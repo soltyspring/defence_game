@@ -15,3 +15,9 @@
 - Validation (actual): all 21 JSON files parse; every unit/skill/tutorial reference resolves; no null array entries → ALL_OK=True.
 - Requests written: 01-director-to-02-engine R1 (★ keys + headless sim), to-03-art R1 (anim ids, sizes, roster), to-04-client R1 (labels, tutorial, results, upgrades).
 - Still unvalidated: in-engine load and balance.
+
+## 2026-10-31 — release design review (Codex task)
+- Wrote RELEASE_DESIGN_REVIEW.md (audit findings, onboarding/pacing, edge-case rules, monetization alternatives (unapproved), stamina-free retention, atlas reuse, accessibility/l10n, acceptance criteria).
+- Audit (actual PowerShell check): order/index, enemy first appearance, unlocks, tutorials, upgrades all pass. Fixed F1 en.json 21→60/60 keys; F2 ROUNDS.md worker timing. Added source-of-truth rule to DATA_SCHEMA.
+- Requests: 02 R2 (reward semantics, skill gating, resolution rules), 04 R2 (executable tests).
+- 02 balance sim not received; balance remains UNTESTED.

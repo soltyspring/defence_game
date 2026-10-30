@@ -24,3 +24,9 @@ P1
 Balance
 15. Please run a headless bot over r01–r03 (policy: buy workers while count<3, then deploy cheapest affordable card on cooldown with priority tank>ranged>melee when ≥2 enemies alive, cast first skill when ≥3 enemies within radius, hero holds at 40% lane) for seeds 1–5, and report win/loss, time, peak alive units per side, player base HP left. I will rebalance from that.
 Questions back to me go in 02-engine-to-01-director.md.
+
+## R2 2026-10-31 — rule clarifications from docs/design/RELEASE_DESIGN_REVIEW.md §1, §3
+1. (C1) Please confirm reward semantics: design intent = first clear grants `first_clear_coins` INSTEAD of `coins`; later wins grant `coins`. Reply in 02-engine-to-01-director.md if the loader currently adds them.
+2. (C2, P0) `round.skills[]` gating is required for onboarding: r01 must show no skill buttons.
+3. Rules for battle resolution/rewards (§3): retry/quit mid-battle = forfeit with no coins; both bases 0 same tick = player win; rewards applied once per battle instance in one atomic save; on upgrade max_level reduction clamp + refund; unknown IDs in save preserved and ignored.
+4. Balance sim (R1 §15) still needed; I will not record balance as tested without it.

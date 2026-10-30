@@ -15,7 +15,7 @@ Data: data/rounds.json. P0 = rounds 1–3.
 | 10 | — | boss_overlord (summons) + warlord at 50% | 3200 | 1.55/1.50 | 8 | 330 s | 600 | Chapter finale |
 
 ## R1–R3 detail (P0)
-R1 tutorial order: tut_move_hero (t=0) → tut_deploy_unit (after first hero move or t=4) → tut_buy_worker (when supply ≥ 40 after first deploy) → tut_destroy_base (when any ally reaches 50% lane). Tutorial never pauses enemy trickle after step 2. Expected: greedy 3 workers by t≈17 s reaches 8.5 supply/s ≈ one melee per 3.5 s; enemy output ≈ 25 grunts / 120 s. Comfortable win.
+R1 tutorial order: tut_move_hero (t=0) → tut_deploy_unit (after first hero move or t=4) → tut_buy_worker (when supply ≥ 40 after first deploy) → tut_destroy_base (when any ally reaches 50% lane). Tutorial never pauses enemy trickle after step 2. Expected: greedy 3 workers by t≈16 s (worker costs 40/52/68 at t=0/6/16) reaches 8.5 supply/s ≈ one melee per 3.5 s; enemy output ≈ 25 grunts / 120 s. Comfortable win.
 R2: first swarm wave at t=20 bunches 3 swarms; Slam unlocked with 30 start energy + 3/s so it is ready at t≈4 s.
 R3: spitter range 100 < ranged 110 so our archers out-range them; tank absorbs volleys. Base triggers at 60% and 25% create a comeback spike.
 

@@ -23,3 +23,8 @@ Priority P0 (slice) / P1 (chapter 1) / P2 (production) / P3 (post-launch). Owner
 | B18 | P3 | Chapter 2 + hero 2 | 01/03 | idea |
 | B19 | P3 | Endless mode | 01/02 | idea |
 | B20 | P3 | Worker raiders (workers can be attacked) | 01/02 | idea |
+| B21 | P2 | Enemy desc_key texts for codex / boss intro | 01 | open |
+| B22 | P2 | Chapter star milestone rewards (10/20/30 stars) data field | 01/02 | proposal |
+| B23 | P1 | Replay challenge modifiers (data-only content) | 01/02 | proposal |
+| B24 | P1 | Loss-screen hint by cause of base death | 01/04 | proposal |
+| B25 | P1 | Consider moving Rally r04→r05 (pending sim) | 01 | pending sim |

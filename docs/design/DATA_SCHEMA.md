@@ -36,5 +36,8 @@ Meteor target: contract = frontmost enemy. Design intent was hero_front+200; con
 ## Meta (data/meta.json, proposal)
 currencies[{id,name_key,persistent,start,max,enabled}]; upgrades[{id, target "unit:<id>"|"hero:<id>"|"resource:supply|energy"|"worker"|"base:player", max_level, costs[max_level−1], per_level{hp_mult|atk_mult|regen_add|cap_add|income_add}}]. Level starts 1. `*_mult`: stat × (1 + v × (level−1)); `*_add`: stat + v × (level−1). Visible only when target unlocked. retention_hooks / iap_catalog: disabled placeholders; engine ignores while `enabled:false`.
 
+## Source-of-truth rule (C3)
+Engine values come from economy.json, heroes/*, rounds/*. game_config.json is authoritative ONLY for caps, camera, lane, hero_respawn and speed_options; its resources/worker/bases blocks are design mirrors and must be kept equal when editing.
+
 ## Required save fields (design requirement for 02 Save)
 Progress v1 (contract) + ★ per round `{best_stars, best_time, clears}`, ★`upgrades{<upgrade_id>: level}`, ★`three_star_claimed[round_id]`, ★`tutorial_done[keys]`, ★`stats{kills, rounds_played}`. Store IDs + levels only, never computed stats, so rebalance is save-safe. Unknown IDs after a content update must be ignored and refunded per migration rule (02).
