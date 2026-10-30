@@ -44,7 +44,7 @@ The pre-account-change WIP (save epoch, save_bridge, sink enforcement, ack-elsew
 - M1: 17623c1, 9c20763, b7fa3c0. M2: 0f84461, 708bdb0, 7c43ebd. All PUSHED.
 - Account-change checkpoint: handoff was PUSH_PENDING (01's staged files blocked the helper); superseded by this handoff.
 - M3 code+tests: 5d61d0d44dd3522501f1a197d33921afe57770b8 `[Feat] 실제 Save 기반 보상 원자성·프로세스 종료 검증, 지급 계약 위반 차단, 동의 흐름과 결제 대기 취소·외부 확인 처리 추가` (20 files) → PUSHED origin/main (ls-remote = 5d61d0d…).
-- M3 docs/requests/handoff: next commit, SHA recorded in status after push.
+- M3 docs/requests/handoff: 078df2ecaa6b3f7b5f3157516f634c42b5c27b67 `[Docs] 서비스 M3 문서·연동 요청·리서치 회신과 상태 인수인계 갱신` (8 files) → PUSHED origin/main (ls-remote = 078df2e…).
 
 ## Next task (06) — M4
 1. On 02 reply to S1/S2: rerun test_services_m3 against the integrated game boot (real autoload Save + Services), then change the claim from "isolated" to "integrated".
