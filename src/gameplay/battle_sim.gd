@@ -353,6 +353,7 @@ func step(dt: float) -> void:
 	_step_hp_triggers()
 	_step_delayed()
 	_step_aura()
+	_sort_lanes()
 	_step_hero(dt)
 	for u in players: _step_unit(u, dt)
 	for u in enemies: _step_unit(u, dt)
@@ -361,8 +362,30 @@ func step(dt: float) -> void:
 	_step_fx(dt)
 	_reap()
 	stats.max_units = maxi(stats.max_units, players.size() + enemies.size())
-	if t >= TIME_LIMIT and not ended:
+	# both bases destroyed in the same tick resolve as a player win (01 RELEASE_DESIGN_REVIEW §3)
+	if not ended and (_base_dead_enemy or _base_dead_player):
+		_end(_base_dead_enemy)
+	if time_limit > 0.0 and t >= time_limit and not ended:
 		_end(false)
+
+## Per-step x-ordered views of each side (insertion sort: lanes are nearly sorted step to step).
+## Used by _find_target for O(log n) lookups instead of O(n) scans (08-performance P2).
+func _sort_lanes() -> void:
+	_sorted_into(players, _lane_p)
+	_sorted_into(enemies, _lane_e)
+
+func _sorted_into(src: Array[Unit], dst: Array[Unit]) -> void:
+	dst.resize(src.size())
+	var n := 0
+	for u in src:
+		if u.dying: continue
+		var i := n
+		while i > 0 and dst[i - 1].x > u.x:
+			dst[i] = dst[i - 1]
+			i -= 1
+		dst[i] = u
+		n += 1
+	dst.resize(n)
 
 func _step_wave_announce() -> void:
 	while _wave_announced < wave_times.size() and wave_times[_wave_announced] <= t:
@@ -587,12 +610,14 @@ func _resolve_attack(u: Unit) -> void:
 		p.homing = not siege
 		p.target = tgt
 		p.hit_base = tgt == null
+		_cue(&"shoot", p.kind, {"projectile": p.kind, "x": u.x})
 	else:
 		if tgt:
 			_damage(tgt, atk, kb)
 			if float(u.def.get("splash", 0.0)) > 0.0:
 				_area_damage_side(-u.side, tgt.x, float(u.def.get("splash", 0.0)), atk, kb, tgt)
 			_fx("hit_spark", tgt.x, -12.0, 0.25, 0.0)
+			_cue(&"hit", "melee", {"kind": "melee", "x": tgt.x})
 		elif u.w_base:
 			_damage_base(-u.side, atk * _struct_mult(u))
 			if float(u.def.get("splash", 0.0)) > 0.0:
