@@ -1,5 +1,5 @@
 # ART_DIRECTION.md — visual identity and asset contract (owner: 03-art)
-Art version 0.5.0 · 2026-10-31 · Status: **initial production pack, theme still PROVISIONAL** (Q1 pending in coordination/requests/USER_QUESTION.md). The default theme below is a reversible working assumption. The user has not approved it.
+Art version 0.6.0 · 2026-10-31 · Status: **initial production pack, theme still PROVISIONAL** (Q1 pending in coordination/requests/USER_QUESTION.md). The default theme below is a reversible working assumption. The user has not approved it.
 
 ## 1. How the art is made (provenance)
 - Tool inventory on this machine: Python 3.11.9, Pillow 11.2.1, numpy 2.2.4. There are **no** image-generation, Aseprite or ImageMagick tools. Godot 4.7.2 is in tools/engine (owned by 02).
@@ -42,6 +42,7 @@ Art version 0.5.0 · 2026-10-31 · Status: **initial production pack, theme stil
 | e_brute (bramble troll) | char_enemy_adv | 48×48 (~32 px) | idle 4@4, walk 6@7, attack 5@8 (hit 3, ground cracks), hit 2, death 6 |
 | e_bomber (keg sapper) | char_enemy_adv | 32×32 (~17 px + keg) | idle 2@6, walk 6@14 (fuse flicker), attack 3@10 (hit 1; engine plays `explosion`), hit 2, death 6 |
 | boss_warlord | char_boss_warlord | 64×64 (~45 px) | idle 4@4, walk 6@7, attack 6@9 (hit 3, purple cleave arc + ground cue), hit 2, death 7 |
+| boss_overlord (hive overlord) | char_boss_overlord | 88×80 (~56 px idle, staff to ~66 px) | idle 4@4, walk 6@6, attack 6@8 (hit 3, rune ring at staff impact), **summon 6@8 (events.spawn 3, points.spawn_origin)**, hit 2, death 8 |
 | prop_mine | bases | 48×32 | idle 2@3 (worker destination behind the keep, static frame `prop_mine`) |
 | arrow, tower_bolt, spit, rock | fx_combat | small | fly |
 | hit_spark, hit_spit, explosion, death_poof, dust, spawn | fx_combat | | play |
@@ -49,7 +50,9 @@ Art version 0.5.0 · 2026-10-31 · Status: **initial production pack, theme stil
 
 Every character also has `die`, an alias of `death` that shares its frames (01 data uses `die`). Death = hurt → kneel → lying (a lossless 90° rotation) → ordered-dither dissolve, so it needs no alpha fade.
 
-Missing (backlog): boss_overlord (r10, planned own page `char_boss_overlord`), 2nd/3rd biome.
+Missing (backlog): 2nd/3rd biome. Every anim_set referenced by data/** now exists.
+Boss hierarchy at 1× (measured idle height × width, opaque px): grunt 19×17 (195) < brute 32×23 (503) < warlord 45×24 (798) < **overlord 56×34 (1225)**; hero 31×24. The overlord is the only unit with a lilac glow (eyes + staff orb) and a hive on its back.
+Colour-vision rule (ART_AUDIT A16): large enemy masses must not use purple `p/P/V`, because under deuteranopia simulation purple lies within ΔE 9.7–16 of ally blue. Use bark/wood or dark green (ΔE ≥ 60 vs ally blue); purple only for small accents.
 Role cues at 1× (09 R09-03-1): lancer = horse + blue pennant; catapult = wheeled frame + arm; brute = double bulk, dark moss skin, log club; bomber = orange bandana + keg with flickering fuse (the only orange enemy accent = danger); warlord = gold thorn crown, purple cape, cleaver, 2.3× grunt height. The engine draws fallbacks until they exist.
 
 ## 6. UI art (`ui_main`, always resident)

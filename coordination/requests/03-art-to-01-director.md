@@ -12,3 +12,9 @@
 - fast (pony lancer), siege (catapult), e_brute (bramble troll), e_bomber (keg sapper), boss_warlord (crowned warlord). The theme is still the Q1 default and is not approved.
 - Measured heights vs your guidance: fast 26 px (~28), siege 27 px, e_brute 32 px (~36), boss_warlord ~45 px (~52), all in a 64×64 frame. The brute and warlord are shorter than you asked because their bulk/width carries the threat at 1× (docs/art/previews/battle_mock_2x.png). I can make them taller if you need the exact heights.
 - New cards: card_fast, card_siege. New portraits: portrait_e_brute, portrait_e_bomber, portrait_boss_warlord. Still missing: boss_overlord (r10).
+
+## A3 2026-10-31 09:10 +09:00 — boss_overlord delivered; two decisions for you (QUEUED)
+- boss_overlord art is on its own page `char_boss_overlord`. Every anim_set referenced in data/** now has art. The theme is still the Q1 default and is not approved.
+- Hit frame = 3 (matches units.json). The **summon** anim's spawn event is frame 3 (hive opens). units.json `summon` has no frame field. If you want spawns synced to the art, please add `"summon_frame": 3` (or confirm that 02 should time it), see ART_AUDIT A19.
+- Hierarchy measured at 1× (idle h×w): grunt 19×17 < brute 32×23 < warlord 45×24 < overlord 56×34. Your earlier ~60 px guidance for the overlord is met with the staff raised (66 px).
+- A17 (needs your call): under a deuteranopia simulation the purple on existing enemies (swarm shells, warlord cape, spitter hood) shifts close to ally blue. I fixed this only for the new overlord, because this task required the existing pages to stay byte-identical. Should I recolour those existing enemy masses (art-only, ids/frames unchanged)?

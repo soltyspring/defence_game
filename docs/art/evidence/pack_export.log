@@ -9,39 +9,42 @@ Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 [  83% ] [90m[1mfirst_scan_filesystem[22m | 파일 스캔 시작 중...[39m[0m
 [92m[ DONE ][39m [1mfirst_scan_filesystem[22m
 [0m
-[   0% ] [90m[1mupdate_scripts_classes[22m | Started 전역 클래스를 등록하는 중... (2 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started 전역 클래스를 등록하는 중... (3 steps)[39m[0m
 [   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
-[  33% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  25% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
 [92m[ DONE ][39m [1mupdate_scripts_classes[22m
 [0m
-[   0% ] [90m[1m_update_scan_actions[22m | Started 액션 스캔 중... (12 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started 액션 스캔 중... (13 steps)[39m[0m
 [   0% ] [90m[1m_update_scan_actions[22m | bases.png[39m[0m
 [   7% ] [90m[1m_update_scan_actions[22m | biome_meadow.png[39m[0m
-[  15% ] [90m[1m_update_scan_actions[22m | char_boss_warlord.png[39m[0m
-[  23% ] [90m[1m_update_scan_actions[22m | char_enemy.png[39m[0m
-[  30% ] [90m[1m_update_scan_actions[22m | char_enemy_adv.png[39m[0m
-[  38% ] [90m[1m_update_scan_actions[22m | char_player.png[39m[0m
-[  46% ] [90m[1m_update_scan_actions[22m | char_player_adv.png[39m[0m
-[  53% ] [90m[1m_update_scan_actions[22m | fx_combat.png[39m[0m
-[  61% ] [90m[1m_update_scan_actions[22m | ui_main.png[39m[0m
-[  69% ] [90m[1m_update_scan_actions[22m | Galmuri9.ttf[39m[0m
-[  76% ] [90m[1m_update_scan_actions[22m | Galmuri11-Bold.ttf[39m[0m
-[  84% ] [90m[1m_update_scan_actions[22m | Galmuri11.ttf[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | char_boss_overlord.png[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | char_boss_warlord.png[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | char_enemy.png[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | char_enemy_adv.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | char_player.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | char_player_adv.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | fx_combat.png[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | ui_main.png[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | Galmuri9.ttf[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | Galmuri11-Bold.ttf[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | Galmuri11.ttf[39m[0m
 [92m[ DONE ][39m [1m_update_scan_actions[22m
 [0m
-[   0% ] [90m[1mreimport[22m | Started 애셋 (다시) 가져오는 중 (12 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Started 애셋 (다시) 가져오는 중 (13 steps)[39m[0m
 [   0% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
 [   7% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
-[  15% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
-[  23% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
-[  30% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
-[  38% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
-[  46% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
-[  53% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
-[  61% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
-[  69% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
-[  76% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
-[  84% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  14% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  21% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  28% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  35% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  42% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  50% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  57% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  64% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  71% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  78% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  85% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
 [   0% ] [90m[1mreimport[22m | 다시 가져오기 전 작업을 수행 중...[39m[0m
 [   0% ] [90m[1mreimport[22m | Galmuri9.ttf[39m[0m
 res://assets/fonts/Galmuri9.ttf: Pixel font detected, disabling subpixel positioning.
@@ -49,22 +52,23 @@ res://assets/fonts/Galmuri9.ttf: Pixel font detected, disabling hinting.
 [   7% ] [90m[1mreimport[22m | Galmuri11-Bold.ttf[39m[0m
 res://assets/fonts/Galmuri11-Bold.ttf: Pixel font detected, disabling subpixel positioning.
 res://assets/fonts/Galmuri11-Bold.ttf: Pixel font detected, disabling hinting.
-[  15% ] [90m[1mreimport[22m | Galmuri11.ttf[39m[0m
 res://assets/fonts/Galmuri11.ttf: Pixel font detected, disabling subpixel positioning.
 res://assets/fonts/Galmuri11.ttf: Pixel font detected, disabling hinting.
-[  23% ] [90m[1mreimport[22m | Galmuri9.ttf[39m[0m
-[  30% ] [90m[1mreimport[22m | Galmuri11-Bold.ttf[39m[0m
-[  38% ] [90m[1mreimport[22m | Galmuri11.ttf[39m[0m
-[  46% ] [90m[1mreimport[22m | bases.png[39m[0m
-[  53% ] [90m[1mreimport[22m | biome_meadow.png[39m[0m
-[  61% ] [90m[1mreimport[22m | char_boss_warlord.png[39m[0m
-[  69% ] [90m[1mreimport[22m | char_enemy.png[39m[0m
-[  76% ] [90m[1mreimport[22m | char_enemy_adv.png[39m[0m
-[  84% ] [90m[1mreimport[22m | char_player.png[39m[0m
+[  14% ] [90m[1mreimport[22m | Galmuri11.ttf[39m[0m
+[  21% ] [90m[1mreimport[22m | Galmuri9.ttf[39m[0m
+[  28% ] [90m[1mreimport[22m | Galmuri11-Bold.ttf[39m[0m
+[  35% ] [90m[1mreimport[22m | Galmuri11.ttf[39m[0m
+[  42% ] [90m[1mreimport[22m | bases.png[39m[0m
+[  50% ] [90m[1mreimport[22m | biome_meadow.png[39m[0m
+[  57% ] [90m[1mreimport[22m | char_boss_overlord.png[39m[0m
+[  64% ] [90m[1mreimport[22m | char_boss_warlord.png[39m[0m
+[  71% ] [90m[1mreimport[22m | char_enemy.png[39m[0m
+[  78% ] [90m[1mreimport[22m | char_enemy_adv.png[39m[0m
+[  85% ] [90m[1mreimport[22m | char_player.png[39m[0m
 [  92% ] [90m[1mreimport[22m | 애셋 가져오기 마무리 중...[39m[0m
 [92m[ DONE ][39m [1mreimport[22m
 [0m
-[   0% ] [90m[1mreimport[22m | Started 애셋 (다시) 가져오는 중 (12 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Started 애셋 (다시) 가져오는 중 (13 steps)[39m[0m
 [   0% ] [90m[1mreimport[22m | 다시 가져오기 후 작업을 수행 중...[39m[0m
 [92m[ DONE ][39m [1mreimport[22m
 [0m
@@ -88,45 +92,50 @@ Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 [   1% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/bases.json[39m[0m
 [   4% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/bases.png-7cea66318d28e7c4ad5e2a7f61e1cbf8.ctex[39m[0m
 [   4% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/bases.png.import[39m[0m
-[   8% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/biome_meadow.json[39m[0m
-[  12% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/biome_meadow.png-85b1b5ff68f9a2f47452b0aaa7782020.ctex[39m[0m
-[  12% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/biome_meadow.png.import[39m[0m
-[  15% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_boss_warlord.json[39m[0m
-[  19% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/char_boss_warlord.png-184f6b0b5ba5afb7475466837f3f2e87.ctex[39m[0m
-[  19% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_boss_warlord.png.import[39m[0m
-[  23% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_enemy.json[39m[0m
-[  26% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/char_enemy.png-e5df2b163b25820b3fcce88fdb139e13.ctex[39m[0m
-[  26% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_enemy.png.import[39m[0m
-[  30% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_enemy_adv.json[39m[0m
-[  33% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/char_enemy_adv.png-50efdc536346e5ccbf0992855ba3a53c.ctex[39m[0m
-[  33% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_enemy_adv.png.import[39m[0m
-[  37% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_player.json[39m[0m
-[  40% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/char_player.png-a822b4a4d58c09b9090b7f17c9f835e2.ctex[39m[0m
-[  40% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_player.png.import[39m[0m
-[  44% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_player_adv.json[39m[0m
-[  48% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/char_player_adv.png-0da60882c8f7e680cc0b908c47bb1366.ctex[39m[0m
-[  48% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_player_adv.png.import[39m[0m
-[  51% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/fx_combat.json[39m[0m
-[  55% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/fx_combat.png-e6354d67123718b0bffb7ceec69fc478.ctex[39m[0m
-[  55% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/fx_combat.png.import[39m[0m
-[  59% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/ui_main.json[39m[0m
-[  62% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/ui_main.png-b8d0216391e4b08a56e7bd555a45b7f3.ctex[39m[0m
-[  62% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/ui_main.png.import[39m[0m
+[   7% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/biome_meadow.json[39m[0m
+[  11% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/biome_meadow.png-85b1b5ff68f9a2f47452b0aaa7782020.ctex[39m[0m
+[  11% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/biome_meadow.png.import[39m[0m
+[  14% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_boss_overlord.json[39m[0m
+[  17% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/char_boss_overlord.png-8dc3d38db2e702f52956042baf7d959a.ctex[39m[0m
+[  17% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_boss_overlord.png.import[39m[0m
+[  21% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_boss_warlord.json[39m[0m
+[  24% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/char_boss_warlord.png-184f6b0b5ba5afb7475466837f3f2e87.ctex[39m[0m
+[  24% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_boss_warlord.png.import[39m[0m
+[  27% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_enemy.json[39m[0m
+[  31% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/char_enemy.png-e5df2b163b25820b3fcce88fdb139e13.ctex[39m[0m
+[  31% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_enemy.png.import[39m[0m
+[  33% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_enemy_adv.json[39m[0m
+[  36% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/char_enemy_adv.png-50efdc536346e5ccbf0992855ba3a53c.ctex[39m[0m
+[  36% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_enemy_adv.png.import[39m[0m
+[  40% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_player.json[39m[0m
+[  43% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/char_player.png-a822b4a4d58c09b9090b7f17c9f835e2.ctex[39m[0m
+[  43% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_player.png.import[39m[0m
+[  46% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_player_adv.json[39m[0m
+[  50% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/char_player_adv.png-0da60882c8f7e680cc0b908c47bb1366.ctex[39m[0m
+[  50% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/char_player_adv.png.import[39m[0m
+[  53% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/fx_combat.json[39m[0m
+[  56% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/fx_combat.png-e6354d67123718b0bffb7ceec69fc478.ctex[39m[0m
+[  56% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/fx_combat.png.import[39m[0m
+[  60% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/ui_main.json[39m[0m
+[  63% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/ui_main.png-b8d0216391e4b08a56e7bd555a45b7f3.ctex[39m[0m
+[  63% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/atlases/ui_main.png.import[39m[0m
 [  66% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/fonts/fonts_provenance.json[39m[0m
 [  69% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/Galmuri9.ttf-98ce197f22f89047170858fe1b62fb4f.fontdata[39m[0m
 [  69% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/fonts/Galmuri9.ttf.import[39m[0m
-[  73% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/Galmuri11-Bold.ttf-3a23d149e7b99ee54cc37134f38f9040.fontdata[39m[0m
-[  73% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/fonts/Galmuri11-Bold.ttf.import[39m[0m
-[  76% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/Galmuri11.ttf-dc494bdf43221ea4068442166ca7b6a4.fontdata[39m[0m
-[  76% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/fonts/Galmuri11.ttf.import[39m[0m
-[  80% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/manifest.json[39m[0m
-[  84% ] [90m[1msavepack[22m | 파일 저장 중: res://check.gdc[39m[0m
-[  87% ] [90m[1msavepack[22m | 파일 저장 중: res://font_sheet.gdc[39m[0m
-[  91% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/exported/133200997/export-3070c538c03ee49b7677ff960a3f5195-main.scn[39m[0m
+[  72% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/Galmuri11-Bold.ttf-3a23d149e7b99ee54cc37134f38f9040.fontdata[39m[0m
+[  72% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/fonts/Galmuri11-Bold.ttf.import[39m[0m
+[  75% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/imported/Galmuri11.ttf-dc494bdf43221ea4068442166ca7b6a4.fontdata[39m[0m
+[  75% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/fonts/Galmuri11.ttf.import[39m[0m
+[  79% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/manifest.json[39m[0m
+[  82% ] [90m[1msavepack[22m | 파일 저장 중: res://check.gdc[39m[0m
+[  85% ] [90m[1msavepack[22m | 파일 저장 중: res://font_sheet.gdc[39m[0m
+[  89% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/exported/133200997/export-3070c538c03ee49b7677ff960a3f5195-main.scn[39m[0m
+[  92% ] [90m[1msavepack[22m | 파일 저장 중: res://ui_sheet.gdc[39m[0m
 [  95% ] [90m[1msavepack[22m | 파일 저장 중: res://assets/fonts/OFL-Galmuri.txt[39m[0m
 [  95% ] [90m[1msavepack[22m | 파일 저장 중: res://check.gd.remap[39m[0m
 [  95% ] [90m[1msavepack[22m | 파일 저장 중: res://font_sheet.gd.remap[39m[0m
 [  95% ] [90m[1msavepack[22m | 파일 저장 중: res://main.tscn.remap[39m[0m
+[  95% ] [90m[1msavepack[22m | 파일 저장 중: res://ui_sheet.gd.remap[39m[0m
 [  95% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/global_script_class_cache.cfg[39m[0m
 [  95% ] [90m[1msavepack[22m | 파일 저장 중: res://.godot/uid_cache.bin[39m[0m
 [  95% ] [90m[1msavepack[22m | 파일 저장 중: res://project.binary[39m[0m

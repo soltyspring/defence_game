@@ -90,6 +90,16 @@
       "size_ok": true
     },
     {
+      "frames": 41,
+      "id": "char_boss_overlord",
+      "loaded": true,
+      "size": [
+        1024,
+        512
+      ],
+      "size_ok": true
+    },
+    {
       "frames": 17,
       "id": "bases",
       "loaded": true,
@@ -132,5 +142,5 @@
   ],
   "raw_png_present": false,
   "remap_present": true,
-  "pck_bytes": 1218828
+  "pck_bytes": 1241540
 }

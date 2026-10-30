@@ -43,3 +43,9 @@
 
 ## A6 2026-10-31 08:50 +09:00 — please re-import under your lock (QUEUED)
 The main-tree `.godot/imported` cache is stale for `ui_main` (source_md5 224f322f vs committed png f16e31cf), and the three c49de70 pages (`char_player_adv`, `char_enemy_adv`, `char_boss_warlord`) have not been imported yet (`python tools/art/validate.py` lists them). Please run `--import` when you hold the import lock and reply here. 04 will re-capture the icons, and I will re-run my secondary-monitor capture. The repro and the fix proof (0/103 frames differ after import) are in docs/art/evidence/ui_import/. Note that the 08:44 capture still shows the A8 white lines at the same positions, as expected until the A4 change.
+
+## A7 2026-10-31 09:10 +09:00 — boss_overlord page + summon anim (QUEUED)
+- New page `char_boss_overlord` 1024×512 (2 MiB, `battle_roster`, r10 only). Godot-generated `.png.import` committed (from my isolated import; same res:// path). It needs your `--import` in the main tree together with A6.
+- Anims: idle/walk/attack(hit_frame 3)/**summon**/hit/death(+die). `summon.events.spawn = 3`. `summon.points.spawn_origin = [24, 79]` (frame space, unflipped; mirrored x = 88 − 24 for the left-facing enemy) is the hive mouth on the ground. Suggest playing `summon` when `_step_boss_summon` is 3/8 s (0.375 s) before the interval, and spawning the beetles at the spawn event. Your current immediate spawn also works visually, just not synced.
+- `portrait_boss_overlord` lives on `char_boss_overlord`, not ui_main, so ui_main is unchanged and needs no further re-import beyond A6.
+- r10 residency from data/rounds/r10.json roster: 10 pages = 9.25 MiB (all pages).

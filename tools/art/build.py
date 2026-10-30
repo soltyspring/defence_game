@@ -38,7 +38,7 @@ REL_ATLAS = "assets/atlases"
 PREV = os.path.join(ROOT, "docs", "art", "previews")
 # Layout locks: existing regions keep their page position across rebuilds (see atlas._pack).
 LOCK_DIR = os.path.join(HERE, "layout_lock")
-ART_VERSION = "0.5.0"
+ART_VERSION = "0.6.0"
 
 REQUIRED_CHAR_ANIMS = ("idle", "walk", "attack", "death")
 
@@ -80,15 +80,23 @@ def build():
 
     # --- r04+ roster: separate pages so r01-r03 battles don't hold these pixels (08 A1) ---
     import chars_r04
+    import chars_boss
     for aid, group_map, faction, note in [
         ("char_player_adv", chars_r04.PLAYER, "player", "fast (r04+), siege (r06+). Acquire only when in roster."),
         ("char_enemy_adv", chars_r04.ENEMY, "enemy", "e_brute (r04+), e_bomber (r07+). Acquire only when in roster."),
         ("char_boss_warlord", chars_r04.BOSS, "enemy", "boss_warlord (r05+). Own page: boss pixels resident only in boss rounds."),
+        ("char_boss_overlord", chars_boss.BOSS, "enemy", "boss_overlord (r10). Own page; summon anim spawns e_swarm (char_enemy)."),
     ]:
         pg = atl.Atlas(aid, "character", "battle_roster", note)
         for sid, (body, fn) in group_map.items():
             an = add_char(pg, sid, body, fn, faction)
             sheets[sid] = (an, body.W, body.H, (body.px, body.H - 1))
+        if aid == "char_boss_overlord":
+            # portrait lives on the boss page: ui_main stays byte-identical (no re-import needed)
+            # and the portrait is resident only in r10 (wave preview / boss bar).
+            pg.add_image("portrait_boss_overlord",
+                         ui.portrait(sheets["boss_overlord"][0]["idle"]["frames"][0].a, bg="p", rim="P", hi="V").a,
+                         meta={"kind": "ui_portrait"})
         pages.append(pg)
 
     # --- bases ---------------------------------------------------------------

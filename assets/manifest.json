@@ -1,6 +1,6 @@
 {
  "version": 1,
- "art_version": "0.5.0",
+ "art_version": "0.6.0",
  "schema": "INTERFACES.md §5.1 (02-engine) + additive keys",
  "pixel_scale": 1,
  "reference_view": [
@@ -144,6 +144,24 @@
    "image_frames": 0
   },
   {
+   "id": "char_boss_overlord",
+   "group": "character",
+   "load_policy": "battle_roster",
+   "image": "res://assets/atlases/char_boss_overlord.png",
+   "frames": "res://assets/atlases/char_boss_overlord.json",
+   "size": [
+    1024,
+    512
+   ],
+   "disk_bytes": 11197,
+   "gpu_bytes": 2097152,
+   "biome": "",
+   "anim_sets": [
+    "boss_overlord"
+   ],
+   "image_frames": 1
+  },
+  {
    "id": "bases",
    "group": "base",
    "load_policy": "battle",
@@ -243,6 +261,7 @@
   "e_brute": "char_enemy_adv",
   "e_bomber": "char_enemy_adv",
   "boss_warlord": "char_boss_warlord",
+  "boss_overlord": "char_boss_overlord",
   "base_player": "bases",
   "base_enemy": "bases",
   "prop_mine": "bases",
@@ -471,6 +490,7 @@
    "char_player_adv",
    "char_enemy_adv",
    "char_boss_warlord",
+   "char_boss_overlord",
    "bases",
    "fx_combat"
   ],
@@ -491,8 +511,8 @@
   "license": "Original work created for this project; owned by the project owner. No third-party assets included."
  },
  "totals": {
-  "disk_bytes": 61635,
-  "gpu_bytes_all_pages": 7602176,
+  "disk_bytes": 72832,
+  "gpu_bytes_all_pages": 9699328,
   "note": "GPU = w*h*4 (RGBA8, lossless import, no mipmaps). See docs/art/ATLAS_BUDGET.md"
  }
 }

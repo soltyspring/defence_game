@@ -1,0 +1,550 @@
+{
+ "schema": "defence.atlas/1",
+ "atlas": "char_boss_overlord",
+ "image": "char_boss_overlord.png",
+ "image_res": "res://assets/atlases/char_boss_overlord.png",
+ "size": [
+  1024,
+  512
+ ],
+ "padding": 2,
+ "extrude": 1,
+ "group": "character",
+ "load_policy": "battle_roster",
+ "note": "boss_overlord (r10). Own page; summon anim spawns e_swarm (char_enemy).",
+ "filter": "nearest",
+ "mipmaps": false,
+ "repeat": false,
+ "gpu_format": "RGBA8 (lossless, no VRAM compression)",
+ "gpu_bytes": 2097152,
+ "disk_bytes": 11197,
+ "unique_regions": 32,
+ "occupancy": 0.417,
+ "frames": {
+  "boss_overlord/idle/0": {
+   "x": 279,
+   "y": 423,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/idle/1": {
+   "x": 95,
+   "y": 171,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/idle/2": {
+   "x": 187,
+   "y": 171,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/idle/3": {
+   "x": 3,
+   "y": 255,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/walk/0": {
+   "x": 95,
+   "y": 3,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/walk/1": {
+   "x": 187,
+   "y": 423,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/walk/2": {
+   "x": 95,
+   "y": 255,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/walk/3": {
+   "x": 279,
+   "y": 255,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/walk/4": {
+   "x": 3,
+   "y": 87,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/walk/5": {
+   "x": 187,
+   "y": 87,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/attack/0": {
+   "x": 371,
+   "y": 3,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/attack/1": {
+   "x": 3,
+   "y": 339,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/attack/2": {
+   "x": 95,
+   "y": 87,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/attack/3": {
+   "x": 371,
+   "y": 171,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/attack/4": {
+   "x": 187,
+   "y": 339,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/attack/5": {
+   "x": 371,
+   "y": 87,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/summon/0": {
+   "x": 279,
+   "y": 87,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/summon/1": {
+   "x": 463,
+   "y": 3,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/summon/2": {
+   "x": 279,
+   "y": 171,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/summon/3": {
+   "x": 371,
+   "y": 423,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/summon/4": {
+   "x": 3,
+   "y": 171,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/summon/5": {
+   "x": 3,
+   "y": 3,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/hit/0": {
+   "x": 3,
+   "y": 423,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/hit/1": {
+   "x": 279,
+   "y": 339,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/death/0": {
+   "x": 3,
+   "y": 423,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/death/1": {
+   "x": 279,
+   "y": 3,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/death/2": {
+   "x": 371,
+   "y": 339,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/death/3": {
+   "x": 187,
+   "y": 3,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/death/4": {
+   "x": 95,
+   "y": 423,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/death/5": {
+   "x": 187,
+   "y": 255,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/death/6": {
+   "x": 95,
+   "y": 339,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/death/7": {
+   "x": 371,
+   "y": 255,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/die/0": {
+   "x": 3,
+   "y": 423,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/die/1": {
+   "x": 279,
+   "y": 3,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/die/2": {
+   "x": 371,
+   "y": 339,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/die/3": {
+   "x": 187,
+   "y": 3,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/die/4": {
+   "x": 95,
+   "y": 423,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/die/5": {
+   "x": 187,
+   "y": 255,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/die/6": {
+   "x": 95,
+   "y": 339,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/die/7": {
+   "x": 371,
+   "y": 255,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "portrait_boss_overlord": {
+   "x": 463,
+   "y": 87,
+   "w": 24,
+   "h": 24,
+   "pivot": [
+    12,
+    12
+   ],
+   "kind": "ui_portrait"
+  }
+ },
+ "anims": {
+  "boss_overlord": {
+   "idle": {
+    "frames": [
+     "boss_overlord/idle/0",
+     "boss_overlord/idle/1",
+     "boss_overlord/idle/2",
+     "boss_overlord/idle/3"
+    ],
+    "fps": 4,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "boss_overlord/walk/0",
+     "boss_overlord/walk/1",
+     "boss_overlord/walk/2",
+     "boss_overlord/walk/3",
+     "boss_overlord/walk/4",
+     "boss_overlord/walk/5"
+    ],
+    "fps": 6,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "boss_overlord/attack/0",
+     "boss_overlord/attack/1",
+     "boss_overlord/attack/2",
+     "boss_overlord/attack/3",
+     "boss_overlord/attack/4",
+     "boss_overlord/attack/5"
+    ],
+    "fps": 8,
+    "loop": false,
+    "hit_frame": 3,
+    "events": {
+     "hit": 3
+    }
+   },
+   "summon": {
+    "frames": [
+     "boss_overlord/summon/0",
+     "boss_overlord/summon/1",
+     "boss_overlord/summon/2",
+     "boss_overlord/summon/3",
+     "boss_overlord/summon/4",
+     "boss_overlord/summon/5"
+    ],
+    "fps": 8,
+    "loop": false,
+    "events": {
+     "spawn": 3
+    },
+    "points": {
+     "spawn_origin": [
+      24,
+      79
+     ]
+    }
+   },
+   "hit": {
+    "frames": [
+     "boss_overlord/hit/0",
+     "boss_overlord/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "boss_overlord/death/0",
+     "boss_overlord/death/1",
+     "boss_overlord/death/2",
+     "boss_overlord/death/3",
+     "boss_overlord/death/4",
+     "boss_overlord/death/5",
+     "boss_overlord/death/6",
+     "boss_overlord/death/7"
+    ],
+    "fps": 7,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "boss_overlord/die/0",
+     "boss_overlord/die/1",
+     "boss_overlord/die/2",
+     "boss_overlord/die/3",
+     "boss_overlord/die/4",
+     "boss_overlord/die/5",
+     "boss_overlord/die/6",
+     "boss_overlord/die/7"
+    ],
+    "fps": 7,
+    "loop": false
+   }
+  }
+ },
+ "anim_sets_meta": {
+  "boss_overlord": {
+   "frame_size": [
+    88,
+    80
+   ],
+   "pivot": [
+    36,
+    79
+   ],
+   "facing": "right",
+   "faction": "enemy",
+   "kind": "character"
+  }
+ }
+}

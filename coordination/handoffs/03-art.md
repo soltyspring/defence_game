@@ -1,5 +1,5 @@
 # 03-art handoff
-Updated: 2026-10-31 08:52 +09:00 · Resumed after authExpiryRetry (08:21-08:22 requests failed; no files had been written for that task; worktree was clean vs HEAD at resume).
+Updated: 2026-10-31 09:15 +09:00 · Q1 still PENDING (checked DECISIONS.md at start of task).
 
 ## Status
 MILESTONE 3: r04–r07 roster art delivered and the white-line root cause handed to 02. Theme is still the reversible default (Q1 PENDING, not user-approved). Nothing here is release completion.
@@ -38,7 +38,14 @@ Outgoing: 03-art-to-02-engine A4 (white-line root cause), A5 (new pages); 03-art
 
 - Commit: de85b3e [Fix] ui_main stale-import repro/verify tools + layout locks. PUSHED origin/main (verified with `git branch -r --contains`).
 
+## Milestone 5 (this session): boss_overlord
+- `tools/art/chars_boss.py`: hive overlord, 88×80 frame, pivot (36,79). Anims idle/walk/attack (hit 3, = units.json)/summon (events.spawn 3, points.spawn_origin [24,79])/hit/death (+die). New page `char_boss_overlord` 1024×512 (2.00 MiB, battle_roster, r10 only) + `portrait_boss_overlord` on that page. ui_main is untouched.
+- Regression: SHA-256 of all 27 previous atlas files (9 pages × png/json/import) identical before vs after.
+- validate.py --determinism PASS (only expected WARNs: local .godot cache stale/unimported, A6 with 02). Exported PCK: 10/10 pages load, raw PNG absent, PCK 1,241,540 B. r10 residency from round data = 9.25 MiB.
+- Adversarial review: hierarchy measured (overlord 56×34 > warlord 45×24 > brute 32×23 > grunt 19×17). A16: the purple mass was within ΔE 9.7 of ally blue under deuteranopia sim; fixed for the overlord (bark/green; retest image docs/art/previews/boss_overlord_review_3x_after.png). A17: the same issue on existing enemies is OPEN and needs approval to touch existing pages (asked 01 A3). A19: summon has no data frame field (asked 01/02).
+- Not done: in-game capture of the overlord (needs 02 --import + an r10 run).
+
 ## Next tasks (03)
-1. boss_overlord (r10, summon anim, own page `char_boss_overlord`).
+1. (done) boss_overlord. Next: A17 recolour of existing enemy purple masses if 01 approves; in-game r10 capture after 02 import.
 2. When 02 acknowledges A4/A5: rerun the same capture (`& .\tools\build\visible_launch.ps1 -UserArgs @('--round=r01','--shots=2,5,8','--shot-dir=build/qa/art03','--quit-after=10') -EvidenceDir build\qa\art03`) and an r05/r07 capture to verify the new units in game.
 3. Re-theme immediately if Q1 is answered.

@@ -10,6 +10,7 @@ Version 1 · 2026-10-31. This file implements ENGINE.md §8 and INTERFACES.md §
 | `char_player_adv` 512×256 | fast, siege | `battle_roster` (r04+/r06+ only) |
 | `char_enemy_adv` 512×256 | e_brute, e_bomber | `battle_roster` (r04+/r07+ only) |
 | `char_boss_warlord` 512×512 | boss_warlord | `battle_roster` (boss rounds only) |
+| `char_boss_overlord` 1024×512 | boss_overlord + `portrait_boss_overlord` (portrait kept here so ui_main stays byte-identical) | `battle_roster` (r10 only) |
 | `bases` 512×512 | base_player, base_enemy × idle/damaged/ruined | `battle` |
 | `fx_combat` 512×256 | projectiles, impacts, skill FX, shadows, coin | `battle` |
 | `biome_meadow` 1024×512 | sky/far/mid/ground/front layers | `per_round` (data biome `biome_01` / `meadow`) |
