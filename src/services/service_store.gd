@@ -12,15 +12,31 @@ extends RefCounted
 
 var data: Dictionary
 var commit_fn: Callable
+## Optional Callable() -> int that increases whenever the game save is written by ANYONE
+## (see save_bridge.gd: counts Events.progress_changed, which src/core/save.gd emits after
+## every successful save). Lets services detect a grant sink that saved on its own.
+var save_epoch_fn: Callable
 var commits := 0
 var failed_commits := 0
 
-func _init(backing: Dictionary = {}, commit_callable: Callable = Callable()) -> void:
+func _init(backing: Dictionary = {}, commit_callable: Callable = Callable(), epoch_callable: Callable = Callable()) -> void:
 	data = backing
 	commit_fn = commit_callable
+	save_epoch_fn = epoch_callable
 
 func is_persistent() -> bool:
 	return commit_fn.is_valid()
+
+## -1 = unknown (no epoch source). Otherwise a counter of completed game saves.
+func save_epoch() -> int:
+	if save_epoch_fn.is_valid():
+		return int(save_epoch_fn.call())
+	return external_epoch
+
+## Connected by save_bridge.gd to Events.progress_changed (emitted after each successful save).
+var external_epoch := -1
+func on_game_saved(_p: Variant = null) -> void:
+	external_epoch = maxi(external_epoch, 0) + 1
 
 func get_value(key: String, default: Variant = null) -> Variant:
 	return data.get(key, default)

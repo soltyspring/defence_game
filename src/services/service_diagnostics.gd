@@ -55,6 +55,10 @@ static func snapshot(bundle: Dictionary) -> Dictionary:
 	if an != null:
 		out["analytics"] = {"enabled": an.enabled, "queued": an.queued(), "stats": an.stats.duplicate(true),
 			"last_reject_reason": an.last_reject_reason}
+	var cf = bundle.get("consent_flow")
+	if cf != null:
+		out["consent_flow"] = {"state": cf.state, "requirement": cf.requirement, "last_code": cf.last_code,
+			"provider": _kind(bundle.get("consent_provider")), "counters": cf.diagnostics.duplicate(true)}
 	var tel = bundle.get("telemetry")
 	if tel != null:
 		out["telemetry"] = tel.stats.duplicate(true)

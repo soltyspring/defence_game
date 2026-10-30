@@ -31,6 +31,9 @@ signal state_changed(state: String)
 ## and ledger stay in memory and are written together by the next successful save.
 signal reward_granted(placement_id: String, reward: Dictionary, context_id: String, persisted: bool)
 signal finished(request_id: int, placement_id: String, code: String)
+## A grant sink broke its contract.
+## kind: ads_sink_saved | ads_sink_saved_then_failed | ads_repair_commit_failed
+signal contract_violation(kind: String)
 
 var provider
 var consent
@@ -47,7 +50,7 @@ var show_timeout_s := 120.0
 var state := IDLE
 var _session := {}
 var _next_request_id := 1
-var diagnostics := {"duplicate_reward": 0, "late_or_stray": 0, "timeouts": 0, "grant_failed": 0}
+var diagnostics := {"duplicate_reward": 0, "late_or_stray": 0, "timeouts": 0, "grant_failed": 0, "contract_violation": 0}
 
 func _init(p_provider, p_consent, p_store, p_clock, p_network, config: Dictionary = {}) -> void:
 	provider = p_provider
@@ -211,15 +214,32 @@ func _grant() -> void:
 	var counts: Dictionary = daily["counts"]
 	counts[pid] = _num(counts.get(pid, 0)) + 1
 	var applied := false
+	var epoch0: int = store.save_epoch()
 	if grant_sink.is_valid():
 		applied = bool(grant_sink.call(pid, reward, ctx))
+	var sink_saved := _sink_saved(epoch0)
+	# Persistent store without a save-epoch source: a sink save cannot be ruled out, so a
+	# failure is handled like saved-then-failed (conservative, no duplicate possible).
+	var cannot_tell: bool = store.is_persistent() and store.save_epoch() < 0
+	if sink_saved and applied:
+		_violation("ads_sink_saved")   # safe thanks to ledger-first, but still a violation
 	if not applied:
-		# Roll back in memory. Nothing was committed by the service.
+		diagnostics.grant_failed += 1
+		_session.grant_failed = true
+		if sink_saved or cannot_tell:
+			# Contract violation (or unknown): the sink saved (our ledger-first entry is on disk) and then
+			# reported failure. We cannot know whether its reward also reached disk. Removing
+			# the ledger could leave reward-without-ledger (duplicate on retry), so keep the
+			# ledger, mark it, and persist that: no duplicate; the player may lose this reward.
+			_ledger()[ctx]["grant_unknown"] = true
+			_violation("ads_sink_saved_then_failed" if sink_saved else "ads_failed_epoch_unknown")
+			if not store.commit():
+				_violation("ads_repair_commit_failed")
+			return
+		# Normal failure: roll back in memory. Nothing was committed by the service.
 		_ledger().erase(ctx)
 		daily.clear()
 		daily.merge(daily_before)
-		diagnostics.grant_failed += 1
-		_session.grant_failed = true
 		return
 	_prune_ledger()
 	_session.granted = true
@@ -264,6 +284,18 @@ func _granted_today(placement_id: String) -> int:
 
 static func _num(v: Variant) -> int:
 	return int(v) if (v is int or v is float) else 0
+
+## Grant-sink contract (SERVICES.md §3): the sink applies the reward in memory and must NOT
+## save. Violations are detected through the store's save epoch, counted, reported via the
+## `contract_violation` signal and push_warning, and handled safely (ledger-first + repair).
+func _sink_saved(epoch0: int) -> bool:
+	var e1: int = store.save_epoch()
+	return epoch0 >= 0 and e1 >= 0 and e1 != epoch0
+
+func _violation(kind: String) -> void:
+	diagnostics.contract_violation = int(diagnostics.get("contract_violation", 0)) + 1
+	push_warning("[Services] grant contract violation: " + kind)
+	contract_violation.emit(kind)
 
 ## Repair a store section loaded from a damaged/edited save. Corrupt ledger entries are kept
 ## (conservative: they still block their context) and re-dated to today so they age out.
