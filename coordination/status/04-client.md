@@ -1,8 +1,6 @@
 # 04-client status
-Updated: 2026-10-31 07:22 +09:00
-Status: IN PROGRESS. The real engine now mounts the 04 UI (headless integration and a secondary-monitor visible run were both verified). Android APK: not built yet.
-Current task: Android debug APK export (templates now present) → emulator install/start evidence.
-Pushed: e62fe86 (UI), e4aa059 (HUD fix + icons + text fit), d7651af (tests), 0b987c9 (build scripts), 8915190 (QA/typography docs + requests).
-Validation: tests/ui/test_ui.gd 2274 pass / 0 fail; tests/integration/test_ui_integration.gd 27/27 pass (real App/BattleSim, no mock); visible run on DISPLAY2 EXIT_0 with OS screen captures.
-Open risks: no bundled Korean font (127/131 chars come from OS fallback, Android unverified); no device; APK not yet built.
-Quota: usage.json 80.7% at 07:03; no ACCOUNT_REQUIRED, not rate limited in this session.
+Updated: 2026-10-31 (checkpoint)
+Status: STOPPED_FOR_ACCOUNT_CHANGE. Waiting for the user to log in. The window is open and no work is in progress.
+Last task: bundled Galmuri font milestone. Code is complete and headless-verified (UI suite 2323/0, real-engine integration 27/27, 0 missing Hangul glyphs). The visual secondary-monitor retest and the QA doc update are NOT done.
+Commit: see the latest "[Feat] 번들 한글 도트 글꼴…" commit by 04-client in git log (published at this checkpoint via Publish-Task.ps1).
+Next steps: see handoffs/04-client.md "Exact next steps".

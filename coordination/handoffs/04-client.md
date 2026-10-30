@@ -1,43 +1,43 @@
-# 04-client handoff
-Updated: 2026-10-31 07:22 +09:00 (resumed once after the rate-limit cooldown as instructed; no retry loop)
+# 04-client handoff — CHECKPOINT (user-requested stop for account change)
+Updated: 2026-10-31 (checkpoint). Session: C:/Users/aghose/.kiro/sessions/48374e8b85ea0326/sess_a24d01e7-e535-413c-9ff6-d5258090820b (Kiro CLI, claude-opus-5.5, trust-all). Window kept open. No new work started after the stop request.
 
-## Read receipts / processed IDs
-BRIEF.md, OWNERSHIP.md (8-worker expansion: tests/acceptance, tests/performance, tests/services are no longer mine; 06 owns ad/IAP adapters in src/services), GIT_WORKFLOW.md, QUALITY_REVIEW.md, WINDOW_STABILITY.md, QUOTA_POLICY.md, coordinator-to-04-client R3/R4/R5/C04/C06, 02-engine-to-04-client R1+R2, 01-director-to-04-client R1+R2, DECISIONS.md D1–D10 (Q1 theme still PENDING), ENGINE.md/INTERFACES.md v1.0, assets/manifest.json + ui_main.json.
-gongmojeon SKILL.md (outside the workspace) not read yet; the hostile-review method was applied below in spirit only.
+## User decisions preserved
+No theme decision exists yet (Q1 PENDING in docs/design/DECISIONS.md; D1–D10 are DEFAULTS, not user approvals). User directives in force: secondary-monitor-only visible tests, per-task commit+push through Publish-Task.ps1, no window restarts, no account switching by workers, apply the gongmojeon reject→fix→retest method.
 
-## Commits (all via Publish-Task.ps1, all PUSHED to origin/main)
-- e62fe86 [Feat] menu/round select/HUD/result + multi-touch input (39 files)
-- e4aa059 [Fix] hud_top.gd parse error (from my own bad batch edit), ui_main atlas icons, Korean text auto-fit, locale auto-detect, engine toast key fallback
-- d7651af [Test] compile gate + Korean typography fit test + real-engine UI integration test
-- 0b987c9 [Chore] tools/build: common.ps1, run_tests.ps1, capture_ui.ps1, visible_launch.ps1
-- 8915190 [Docs] QA_CHECKLIST, TYPOGRAPHY_QA, BUILD_PLAN update, requests to 01/02/03/coordinator
-- (this handoff/status refresh: separate [Docs] commit after 8915190)
+## Current task (interrupted)
+Bundled Korean font milestone: Galmuri11 / Galmuri11-Bold / Galmuri9 from 03 (commit 5e157e3, assets/manifest.json `fonts`), grid sizes 12/24/36 (numerals 10/20), no OS fallback, stable-width numerals, layout fit at narrow/wide sizes.
 
-## Delivered and how it was validated
-| Item | Evidence | Type of evidence |
-|---|---|---|
-| 04 screens compile and mount in the REAL engine (not fallback) | integration test 27/27: App.ui_source == scenes/ui for menu, round_select, hud, result, hud-after-retry; root script paths asserted | headless, real App/BattleSim |
-| Real card deploy, hero hold-move, pause freezes sim time, resume, win → result, retry | same test (deployed 0→1, gold 62→32, hero x 70→127, t frozen at 1.45) | headless, synthetic touches through Viewport GUI |
-| Layout/safe-area/touch-target math | 2100 configurations, test_ui.gd | math only, not a phone |
-| Multi-touch, emulated-mouse dedupe, battlefield pass-through, lifecycle/back | test_ui.gd | synthetic events |
-| Korean text fits narrowest slots | typography_report.json, test_ui.gd | font metrics on Windows fallback font |
-| Visible real game on the secondary monitor only | build/qa/visible/launch_20261031_071349.json: DISPLAY2, first-seen rect -1608,299, verified with MonitorFromWindow, topmost; OS capture screen_20261031_071349_008s.png shows the real r01 HUD over 03 art | real desktop render |
-| Data text keys integrated | all 49 ui./toast. keys now come from data/text (01); FALLBACK_KO only covers gaps | test_ui.gd key check |
+## Done in this task (code complete, headless-verified)
+- src/ui/ui_style.gd: rewrite. Manifest-driven fonts (ui/bold/num) with pixel flags forced at load (no AA, no hinting, no subpixel, no mipmaps/MSDF, allow_system_fallback=false). Galmuri9 falls back to Galmuri11, never to the OS. FONT_* constants are now 12/12/24/36, NUM_S/NUM_L 10/20. `fit_text` only ellipsizes (it no longer shrinks). Whole-pixel drop shadow replaces the 3 px outline. `digit_cell`, `number_width` and `draw_number` give fixed-cell digits.
+- src/ui/touch_button.gd: grid-locked layout (icon / 12 px name / 10 px fixed-cell cost). Skill buttons below 54 px tall show icon+cost only, so skill names are not visible anymore (UX gap, see below). A numeric text is drawn as a big countdown. QA fields `last_text_drawn` / `last_text_truncated`.
+- src/ui/hud.gd: banner Bold 24 with a 2 px shadow; toast/banner labels get a dark strip sized to the text (`_fit_label`); respawn shows a numeric countdown.
+- src/ui/hud_top.gd: gold is right-aligned in a fixed slot sized to the cap's digits; "/cap", income, army and VS use Galmuri9 10; the wave line uses 12 px with ellipsis.
+- src/ui/main_menu.gd, round_select.gd, result.gd: titles Bold 36/24, numbers via draw_number, coin icon from the atlas.
+- tests/ui/test_ui.gd: new typography gate. It checks bundled fonts and flags, glyph coverage of the whole ko/en text tables in Regular AND Bold, fixed digit cells, and Korean fit on 3 layouts (640 notch both, 640, 800 notch); English ellipsis is a WARN.
 
-## Strongest rejection reasons (still open)
-1. P1: no bundled Korean font. 127/131 UI chars rely on OS fallback; Android rendering is unknown (requested from 03 R1).
-2. P1: no APK built yet, so there is no Android evidence of any kind (startup, touch, safe area, font).
-3. No physical-phone check of finger size, legibility at 8–12 logical px, notch, or gesture bar. All touch tests are synthetic.
-4. Tutorial banners, boss HP bar, star-reason display and the upgrade screen are not implemented, although 02 now exposes the fields.
-5. The earlier mock suite passed while hud.gd failed to compile, because Godot skips code after script errors. This is fixed with the compile gate and section-completion checks, and the same scenario was retested: the gate passes now that the scripts compile.
-6. Visual: two white vertical lines in the r01 sky (reported to 02/03). Gold digits are proportional (the readout shifts as numbers change).
+## Validation actually run (after the edits, before the stop)
+- Parse check of all changed src/ui scripts: OK. One inference-warning-as-error in ui_style.gd was fixed.
+- `tests/ui/test_ui.gd` headless: passed=2323 failed=0. Fonts are bundled from res://assets/fonts/Galmuri11.ttf, Galmuri11-Bold.ttf and Galmuri9.ttf. The ko text table has 230 unique characters with 0 missing in Regular and Bold. No Korean label is truncated.
+- English ellipsis: 15 labels (card names at 37–44 px slots, e.g. "Footman" 53 px → "Foo…"; round tiles "Heavy Footsteps" and "Break the Walls"; menu "Select Round"). This is a localisation-expansion defect for 01 (shorter en strings) or for 04 layout. It is not fixed.
+- `tests/integration/test_ui_integration.gd` headless with the real App/BattleSim: passed=27 failed=0. Real scenes were mounted, not the fallback UI.
+- Report file: build/qa/typography_report.json (git-ignored).
 
-## Next tasks (04, in order)
-1. Android debug APK: tools/build/build_android_debug.ps1 → export, apksigner verify, aapt2 badging; then a workspace-local AVD (x86_64 android-36) on the secondary monitor: install, start, logcat, screencap. Record exact blockers if anything fails.
-2. Tutorial banner and boss HP bar from HudSnapshot.boss / BattleInfo.tutorial; star reasons on the result screen.
-3. Switch to the bundled font when 03 delivers it, then re-run the typography and visible captures.
-4. Data validation test (01 R2.1) in tests/data/.
-5. Release pipeline doc + script skeleton (signing via env vars), privacy/data-disclosure notes (06 owns adapters).
+## NOT done / unverified (do not claim)
+- No new visual render of the font change. The secondary-monitor captures of menu/round select/HUD/result at 2× and 3× (1280x720, 1600x720, 1280x800) plus one non-integer case (1600x900 = 2.5×) were not taken after the font change. Pixel regularity of the new text is unverified in the 04 UI.
+- docs/qa/TYPOGRAPHY_QA.md and QA_CHECKLIST.md still describe the OLD fallback-font state (127/131 chars missing). They are stale and must be updated.
+- Requests not yet written: to 02, set `display/window/stretch/scale_mode="integer"` (03 TYPOGRAPHY rule 3; currently not set); to 03, set font .import flags (the current .import has antialiasing=1, hinting=3, subpixel=4, allow_system_fallback=true; 04 overrides them at runtime only).
+- No new APK/AVD work. 02 built build/android/defence-debug.apk at 07:07 (08 measured 55.3 MiB, both arm64 and x86_64). 04 has no install/start evidence of its own.
+- gongmojeon SKILL.md was read. Reject→fix→retest was applied to (a) silent compile failures (fixed with the compile gate; the same scenario was retested) and (b) the font (rejected: OS-fallback Hangul and off-grid 9/18/28 sizes; fixed in code; retest is headless only and the visual retest is pending).
 
-## Dependencies
-02: main/App (OK). 03: font (pending). 01: Q1 theme (pending; text keys are already data-driven). Device: none attached.
+## Commit / push state
+Commits before this task: e62fe86, e4aa059, d7651af, 0b987c9, 8915190, 225abc6 (all PUSHED). This checkpoint: the files listed under "Done in this task" plus this handoff are published by Publish-Task.ps1 as a [Feat] commit. The SHA and push result are in git log and coordination/status/04-client.md. If the push fails, the state is PUSH_PENDING.
+
+## Exact next steps (after login)
+1. Re-read coordinator-to-04-client.md and DECISIONS.md.
+2. Visual retest on the secondary monitor: `tools/build/visible_launch.ps1` (real game) and `tools/build/capture_ui.ps1`. Check pixel-regular text at 2×/3×, the toast strip, the gold slot, and round/result layouts. Note that capture_ui.ps1 opens windows without secondary-monitor placement; route it through visible_launch or add `--screen` first.
+3. Update docs/qa/TYPOGRAPHY_QA.md and QA_CHECKLIST.md with the new numbers; add the licence/credits entry (OFL Galmuri © Lee Minseo) to the UI credits.
+4. Write requests: 02 integer scale_mode; 03 .import font flags; 01 shorter en card/round names or approval of icon-only en cards.
+5. UI gaps to report or implement next: tutorial banner (BattleInfo.tutorial), boss HP bar (HudSnapshot.boss), result star reasons, skill names (no longer shown on 48 px skill buttons), upgrade screen (P1).
+
+## Known failures/risks
+English ellipsis (15 labels); visual pixel regularity unverified; no device evidence; non-integer scale not yet prevented (02 setting).

@@ -397,70 +397,111 @@ func test_menu_and_settings() -> void:
 
 # ---------------------------------------------------------------- typography
 
-## Korean (and English expansion) text fit + glyph coverage, measured with the exact runtime font.
-## ko: any shrink below 8 px or ellipsis is a FAIL. en: ellipsis is reported (warning) for 01/03.
-## Glyph coverage: with a bundled font (manifest fonts.ui) every Hangul char must be in it (FAIL);
-## with Godot's fallback font, Hangul relies on OS fallback → recorded as an open release risk.
+## Typography gate (bundled Galmuri fonts, docs/art/TYPOGRAPHY.md + docs/qa/TYPOGRAPHY_QA.md):
+## - runtime fonts must be the bundled files (no Godot/OS fallback) with pixel flags and
+##   allow_system_fallback = false;
+## - every character of every string in data/text/{ko,en}.json + UI fallbacks exists in Galmuri11
+##   Regular AND Bold (no tofu, no OS substitution); numerals font has 0-9 and +-/.:%;
+## - Korean labels fit their real slots at the real (grid) sizes on narrow AND wide layouts with
+##   no ellipsis (FAIL); English ellipsis is recorded as a localisation-expansion warning;
+## - digit cells are stable (width("111") == width("888")) for resource readouts.
 func test_korean_text_fit() -> void:
 	var UiStyle := load("res://src/ui/ui_style.gd")
-	var f: Font = UiStyle.font()
-	var report := {"font_source": UiStyle.font_source, "locales": {}}
-	# Worst realistic sizes: 640x360, min target 40, notch both sides → narrowest card/skill buttons.
-	var tight := HudLayout.compute(Vector2(640, 360), Rect2(34, 0, 572, 360), 5, 3, 40.0)
-	var card_w: float = (tight.cards[0] as Rect2).size.x - 6
-	var skill_w: float = (tight.skills[0] as Rect2).size.x - 6
+	UiStyle.reset_fonts()
+	var fu: Font = UiStyle.font(&"ui")
+	var fb: Font = UiStyle.font(&"bold")
+	var fnum: Font = UiStyle.font(&"num")
+	var report := {"font_sources": UiStyle.font_sources.duplicate(), "locales": {}, "layouts": {}}
+	for k in [&"ui", &"bold", &"num"]:
+		var src: String = UiStyle.font_sources.get(k, "")
+		check(src.begins_with("bundled:res://assets/fonts/"), "font %s is bundled (%s)" % [k, src])
+		var ff = UiStyle.font(k)
+		check(ff is FontFile and not ff.allow_system_fallback, "font %s: allow_system_fallback=false" % k)
+		if ff is FontFile:
+			check(ff.antialiasing == TextServer.FONT_ANTIALIASING_NONE and ff.hinting == TextServer.HINTING_NONE and ff.subpixel_positioning == TextServer.SUBPIXEL_POSITIONING_DISABLED and not ff.generate_mipmaps and not ff.multichannel_signed_distance_field, "font %s: pixel flags (no AA/hinting/subpixel/mipmaps/MSDF)" % k)
+	# --- stable numerals
+	for kind in [&"num", &"bold"]:
+		var sz: int = UiStyle.NUM_S if kind == &"num" else UiStyle.FONT_M
+		check(UiStyle.number_width("111", sz, kind) == UiStyle.number_width("888", sz, kind), "%s %d px: fixed digit cells (111 vs 888: %.1f / %.1f)" % [kind, sz, UiStyle.number_width("111", sz, kind), UiStyle.number_width("888", sz, kind)])
+		check(UiStyle.number_width("+4.0/s", sz, kind) == UiStyle.number_width("+9.5/s", sz, kind), "%s %d px: income readout width stable" % [kind, sz])
+	for ch in "0123456789+-/.:%xv":
+		check(fnum.has_char(ch.unicode_at(0)), "numerals font has '%s'" % ch)
+	report["digit_cell"] = {"num10": UiStyle.digit_cell(10, &"num"), "bold12": UiStyle.digit_cell(12, &"bold")}
+	# --- slot widths from the real layout code, narrow and wide
+	var layouts := {
+		"640x360_notch_both": HudLayout.compute(Vector2(640, 360), Rect2(34, 0, 572, 360), 5, 3, 40.0),
+		"640x360": HudLayout.compute(Vector2(640, 360), Rect2(0, 0, 640, 360), 5, 3, 40.0),
+		"800x360_notch": HudLayout.compute(Vector2(800, 360), Rect2(34, 0, 766, 360), 5, 3, 48.0),
+	}
+	var items := []   # [key, max_w, size, kind, where]
+	for lname in layouts:
+		var l: Dictionary = layouts[lname]
+		var card_w: float = (l.cards[0] as Rect2).size.x - 6
+		report.layouts[lname] = {"card_w": card_w, "skill_w": (l.skills[0] as Rect2).size.x}
+		for id in ["worker", "melee_basic", "ranged_basic", "tank", "fast", "siege"]:
+			items.append(["unit.%s.name" % id, card_w, 12, &"ui", "card@" + lname])
 	var tile_w := floorf((640 - 2 * 50 - 4 * 6) / 5.0) - 6   # round_select tile at 640 wide
-	var items := []   # [key, max_w, size, where]
-	for id in ["worker", "melee_basic", "ranged_basic", "tank", "fast", "siege"]:
-		items.append(["unit.%s.name" % id, card_w, 9, "card"])
-	for id in ["skill_slam", "skill_rally", "skill_barrage"]:
-		items.append(["skill.%s.name" % id, skill_w, 9, "skill"])
 	for i in range(1, 11):
-		items.append(["round.r%02d.name" % i, tile_w, 10, "round_tile"])
+		items.append(["round.r%02d.name" % i, tile_w, 12, &"ui", "round_tile"])
 	for k in ["ui.resume", "ui.retry", "ui.settings", "ui.menu"]:
-		items.append([k, 150 - 6, 12, "pause_menu"])
+		items.append([k, 150 - 6, 12, &"ui", "pause_menu"])
 	for k in ["ui.menu", "ui.retry", "ui.next"]:
-		items.append([k, floorf((356 - 16) / 3.0) - 6, 12, "result_button"])
+		items.append([k, floorf((356 - 16) / 3.0) - 6, 12, &"ui", "result_button"])
 	for k in ["ui.play", "ui.continue"]:
-		items.append([k, 180 - 6, 18, "menu_primary"])
+		items.append([k, 180 - 6, 24, &"ui", "menu_primary"])
 	for k in ["ui.select_round", "ui.settings"]:
-		items.append([k, 87 - 6, 12, "menu_secondary"])
+		items.append([k, 87 - 6, 12, &"ui", "menu_secondary"])
 	for k in ["ui.fps_cap", "ui.sfx", "ui.music", "ui.show_damage", "ui.screen_shake"]:
-		items.append([k, 360 - 12 - 8 - 2 * 68 - 4, 12, "settings_label"])
+		items.append([k, 356 - 12 - 8 - 2 * 68 - 4, 12, &"ui", "settings_label"])
 	for k in ["toast.not_enough_gold", "toast.army_full", "toast.on_cooldown", "toast.not_enough_mana", "toast.hero_dead", "toast.wave_incoming", "toast.boss_incoming", "toast.worker_max", "ui.save_recovered"]:
-		items.append([k, 560, 12, "toast"])
-	items.append(["ui.quit_confirm", 560, 18, "dialog_title"])
+		items.append([k, 572 - 16, 12, &"ui", "toast"])
+	for k in ["ui.victory", "ui.defeat"]:
+		items.append([k, 356 - 16, 36, &"bold", "result_title"])
+	items.append(["ui.title", 572, 36, &"bold", "menu_title"])
+	items.append(["ui.quit_confirm", 572, 24, &"ui", "dialog_title"])
+	items.append(["ui.boss", 556, 24, &"bold", "banner"])
+	items.append(["ui.select_round", 572 - 160, 24, &"ui", "round_select_title"])
 	for loc in ["ko", "en"]:
 		UiText.load_locale(loc)
 		var rows := []
-		var chars := {}
+		var truncated_n := 0
 		for it in items:
 			var txt: String = UiText.t(it[0])
 			if txt == it[0]:
 				check(false, "[%s] missing text key %s" % [loc, it[0]])
 				continue
-			if it[0] == "ui.wave":
-				txt = txt % [3, 5]
-			var fit: Array = UiStyle.fit_text(txt, it[1], it[2])
+			var fit: Array = UiStyle.fit_text(txt, it[1], it[2], it[3])
 			var truncated: bool = fit[0] != txt
-			var w: float = f.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, it[2]).x
-			rows.append({"key": it[0], "where": it[3], "text": txt, "width_at_size": w, "max_w": it[1], "size": it[2], "fitted_size": fit[1], "truncated": truncated})
+			var w: float = UiStyle.text_width(txt, it[2], it[3])
+			rows.append({"key": it[0], "where": it[4], "text": txt, "width": w, "max_w": it[1], "size": it[2], "font": str(it[3]), "drawn": fit[0], "truncated": truncated})
 			if loc == "ko":
-				check(not truncated and int(fit[1]) >= 8, "[ko] %s '%s' fits %s (w=%.0f max=%.0f → size %d)" % [it[0], txt, it[3], w, it[1], fit[1]])
+				check(not truncated, "[ko] %s '%s' fits %s at %d px (w=%.0f max=%.0f)" % [it[0], txt, it[4], it[2], w, it[1]])
 			elif truncated:
-				print("  WARN [en] %s '%s' ellipsized in %s (w=%.0f max=%.0f)" % [it[0], txt, it[3], w, it[1]])
-			for ch in txt:
+				truncated_n += 1
+				print("  WARN [en] %s '%s' → '%s' in %s (w=%.0f max=%.0f)" % [it[0], txt, fit[0], it[4], w, it[1]])
+		# glyph coverage over the WHOLE text table (any string may be shown), plus UI fallbacks
+		var chars := {}
+		var tj := JSON.new()
+		if tj.parse(FileAccess.get_file_as_string("res://data/text/%s.json" % loc)) == OK:
+			for key in tj.data.get("strings", {}):
+				for ch in str(tj.data.strings[key]):
+					chars[ch] = true
+		for key in UiText.FALLBACK_KO:
+			for ch in str(UiText.FALLBACK_KO[key]):
 				chars[ch] = true
-		var missing := []
+		var miss_u := []
+		var miss_b := []
 		for ch in chars:
 			var code: int = str(ch).unicode_at(0)
-			if code > 32 and not f.has_char(code):
-				missing.append(ch)
-		report.locales[loc] = {"rows": rows, "unique_chars": chars.size(), "missing_in_font": "".join(missing), "missing_count": missing.size()}
-		if UiStyle.font_source.begins_with("bundled"):
-			check(missing.is_empty(), "[%s] bundled font covers all %d UI chars (missing: %s)" % [loc, chars.size(), "".join(missing)])
-		elif not missing.is_empty():
-			print("  RISK [%s] %d/%d UI chars not in runtime font (%s); rendered via OS fallback only. Needs bundled font from 03." % [loc, missing.size(), chars.size(), UiStyle.font_source])
+			if code <= 32:
+				continue
+			if not fu.has_char(code):
+				miss_u.append(ch)
+			if not fb.has_char(code):
+				miss_b.append(ch)
+		check(miss_u.is_empty(), "[%s] Galmuri11 covers all %d chars (missing: %s)" % [loc, chars.size(), "".join(miss_u)])
+		check(miss_b.is_empty(), "[%s] Galmuri11-Bold covers all %d chars (missing: %s)" % [loc, chars.size(), "".join(miss_b)])
+		report.locales[loc] = {"rows": rows, "unique_chars": chars.size(), "missing_regular": "".join(miss_u), "missing_bold": "".join(miss_b), "ellipsized": truncated_n}
 	UiText.load_locale("ko")
 	var out := ProjectSettings.globalize_path("res://build/qa")
 	DirAccess.make_dir_recursive_absolute(out)
@@ -468,5 +509,5 @@ func test_korean_text_fit() -> void:
 	if fa:
 		fa.store_string(JSON.stringify(report, "  "))
 		fa.close()
-	print("[typography] font=%s report=%s" % [UiStyle.font_source, out.path_join("typography_report.json")])
+	print("[typography] fonts=%s ko_chars=%d en_ellipsized=%d report=%s" % [UiStyle.font_sources, report.locales.ko.unique_chars, report.locales.en.ellipsized, out.path_join("typography_report.json")])
 	done["korean_text"] = true
