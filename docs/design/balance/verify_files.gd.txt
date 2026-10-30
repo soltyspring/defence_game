@@ -1,0 +1,35 @@
+extends SceneTree
+## 01-director post-edit verification on the REAL data files (no in-memory changes).
+## Checks: content warnings, competent bot (02 bot skill 2) seed 11 per round, passive bot must lose every round
+## (02 selftest invariant). Run: copy to $env:TEMP\verify_files.gd, then
+##   tools\engine\Godot_v4.7.2-stable_win64_console.exe --headless --path . -s $env:TEMP\verify_files.gd -- <out.json>
+const ContentS := preload("res://src/core/content.gd")
+const SimS := preload("res://src/gameplay/battle_sim.gd")
+const BotS := preload("res://src/gameplay/bot_player.gd")
+
+func _run(sim, bot) -> void:
+	var step := 1.0 / 60.0
+	while not sim.ended and sim.t < 900.0:
+		if bot.skill > 0: bot.act(sim, step)
+		sim.step(step)
+
+func _initialize() -> void:
+	var args := OS.get_cmdline_user_args()
+	var out_path: String = args[0] if args.size() > 0 else "user://verify_files.json"
+	var content = ContentS.new()
+	content.load_all("res://data")
+	var rows := []
+	var passive_ok := true
+	for rid in content.round_order:
+		var s = SimS.new(); s.setup(content, rid, 11); _run(s, BotS.new(2, 11))
+		var p = SimS.new(); p.setup(content, rid, 5); _run(p, BotS.new(0, 5))
+		if p.won or not p.ended: passive_ok = false
+		rows.append({"round": rid, "ai_pool": content.rounds[rid].enemy_ai.get("pool", []),
+			"competent_won": s.won, "competent_t": snappedf(s.t, 0.1), "enemy_spawned": s.stats.enemy_spawned,
+			"passive_won": p.won, "passive_ended": p.ended, "passive_t": snappedf(p.t, 0.1)})
+	var res := {"content_warnings": Array(content.warnings), "passive_all_lose": passive_ok, "rows": rows}
+	var f := FileAccess.open(out_path, FileAccess.WRITE)
+	f.store_string(JSON.stringify(res, " ")); f.close()
+	print("VERIFY_DONE passive_all_lose=", passive_ok, " warnings=", content.warnings.size())
+	content.free()
+	quit(0 if passive_ok and content.warnings.size() == 0 else 1)
