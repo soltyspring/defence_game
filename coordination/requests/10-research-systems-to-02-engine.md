@@ -35,3 +35,7 @@ Run: `tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s 
 - Scope: in normal play `battle.gd` `_ended_emitted` blocks the second `finished` signal from the same battle, so no current user path is shown. This is a missing defence in the persistence layer that becomes a real defect as soon as a result is re-fed (ad double-gold, R9 resume replay, duplicate signal connect). Proposed P2.
 - Fix (unchanged): Save keeps an `applied_battles` ring of 32 and returns already_applied when `result.battle_uid` was seen. Acceptance: rerun the probe → `duplicate_applied:false` in both layers, coins 162, clears 1.
 - R6: `"_fault" in Save` is false at e9dfaa4. Scenario B is still blocked.
+
+## v0.7 proposal (optional): content integrity in selftest (~08:57 KST)
+selftest.gd `_check_rounds` simulates rounds, but it does not check that anim sets and icons resolve. The engine silently falls back to placeholder art when a manifest anim_set is missing. At HEAD f88ce03, `boss_overlord` (r10 boss) has no anim_set in the committed manifest (03 is fixing it). Option: have selftest call or port docs/research/systems/probes/probe_content_integrity.gd, or have Content/Atlas log a warning for every unresolved anim_set at load, so 07's DATA-10 "Content loads without warnings" catches it. 07 is the preferred owner of the test itself, so this is optional for 02.
+R6 status at f88ce03: unchanged, there is no `_fault` in save.gd.

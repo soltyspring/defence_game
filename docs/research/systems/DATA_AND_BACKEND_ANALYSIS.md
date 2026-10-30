@@ -1,5 +1,5 @@
 # 데이터·백엔드 분석: 성공한 디펜스 게임의 온라인 기능과 우리 게임의 최소 설계
-작성: 10-research-systems · 버전 v0.6 (v0.1 증거 보고서, v0.2 §9.1, v0.3 SV-1 실행 재현·§5.8, v0.4~v0.5 회신 추적, v0.6 battle_uid 중복 적용 실행 재현) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
+작성: 10-research-systems · 버전 v0.7 (v0.1 증거 보고서, v0.2 §9.1, v0.3 SV-1 실행 재현·§5.8, v0.4~v0.5 회신 추적, v0.6 battle_uid 중복 적용 재현, v0.7 §9.2 콘텐츠 참조 무결성 프로브) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
 범위: 경쟁작에서 **관찰되는** 온라인 기능, 그 기능의 **공개 문서화된** 기술, **UNKNOWN**, 우리 오프라인 우선 Godot 게임에 필요한 최소 콘텐츠 DB·세이브·거래 계약. 런타임 코드는 수정하지 않았다. 내부 DB나 비공개 구현에 접근한 적 없다. 게임을 직접 플레이하지 않았다(스토어 텍스트·공개 스크린샷만 확인).
 
 ## 0. 현재 판단 (요약)
@@ -373,6 +373,27 @@ JSON 파일을 관계형 테이블로 보면 무결성 규칙이 명확해진다
 | text | data/text/<locale>.json | key | `name_key`/`desc_key`에서 참조 | 01의 ko/en parity 검사 |
 실행한 검증(읽기 전용 PowerShell, 2026-10-31 07:30): 유닛 12개 ID 중복 0, 영웅 스킬 참조 누락 0, r01~r10의 cards/waves/skills/trickle 참조 오류 0, upgrades의 `costs` 길이 = `max_level−1` 위반 0, `unit:` 대상 누락 0. 이 검사는 참조 무결성만 증명한다. 밸런스나 재미는 증명하지 않는다.
 관찰된 설계 위험 [I]: 세이브의 `unlocked_round`가 **순서 인덱스**라서, 라운드를 중간에 끼워 넣으면 이미 깬 라운드가 잠기거나 안 깬 라운드가 열릴 수 있다. v2에서는 진행도를 `rounds{id:{clears}}`에서 파생하는 쪽을 권한다(02/01 결정).
+
+### 9.2 콘텐츠 DB 참조 무결성 프로브 (v0.7, 실행 증거)
+v0.2의 PowerShell 검사(§9.1)는 일회성이었다. 이번에는 다시 실행할 수 있는 Godot 프로브로 바꾸고, 아트 매니페스트와 아이콘까지 범위를 넓혔다.
+- 파일: `docs/research/systems/probes/probe_content_integrity.gd` (`res://` 파일만 읽고 아무것도 쓰지 않는다. ERROR가 있으면 exit 1이라서 그대로 테스트로 쓸 수 있다)
+- 실행 명령: `tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://docs/research/systems/probes/probe_content_integrity.gd --quit-after 600`
+- 검사 항목: 중복 ID(유닛·스킬·영웅·라운드·업그레이드), ID와 파일명 일치, 유닛·스킬·영웅·바이옴·애니메이션 세트·투사체·fx 참조, **엔진이 만드는 아이콘 이름**(`battle_sim.gd`의 `card_<unit_id>`, `skill_<skill_id>`을 `assets/atlases/ui_main.json`에서 확인), 진영(카드는 아군만, 웨이브는 적만), unlock_round, 수치 범위(522개 항목), 웨이브 시각 순서, `order.json`과 `index` 일치, 업그레이드 대상·비용(양수, 감소하지 않음), economy와 game_config 미러 값, caps와 엔진 상한(INTERFACES §2.7의 40/40/64/48/24), 텍스트 참조와 ko/en 키·자리표시자 일치, `schema_version` 존재 여부.
+
+**HEAD 실행 (f88ce03c7c19b14ac2bd3dcd260d1b9eb7cdca4c, 2026-10-31 ~08:55 KST):** 작업 트리에 01(라운드 10개)과 03(manifest, ui_main.json)의 미커밋 변경이 있었다. 그래서 `git archive HEAD`로 data/·assets/manifest.json·assets/atlases/*.json·project.godot만 임시 폴더에 풀었다. 프로젝트 이름을 바꾸고 autoload 섹션을 지운 상태로 실행해, 게임 부팅과 실제 세이브 접근이 없게 했다. 실행 후 임시 폴더는 지웠다.
+| 심각도 | 검사 | 담당 | 내용 |
+|---|---|---|---|
+| **ERROR** | ANIM_REF | 03 | `boss_overlord.anim_set 'boss_overlord'`가 HEAD의 `assets/manifest.json` anim_sets에 없다. r10.json 61행이 이 보스를 소환한다. 따라서 마지막 라운드 보스가 대체 그래픽으로 나온다(대체 경로는 atlas.gd에서 코드로 읽음. 화면은 확인하지 않음) |
+| INFO | VERSION | 01 | data 파일 21개 중 15개(order.json, skills 3개, heroes 1개, rounds 10개)에 `schema_version`이 없다. DATA_SCHEMA는 요구하지 않으므로 결함이 아닌 제안이다. 전역 `game_config.data_version`은 있다 |
+- 요약: `{"counts":{"ERROR":1,"INFO":1,"WARN":0}, "tables":{"units":12,"skills":3,"heroes":1,"rounds":10,"order":10,"text_ko":116,"text_en":116,"anim_sets":32,"ui_frames":103}}`, exit 1.
+- **작업 트리 실행(같은 시각, 01/03 미커밋 변경 포함):** ERROR 0, INFO 1, exit 0. 작업 트리 manifest에는 boss_overlord가 있다(anim_sets 33개). 03 handoff(08:47)도 "boss_overlord art is missing"을 다음 작업 1번으로 적고 있다. 따라서 이 ERROR는 03이 커밋하면 닫힐 가능성이 높다. 판정은 커밋 후 HEAD에서 다시 실행해서 한다.
+
+**프로브 자체 검증(변이 시험):** HEAD 스냅샷을 복사한 뒤 결함 10종을 일부러 넣었다. 유닛 ID 중복, hp=-5, 존재하지 않는 카드 `ghost_unit`, 웨이브 at=9999(범위 초과와 순서 역전), 없는 튜토리얼 키, base_hp_2=1.7, r03 index=7, 없는 스킬, 업그레이드 대상 `unit:nobody`, ui_main의 `card_tank` 제거, en 키 1개 제거. 10종 모두 ERROR로 잡혔고(16줄) exit 1이었다. 프로브가 항상 통과하는 빈 검사가 아니라는 근거다. 변이 폴더도 지웠다.
+
+**기존 검사와의 관계(중복을 피하기 위해 확인):**
+- 07 `tests/acceptance/suite_data.gd` DATA-01~14가 이미 다루는 것: order 존재, 도달 가능성, 유닛·영웅·스킬 교차 참조와 진영, P0 라운드 수치, 유닛 스탯 부호, 텍스트 키 ko/en, 자리표시자, src의 ui/toast 키.
+- 03 `tools/art/validate.py` `check_data_refs`가 따라가는 것은 키 이름이 `sprite`/`vfx`/`fx`/`icon`인 값뿐이다. `anim_set`, `projectile`과 엔진이 만드는 `card_<id>`/`skill_<id>`는 보지 않는다. 그래서 03 검증이 "data refs PASS"를 보고하는 동안에도 boss_overlord 누락이 남아 있었다.
+- 이 프로브만 추가로 잡는 것: ANIM_REF(anim_set, projectile), BIOME_REF, ICON_REF, 업그레이드 대상·비용, MIRROR, caps 상한, index↔order 위치, 웨이브 순서, summon 참조, unlock_round, schema_version. 07/02에는 이 차이만 넣자고 제안한다.
 
 ## 10. 출처 (모두 2026-10-31 KST 접근)
 | ID | 출처 | URL | 한계 |

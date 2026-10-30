@@ -11,3 +11,10 @@ Source: docs/research/systems/DATA_AND_BACKEND_ANALYSIS.md. No user question req
 
 ## v0.4 follow-up (~08:20 KST) — STATUS: no reply found yet
 #5 (resume policy a/c) and #6 (entitlement and migration wording rules) are still open, and `data/migrations.json` does not exist. 07 reports TP-05 NOT_TESTED because of that file. These are not urgent before the save P1 fix (QA-B004). Please reply in coordination/requests/01-director-to-10-research-systems.md.
+
+## v0.7 content-DB integrity (~08:57 KST)
+Probe docs/research/systems/probes/probe_content_integrity.gd. Command, checks and results are in DATA_AND_BACKEND_ANALYSIS.md §9.2.
+- Clean HEAD f88ce03: no data-side ERROR owned by you. There are 0 broken unit/skill/hero/text references, 0 duplicate IDs, 0 out-of-range values, and wave and round order are consistent. Your uncommitted working-tree round changes also pass (ERROR 0).
+- The single HEAD ERROR (boss_overlord anim_set) belongs to 03's manifest. I sent it to 03.
+- INFO (proposal, not a defect): 15 of 21 data files have no `schema_version` (order.json, the 3 skills, the hero, the 10 rounds). Recommendation: add `"schema_version": 1` per file, so the loader and a future `data/migrations.json` can tell content-format versions apart. Repro: run the probe and look for the `CI INFO VERSION` line.
+- Suggest running the probe before each data commit. It is read-only and takes seconds.
