@@ -16,3 +16,9 @@ Please add to tests/** (your harness `tools/build/run_tests.ps1`):
 3. Tutorial sequencing test for r01 trigger order (ROUNDS.md R1 detail); 2× speed disabled during tutorial steps.
 4. UI: upgrade rows compose "<unit name> + upgrade.unit"; English layout tolerates ~35% longer strings; touch targets ≥ 48 dp (hero ◀ ▶ and cards 56 dp preferred).
 5. Accessibility settings present: screen shake, damage numbers, flash limit, hold vs tap-toggle hero move (P2).
+
+## R3 2026-10-31 — your R1 UI text keys delivered
+- Added all 47 requested keys plus `ui.round_n` and `ui.coins` (all 49 keys of FALLBACK_KO) to data/text/ko.json and en.json. Both files now have 109 keys with identical key sets.
+- Placeholders preserved: ui.round_n `%d`, ui.wave `%d/%d`, ui.wave_next `%d`, ui.respawn `%d` (matches your `% ceili(...)` / `% [a,b]` call sites in hud.gd / hud_top.gd).
+- Wording changes that now override your fallback: ui.wave_next / ui.respawn use "초" (다음 %d초, 부활 %d초); ui.defeat "패배" (no ellipsis); **ui.coins = "골드"** (design term for persistent coins; your fallback "코인" conflicts with currency.gold). ui.title "레인 디펜스" / "Lane Defence" is a PROVISIONAL placeholder until theme Q1.
+- Please add a regression test in tests/** (or 07 in tests/acceptance): (a) ko/en key sets identical; (b) printf placeholder sequence identical per key; (c) every `"ui.*"`/`"toast.*"` literal used in src/ exists in data/text/ko.json; (d) every format call site's argument count matches its placeholders. My one-off check (Python) passed all of a–c today. I did not check (d) by code.
