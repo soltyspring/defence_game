@@ -114,13 +114,13 @@ func _draw() -> void:
 		x += 8
 	draw_rect(Rect2(0, h * 0.82, view.x, h * 0.18), Color(0.36, 0.27, 0.18))
 	var tc := Vector2(safe.get_center().x, safe.position.y + safe.size.y * 0.24)
-	UiStyle.draw_text_centered(self, UiText.t("ui.title"), tc, UiStyle.FONT_XL + 8, UiStyle.C_GOLD)
-	UiStyle.draw_text_centered(self, UiText.t("ui.subtitle"), tc + Vector2(0, 30), UiStyle.FONT_M, UiStyle.C_TEXT)
+	UiStyle.draw_text_centered(self, UiText.t("ui.title"), tc, UiStyle.FONT_XL, UiStyle.C_GOLD, true, &"bold")
+	UiStyle.draw_text_centered(self, UiText.t("ui.subtitle"), tc + Vector2(0, 32), UiStyle.FONT_M, UiStyle.C_TEXT)
 	var p := progress()
 	if not UiStyle.draw_ui_icon(self, "icon_gold", Vector2(safe.position.x + 14, safe.position.y + 14)):
 		UiStyle.draw_glyph(self, &"coin", Vector2(safe.position.x + 14, safe.position.y + 14), 5)
-	UiStyle.draw_text_left(self, str(int(p.get("coins", 0))), Vector2(safe.position.x + 24, safe.position.y + 14), UiStyle.FONT_M, UiStyle.C_GOLD)
+	UiStyle.draw_number(self, str(int(p.get("coins", 0))), Vector2(safe.position.x + 25, safe.position.y + 14), UiStyle.FONT_M, UiStyle.C_GOLD, -1, &"bold")
 	var ver := str(ProjectSettings.get_setting("application/config/version", ""))
-	UiStyle.draw_text_left(self, "v" + ver, Vector2(safe.end.x - 40, safe.end.y - 10), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
+	UiStyle.draw_number(self, "v" + ver, Vector2(safe.end.x - 6, safe.end.y - 10), UiStyle.NUM_S, UiStyle.C_TEXT_DIM, 1)
 	if _notice != "":
-		UiStyle.draw_text_centered(self, _notice, Vector2(safe.get_center().x, safe.end.y - 24), UiStyle.FONT_S + 1, UiStyle.C_ACCENT)
+		UiStyle.draw_text_centered(self, _notice, Vector2(safe.get_center().x, safe.end.y - 24), UiStyle.FONT_S, UiStyle.C_ACCENT)

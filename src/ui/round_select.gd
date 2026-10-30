@@ -24,7 +24,7 @@ func _build() -> void:
 	btn_next.glyph = &"right"
 	for i in COLS * ROWS:
 		var t: Control = TouchButton.new()
-		t.font_size = UiStyle.FONT_S + 1
+		t.font_size = UiStyle.FONT_S
 		t.tapped.connect(_on_tile.bind(i))
 		add_child(t)
 		tiles.append(t)
@@ -122,8 +122,9 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, view), UiStyle.C_BG)
 	UiStyle.draw_text_centered(self, UiText.t("ui.select_round"), Vector2(safe.get_center().x, safe.position.y + 4 + maxf(target, 40.0) / 2), UiStyle.FONT_L)
 	var p := progress()
-	UiStyle.draw_glyph(self, &"coin", Vector2(safe.end.x - 70, safe.position.y + 24), 5)
-	UiStyle.draw_text_left(self, str(int(p.get("coins", 0))), Vector2(safe.end.x - 60, safe.position.y + 24), UiStyle.FONT_M, UiStyle.C_GOLD)
+	if not UiStyle.draw_ui_icon(self, "icon_gold", Vector2(safe.end.x - 70, safe.position.y + 24)):
+		UiStyle.draw_glyph(self, &"coin", Vector2(safe.end.x - 70, safe.position.y + 24), 5)
+	UiStyle.draw_number(self, str(int(p.get("coins", 0))), Vector2(safe.end.x - 59, safe.position.y + 24), UiStyle.FONT_M, UiStyle.C_GOLD, -1, &"bold")
 
 ## Overlay drawn on top of each tile (number + stars) via TouchButton.overlay.
 func _ready() -> void:
@@ -133,7 +134,7 @@ func _ready() -> void:
 
 func _draw_tile_overlay(t: Control) -> void:
 	var n := int(t.get_meta("number", 0))
-	UiStyle.draw_text_centered(t, str(n), Vector2(t.size.x / 2, 14), UiStyle.FONT_L, UiStyle.C_TEXT if not t.disabled else UiStyle.C_TEXT_DIM)
+	UiStyle.draw_number(t, str(n), Vector2(t.size.x / 2, 16), UiStyle.FONT_L, UiStyle.C_TEXT if not t.disabled else UiStyle.C_TEXT_DIM, 0, &"bold")
 	if not t.disabled:
 		var st := int(t.get_meta("stars", 0))
 		for k in 3:

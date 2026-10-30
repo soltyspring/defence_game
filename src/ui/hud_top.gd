@@ -8,6 +8,7 @@ const UiText := preload("res://src/ui/ui_text.gd")
 var snap: Dictionary = {}
 var layout: Dictionary = {}
 var round_title := ""
+var gold_slot_debug := Rect2()    # QA: fixed gold number slot
 
 func _init() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -26,11 +27,16 @@ func _draw_resources(r: Rect2) -> void:
 	var y1 := r.position.y + 11
 	if not UiStyle.draw_ui_icon(self, "icon_supply", Vector2(r.position.x + 11, y1)):
 		UiStyle.draw_glyph(self, &"coin", Vector2(r.position.x + 11, y1), 5)
-	var gtxt := "%d" % gold
+	# Stable-width readout: current gold is right-aligned in a slot as wide as the cap's digits,
+	# so "/200" and the income never move while gold ticks (fixed digit cells, Galmuri11 Bold 12).
+	var digits := maxi(3, str(maxi(gmax, gold)).length())
+	var slot := UiStyle.digit_cell(UiStyle.FONT_M, &"bold") * digits
+	var gx := r.position.x + 20
+	UiStyle.draw_number(self, "%d" % gold, Vector2(gx + slot, y1), UiStyle.FONT_M, UiStyle.C_GOLD, 1, &"bold")
 	if gmax > 0:
-		gtxt += "/%d" % gmax
-	UiStyle.draw_text_left(self, gtxt, Vector2(r.position.x + 20, y1), UiStyle.FONT_M, UiStyle.C_GOLD)
-	UiStyle.draw_text_left(self, "+%.1f/s" % income, Vector2(r.end.x - 46, y1), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
+		UiStyle.draw_number(self, "/%d" % gmax, Vector2(gx + slot, y1), UiStyle.NUM_S, UiStyle.C_TEXT_DIM, -1)
+	UiStyle.draw_number(self, "+%.1f/s" % income, Vector2(r.end.x - 6, y1), UiStyle.NUM_S, UiStyle.C_TEXT_DIM, 1)
+	gold_slot_debug = Rect2(gx, y1 - 6, slot, 12)
 	var mana := float(snap.get("mana", 0))
 	var mmax := maxf(1.0, float(snap.get("mana_max", 100)))
 	var y2 := r.position.y + 27
@@ -54,7 +60,7 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 	draw_rect(inner, Color(0.05, 0.05, 0.08))
 	var w := floorf(inner.size.x * clampf(er, 0, 1))
 	draw_rect(Rect2(inner.end.x - w, inner.position.y, w, inner.size.y), UiStyle.C_HP_ENEMY)
-	UiStyle.draw_text_centered(self, "VS", Vector2(r.position.x + half + 9, y + h / 2), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
+	UiStyle.draw_number(self, "VS", Vector2(r.position.x + half + 9, y + h / 2), UiStyle.NUM_S, UiStyle.C_TEXT_DIM, 0)
 	var wave: Dictionary = snap.get("wave", {})
 	var txt := round_title
 	if not wave.is_empty():
@@ -64,7 +70,7 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 			wt += "  " + UiText.t("ui.wave_next") % ceili(next_in)
 		txt = wt if txt == "" else txt + "   " + wt
 	if txt != "":
-		UiStyle.draw_text_centered(self, txt, wr.get_center(), UiStyle.FONT_S + 1, UiStyle.C_TEXT)
+		UiStyle.draw_text_centered(self, UiStyle.fit_text(txt, wr.size.x - 70, UiStyle.FONT_S)[0], wr.get_center(), UiStyle.FONT_S, UiStyle.C_TEXT)
 	var army: Dictionary = snap.get("army", {})
 	if not army.is_empty():
-		UiStyle.draw_text_left(self, "%d/%d" % [int(army.get("player", 0)), int(army.get("cap", 0))], Vector2(r.position.x, wr.get_center().y), UiStyle.FONT_S, UiStyle.C_HP_PLAYER)
+		UiStyle.draw_number(self, "%d/%d" % [int(army.get("player", 0)), int(army.get("cap", 0))], Vector2(r.position.x, wr.get_center().y), UiStyle.NUM_S, UiStyle.C_HP_PLAYER, -1)
