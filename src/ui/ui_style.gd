@@ -1,7 +1,17 @@
 extends RefCounted
-## Pixel UI palette, theme and shared draw helpers. Owner: 04-client.
-## Until 03 publishes a `ui` atlas (assets/manifest.json "ui"), everything is drawn with flat
-## pixel-style boxes so the UI stays readable. When the atlas exists, icons come from Atlas.
+## Pixel UI palette, theme, typography and shared draw helpers. Owner: 04-client.
+## Icons come from the 03 `ui_main` atlas via Atlas; drawn glyphs are only a fallback.
+##
+## Typography (docs/art/TYPOGRAPHY.md, 03; measured in docs/qa/TYPOGRAPHY_QA.md, 04):
+## - Fonts from assets/manifest.json "fonts": ui = Galmuri11, ui_bold = Galmuri11-Bold,
+##   numerals = Galmuri9 (ASCII digits only, NO Hangul).
+## - Sizes are integer multiples of the native grid only: Galmuri11 12/24/36, Galmuri9 10/20.
+##   Hangul is never drawn below 12 px. Text is never shrunk; if it cannot fit, it is ellipsized
+##   (and tests fail for Korean).
+## - Flags forced at load: no antialiasing, no hinting, no subpixel positioning, no mipmaps,
+##   allow_system_fallback = false (a missing glyph shows as tofu in QA instead of a silent OS font).
+## - Contrast via whole-pixel drop shadow (1 px at 12, 2 px at 24+), not fractional outlines.
+## - Resource numbers use fixed digit cells so values do not jitter as they change.
 
 const C_BG := Color(0.09, 0.10, 0.14)
 const C_PANEL := Color(0.13, 0.15, 0.21, 0.92)
@@ -9,7 +19,7 @@ const C_PANEL_LIGHT := Color(0.22, 0.25, 0.33, 0.95)
 const C_EDGE := Color(0.03, 0.03, 0.05)
 const C_HILITE := Color(1, 1, 1, 0.18)
 const C_TEXT := Color(0.96, 0.94, 0.88)
-const C_TEXT_DIM := Color(0.62, 0.64, 0.70)
+const C_TEXT_DIM := Color(0.66, 0.68, 0.74)
 const C_GOLD := Color(1.0, 0.80, 0.25)
 const C_MANA := Color(0.35, 0.65, 1.0)
 const C_HP_PLAYER := Color(0.36, 0.85, 0.42)
@@ -19,24 +29,36 @@ const C_DISABLED := Color(0.30, 0.31, 0.35, 0.92)
 const C_DIM := Color(0, 0, 0, 0.55)
 const C_STAR := Color(1.0, 0.85, 0.2)
 const C_STAR_OFF := Color(0.30, 0.30, 0.36)
+const C_TOAST_BG := Color(0.05, 0.05, 0.08, 0.82)
 
-const FONT_S := 9
+# Galmuri11 grid: 12 / 24 / 36 only.
+const FONT_S := 12
 const FONT_M := 12
-const FONT_L := 18
-const FONT_XL := 28
+const FONT_L := 24
+const FONT_XL := 36
+# Galmuri9 numerals grid: 10 / 20 only.
+const NUM_S := 10
+const NUM_L := 20
+const ALLOWED_SIZES := {&"ui": [12, 24, 36], &"bold": [12, 24, 36], &"num": [10, 20]}
 
 static var _theme: Theme
+static var _fonts: Dictionary = {}          # kind -> Font
+static var font_sources: Dictionary = {}    # kind -> "bundled:<path>" | "fallback"
+static var font_source := ""                # ui font source (kept for older callers/tests)
+static var _digit_cell: Dictionary = {}     # "kind:size" -> cell width
 
 static func theme() -> Theme:
 	if _theme != null:
 		return _theme
 	var th := Theme.new()
 	th.default_font_size = FONT_M
-	th.default_font = font()
+	th.default_font = font(&"ui")
 	for t in ["Label", "Button"]:
 		th.set_color("font_color", t, C_TEXT)
-	th.set_color("font_outline_color", "Label", C_EDGE)
-	th.set_constant("outline_size", "Label", 3)
+	th.set_color("font_shadow_color", "Label", C_EDGE)
+	th.set_constant("shadow_offset_x", "Label", 1)
+	th.set_constant("shadow_offset_y", "Label", 1)
+	th.set_constant("outline_size", "Label", 0)
 	th.set_stylebox("normal", "Button", box(C_PANEL_LIGHT))
 	th.set_stylebox("hover", "Button", box(C_PANEL_LIGHT.lightened(0.1)))
 	th.set_stylebox("pressed", "Button", box(C_ACCENT.darkened(0.3)))
@@ -56,45 +78,156 @@ static func box(fill: Color, border := C_EDGE, bw := 2) -> StyleBoxFlat:
 	s.anti_aliasing = false
 	return s
 
-static var _font: Font
-static var font_source := ""      # "bundled:<path>" or "fallback" (evidence for typography report)
+# ------------------------------------------------------------------ fonts
 
-## UI font: assets/manifest.json "fonts"."ui" (03-owned, OFL Korean+Latin font) when present,
-## otherwise Godot's fallback font (Hangul then comes from OS system-font fallback, which is NOT
-## guaranteed on every Android device; see docs/qa/TYPOGRAPHY_QA.md).
-static func font() -> Font:
-	if _font != null:
-		return _font
-	var path := ""
-	if FileAccess.file_exists("res://assets/manifest.json"):
-		var j := JSON.new()
-		if j.parse(FileAccess.get_file_as_string("res://assets/manifest.json")) == OK and j.data is Dictionary:
-			var fonts = j.data.get("fonts", {})
-			if fonts is Dictionary:
-				var ui = fonts.get("ui", "")
-				path = str(ui.get("path", "")) if ui is Dictionary else str(ui)
+static func _manifest_fonts() -> Dictionary:
+	if not FileAccess.file_exists("res://assets/manifest.json"):
+		return {}
+	var j := JSON.new()
+	if j.parse(FileAccess.get_file_as_string("res://assets/manifest.json")) != OK or not (j.data is Dictionary):
+		return {}
+	var f = j.data.get("fonts", {})
+	return f if f is Dictionary else {}
+
+static func _path_of(v: Variant) -> String:
+	if v is Dictionary:
+		return str(v.get("path", ""))
+	return str(v) if v != null else ""
+
+static func _pixel_flags(f: Font) -> void:
+	if f is FontFile:
+		var ff := f as FontFile
+		ff.antialiasing = TextServer.FONT_ANTIALIASING_NONE
+		ff.hinting = TextServer.HINTING_NONE
+		ff.subpixel_positioning = TextServer.SUBPIXEL_POSITIONING_DISABLED
+		ff.multichannel_signed_distance_field = false
+		ff.generate_mipmaps = false
+		ff.allow_system_fallback = false
+
+## kind: &"ui" (Galmuri11), &"bold" (Galmuri11-Bold), &"num" (Galmuri9 digits; falls back to ui).
+static func font(kind: StringName = &"ui") -> Font:
+	if _fonts.has(kind):
+		return _fonts[kind]
+	var mf := _manifest_fonts()
+	var key: String = {&"ui": "ui", &"bold": "ui_bold", &"num": "numerals"}.get(kind, "ui")
+	var path := _path_of(mf.get(key, ""))
+	var f: Font = null
 	if path != "" and ResourceLoader.exists(path):
-		var f = load(path)
-		if f is Font:
-			_font = f
-			font_source = "bundled:" + path
-			return _font
-	_font = ThemeDB.fallback_font
-	font_source = "fallback"
-	return _font
+		var r = load(path)
+		if r is Font:
+			f = r
+			_pixel_flags(f)
+			font_sources[kind] = "bundled:" + path
+	if f == null:
+		if kind != &"ui":
+			f = font(&"ui")             # bold/num missing → regular bundled font
+			font_sources[kind] = "alias:ui"
+		else:
+			f = ThemeDB.fallback_font
+			font_sources[kind] = "fallback"
+	_fonts[kind] = f
+	if kind == &"num" and f is FontFile and font_sources[kind].begins_with("bundled"):
+		# digits-only font: any other char (e.g. Hangul) comes from Galmuri11, never from the OS
+		(f as FontFile).fallbacks = [font(&"ui")]
+	if kind == &"ui":
+		font_source = font_sources[kind]
+	return f
 
-## Shrinks font size (down to min_size) then ellipsizes so text fits max_w. Returns [text, size].
-static func fit_text(text: String, max_w: float, size: int, min_size := 8) -> Array:
-	var f := font()
-	var s := size
-	while s > min_size and f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, s).x > max_w:
-		s -= 1
-	if f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, s).x <= max_w:
-		return [text, s]
+static func reset_fonts() -> void:
+	_fonts.clear()
+	font_sources.clear()
+	_digit_cell.clear()
+	_theme = null
+
+static func shadow_px(size: int) -> int:
+	return 2 if size >= 24 else 1
+
+## Ellipsizes (never shrinks: the pixel grid forbids arbitrary sizes) so text fits max_w.
+## Returns [text, size] (size returned unchanged, kept for call-site compatibility).
+static func fit_text(text: String, max_w: float, size: int, kind: StringName = &"ui") -> Array:
+	var f := font(kind)
+	if f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x <= max_w:
+		return [text, size]
 	var t := text
-	while t.length() > 1 and f.get_string_size(t + "…", HORIZONTAL_ALIGNMENT_LEFT, -1, s).x > max_w:
+	while t.length() > 1 and f.get_string_size(t + "…", HORIZONTAL_ALIGNMENT_LEFT, -1, size).x > max_w:
 		t = t.substr(0, t.length() - 1)
-	return [t + "…", s]
+	return [t + "…", size]
+
+static func text_width(text: String, size: int, kind: StringName = &"ui") -> float:
+	return font(kind).get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
+
+static func _baseline_y(f: Font, center_y: float, size: int) -> float:
+	return roundf(center_y - f.get_height(size) / 2.0 + f.get_ascent(size))
+
+static func _draw_shadowed(ci: CanvasItem, f: Font, pos: Vector2, text: String, size: int, color: Color, shadow: bool) -> void:
+	if shadow:
+		var s := shadow_px(size)
+		ci.draw_string(f, pos + Vector2(s, s), text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, Color(C_EDGE, color.a))
+	ci.draw_string(f, pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, color)
+
+static func draw_text_centered(ci: CanvasItem, text: String, center: Vector2, size: int, color := C_TEXT, shadow := true, kind: StringName = &"ui") -> void:
+	var f := font(kind)
+	var w := f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
+	_draw_shadowed(ci, f, Vector2(roundf(center.x - w / 2.0), _baseline_y(f, center.y, size)), text, size, color, shadow)
+
+static func draw_text_left(ci: CanvasItem, text: String, left_mid: Vector2, size: int, color := C_TEXT, kind: StringName = &"ui") -> void:
+	var f := font(kind)
+	_draw_shadowed(ci, f, Vector2(roundf(left_mid.x), _baseline_y(f, left_mid.y, size)), text, size, color, true)
+
+# ------------------------------------------------------------------ stable-width numerals
+
+static func _is_numeric(text: String) -> bool:
+	for ch in text:
+		if ch.unicode_at(0) > 127:
+			return false
+	return true
+
+## Width of one digit cell = widest of 0-9 at this size, so "111" and "888" have the same width.
+static func digit_cell(size: int, kind: StringName = &"num") -> float:
+	var k := "%s:%d" % [kind, size]
+	if _digit_cell.has(k):
+		return _digit_cell[k]
+	var f := font(kind)
+	var w := 0.0
+	for d in 10:
+		w = maxf(w, f.get_char_size(48 + d, size).x)
+	_digit_cell[k] = w
+	return w
+
+static func number_width(text: String, size: int, kind: StringName = &"num") -> float:
+	var f := font(kind)
+	var cell := digit_cell(size, kind)
+	var w := 0.0
+	for ch in text:
+		var c := ch.unicode_at(0)
+		w += cell if c >= 48 and c <= 57 else f.get_char_size(c, size).x
+	return w
+
+## Draw a number string with fixed digit cells. align: -1 left edge at anchor.x, 0 centred, 1 right edge.
+## Non-ASCII text (e.g. "최대") is routed to Galmuri11 12 px (Hangul minimum) instead.
+static func draw_number(ci: CanvasItem, text: String, anchor: Vector2, size: int, color := C_TEXT, align := 0, kind: StringName = &"num") -> void:
+	if not _is_numeric(text):
+		if align == 0:
+			draw_text_centered(ci, text, anchor, FONT_S, color)
+		else:
+			var w0 := text_width(text, FONT_S)
+			draw_text_left(ci, text, Vector2(anchor.x - (w0 if align == 1 else 0.0), anchor.y), FONT_S, color)
+		return
+	var f := font(kind)
+	var cell := digit_cell(size, kind)
+	var w := number_width(text, size, kind)
+	var x := anchor.x - (w / 2.0 if align == 0 else (w if align == 1 else 0.0))
+	x = roundf(x)
+	var by := _baseline_y(f, anchor.y, size)
+	for ch in text:
+		var c := ch.unicode_at(0)
+		var cw := f.get_char_size(c, size).x
+		var adv := cell if c >= 48 and c <= 57 else cw
+		var gx := roundf(x + (adv - cw) / 2.0)    # centre narrow digits (e.g. "1") in the cell
+		_draw_shadowed(ci, f, Vector2(gx, by), ch, size, color, true)
+		x += adv
+
+# ------------------------------------------------------------------ shapes
 
 ## Pixel-style bevelled box: dark edge, fill, 1px top highlight.
 static func draw_pixel_box(ci: CanvasItem, r: Rect2, fill: Color, pressed := false) -> void:
@@ -115,20 +248,6 @@ static func draw_bar(ci: CanvasItem, r: Rect2, ratio: float, fill: Color) -> voi
 	if w > 0:
 		ci.draw_rect(Rect2(inner.position, Vector2(w, inner.size.y)), fill)
 		ci.draw_rect(Rect2(inner.position, Vector2(w, 1)), fill.lightened(0.35))
-
-static func draw_text_centered(ci: CanvasItem, text: String, center: Vector2, size: int, color := C_TEXT, outline := true) -> void:
-	var f := font()
-	var ts := f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size)
-	var pos := Vector2(roundf(center.x - ts.x / 2.0), roundf(center.y + f.get_ascent(size) / 2.0 - 1))
-	if outline:
-		ci.draw_string_outline(f, pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, 3, C_EDGE)
-	ci.draw_string(f, pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, color)
-
-static func draw_text_left(ci: CanvasItem, text: String, left_mid: Vector2, size: int, color := C_TEXT) -> void:
-	var f := font()
-	var pos := Vector2(roundf(left_mid.x), roundf(left_mid.y + f.get_ascent(size) / 2.0 - 1))
-	ci.draw_string_outline(f, pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, 3, C_EDGE)
-	ci.draw_string(f, pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, color)
 
 static func draw_star(ci: CanvasItem, c: Vector2, r: float, on: bool) -> void:
 	var pts := PackedVector2Array()
@@ -165,7 +284,8 @@ static func draw_glyph(ci: CanvasItem, glyph: StringName, c: Vector2, s: float, 
 		_:
 			ci.draw_circle(c, s * 0.6, color)
 
-## Icon texture from the 03 atlas via the Atlas autoload (INTERFACES.md §4), or null.
+# ------------------------------------------------------------------ atlas icons
+
 static var _icon_cache: Dictionary = {}
 
 ## Frame from the always-resident UI atlas (manifest "ui".atlas, default ui_main). Cached; null if absent.
@@ -199,6 +319,8 @@ static func draw_ui_icon(ci: CanvasItem, frame: String, c: Vector2, k := 1.0, mo
 	var sz := t.get_size() * k
 	ci.draw_texture_rect(t, Rect2((c - sz / 2).round(), sz), false, modulate)
 	return true
+
+## Icon texture from the 03 atlas via the Atlas autoload (INTERFACES.md §4), or null.
 static func icon_texture(icon: Variant) -> Texture2D:
 	if not (icon is Dictionary) or not icon.has("atlas") or not icon.has("frame"):
 		return null

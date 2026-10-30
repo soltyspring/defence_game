@@ -73,7 +73,10 @@ func _build() -> void:
 	btn_worker.fill = Color(0.30, 0.26, 0.16, 0.95)
 
 	toast_label = _make_label(UiStyle.FONT_M)
-	banner_label = _make_label(UiStyle.FONT_XL)
+	banner_label = _make_label(UiStyle.FONT_L)
+	banner_label.add_theme_font_override("font", UiStyle.font(&"bold"))
+	banner_label.add_theme_constant_override("shadow_offset_x", 2)
+	banner_label.add_theme_constant_override("shadow_offset_y", 2)
 	banner_label.add_theme_color_override("font_color", UiStyle.C_ACCENT)
 
 	_build_pause_layer()
@@ -88,6 +91,15 @@ func _make_label(fs: int) -> Label:
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	l.add_theme_font_size_override("font_size", fs)
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	l.add_theme_font_override("font", UiStyle.font(&"ui"))
+	var bg := StyleBoxFlat.new()          # dark strip behind toasts/banners for contrast on bright sky
+	bg.bg_color = UiStyle.C_TOAST_BG
+	bg.content_margin_left = 8
+	bg.content_margin_right = 8
+	bg.content_margin_top = 2
+	bg.content_margin_bottom = 2
+	l.add_theme_stylebox_override("normal", bg)
+	l.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	l.modulate.a = 0.0
 	add_child(l)
 	return l
@@ -198,7 +210,7 @@ func _on_snapshot(s: Dictionary) -> void:
 	for b in [btn_left, btn_right]:
 		b.disabled = dead
 		b.badge = ""
-	btn_left.text = UiText.t("ui.respawn") % ceili(float(hero.get("respawn", 0))) if dead else ""
+	btn_left.text = str(ceili(float(hero.get("respawn", 0)))) if dead else ""   # big fixed-cell countdown
 	btn_left.font_size = UiStyle.FONT_S
 	btn_left.queue_redraw(); btn_right.queue_redraw()
 	var wave: Dictionary = s.get("wave", {})
@@ -305,11 +317,28 @@ func show_toast(text: String) -> void:
 	toast_label.text = text
 	toast_label.modulate.a = 1.0
 	_toast_left = TOAST_SECONDS
+	_fit_label(toast_label, layout.get("toast", Rect2()))
 
 func show_banner(text: String) -> void:
 	banner_label.text = text
 	banner_label.modulate.a = 1.0
 	_banner_left = 1.8
+	_fit_label(banner_label, layout.get("banner", Rect2()))
+
+## Centre the label in `area`, sized to its text (+ stylebox margins) so the dark strip hugs the text.
+## Text wider than the area is ellipsized (no font shrinking on the pixel grid).
+func _fit_label(l: Label, area: Rect2) -> void:
+	if area.size == Vector2.ZERO:
+		return
+	var fs := l.get_theme_font_size("font_size")
+	var f := l.get_theme_font("font")
+	var fit := UiStyle.fit_text(l.text, area.size.x - 16, fs, &"bold" if f == UiStyle.font(&"bold") else &"ui")
+	if fit[0] != l.text:
+		l.text = fit[0]
+	var w := ceilf(f.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x) + 16
+	var h := ceilf(f.get_height(fs)) + 4
+	l.size = Vector2(w, h)
+	l.position = Vector2(roundf(area.get_center().x - w / 2), roundf(area.get_center().y - h / 2))
 
 func _process(delta: float) -> void:
 	if _toast_left > 0:
@@ -335,8 +364,8 @@ func _layout() -> void:
 		place(card_buttons[i], layout.cards[i])
 	for i in skill_buttons.size():
 		place(skill_buttons[i], layout.skills[i])
-	place(toast_label, layout.toast)
-	place(banner_label, layout.banner)
+	_fit_label(toast_label, layout.toast)
+	_fit_label(banner_label, layout.banner)
 	place(pause_layer, Rect2(Vector2.ZERO, view))
 	var bw := 150.0
 	var bh := maxf(target, 40.0)

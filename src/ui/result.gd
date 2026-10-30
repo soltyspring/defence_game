@@ -78,7 +78,7 @@ func _draw() -> void:
 	UiStyle.draw_pixel_box(self, panel, UiStyle.C_PANEL)
 	var won := bool(result.get("won", false))
 	var cx := panel.get_center().x
-	UiStyle.draw_text_centered(self, UiText.t("ui.victory") if won else UiText.t("ui.defeat"), Vector2(cx, panel.position.y + 28), UiStyle.FONT_XL, UiStyle.C_GOLD if won else UiStyle.C_HP_ENEMY)
+	UiStyle.draw_text_centered(self, UiText.t("ui.victory") if won else UiText.t("ui.defeat"), Vector2(cx, panel.position.y + 30), UiStyle.FONT_XL, UiStyle.C_GOLD if won else UiStyle.C_HP_ENEMY, true, &"bold")
 	var stars := int(result.get("stars", 0)) if won else 0
 	for k in 3:
 		# stars pop in one by one
@@ -95,7 +95,7 @@ func _draw() -> void:
 	var y := panel.position.y + 104
 	for l in lines:
 		UiStyle.draw_text_left(self, l[0], Vector2(panel.position.x + 40, y), UiStyle.FONT_M, UiStyle.C_TEXT_DIM)
-		UiStyle.draw_text_left(self, l[1], Vector2(cx + 20, y), UiStyle.FONT_M, UiStyle.C_TEXT)
+		UiStyle.draw_number(self, l[1], Vector2(panel.end.x - 40, y), UiStyle.FONT_M, UiStyle.C_TEXT, 1, &"bold")
 		y += 18
 	if bool(result.get("first_clear", false)) and won:
 		UiStyle.draw_text_centered(self, UiText.t("ui.first_clear"), Vector2(cx, y + 4), UiStyle.FONT_M, UiStyle.C_ACCENT)
