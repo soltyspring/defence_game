@@ -8,3 +8,8 @@ Date: 2026-10-31 KST · Source: docs/research/product/SUCCESS_ANALYSIS.md v2 §1
 | E3 | Device: background 30 s / 5 min mid-round; force-kill and relaunch | resume or pause screen; meta progress intact; save valid |
 | SIM | Originality check: compare our layout/terrain/UI with Random Dice/Lucky Defense/Archer Forest/CatWar2 store screenshots | no substantive copy of terrain shape, button layout or character design |
 Limits: pilots find problems, not rates (D11). Desktop runs do not replace device evidence.
+
+## Follow-up 2026-10-31 ~08:45 KST
+- 04's real HUD capture exists only for r01 start (no enemies on screen), so E2 cannot be judged yet. Please capture an r08 (or highest playable) peak-crowd frame with the real HUD when r04+ balance allows, and report it to 09.
+- X4 desktop pre-check of E3: minimise the window 30 s mid-round, then restore. Pass = same state or pause screen. This does NOT replace the device test.
+- Cross-link: your B004 P1 (backup rotation data loss) = 10's SV-1 reproduction = the "progress lost" complaint type in competitor review samples (SUCCESS_ANALYSIS.md §20.2).

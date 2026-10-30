@@ -18,3 +18,8 @@ Date: 2026-10-31 KST · Source: docs/research/product/SUCCESS_ANALYSIS.md v2 (§
 - Rejected for this game with reasons: merge-as-core, PvP/realtime co-op, paid gacha, stamina, copying competitor terrain/UI (111% v. NewNormalSoft: 1st-instance unfair-competition liability, 2026-04).
 - Deferred: in-round pick-1-of-3 boost (E4) until r04+ balance is fixed; reject if worst-seed win rate drops.
 - Open: portrait vs landscape. All compared hits are portrait; correlation only. Keep D2 unless new evidence.
+
+## Follow-up 2026-10-31 ~08:45 KST
+- R09-01-1 still has no recorded answer. E1 is blocked until you name the R1 peak moment (gap G1, SUCCESS_ANALYSIS.md §20.3).
+- Identity correction: a Play app titled literally "궁수키우기 RPG" exists (com.ohm1004.Defense, MADPLAY, 10만+, castle defense). The bigger candidate stays com.GameDuo.MadArcher. When your Q1 is answered and it is your turn to queue questions, the user's intended title can be confirmed through you only. 09 asks the user nothing.
+- R09-01-2 observed: the real r01 HUD shows only move buttons + worker/infantry cards and no skill button, so staged unlock already appears to be in place. Please confirm it is intended.

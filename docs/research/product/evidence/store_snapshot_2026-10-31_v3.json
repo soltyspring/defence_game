@@ -1,0 +1,10 @@
+{
+  "_about": "09 v3 추가 확인. Google Play hl=ko gl=KR 상세 페이지를 2026-10-31 ~08:30 KST에 직접 받아 추출. 후보 목록 출처는 10-research-systems DATA_AND_BACKEND_ANALYSIS §2. 원문 HTML·스크린샷은 저장소에 넣지 않음.",
+  "literal_title_candidates": [
+    {"package": "com.ohm1004.Defense", "title": "궁수키우기 RPG", "developer": "MADPLAY", "installs_bucket": "10만+", "rating": 4.6, "reviews_shown": "5.9천", "updated": "2026-10-18", "ads": true, "iap": true, "iap_range": "항목당 ₩2,200 - ₩49,000", "category": "전략", "orientation_observed": "portrait (3/3 screenshots 405x720)"},
+    {"package": "com.juokstudio.archer", "title": "궁수키우기 : 스틱맨RPG", "developer": "JU-OK STUDIO", "installs_bucket": "1만+", "rating": 4.2, "updated": "2026-10-31"},
+    {"package": "kr.minigame.archer", "title": "궁수 키우기", "developer": "Kafra", "installs_bucket": "10+", "updated": "2026-10-30"},
+    {"package": "com.jumongarcher.defense", "title": "궁수 키우기: 성벽전투", "developer": "Jong1", "installs_bucket": "10+", "updated": "2026-10-04"}
+  ],
+  "not_rechecked_by_09": ["com.rp.archer", "com.springgames.archercastle"]
+}
