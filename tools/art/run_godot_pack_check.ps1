@@ -30,7 +30,9 @@ try { $log = & $G --headless --main-pack "$tmp\out\check.pck" -- --pack-check 2>
 $line = $log | Where-Object { "$_" -like 'ART_PACK_JSON *' } | Select-Object -Last 1
 $log | ForEach-Object { "$_".TrimEnd() } | Out-File -Encoding utf8 "$out\pack_run.log"
 if (!$line) { throw "no ART_PACK_JSON line; see $out\pack_run.log" }
-$json = "$line".Substring(14)
+# read the UTF-8 file written by check.gd (stdout can mangle Hangul via the console code page)
+$ud = Join-Path $env:APPDATA 'Godot\app_userdata\defence-art-check\pack_check.json'
+$json = if (Test-Path $ud) { [IO.File]::ReadAllText($ud, [Text.Encoding]::UTF8) } else { "$line".Substring(14) }
 $pck = Get-Item "$tmp\out\check.pck"
 $rep = $json | ConvertFrom-Json
 $rep | Add-Member -NotePropertyName pck_bytes -NotePropertyValue $pck.Length

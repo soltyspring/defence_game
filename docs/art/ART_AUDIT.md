@@ -28,3 +28,11 @@ Round 1 · 2026-10-31. Method adapted from the gongmojeon skill (QUALITY_REVIEW.
 
 ## Not evidence (do not cite as proof)
 Desktop GPU numbers, emulated-device SubViewports, and my own visual judgement are not phone tests or player tests. Android device captures (04/07) and device profiling (08) are required before release.
+
+## Round 2 (2026-10-31 08:30) — r04–r07 roster
+| ID | Observed problem | Evidence | Player impact | Sev | Owner | Fix | Acceptance check | Recheck result | Status |
+|---|---|---|---|---|---|---|---|---|---|
+| A12 | fast/siege/e_brute/e_bomber/boss_warlord had no art (procedural placeholders) | 08 RESOURCE_INVENTORY; data/units/units.json anim_set refs | Placeholder shapes in r04–r07, more draw commands | P1 | 03 | Original sprites on 3 roster pages (tools/art/chars_r04.py) | All data art refs present except boss_overlord; validate PASS; export-pack load | 9/9 pages load from PCK; only `boss_overlord` missing | **Fixed (art)**. Runtime recapture pending 02 |
+| A13 | First catapult draft: banner at the rear, arm resting forward, so it looked aimed at its own base | WIP sheet r1 (not committed) | Reads as facing the wrong way | P2 | 03 | Banner moved to the front, arm rests at the rear and flings forward-up | Release frame bucket points toward the enemy | sheets/siege.png | **Fixed** |
+| A14 | First brute draft used grunt green and teal; teal is close to the ally blue | WIP r1/r2 | Faction confusion | P2 | 03 | Dark moss green + bark plates; no blue | Enemy-hue only; distinct from grunt by bulk | battle_mock_2x.png | **Fixed** |
+| A15 | Brute/warlord shorter than 01 guidance (32 vs ~36, ~45 vs ~52 px) | height measurement in this session | Boss slightly less imposing | P3 | 03/01 | Flagged to 01 (A2); bulk carries the threat | 01 accepts or asks for taller | — | Open (01) |

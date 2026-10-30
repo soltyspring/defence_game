@@ -1,0 +1,436 @@
+{
+ "schema": "defence.atlas/1",
+ "atlas": "char_boss_warlord",
+ "image": "char_boss_warlord.png",
+ "image_res": "res://assets/atlases/char_boss_warlord.png",
+ "size": [
+  512,
+  512
+ ],
+ "padding": 2,
+ "extrude": 1,
+ "group": "character",
+ "load_policy": "battle_roster",
+ "note": "boss_warlord (r05+). Own page: boss pixels resident only in boss rounds.",
+ "filter": "nearest",
+ "mipmaps": false,
+ "repeat": false,
+ "gpu_format": "RGBA8 (lossless, no VRAM compression)",
+ "gpu_bytes": 1048576,
+ "disk_bytes": 6492,
+ "unique_regions": 24,
+ "occupancy": 0.375,
+ "frames": {
+  "boss_warlord/idle/0": {
+   "x": 3,
+   "y": 71,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/idle/1": {
+   "x": 411,
+   "y": 3,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/idle/2": {
+   "x": 3,
+   "y": 275,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/idle/3": {
+   "x": 3,
+   "y": 411,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/walk/0": {
+   "x": 71,
+   "y": 139,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/walk/1": {
+   "x": 207,
+   "y": 71,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/walk/2": {
+   "x": 71,
+   "y": 3,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/walk/3": {
+   "x": 343,
+   "y": 3,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/walk/4": {
+   "x": 3,
+   "y": 3,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/walk/5": {
+   "x": 275,
+   "y": 3,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/attack/0": {
+   "x": 71,
+   "y": 207,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/attack/1": {
+   "x": 3,
+   "y": 139,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/attack/2": {
+   "x": 275,
+   "y": 71,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/attack/3": {
+   "x": 71,
+   "y": 275,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/attack/4": {
+   "x": 411,
+   "y": 71,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/attack/5": {
+   "x": 71,
+   "y": 343,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/hit/0": {
+   "x": 343,
+   "y": 71,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/hit/1": {
+   "x": 71,
+   "y": 411,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/death/0": {
+   "x": 343,
+   "y": 71,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/death/1": {
+   "x": 3,
+   "y": 207,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/death/2": {
+   "x": 71,
+   "y": 71,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/death/3": {
+   "x": 139,
+   "y": 3,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/death/4": {
+   "x": 3,
+   "y": 343,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/death/5": {
+   "x": 207,
+   "y": 3,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/death/6": {
+   "x": 139,
+   "y": 71,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/die/0": {
+   "x": 343,
+   "y": 71,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/die/1": {
+   "x": 3,
+   "y": 207,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/die/2": {
+   "x": 71,
+   "y": 71,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/die/3": {
+   "x": 139,
+   "y": 3,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/die/4": {
+   "x": 3,
+   "y": 343,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/die/5": {
+   "x": 207,
+   "y": 3,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/die/6": {
+   "x": 139,
+   "y": 71,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  }
+ },
+ "anims": {
+  "boss_warlord": {
+   "idle": {
+    "frames": [
+     "boss_warlord/idle/0",
+     "boss_warlord/idle/1",
+     "boss_warlord/idle/2",
+     "boss_warlord/idle/3"
+    ],
+    "fps": 4,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "boss_warlord/walk/0",
+     "boss_warlord/walk/1",
+     "boss_warlord/walk/2",
+     "boss_warlord/walk/3",
+     "boss_warlord/walk/4",
+     "boss_warlord/walk/5"
+    ],
+    "fps": 7,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "boss_warlord/attack/0",
+     "boss_warlord/attack/1",
+     "boss_warlord/attack/2",
+     "boss_warlord/attack/3",
+     "boss_warlord/attack/4",
+     "boss_warlord/attack/5"
+    ],
+    "fps": 9,
+    "loop": false,
+    "hit_frame": 3,
+    "events": {
+     "hit": 3
+    }
+   },
+   "hit": {
+    "frames": [
+     "boss_warlord/hit/0",
+     "boss_warlord/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "boss_warlord/death/0",
+     "boss_warlord/death/1",
+     "boss_warlord/death/2",
+     "boss_warlord/death/3",
+     "boss_warlord/death/4",
+     "boss_warlord/death/5",
+     "boss_warlord/death/6"
+    ],
+    "fps": 7,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "boss_warlord/die/0",
+     "boss_warlord/die/1",
+     "boss_warlord/die/2",
+     "boss_warlord/die/3",
+     "boss_warlord/die/4",
+     "boss_warlord/die/5",
+     "boss_warlord/die/6"
+    ],
+    "fps": 7,
+    "loop": false
+   }
+  }
+ },
+ "anim_sets_meta": {
+  "boss_warlord": {
+   "frame_size": [
+    64,
+    64
+   ],
+   "pivot": [
+    28,
+    63
+   ],
+   "facing": "right",
+   "faction": "enemy",
+   "kind": "character"
+  }
+ }
+}

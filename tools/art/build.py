@@ -36,7 +36,7 @@ from preview import anim_sheet, checker  # noqa: E402
 ATLAS_DIR = os.path.join(ROOT, "assets", "atlases")
 REL_ATLAS = "assets/atlases"
 PREV = os.path.join(ROOT, "docs", "art", "previews")
-ART_VERSION = "0.4.0"
+ART_VERSION = "0.5.0"
 
 REQUIRED_CHAR_ANIMS = ("idle", "walk", "attack", "death")
 
@@ -75,6 +75,19 @@ def build():
         an = add_char(ce, sid, body, fn, "enemy")
         sheets[sid] = (an, body.W, body.H, (body.px, body.H - 1))
     pages.append(ce)
+
+    # --- r04+ roster: separate pages so r01-r03 battles don't hold these pixels (08 A1) ---
+    import chars_r04
+    for aid, group_map, faction, note in [
+        ("char_player_adv", chars_r04.PLAYER, "player", "fast (r04+), siege (r06+). Acquire only when in roster."),
+        ("char_enemy_adv", chars_r04.ENEMY, "enemy", "e_brute (r04+), e_bomber (r07+). Acquire only when in roster."),
+        ("char_boss_warlord", chars_r04.BOSS, "enemy", "boss_warlord (r05+). Own page: boss pixels resident only in boss rounds."),
+    ]:
+        pg = atl.Atlas(aid, "character", "battle_roster", note)
+        for sid, (body, fn) in group_map.items():
+            an = add_char(pg, sid, body, fn, faction)
+            sheets[sid] = (an, body.W, body.H, (body.px, body.H - 1))
+        pages.append(pg)
 
     # --- bases ---------------------------------------------------------------
     bp = atl.Atlas("bases", "base", "battle", "Both bases, 3 damage states each. NOT flipped by engine.")
@@ -130,11 +143,11 @@ def build():
     up.add_image("btn_move_right", ui.move_button(1).a)
     up.add_image("btn_move_left", ui.move_button(-1).a)
     # portraits for deploy cards (01 unit ids) and enemies (wave preview)
-    card_map = {k: k for k in ("worker", "melee_basic", "ranged_basic", "tank", "hero_captain")}
+    card_map = {k: k for k in ("worker", "melee_basic", "ranged_basic", "tank", "fast", "siege", "hero_captain")}
     for uid, sid in card_map.items():
         fr = sheets[sid][0]["idle"]["frames"][0].a
         up.add_image("card_" + uid, ui.portrait(fr).a)
-    for eid, sid in {k: k for k in ("e_grunt", "e_swarm", "e_spitter")}.items():
+    for eid, sid in {k: k for k in ("e_grunt", "e_swarm", "e_spitter", "e_brute", "e_bomber", "boss_warlord")}.items():
         fr = sheets[sid][0]["idle"]["frames"][0].a
         up.add_image("portrait_" + eid, ui.portrait(fr, bg="p", rim="P", hi="V").a)
     pages.append(up)
@@ -218,7 +231,7 @@ def write_manifest(pages, docs, layer_meta):
         "icons": {
             "resource": {"in_round_currency": "icon_gold (alias icon_supply)", "skill_energy": "icon_mana (alias icon_energy)",
                          "worker": "icon_worker", "meta_currency_candidate": "icon_gem"},
-            "cards": "card_<unit_id> (worker, melee_basic, ranged_basic, tank, hero_captain)",
+            "cards": "card_<unit_id> (worker, melee_basic, ranged_basic, tank, fast, siege, hero_captain)",
             "skills": "icon_<skill_id> and skill_<skill_id>",
             "enemy_portraits": "portrait_<enemy_id>",
         },
@@ -297,10 +310,10 @@ def battle_mock(sheets, meadow, docs):
     mk = {k: Image.fromarray(RGBA[v.a], "RGBA") for k, v in fx.shadows().items() if k.startswith("marker_")}
     put("base_player", "idle", 0, 40)
     put("base_enemy", "damaged", 0, 600)
-    ally = [("worker", "work", 3, 92), ("tank", "walk", 1, 190), ("melee_basic", "attack", 2, 260),
-            ("melee_basic", "walk", 3, 232), ("ranged_basic", "attack", 1, 205), ("hero_captain", "attack", 3, 300)]
-    enemy = [("e_grunt", "attack", 2, 335), ("e_swarm", "walk", 1, 360), ("e_grunt", "walk", 2, 390),
-             ("e_spitter", "attack", 2, 430), ("e_swarm", "walk", 3, 452)]
+    ally = [("worker", "work", 3, 92), ("siege", "idle", 0, 140), ("tank", "walk", 1, 190), ("fast", "walk", 2, 230), ("melee_basic", "attack", 2, 260),
+            ("ranged_basic", "attack", 1, 205), ("hero_captain", "attack", 3, 300)]
+    enemy = [("e_grunt", "attack", 2, 335), ("e_bomber", "walk", 1, 358), ("e_brute", "walk", 2, 388),
+             ("e_spitter", "attack", 2, 425), ("e_swarm", "walk", 3, 452), ("boss_warlord", "walk", 1, 500)]
     for sid, a, fi, x in ally + enemy:
         img.alpha_composite(shadow, (x - 10, ground_y - 3))
     for sid, a, fi, x in ally:

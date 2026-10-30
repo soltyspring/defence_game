@@ -64,6 +64,7 @@ class Body:
     back_item: callable = None   # fn(cv, anchors, pose, body)  drawn before everything
     blink_px: list = field(default_factory=list)  # [(x,y,key)] in head coords for blink
     outline: str = "K"
+    boot_w: int = 1              # foot extends boot_w px forward of the ankle
 
 
 def _hip(body: Body, pose: Pose):
@@ -93,11 +94,11 @@ def draw_leg(cv: Canvas, body: Body, hip, foot, back: bool):
     sh = c(body.leg_shade)
     cv.thick_line(hip[0], hip[1], foot[0], foot[1] - 1, col, t=body.leg_t, shade=None if back else sh)
     boot = c(body.boot_col)
-    # boot: 3 px forward-pointing foot, 1-2 px tall
+    # boot: forward-pointing foot, 2 px tall; boot_w=1 -> classic 3 px foot
     fx, fy = foot
-    cv.hline(fx - 1, fx + 1, fy, boot)
-    cv.put(fx - 1, fy - 1, boot)
-    cv.put(fx, fy - 1, boot)
+    bw = getattr(body, "boot_w", 1)
+    cv.hline(fx - 1, fx + bw, fy, boot)
+    cv.hline(fx - 1, fx + bw - 1, fy - 1, boot)
 
 
 def draw_arm(cv: Canvas, body: Body, sh, hand, back: bool):

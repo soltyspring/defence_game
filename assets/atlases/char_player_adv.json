@@ -1,0 +1,673 @@
+{
+ "schema": "defence.atlas/1",
+ "atlas": "char_player_adv",
+ "image": "char_player_adv.png",
+ "image_res": "res://assets/atlases/char_player_adv.png",
+ "size": [
+  512,
+  256
+ ],
+ "padding": 2,
+ "extrude": 1,
+ "group": "character",
+ "load_policy": "battle_roster",
+ "note": "fast (r04+), siege (r06+). Acquire only when in roster.",
+ "filter": "nearest",
+ "mipmaps": false,
+ "repeat": false,
+ "gpu_format": "RGBA8 (lossless, no VRAM compression)",
+ "gpu_bytes": 524288,
+ "disk_bytes": 5331,
+ "unique_regions": 33,
+ "occupancy": 0.4,
+ "frames": {
+  "fast/idle/0": {
+   "x": 247,
+   "y": 39,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/idle/1": {
+   "x": 247,
+   "y": 75,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/walk/0": {
+   "x": 247,
+   "y": 183,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/walk/1": {
+   "x": 159,
+   "y": 47,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/walk/2": {
+   "x": 247,
+   "y": 111,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/walk/3": {
+   "x": 159,
+   "y": 83,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/walk/4": {
+   "x": 203,
+   "y": 155,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/walk/5": {
+   "x": 203,
+   "y": 83,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/attack/0": {
+   "x": 203,
+   "y": 47,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/attack/1": {
+   "x": 247,
+   "y": 147,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/attack/2": {
+   "x": 255,
+   "y": 3,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/attack/3": {
+   "x": 203,
+   "y": 191,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/hit/0": {
+   "x": 159,
+   "y": 191,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/hit/1": {
+   "x": 247,
+   "y": 75,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/death/0": {
+   "x": 159,
+   "y": 191,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/death/1": {
+   "x": 159,
+   "y": 155,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/death/2": {
+   "x": 159,
+   "y": 119,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/death/3": {
+   "x": 203,
+   "y": 119,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/death/4": {
+   "x": 211,
+   "y": 3,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/die/0": {
+   "x": 159,
+   "y": 191,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/die/1": {
+   "x": 159,
+   "y": 155,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/die/2": {
+   "x": 159,
+   "y": 119,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/die/3": {
+   "x": 203,
+   "y": 119,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "fast/die/4": {
+   "x": 211,
+   "y": 3,
+   "w": 40,
+   "h": 32,
+   "pivot": [
+    18,
+    31
+   ]
+  },
+  "siege/idle/0": {
+   "x": 107,
+   "y": 47,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/idle/1": {
+   "x": 55,
+   "y": 135,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/walk/0": {
+   "x": 107,
+   "y": 47,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/walk/1": {
+   "x": 55,
+   "y": 47,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/walk/2": {
+   "x": 107,
+   "y": 179,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/walk/3": {
+   "x": 3,
+   "y": 91,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/attack/0": {
+   "x": 107,
+   "y": 47,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/attack/1": {
+   "x": 55,
+   "y": 91,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/attack/2": {
+   "x": 55,
+   "y": 179,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/attack/3": {
+   "x": 159,
+   "y": 3,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/attack/4": {
+   "x": 55,
+   "y": 3,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/attack/5": {
+   "x": 107,
+   "y": 91,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/hit/0": {
+   "x": 3,
+   "y": 3,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/hit/1": {
+   "x": 107,
+   "y": 47,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/death/0": {
+   "x": 3,
+   "y": 47,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/death/1": {
+   "x": 3,
+   "y": 179,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/death/2": {
+   "x": 107,
+   "y": 3,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/death/3": {
+   "x": 3,
+   "y": 135,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/death/4": {
+   "x": 107,
+   "y": 135,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/die/0": {
+   "x": 3,
+   "y": 47,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/die/1": {
+   "x": 3,
+   "y": 179,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/die/2": {
+   "x": 107,
+   "y": 3,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/die/3": {
+   "x": 3,
+   "y": 135,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  },
+  "siege/die/4": {
+   "x": 107,
+   "y": 135,
+   "w": 48,
+   "h": 40,
+   "pivot": [
+    22,
+    39
+   ]
+  }
+ },
+ "anims": {
+  "fast": {
+   "idle": {
+    "frames": [
+     "fast/idle/0",
+     "fast/idle/1"
+    ],
+    "fps": 4,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "fast/walk/0",
+     "fast/walk/1",
+     "fast/walk/2",
+     "fast/walk/3",
+     "fast/walk/4",
+     "fast/walk/5"
+    ],
+    "fps": 14,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "fast/attack/0",
+     "fast/attack/1",
+     "fast/attack/2",
+     "fast/attack/3"
+    ],
+    "fps": 10,
+    "loop": false,
+    "hit_frame": 1,
+    "events": {
+     "hit": 1
+    }
+   },
+   "hit": {
+    "frames": [
+     "fast/hit/0",
+     "fast/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "fast/death/0",
+     "fast/death/1",
+     "fast/death/2",
+     "fast/death/3",
+     "fast/death/4"
+    ],
+    "fps": 8,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "fast/die/0",
+     "fast/die/1",
+     "fast/die/2",
+     "fast/die/3",
+     "fast/die/4"
+    ],
+    "fps": 8,
+    "loop": false
+   }
+  },
+  "siege": {
+   "idle": {
+    "frames": [
+     "siege/idle/0",
+     "siege/idle/1"
+    ],
+    "fps": 2,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "siege/walk/0",
+     "siege/walk/1",
+     "siege/walk/2",
+     "siege/walk/3"
+    ],
+    "fps": 8,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "siege/attack/0",
+     "siege/attack/1",
+     "siege/attack/2",
+     "siege/attack/3",
+     "siege/attack/4",
+     "siege/attack/5"
+    ],
+    "fps": 10,
+    "loop": false,
+    "hit_frame": 3,
+    "events": {
+     "hit": 3
+    },
+    "points": {
+     "projectile_spawn": [
+      37,
+      1
+     ]
+    }
+   },
+   "hit": {
+    "frames": [
+     "siege/hit/0",
+     "siege/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "siege/death/0",
+     "siege/death/1",
+     "siege/death/2",
+     "siege/death/3",
+     "siege/death/4"
+    ],
+    "fps": 8,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "siege/die/0",
+     "siege/die/1",
+     "siege/die/2",
+     "siege/die/3",
+     "siege/die/4"
+    ],
+    "fps": 8,
+    "loop": false
+   }
+  }
+ },
+ "anim_sets_meta": {
+  "fast": {
+   "frame_size": [
+    40,
+    32
+   ],
+   "pivot": [
+    18,
+    31
+   ],
+   "facing": "right",
+   "faction": "player",
+   "kind": "character"
+  },
+  "siege": {
+   "frame_size": [
+    48,
+    40
+   ],
+   "pivot": [
+    22,
+    39
+   ],
+   "facing": "right",
+   "faction": "player",
+   "kind": "character"
+  }
+ }
+}

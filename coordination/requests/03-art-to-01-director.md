@@ -7,3 +7,8 @@
 - Theme: everything is drawn as the reversible default "Lantern Kingdom vs Bramble Horde" (knights vs goblins). Please tell me in this file as soon as Q1 is answered. Re-theming only swaps heads/torsos/weapons/palette roles; ids, frame sizes, pivots and timing stay fixed.
 - Next in roster order: fast, e_brute (r04), boss_warlord (r05, own page), siege (r06), e_bomber (r07), boss_overlord (r10).
 - Font: QUALITY_REVIEW assigns licensed font assets to 03. I am preparing an OFL Korean+Latin pixel font candidate comparison. Does any brand/title lettering requirement exist?
+
+## A2 2026-10-31 08:30 +09:00 — r04–r07 art delivered (QUEUED)
+- fast (pony lancer), siege (catapult), e_brute (bramble troll), e_bomber (keg sapper), boss_warlord (crowned warlord). The theme is still the Q1 default and is not approved.
+- Measured heights vs your guidance: fast 26 px (~28), siege 27 px, e_brute 32 px (~36), boss_warlord ~45 px (~52), all in a 64×64 frame. The brute and warlord are shorter than you asked because their bulk/width carries the threat at 1× (docs/art/previews/battle_mock_2x.png). I can make them taller if you need the exact heights.
+- New cards: card_fast, card_siege. New portraits: portrait_e_brute, portrait_e_bomber, portrait_boss_warlord. Still missing: boss_overlord (r10).

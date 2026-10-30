@@ -1,0 +1,733 @@
+{
+ "schema": "defence.atlas/1",
+ "atlas": "char_enemy_adv",
+ "image": "char_enemy_adv.png",
+ "image_res": "res://assets/atlases/char_enemy_adv.png",
+ "size": [
+  512,
+  256
+ ],
+ "padding": 2,
+ "extrude": 1,
+ "group": "character",
+ "load_policy": "battle_roster",
+ "note": "e_brute (r04+), e_bomber (r07+). Acquire only when in roster.",
+ "filter": "nearest",
+ "mipmaps": false,
+ "repeat": false,
+ "gpu_format": "RGBA8 (lossless, no VRAM compression)",
+ "gpu_bytes": 524288,
+ "disk_bytes": 5105,
+ "unique_regions": 40,
+ "occupancy": 0.527,
+ "frames": {
+  "e_brute/idle/0": {
+   "x": 55,
+   "y": 55,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/idle/1": {
+   "x": 3,
+   "y": 55,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/idle/2": {
+   "x": 211,
+   "y": 159,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/idle/3": {
+   "x": 3,
+   "y": 107,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/walk/0": {
+   "x": 55,
+   "y": 159,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/walk/1": {
+   "x": 107,
+   "y": 107,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/walk/2": {
+   "x": 211,
+   "y": 55,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/walk/3": {
+   "x": 107,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/walk/4": {
+   "x": 159,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/walk/5": {
+   "x": 3,
+   "y": 159,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/attack/0": {
+   "x": 107,
+   "y": 55,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/attack/1": {
+   "x": 315,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/attack/2": {
+   "x": 159,
+   "y": 107,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/attack/3": {
+   "x": 211,
+   "y": 107,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/attack/4": {
+   "x": 159,
+   "y": 159,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/hit/0": {
+   "x": 55,
+   "y": 107,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/hit/1": {
+   "x": 107,
+   "y": 159,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/death/0": {
+   "x": 55,
+   "y": 107,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/death/1": {
+   "x": 263,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/death/2": {
+   "x": 55,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/death/3": {
+   "x": 211,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/death/4": {
+   "x": 3,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/death/5": {
+   "x": 159,
+   "y": 55,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/die/0": {
+   "x": 55,
+   "y": 107,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/die/1": {
+   "x": 263,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/die/2": {
+   "x": 55,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/die/3": {
+   "x": 211,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/die/4": {
+   "x": 3,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_brute/die/5": {
+   "x": 159,
+   "y": 55,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    21,
+    47
+   ]
+  },
+  "e_bomber/idle/0": {
+   "x": 327,
+   "y": 55,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/idle/1": {
+   "x": 367,
+   "y": 3,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/walk/0": {
+   "x": 183,
+   "y": 211,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/walk/1": {
+   "x": 291,
+   "y": 55,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/walk/2": {
+   "x": 147,
+   "y": 211,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/walk/3": {
+   "x": 367,
+   "y": 39,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/walk/4": {
+   "x": 475,
+   "y": 39,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/walk/5": {
+   "x": 403,
+   "y": 39,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/attack/0": {
+   "x": 255,
+   "y": 211,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/attack/1": {
+   "x": 39,
+   "y": 211,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/attack/2": {
+   "x": 75,
+   "y": 211,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/hit/0": {
+   "x": 439,
+   "y": 3,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/hit/1": {
+   "x": 219,
+   "y": 211,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/death/0": {
+   "x": 439,
+   "y": 3,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/death/1": {
+   "x": 403,
+   "y": 3,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/death/2": {
+   "x": 111,
+   "y": 211,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/death/3": {
+   "x": 439,
+   "y": 39,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/death/4": {
+   "x": 3,
+   "y": 211,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/death/5": {
+   "x": 475,
+   "y": 3,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/die/0": {
+   "x": 439,
+   "y": 3,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/die/1": {
+   "x": 403,
+   "y": 3,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/die/2": {
+   "x": 111,
+   "y": 211,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/die/3": {
+   "x": 439,
+   "y": 39,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/die/4": {
+   "x": 3,
+   "y": 211,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "e_bomber/die/5": {
+   "x": 475,
+   "y": 3,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  }
+ },
+ "anims": {
+  "e_brute": {
+   "idle": {
+    "frames": [
+     "e_brute/idle/0",
+     "e_brute/idle/1",
+     "e_brute/idle/2",
+     "e_brute/idle/3"
+    ],
+    "fps": 4,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "e_brute/walk/0",
+     "e_brute/walk/1",
+     "e_brute/walk/2",
+     "e_brute/walk/3",
+     "e_brute/walk/4",
+     "e_brute/walk/5"
+    ],
+    "fps": 7,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "e_brute/attack/0",
+     "e_brute/attack/1",
+     "e_brute/attack/2",
+     "e_brute/attack/3",
+     "e_brute/attack/4"
+    ],
+    "fps": 8,
+    "loop": false,
+    "hit_frame": 3,
+    "events": {
+     "hit": 3
+    }
+   },
+   "hit": {
+    "frames": [
+     "e_brute/hit/0",
+     "e_brute/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "e_brute/death/0",
+     "e_brute/death/1",
+     "e_brute/death/2",
+     "e_brute/death/3",
+     "e_brute/death/4",
+     "e_brute/death/5"
+    ],
+    "fps": 7,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "e_brute/die/0",
+     "e_brute/die/1",
+     "e_brute/die/2",
+     "e_brute/die/3",
+     "e_brute/die/4",
+     "e_brute/die/5"
+    ],
+    "fps": 7,
+    "loop": false
+   }
+  },
+  "e_bomber": {
+   "idle": {
+    "frames": [
+     "e_bomber/idle/0",
+     "e_bomber/idle/1"
+    ],
+    "fps": 6,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "e_bomber/walk/0",
+     "e_bomber/walk/1",
+     "e_bomber/walk/2",
+     "e_bomber/walk/3",
+     "e_bomber/walk/4",
+     "e_bomber/walk/5"
+    ],
+    "fps": 14,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "e_bomber/attack/0",
+     "e_bomber/attack/1",
+     "e_bomber/attack/2"
+    ],
+    "fps": 10,
+    "loop": false,
+    "hit_frame": 1,
+    "events": {
+     "hit": 1
+    }
+   },
+   "hit": {
+    "frames": [
+     "e_bomber/hit/0",
+     "e_bomber/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "e_bomber/death/0",
+     "e_bomber/death/1",
+     "e_bomber/death/2",
+     "e_bomber/death/3",
+     "e_bomber/death/4",
+     "e_bomber/death/5"
+    ],
+    "fps": 8,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "e_bomber/die/0",
+     "e_bomber/die/1",
+     "e_bomber/die/2",
+     "e_bomber/die/3",
+     "e_bomber/die/4",
+     "e_bomber/die/5"
+    ],
+    "fps": 8,
+    "loop": false
+   }
+  }
+ },
+ "anim_sets_meta": {
+  "e_brute": {
+   "frame_size": [
+    48,
+    48
+   ],
+   "pivot": [
+    21,
+    47
+   ],
+   "facing": "right",
+   "faction": "enemy",
+   "kind": "character"
+  },
+  "e_bomber": {
+   "frame_size": [
+    32,
+    32
+   ],
+   "pivot": [
+    13,
+    31
+   ],
+   "facing": "right",
+   "faction": "enemy",
+   "kind": "character"
+  }
+ }
+}

@@ -42,6 +42,10 @@ func _ready() -> void:
 		var img := at.get_image()
 		_report["pack_frame_image"] = [img.get_width(), img.get_height()] if img else []
 		_report["fonts"] = _font_report()
+		var fa := FileAccess.open(OS.get_user_data_dir() + "/pack_check.json", FileAccess.WRITE)
+		if fa:
+			fa.store_string(JSON.stringify(_report))
+			fa.close()
 		print("ART_PACK_JSON " + JSON.stringify(_report))
 		get_tree().quit(0)
 		return

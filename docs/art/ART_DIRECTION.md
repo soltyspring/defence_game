@@ -1,5 +1,5 @@
 # ART_DIRECTION.md — visual identity and asset contract (owner: 03-art)
-Art version 0.4.0 · 2026-10-31 · Status: **initial production pack, theme still PROVISIONAL** (Q1 pending in coordination/requests/USER_QUESTION.md). The default theme below is a reversible working assumption. The user has not approved it.
+Art version 0.5.0 · 2026-10-31 · Status: **initial production pack, theme still PROVISIONAL** (Q1 pending in coordination/requests/USER_QUESTION.md). The default theme below is a reversible working assumption. The user has not approved it.
 
 ## 1. How the art is made (provenance)
 - Tool inventory on this machine: Python 3.11.9, Pillow 11.2.1, numpy 2.2.4. There are **no** image-generation, Aseprite or ImageMagick tools. Godot 4.7.2 is in tools/engine (owned by 02).
@@ -37,6 +37,11 @@ Art version 0.4.0 · 2026-10-31 · Status: **initial production pack, theme stil
 | e_spitter | char_enemy | 32×32 | idle 4, walk 6, attack 4@10 (hit 2, projectile_spawn), hit 2, death 6 |
 | e_swarm (beetle) | char_enemy | 32×24 (~16 px tall) | idle 2, walk 4@14, attack 3@10 (hit 1), hit 2, death 5 |
 | base_player / base_enemy | bases | 96×128 | idle 2@3, damaged 2@5, ruined 2@5 (+ static frame `base_player` / `base_enemy`) |
+| fast (pony lancer) | char_player_adv | 40×32 (~26 px) | idle 2@4, walk 6@14 (gallop), attack 4@10 (hit 1), hit 2, death 5 |
+| siege (catapult) | char_player_adv | 48×40 (~27 px) | idle 2@2, walk 4@8 (wheels turn), attack 6@10 (hit 3 = release, projectile_spawn), hit 2, death 5 |
+| e_brute (bramble troll) | char_enemy_adv | 48×48 (~32 px) | idle 4@4, walk 6@7, attack 5@8 (hit 3, ground cracks), hit 2, death 6 |
+| e_bomber (keg sapper) | char_enemy_adv | 32×32 (~17 px + keg) | idle 2@6, walk 6@14 (fuse flicker), attack 3@10 (hit 1; engine plays `explosion`), hit 2, death 6 |
+| boss_warlord | char_boss_warlord | 64×64 (~45 px) | idle 4@4, walk 6@7, attack 6@9 (hit 3, purple cleave arc + ground cue), hit 2, death 7 |
 | prop_mine | bases | 48×32 | idle 2@3 (worker destination behind the keep, static frame `prop_mine`) |
 | arrow, tower_bolt, spit, rock | fx_combat | small | fly |
 | hit_spark, hit_spit, explosion, death_poof, dust, spawn | fx_combat | | play |
@@ -44,7 +49,8 @@ Art version 0.4.0 · 2026-10-31 · Status: **initial production pack, theme stil
 
 Every character also has `die`, an alias of `death` that shares its frames (01 data uses `die`). Death = hurt → kneel → lying (a lossless 90° rotation) → ordered-dither dissolve, so it needs no alpha fade.
 
-Missing (backlog, in roster order): fast, siege, e_brute, e_bomber, boss_warlord, boss_overlord, 2nd/3rd biome. The engine draws fallbacks until they exist.
+Missing (backlog): boss_overlord (r10, planned own page `char_boss_overlord`), 2nd/3rd biome.
+Role cues at 1× (09 R09-03-1): lancer = horse + blue pennant; catapult = wheeled frame + arm; brute = double bulk, dark moss skin, log club; bomber = orange bandana + keg with flickering fuse (the only orange enemy accent = danger); warlord = gold thorn crown, purple cape, cleaver, 2.3× grunt height. The engine draws fallbacks until they exist.
 
 ## 6. UI art (`ui_main`, always resident)
 Icons: `icon_gold` (alias `icon_supply`), `icon_mana` (alias `icon_energy`), `icon_worker`, `icon_gem` (meta-currency candidate), `icon_star`, `icon_star_empty`, `icon_heart`, `icon_lock`, `icon_pause`, `icon_play`, `icon_speed_1x/2x`, `icon_settings`, `icon_home`, `icon_retry`, `icon_close`, `icon_sound`, `icon_sound_off`, `icon_skull`, `icon_crown`, `icon_army`.

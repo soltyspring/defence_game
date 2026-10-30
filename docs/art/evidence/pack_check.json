@@ -60,6 +60,36 @@
       "size_ok": true
     },
     {
+      "frames": 48,
+      "id": "char_player_adv",
+      "loaded": true,
+      "size": [
+        512,
+        256
+      ],
+      "size_ok": true
+    },
+    {
+      "frames": 54,
+      "id": "char_enemy_adv",
+      "loaded": true,
+      "size": [
+        512,
+        256
+      ],
+      "size_ok": true
+    },
+    {
+      "frames": 32,
+      "id": "char_boss_warlord",
+      "loaded": true,
+      "size": [
+        512,
+        512
+      ],
+      "size_ok": true
+    },
+    {
       "frames": 17,
       "id": "bases",
       "loaded": true,
@@ -80,7 +110,7 @@
       "size_ok": true
     },
     {
-      "frames": 98,
+      "frames": 103,
       "id": "ui_main",
       "loaded": true,
       "size": [
@@ -102,5 +132,5 @@
   ],
   "raw_png_present": false,
   "remap_present": true,
-  "pck_bytes": 1172452
+  "pck_bytes": 1218828
 }

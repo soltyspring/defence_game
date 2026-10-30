@@ -1,6 +1,6 @@
 {
  "version": 1,
- "art_version": "0.4.0",
+ "art_version": "0.5.0",
  "schema": "INTERFACES.md §5.1 (02-engine) + additive keys",
  "pixel_scale": 1,
  "reference_view": [
@@ -88,6 +88,62 @@
    "image_frames": 0
   },
   {
+   "id": "char_player_adv",
+   "group": "character",
+   "load_policy": "battle_roster",
+   "image": "res://assets/atlases/char_player_adv.png",
+   "frames": "res://assets/atlases/char_player_adv.json",
+   "size": [
+    512,
+    256
+   ],
+   "disk_bytes": 5331,
+   "gpu_bytes": 524288,
+   "biome": "",
+   "anim_sets": [
+    "fast",
+    "siege"
+   ],
+   "image_frames": 0
+  },
+  {
+   "id": "char_enemy_adv",
+   "group": "character",
+   "load_policy": "battle_roster",
+   "image": "res://assets/atlases/char_enemy_adv.png",
+   "frames": "res://assets/atlases/char_enemy_adv.json",
+   "size": [
+    512,
+    256
+   ],
+   "disk_bytes": 5105,
+   "gpu_bytes": 524288,
+   "biome": "",
+   "anim_sets": [
+    "e_bomber",
+    "e_brute"
+   ],
+   "image_frames": 0
+  },
+  {
+   "id": "char_boss_warlord",
+   "group": "character",
+   "load_policy": "battle_roster",
+   "image": "res://assets/atlases/char_boss_warlord.png",
+   "frames": "res://assets/atlases/char_boss_warlord.json",
+   "size": [
+    512,
+    512
+   ],
+   "disk_bytes": 6492,
+   "gpu_bytes": 1048576,
+   "biome": "",
+   "anim_sets": [
+    "boss_warlord"
+   ],
+   "image_frames": 0
+  },
+  {
    "id": "bases",
    "group": "base",
    "load_policy": "battle",
@@ -150,11 +206,11 @@
     256,
     256
    ],
-   "disk_bytes": 4685,
+   "disk_bytes": 5508,
    "gpu_bytes": 262144,
    "biome": "",
    "anim_sets": [],
-   "image_frames": 98
+   "image_frames": 103
   },
   {
    "id": "biome_meadow",
@@ -182,6 +238,11 @@
   "e_grunt": "char_enemy",
   "e_spitter": "char_enemy",
   "e_swarm": "char_enemy",
+  "fast": "char_player_adv",
+  "siege": "char_player_adv",
+  "e_brute": "char_enemy_adv",
+  "e_bomber": "char_enemy_adv",
+  "boss_warlord": "char_boss_warlord",
   "base_player": "bases",
   "base_enemy": "bases",
   "prop_mine": "bases",
@@ -396,7 +457,7 @@
    "worker": "icon_worker",
    "meta_currency_candidate": "icon_gem"
   },
-  "cards": "card_<unit_id> (worker, melee_basic, ranged_basic, tank, hero_captain)",
+  "cards": "card_<unit_id> (worker, melee_basic, ranged_basic, tank, fast, siege, hero_captain)",
   "skills": "icon_<skill_id> and skill_<skill_id>",
   "enemy_portraits": "portrait_<enemy_id>"
  },
@@ -407,6 +468,9 @@
   "battle": [
    "char_player",
    "char_enemy",
+   "char_player_adv",
+   "char_enemy_adv",
+   "char_boss_warlord",
    "bases",
    "fx_combat"
   ],
@@ -427,8 +491,8 @@
   "license": "Original work created for this project; owned by the project owner. No third-party assets included."
  },
  "totals": {
-  "disk_bytes": 43884,
-  "gpu_bytes_all_pages": 5505024,
+  "disk_bytes": 61635,
+  "gpu_bytes_all_pages": 7602176,
   "note": "GPU = w*h*4 (RGBA8, lossless import, no mipmaps). See docs/art/ATLAS_BUDGET.md"
  }
 }

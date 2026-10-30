@@ -11,6 +11,8 @@ from preview import anim_sheet  # noqa: E402
 
 REG = {}
 REG.update(chars_player.ALL)
+import chars_r04  # noqa: E402
+REG.update(chars_r04.ALL)
 try:
     import chars_enemy  # noqa: E402
     REG.update(chars_enemy.ALL)
