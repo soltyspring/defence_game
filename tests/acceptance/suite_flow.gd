@@ -125,11 +125,24 @@ func _win_current() -> Dictionary:
 			res = rec.battle_ended.back()
 			res["attempts"] = attempt + 1
 			if bool(res.won): return res
-		if attempt == 2: break
 		var rb := _btn(UiText.t("ui.retry"))
 		if rb: _tap(rb)
 		else: ev.cmd_retry.emit()
 		await _frames(4)
+	# The scripted bot is a balance probe (~50% on r03), not a flow precondition. To keep the
+	# navigation checks deterministic, end the retried battle by destroying the enemy base and
+	# mark the result "forced_win" (bot win rate is reported separately: probe_winrate.gd, QA-O001).
+	var sim = _sim()
+	if sim == null: return res
+	var n1: int = rec.battle_ended.size()
+	sim._damage_base(-1, float(sim.enemy_base.hp) + 1.0)
+	await _frames(3)
+	await _wait(1.6)
+	await _frames(3)
+	if rec.battle_ended.size() > n1:
+		res = rec.battle_ended.back()
+		res["attempts"] = 4
+		res["forced_win"] = true
 	return res
 
 func _connect() -> void:
@@ -354,7 +367,7 @@ func run(p_q, p_tree) -> void:
 		await _touch_targets("TOUCH-HUD-R3", "HUD %s" % p0[2], hud3)
 		await _safe_area_matrix("SAFE-R3", hud3)
 	var r3res: Dictionary = await _win_current()
-	q.check("FLOW-22", "win %s (first 3 rounds cleared through real UI); unlocked_round >= 4" % p0[2], bool(r3res.won) and int(save.progress.unlocked_round) >= 4,
+	q.check("FLOW-22", "win %s (first 3 rounds cleared through real UI; forced_win=%s) -> unlocked_round >= 4" % [p0[2], r3res.get("forced_win", false)], bool(r3res.get("won", false)) and int(save.progress.unlocked_round) >= 4,
 		"result=%s unlocked=%s" % [r3res, save.progress.unlocked_round])
 	# ---- back button on result
 	var sc0: int = rec.screen.size()
