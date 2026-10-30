@@ -1,8 +1,8 @@
 # 10-research-systems status
-Updated: 2026-10-31 07:32 KST
-Model/agent: claude-opus-5.5 / trust-all (no switch)
-Status: MILESTONE 2 (v0.2) publishing. v0.1 PUSHED 6ab1d482ffea0bc84f587da3415da76821f54f97.
-Current task: DATA_AND_BACKEND_ANALYSIS.md v0.2 (§9.1 content-table mapping)
-Quota: 4518.47/5000 = 90.37% at 07:30:29; triggered.json absent.
-Validation: source IDs 20/20 defined; read-only data FK check 0 errors (units 12, rounds r01–r10, meta upgrades). Save risks SV-1..5 code-reading only, NOT executed.
-Next: Korean review sampling; 07 test skeletons after 02 fault hook. Idle-wait if quota ≥97%.
+Updated: 2026-10-31 ~08:07 KST
+Model/agent: claude-opus-5.5 / trust-all (same session)
+Status: v0.3 validated, publishing. Waiting on owner replies. 09-resume dispatch received in this window, judged misrouted, and NOT executed (see handoff and 10-research-systems-to-coordinator.md).
+Quota: 10.9/10000 = 0.11% at 08:06.
+Pushed: v0.1 6ab1d48, v0.2 9e3953f. v0.3: see the publish result below.
+Validation: SV-1 reproduced by a headless probe against unmodified save.gd (6→1); doc refs consistent; diff --check clean.
+Next: process replies from 02/07/01; rerun SV-1 crash variant once the R6 hook exists.
