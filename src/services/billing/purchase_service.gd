@@ -32,6 +32,8 @@ signal restore_finished(summary: Dictionary)
 signal entitlement_changed(entitlement_id: String, owned: bool)
 ## Consumables only. grant_sink already applied it; persisted=false => save commit failed.
 signal consumable_granted(product_id: String, grant: Dictionary, persisted: bool)
+## A consumable grant sink broke its contract. kind: iap_sink_saved | iap_repair_commit_failed
+signal contract_violation(kind: String)
 
 var provider
 var verifier
@@ -51,7 +53,8 @@ var _flow := {}            # active user purchase
 var _verifying := {}       # key -> {"purchase", "elapsed", "origin"}
 var _restore := {}         # active restore
 var _ack_inflight := {}    # key -> true while acknowledge/consume is outstanding (memory only)
-var diagnostics := {"duplicate_updates": 0, "stray": 0, "unknown_product": 0, "ack_failed": 0}
+var diagnostics := {"duplicate_updates": 0, "stray": 0, "unknown_product": 0, "ack_failed": 0,
+	"ack_elsewhere": 0, "unknown_state": 0, "contract_violation": 0}
 
 func _init(p_provider, p_verifier, p_store, p_clock, p_network, config: Dictionary = {}) -> void:
 	provider = p_provider
@@ -237,6 +240,12 @@ func _handle_purchase(p: Dictionary, origin: String) -> void:
 		if _flow_waiting_for(pid) and str(_flow.key) == key:
 			_finish_flow(Result.PENDING)
 		return
+	if str(p.get("state", "")) != "purchased":
+		# Unknown/unspecified state (e.g. a pending payment that was cancelled). Never grant.
+		diagnostics.unknown_state = int(diagnostics.get("unknown_state", 0)) + 1
+		if _flow_waiting_for(pid) and str(_flow.key) == key:
+			_finish_flow(Result.CANCELLED)
+		return
 	var led := _ledger()
 	if led.has(key):
 		var entry: Dictionary = led[key]
@@ -244,8 +253,10 @@ func _handle_purchase(p: Dictionary, origin: String) -> void:
 			"granted":
 				diagnostics.duplicate_updates += 1
 				_ensure_entitlement(pid, key)
-				if not bool(p.get("acknowledged", false)) or not bool(entry.get("acknowledged", false)):
-					_ack(pid, token)
+				if str(catalog[pid].get("type", "")) == TYPE_CONSUMABLE:
+					_ack(pid, token)            # still owned => not consumed yet: consume
+				elif not bool(entry.get("acknowledged", false)):
+					_ack_if_needed(pid, p)
 				if origin == "restore":
 					_restore.summary.already += 1
 				if _flow_waiting_for(pid) and str(_flow.key) == key:
@@ -309,14 +320,27 @@ func _grant(p: Dictionary, key: String) -> String:
 	if prior is Dictionary and str(prior.get("state", "")) == "granted":
 		diagnostics.duplicate_updates += 1
 		_ensure_entitlement(pid, key)
-		_ack(pid, str(p.token))
+		if str(item.get("type", "")) == TYPE_CONSUMABLE:
+			_ack(pid, str(p.token))
+		else:
+			_ack_if_needed(pid, p)
 		return Result.OK
 	if str(item.get("type", "")) == TYPE_CONSUMABLE:
 		var g: Dictionary = item.get("grant", {}).duplicate(true)
 		# Ledger-first: any save during the sink (even one it triggers) carries both.
 		_ledger()[key] = {"product_id": pid, "state": "granted", "acknowledged": false}
-		if not grant_sink.is_valid() or not bool(grant_sink.call(pid, g, key)):
+		var epoch0: int = store.save_epoch()
+		var ok := grant_sink.is_valid() and bool(grant_sink.call(pid, g, key))
+		var e1: int = store.save_epoch()
+		var sink_saved := epoch0 >= 0 and e1 >= 0 and e1 != epoch0
+		if sink_saved:
+			_violation("iap_sink_saved")
+		if not ok:
 			_ledger().erase(key)
+			# Repair a ledger-only save the sink may have written (or when we cannot tell).
+			if sink_saved or e1 < 0:
+				if not store.commit():
+					_violation("iap_repair_commit_failed")
 			return Result.GRANT_FAILED     # not acknowledged/consumed -> store may refund
 		persisted = store.commit()
 		consumable_granted.emit(pid, g, persisted)
@@ -325,8 +349,25 @@ func _grant(p: Dictionary, key: String) -> String:
 		_ledger()[key] = {"product_id": pid, "state": "granted", "acknowledged": false}
 		_ensure_entitlement(pid, key)
 		persisted = store.commit()
-		_ack(pid, str(p.token))
+		_ack_if_needed(pid, p)
 	return Result.OK
+
+func _violation(kind: String) -> void:
+	diagnostics.contract_violation = int(diagnostics.get("contract_violation", 0)) + 1
+	push_warning("[Services] grant contract violation: " + kind)
+	contract_violation.emit(kind)
+
+## Non-consumable acknowledged elsewhere (other device, server): record it, do not re-ack.
+func _ack_if_needed(pid: String, p: Dictionary) -> void:
+	var key := _key(str(p.token))
+	if str(catalog.get(pid, {}).get("type", "")) != TYPE_CONSUMABLE and p.get("acknowledged", false) == true:
+		var e = _ledger().get(key)
+		if e is Dictionary and not bool(e.get("acknowledged", false)):
+			e["acknowledged"] = true
+			store.commit()
+		diagnostics.ack_elsewhere = int(diagnostics.get("ack_elsewhere", 0)) + 1
+		return
+	_ack(pid, str(p.token))
 
 func _ensure_entitlement(pid: String, key: String) -> void:
 	var item: Dictionary = catalog.get(pid, {})

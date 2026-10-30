@@ -1,52 +1,48 @@
 # 06-services handoff
-Updated: 2026-10-31 (M2)
-Status: M2 COMPLETE. **No real ad network, store billing, verification server or remote analytics is integrated. Nothing is live.** Every build runs in `disabled` mode; `production` mode falls back to disabled. Monetization decisions remain pending with the user (via 01).
+Updated: 2026-10-31 (ACCOUNT-CHANGE CHECKPOINT during M3)
+Status: STOPPED by user request for account change. M3 was IN PROGRESS and is UNFINISHED and UNTESTED. M1 and M2 are complete and pushed. **No real ad network, store billing, verification server or remote analytics is integrated. Nothing is live.** Every build runs in `disabled` mode. No user monetization decision exists (D9 DEFAULT, Q1 PENDING, Q2–Q5 not asked). No approvals were invented.
+Window: kept open, nothing closed or restarted. Session ID: not known to this agent (no session id is exposed in-session; coordination/.runtime/quota/sessions.json has no 06 entry).
 
-## Ownership acknowledged (OWNERSHIP.md "Eight-worker expansion")
-Own only: src/services/**, docs/services/**, tests/services/**, coordination/status/06-services.md, coordination/handoffs/06-services.md, coordination/requests/06-services-to-*.md. Not mine: save/progression core (02), UI (04), economy/catalog/text data (01), Android export (04/02). User questions only via 01, one at a time.
+## Ownership (unchanged)
+src/services/**, docs/services/**, tests/services/**, coordination/status/06-services.md, coordination/handoffs/06-services.md, coordination/requests/06-services-to-*.md. User questions only via 01, one at a time.
 
-## Instructions read / processed (M2)
-coordinator-to-06-services.md: all 4 sections (eight-worker expansion, completion review gate, window stability, quota checkpoint) re-read at M2 start; unchanged since M1. coordination/QUALITY_REVIEW.md (findings must be observable → owner fix → recheck; 02/05/06 fix measured problems in owned paths). docs/design/QUALITY_BAR.md row 10 (rewarded ads must deliver the promised reward, opt-in). DECISIONS.md D1–D12 DEFAULT, Q1 PENDING (no monetization decision). Quota usage.json 85.85% at 07:18:33, no triggered.json. Window: work continued in the same window, nothing closed or restarted.
-Replies to my requests: none found (no 02/04/01/07 → 06 files).
+## Current task (M3, interrupted)
+Goal from coordinator: address untested persistence/grant risks. 02 has NOT replied to S1/S2 (checked at M3 start: no 02→06 file, no `services` in src/core/*.gd or project.godot). So the plan was: (a) test the REAL src/core/save.gd script in isolation with isolated user:// paths, without changing 02 files; (b) detect and enforce the unsafe "grant sink saves then fails" contract; (c) consent provider state machine; (d) pending-purchase cancellation and acknowledged-elsewhere transitions.
 
-## M2 review of pushed M1 tests: gaps found
-1. No crash/persistence model: M1 never reloaded state from a saved copy between grant and commit.
-2. **Defect (fixed):** the ad grant wrote the ledger AFTER calling the grant sink. If the sink (or anything during it) saved, the reward reached disk without the ledger, and after a crash the same context could be rewarded again. Same order for consumables. Reproduced by `crash_ads` B (got ledger 0, want 1; second grant `ok`, want `already_granted`).
-3. **Defect (fixed):** two service instances on one store (e.g. `setup()` twice) could both grant the same consumable token (got 2, want 1). Fixed with a prior-grant check in `purchase_service._grant`; ads gained an `already_granted` finish.
-4. **Defect (fixed):** damaged service data (non-dictionary ledger/entitlement entries, non-numeric counts) caused script errors ("Nonexistent function 'get' in base 'String'") and a corrupt entitlement was trusted. Fixed with `_sanitize()` on construction and ledger-backed `has_entitlement()`.
-5. No JSON round-trip check (ints come back as floats from the real JSON save). Added; it passed without code changes.
-6. Test runner weakness: a group that crashed mid-way was still reported PASS. Both runners now require each group to reach its end (`group aborted` failure otherwise).
-Same failing scenarios re-run after fixes: all pass (see validation).
+## Uncommitted working-tree changes (UNTESTED, WIP — do not treat as done)
+- `src/services/service_store.gd` (M): added `save_epoch_fn`, `save_epoch()`, `external_epoch`, `on_game_saved()` to count completed game saves.
+- `src/services/save_bridge.gd` (new): `make_store(Save, Events)` binds `Save.progress["services"]`, commit = `Save.save_progress`, epoch via `Events.progress_changed`.
+- `src/services/ads/rewarded_ad_service.gd` (M): grant sink save detection (`_sink_saved`), `_violation()`, new `contract_violation(kind)` signal, `diagnostics.contract_violation`; on sink failure rolls back the ledger and does a repair commit when the sink saved or the epoch is unknown.
+- `src/services/billing/purchase_service.gd` (M): same consumable sink enforcement + `contract_violation` signal; `_ack_if_needed()` (acknowledged elsewhere → record, no re-ack); purchases with state other than pending/purchased are never granted (`unknown_state`, flow → cancelled); consumables still owned after grant are consumed on restore; new diagnostics keys `ack_elsewhere`, `unknown_state`, `contract_violation`.
+- `src/services/billing/mock_billing_provider.gd` (M): `cancel_pending(product_id, notify)`, `acknowledge_elsewhere(product_id)`, `query_owned()` now also returns pending purchases (like Play), doc comment updated (the last edit was interrupted, but a readback confirms it applied).
+- Untracked Godot .uid files (generated by an import, not by 06 work): reward_policy.gd.uid, service_telemetry.gd.uid, service_diagnostics.gd.uid, tests/services/test_services_m2.gd.uid. Safe to commit with the next verified code commit.
+None of these were run. The behaviour change in `_handle_purchase` (ack path) could change M1/M2 test results; it has NOT been checked. These files are left uncommitted on purpose; the coordinator's quota guard may save them to a WIP checkpoint branch.
 
-## Completed (M2)
-- `src/services/ads/reward_policy.gd`: fail-closed offer rules for 01's `results_win` and `in_round_once_below_30pct` (exact 30% not eligible, needs `battle_uid`, rescue reports `max_stars: 2`). `ads.offer_for()` / `request_for()` combine policy and all service gates without SDK calls. New result code `not_eligible`.
-- `src/services/analytics/service_telemetry.gd`: emits ad_result / purchase_result / restore_result from service signals and ad_offer via `offer_shown()` (de-duplicated). Caps: 30 per event, 100 total per session. Still gated by analytics enabled + consent; disabled by default.
-- `src/services/service_diagnostics.gd` + `Services.diagnostics()`: detached JSON-safe snapshot, `live.*` flags (all false), no tokens/ledger keys/context ids/session id, never saves.
-- tests/services/test_services_m2.gd: crash_ads (incl. seeded 40-context property run with save failures and crash/reloads), crash_iap, duplicate_two_instances, corrupt_store, json_roundtrip_types, reward_policy, telemetry, diagnostics.
-- Docs: SERVICES.md v0.2 (§3 ledger-first, §3.1 policy, §4 entitlement trust, §8 coverage incl. M2, §8.1 telemetry, §9 diagnostics, §10 known limits); ANALYTICS_EVENTS.md (telemetry bridge, `not_eligible`).
-- Requests: 02 update (S2 ledger-first + requested real-Save crash acceptance test; S6 offer situations), 04 update (offer_for, offer_shown, diagnostics; after approval), new 06-services-to-07-qa.md (Q1 regressions, Q2 non-proofs, Q3 diagnostics). All QUEUED.
+## Not started (M3 remainder)
+- tests/services/test_services_m3.gd: real save.gd tests with isolated path (set `path` before add_child; create dir; Events at /root/Events or a local one): failed commit (block `save.json.tmp` with a directory), sink saves then returns false (repair commit → disk has neither reward nor ledger), `.bak` restore after corrupting main file (coins == 100 × ledger in recovered payload), checksum tamper, two Save instances on one file (no double coins on disk), `services` key surviving `_migrate`, consumable failed commit + restore once.
+- Mutation check: remove the repair commit → the "sink saves then fails" regression must fail.
+- Consent provider: `consent_provider.gd` interface + disabled/mock adapters + `consent_flow.gd` (IDLE/CHECKING/FORM_REQUIRED/SHOWING_FORM/DONE; required / not_required (ads purposes only) / obtained / error / offline / timeout / dismissed / withdrawal → re-check) with tests.
+- Billing tests: pending → cancel_pending (with and without notify) → no grant, no ledger, purchase allowed again; acknowledge_elsewhere → entitlement restored, no extra ack.
+- Docs: SERVICES.md §3/§4/§5 + coverage; status file.
 
-## Validation evidence (actual)
-- `tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://tests/services/test_services.gd` → EXIT=0, passes=462 failures=0 (14 groups; static_guards now scans 25 service scripts).
-- `... -s res://tests/services/test_services_m2.gd` → EXIT=0, passes=129 failures=0: crash_ads 11, crash_iap 9, duplicate_two_instances 6, corrupt_store 8, json_roundtrip_types 5, reward_policy 42, telemetry 26, diagnostics 22. No ERROR/WARNING lines. Property run: seed 6061, 40 contexts, coins on disk == 100 × ledger entries. Reports: user://services_test_report.json, user://services_m2_test_report.json.
-- Mutation checks (each made test_services_m2 EXIT=1; file restored, hash identical): ads without ledger-first (2 failures in crash_ads), ads without ledger re-check (2 in duplicate_two_instances), IAP without prior-grant check (1), rescue threshold 0.31 (1 boundary failure), telemetry cap removed (3), diagnostics leaking ledger (1).
-- Readback: after `git fetch`, `git diff origin/main -- src/services tests/services` is empty; `git cat-file -p origin/main:src/services/ads/reward_policy.gd` shows `RESCUE_HP_RATIO := 0.30`.
+## Exact next steps after login
+1. Re-read coordinator-to-06-services.md, DECISIONS.md, quota files, and any 02→06 reply.
+2. `git status` and `git diff -- src/services`. Review the WIP diff above.
+3. Run M1 and M2 suites (`tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://tests/services/test_services.gd`, same for `test_services_m2.gd`), fix any regressions.
+4. Write test_services_m3.gd (list above), run it, do the mutation check, then commit [Feat]/[Fix] via Publish-Task.ps1 (no stderr redirection) and update docs, status and handoff with the SHA.
 
-## Strongest reasons to reject / untested claims
-- Cross-save atomicity is NOT proven. Crash tests use a save double (progress + services in one JSON string). The real src/core/save.gd has no `services` section and Services is not registered (02 S1/S2 unanswered). I requested a real-Save crash acceptance test from 02.
-- `battle_uid` does not exist (02 S4), so in a real build every policy check returns `missing_battle_uid`. Policy rules are 01 DEFAULT design, not user decisions.
-- Only mock adapters. No real SDK callback order, Android lifecycle during a full-screen ad, Play Billing behaviour or server verification has been observed.
-- Accepted risks: device clock changes reset daily caps; a damaged ledger can let restore regrant one unconsumed consumable; `setup()` during an active session drops that session (no double grant).
-- If a consumable grant sink saves and then returns false, the rollback removes the ledger in memory but a ledger-less save could already be on disk. Contract says sinks must not save; not separately tested.
+## Known failures / risks
+- WIP code is unverified (see above).
+- Cross-save atomicity with the real game is NOT proven: 02 has not integrated (S1/S2/S4/S6 unanswered). M2 crash evidence used a save double only.
+- From M2: battle_uid missing (all policy checks `missing_battle_uid`); mock adapters only; clock changes reset caps; a damaged ledger can let restore regrant one unconsumed consumable.
 
-## Git
-- M1: 17623c14e1b054d024e8029049b58d5fc373a93b, 9c207630e2049befa9a0e7aec2269f88dedf4620, b7fa3c094a5128aa0a695f80128980d9b71b200e (all PUSHED).
-- M2 code+tests: 0f8446199154e3ee0d916a10e019b069f3e18414 `[Feat] 광고 보상 정책·서비스 텔레메트리·읽기 전용 진단 추가와 크래시·중복 지급·손상 상태 결함 수정` (27 files) → PUSHED origin/main (`git ls-remote` = 0f84461…).
-- M2 docs/requests/handoff: 708bdb006208580b057a5bc219f921fc5b297568 `[Docs] 서비스 M2 문서·연동 요청 갱신과 07 회귀 요청, 상태 인수인계 반영` (7 files) → PUSHED origin/main (`git ls-remote` = 708bdb0…).
-- Helper note: call Publish-Task.ps1 without stderr redirection.
+## Last verified validation (M2, committed code only)
+test_services.gd EXIT=0 passes=462 failures=0; test_services_m2.gd EXIT=0 passes=129 failures=0; 6 mutations caught. Not re-run on the WIP tree.
 
-## Next task (06) — M3
-1. When 02 answers S1/S2: integration test against the real `src/core/save.gd` with a temp `user://` path (failed save between sink and commit, `.bak` recovery), then update the claim.
-2. Otherwise (no dependency): consent state machine for a UMP-like platform flow (`consent_provider.gd` interface + disabled/mock adapters: info update, form required/not required, form error, offline), with tests.
-3. Billing: model Play's "pending purchase cancelled" and "purchase acknowledged elsewhere" updates in the mock and verify the state machine.
-Dependencies: 02 S1/S2/S4/S6; 01 Q2–Q5 + analytics decision before any production adapter.
+## Git / push state
+- Pushed and verified with `git ls-remote`: M1 17623c1, 9c20763, b7fa3c0; M2 0f84461 (code+tests), 708bdb0 (docs), 7c43ebd (handoff SHAs).
+- Local HEAD at checkpoint: 9e3953f (includes other roles' later commits).
+- This handoff: committed by helper in the checkpoint commit below (SHA in the coordinator log / `git log -- coordination/handoffs/06-services.md`). M3 code: NOT committed (WIP).
+
+## User decisions
+None recorded for monetization. Q1 theme pending. Defaults D1–D12 unchanged and not user-approved.
