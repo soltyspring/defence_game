@@ -9,6 +9,15 @@ var snap: Dictionary = {}
 var layout: Dictionary = {}
 var round_title := ""
 var gold_slot_debug := Rect2()    # QA: fixed gold number slot
+var base_labels := {"player": "", "enemy": ""}        # QA: drawn HP text
+var base_label_rects := {"player": Rect2(), "enemy": Rect2()}
+
+func _hp_text(b: Dictionary, max_w: float) -> String:
+	if b.is_empty():
+		return ""
+	var hp := ceili(maxf(0.0, float(b.get("hp", 0))))
+	var full := "%d/%d" % [hp, ceili(float(b.get("hp_max", 0)))]
+	return full if UiStyle.number_width(full, UiStyle.NUM_S) <= max_w else str(hp)
 
 func _init() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -48,8 +57,8 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 	var pb: Dictionary = snap.get("player_base", {})
 	var eb: Dictionary = snap.get("enemy_base", {})
 	var half := floorf((r.size.x - 18) / 2)
-	var h := 10.0
-	var y := r.position.y + 6
+	var h := 14.0
+	var y := r.position.y + 4
 	var pr := float(pb.get("hp", 1)) / maxf(1.0, float(pb.get("hp_max", 1)))
 	var er := float(eb.get("hp", 1)) / maxf(1.0, float(eb.get("hp_max", 1)))
 	UiStyle.draw_bar(self, Rect2(r.position.x, y, half, h), pr, UiStyle.C_HP_PLAYER)
@@ -61,6 +70,16 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 	var w := floorf(inner.size.x * clampf(er, 0, 1))
 	draw_rect(Rect2(inner.end.x - w, inner.position.y, w, inner.size.y), UiStyle.C_HP_ENEMY)
 	UiStyle.draw_number(self, "VS", Vector2(r.position.x + half + 9, y + h / 2), UiStyle.NUM_S, UiStyle.C_TEXT_DIM, 0)
+	# exact HP numbers (09 R09-04-5): fixed-cell Galmuri9 10 inside each bar, at the OUTER end so they
+	# never touch "VS"; "hp/max" when it fits, else "hp". Bar is 14 high → 12 px inner > 10 px glyph line.
+	base_labels.player = _hp_text(pb, half - 8)
+	base_labels.enemy = _hp_text(eb, half - 8)
+	var cy := y + h / 2
+	UiStyle.draw_number(self, base_labels.player, Vector2(r.position.x + 4, cy), UiStyle.NUM_S, UiStyle.C_TEXT, -1)
+	UiStyle.draw_number(self, base_labels.enemy, Vector2(er_rect.end.x - 4, cy), UiStyle.NUM_S, UiStyle.C_TEXT, 1)
+	base_label_rects.player = Rect2(r.position.x + 4, y, UiStyle.number_width(base_labels.player, UiStyle.NUM_S), h)
+	var ew := UiStyle.number_width(base_labels.enemy, UiStyle.NUM_S)
+	base_label_rects.enemy = Rect2(er_rect.end.x - 4 - ew, y, ew, h)
 	var wave: Dictionary = snap.get("wave", {})
 	var txt := round_title
 	if not wave.is_empty():

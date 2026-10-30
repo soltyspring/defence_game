@@ -139,5 +139,4 @@ func _draw_tile_overlay(t: Control) -> void:
 		var st := int(t.get_meta("stars", 0))
 		for k in 3:
 			var sc := Vector2(t.size.x / 2 + (k - 1) * 18, t.size.y - 30)
-			if not UiStyle.draw_ui_icon(t, "icon_star" if k < st else "icon_star_empty", sc):
-				UiStyle.draw_star(t, sc, 5.5, k < st)
+			UiStyle.draw_star_marker(t, sc, k < st, 5.5)

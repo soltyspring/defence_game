@@ -13,6 +13,7 @@ const SafeArea := preload("res://src/ui/safe_area.gd")
 const MockEngine := preload("res://src/ui/mock/mock_engine.gd")
 const SettingsPanel := preload("res://src/ui/settings_panel.gd")
 const UiText := preload("res://src/ui/ui_text.gd")
+const UiStyle_ := preload("res://src/ui/ui_style.gd")
 
 var failures := PackedStringArray()
 var passes := 0
@@ -278,6 +279,14 @@ func test_hud_state() -> void:
 	bus.tutorial_step.emit("tut_move_hero")
 	check(hud.tutorial_label.modulate.a > 0.9 and hud.tutorial_label.text == UiText.t("tut_move_hero"), "tutorial hint shown (%s)" % hud.tutorial_label.text)
 	check(hud.layout.tutorial.encloses(hud.tutorial_label.get_rect()) or hud.tutorial_label.size.x <= hud.layout.tutorial.size.x, "tutorial hint inside its strip")
+	bus.tutorial_step.emit("tut_boss_warning")
+	var before: int = hud.toasts_suppressed
+	hud.show_toast(UiText.t("tut_boss_warning"))
+	check(hud.toasts_suppressed == before + 1, "toast identical to the visible tutorial hint is not shown twice")
+	bus.tutorial_step.emit("")
+	hud.show_toast(UiText.t("tut_boss_warning"))
+	bus.tutorial_step.emit("tut_boss_warning")
+	check(hud.toast_label.modulate.a == 0.0 and hud.tutorial_label.modulate.a > 0.9, "toast-then-hint order also shows the sentence once")
 	bus.tutorial_step.emit("")
 	check(hud.tutorial_label.modulate.a == 0.0, "tutorial hint hidden on empty key")
 	# boss bar from HudSnapshot.boss (stop mock ticks so its own snapshots do not overwrite ours)
@@ -290,6 +299,27 @@ func test_hud_state() -> void:
 	bus.hud_snapshot.emit(s)
 	await _frames(2)
 	check(not hud.top.boss_drawn, "boss HP bar hidden when no boss")
+	# base HP numbers (09 R09-04-5): exact snapshot values, inside their own bar half, clear of "VS"
+	s = mock.snapshot(); s.player_base = {"hp": 1234.4, "hp_max": 1500}; s.enemy_base = {"hp": 7.0, "hp_max": 1200}
+	bus.hud_snapshot.emit(s)
+	await _frames(2)
+	check(hud.top.base_labels.player == "1235/1500" and hud.top.base_labels.enemy == "7/1200", "base HP numbers match snapshot (%s / %s)" % [hud.top.base_labels.player, hud.top.base_labels.enemy])
+	var br: Rect2 = hud.layout.bases
+	var half := floorf((br.size.x - 18) / 2)
+	var pr: Rect2 = hud.top.base_label_rects.player
+	var er: Rect2 = hud.top.base_label_rects.enemy
+	check(pr.position.x >= br.position.x and pr.end.x <= br.position.x + half - 2, "player HP number inside its bar half (%s, half end %.0f)" % [pr, br.position.x + half])
+	check(er.position.x >= br.position.x + half + 18 + 2 and er.end.x <= br.end.x, "enemy HP number inside its bar half, clear of VS (%s)" % er)
+	check(UiStyle_.number_width("1111/1500", 10) == UiStyle_.number_width("8888/1500", 10), "HP numbers fixed-width")
+	# skill name tooltip: shown while the finger is down, inside safe area; cast happens on release
+	var sb: Control = hud.skill_buttons[hud.skill_buttons.size() - 1]
+	var sp: Vector2 = sb.get_global_rect().get_center()
+	rec.clear()
+	touch(4, sp, true)
+	check(hud.skill_tip.modulate.a > 0.9 and hud.skill_tip.text == sb.text, "skill tip shows '%s' while pressed" % hud.skill_tip.text)
+	check(hud.safe.encloses(hud.skill_tip.get_rect()) and not hud.skill_tip.get_rect().intersects(sb.get_rect()), "skill tip inside safe area and above the button (%s)" % hud.skill_tip.get_rect())
+	touch(4, sp, false)
+	check(hud.skill_tip.modulate.a == 0.0 and last().size() == 2 and last()[0] == &"cmd_hero_skill", "release hides tip and casts (%s)" % [last()])
 	mock.running = false
 	mock.queue_free()
 	hud.queue_free()
@@ -362,6 +392,10 @@ func test_result() -> void:
 	check(rs_[0].met and rs_[1].met and not rs_[2].met, "star reasons: win ✓, base ✓, time ✗ (%s)" % [rs_])
 	check(rs_[1].text.contains("50") and rs_[2].text.contains("120"), "star reasons show thresholds (%s / %s)" % [rs_[1].text, rs_[2].text])
 	check(not r.reason_mismatch, "star reasons agree with engine star count")
+	r._shown_t = 1.0
+	r.queue_redraw()
+	await _frames(2)
+	check(r.row_markers == ["filled", "filled", "hollow"], "met rows filled star, unmet row hollow star (shape differs, not only colour): %s" % [r.row_markers])
 	r.ui_setup({"result": {"round_id": "r01", "won": false, "stars": 0, "time": 40.0, "kills": 3, "coins": 5, "player_base_ratio": 0.0, "first_clear": false, "next_round_id": "", "star_rules": {"base_hp_2": 0.5, "time_3": 120}}})
 	await _frames(2)
 	check(r.star_reasons().filter(func(x): return x.met).is_empty() and not r.reason_mismatch, "loss: no star conditions met")
@@ -415,6 +449,23 @@ func test_menu_and_settings() -> void:
 	check(SettingsPanel.option_matches("music", 0.5, 0.8) and not SettingsPanel.option_matches("music", 0.0, 0.8), "volume on/off matching")
 	m.propagate_notification(Node.NOTIFICATION_WM_GO_BACK_REQUEST)
 	check(not m.settings_panel.visible, "back closes settings")
+	# credits view (OFL font credit). Galmuri11 12 only; wrapped lines fit the panel.
+	tap(m.btn_settings)
+	tap(sp._credits_btn)
+	await _frames(1)
+	check(sp.showing_credits and not sp._rows[0].buttons[0].visible, "credits view replaces option rows")
+	var joined := " ".join(sp.credit_lines)
+	check(joined.contains("©") and joined.contains("OFL-Galmuri.txt") and (joined.contains("Galmuri") or joined.contains("갈무리")), "credits show font credit + licence file (%s)" % joined)
+	for line in sp.credit_lines:
+		check(UiStyle_.text_width(line, 12) <= sp.panel_rect.size.x - 24, "credit line fits panel: '%s'" % line)
+	check(sp.panel_rect.encloses(Rect2(sp.panel_rect.position + Vector2(12, 50), Vector2(10, 18 * sp.credit_lines.size()))), "credit lines inside panel height (%d lines)" % sp.credit_lines.size())
+	var fnt: Font = UiStyle_.font()
+	check(sp.panel_rect.position.y + 19 - fnt.get_height(24) / 2.0 >= sp.panel_rect.position.y + 2, "panel title (24 px) starts inside the 2 px border")
+	check(sp._rows[sp._rows.size() - 1].buttons[0].get_rect().end.y < sp._close.position.y and sp.panel_rect.encloses(sp._close.get_rect()), "rows above close, close inside panel")
+	m.propagate_notification(Node.NOTIFICATION_WM_GO_BACK_REQUEST)
+	check(sp.visible and not sp.showing_credits and sp._rows[0].buttons[0].visible, "back from credits returns to settings rows")
+	m.propagate_notification(Node.NOTIFICATION_WM_GO_BACK_REQUEST)
+	check(not m.settings_panel.visible, "back again closes settings")
 	m.propagate_notification(Node.NOTIFICATION_WM_GO_BACK_REQUEST)
 	check(m.quit_layer.visible, "back on menu asks to quit (not instant exit)")
 	m.quit_layer.hide()

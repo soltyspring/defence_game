@@ -13,6 +13,9 @@ var settings: Dictionary = {}
 var panel_rect := Rect2()
 var _rows: Array = []   # [{key, label, options:[[label,value],...], buttons:[]}]
 var _close: Control
+var _credits_btn: Control
+var showing_credits := false   # credits view replaces the option rows (same modal, Back returns)
+var credit_lines: Array = []  # QA: wrapped lines actually drawn
 var target := 40.0
 var row_h_used := 40.0
 
@@ -52,15 +55,19 @@ func _build() -> void:
 	_close.fill = UiStyle.C_ACCENT.darkened(0.2)
 	_close.tapped.connect(_on_close)
 	add_child(_close)
+	_credits_btn = TouchButton.new()
+	_credits_btn.text = UiText.t("ui.credits")
+	_credits_btn.tapped.connect(_on_credits)
+	add_child(_credits_btn)
 
 func _layout(view: Vector2, safe: Rect2) -> void:
 	# rows + close button must fit the safe height; never below the 40 logical floor
-	var row_h := clampf((safe.size.y - 16 - 46) / (_rows.size() + 1) - 4, 40.0, maxf(target, 40.0))
+	var row_h := clampf((safe.size.y - 16 - 54) / (_rows.size() + 1) - 4, 40.0, maxf(target, 40.0))
 	var w := minf(safe.size.x - 16, 360.0)
-	var h := 30 + _rows.size() * (row_h + 4) + row_h + 12
+	var h := 38 + _rows.size() * (row_h + 4) + row_h + 12   # 38: 24 px title fully inside the border
 	panel_rect = Rect2((safe.get_center() - Vector2(w, h) / 2).round(), Vector2(w, h))
 	row_h_used = row_h
-	var y := panel_rect.position.y + 30
+	var y := panel_rect.position.y + 38
 	var bw := maxf(target, 64.0)
 	for row in _rows:
 		var x: float = panel_rect.end.x - 8 - row.buttons.size() * (bw + 4) + 4
@@ -70,8 +77,11 @@ func _layout(view: Vector2, safe: Rect2) -> void:
 			x += bw + 4
 		row.y = y
 		y += row_h + 4
-	_close.position = Vector2(panel_rect.get_center().x - 50, y + 4).round()
+	_close.position = Vector2(panel_rect.get_center().x + 4, y + 4).round()
 	_close.size = Vector2(100, row_h)
+	_credits_btn.position = Vector2(panel_rect.get_center().x - 104, y + 4).round()
+	_credits_btn.size = Vector2(100, row_h)
+	_apply_mode()
 	queue_redraw()
 
 ## Whether stored value `cur` corresponds to option value `opt` for this key.
@@ -100,8 +110,27 @@ func _on_option(key: String, value: Variant) -> void:
 	_refresh()
 
 func _on_close() -> void:
+	if showing_credits:
+		showing_credits = false     # Back from credits returns to the settings rows
+		_apply_mode()
+		return
 	hide()
 	closed.emit()
+
+func _on_credits() -> void:
+	showing_credits = true
+	_apply_mode()
+
+func _apply_mode() -> void:
+	for row in _rows:
+		for b in row.buttons:
+			b.visible = not showing_credits
+	if _credits_btn:
+		_credits_btn.visible = not showing_credits
+	if _close:
+		_close.text = UiText.t("ui.back") if showing_credits else UiText.t("ui.close")
+		_close.queue_redraw()
+	queue_redraw()
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST and visible:
@@ -110,7 +139,20 @@ func _notification(what: int) -> void:
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), UiStyle.C_DIM)
 	UiStyle.draw_pixel_box(self, panel_rect, UiStyle.C_PANEL)
-	UiStyle.draw_text_centered(self, UiText.t("ui.settings"), Vector2(panel_rect.get_center().x, panel_rect.position.y + 15), UiStyle.FONT_L)
+	UiStyle.draw_text_centered(self, UiText.t("ui.credits") if showing_credits else UiText.t("ui.settings"), Vector2(panel_rect.get_center().x, panel_rect.position.y + 19), UiStyle.FONT_L)
+	if showing_credits:
+		# Galmuri11 12 only: Galmuri9 has no Hangul and no ©. Lines are word-wrapped, never shrunk.
+		credit_lines = []
+		for k in ["ui.font_credit"]:
+			credit_lines.append_array(UiStyle.wrap_text(UiText.t(k), panel_rect.size.x - 24, UiStyle.FONT_S))
+		credit_lines.append("")
+		credit_lines.append_array(UiStyle.wrap_text("SIL Open Font License 1.1: assets/fonts/OFL-Galmuri.txt", panel_rect.size.x - 24, UiStyle.FONT_S))
+		credit_lines.append_array(UiStyle.wrap_text("github.com/quiple/galmuri", panel_rect.size.x - 24, UiStyle.FONT_S))
+		var y := panel_rect.position.y + 50
+		for line in credit_lines:
+			UiStyle.draw_text_left(self, line, Vector2(panel_rect.position.x + 12, y), UiStyle.FONT_S, UiStyle.C_TEXT)
+			y += 18
+		return
 	for row in _rows:
 		if row.has("y"):
 			UiStyle.draw_text_left(self, UiText.t(row.label), Vector2(panel_rect.position.x + 12, row.y + row_h_used / 2), UiStyle.FONT_M)

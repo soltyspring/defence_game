@@ -26,6 +26,9 @@ var main: Node
 var shot_dir := ""
 var shot_tag := "real"
 var tile := 0
+var spawn_boss := false
+var boss_id := "boss_warlord"
+var toasts_seen: Array = []
 
 ## Saves the real rendered frame (only in a visible run with --shot-dir). Records UI root script.
 func shot(label: String) -> void:
@@ -110,12 +113,16 @@ func _run() -> void:
 			DirAccess.remove_absolute(ProjectSettings.globalize_path(f))
 	save.load_progress()
 	events.hud_snapshot.connect(func(s): snaps.append(s))
+	events.toast.connect(func(k, _a): toasts_seen.append(k))
 	# visible-run options (headless runs ignore them): --shot-dir=<abs> --tag=<name> --locale=ko|en
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--shot-dir="):
 			shot_dir = a.get_slice("=", 1)
 		elif a.begins_with("--tag="):
 			shot_tag = a.get_slice("=", 1)
+		elif a.begins_with("--boss="):
+			spawn_boss = true
+			boss_id = a.get_slice("=", 1)
 		elif a.begins_with("--tile="):
 			tile = int(a.get_slice("=", 1))
 			if tile > 0:
@@ -190,9 +197,34 @@ func _run() -> void:
 	var x1: float = sim.hero.x if sim.hero else 0.0
 	check(x1 > x0 + 10.0, "holding ▶ moved hero right (%.1f→%.1f)" % [x0, x1])
 	check(sim.hero_dir == 0, "release stops hero (dir=%d)" % sim.hero_dir)
-	events.toast.emit("not_enough_gold", {})
+	# real HUD state BEFORE any test-injected toast (09 X3: the earlier 3_hud toast came from this test)
 	await _frames(2)
 	await shot("3_hud")
+	check(not toasts_seen.has("not_enough_gold"), "no 'not enough supply' toast from real play so far (toasts: %s)" % [toasts_seen])
+	# base HP numbers follow a real base hit
+	sim._damage_base(sim.SIDE_PLAYER, 100.0)
+	await _seconds(0.25)
+	var want := "%d/%d" % [ceili(sim.player_base.hp), ceili(sim.player_base.hp_max)]
+	check(hud.top.base_labels.player == want, "player base number after a real hit = %s (drawn %s)" % [want, hud.top.base_labels.player])
+	if spawn_boss:
+		sim._spawn_enemy(boss_id)
+		var bw := 0.0
+		while not hud.top.boss_drawn and bw < 2.0:
+			await _seconds(0.1)
+			bw += 0.1
+		check(hud.top.boss_drawn, "real boss %s spawned → HUD boss bar drawn" % boss_id)
+		await shot("3c_boss")
+	if not hud.skill_buttons.is_empty():
+		var sb: Control = hud.skill_buttons[0]
+		touch(3, sb.get_global_rect().get_center(), true)
+		await _frames(2)
+		check(hud.skill_tip.modulate.a > 0.9 and hud.skill_tip.text == sb.text, "skill name tip on real skill button: '%s'" % hud.skill_tip.text)
+		await shot("3d_skilltip")
+		touch(3, sb.get_global_rect().get_center(), false)
+		await _frames(1)
+	events.toast.emit("not_enough_gold", {})
+	await _frames(2)
+	await shot("3b_toast")
 	# pause via HUD
 	tap(hud.btn_pause)
 	await _frames(3)
@@ -202,6 +234,18 @@ func _run() -> void:
 	check(absf(sim.t - t_paused) < 0.001, "sim time frozen while paused (%.3f vs %.3f)" % [sim.t, t_paused])
 	check(hud.pause_layer.visible, "pause overlay visible")
 	await shot("4_pause")
+	if shot_dir != "":
+		# credits view inside pause → settings (visible runs only; headless covered by tests/ui)
+		tap(hud.pause_buttons[2])
+		await _frames(2)
+		tap(hud.settings_panel._credits_btn)
+		await _frames(2)
+		await shot("4b_credits")
+		hud.settings_panel._on_close()
+		hud.settings_panel._on_close()
+		await _frames(2)
+		if not hud.pause_layer.visible:
+			hud.pause_layer.visible = true
 	tap(hud.pause_buttons[0])
 	await _seconds(0.3)
 	check(not sim.paused and sim.t > t_paused, "resume continues sim (t %.2f→%.2f)" % [t_paused, sim.t])

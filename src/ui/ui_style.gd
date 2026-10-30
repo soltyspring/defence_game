@@ -156,6 +156,31 @@ static func fit_text(text: String, max_w: float, size: int, kind: StringName = &
 static func text_width(text: String, size: int, kind: StringName = &"ui") -> float:
 	return font(kind).get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
 
+## Greedy word wrap at spaces (Korean words are space-separated too); a single over-long word is
+## broken by characters. Never changes the font size.
+static func wrap_text(text: String, max_w: float, size: int, kind: StringName = &"ui") -> PackedStringArray:
+	var out := PackedStringArray()
+	var line := ""
+	for word in text.split(" "):
+		var cand := word if line == "" else line + " " + word
+		if text_width(cand, size, kind) <= max_w:
+			line = cand
+			continue
+		if line != "":
+			out.append(line)
+		line = ""
+		var w := word
+		while text_width(w, size, kind) > max_w and w.length() > 1:
+			var n := w.length()
+			while n > 1 and text_width(w.substr(0, n), size, kind) > max_w:
+				n -= 1
+			out.append(w.substr(0, n))
+			w = w.substr(n)
+		line = w
+	if line != "":
+		out.append(line)
+	return out
+
 ## Grid-safe label fit. Returns [text, size, kind]:
 ## 1) as requested if it fits; 2) ASCII-only text at 12 px may step down to Galmuri9 10 px (Latin/
 ## numerals cut, still on its native grid; Hangul never shrinks); 3) otherwise ellipsis at the
@@ -262,14 +287,40 @@ static func draw_bar(ci: CanvasItem, r: Rect2, ratio: float, fill: Color) -> voi
 		ci.draw_rect(Rect2(inner.position, Vector2(w, 1)), fill.lightened(0.35))
 
 static func draw_star(ci: CanvasItem, c: Vector2, r: float, on: bool) -> void:
+	var pts := _star_points(c, r)
+	if not on:
+		draw_star_hollow(ci, c, r)
+		return
+	ci.draw_colored_polygon(pts, C_STAR)
+	pts.append(pts[0])
+	ci.draw_polyline(pts, C_EDGE, 1.0)
+
+## Unachieved star: outline only (no fill), so met/unmet differ by SHAPE and stay distinct in
+## greyscale / for colour-blind players (09 R09-04-6), not just by yellow vs grey.
+static func draw_star_hollow(ci: CanvasItem, c: Vector2, r: float, color := C_TEXT_DIM) -> void:
+	var pts := _star_points(c, r)
+	pts.append(pts[0])
+	ci.draw_polyline(pts, C_EDGE, 3.0)
+	ci.draw_polyline(pts, color, 1.0)
+
+static func _star_points(c: Vector2, r: float) -> PackedVector2Array:
 	var pts := PackedVector2Array()
 	for i in 10:
 		var a := -PI / 2 + i * PI / 5
 		var rr := r if i % 2 == 0 else r * 0.45
-		pts.append(c + Vector2(cos(a), sin(a)) * rr)
-	ci.draw_colored_polygon(pts, C_STAR if on else C_STAR_OFF)
-	pts.append(pts[0])
-	ci.draw_polyline(pts, C_EDGE, 1.0)
+		pts.append((c + Vector2(cos(a), sin(a)) * rr).round())
+	return pts
+
+## Star marker used by result rows and round tiles: met → atlas icon_star (or filled vector star);
+## unmet → hollow vector star always (atlas icon_star_empty is a filled grey star = same shape).
+## Returns "filled" | "hollow" (QA).
+static func draw_star_marker(ci: CanvasItem, c: Vector2, met: bool, r := 7.0) -> String:
+	if met:
+		if not draw_ui_icon(ci, "icon_star", c):
+			draw_star(ci, c, r, true)
+		return "filled"
+	draw_star_hollow(ci, c, r)
+	return "hollow"
 
 ## Simple vector glyphs for icons when no atlas is available.
 static func draw_glyph(ci: CanvasItem, glyph: StringName, c: Vector2, s: float, color := C_TEXT) -> void:

@@ -97,8 +97,9 @@ func _draw() -> void:
 		var y := y0 + k * 22
 		var met: bool = reasons[k].met
 		var on := met and _shown_t >= (k + 1) / 4.0     # stars pop in one by one
-		if not UiStyle.draw_ui_icon(self, "icon_star" if on else "icon_star_empty", Vector2(lx + 8, y)):
-			UiStyle.draw_star(self, Vector2(lx + 8, y), 7.0, on)
+		row_markers[k] = UiStyle.draw_star_marker(self, Vector2(lx + 8, y), on)
+		if met and not on:
+			row_markers[k] = "pending"
 		var fit: Array = UiStyle.fit_text(reasons[k].text, col_w - 22, UiStyle.FONT_S)
 		UiStyle.draw_text_left(self, fit[0], Vector2(lx + 20, y), UiStyle.FONT_S, UiStyle.C_TEXT if met else UiStyle.C_TEXT_DIM)
 		UiStyle.draw_text_left(self, lines[k][0], Vector2(rx, y), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
@@ -110,6 +111,7 @@ func _draw() -> void:
 		reason_mismatch = true
 
 var reason_mismatch := false      # QA: UI reasons disagree with engine stars
+var row_markers := ["", "", ""]   # QA: "filled" | "hollow" | "pending" (pop-in not reached yet)
 
 ## Star conditions (INTERFACES §2.4: 1 = win, +1 base hp ≥ base_hp_2, +1 time ≤ time_3) with
 ## the round's real thresholds from Content when available. Returns [{met, text}] ×3.

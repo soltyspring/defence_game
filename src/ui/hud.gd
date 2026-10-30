@@ -23,6 +23,8 @@ var toast_label: Label
 var tutorial_label: Label         # Events.tutorial_step (02): persistent, non-blocking hint
 var tutorial_key := ""
 var banner_label: Label
+var skill_tip: Label              # skill name above the pressed skill button
+var toasts_suppressed := 0        # QA
 var pause_layer: Control
 var pause_buttons: Array = []
 var settings_panel: Control
@@ -78,6 +80,7 @@ func _build() -> void:
 	toast_label = _make_label(UiStyle.FONT_M)
 	tutorial_label = _make_label(UiStyle.FONT_M)
 	tutorial_label.add_theme_color_override("font_color", UiStyle.C_GOLD)
+	skill_tip = _make_label(UiStyle.FONT_M)
 	banner_label = _make_label(UiStyle.FONT_L)
 	banner_label.add_theme_font_override("font", UiStyle.font(&"bold"))
 	banner_label.add_theme_constant_override("shadow_offset_x", 2)
@@ -165,6 +168,9 @@ func _on_battle_started(p_info: Dictionary) -> void:
 		if b.icon == null:
 			b.glyph = &"mana"
 		b.tapped.connect(_on_skill.bind(sid))
+		# 48 px skill buttons have no room for the name: show it in a tooltip while the finger is down
+		b.pressed_down.connect(_show_skill_tip.bind(b))
+		b.released.connect(func(_inside): _hide_skill_tip())
 		add_child(b)
 		skill_buttons.append(b)
 	# keep modal layers on top
@@ -249,6 +255,10 @@ func _on_tutorial_step(key: String) -> void:
 		return
 	tutorial_label.text = UiText.t(key, key)
 	tutorial_label.modulate.a = 1.0
+	if toast_label.modulate.a > 0.0 and toast_label.text == tutorial_label.text:
+		_toast_left = 0.0                 # toast arrived first with the same sentence → keep only the hint
+		toast_label.modulate.a = 0.0
+		toasts_suppressed += 1
 	_fit_label(tutorial_label, layout.get("tutorial", Rect2()))
 
 func _on_battle_ended(_result: Dictionary) -> void:
@@ -265,6 +275,23 @@ func _cmd(sig: StringName, args: Array = []) -> void:
 
 func _on_card(id: String) -> void:
 	_cmd(&"cmd_deploy_unit", [id])
+
+func _show_skill_tip(b: Control) -> void:
+	if b.text == "":
+		return
+	skill_tip.text = b.text
+	skill_tip.modulate.a = 1.0
+	var fs := skill_tip.get_theme_font_size("font_size")
+	var w := ceilf(UiStyle.text_width(skill_tip.text, fs)) + 16
+	var h := ceilf(UiStyle.font().get_height(fs)) + 4
+	var r: Rect2 = b.get_rect()
+	# above the button, clamped inside the safe area (right-edge buttons would otherwise overflow)
+	var x := clampf(roundf(r.get_center().x - w / 2), safe.position.x, safe.end.x - w)
+	skill_tip.size = Vector2(w, h)
+	skill_tip.position = Vector2(x, r.position.y - h - 4)
+
+func _hide_skill_tip() -> void:
+	skill_tip.modulate.a = 0.0
 
 func _on_skill(id: String) -> void:
 	_cmd(&"cmd_hero_skill", [id])
@@ -330,6 +357,10 @@ func _notification(what: int) -> void:
 # ---------------- feedback ----------------
 
 func show_toast(text: String) -> void:
+	# same sentence already on screen as the tutorial hint (e.g. boss warning) → do not stack it twice
+	if tutorial_label != null and tutorial_label.modulate.a > 0.0 and tutorial_label.text == text:
+		toasts_suppressed += 1
+		return
 	toast_label.text = text
 	toast_label.modulate.a = 1.0
 	_toast_left = TOAST_SECONDS
