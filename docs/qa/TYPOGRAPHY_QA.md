@@ -19,7 +19,7 @@ Updated: 2026-10-31 08:10 +09:00. Code: 8b24e59 (bundled fonts) + 0333cd3 (grid-
 ## 3. Fit / clipping (narrow and wide layouts)
 Slots come from the real layout code (`HudLayout.compute`) at 640×360 with notches on both sides, at 640×360, and at 800×360 with a notch, plus the menu, pause, result and round-tile widths.
 - ko: every label checked fits at its grid size with no ellipsis: unit and skill names, 10 round names, buttons, settings labels, 9 toasts, titles, banner. A ko ellipsis fails the test.
-- en (expansion check): Latin-only labels that do not fit at Galmuri11 12 drop to Galmuri9 10, which stays on its native grid (`UiStyle.fit_label`). The ellipsis count fell from 15 → 2. The remaining two are "Footman" → "Foo…" and "Catapult" → "Cat…", only in the worst case (640 wide, notches on both sides, 5 cards + 3 skills, card slot 37 px). This is reported to 01 (shorter en names) and is still open.
+- en (expansion check): Latin-only labels that do not fit at Galmuri11 12 drop to Galmuri9 10 (`UiStyle.fit_label`). After 01 shortened the names (67bf9ca: Footman→Troop, Catapult→Siege, measured at 37/36 px vs a 37 px slot), the ellipsis count is **0** (test run 08:42). The visible worst-layout capture shows all six names complete: build/qa/real2/en_worst_2x_v2_3_hud.png.
 - Toast and banner strips size themselves to the text and ellipsize beyond the safe width.
 
 ## 4. Stable numerals
@@ -42,6 +42,15 @@ Pixel regularity (white text pixels in round-tile names, horizontal run widths):
 | ko_16x9 at 2× | 140 | 0 (0%) | regular |
 | ko_2p5x at 2.5× | 1077 | 887 (82%) | **irregular stems** (runs of 2 and 3 px mixed) |
 At non-integer scale, pixel text (and sprites) render unevenly. 04 cannot fix this inside its UI. It needs `display/window/stretch/scale_mode="integer"` (02, already requested by 03 A2c). The layout code was verified for the integer-mode views this creates (800×450, 666×400, 683×384) in the 3000-configuration layout matrix.
+
+## 5b. Same-condition retest 08:42 (worst layout 640 + notches 34/34, 5 cards/3 skills, real engine, DISPLAY2)
+| Run | Odd-width runs (bottom-row text) | Integration |
+|---|---|---|
+| en 1280×720 (2×) | 4% (bar/frame edges) | 27/27 |
+| ko 1280×720 (2×) | 5% | 27/27 |
+| en 1600×900 (2.5×) | 68% | 27/27 |
+| ko 1600×900 (2.5×) | 57% | 27/27 |
+2.5× is unchanged because 02 has not set integer scale (the view is still 640×360). Icons: ui_main import is still stale, so all UI icons use vector glyphs. Card icons from BattleInfo used to bypass the guard and showed wrong art; this was fixed and the same capture retested (en_worst_2x_v2).
 
 ## 6. Limits of this evidence (do not over-claim)
 - Desktop GL on Windows at 96 dpi only. Nothing has been checked on an Android device or emulator: physical legibility of 12 px Hangul (≈2.1–2.4 mm, 03 estimate), Android font loading, and thermal or text-cache growth are all unchecked.

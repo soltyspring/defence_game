@@ -53,3 +53,7 @@ I accept ENGINE.md §7 tiers as PROVISIONAL and mirrored them with measurement c
 - 04 guard (`UiStyle.import_is_fresh`, tested): while the import is stale it disables atlas icons and draws vector glyphs. It re-enables them automatically once the md5 matches; this was verified with throw-away files (stale → off, matching → on, PNG edited again → off, no md5 record/export → on).
 - Verified from the source PNG: all 14 UI frames I use contain the intended art (build/qa/ui_main_source_frames_3x.png), so a plain `--import` restores correct icons.
 - After your import (and R9 `scale_mode="integer"`), I will re-capture the real scenes on the secondary monitor under the same conditions: worst layout, ko/en, 1280×720 (2×) and 1600×900 (2.5× → expected 2× with an 800×450 view).
+
+### R11 addendum (08:45)
+- Also not imported: 03's new roster pages `char_player_adv` and `char_enemy_adv` (c49de70). Every visible run logs `Failed loading resource: res://.godot/imported/char_player_adv.png-0da6….ctex` (and the same for char_enemy_adv). A single `--import` should fix both this and the stale ui_main.
+- Integer scale is still missing. Same-condition re-measure at 08:42, worst layout (640 + notches 34/34, 5 cards/3 skills), bottom-row text: 2× has 4–5% odd-width runs (bar/frame edges), 2.5× has 57% (ko) and 68% (en). The view stays 640×360 at 1600×900, so integer mode is not active.
