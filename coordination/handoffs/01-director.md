@@ -31,4 +31,4 @@ The requested max effort cannot be read back in this session. The actual accepte
 - abdb664 [Docs] release design review → PUSHED
 - 4cd16ee [Docs] handoff SHA record → PUSHED
 - f8823ac837ca93b5fa2592cc972c6f65d79455c9 [Feat] UI·알림 텍스트 키 49개 한영 추가 (ko/en + 04 request) → PUSHED origin/main
-- [Docs] 품질 기준·연구 근거 보강과 플레이테스트 판정 기준 재작성 → SHA recorded in the follow-up line below
+- e07b7a3d5cf6586d99d82cc50537ae1e01ded71f [Docs] 품질 기준·연구 근거 보강과 플레이테스트 판정 기준 재작성 (13 files) → PUSHED origin/main
