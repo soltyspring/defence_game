@@ -1,0 +1,1991 @@
+{
+ "schema": "defence.atlas/1",
+ "atlas": "char_player",
+ "image": "char_player.png",
+ "image_res": "res://assets/atlases/char_player.png",
+ "size": [
+  512,
+  512
+ ],
+ "padding": 2,
+ "extrude": 1,
+ "group": "character",
+ "load_policy": "battle",
+ "note": "Player roster: hero, worker, infantry. Acquire on battle enter, release on exit.",
+ "filter": "nearest",
+ "mipmaps": false,
+ "repeat": false,
+ "gpu_format": "RGBA8 (lossless, no VRAM compression)",
+ "gpu_bytes": 1048576,
+ "disk_bytes": 11816,
+ "unique_regions": 113,
+ "occupancy": 0.583,
+ "frames": {
+  "hero_captain/idle/0": {
+   "x": 367,
+   "y": 55,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/idle/1": {
+   "x": 55,
+   "y": 263,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/idle/2": {
+   "x": 3,
+   "y": 159,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/idle/3": {
+   "x": 419,
+   "y": 55,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/walk/0": {
+   "x": 211,
+   "y": 55,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/walk/1": {
+   "x": 211,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/walk/2": {
+   "x": 55,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/walk/3": {
+   "x": 55,
+   "y": 55,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/walk/4": {
+   "x": 107,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/walk/5": {
+   "x": 107,
+   "y": 55,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/attack/0": {
+   "x": 263,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/attack/1": {
+   "x": 3,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/attack/2": {
+   "x": 159,
+   "y": 55,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/attack/3": {
+   "x": 55,
+   "y": 211,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/attack/4": {
+   "x": 315,
+   "y": 55,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/attack/5": {
+   "x": 159,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/cast/0": {
+   "x": 55,
+   "y": 159,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/cast/1": {
+   "x": 55,
+   "y": 107,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/cast/2": {
+   "x": 3,
+   "y": 211,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/cast/3": {
+   "x": 367,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/cast/4": {
+   "x": 3,
+   "y": 367,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/cast/5": {
+   "x": 3,
+   "y": 263,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/hit/0": {
+   "x": 3,
+   "y": 107,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/hit/1": {
+   "x": 3,
+   "y": 419,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/death/0": {
+   "x": 3,
+   "y": 107,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/death/1": {
+   "x": 315,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/death/2": {
+   "x": 3,
+   "y": 315,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/death/3": {
+   "x": 419,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/death/4": {
+   "x": 263,
+   "y": 55,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/death/5": {
+   "x": 3,
+   "y": 55,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/die/0": {
+   "x": 3,
+   "y": 107,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/die/1": {
+   "x": 315,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/die/2": {
+   "x": 3,
+   "y": 315,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/die/3": {
+   "x": 419,
+   "y": 3,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/die/4": {
+   "x": 263,
+   "y": 55,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "hero_captain/die/5": {
+   "x": 3,
+   "y": 55,
+   "w": 48,
+   "h": 48,
+   "pivot": [
+    22,
+    47
+   ]
+  },
+  "worker/idle/0": {
+   "x": 399,
+   "y": 107,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/idle/1": {
+   "x": 399,
+   "y": 107,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/idle/2": {
+   "x": 251,
+   "y": 183,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/idle/3": {
+   "x": 91,
+   "y": 387,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/walk/0": {
+   "x": 235,
+   "y": 399,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/walk/1": {
+   "x": 219,
+   "y": 471,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/walk/2": {
+   "x": 55,
+   "y": 387,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/walk/3": {
+   "x": 127,
+   "y": 291,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/walk/4": {
+   "x": 287,
+   "y": 147,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/walk/5": {
+   "x": 127,
+   "y": 363,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/work/0": {
+   "x": 251,
+   "y": 111,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/work/1": {
+   "x": 147,
+   "y": 471,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/work/2": {
+   "x": 287,
+   "y": 107,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/work/3": {
+   "x": 435,
+   "y": 107,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/carry/0": {
+   "x": 143,
+   "y": 147,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/carry/1": {
+   "x": 91,
+   "y": 351,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/carry/2": {
+   "x": 75,
+   "y": 459,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/carry/3": {
+   "x": 271,
+   "y": 399,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/carry/4": {
+   "x": 287,
+   "y": 255,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/carry/5": {
+   "x": 163,
+   "y": 399,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/death/0": {
+   "x": 199,
+   "y": 327,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/death/1": {
+   "x": 3,
+   "y": 471,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/death/2": {
+   "x": 255,
+   "y": 435,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/death/3": {
+   "x": 471,
+   "y": 39,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/death/4": {
+   "x": 287,
+   "y": 219,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/death/5": {
+   "x": 251,
+   "y": 219,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/die/0": {
+   "x": 199,
+   "y": 327,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/die/1": {
+   "x": 3,
+   "y": 471,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/die/2": {
+   "x": 255,
+   "y": 435,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/die/3": {
+   "x": 471,
+   "y": 39,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/die/4": {
+   "x": 287,
+   "y": 219,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "worker/die/5": {
+   "x": 251,
+   "y": 219,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    14,
+    31
+   ]
+  },
+  "melee_basic/idle/0": {
+   "x": 271,
+   "y": 291,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/idle/1": {
+   "x": 271,
+   "y": 291,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/idle/2": {
+   "x": 307,
+   "y": 399,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/idle/3": {
+   "x": 215,
+   "y": 111,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/walk/0": {
+   "x": 255,
+   "y": 471,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/walk/1": {
+   "x": 147,
+   "y": 435,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/walk/2": {
+   "x": 471,
+   "y": 75,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/walk/3": {
+   "x": 235,
+   "y": 291,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/walk/4": {
+   "x": 179,
+   "y": 111,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/walk/5": {
+   "x": 307,
+   "y": 327,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/attack/0": {
+   "x": 215,
+   "y": 219,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/attack/1": {
+   "x": 179,
+   "y": 183,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/attack/2": {
+   "x": 235,
+   "y": 327,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/attack/3": {
+   "x": 163,
+   "y": 291,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/attack/4": {
+   "x": 183,
+   "y": 471,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/hit/0": {
+   "x": 251,
+   "y": 147,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/hit/1": {
+   "x": 183,
+   "y": 435,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/death/0": {
+   "x": 251,
+   "y": 147,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/death/1": {
+   "x": 127,
+   "y": 399,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/death/2": {
+   "x": 55,
+   "y": 315,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/death/3": {
+   "x": 91,
+   "y": 315,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/death/4": {
+   "x": 219,
+   "y": 435,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/death/5": {
+   "x": 107,
+   "y": 183,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/die/0": {
+   "x": 251,
+   "y": 147,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/die/1": {
+   "x": 127,
+   "y": 399,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/die/2": {
+   "x": 55,
+   "y": 315,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/die/3": {
+   "x": 91,
+   "y": 315,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/die/4": {
+   "x": 219,
+   "y": 435,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "melee_basic/die/5": {
+   "x": 107,
+   "y": 183,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/idle/0": {
+   "x": 271,
+   "y": 363,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/idle/1": {
+   "x": 271,
+   "y": 363,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/idle/2": {
+   "x": 143,
+   "y": 111,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/idle/3": {
+   "x": 55,
+   "y": 423,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/walk/0": {
+   "x": 307,
+   "y": 291,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/walk/1": {
+   "x": 163,
+   "y": 363,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/walk/2": {
+   "x": 179,
+   "y": 219,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/walk/3": {
+   "x": 55,
+   "y": 351,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/walk/4": {
+   "x": 107,
+   "y": 255,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/walk/5": {
+   "x": 111,
+   "y": 459,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/attack/0": {
+   "x": 39,
+   "y": 471,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/attack/1": {
+   "x": 327,
+   "y": 107,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/attack/2": {
+   "x": 199,
+   "y": 291,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/attack/3": {
+   "x": 291,
+   "y": 471,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/hit/0": {
+   "x": 91,
+   "y": 423,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/hit/1": {
+   "x": 199,
+   "y": 363,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/death/0": {
+   "x": 91,
+   "y": 423,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/death/1": {
+   "x": 179,
+   "y": 147,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/death/2": {
+   "x": 215,
+   "y": 147,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/death/3": {
+   "x": 143,
+   "y": 183,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/death/4": {
+   "x": 291,
+   "y": 435,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/death/5": {
+   "x": 143,
+   "y": 255,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/die/0": {
+   "x": 91,
+   "y": 423,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/die/1": {
+   "x": 179,
+   "y": 147,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/die/2": {
+   "x": 215,
+   "y": 147,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/die/3": {
+   "x": 143,
+   "y": 183,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/die/4": {
+   "x": 291,
+   "y": 435,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "ranged_basic/die/5": {
+   "x": 143,
+   "y": 255,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/idle/0": {
+   "x": 107,
+   "y": 111,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/idle/1": {
+   "x": 107,
+   "y": 111,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/idle/2": {
+   "x": 307,
+   "y": 363,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/walk/0": {
+   "x": 307,
+   "y": 363,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/walk/1": {
+   "x": 179,
+   "y": 255,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/walk/2": {
+   "x": 251,
+   "y": 255,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/walk/3": {
+   "x": 271,
+   "y": 327,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/walk/4": {
+   "x": 107,
+   "y": 147,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/walk/5": {
+   "x": 127,
+   "y": 327,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/attack/0": {
+   "x": 215,
+   "y": 255,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/attack/1": {
+   "x": 143,
+   "y": 219,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/attack/2": {
+   "x": 199,
+   "y": 399,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/attack/3": {
+   "x": 363,
+   "y": 107,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/hit/0": {
+   "x": 471,
+   "y": 111,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/hit/1": {
+   "x": 287,
+   "y": 183,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/death/0": {
+   "x": 471,
+   "y": 111,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/death/1": {
+   "x": 235,
+   "y": 363,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/death/2": {
+   "x": 471,
+   "y": 3,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/death/3": {
+   "x": 163,
+   "y": 327,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/death/4": {
+   "x": 215,
+   "y": 183,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/death/5": {
+   "x": 107,
+   "y": 219,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/die/0": {
+   "x": 471,
+   "y": 111,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/die/1": {
+   "x": 235,
+   "y": 363,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/die/2": {
+   "x": 471,
+   "y": 3,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/die/3": {
+   "x": 163,
+   "y": 327,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/die/4": {
+   "x": 215,
+   "y": 183,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  },
+  "tank/die/5": {
+   "x": 107,
+   "y": 219,
+   "w": 32,
+   "h": 32,
+   "pivot": [
+    13,
+    31
+   ]
+  }
+ },
+ "anims": {
+  "hero_captain": {
+   "idle": {
+    "frames": [
+     "hero_captain/idle/0",
+     "hero_captain/idle/1",
+     "hero_captain/idle/2",
+     "hero_captain/idle/3"
+    ],
+    "fps": 5,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "hero_captain/walk/0",
+     "hero_captain/walk/1",
+     "hero_captain/walk/2",
+     "hero_captain/walk/3",
+     "hero_captain/walk/4",
+     "hero_captain/walk/5"
+    ],
+    "fps": 10,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "hero_captain/attack/0",
+     "hero_captain/attack/1",
+     "hero_captain/attack/2",
+     "hero_captain/attack/3",
+     "hero_captain/attack/4",
+     "hero_captain/attack/5"
+    ],
+    "fps": 14,
+    "loop": false,
+    "hit_frame": 3,
+    "events": {
+     "hit": 3
+    }
+   },
+   "cast": {
+    "frames": [
+     "hero_captain/cast/0",
+     "hero_captain/cast/1",
+     "hero_captain/cast/2",
+     "hero_captain/cast/3",
+     "hero_captain/cast/4",
+     "hero_captain/cast/5"
+    ],
+    "fps": 12,
+    "loop": false,
+    "events": {
+     "release": 4
+    }
+   },
+   "hit": {
+    "frames": [
+     "hero_captain/hit/0",
+     "hero_captain/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "hero_captain/death/0",
+     "hero_captain/death/1",
+     "hero_captain/death/2",
+     "hero_captain/death/3",
+     "hero_captain/death/4",
+     "hero_captain/death/5"
+    ],
+    "fps": 8,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "hero_captain/die/0",
+     "hero_captain/die/1",
+     "hero_captain/die/2",
+     "hero_captain/die/3",
+     "hero_captain/die/4",
+     "hero_captain/die/5"
+    ],
+    "fps": 8,
+    "loop": false
+   }
+  },
+  "worker": {
+   "idle": {
+    "frames": [
+     "worker/idle/0",
+     "worker/idle/1",
+     "worker/idle/2",
+     "worker/idle/3"
+    ],
+    "fps": 4,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "worker/walk/0",
+     "worker/walk/1",
+     "worker/walk/2",
+     "worker/walk/3",
+     "worker/walk/4",
+     "worker/walk/5"
+    ],
+    "fps": 10,
+    "loop": true
+   },
+   "work": {
+    "frames": [
+     "worker/work/0",
+     "worker/work/1",
+     "worker/work/2",
+     "worker/work/3"
+    ],
+    "fps": 8,
+    "loop": true,
+    "hit_frame": 3,
+    "events": {
+     "hit": 3
+    }
+   },
+   "carry": {
+    "frames": [
+     "worker/carry/0",
+     "worker/carry/1",
+     "worker/carry/2",
+     "worker/carry/3",
+     "worker/carry/4",
+     "worker/carry/5"
+    ],
+    "fps": 9,
+    "loop": true
+   },
+   "death": {
+    "frames": [
+     "worker/death/0",
+     "worker/death/1",
+     "worker/death/2",
+     "worker/death/3",
+     "worker/death/4",
+     "worker/death/5"
+    ],
+    "fps": 8,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "worker/die/0",
+     "worker/die/1",
+     "worker/die/2",
+     "worker/die/3",
+     "worker/die/4",
+     "worker/die/5"
+    ],
+    "fps": 8,
+    "loop": false
+   }
+  },
+  "melee_basic": {
+   "idle": {
+    "frames": [
+     "melee_basic/idle/0",
+     "melee_basic/idle/1",
+     "melee_basic/idle/2",
+     "melee_basic/idle/3"
+    ],
+    "fps": 4,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "melee_basic/walk/0",
+     "melee_basic/walk/1",
+     "melee_basic/walk/2",
+     "melee_basic/walk/3",
+     "melee_basic/walk/4",
+     "melee_basic/walk/5"
+    ],
+    "fps": 10,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "melee_basic/attack/0",
+     "melee_basic/attack/1",
+     "melee_basic/attack/2",
+     "melee_basic/attack/3",
+     "melee_basic/attack/4"
+    ],
+    "fps": 12,
+    "loop": false,
+    "hit_frame": 2,
+    "events": {
+     "hit": 2
+    }
+   },
+   "hit": {
+    "frames": [
+     "melee_basic/hit/0",
+     "melee_basic/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "melee_basic/death/0",
+     "melee_basic/death/1",
+     "melee_basic/death/2",
+     "melee_basic/death/3",
+     "melee_basic/death/4",
+     "melee_basic/death/5"
+    ],
+    "fps": 8,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "melee_basic/die/0",
+     "melee_basic/die/1",
+     "melee_basic/die/2",
+     "melee_basic/die/3",
+     "melee_basic/die/4",
+     "melee_basic/die/5"
+    ],
+    "fps": 8,
+    "loop": false
+   }
+  },
+  "ranged_basic": {
+   "idle": {
+    "frames": [
+     "ranged_basic/idle/0",
+     "ranged_basic/idle/1",
+     "ranged_basic/idle/2",
+     "ranged_basic/idle/3"
+    ],
+    "fps": 4,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "ranged_basic/walk/0",
+     "ranged_basic/walk/1",
+     "ranged_basic/walk/2",
+     "ranged_basic/walk/3",
+     "ranged_basic/walk/4",
+     "ranged_basic/walk/5"
+    ],
+    "fps": 10,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "ranged_basic/attack/0",
+     "ranged_basic/attack/1",
+     "ranged_basic/attack/2",
+     "ranged_basic/attack/3"
+    ],
+    "fps": 10,
+    "loop": false,
+    "hit_frame": 2,
+    "events": {
+     "hit": 2
+    },
+    "points": {
+     "projectile_spawn": [
+      24,
+      17
+     ]
+    }
+   },
+   "hit": {
+    "frames": [
+     "ranged_basic/hit/0",
+     "ranged_basic/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "ranged_basic/death/0",
+     "ranged_basic/death/1",
+     "ranged_basic/death/2",
+     "ranged_basic/death/3",
+     "ranged_basic/death/4",
+     "ranged_basic/death/5"
+    ],
+    "fps": 8,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "ranged_basic/die/0",
+     "ranged_basic/die/1",
+     "ranged_basic/die/2",
+     "ranged_basic/die/3",
+     "ranged_basic/die/4",
+     "ranged_basic/die/5"
+    ],
+    "fps": 8,
+    "loop": false
+   }
+  },
+  "tank": {
+   "idle": {
+    "frames": [
+     "tank/idle/0",
+     "tank/idle/1",
+     "tank/idle/2"
+    ],
+    "fps": 3,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "tank/walk/0",
+     "tank/walk/1",
+     "tank/walk/2",
+     "tank/walk/3",
+     "tank/walk/4",
+     "tank/walk/5"
+    ],
+    "fps": 8,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "tank/attack/0",
+     "tank/attack/1",
+     "tank/attack/2",
+     "tank/attack/3"
+    ],
+    "fps": 9,
+    "loop": false,
+    "hit_frame": 2,
+    "events": {
+     "hit": 2
+    }
+   },
+   "hit": {
+    "frames": [
+     "tank/hit/0",
+     "tank/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "tank/death/0",
+     "tank/death/1",
+     "tank/death/2",
+     "tank/death/3",
+     "tank/death/4",
+     "tank/death/5"
+    ],
+    "fps": 8,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "tank/die/0",
+     "tank/die/1",
+     "tank/die/2",
+     "tank/die/3",
+     "tank/die/4",
+     "tank/die/5"
+    ],
+    "fps": 8,
+    "loop": false
+   }
+  }
+ },
+ "anim_sets_meta": {
+  "hero_captain": {
+   "frame_size": [
+    48,
+    48
+   ],
+   "pivot": [
+    22,
+    47
+   ],
+   "facing": "right",
+   "faction": "player",
+   "kind": "character"
+  },
+  "worker": {
+   "frame_size": [
+    32,
+    32
+   ],
+   "pivot": [
+    14,
+    31
+   ],
+   "facing": "right",
+   "faction": "player",
+   "kind": "character"
+  },
+  "melee_basic": {
+   "frame_size": [
+    32,
+    32
+   ],
+   "pivot": [
+    13,
+    31
+   ],
+   "facing": "right",
+   "faction": "player",
+   "kind": "character"
+  },
+  "ranged_basic": {
+   "frame_size": [
+    32,
+    32
+   ],
+   "pivot": [
+    13,
+    31
+   ],
+   "facing": "right",
+   "faction": "player",
+   "kind": "character"
+  },
+  "tank": {
+   "frame_size": [
+    32,
+    32
+   ],
+   "pivot": [
+    13,
+    31
+   ],
+   "facing": "right",
+   "faction": "player",
+   "kind": "character"
+  }
+ }
+}

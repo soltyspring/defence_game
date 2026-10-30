@@ -1,0 +1,1200 @@
+{
+ "schema": "defence.atlas/1",
+ "atlas": "fx_combat",
+ "image": "fx_combat.png",
+ "image_res": "res://assets/atlases/fx_combat.png",
+ "size": [
+  512,
+  256
+ ],
+ "padding": 2,
+ "extrude": 1,
+ "group": "fx",
+ "load_policy": "battle",
+ "note": "Projectiles, impacts, skill FX, shadows. Pivot centre unless noted.",
+ "filter": "nearest",
+ "mipmaps": false,
+ "repeat": false,
+ "gpu_format": "RGBA8 (lossless, no VRAM compression)",
+ "gpu_bytes": 524288,
+ "disk_bytes": 4457,
+ "unique_regions": 73,
+ "occupancy": 0.502,
+ "frames": {
+  "arrow/fly/0": {
+   "x": 317,
+   "y": 159,
+   "w": 14,
+   "h": 5,
+   "pivot": [
+    7,
+    2
+   ]
+  },
+  "tower_bolt/fly/0": {
+   "x": 271,
+   "y": 247,
+   "w": 16,
+   "h": 5,
+   "pivot": [
+    8,
+    2
+   ]
+  },
+  "spit/fly/0": {
+   "x": 303,
+   "y": 201,
+   "w": 10,
+   "h": 8,
+   "pivot": [
+    5,
+    4
+   ]
+  },
+  "spit/fly/1": {
+   "x": 317,
+   "y": 147,
+   "w": 10,
+   "h": 8,
+   "pivot": [
+    5,
+    4
+   ]
+  },
+  "spit/fly/2": {
+   "x": 303,
+   "y": 201,
+   "w": 10,
+   "h": 8,
+   "pivot": [
+    5,
+    4
+   ]
+  },
+  "rock/fly/0": {
+   "x": 303,
+   "y": 161,
+   "w": 10,
+   "h": 10,
+   "pivot": [
+    5,
+    5
+   ]
+  },
+  "rock/fly/1": {
+   "x": 303,
+   "y": 175,
+   "w": 10,
+   "h": 10,
+   "pivot": [
+    5,
+    5
+   ]
+  },
+  "rock/fly/2": {
+   "x": 303,
+   "y": 147,
+   "w": 10,
+   "h": 10,
+   "pivot": [
+    5,
+    5
+   ]
+  },
+  "rock/fly/3": {
+   "x": 499,
+   "y": 3,
+   "w": 10,
+   "h": 10,
+   "pivot": [
+    5,
+    5
+   ]
+  },
+  "hit_spark/play/0": {
+   "x": 283,
+   "y": 71,
+   "w": 16,
+   "h": 16,
+   "pivot": [
+    8,
+    8
+   ]
+  },
+  "hit_spark/play/1": {
+   "x": 283,
+   "y": 31,
+   "w": 16,
+   "h": 16,
+   "pivot": [
+    8,
+    8
+   ]
+  },
+  "hit_spark/play/2": {
+   "x": 283,
+   "y": 111,
+   "w": 16,
+   "h": 16,
+   "pivot": [
+    8,
+    8
+   ]
+  },
+  "hit_spark/play/3": {
+   "x": 327,
+   "y": 3,
+   "w": 16,
+   "h": 16,
+   "pivot": [
+    8,
+    8
+   ]
+  },
+  "hit_spark/play/4": {
+   "x": 283,
+   "y": 91,
+   "w": 16,
+   "h": 16,
+   "pivot": [
+    8,
+    8
+   ]
+  },
+  "hit_spit/play/0": {
+   "x": 367,
+   "y": 3,
+   "w": 16,
+   "h": 16,
+   "pivot": [
+    8,
+    8
+   ]
+  },
+  "hit_spit/play/1": {
+   "x": 283,
+   "y": 51,
+   "w": 16,
+   "h": 16,
+   "pivot": [
+    8,
+    8
+   ]
+  },
+  "hit_spit/play/2": {
+   "x": 307,
+   "y": 3,
+   "w": 16,
+   "h": 16,
+   "pivot": [
+    8,
+    8
+   ]
+  },
+  "hit_spit/play/3": {
+   "x": 347,
+   "y": 3,
+   "w": 16,
+   "h": 16,
+   "pivot": [
+    8,
+    8
+   ]
+  },
+  "explosion/play/0": {
+   "x": 47,
+   "y": 207,
+   "w": 40,
+   "h": 40,
+   "pivot": [
+    20,
+    22
+   ]
+  },
+  "explosion/play/1": {
+   "x": 107,
+   "y": 47,
+   "w": 40,
+   "h": 40,
+   "pivot": [
+    20,
+    22
+   ]
+  },
+  "explosion/play/2": {
+   "x": 107,
+   "y": 91,
+   "w": 40,
+   "h": 40,
+   "pivot": [
+    20,
+    22
+   ]
+  },
+  "explosion/play/3": {
+   "x": 107,
+   "y": 3,
+   "w": 40,
+   "h": 40,
+   "pivot": [
+    20,
+    22
+   ]
+  },
+  "explosion/play/4": {
+   "x": 3,
+   "y": 207,
+   "w": 40,
+   "h": 40,
+   "pivot": [
+    20,
+    22
+   ]
+  },
+  "explosion/play/5": {
+   "x": 91,
+   "y": 207,
+   "w": 40,
+   "h": 40,
+   "pivot": [
+    20,
+    22
+   ]
+  },
+  "explosion/play/6": {
+   "x": 107,
+   "y": 135,
+   "w": 40,
+   "h": 40,
+   "pivot": [
+    20,
+    22
+   ]
+  },
+  "death_poof/play/0": {
+   "x": 135,
+   "y": 223,
+   "w": 24,
+   "h": 24,
+   "pivot": [
+    12,
+    20
+   ]
+  },
+  "death_poof/play/1": {
+   "x": 191,
+   "y": 223,
+   "w": 24,
+   "h": 24,
+   "pivot": [
+    12,
+    20
+   ]
+  },
+  "death_poof/play/2": {
+   "x": 219,
+   "y": 223,
+   "w": 24,
+   "h": 24,
+   "pivot": [
+    12,
+    20
+   ]
+  },
+  "death_poof/play/3": {
+   "x": 163,
+   "y": 223,
+   "w": 24,
+   "h": 24,
+   "pivot": [
+    12,
+    20
+   ]
+  },
+  "death_poof/play/4": {
+   "x": 107,
+   "y": 179,
+   "w": 24,
+   "h": 24,
+   "pivot": [
+    12,
+    20
+   ]
+  },
+  "dust/play/0": {
+   "x": 487,
+   "y": 19,
+   "w": 16,
+   "h": 10,
+   "pivot": [
+    8,
+    9
+   ]
+  },
+  "dust/play/1": {
+   "x": 487,
+   "y": 33,
+   "w": 16,
+   "h": 10,
+   "pivot": [
+    8,
+    9
+   ]
+  },
+  "dust/play/2": {
+   "x": 467,
+   "y": 19,
+   "w": 16,
+   "h": 10,
+   "pivot": [
+    8,
+    9
+   ]
+  },
+  "dust/play/3": {
+   "x": 467,
+   "y": 33,
+   "w": 16,
+   "h": 10,
+   "pivot": [
+    8,
+    9
+   ]
+  },
+  "skill_slam/play/0": {
+   "x": 215,
+   "y": 3,
+   "w": 64,
+   "h": 32,
+   "pivot": [
+    32,
+    31
+   ]
+  },
+  "skill_slam/play/1": {
+   "x": 215,
+   "y": 75,
+   "w": 64,
+   "h": 32,
+   "pivot": [
+    32,
+    31
+   ]
+  },
+  "skill_slam/play/2": {
+   "x": 215,
+   "y": 39,
+   "w": 64,
+   "h": 32,
+   "pivot": [
+    32,
+    31
+   ]
+  },
+  "skill_slam/play/3": {
+   "x": 235,
+   "y": 147,
+   "w": 64,
+   "h": 32,
+   "pivot": [
+    32,
+    31
+   ]
+  },
+  "skill_slam/play/4": {
+   "x": 215,
+   "y": 111,
+   "w": 64,
+   "h": 32,
+   "pivot": [
+    32,
+    31
+   ]
+  },
+  "skill_slam/play/5": {
+   "x": 235,
+   "y": 183,
+   "w": 64,
+   "h": 32,
+   "pivot": [
+    32,
+    31
+   ]
+  },
+  "skill_rally/loop/0": {
+   "x": 151,
+   "y": 135,
+   "w": 32,
+   "h": 40,
+   "pivot": [
+    16,
+    39
+   ]
+  },
+  "skill_rally/loop/1": {
+   "x": 151,
+   "y": 47,
+   "w": 32,
+   "h": 40,
+   "pivot": [
+    16,
+    39
+   ]
+  },
+  "skill_rally/loop/2": {
+   "x": 151,
+   "y": 3,
+   "w": 32,
+   "h": 40,
+   "pivot": [
+    16,
+    39
+   ]
+  },
+  "skill_rally/loop/3": {
+   "x": 135,
+   "y": 179,
+   "w": 32,
+   "h": 40,
+   "pivot": [
+    16,
+    39
+   ]
+  },
+  "skill_rally/loop/4": {
+   "x": 171,
+   "y": 179,
+   "w": 32,
+   "h": 40,
+   "pivot": [
+    16,
+    39
+   ]
+  },
+  "skill_rally/loop/5": {
+   "x": 151,
+   "y": 91,
+   "w": 32,
+   "h": 40,
+   "pivot": [
+    16,
+    39
+   ]
+  },
+  "skill_barrage/play/0": {
+   "x": 3,
+   "y": 71,
+   "w": 48,
+   "h": 64,
+   "pivot": [
+    24,
+    63
+   ]
+  },
+  "skill_barrage/play/1": {
+   "x": 3,
+   "y": 3,
+   "w": 48,
+   "h": 64,
+   "pivot": [
+    24,
+    63
+   ]
+  },
+  "skill_barrage/play/2": {
+   "x": 55,
+   "y": 3,
+   "w": 48,
+   "h": 64,
+   "pivot": [
+    24,
+    63
+   ]
+  },
+  "skill_barrage/play/3": {
+   "x": 3,
+   "y": 139,
+   "w": 48,
+   "h": 64,
+   "pivot": [
+    24,
+    63
+   ]
+  },
+  "skill_barrage/play/4": {
+   "x": 55,
+   "y": 139,
+   "w": 48,
+   "h": 64,
+   "pivot": [
+    24,
+    63
+   ]
+  },
+  "skill_barrage/play/5": {
+   "x": 55,
+   "y": 71,
+   "w": 48,
+   "h": 64,
+   "pivot": [
+    24,
+    63
+   ]
+  },
+  "spawn/play/0": {
+   "x": 207,
+   "y": 179,
+   "w": 24,
+   "h": 40,
+   "pivot": [
+    12,
+    39
+   ]
+  },
+  "spawn/play/1": {
+   "x": 187,
+   "y": 91,
+   "w": 24,
+   "h": 40,
+   "pivot": [
+    12,
+    39
+   ]
+  },
+  "spawn/play/2": {
+   "x": 187,
+   "y": 3,
+   "w": 24,
+   "h": 40,
+   "pivot": [
+    12,
+    39
+   ]
+  },
+  "spawn/play/3": {
+   "x": 187,
+   "y": 135,
+   "w": 24,
+   "h": 40,
+   "pivot": [
+    12,
+    39
+   ]
+  },
+  "spawn/play/4": {
+   "x": 187,
+   "y": 47,
+   "w": 24,
+   "h": 40,
+   "pivot": [
+    12,
+    39
+   ]
+  },
+  "heal/loop/0": {
+   "x": 267,
+   "y": 219,
+   "w": 16,
+   "h": 24,
+   "pivot": [
+    8,
+    23
+   ]
+  },
+  "heal/loop/1": {
+   "x": 215,
+   "y": 147,
+   "w": 16,
+   "h": 24,
+   "pivot": [
+    8,
+    23
+   ]
+  },
+  "heal/loop/2": {
+   "x": 283,
+   "y": 3,
+   "w": 16,
+   "h": 24,
+   "pivot": [
+    8,
+    23
+   ]
+  },
+  "heal/loop/3": {
+   "x": 287,
+   "y": 219,
+   "w": 16,
+   "h": 24,
+   "pivot": [
+    8,
+    23
+   ]
+  },
+  "heal/loop/4": {
+   "x": 247,
+   "y": 219,
+   "w": 16,
+   "h": 24,
+   "pivot": [
+    8,
+    23
+   ]
+  },
+  "heal/loop/5": {
+   "x": 267,
+   "y": 219,
+   "w": 16,
+   "h": 24,
+   "pivot": [
+    8,
+    23
+   ]
+  },
+  "fire/loop/0": {
+   "x": 387,
+   "y": 3,
+   "w": 12,
+   "h": 16,
+   "pivot": [
+    6,
+    15
+   ]
+  },
+  "fire/loop/1": {
+   "x": 419,
+   "y": 3,
+   "w": 12,
+   "h": 16,
+   "pivot": [
+    6,
+    15
+   ]
+  },
+  "fire/loop/2": {
+   "x": 435,
+   "y": 3,
+   "w": 12,
+   "h": 16,
+   "pivot": [
+    6,
+    15
+   ]
+  },
+  "fire/loop/3": {
+   "x": 403,
+   "y": 3,
+   "w": 12,
+   "h": 16,
+   "pivot": [
+    6,
+    15
+   ]
+  },
+  "coin/loop/0": {
+   "x": 483,
+   "y": 3,
+   "w": 12,
+   "h": 12,
+   "pivot": [
+    6,
+    6
+   ]
+  },
+  "coin/loop/1": {
+   "x": 451,
+   "y": 3,
+   "w": 12,
+   "h": 12,
+   "pivot": [
+    6,
+    6
+   ]
+  },
+  "coin/loop/2": {
+   "x": 451,
+   "y": 19,
+   "w": 12,
+   "h": 12,
+   "pivot": [
+    6,
+    6
+   ]
+  },
+  "coin/loop/3": {
+   "x": 467,
+   "y": 3,
+   "w": 12,
+   "h": 12,
+   "pivot": [
+    6,
+    6
+   ]
+  },
+  "coin/loop/4": {
+   "x": 451,
+   "y": 19,
+   "w": 12,
+   "h": 12,
+   "pivot": [
+    6,
+    6
+   ]
+  },
+  "coin/loop/5": {
+   "x": 451,
+   "y": 3,
+   "w": 12,
+   "h": 12,
+   "pivot": [
+    6,
+    6
+   ]
+  },
+  "shadow_s": {
+   "x": 291,
+   "y": 247,
+   "w": 14,
+   "h": 5,
+   "pivot": [
+    7,
+    2
+   ],
+   "blend": "alpha",
+   "note": "translucent 96/255"
+  },
+  "shadow_m": {
+   "x": 247,
+   "y": 247,
+   "w": 20,
+   "h": 6,
+   "pivot": [
+    10,
+    3
+   ],
+   "blend": "alpha",
+   "note": "translucent 96/255"
+  },
+  "shadow_l": {
+   "x": 303,
+   "y": 189,
+   "w": 34,
+   "h": 8,
+   "pivot": [
+    17,
+    4
+   ],
+   "blend": "alpha",
+   "note": "translucent 96/255"
+  },
+  "shadow_xl": {
+   "x": 283,
+   "y": 131,
+   "w": 90,
+   "h": 12,
+   "pivot": [
+    45,
+    6
+   ],
+   "blend": "alpha",
+   "note": "translucent 96/255"
+  }
+ },
+ "anims": {
+  "arrow": {
+   "fly": {
+    "frames": [
+     "arrow/fly/0"
+    ],
+    "fps": 1,
+    "loop": true
+   }
+  },
+  "tower_bolt": {
+   "fly": {
+    "frames": [
+     "tower_bolt/fly/0"
+    ],
+    "fps": 1,
+    "loop": true
+   }
+  },
+  "spit": {
+   "fly": {
+    "frames": [
+     "spit/fly/0",
+     "spit/fly/1",
+     "spit/fly/2"
+    ],
+    "fps": 10,
+    "loop": true
+   }
+  },
+  "rock": {
+   "fly": {
+    "frames": [
+     "rock/fly/0",
+     "rock/fly/1",
+     "rock/fly/2",
+     "rock/fly/3"
+    ],
+    "fps": 12,
+    "loop": true
+   }
+  },
+  "hit_spark": {
+   "play": {
+    "frames": [
+     "hit_spark/play/0",
+     "hit_spark/play/1",
+     "hit_spark/play/2",
+     "hit_spark/play/3",
+     "hit_spark/play/4"
+    ],
+    "fps": 20,
+    "loop": false
+   }
+  },
+  "hit_spit": {
+   "play": {
+    "frames": [
+     "hit_spit/play/0",
+     "hit_spit/play/1",
+     "hit_spit/play/2",
+     "hit_spit/play/3"
+    ],
+    "fps": 16,
+    "loop": false
+   }
+  },
+  "explosion": {
+   "play": {
+    "frames": [
+     "explosion/play/0",
+     "explosion/play/1",
+     "explosion/play/2",
+     "explosion/play/3",
+     "explosion/play/4",
+     "explosion/play/5",
+     "explosion/play/6"
+    ],
+    "fps": 16,
+    "loop": false
+   }
+  },
+  "death_poof": {
+   "play": {
+    "frames": [
+     "death_poof/play/0",
+     "death_poof/play/1",
+     "death_poof/play/2",
+     "death_poof/play/3",
+     "death_poof/play/4"
+    ],
+    "fps": 14,
+    "loop": false
+   }
+  },
+  "dust": {
+   "play": {
+    "frames": [
+     "dust/play/0",
+     "dust/play/1",
+     "dust/play/2",
+     "dust/play/3"
+    ],
+    "fps": 14,
+    "loop": false
+   }
+  },
+  "skill_slam": {
+   "play": {
+    "frames": [
+     "skill_slam/play/0",
+     "skill_slam/play/1",
+     "skill_slam/play/2",
+     "skill_slam/play/3",
+     "skill_slam/play/4",
+     "skill_slam/play/5"
+    ],
+    "fps": 14,
+    "loop": false
+   }
+  },
+  "skill_rally": {
+   "loop": {
+    "frames": [
+     "skill_rally/loop/0",
+     "skill_rally/loop/1",
+     "skill_rally/loop/2",
+     "skill_rally/loop/3",
+     "skill_rally/loop/4",
+     "skill_rally/loop/5"
+    ],
+    "fps": 10,
+    "loop": true
+   }
+  },
+  "skill_barrage": {
+   "play": {
+    "frames": [
+     "skill_barrage/play/0",
+     "skill_barrage/play/1",
+     "skill_barrage/play/2",
+     "skill_barrage/play/3",
+     "skill_barrage/play/4",
+     "skill_barrage/play/5"
+    ],
+    "fps": 12,
+    "loop": false
+   }
+  },
+  "spawn": {
+   "play": {
+    "frames": [
+     "spawn/play/0",
+     "spawn/play/1",
+     "spawn/play/2",
+     "spawn/play/3",
+     "spawn/play/4"
+    ],
+    "fps": 14,
+    "loop": false
+   }
+  },
+  "heal": {
+   "loop": {
+    "frames": [
+     "heal/loop/0",
+     "heal/loop/1",
+     "heal/loop/2",
+     "heal/loop/3",
+     "heal/loop/4",
+     "heal/loop/5"
+    ],
+    "fps": 10,
+    "loop": true
+   }
+  },
+  "fire": {
+   "loop": {
+    "frames": [
+     "fire/loop/0",
+     "fire/loop/1",
+     "fire/loop/2",
+     "fire/loop/3"
+    ],
+    "fps": 10,
+    "loop": true
+   }
+  },
+  "coin": {
+   "loop": {
+    "frames": [
+     "coin/loop/0",
+     "coin/loop/1",
+     "coin/loop/2",
+     "coin/loop/3",
+     "coin/loop/4",
+     "coin/loop/5"
+    ],
+    "fps": 12,
+    "loop": true
+   }
+  }
+ },
+ "anim_sets_meta": {
+  "arrow": {
+   "frame_size": [
+    14,
+    5
+   ],
+   "pivot": [
+    7,
+    2
+   ],
+   "facing": "right",
+   "kind": "fx"
+  },
+  "tower_bolt": {
+   "frame_size": [
+    16,
+    5
+   ],
+   "pivot": [
+    8,
+    2
+   ],
+   "facing": "right",
+   "kind": "fx"
+  },
+  "spit": {
+   "frame_size": [
+    10,
+    8
+   ],
+   "pivot": [
+    5,
+    4
+   ],
+   "facing": "right",
+   "kind": "fx"
+  },
+  "rock": {
+   "frame_size": [
+    10,
+    10
+   ],
+   "pivot": [
+    5,
+    5
+   ],
+   "facing": "right",
+   "kind": "fx"
+  },
+  "hit_spark": {
+   "frame_size": [
+    16,
+    16
+   ],
+   "pivot": [
+    8,
+    8
+   ],
+   "facing": "right",
+   "kind": "fx"
+  },
+  "hit_spit": {
+   "frame_size": [
+    16,
+    16
+   ],
+   "pivot": [
+    8,
+    8
+   ],
+   "facing": "right",
+   "kind": "fx"
+  },
+  "explosion": {
+   "frame_size": [
+    40,
+    40
+   ],
+   "pivot": [
+    20,
+    22
+   ],
+   "facing": "right",
+   "kind": "fx"
+  },
+  "death_poof": {
+   "frame_size": [
+    24,
+    24
+   ],
+   "pivot": [
+    12,
+    20
+   ],
+   "facing": "right",
+   "kind": "fx"
+  },
+  "dust": {
+   "frame_size": [
+    16,
+    10
+   ],
+   "pivot": [
+    8,
+    9
+   ],
+   "facing": "right",
+   "kind": "fx"
+  },
+  "skill_slam": {
+   "frame_size": [
+    64,
+    32
+   ],
+   "pivot": [
+    32,
+    31
+   ],
+   "facing": "right",
+   "kind": "fx"
+  },
+  "skill_rally": {
+   "frame_size": [
+    32,
+    40
+   ],
+   "pivot": [
+    16,
+    39
+   ],
+   "facing": "right",
+   "kind": "fx"
+  },
+  "skill_barrage": {
+   "frame_size": [
+    48,
+    64
+   ],
+   "pivot": [
+    24,
+    63
+   ],
+   "facing": "right",
+   "kind": "fx"
+  },
+  "spawn": {
+   "frame_size": [
+    24,
+    40
+   ],
+   "pivot": [
+    12,
+    39
+   ],
+   "facing": "right",
+   "kind": "fx"
+  },
+  "heal": {
+   "frame_size": [
+    16,
+    24
+   ],
+   "pivot": [
+    8,
+    23
+   ],
+   "facing": "right",
+   "kind": "fx"
+  },
+  "fire": {
+   "frame_size": [
+    12,
+    16
+   ],
+   "pivot": [
+    6,
+    15
+   ],
+   "facing": "right",
+   "kind": "fx"
+  },
+  "coin": {
+   "frame_size": [
+    12,
+    12
+   ],
+   "pivot": [
+    6,
+    6
+   ],
+   "facing": "right",
+   "kind": "fx"
+  }
+ }
+}

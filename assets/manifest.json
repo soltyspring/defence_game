@@ -1,0 +1,400 @@
+{
+ "version": 1,
+ "art_version": "0.3.0",
+ "schema": "INTERFACES.md §5.1 (02-engine) + additive keys",
+ "pixel_scale": 1,
+ "reference_view": [
+  640,
+  360
+ ],
+ "conventions": {
+  "facing": "characters/projectiles drawn facing RIGHT; engine flip_h for enemy faction. Bases are pre-oriented (no_flip).",
+  "pivot": "frame pixel placed on the world point: characters = feet ground point (W/2-ish, H-1); fx/projectiles = centre unless their atlas entry says otherwise",
+  "flip_pivot": "when flip_h is used with offset=-pivot, mirrored pivot_x = frame_w - pivot_x",
+  "filter": "nearest",
+  "mipmaps": false,
+  "repeat": false,
+  "padding": 2,
+  "extrude": 1,
+  "scaling": "integer scale only (canvas_items stretch, viewport 640x360 expand)",
+  "anim_names": {
+   "character": [
+    "idle",
+    "walk",
+    "attack",
+    "death",
+    "die(alias of death)",
+    "hit",
+    "cast",
+    "work",
+    "carry"
+   ],
+   "fx": [
+    "play",
+    "loop"
+   ],
+   "projectile": [
+    "fly"
+   ],
+   "base": [
+    "idle",
+    "damaged",
+    "ruined"
+   ]
+  },
+  "events": "anims[*].hit_frame = damage frame index; anims[*].events = named frame indices; points = frame-space offsets (e.g. projectile_spawn)"
+ },
+ "atlases": [
+  {
+   "id": "char_player",
+   "group": "character",
+   "load_policy": "battle",
+   "image": "res://assets/atlases/char_player.png",
+   "frames": "res://assets/atlases/char_player.json",
+   "size": [
+    512,
+    512
+   ],
+   "disk_bytes": 11816,
+   "gpu_bytes": 1048576,
+   "biome": "",
+   "anim_sets": [
+    "hero_captain",
+    "melee_basic",
+    "ranged_basic",
+    "tank",
+    "worker"
+   ],
+   "image_frames": 0
+  },
+  {
+   "id": "char_enemy",
+   "group": "character",
+   "load_policy": "battle_roster",
+   "image": "res://assets/atlases/char_enemy.png",
+   "frames": "res://assets/atlases/char_enemy.json",
+   "size": [
+    512,
+    256
+   ],
+   "disk_bytes": 4794,
+   "gpu_bytes": 524288,
+   "biome": "",
+   "anim_sets": [
+    "e_grunt",
+    "e_spitter",
+    "e_swarm"
+   ],
+   "image_frames": 0
+  },
+  {
+   "id": "bases",
+   "group": "base",
+   "load_policy": "battle",
+   "image": "res://assets/atlases/bases.png",
+   "frames": "res://assets/atlases/bases.json",
+   "size": [
+    512,
+    512
+   ],
+   "disk_bytes": 10051,
+   "gpu_bytes": 1048576,
+   "biome": "",
+   "anim_sets": [
+    "base_enemy",
+    "base_player"
+   ],
+   "image_frames": 2
+  },
+  {
+   "id": "fx_combat",
+   "group": "fx",
+   "load_policy": "battle",
+   "image": "res://assets/atlases/fx_combat.png",
+   "frames": "res://assets/atlases/fx_combat.json",
+   "size": [
+    512,
+    256
+   ],
+   "disk_bytes": 4457,
+   "gpu_bytes": 524288,
+   "biome": "",
+   "anim_sets": [
+    "arrow",
+    "coin",
+    "death_poof",
+    "dust",
+    "explosion",
+    "fire",
+    "heal",
+    "hit_spark",
+    "hit_spit",
+    "rock",
+    "skill_barrage",
+    "skill_rally",
+    "skill_slam",
+    "spawn",
+    "spit",
+    "tower_bolt"
+   ],
+   "image_frames": 4
+  },
+  {
+   "id": "ui_main",
+   "group": "ui",
+   "load_policy": "always",
+   "image": "res://assets/atlases/ui_main.png",
+   "frames": "res://assets/atlases/ui_main.json",
+   "size": [
+    256,
+    128
+   ],
+   "disk_bytes": 4425,
+   "gpu_bytes": 131072,
+   "biome": "",
+   "anim_sets": [],
+   "image_frames": 96
+  },
+  {
+   "id": "biome_meadow",
+   "group": "biome",
+   "load_policy": "per_round",
+   "image": "res://assets/atlases/biome_meadow.png",
+   "frames": "res://assets/atlases/biome_meadow.json",
+   "size": [
+    1024,
+    512
+   ],
+   "disk_bytes": 7416,
+   "gpu_bytes": 2097152,
+   "biome": "meadow",
+   "anim_sets": [],
+   "image_frames": 5
+  }
+ ],
+ "anim_sets": {
+  "hero_captain": "char_player",
+  "worker": "char_player",
+  "melee_basic": "char_player",
+  "ranged_basic": "char_player",
+  "tank": "char_player",
+  "e_grunt": "char_enemy",
+  "e_spitter": "char_enemy",
+  "e_swarm": "char_enemy",
+  "base_player": "bases",
+  "base_enemy": "bases",
+  "arrow": "fx_combat",
+  "tower_bolt": "fx_combat",
+  "spit": "fx_combat",
+  "rock": "fx_combat",
+  "hit_spark": "fx_combat",
+  "hit_spit": "fx_combat",
+  "explosion": "fx_combat",
+  "death_poof": "fx_combat",
+  "dust": "fx_combat",
+  "skill_slam": "fx_combat",
+  "skill_rally": "fx_combat",
+  "skill_barrage": "fx_combat",
+  "spawn": "fx_combat",
+  "heal": "fx_combat",
+  "fire": "fx_combat",
+  "coin": "fx_combat"
+ },
+ "bases": {
+  "player": {
+   "atlas": "bases",
+   "frame": "base_player",
+   "anim_set": "base_player",
+   "states": [
+    "idle",
+    "damaged",
+    "ruined"
+   ]
+  },
+  "enemy": {
+   "atlas": "bases",
+   "frame": "base_enemy",
+   "anim_set": "base_enemy",
+   "states": [
+    "idle",
+    "damaged",
+    "ruined"
+   ]
+  }
+ },
+ "biomes": {
+  "biome_01": {
+   "atlas": "biome_meadow",
+   "clear_color": "#3b5aa8",
+   "layers": [
+    {
+     "frame": "sky",
+     "view_y": 0,
+     "parallax": 0.0,
+     "repeat_x": 16,
+     "clear_color": "#3b5aa8",
+     "size": [
+      16,
+      360
+     ]
+    },
+    {
+     "frame": "far",
+     "view_y": 100,
+     "parallax": 0.15,
+     "size": [
+      640,
+      150
+     ]
+    },
+    {
+     "frame": "mid",
+     "view_y": 180,
+     "parallax": 0.45,
+     "size": [
+      640,
+      120
+     ]
+    },
+    {
+     "frame": "ground",
+     "view_y": 280,
+     "parallax": 1.0,
+     "tile": true,
+     "lane_line": 15,
+     "note": "layer row 15 is the feet line: place layer at view_y = ground_y - 15",
+     "size": [
+      640,
+      80
+     ]
+    },
+    {
+     "frame": "front",
+     "view_y": 342,
+     "parallax": 1.15,
+     "tile": true,
+     "z": "front",
+     "size": [
+      640,
+      18
+     ]
+    }
+   ],
+   "repeat_period": 640,
+   "ground_feet_line": "ground layer row 15 (lane_line); layer view_y = lane ground_y - 15",
+   "aliases": [
+    "biome_01",
+    "meadow"
+   ]
+  },
+  "meadow": {
+   "atlas": "biome_meadow",
+   "clear_color": "#3b5aa8",
+   "layers": [
+    {
+     "frame": "sky",
+     "view_y": 0,
+     "parallax": 0.0,
+     "repeat_x": 16,
+     "clear_color": "#3b5aa8",
+     "size": [
+      16,
+      360
+     ]
+    },
+    {
+     "frame": "far",
+     "view_y": 100,
+     "parallax": 0.15,
+     "size": [
+      640,
+      150
+     ]
+    },
+    {
+     "frame": "mid",
+     "view_y": 180,
+     "parallax": 0.45,
+     "size": [
+      640,
+      120
+     ]
+    },
+    {
+     "frame": "ground",
+     "view_y": 280,
+     "parallax": 1.0,
+     "tile": true,
+     "lane_line": 15,
+     "note": "layer row 15 is the feet line: place layer at view_y = ground_y - 15",
+     "size": [
+      640,
+      80
+     ]
+    },
+    {
+     "frame": "front",
+     "view_y": 342,
+     "parallax": 1.15,
+     "tile": true,
+     "z": "front",
+     "size": [
+      640,
+      18
+     ]
+    }
+   ],
+   "repeat_period": 640,
+   "ground_feet_line": "ground layer row 15 (lane_line); layer view_y = lane ground_y - 15",
+   "aliases": [
+    "biome_01",
+    "meadow"
+   ]
+  }
+ },
+ "ui": {
+  "atlas": "ui_main"
+ },
+ "icons": {
+  "resource": {
+   "in_round_currency": "icon_gold (alias icon_supply)",
+   "skill_energy": "icon_mana (alias icon_energy)",
+   "worker": "icon_worker",
+   "meta_currency_candidate": "icon_gem"
+  },
+  "cards": "card_<unit_id> (worker, melee_basic, ranged_basic, tank, hero_captain)",
+  "skills": "icon_<skill_id> and skill_<skill_id>",
+  "enemy_portraits": "portrait_<enemy_id>"
+ },
+ "load_groups": {
+  "always": [
+   "ui_main"
+  ],
+  "battle": [
+   "char_player",
+   "char_enemy",
+   "bases",
+   "fx_combat"
+  ],
+  "per_biome": {
+   "biome_01": [
+    "biome_meadow"
+   ],
+   "meadow": [
+    "biome_meadow"
+   ]
+  }
+ },
+ "provenance": {
+  "author": "03-art (Claude, claude-opus-5.5) via hand-written deterministic code in tools/art/*.py",
+  "method": "ASCII pixel maps + Bresenham line rig + procedural shapes, rendered with Python 3.11 / Pillow 11.2 / numpy 2.2. No AI image generation, no external/stock/reference images, no fonts.",
+  "palette": "Hearth-48 (original, docs/art/palette/hearth48.gpl)",
+  "reproduce": "python tools/art/build.py && python tools/art/validate.py",
+  "license": "Original work created for this project; owned by the project owner. No third-party assets included."
+ },
+ "totals": {
+  "disk_bytes": 42959,
+  "gpu_bytes_all_pages": 5373952,
+  "note": "GPU = w*h*4 (RGBA8, lossless import, no mipmaps). See docs/art/ATLAS_BUDGET.md"
+ }
+}

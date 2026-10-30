@@ -1,0 +1,94 @@
+{
+ "schema": "defence.atlas/1",
+ "atlas": "biome_meadow",
+ "image": "biome_meadow.png",
+ "image_res": "res://assets/atlases/biome_meadow.png",
+ "size": [
+  1024,
+  512
+ ],
+ "padding": 2,
+ "extrude": 1,
+ "group": "biome",
+ "load_policy": "per_round",
+ "note": "Meadow parallax layers (640 px seamless period). Acquire for rounds with biome=meadow.",
+ "filter": "nearest",
+ "mipmaps": false,
+ "repeat": false,
+ "gpu_format": "RGBA8 (lossless, no VRAM compression)",
+ "gpu_bytes": 2097152,
+ "disk_bytes": 7416,
+ "unique_regions": 5,
+ "occupancy": 0.46,
+ "frames": {
+  "sky": {
+   "x": 3,
+   "y": 3,
+   "w": 16,
+   "h": 360,
+   "pivot": [
+    0,
+    0
+   ],
+   "view_y": 0,
+   "parallax": 0.0,
+   "repeat_x": 16,
+   "clear_color": "#3b5aa8"
+  },
+  "far": {
+   "x": 23,
+   "y": 3,
+   "w": 640,
+   "h": 150,
+   "pivot": [
+    0,
+    0
+   ],
+   "view_y": 100,
+   "parallax": 0.15
+  },
+  "mid": {
+   "x": 3,
+   "y": 367,
+   "w": 640,
+   "h": 120,
+   "pivot": [
+    0,
+    0
+   ],
+   "view_y": 180,
+   "parallax": 0.45
+  },
+  "ground": {
+   "x": 23,
+   "y": 157,
+   "w": 640,
+   "h": 80,
+   "pivot": [
+    0,
+    0
+   ],
+   "view_y": 280,
+   "parallax": 1.0,
+   "tile": true,
+   "lane_line": 15,
+   "note": "layer row 15 is the feet line: place layer at view_y = ground_y - 15"
+  },
+  "front": {
+   "x": 3,
+   "y": 491,
+   "w": 640,
+   "h": 18,
+   "pivot": [
+    0,
+    0
+   ],
+   "view_y": 342,
+   "parallax": 1.15,
+   "tile": true,
+   "z": "front"
+  }
+ },
+ "anims": {},
+ "anim_sets_meta": {}
+}

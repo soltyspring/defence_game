@@ -1,0 +1,257 @@
+{
+ "schema": "defence.atlas/1",
+ "atlas": "bases",
+ "image": "bases.png",
+ "image_res": "res://assets/atlases/bases.png",
+ "size": [
+  512,
+  512
+ ],
+ "padding": 2,
+ "extrude": 1,
+ "group": "base",
+ "load_policy": "battle",
+ "note": "Both bases, 3 damage states each. NOT flipped by engine.",
+ "filter": "nearest",
+ "mipmaps": false,
+ "repeat": false,
+ "gpu_format": "RGBA8 (lossless, no VRAM compression)",
+ "gpu_bytes": 1048576,
+ "disk_bytes": 10051,
+ "unique_regions": 12,
+ "occupancy": 0.562,
+ "frames": {
+  "base_player/idle/0": {
+   "x": 103,
+   "y": 3,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_player/idle/1": {
+   "x": 203,
+   "y": 3,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_player/damaged/0": {
+   "x": 403,
+   "y": 135,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_player/damaged/1": {
+   "x": 3,
+   "y": 135,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_player/ruined/0": {
+   "x": 203,
+   "y": 135,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_player/ruined/1": {
+   "x": 103,
+   "y": 135,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_enemy/idle/0": {
+   "x": 103,
+   "y": 267,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_enemy/idle/1": {
+   "x": 3,
+   "y": 3,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_enemy/damaged/0": {
+   "x": 303,
+   "y": 135,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_enemy/damaged/1": {
+   "x": 403,
+   "y": 3,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_enemy/ruined/0": {
+   "x": 3,
+   "y": 267,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_enemy/ruined/1": {
+   "x": 303,
+   "y": 3,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_player": {
+   "x": 103,
+   "y": 3,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_enemy": {
+   "x": 103,
+   "y": 267,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  }
+ },
+ "anims": {
+  "base_player": {
+   "idle": {
+    "frames": [
+     "base_player/idle/0",
+     "base_player/idle/1"
+    ],
+    "fps": 3,
+    "loop": true
+   },
+   "damaged": {
+    "frames": [
+     "base_player/damaged/0",
+     "base_player/damaged/1"
+    ],
+    "fps": 5,
+    "loop": true
+   },
+   "ruined": {
+    "frames": [
+     "base_player/ruined/0",
+     "base_player/ruined/1"
+    ],
+    "fps": 5,
+    "loop": true
+   }
+  },
+  "base_enemy": {
+   "idle": {
+    "frames": [
+     "base_enemy/idle/0",
+     "base_enemy/idle/1"
+    ],
+    "fps": 3,
+    "loop": true
+   },
+   "damaged": {
+    "frames": [
+     "base_enemy/damaged/0",
+     "base_enemy/damaged/1"
+    ],
+    "fps": 5,
+    "loop": true
+   },
+   "ruined": {
+    "frames": [
+     "base_enemy/ruined/0",
+     "base_enemy/ruined/1"
+    ],
+    "fps": 5,
+    "loop": true
+   }
+  }
+ },
+ "anim_sets_meta": {
+  "base_player": {
+   "frame_size": [
+    96,
+    128
+   ],
+   "pivot": [
+    48,
+    127
+   ],
+   "facing": "right",
+   "kind": "base",
+   "no_flip": true,
+   "states": {
+    "idle": ">0.5 hp",
+    "damaged": "<=0.5 hp",
+    "ruined": "0 hp"
+   }
+  },
+  "base_enemy": {
+   "frame_size": [
+    96,
+    128
+   ],
+   "pivot": [
+    48,
+    127
+   ],
+   "facing": "left",
+   "kind": "base",
+   "no_flip": true,
+   "states": {
+    "idle": ">0.5 hp",
+    "damaged": "<=0.5 hp",
+    "ruined": "0 hp"
+   }
+  }
+ }
+}
