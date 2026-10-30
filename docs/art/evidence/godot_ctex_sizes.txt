@@ -1,0 +1,8 @@
+Name                                                   Length
+----                                                   ------
+bases.png-7cea66318d28e7c4ad5e2a7f61e1cbf8.ctex          8878
+biome_meadow.png-85b1b5ff68f9a2f47452b0aaa7782020.ctex   7320
+char_enemy.png-e5df2b163b25820b3fcce88fdb139e13.ctex     6194
+char_player.png-a822b4a4d58c09b9090b7f17c9f835e2.ctex   14592
+fx_combat.png-e6354d67123718b0bffb7ceec69fc478.ctex      6574
+ui_main.png-b8d0216391e4b08a56e7bd555a45b7f3.ctex        3794

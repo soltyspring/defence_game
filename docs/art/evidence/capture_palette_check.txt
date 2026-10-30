@@ -1,0 +1,2 @@
+battle_cap_1x.png pixels 921600 colours 44 non-palette px 0 []
+battle_cap_zoom4_fractional.png pixels 921600 colours 40 non-palette px 0 []

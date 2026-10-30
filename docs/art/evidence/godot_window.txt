@@ -1,0 +1,1 @@
+monitor=\\.\DISPLAY2 work_area=-1920,174,1920x1032 (Windows coords); window is moved by check.gd to Godot's non-primary screen
