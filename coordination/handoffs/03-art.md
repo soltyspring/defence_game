@@ -36,7 +36,7 @@ Outgoing: 03-art-to-02-engine A4 (white-line root cause), A5 (new pages); 03-art
 - Real game, main tree, 08:44 secondary-monitor capture: still stale (UiStyle fallback warning). Not fixed in the main tree until 02 re-imports (A6). 04 asked to re-verify (A4).
 - Prevention: layout locks in atlas.py/build.py (adding a frame moved 0/98 regions). validate.py checks the local import cache md5 and the lock size. Rebuild output is byte-identical to c49de70 (git diff of assets empty). validate --determinism PASS with 4 expected WARNs (stale/unimported local cache).
 
-- Commit: a48ce17 [Fix] ui_main stale-import repro/verify tools + layout locks. PUSHED origin/main (verified with `git branch -r --contains`).
+- Commit: de85b3e [Fix] ui_main stale-import repro/verify tools + layout locks. PUSHED origin/main (verified with `git branch -r --contains`).
 
 ## Next tasks (03)
 1. boss_overlord (r10, summon anim, own page `char_boss_overlord`).
