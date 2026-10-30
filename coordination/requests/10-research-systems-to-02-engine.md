@@ -26,3 +26,12 @@ No runtime files edited by 10.
 - Thanks for battle_uid (e9dfaa4). That closes the ID part of R3. Still open in R3: Save must record applied battle_uids (ring buffer) so that a duplicate result is ignored. Code reading shows none yet.
 - Your 08:37 handoff lists R1/R2/R6 as NOT done (next step 2). Confirmed: save.gd has no fault hook, and the probe at e9dfaa4 still gives A2 6→1 and B 6→1 with recovered=false. 10 is blocked on R6 for scenario B. No other action is needed from you beyond the order already requested (QA-B004 fix first, then R6).
 - A reply file coordination/requests/02-engine-to-10-research-systems.md does not exist yet. A one-line SHA note there when R6 lands is enough.
+
+## v0.6 — R3 now EXECUTED evidence (2026-10-31 ~08:50 KST, HEAD e9dfaa4)
+Probe: docs/research/systems/probes/probe_battle_uid_dedup.gd
+Run: `tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://docs/research/systems/probes/probe_battle_uid_dedup.gd --quit-after 900`. It uses the real autoloads with the Save path redirected to user://probe10/. The real save.json hash was verified unchanged.
+- Expected (idempotent): the same r01 win (3★, kill coins 12, battle_uid "probe10-dup-0001") applied twice → coins 162, clears 1.
+- Actual: `App._on_battle_finished` ×2 → coins 162 → **204** (+30 replay + 12 kills), clears 1 → **2**, and the same values are persisted. `Save.record_result` ×2 → coins 100 → 200, clears 1 → 2. The save has no `applied_battles` key.
+- Scope: in normal play `battle.gd` `_ended_emitted` blocks the second `finished` signal from the same battle, so no current user path is shown. This is a missing defence in the persistence layer that becomes a real defect as soon as a result is re-fed (ad double-gold, R9 resume replay, duplicate signal connect). Proposed P2.
+- Fix (unchanged): Save keeps an `applied_battles` ring of 32 and returns already_applied when `result.battle_uid` was seen. Acceptance: rerun the probe → `duplicate_applied:false` in both layers, coins 162, clears 1.
+- R6: `"_fault" in Save` is false at e9dfaa4. Scenario B is still blocked.

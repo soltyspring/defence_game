@@ -1,5 +1,5 @@
 # 데이터·백엔드 분석: 성공한 디펜스 게임의 온라인 기능과 우리 게임의 최소 설계
-작성: 10-research-systems · 버전 v0.5 (v0.1 증거 보고서, v0.2 §9.1, v0.3 SV-1 실행 재현·§5.8, v0.4 회신 추적, v0.5 e9dfaa4 재확인) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
+작성: 10-research-systems · 버전 v0.6 (v0.1 증거 보고서, v0.2 §9.1, v0.3 SV-1 실행 재현·§5.8, v0.4~v0.5 회신 추적, v0.6 battle_uid 중복 적용 실행 재현) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
 범위: 경쟁작에서 **관찰되는** 온라인 기능, 그 기능의 **공개 문서화된** 기술, **UNKNOWN**, 우리 오프라인 우선 Godot 게임에 필요한 최소 콘텐츠 DB·세이브·거래 계약. 런타임 코드는 수정하지 않았다. 내부 DB나 비공개 구현에 접근한 적 없다. 게임을 직접 플레이하지 않았다(스토어 텍스트·공개 스크린샷만 확인).
 
 ## 0. 현재 판단 (요약)
@@ -284,7 +284,7 @@ commit;
 |---|---|---|---|---|---|
 | SV-1 | `save_progress()`는 기존 `.bak`을 지운 뒤 현재 main을 `.bak`으로 옮긴다. main이 손상되어 `.bak`에서 복구한 직후의 첫 저장은 **정상 `.bak`을 지우고 손상된 main을 `.bak`으로 만든다** | **실행 재현(v0.3, 아래 프로브):** 복구 후 저장 성공 → `.bak` 내용이 손상 파일 → main이 다시 손상되면 `unlocked_round` 6→1(`recovered=true`). 저장 중 종료를 흉내 내면 6→1이고 `recovered=false`라서 사용자에게 알림이 없다 | **P1: 07 QA-B004로 등록(OPEN, 02 담당)** | `recovered`이면 손상 main을 `save.json.corrupt-<n>`으로 격리하고 정상 `.bak`은 유지. 로드할 때 검증된 `.tmp`도 후보로 확인(07 QA-O002와 같은 개선) | TP-02: 프로브 시나리오 A2/B에서 `unlocked_round == 6` |
 | SV-2 | `_migrate`는 `from_version`이 `VERSION`보다 커도 `p.version = VERSION`으로 덮어쓴다 | 07이 SAVE-08로 재현했다(QA-O003): v99 세이브를 읽은 뒤 v1로 다시 쓴다 | P2 | `from_version > VERSION`이면 읽기 전용 모드로 열고 원본 보존 | TP-06 |
-| SV-3 | 전투 결과에 고유 ID가 없다. `first_clear = not stars.has(rid)` | 결과 이벤트가 중복되면 보상이 중복된다(현재 `ended` 가드로 막히는지 미확인). 06 광고 context에 `battle_uid`가 필요하다(06 요청과 같음) | P2 | `battle_uid` + `applied_battles` | TP-03 |
+| SV-3 | e9dfaa4부터 `battle_uid`가 결과에 실린다. 하지만 `App._on_battle_finished` → `Save.record_result` 경로는 이 값을 읽지 않고, 적용한 전투를 기록하지도 않는다 | **실행 재현(v0.6, 아래 프로브 2):** 같은 `battle_uid`의 결과가 두 번 들어오면 두 번 다 반영된다. 골드 162→204, clears 1→2. 디스크에도 같은 값이 남는다. 정상 플레이에서는 `battle.gd`의 `_ended_emitted` 가드가 같은 전투의 두 번째 `finished` 신호를 막는다. 따라서 현재 사용자 경로에서 중복이 일어나는 경우는 보이지 않았다. 위험해지는 경우는 결과를 다시 넣는 경로(광고 2배 보상, 전투 재개 재연, 신호 중복 연결)를 추가할 때다 | P2(현재 사용자 경로에서 재현되지 않으므로 P1 아님. 판정은 07) | Save가 `applied_battles`(최근 32개) 링 버퍼를 두고, uid가 있으면 `already_applied`로 무시한다 | TP-03: 프로브 2의 `duplicate_applied == false`, 골드 162, clears 1 |
 | SV-4 | `record_result`가 저장 실패를 무시한다 | 메모리와 디스크 불일치. 다음 저장 때 해소된다 | P3 | transact 계약 | TP-04 |
 | SV-5 | 타입 검증이 일부만 있다(`stars`, `best_time`이 Dictionary인지 확인하지 않음) | 07이 SAVE-05/06으로 재현했다(QA-B003): 다음 `record_result`가 스크립트 오류를 내고 결과가 저장되지 않는다 | P2(07 판정) | 필드별 타입 정규화 | TP-13 = 07 SAVE-05/06 |
 
@@ -309,6 +309,20 @@ PROBE10_SAVE_ROTATION {"A_recovered":true,"A_unlocked_after_load":6,"A_save_ok":
 - 02가 e9dfaa4에서 `battle_uid`를 넣었다(`src/gameplay/battle.gd` `_make_battle_uid()`. BattleInfo와 BattleResult에 실린다). 이것은 R3의 **ID 부분**만이다. `Save`에는 `applied_battles` 같은 적용 기록이 없다. 그래서 같은 결과가 두 번 들어오면 두 번 반영된다. 이 판단은 코드 읽기에 근거하며 실행하지 않았다.
 - 같은 커밋에서 save.gd는 `fresh()`에 `tutorial_done: []`가 추가된 1줄만 바뀌었다. 02 handoff(08:37)에는 "10 R1/R2/R6 save `.bak` quarantine, newer-version read-only, fault-injection hook — NOT done"이 다음 작업 2번으로 적혀 있다. **R6 훅은 아직 없다.**
 - 프로브를 e9dfaa4에서 다시 실행했다: A2 6→1, B 6→1, `recovered=false`. SV-1(QA-B004)은 그대로다.
+
+**프로브 2: battle_uid 중복 적용(SV-3/R3, v0.6, 2026-10-31 ~08:50 KST, HEAD e9dfaa4):** `docs/research/systems/probes/probe_battle_uid_dedup.gd`
+- 실행 명령: `tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://docs/research/systems/probes/probe_battle_uid_dedup.gd --quit-after 900`
+- 격리 방식: 07 수용 러너와 같다. 실제 autoload(App, Save, Content)를 쓰되, `_initialize`에서 Save autoload 경로를 `user://probe10/`로 돌린 뒤 실행한다. 실행 전후로 개발자의 실제 `save.json` SHA-256을 비교했다(F33DD39B…776A, 변화 없음). 끝난 뒤 `probe10` 폴더를 지웠다.
+- 입력: r01 승리 결과 하나(3별, kill coins 12, `battle_uid: "probe10-dup-0001"`)를 같은 값으로 두 번 넣었다. r01 보상 데이터는 first_clear 100, 재클리어 30, 3별 보너스 50이다.
+
+| 층 | 경로 | 멱등이라면 기대값 | 실제값 | 판정 |
+|---|---|---|---|---|
+| L1 | `Save.record_result(결과, 0)` × 2 (격리 인스턴스, 보상 100으로 확정된 결과) | 골드 100, clears 1 | 골드 100→**200**, clears 1→**2** | 중복 반영 |
+| L2 | `App._on_battle_finished(같은 결과)` × 2 (실제 보상 계산 경로) | 골드 162(=12+100+50), clears 1 | 첫 번째 162(first_clear=true). 두 번째에 **204**(+42 = 재클리어 30 + kill 12, first_clear=false), clears **2** | 중복 반영 |
+| L2 디스크 | 다시 읽은 세이브 | 162 / 1 | 204 / 2, `applied_battles` 키 없음 | 중복 영속 |
+- 원시 출력(발췌): `"L2_app_on_battle_finished":{"after_first":{"clears":1,"coins":162,...},"after_duplicate":{"clears":2,"coins":204,...},"duplicate_applied":true,"expected_coins_if_idempotent":162}`, `"L2_persisted":{"clears":2,"coins":204,"has_applied_battles_key":false}`, `"save_gd_has_fault_hook":false`
+- 한계: 프로브는 `_on_battle_finished`를 직접 두 번 호출했다. 실제 게임에서 두 번 호출되는 경로가 있다는 증거는 아니다. `battle.gd`의 `_ended_emitted`가 같은 Battle 인스턴스에서 두 번째 신호를 막는다(코드 읽기). 이 프로브가 보여주는 것은 **저장 계층에 멱등성 방어가 없다**는 사실이다. 그래서 보상 2배 광고(06 `ad_double_gold`), 전투 재개(R9), 결과 재전송 같은 경로를 추가하면 그 경로가 직접 중복을 막아야 한다.
+- 같은 실행에서 R6 훅 존재 여부도 확인했다: `"_fault" in Save` = false. **시나리오 B의 훅 기반 재실행은 여전히 불가능하다.**
 
 ## 7. 위협/실패 사례와 실행 테스트 제안 (07 acceptance, 06 services, 02 훅)
 실행 방식: Godot 헤드리스 `--headless -s res://tests/acceptance/<file>.gd`. 02가 `Save.path` 주입(이미 var)과 쓰기 단계별 장애 주입 훅(`Save._fault = "after_bak_rename"` 등, 디버그 빌드 전용)을 제공해야 한다.

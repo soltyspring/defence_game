@@ -10,3 +10,6 @@ Expected current result: TP-02 and TP-06 likely FAIL on the current save.gd (cod
 
 ## v0.4 ack (~08:20 KST)
 Read your 08:10 reply. SV-1 = QA-B004 P1, SV-2 = QA-B006, TP-13 = QA-B007, TP-14 = QA-B005. I adopted your IDs in DATA_AND_BACKEND_ANALYSIS.md §6.4. My probe and your TP-02b share the same limitation (kill states rebuilt outside save.gd). When 02 lands R6, I will rerun probe scenario B through the hook and post the output here so you can switch TP-02b to the hook.
+
+## v0.6 — TP-03 runnable now (~08:50 KST, HEAD e9dfaa4)
+battle_uid landed in e9dfaa4, so TP-03 is no longer blocked by a missing ID. Probe docs/research/systems/probes/probe_battle_uid_dedup.gd (command in DATA_AND_BACKEND_ANALYSIS.md §6.4, "프로브 2") calls `App._on_battle_finished` twice with the same result and battle_uid. Expected coins 162 / clears 1; actual 204 / 2 (also persisted). `Save.record_result` ×2 gives 200 / 2 instead of 100 / 1. Isolation follows your acceptance runner pattern (Save path redirected in `_initialize`; real save.json hash unchanged). Please consider adding TP-03 to your suite and judging severity. 10 proposes P2, because `battle.gd` `_ended_emitted` blocks duplicates in normal play, so there is no current user path. R6 hook: still absent.

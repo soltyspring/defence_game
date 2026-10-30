@@ -1,31 +1,30 @@
 # 10-research-systems handoff
-Updated: 2026-10-31 ~08:41 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same window (restored under the new Kiro login)
+Updated: 2026-10-31 ~08:52 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same window
 Owned: docs/research/systems/**, coordination/status|handoffs/10-research-systems.md, coordination/requests/10-research-systems-to-*.md
 Git protocol acknowledged. DECISIONS D1–D12 DEFAULT, Q1 PENDING. Unchanged, and no user questions from 10. No 09 paths touched.
 
 ## READ ACK / START
-- ~08:19: read the coordinator correction 08:09 (10 role, the 09 dispatch was misrouted, old quota notices are historical). STARTED the follow-up.
-- ~08:39: resume order after the new login read. Checked the state after 3c8cddb/c4a3d93/198e40a. Quota 434.55/10000 = 4.35% at 08:38, no triggered.json.
+- ~08:19: coordinator correction 08:09 read (10 role, the 09 dispatch was misrouted).
+- ~08:39: resume order after the new login read.
+- ~08:45: review order "R3 code reading → execution evidence; rerun scenario B via the hook once R6 lands" read and STARTED. Quota 631.38/10000 = 6.31% at 08:45.
 
-## Follow-up state (HEAD e9dfaa4)
-| Owner | Request | State |
-|---|---|---|
-| 02 | R6 fault hook | **NOT READY.** save.gd at e9dfaa4 changed only `tutorial_done: []`. The 02 handoff (08:37) says "10 R1/R2/R6 ... NOT done" (next step 2). No 02-engine-to-10 reply file |
-| 02 | R3 battle_uid | ID DONE in e9dfaa4 (battle.gd `_make_battle_uid`, in BattleInfo/BattleResult). Applied-uid dedup in Save still missing (code reading) |
-| 02 | R1/R2/R4/R5/R7–R9 | open |
-| 07 | SV-1 | QA-B004 P1 OPEN (owner 02). B005/B006/B007 OPEN |
-| 06 | TP-08 | done by 06 (desktop) |
-| 01 | #5/#6 | no reply; data/migrations.json absent |
-**Scenario B via hook: NOT rerun. Reason: R6 does not exist.** Substitute evidence: the probe re-executed at e9dfaa4 gives A2 6→1 and B 6→1 with recovered=false (unchanged).
+## This task (v0.6): R3 executed
+- New probe docs/research/systems/probes/probe_battle_uid_dedup.gd (real autoloads, Save redirected to user://probe10/, real save.json SHA-256 F33DD39B…776A unchanged before and after, probe dir deleted).
+- Result at HEAD e9dfaa4: the same battle_uid result applied twice is applied twice. App path coins 162→204, clears 1→2, persisted. Save.record_result path 100→200, 1→2. No applied_battles key.
+- Scope: battle.gd `_ended_emitted` blocks the duplicate signal in normal play, so no current user path is shown. Proposed P2 (07 judges).
+- Doc §6.4 SV-3 row and "프로브 2" section (command, expected, actual, limits) updated; requests to 02 (v0.6) and 07 (TP-03 runnable).
+
+## R6 / scenario B
+NOT READY: `"_fault" in Save` = false at e9dfaa4 (checked inside the probe run). Scenario B was not rerun via the hook. Wait reason unchanged: 02 lists R1/R2/R6 as NOT done.
 
 ## Commits (all PUSHED origin/main)
-6ab1d48 v0.1 · 9e3953f v0.2 · 462991a v0.3 · 14f7084 status · 3c8cddb v0.4 · c4a3d93 status · 198e40a status fix · v0.5: SHA in status after the helper call
+6ab1d48 · 9e3953f · 462991a · 14f7084 · 3c8cddb · c4a3d93 · 198e40a · 2aa6d28 · 9ca89e0 · v0.6: SHA in status after the helper call
 
 ## Exact next steps
-1. Poll at milestones (not in a loop): grep `_fault` in src/core/save.gd, and check for coordination/requests/02-engine-to-10-research-systems.md.
-2. When R6 lands: switch probe scenario B to the hook (`before_final_rename`), rerun, update §6.4, notify 07, publish.
-3. When QA-B004 is fixed: rerun the probe and expect A2/B unlocked 6.
+1. At milestones, check save.gd for `_fault` and look for 02-engine-to-10-research-systems.md.
+2. R6 lands → switch probe_save_rotation scenario B to the hook, rerun, update §6.4, tell 07, publish.
+3. 02 adds applied_battles → rerun probe_battle_uid_dedup and expect duplicate_applied false / 162 / 1.
 4. Stop at ≥97% quota.
 
 ## Errors / caveats
-Scenario B is an emulation of the file-operation order (no in-code fault). A harmless probe-environment get_node error appears. Other roles' Godot processes were not touched.
+The probes call internal functions directly (`_on_battle_finished`), which is evidence about the persistence layer, not a user repro. No Godot processes of other roles were touched.
