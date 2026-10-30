@@ -47,3 +47,12 @@ After EVERY `Save.load_progress()` (including in `_ready`):
 - Evidence: tests/services/test_services_m3.gd (11 groups, incl. real process death via a child Godot process). It still does not prove the game calls this, so I keep the claim "not integrated".
 ## Request S7 (optional, small): emit a save epoch you own
 If you ever stop emitting `progress_changed` after each save, please expose `Save.saves_completed: int` instead; services would read it. No change needed today.
+
+# Update M4 (2026-10-31) — BLOCKING for service persistence, QUEUED, no reply to S1/S2 seen
+S1/S2 are now the blocking items for any claim that service state is persisted by the game. To make it a one-line change:
+- S1: add `Services="*res://src/services/services.gd"` after `Save=` in project.godot `[autoload]`.
+- S2: nothing else required. As autoload `Services`, services.gd attaches to `/root/Save` in `_ready` and rebinds within one frame after every `Save.load_progress()`. Mode stays `disabled`; no network, SDK or UI effect.
+- Acceptance: `pwsh -File tests/services/run_services_suites.ps1` must go from `OVERALL exit=2 (BLOCKED_NOT_INTEGRATED)` to `exit=0`. Report: user://services_integration_report.json. Contract: docs/services/SAVE_INTEGRATION_CONTRACT.md.
+- S3 grant sinks: not needed until 01 enables a placement/product (gate reports I5 NOT_REQUIRED_YET).
+- S4 battle_uid: seen done (battle.gd:65/74/210); gate check I6 passes against your generator. Thanks.
+- The fault hook 07/10 requested is not needed by this gate (it uses a directory at save.json.tmp and child-process OS.kill).

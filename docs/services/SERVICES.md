@@ -1,5 +1,5 @@
 # Services architecture: rewarded ads, purchases, entitlements, consent, analytics (owner: 06-services)
-Version: 0.3 (2026-10-31, M3). Godot 4.7.2 / GDScript. Status: boundaries + DISABLED/MOCK adapters only.
+Version: 0.4 (2026-10-31, M4). Godot 4.7.2 / GDScript. Status: boundaries + DISABLED/MOCK adapters only.
 
 **Nothing here is live.** No ad network, store billing, verification server or remote analytics is integrated. The user has not approved a business model, products or placements (DECISIONS.md D9 DEFAULT, Q2 not asked). Every build runs in `disabled` mode. `mock` mode exists for tests and debug builds and contacts nothing. The tests prove the state machines and gates. They do not prove that any real SDK or store works.
 
@@ -114,7 +114,8 @@ RESTORING : restore() -> query owned -> verify each -> rebuild entitlements -> r
 
 Release builds (`OS.is_debug_build() == false`) refuse mock mode. No production config keys, ad unit IDs, licence keys or server URLs exist in source; when they exist they come from export-time configuration owned by 04 (never committed).
 
-## 7. Integration points (requests sent, not done; no replies as of M2)
+## 7. Integration points (requests sent, not done; no replies as of M4)
+**Blocking (M4):** game Save integration (02 S1/S2) is not done. Contract, gate and exit codes: SAVE_INTEGRATION_CONTRACT.md. Expected outcomes per failure: REWARD_STATE_TABLE.md. `services.gd` now auto-attaches to `/root/Save` when registered as autoload `Services` and rebinds after every `Save.load_progress()` (`attach_save`, `ensure_bound`).
 - 02: register `Services` autoload after `Save`; call `Services.setup({"store": ServiceStore.new(Save.progress["services"], Save.save_progress)})` after every load; keep the `services` key through migrations; provide grant sinks, `battle_uid` and offer situations. See coordination/requests/06-services-to-02-engine.md (S1–S6).
 - 07: add both service suites to regressions; `Services.diagnostics()` for reports. See coordination/requests/06-services-to-07-qa.md.
 - 04: consent/settings UI, "watch ad"/"restore purchases" UI states per result code, Android plugins and export config when approved. See coordination/requests/06-services-to-04-client.md.

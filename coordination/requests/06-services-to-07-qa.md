@@ -18,3 +18,6 @@ Exit 0 = pass. Reports: `user://services_test_report.json`, `user://services_m2_
 
 # Update M3 (2026-10-31) — QUEUED
 Add `res://tests/services/test_services_m3.gd` (real src/core/save.gd in isolated user://svc_m3_test, spawns 3 child Godot processes and kills them; ~5–10 s; cleans up its directory). It proves both-or-neither persistence for that save script in isolation, not game integration (02 S2 still open).
+
+# Update M4 (2026-10-31) — QUEUED
+Run `pwsh -File tests/services/run_services_suites.ps1` (sequential, ~30 s, mocks only). Expected today: `OVERALL exit=2 (BLOCKED_NOT_INTEGRATED)` with blockers I1–I4 (02 S1/S2). Treat exit 2 as an OPEN blocker, never as a pass; exit 1 is a defect for 06. Per-row results are in user://services_integration_report.json (`binding` must be `game` and `game_evidence` true before you accept any row as game evidence). Expected outcomes: docs/services/REWARD_STATE_TABLE.md. Disabled-mode rows D1–D6 must PASS in every build you verify.
