@@ -37,7 +37,7 @@ src/services/**, docs/services/**, tests/services/**, coordination/status/06-ser
 ## Git
 - M1: 17623c1, 9c20763, b7fa3c0. M2: 0f84461, 708bdb0, 7c43ebd. M3: 5d61d0d, 078df2e, 1f6e57c. All PUSHED.
 - M4 gate: 7fe59f926674961e1e7c872294ca6044009e04d0 `[Feat] 게임 Save 연동 게이트(차단 표시·실패 주입·프로세스 종료)와 보상 중복/유실 상태표, Services 자동 연결·재바인딩 추가` (6 files) → PUSHED origin/main (ls-remote = 7fe59f9…).
-- M4 docs/requests/handoff: next commit; SHA in status after push.
+- M4 docs/requests/handoff: 47c187bd2e39947a0584b893878dc3cb91e778eb `[Docs] 서비스 M4 연동 차단 요청·07 게이트 안내·아키텍처 문서와 상태 인수인계 갱신` (5 files) → PUSHED origin/main (ls-remote = 47c187b…).
 
 ## Next task (06)
 1. When 02 adds the autoload line: run `pwsh -File tests/services/run_services_suites.ps1`; require OVERALL exit 0 and every R/P row `binding=game`, then update SAVE_INTEGRATION_CONTRACT.md status and REWARD_STATE_TABLE.md "Game binding" column with the evidence.
