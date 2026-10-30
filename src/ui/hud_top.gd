@@ -74,3 +74,20 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 	var army: Dictionary = snap.get("army", {})
 	if not army.is_empty():
 		UiStyle.draw_number(self, "%d/%d" % [int(army.get("player", 0)), int(army.get("cap", 0))], Vector2(r.position.x, wr.get_center().y), UiStyle.NUM_S, UiStyle.C_HP_PLAYER, -1)
+	_draw_boss(layout.get("boss", Rect2()))
+
+## Boss HP bar (HudSnapshot.boss, 02 R6) while a boss is alive: name (Galmuri11 12) + bar + hp numbers.
+var boss_drawn := false            # QA
+func _draw_boss(br: Rect2) -> void:
+	var b: Dictionary = snap.get("boss", {})
+	boss_drawn = br.size != Vector2.ZERO and bool(b.get("alive", false))
+	if not boss_drawn:
+		return
+	var key := str(b.get("name_key", ""))
+	var name := UiText.t(key) if key != "" and UiText.has(key) else UiText.t("ui.boss")
+	var name_w := minf(UiStyle.text_width(name, UiStyle.FONT_S) + 6, br.size.x * 0.35)
+	var fit: Array = UiStyle.fit_text(name, name_w - 6, UiStyle.FONT_S)
+	draw_rect(Rect2(br.position, Vector2(br.size.x, br.size.y)), UiStyle.C_TOAST_BG)
+	UiStyle.draw_text_left(self, fit[0], Vector2(br.position.x + 3, br.get_center().y), UiStyle.FONT_S, UiStyle.C_HP_ENEMY)
+	var bar := Rect2(br.position.x + name_w + 2, br.position.y + 3, br.size.x - name_w - 4, br.size.y - 6)
+	UiStyle.draw_bar(self, bar, float(b.get("hp", 0)) / maxf(1.0, float(b.get("hp_max", 1))), UiStyle.C_HP_ENEMY)

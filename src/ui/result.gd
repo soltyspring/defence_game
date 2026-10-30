@@ -36,6 +36,7 @@ func ui_setup(params: Dictionary) -> void:
 func set_result(r: Dictionary) -> void:
 	result = r
 	_shown_t = 0.0
+	reason_mismatch = false
 	_apply()
 
 func _apply() -> void:
@@ -80,22 +81,56 @@ func _draw() -> void:
 	var cx := panel.get_center().x
 	UiStyle.draw_text_centered(self, UiText.t("ui.victory") if won else UiText.t("ui.defeat"), Vector2(cx, panel.position.y + 30), UiStyle.FONT_XL, UiStyle.C_GOLD if won else UiStyle.C_HP_ENEMY, true, &"bold")
 	var stars := int(result.get("stars", 0)) if won else 0
-	for k in 3:
-		# stars pop in one by one
-		var on := k < stars and _shown_t >= (k + 1) / 4.0
-		var sc := Vector2(cx + (k - 1) * 40, panel.position.y + 72)
-		if not UiStyle.draw_ui_icon(self, "icon_star" if on else "icon_star_empty", sc, 2.0):
-			UiStyle.draw_star(self, sc, 13.0, on)
+	var reasons := star_reasons()
 	var t := float(result.get("time", 0))
 	var lines := [
 		[UiText.t("ui.time"), "%d:%02d" % [int(t) / 60, int(t) % 60]],
 		[UiText.t("ui.kills"), str(int(result.get("kills", 0)))],
-		[UiText.t("ui.reward"), "+%d %s" % [int(result.get("coins", 0)), UiText.t("currency.gold", UiText.t("ui.coins"))]],
+		[UiText.t("ui.reward"), "+%d" % int(result.get("coins", 0))],
 	]
-	var y := panel.position.y + 104
-	for l in lines:
-		UiStyle.draw_text_left(self, l[0], Vector2(panel.position.x + 40, y), UiStyle.FONT_M, UiStyle.C_TEXT_DIM)
-		UiStyle.draw_number(self, l[1], Vector2(panel.end.x - 40, y), UiStyle.FONT_M, UiStyle.C_TEXT, 1, &"bold")
-		y += 18
+	# two columns: left = star conditions (met/unmet), right = stats. 22 px rows (12 px text grid).
+	var lx := panel.position.x + 18
+	var col_w := floorf((panel.size.x - 36) / 2.0) - 6
+	var rx := panel.position.x + 18 + col_w + 12
+	var y0 := panel.position.y + 70
+	for k in 3:
+		var y := y0 + k * 22
+		var met: bool = reasons[k].met
+		var on := met and _shown_t >= (k + 1) / 4.0     # stars pop in one by one
+		if not UiStyle.draw_ui_icon(self, "icon_star" if on else "icon_star_empty", Vector2(lx + 8, y)):
+			UiStyle.draw_star(self, Vector2(lx + 8, y), 7.0, on)
+		var fit: Array = UiStyle.fit_text(reasons[k].text, col_w - 22, UiStyle.FONT_S)
+		UiStyle.draw_text_left(self, fit[0], Vector2(lx + 20, y), UiStyle.FONT_S, UiStyle.C_TEXT if met else UiStyle.C_TEXT_DIM)
+		UiStyle.draw_text_left(self, lines[k][0], Vector2(rx, y), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
+		UiStyle.draw_number(self, lines[k][1], Vector2(panel.end.x - 18, y), UiStyle.FONT_M, UiStyle.C_GOLD if k == 2 else UiStyle.C_TEXT, 1, &"bold")
 	if bool(result.get("first_clear", false)) and won:
-		UiStyle.draw_text_centered(self, UiText.t("ui.first_clear"), Vector2(cx, y + 4), UiStyle.FONT_M, UiStyle.C_ACCENT)
+		UiStyle.draw_text_centered(self, UiText.t("ui.first_clear"), Vector2(cx, y0 + 3 * 22 + 6), UiStyle.FONT_M, UiStyle.C_ACCENT)
+	if stars != reasons.filter(func(r): return r.met).size():
+		# engine star count and UI reason derivation disagree: show engine count, flag for QA
+		reason_mismatch = true
+
+var reason_mismatch := false      # QA: UI reasons disagree with engine stars
+
+## Star conditions (INTERFACES §2.4: 1 = win, +1 base hp ≥ base_hp_2, +1 time ≤ time_3) with
+## the round's real thresholds from Content when available. Returns [{met, text}] ×3.
+func star_reasons() -> Array:
+	var won := bool(result.get("won", false))
+	var rules := {}
+	var c := autoload("Content")
+	if c != null and c.has_method("get_round"):
+		rules = (c.get_round(str(result.get("round_id", ""))) as Dictionary).get("stars", {})
+	if result.get("star_rules") is Dictionary:
+		rules = result.star_rules
+	var ratio := float(result.get("player_base_ratio", -1.0))
+	var t := float(result.get("time", 0.0))
+	var out := [{"met": won, "text": UiText.t("ui.star_win")}]
+	if rules.has("base_hp_2"):
+		var need := float(rules.base_hp_2)
+		out.append({"met": won and ratio >= need, "text": UiText.t("ui.star_base_hp") % int(roundf(need * 100))})
+	else:
+		out.append({"met": won and int(result.get("stars", 0)) >= 2, "text": UiText.t("ui.star_base_hp_any")})
+	if rules.has("time_3"):
+		out.append({"met": won and t <= float(rules.time_3), "text": UiText.t("ui.star_time") % int(rules.time_3)})
+	else:
+		out.append({"met": won and int(result.get("stars", 0)) >= 3, "text": UiText.t("ui.star_time_any")})
+	return out

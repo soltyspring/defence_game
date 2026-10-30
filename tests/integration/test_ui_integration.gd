@@ -155,6 +155,13 @@ func _run() -> void:
 	check(HudOk(hud), "HUD layout valid on real mount: %s" % [hud.layout.get("overflow", "?")])
 	await _seconds(0.4)
 	check(snaps.size() >= 2, "real HudSnapshots received (%d)" % snaps.size())
+	if tile == 0:
+		# r01 data has tutorial [tut_move_hero, ...]; the real battle.gd emits tutorial_step
+		var tw := 0.0
+		while hud.tutorial_key == "" and tw < 3.0:
+			await _seconds(0.1)
+			tw += 0.1
+		check(hud.tutorial_key != "" and hud.tutorial_label.modulate.a > 0.9, "real tutorial hint shown in r01 (%s: '%s')" % [hud.tutorial_key, hud.tutorial_label.text])
 	if snaps.is_empty():
 		_finish(); return
 	var sim = app.battle.sim
@@ -205,6 +212,9 @@ func _run() -> void:
 		_finish(); return
 	check(bool(res.result.get("won", false)), "result screen shows a win (%s)" % [res.result])
 	check(res.btn_retry.visible and res.btn_menu.visible, "result has retry + menu")
+	var reasons: Array = res.star_reasons()
+	var met := reasons.filter(func(x): return x.met).size()
+	check(met == int(res.result.get("stars", -1)), "star reasons from real round thresholds match engine stars (%d vs %s: %s)" % [met, res.result.get("stars"), reasons])
 	await _seconds(0.8)   # star pop-in animation
 	await shot("5_result")
 	# retry from result restarts battle with the 04 HUD again

@@ -45,6 +45,13 @@ const FALLBACK_KO := {
 	"ui.cancel": "취소",
 	"ui.save_recovered": "저장 파일이 손상되어 백업에서 복구했습니다.",
 	"ui.coins": "코인",
+	"ui.star_win": "승리",
+	"ui.star_base_hp": "기지 체력 %d%% 이상",
+	"ui.star_base_hp_any": "기지 체력 지키기",
+	"ui.star_time": "%d초 안에 클리어",
+	"ui.star_time_any": "빠르게 클리어",
+	"ui.credits": "크레딧",
+	"ui.font_credit": "글꼴: 갈무리 © 이민서, SIL Open Font License 1.1",
 	"toast.not_enough_gold": "보급이 부족합니다",
 	"toast.army_full": "병력이 가득 찼습니다",
 	"toast.on_cooldown": "아직 준비 중입니다",
@@ -53,6 +60,17 @@ const FALLBACK_KO := {
 	"toast.wave_incoming": "적 웨이브가 몰려옵니다!",
 	"toast.boss_incoming": "강력한 보스가 다가옵니다!",
 	"toast.worker_max": "일꾼이 최대입니다",
+}
+
+## English UI fallbacks for keys not yet in data/text/en.json (01 asked to add them; data wins).
+const FALLBACK_EN := {
+	"ui.star_win": "Win",
+	"ui.star_base_hp": "Base HP %d%%+",
+	"ui.star_base_hp_any": "Keep your base healthy",
+	"ui.star_time": "Clear within %ds",
+	"ui.star_time_any": "Clear quickly",
+	"ui.credits": "Credits",
+	"ui.font_credit": "Font: Galmuri © Lee Minseo, SIL Open Font License 1.1",
 }
 
 static var _strings: Dictionary = {}
@@ -79,6 +97,8 @@ static func t(key: String, fallback := "") -> String:
 		load_locale()
 	if _strings.has(key):
 		return str(_strings[key])
+	if _loaded_locale == "en" and FALLBACK_EN.has(key):
+		return FALLBACK_EN[key]
 	if FALLBACK_KO.has(key):
 		return FALLBACK_KO[key]
 	return fallback if fallback != "" else key

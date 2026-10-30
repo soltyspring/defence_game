@@ -20,6 +20,8 @@ var btn_worker: Control
 var card_buttons: Array = []     # TouchButton per card, same order as info.cards
 var skill_buttons: Array = []
 var toast_label: Label
+var tutorial_label: Label         # Events.tutorial_step (02): persistent, non-blocking hint
+var tutorial_key := ""
 var banner_label: Label
 var pause_layer: Control
 var pause_buttons: Array = []
@@ -42,6 +44,7 @@ func _bus_links() -> Array:
 		[&"toast", _on_toast],
 		[&"battle_paused", _on_paused],
 		[&"battle_ended", _on_battle_ended],
+		[&"tutorial_step", _on_tutorial_step],
 	]
 
 func ui_setup(params: Dictionary) -> void:
@@ -73,6 +76,8 @@ func _build() -> void:
 	btn_worker.fill = Color(0.30, 0.26, 0.16, 0.95)
 
 	toast_label = _make_label(UiStyle.FONT_M)
+	tutorial_label = _make_label(UiStyle.FONT_M)
+	tutorial_label.add_theme_color_override("font_color", UiStyle.C_GOLD)
 	banner_label = _make_label(UiStyle.FONT_L)
 	banner_label.add_theme_font_override("font", UiStyle.font(&"bold"))
 	banner_label.add_theme_constant_override("shadow_offset_x", 2)
@@ -126,6 +131,7 @@ func _on_battle_started(p_info: Dictionary) -> void:
 	snap = {}
 	_held.clear()
 	_last_wave = -1
+	_on_tutorial_step("")
 	paused = false
 	pause_layer.hide()
 	for b in card_buttons + skill_buttons:
@@ -236,7 +242,17 @@ func _on_paused(p: bool) -> void:
 	pause_layer.visible = p and not settings_panel.visible
 	queue_redraw()
 
+func _on_tutorial_step(key: String) -> void:
+	tutorial_key = key
+	if key == "":
+		tutorial_label.modulate.a = 0.0
+		return
+	tutorial_label.text = UiText.t(key, key)
+	tutorial_label.modulate.a = 1.0
+	_fit_label(tutorial_label, layout.get("tutorial", Rect2()))
+
 func _on_battle_ended(_result: Dictionary) -> void:
+	_on_tutorial_step("")
 	_release_all_holds()
 	pause_layer.hide()
 	settings_panel.hide()
@@ -366,6 +382,7 @@ func _layout() -> void:
 		place(skill_buttons[i], layout.skills[i])
 	_fit_label(toast_label, layout.toast)
 	_fit_label(banner_label, layout.banner)
+	_fit_label(tutorial_label, layout.tutorial)
 	place(pause_layer, Rect2(Vector2.ZERO, view))
 	var bw := 150.0
 	var bh := maxf(target, 40.0)

@@ -310,12 +310,68 @@ static func ui_icon(frame: String) -> Texture2D:
 		var ui = atlas.manifest.get("ui", {})
 		if ui is Dictionary and ui.has("atlas"):
 			atlas_id = str(ui.atlas)
-	var tex := icon_texture({"atlas": atlas_id, "frame": frame})
+	var tex := icon_texture({"atlas": atlas_id, "frame": frame}) if _atlas_consistent(atlas, atlas_id) else null
 	_icon_cache[frame] = tex
 	return tex
 
+## Guard against a stale imported texture vs. a regenerated frames file (observed 08:14: ui_main.json
+## re-packed to 256×256 while the imported texture was still the old 256×128 → wrong icons drawn).
+## On mismatch, icons are disabled (vector glyph fallbacks) and a warning is printed once.
+static var _atlas_ok: Dictionary = {}
+static var atlas_warnings: PackedStringArray = []
+static func _atlas_consistent(atlas: Node, atlas_id: String) -> bool:
+	if _atlas_ok.has(atlas_id):
+		return _atlas_ok[atlas_id]
+	var ok := true
+	if atlas != null and atlas.get("pages") is Dictionary and atlas.pages.has(atlas_id):
+		var p: Dictionary = atlas.pages[atlas_id]
+		if p.get("tex") == null and atlas.has_method("acquire"):
+			atlas.acquire(atlas_id)
+		var tex = p.get("tex")
+		var fpath := str((p.get("meta", {}) as Dictionary).get("frames", ""))
+		if tex is Texture2D and fpath != "" and FileAccess.file_exists(fpath):
+			var j := JSON.new()
+			if j.parse(FileAccess.get_file_as_string(fpath)) == OK and j.data is Dictionary and j.data.get("size") is Array:
+				var want := Vector2(float(j.data.size[0]), float(j.data.size[1]))
+				if (tex as Texture2D).get_size() != want:
+					ok = false
+					var msg := "[UiStyle] atlas %s texture %s != frames file size %s (stale import?) → icons disabled" % [atlas_id, (tex as Texture2D).get_size(), want]
+					atlas_warnings.append(msg)
+					push_warning(msg)
+	_atlas_ok[atlas_id] = ok and _import_fresh(atlas_id)
+	return _atlas_ok[atlas_id]
+
+## Dev-tree check: the imported texture must come from the current source PNG (Godot writes
+## source_md5 into .godot/imported/<file>.md5). Observed 08:14: 03 re-packed ui_main.png/json at the
+## same 256×256 size while the import was stale → wrong icons with no size mismatch. Exported builds
+## contain no source PNG, so this check is skipped there.
+static func _import_fresh(atlas_id: String) -> bool:
+	var png := "res://assets/atlases/%s.png" % atlas_id
+	var imp := png + ".import"
+	if not FileAccess.file_exists(png) or not FileAccess.file_exists(imp):
+		return true
+	var cfg := ConfigFile.new()
+	if cfg.load(imp) != OK:
+		return true
+	var dest := str(cfg.get_value("remap", "path", ""))
+	if dest == "":
+		var dests = cfg.get_value("deps", "dest_files", [])
+		dest = str(dests[0]) if dests is Array and not dests.is_empty() else ""
+	var md5_path := dest.get_basename() + ".md5"
+	if dest == "" or not FileAccess.file_exists(md5_path):
+		return true
+	var txt := FileAccess.get_file_as_string(md5_path)
+	var want := FileAccess.get_md5(png)
+	if txt.find(want) < 0:
+		var msg := "[UiStyle] atlas %s import is stale (source PNG md5 %s not in %s) → icons disabled until re-import" % [atlas_id, want, md5_path]
+		atlas_warnings.append(msg)
+		push_warning(msg)
+		return false
+	return true
+
 static func clear_icon_cache() -> void:
 	_icon_cache.clear()
+	_atlas_ok.clear()
 
 static func _atlas_node() -> Node:
 	var loop := Engine.get_main_loop()

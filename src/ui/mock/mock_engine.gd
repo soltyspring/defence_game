@@ -26,6 +26,7 @@ var _accum := 0.0
 var cmd_log: Array = []          # every command received: [name, args]
 var auto_play := false       # when true, enemy base takes passive damage so battles end
 var round_id := "r01"
+var boss_alive := false     # preview: show a boss HP bar
 
 const ROUNDS := [
 	{"id": "r01", "index": 1, "name": "Meadow Gate", "biome": "meadow"},
@@ -189,7 +190,8 @@ func snapshot() -> Dictionary:
 		"hero": {"hp": 420, "hp_max": 600, "alive": hero_alive, "respawn": respawn, "x": hero_x},
 		"player_base": {"hp": player_hp, "hp_max": 1500}, "enemy_base": {"hp": enemy_hp, "hp_max": 1200},
 		"wave": {"index": wave_i, "total": 5, "next_in": 20.0 - fmod(t, 20.0), "boss": wave_i == 5},
-		"army": {"player": army, "enemy": 9, "cap": 36}, "paused": paused}
+		"army": {"player": army, "enemy": 9, "cap": 36}, "paused": paused,
+		"boss": {"alive": boss_alive, "hp": 820.0, "hp_max": 1400.0, "id": "boss_warlord", "name_key": "enemy.boss_warlord.name"}}
 
 func _emit_snapshot() -> void:
 	bus.hud_snapshot.emit(snapshot())

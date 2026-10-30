@@ -76,8 +76,15 @@ static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min
 			skills.append(Rect2(Vector2(s.end.x - skill, y), Vector2(skill, skill)))
 	out.skills = skills
 
-	out.toast = Rect2(Vector2(s.position.x, s.position.y + top_h + 26.0), Vector2(s.size.x, 20.0))
-	out.banner = Rect2(Vector2(s.position.x, view.y * 0.30), Vector2(s.size.x, 32.0))
+	# feedback strips (boss bar, tutorial hint, toast, banner) stay left of a stacked skill column
+	var strip_end := s.end.x
+	if not skills_in_row and n_skills > 0:
+		strip_end = (skills[0] as Rect2).position.x - GAP * 2
+	var strip_w := strip_end - s.position.x
+	out.boss = Rect2(Vector2(bars_x, s.position.y + top_h + 4), Vector2(out.bases.size.x, 14.0))
+	out.tutorial = Rect2(Vector2(s.position.x, s.position.y + top_h + 24), Vector2(strip_w, 20.0))
+	out.toast = Rect2(Vector2(s.position.x, s.position.y + top_h + 46), Vector2(strip_w, 20.0))
+	out.banner = Rect2(Vector2(s.position.x, maxf(view.y * 0.36, s.position.y + top_h + 70)), Vector2(strip_w, 32.0))
 	return out
 
 ## All interactive rects, for validation.
@@ -109,6 +116,22 @@ static func validate(l: Dictionary) -> PackedStringArray:
 		var r: Rect2 = l[key]
 		if r.intersects(l.pause):
 			problems.append("%s overlaps pause" % key)
+	# feedback strips must not overlap each other, the top readouts or the bottom controls
+	var strips := ["boss", "tutorial", "toast", "banner"]
+	var fixed: Array[Rect2] = [l.resources, l.bases, l.wave, l.pause]
+	for i in strips.size():
+		var a: Rect2 = l[strips[i]]
+		if not safe.encloses(a):
+			problems.append("%s outside safe" % strips[i])
+		for ti in rects.size():
+			if a.intersects(rects[ti]):
+				problems.append("%s overlaps touch target %d %s" % [strips[i], ti, rects[ti]])
+		for j in range(i + 1, strips.size()):
+			if a.intersects(l[strips[j]]):
+				problems.append("%s overlaps %s" % [strips[i], strips[j]])
+		for k in fixed.size():
+			if a.intersects(fixed[k]):
+				problems.append("%s overlaps top readout %d" % [strips[i], k])
 	if l.overflow:
 		problems.append("bottom row overflow")
 	return problems

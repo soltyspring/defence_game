@@ -53,6 +53,8 @@ func _run() -> void:
 	for s in SECTIONS:
 		check(done.has(s), "section %s ran to completion (aborted by a script error otherwise)" % s)
 	print("[test_ui] passed=%d failed=%d" % [passes, failures.size()])
+	for w in load("res://src/ui/ui_style.gd").atlas_warnings:
+		print("  ATLAS " + w)
 	for f in failures:
 		print("  - " + f)
 	quit(1 if failures.size() > 0 else 0)
@@ -271,6 +273,22 @@ func test_hud_state() -> void:
 	s = mock.snapshot(); s.wave.index = 2; bus.hud_snapshot.emit(s)
 	s = mock.snapshot(); s.wave.index = 3; bus.hud_snapshot.emit(s)
 	check(hud.banner_label.modulate.a > 0.9 and hud.banner_label.text.contains("3"), "wave banner on wave change")
+	# tutorial hint (Events.tutorial_step): shown with data text, hidden on ""
+	bus.tutorial_step.emit("tut_move_hero")
+	check(hud.tutorial_label.modulate.a > 0.9 and hud.tutorial_label.text == UiText.t("tut_move_hero"), "tutorial hint shown (%s)" % hud.tutorial_label.text)
+	check(hud.layout.tutorial.encloses(hud.tutorial_label.get_rect()) or hud.tutorial_label.size.x <= hud.layout.tutorial.size.x, "tutorial hint inside its strip")
+	bus.tutorial_step.emit("")
+	check(hud.tutorial_label.modulate.a == 0.0, "tutorial hint hidden on empty key")
+	# boss bar from HudSnapshot.boss (stop mock ticks so its own snapshots do not overwrite ours)
+	mock.running = false
+	s = mock.snapshot(); s["boss"] = {"alive": true, "hp": 300.0, "hp_max": 1200.0, "id": "boss_warlord", "name_key": "enemy.boss_warlord.name"}
+	bus.hud_snapshot.emit(s)
+	await _frames(2)
+	check(hud.top.boss_drawn, "boss HP bar drawn while boss alive")
+	s = mock.snapshot(); s["boss"] = {"alive": false}
+	bus.hud_snapshot.emit(s)
+	await _frames(2)
+	check(not hud.top.boss_drawn, "boss HP bar hidden when no boss")
 	mock.running = false
 	mock.queue_free()
 	hud.queue_free()
@@ -336,6 +354,16 @@ func test_result() -> void:
 	check(not r.btn_next.visible, "loss hides Next")
 	for b in [r.btn_retry, r.btn_menu]:
 		check(r.panel.encloses(b.get_rect()), "result button inside panel")
+	# star reasons with real thresholds: base 80% ≥ 50% met, 150 s > 120 s unmet → 2 stars, no mismatch
+	r.ui_setup({"result": {"round_id": "r01", "won": true, "stars": 2, "time": 150.0, "kills": 9, "coins": 70, "player_base_ratio": 0.8, "first_clear": false, "next_round_id": "r02", "star_rules": {"base_hp_2": 0.5, "time_3": 120}}})
+	await _frames(2)
+	var rs_: Array = r.star_reasons()
+	check(rs_[0].met and rs_[1].met and not rs_[2].met, "star reasons: win ✓, base ✓, time ✗ (%s)" % [rs_])
+	check(rs_[1].text.contains("50") and rs_[2].text.contains("120"), "star reasons show thresholds (%s / %s)" % [rs_[1].text, rs_[2].text])
+	check(not r.reason_mismatch, "star reasons agree with engine star count")
+	r.ui_setup({"result": {"round_id": "r01", "won": false, "stars": 0, "time": 40.0, "kills": 3, "coins": 5, "player_base_ratio": 0.0, "first_clear": false, "next_round_id": "", "star_rules": {"base_hp_2": 0.5, "time_3": 120}}})
+	await _frames(2)
+	check(r.star_reasons().filter(func(x): return x.met).is_empty() and not r.reason_mismatch, "loss: no star conditions met")
 	r.queue_free()
 	await _frames()
 	done["result"] = true
@@ -490,6 +518,9 @@ func test_korean_text_fit() -> void:
 					chars[ch] = true
 		for key in UiText.FALLBACK_KO:
 			for ch in str(UiText.FALLBACK_KO[key]):
+				chars[ch] = true
+		for key in UiText.FALLBACK_EN:
+			for ch in str(UiText.FALLBACK_EN[key]):
 				chars[ch] = true
 		var miss_u := []
 		var miss_b := []
