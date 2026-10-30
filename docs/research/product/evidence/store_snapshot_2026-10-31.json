@@ -1,0 +1,22 @@
+{
+  "_about": "09-research-product가 2026-10-31(KST) 07:15~07:35에 Google Play(hl=ko, gl=KR) 상세 페이지 HTML을 받아 정규식으로 추출한 값. 설치 수는 Google Play 단독·누적·하한 구간이며 활성 사용자나 매출이 아니다. 평점/리뷰 수는 표시값. 스크린샷 이미지와 리뷰 원문은 제3자 저작물이므로 저장소에 넣지 않았다(로컬 임시 폴더에서만 열람).",
+  "method": "Invoke-WebRequest + python regex (TEMP/r09/meta.py, parse.py, reviews.py). 리뷰 표본 = 페이지에 내장된 기본 정렬(구글 '관련성') 20건/앱. 무작위 표본 아님.",
+  "apps": [
+    {"package": "com.GameDuo.MadArcher", "title_ko": "아처키우기 : 방치형 디펜스", "title_en_us": "Archer Forest : Idle Defense", "developer": "주식회사 게임듀오", "installs_bucket": "100만+", "rating": 4.5, "reviews_shown": "5.83만", "updated": "2026-09-17", "ads": true, "iap": true, "orientation_observed": "portrait (6/6 screenshots 405x720 계열)"},
+    {"package": "com.percent.royaldice", "title_ko": "랜덤 다이스 디펜스 : PVP 타워 디펜스", "developer": "111%", "installs_bucket": "1,000만+", "rating": 4.2, "reviews_shown": "65만", "updated": "2026-02-11", "whatsnew": "16kb 메모리 페이지 크기 지원(기타 수정)", "ads": true, "iap": true, "orientation_observed": "portrait"},
+    {"package": "com.percent.aos.randomdice2", "title_ko": "랜덤 다이스 2", "developer": "111%", "installs_bucket": "50만+", "rating": 4.6, "reviews_shown": "8.76만", "updated": "2026-10-29", "whatsnew": "신규 초월 '왜곡 주사위', 균열 대청소 이벤트", "earliest_review_in_sample": "2026-08-24", "ads": true, "iap": true, "orientation_observed": "portrait"},
+    {"package": "com.percent.aos.luckydefense", "title_ko": "운빨존많겜", "developer": "111%", "installs_bucket": "500만+", "rating": 4.3, "reviews_shown": "21.7만", "updated": "2026-10-25", "whatsnew": "할로윈 축제, 릴레이 디펜스, 대전 모드 리뉴얼 예고", "ads": true, "iap": true, "orientation_observed": "portrait (+1 landscape key art)"},
+    {"package": "com.habby.archero", "title_ko": "궁수의 전설", "developer": "Habby", "installs_bucket": "5,000만+", "rating": 4.2, "reviews_shown": "174만", "updated": "2026-10-21", "note": "이름 유사 후보. 장르는 디펜스가 아닌 액션 로그라이트", "orientation_observed": "portrait"},
+    {"package": "com.westriversw.CatWar2", "title_ko": "고양이전쟁2", "developer": "WESTRIVER", "installs_bucket": "100만+", "rating": 4.6, "reviews_shown": "19.3만", "updated": "2026-06-07", "note": "사용자 레퍼런스(비교 기준)", "orientation_observed": "landscape 480x320"}
+  ],
+  "app_store_kr": {"id1519590205": {"title": "아처키우기 : 방치형 디펜스", "rating": 4.6, "ratings": "1.1만", "version": "16.11.06 (9월 17일)", "size_mb": 601.4, "contains": ["랜덤 박스", "광고", "메시지 및 채팅"], "top_iap_listed": ["archer_adremove_0 ₩11,000", "광고제거 패키지 ₩12,000", "archer_pass_tier_1_0 ₩1,100", "archer_timedeal_tier_1..4 ₩1,100~6,000", "모래사막 돌파 패키지 ₩1,200", "불타는 폐허 돌파 패키지 ₩4,400", "af_boss_custom_tier_1 ₩1,200"], "copyright": "© 2021 Game Duo Co., Ltd."}},
+  "review_sample_stats": {
+    "_warning": "표본 평균 별점은 스토어 평점(4.2~4.6)보다 훨씬 낮다. '관련성' 정렬이 길고 비판적인 리뷰를 올리는 선택 편향으로 보인다(추론). 불만 유형 발견용이지 비율 추정용이 아니다.",
+    "com.GameDuo.MadArcher": {"n": 20, "date_range": "2021-04-27..2024-06-15", "stars": {"1": 13, "2": 1, "3": 1, "4": 2, "5": 3}},
+    "com.percent.royaldice": {"n": 20, "date_range": "2026-04-19..2026-09-14", "stars": {"1": 6, "2": 3, "3": 4, "4": 1, "5": 6}},
+    "com.percent.aos.randomdice2": {"n": 20, "date_range": "2026-08-24..2026-09-18", "stars": {"1": 6, "2": 2, "3": 2, "4": 4, "5": 6}},
+    "com.percent.aos.luckydefense": {"n": 20, "date_range": "2025-08-10..2026-09-16", "stars": {"1": 4, "3": 2, "4": 6, "5": 8}},
+    "com.habby.archero": {"n": 20, "date_range": "2019-05-21..2026-09-04", "stars": {"1": 5, "2": 4, "3": 4, "4": 5, "5": 2}},
+    "com.westriversw.CatWar2": {"n": 20, "date_range": "2018-09-25..2026-09-22", "stars": {"2": 1, "3": 6, "4": 2, "5": 11}}
+  }
+}
