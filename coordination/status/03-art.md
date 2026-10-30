@@ -1,8 +1,6 @@
 # 03-art status
-Updated: 2026-10-31 08:05 +09:00
-Status: MILESTONE 2 DELIVERED (Godot imports verified, exported-pack loading proven, licensed fonts, hostile art audit round 1 with fixes). Theme is still the reversible default (Q1 PENDING, not approved).
-Current task: done with round 1. Next = r04+ roster art (fast, e_brute, boss_warlord own page).
-Tools: Python 3.11 + Pillow + numpy + fontTools 4.66. Godot 4.7.2 is used only in isolated temp copies (visible windows on the secondary monitor).
-Validation evidence: validate.py PASS (atlases + font coverage + font import params + determinism). Exported PCK: 6/6 pages + 3 fonts load with no raw PNG. Font renders regular at 1/2/3/4× for 12/24 px.
-Dependencies: 02 (re-import, scale_mode integer, draw markers/prop_mine, white lines), 04 (font sizes 12/24/36, ribbons), 01 (Q1).
-Outstanding questions: none to user.
+Updated: 2026-10-31 08:40 +09:00
+Status: MILESTONE 3 DELIVERED. r04-r07 roster art: commit c49de70, PUSHED origin/main and verified with git branch -r --contains. White-line root cause sent to 02 (22cd2bb). Theme is still the Q1 default (PENDING, not approved).
+Current task: done. Next = boss_overlord art; recapture in game after 02 acts on A4/A5.
+Validation: validate.py --determinism PASS (9 pages). Exported PCK: 9/9 pages + 3 fonts load with no raw PNG. Visual inspection of the new sheets and the battle mock.
+Open with other owners: A8 white lines (02), A2 font sizes (04), A3 integer scale (02), A6/A7 markers/mine wiring (02), A9 ribbons (04), A15 heights (01).

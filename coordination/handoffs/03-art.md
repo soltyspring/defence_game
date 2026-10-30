@@ -10,7 +10,7 @@ Outgoing: 03-art-to-02-engine A4 (white-line root cause), A5 (new pages); 03-art
 
 ## Commits
 - 22cd2bb [Docs] white-line real-game reproduction + root-cause evidence for 02. PUSHED origin/main.
-- This milestone: `[Design] r04–r07 로스터 …` (SHA recorded in the status file after push).
+- c49de70 [Design] r04~r07 roster + 3 roster atlases. PUSHED origin/main (verified with `git branch -r --contains`).
 - Earlier: 9b4ee0b, e93acdd, 6cf3d01, 4088ae0, 5e157e3, abd327d, 9848b06 (all pushed).
 
 ## Work done this session
