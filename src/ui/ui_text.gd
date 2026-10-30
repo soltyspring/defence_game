@@ -1,0 +1,93 @@
+extends RefCounted
+## UI string lookup. Owner: 04-client.
+## Order: data/text/<locale>.json "strings" (01-owned, read-only) -> UI fallback table below -> key.
+## UI keys use the `ui.` prefix; 01 is asked to copy them into data/text (coordination/requests/04-client-to-01-director.md).
+
+const FALLBACK_KO := {
+	"ui.title": "레인 디펜스",
+	"ui.subtitle": "기지를 지키고 적 기지를 부숴라",
+	"ui.play": "시작",
+	"ui.continue": "이어하기",
+	"ui.settings": "설정",
+	"ui.back": "뒤로",
+	"ui.close": "닫기",
+	"ui.select_round": "라운드 선택",
+	"ui.locked": "잠김",
+	"ui.round_n": "%d",
+	"ui.pause": "일시정지",
+	"ui.paused": "일시정지됨",
+	"ui.resume": "계속하기",
+	"ui.retry": "다시하기",
+	"ui.next": "다음 라운드",
+	"ui.menu": "메뉴로",
+	"ui.victory": "승리!",
+	"ui.defeat": "패배...",
+	"ui.time": "시간",
+	"ui.kills": "처치",
+	"ui.reward": "보상",
+	"ui.first_clear": "첫 클리어 보너스!",
+	"ui.worker": "일꾼",
+	"ui.wave": "웨이브 %d/%d",
+	"ui.wave_next": "다음 %ds",
+	"ui.boss": "보스",
+	"ui.respawn": "부활 %ds",
+	"ui.full": "가득",
+	"ui.max": "최대",
+	"ui.fps_cap": "프레임 제한",
+	"ui.sfx": "효과음",
+	"ui.music": "음악",
+	"ui.show_damage": "피해 숫자",
+	"ui.screen_shake": "화면 흔들림",
+	"ui.on": "켜기",
+	"ui.off": "끄기",
+	"ui.quit_confirm": "게임을 종료할까요?",
+	"ui.quit": "종료",
+	"ui.cancel": "취소",
+	"ui.save_recovered": "저장 파일이 손상되어 백업에서 복구했습니다.",
+	"ui.coins": "코인",
+	"toast.not_enough_gold": "보급이 부족합니다",
+	"toast.army_full": "병력이 가득 찼습니다",
+	"toast.on_cooldown": "아직 준비 중입니다",
+	"toast.not_enough_mana": "기력이 부족합니다",
+	"toast.hero_dead": "영웅이 부활 중입니다",
+	"toast.wave_incoming": "적 웨이브가 몰려옵니다!",
+	"toast.boss_incoming": "강력한 보스가 다가옵니다!",
+	"toast.worker_max": "일꾼이 최대입니다",
+}
+
+static var _strings: Dictionary = {}
+static var _loaded_locale := ""
+
+static func load_locale(locale := "ko") -> void:
+	_strings = {}
+	_loaded_locale = locale
+	var path := "res://data/text/%s.json" % locale
+	if not FileAccess.file_exists(path):
+		return
+	var j := JSON.new()
+	if j.parse(FileAccess.get_file_as_string(path)) != OK:
+		push_warning("[UiText] parse error in " + path)
+		return
+	if j.data is Dictionary and j.data.get("strings") is Dictionary:
+		_strings = j.data.strings
+
+static func t(key: String, fallback := "") -> String:
+	if _loaded_locale == "":
+		load_locale()
+	if _strings.has(key):
+		return str(_strings[key])
+	if FALLBACK_KO.has(key):
+		return FALLBACK_KO[key]
+	return fallback if fallback != "" else key
+
+static func has(key: String) -> bool:
+	if _loaded_locale == "":
+		load_locale()
+	return _strings.has(key) or FALLBACK_KO.has(key)
+
+## Display name for a content id: tries `<kind>.<id>.name`, then the engine-supplied name.
+static func name_of(kind: String, id: String, engine_name := "") -> String:
+	var k := "%s.%s.name" % [kind, id]
+	if has(k):
+		return t(k)
+	return engine_name if engine_name != "" else id
