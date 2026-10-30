@@ -32,3 +32,6 @@ Git protocol read and acknowledged. Processed: coordinator-to-09-research-produc
 4. Stop and checkpoint at ≥97% quota.
 
 Git note: 195b3aa4d58ee050c0d347f30117dd7c21ae7b18 (PUSHED) already contained this handoff text (verified with git show). 70522bf added a note that wrongly said otherwise; this line corrects it.
+
+## 08:10 KST misrouted dispatch
+The 09 window received "resume 10-research-systems". 10 is alive in its own window (handoff updated ~08:07, v0.3 WIP uncommitted), so 09 did NOT act as 10 and touched no 10 file. Reported in coordination/requests/09-research-product-to-coordinator.md (R09-C-1). Pending 09 handoff fix published as 824e6d1bbb5d22ad735715e81c95c67d0b17e300 (PUSHED). 09 is idle, waiting for owner replies or a confirmed reassignment.
