@@ -1,0 +1,16 @@
+{
+  "_about": "09 X6. Official promotional videos linked from each Play listing or the developer channel. Observed through YouTube's public storyboard thumbnails (the scrub-bar previews, 1 frame per second) on 2026-10-31 ~09:30 KST. The videos were NOT downloaded or played and there is NO audio. Frames are low resolution, so small HUD text is mostly unreadable. Thumbnails are not committed (third-party content).",
+  "method": "owner/title via https://www.youtube.com/oembed; length and publishDate from the watch page; storyboard spec (playerStoryboardSpecRenderer) at the highest level, cropped and timestamped locally",
+  "videos": [
+    {"game": "아처키우기 (com.GameDuo.MadArcher)", "id": "FsBO0ruKar4", "url": "https://www.youtube.com/watch?v=FsBO0ruKar4", "channel": "Gameduo_AF_KR", "title": "아처키우기 PV", "published": "2022-08-12", "length_s": 29, "frame_px": "50x90", "type": "trailer"},
+    {"game": "궁수키우기 RPG (com.ohm1004.Defense)", "id": "Mn_a147HnWI", "url": "https://www.youtube.com/watch?v=Mn_a147HnWI", "channel": "0 madsoft", "title": "궁수키우기 RPG - 모바일게임", "published": "2026-08-01", "length_s": 45, "frame_px": "80x180", "type": "trailer"},
+    {"game": "궁수키우기 RPG (com.ohm1004.Defense)", "id": "X2hYbBpeTvs", "url": "https://www.youtube.com/watch?v=X2hYbBpeTvs", "channel": "0 madsoft", "title": "Castle defense RPG - Raising Archers", "published": "2021-08-24", "length_s": 41, "frame_px": "160x90 (letterboxed portrait)", "type": "gameplay montage linked in Play description"},
+    {"game": "랜덤 다이스 2 (com.percent.aos.randomdice2)", "id": "oj2mI2SBhxg", "url": "https://www.youtube.com/watch?v=oj2mI2SBhxg", "channel": "111%", "title": "랜덤 다이스 2", "published": "2026-08-06", "length_s": 27, "frame_px": "320x180", "type": "trailer"},
+    {"game": "운빨존많겜 (com.percent.aos.luckydefense)", "id": "HwgaDIsxnm8", "url": "https://www.youtube.com/watch?v=HwgaDIsxnm8", "channel": "111%", "title": "260316 luckydefense ... aos kr 29s", "published": "2026-03-16", "length_s": 29, "frame_px": "320x180", "type": "ad creative"}
+  ],
+  "unavailable": [
+    "랜덤 다이스 (1편, com.percent.royaldice): the Play listing links its official YouTube as https://url.kr/6uvmw5, which on 2026-10-31 redirects to an expired-domain page. No own trailer was identified among the listing's embedded videos (the ones found belong to other apps or to other 111% titles).",
+    "No first-3-minutes or tutorial recording from any official channel was found. Every observed video is 27-45 s of edited promotional footage.",
+    "Channel upload listing failed (RSS feed 404; channel page format not parsed), so longer official uploads may exist but were not found."
+  ]
+}

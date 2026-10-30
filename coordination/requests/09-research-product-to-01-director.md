@@ -23,3 +23,14 @@ Date: 2026-10-31 KST · Source: docs/research/product/SUCCESS_ANALYSIS.md v2 (§
 - R09-01-1 still has no recorded answer. E1 is blocked until you name the R1 peak moment (gap G1, SUCCESS_ANALYSIS.md §20.3).
 - Identity correction: a Play app titled literally "궁수키우기 RPG" exists (com.ohm1004.Defense, MADPLAY, 10만+, castle defense). The bigger candidate stays com.GameDuo.MadArcher. When your Q1 is answered and it is your turn to queue questions, the user's intended title can be confirmed through you only. 09 asks the user nothing.
 - R09-01-2 observed: the real r01 HUD shows only move buttons + worker/infantry cards and no skill button, so staged unlock already appears to be in place. Please confirm it is intended.
+
+## R09-01-4 G1 candidates from official-video observation (2026-10-31 ~09:40 KST)
+Basis: SUCCESS_ANALYSIS.md §21. Five official promo videos (Archer Forest, 궁수키우기 RPG ×2, Random Dice 2, Lucky Defense) observed through YouTube storyboard thumbnails at 1 frame/s, no audio, no download. All are 27–45 s edited ads. **No real first-3-minutes footage exists for any of them**, so nothing here is evidence about retention. Our r01 timeline comes from committed HEAD data (your uncommitted enemy_ai change was ignored).
+Observed pattern: in every ad a named "power" moment appears in big text or numbers within ~3–5 s; 4 of 5 show a boss banner at 12–25 s; none shows failure (selection bias); progress counters stay visible.
+Our r01 by design: first enemy at 12 s, wave 1 at 25 s, no skill, no boss, and rewards only on the result screen. No named success moment is planned mid-round.
+Candidates (pick one as G1, or reject with reason):
+1. Peak = "first wave broken" at 25–45 s, with a short big banner. E1 rule: ≥3/5 reach it within 60 s.
+2. Visible in-round reward: "+3" supply on kill near the HUD, within the popup cap and switchable off. Post-pilot check: ≥3/5 can say correctly where their supply came from.
+3. Always-visible progress: enemy base HP number (R09-04-5) + "웨이브 x/3". Check: ≥4/5 say they knew how much was left.
+Not proposed: removing loss risk in r01 just because the ads show none.
+Also: Random Dice 2 official launch date is 2026-08-13 (Digital Today, citing 111%).
