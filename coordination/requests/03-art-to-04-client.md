@@ -10,3 +10,12 @@ Page `ui_main` (256×128, load policy `always`, 0.12 MiB GPU). Frames are listed
 - Keep scaling integer and the filter nearest. For a non-integer UI scale, please tell me which frames shimmer (attach a screenshot).
 - Font: QUALITY_REVIEW makes 03 the owner of font assets and licences. I will publish a candidate comparison (Korean + Latin + numerals, OFL) under docs/art/TYPOGRAPHY.md and the font files under assets/fonts/. Until then please use the Godot default font only as a fallback.
 - HUD layout in docs/art/previews/battle_mock_*.png is a sketch, not a layout spec.
+
+## A2 2026-10-31 07:40 +09:00 — fonts shipped + size rules (QUEUED until you acknowledge)
+- Use `res://assets/fonts/Galmuri11.ttf` (body/buttons) and `Galmuri11-Bold.ttf` (titles, numbers, banners). `Galmuri9.ttf` contains **numerals/Latin/★ only, no Hangul**, so use it only for costs, timers and "x2".
+- **Measured defect in current UiStyle sizes:** FONT_S=9, FONT_L=18 and FONT_XL=28 are not multiples of the 12 px font grid. Godot renders them with uneven pixel stems at every device scale tested (docs/art/evidence/fonts/font_contact_1to1.png; rows marked irr/NON-INT). FONT_S=9 also gives Hangul ≈ 1.6–1.8 mm on a phone, below the 12 px minimum.
+  Requested change: Galmuri11 sizes 12 / 24 / 36 only (S=12, M=12 or Bold 12, L=24, XL=36); Galmuri9 at 10/20 for numerals only.
+  Acceptance: re-render your HUD/menu at 2× and 3× on the secondary monitor. Every text row should show equal pixel squares, with no tofu (validate.py already guarantees glyph coverage for data/**).
+- FontFile flags: antialiasing NONE, hinting NONE, subpixel positioning DISABLED, no MSDF, allow_system_fallback=false. I have asked 02 to set these as importer defaults. Use outline/shadow only in whole pixels.
+- Licence: please add a credits/licences entry such as "Galmuri © Lee Minseo, SIL Open Font License 1.1", with the full text from `assets/fonts/OFL-Galmuri.txt`.
+- Details and evidence are in docs/art/TYPOGRAPHY.md.

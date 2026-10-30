@@ -1,0 +1,181 @@
+{
+  "devices": [
+    {
+      "device_px": [
+        640,
+        360
+      ],
+      "id": "d1_640x360_1x",
+      "ref_view": [
+        640.0,
+        360.0
+      ],
+      "scale": 1.0
+    },
+    {
+      "device_px": [
+        1280,
+        720
+      ],
+      "id": "d2_1280x720_2x",
+      "ref_view": [
+        640.0,
+        360.0
+      ],
+      "scale": 2.0
+    },
+    {
+      "device_px": [
+        2400,
+        1080
+      ],
+      "id": "d3_2400x1080_3x",
+      "ref_view": [
+        800.0,
+        360.0
+      ],
+      "scale": 3.0
+    },
+    {
+      "device_px": [
+        1600,
+        900
+      ],
+      "id": "d4_1600x900_2.5x",
+      "ref_view": [
+        640.0,
+        360.0
+      ],
+      "scale": 2.5
+    },
+    {
+      "device_px": [
+        2560,
+        1600
+      ],
+      "id": "d5_2560x1600_4.44x",
+      "ref_view": [
+        640.0,
+        400.0
+      ],
+      "scale": 4.0
+    }
+  ],
+  "fonts": {
+    "Galmuri11-Bold.ttf": {
+      "cache_bytes_est": 262144,
+      "cache_textures": [
+        {
+          "format": 1,
+          "size": [
+            12,
+            0
+          ],
+          "tex": [
+            256,
+            256
+          ]
+        },
+        {
+          "format": 1,
+          "size": [
+            24,
+            0
+          ],
+          "tex": [
+            256,
+            256
+          ]
+        }
+      ]
+    },
+    "Galmuri11.ttf": {
+      "cache_bytes_est": 655360,
+      "cache_textures": [
+        {
+          "format": 1,
+          "size": [
+            12,
+            0
+          ],
+          "tex": [
+            256,
+            256
+          ]
+        },
+        {
+          "format": 1,
+          "size": [
+            24,
+            0
+          ],
+          "tex": [
+            256,
+            256
+          ]
+        },
+        {
+          "format": 1,
+          "size": [
+            9,
+            0
+          ],
+          "tex": [
+            256,
+            256
+          ]
+        },
+        {
+          "format": 1,
+          "size": [
+            18,
+            0
+          ],
+          "tex": [
+            256,
+            256
+          ]
+        },
+        {
+          "format": 1,
+          "size": [
+            28,
+            0
+          ],
+          "tex": [
+            256,
+            256
+          ]
+        }
+      ]
+    },
+    "Galmuri9.ttf": {
+      "cache_bytes_est": 262144,
+      "cache_textures": [
+        {
+          "format": 1,
+          "size": [
+            10,
+            0
+          ],
+          "tex": [
+            256,
+            256
+          ]
+        },
+        {
+          "format": 1,
+          "size": [
+            20,
+            0
+          ],
+          "tex": [
+            256,
+            256
+          ]
+        }
+      ]
+    }
+  },
+  "out_dir": "C:/Users/aghose/AppData/Roaming/Godot/app_userdata/defence-art-check/font_sheet"
+}

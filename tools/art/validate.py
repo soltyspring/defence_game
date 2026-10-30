@@ -249,6 +249,17 @@ def main():
     missing = check_data_refs(manifest, all_frames)
     for (p, k, v) in missing:
         warn(f"data ref not in art yet: {p} {k}={v}")
+    # fonts: shipped files + licence + no tofu for any data text
+    try:
+        import fonts as fontmod
+        for e in fontmod.coverage_errors():
+            err(e)
+        for req in ("OFL-Galmuri.txt", "fonts_provenance.json"):
+            if not os.path.exists(os.path.join(ROOT, "assets", "fonts", req)):
+                err(f"fonts: missing assets/fonts/{req}")
+        report.append("  fonts: " + ", ".join(sorted(fontmod.FONTS)) + " -> data text coverage checked")
+    except ImportError as e:  # fontTools missing
+        warn(f"font check skipped: {e}")
     if "--determinism" in sys.argv:
         ok = determinism()
         (report.append("  determinism: identical page bytes across 2 builds") if ok else err("non-deterministic build"))

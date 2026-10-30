@@ -1,0 +1,918 @@
+{
+ "d1_640x360_1x": {
+  "scale": 1.0,
+  "rows": [
+   {
+    "font": "Galmuri11.ttf",
+    "px": 12,
+    "device_block": 1.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "band": [
+     4,
+     18
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 24,
+    "device_block": 2.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     2,
+     4,
+     6,
+     8,
+     10,
+     12,
+     14,
+     16
+    ],
+    "band": [
+     19,
+     45
+    ]
+   },
+   {
+    "font": "Galmuri11-Bold.ttf",
+    "px": 12,
+    "device_block": 1.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "band": [
+     46,
+     60
+    ]
+   },
+   {
+    "font": "Galmuri11-Bold.ttf",
+    "px": 24,
+    "device_block": 2.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     2,
+     4,
+     6,
+     8,
+     10,
+     12,
+     14,
+     18
+    ],
+    "band": [
+     61,
+     87
+    ]
+   },
+   {
+    "font": "Galmuri9.ttf",
+    "px": 10,
+    "device_block": 1.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     9
+    ],
+    "band": [
+     88,
+     100
+    ]
+   },
+   {
+    "font": "Galmuri9.ttf",
+    "px": 20,
+    "device_block": 2.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     2,
+     4,
+     6,
+     8,
+     10,
+     12,
+     18
+    ],
+    "band": [
+     101,
+     123
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 9,
+    "device_block": 0.75,
+    "irregular_runs": 1.0,
+    "run_lengths_sample": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "band": [
+     124,
+     135
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 18,
+    "device_block": 1.5,
+    "irregular_runs": 1.0,
+    "run_lengths_sample": [
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9
+    ],
+    "band": [
+     136,
+     156
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 28,
+    "device_block": 2.333,
+    "irregular_runs": 1.0,
+    "run_lengths_sample": [
+     2,
+     3,
+     4,
+     5,
+     7,
+     9,
+     10,
+     12
+    ],
+    "band": [
+     157,
+     187
+    ]
+   }
+  ]
+ },
+ "d2_1280x720_2x": {
+  "scale": 2.0,
+  "rows": [
+   {
+    "font": "Galmuri11.ttf",
+    "px": 12,
+    "device_block": 2.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     2,
+     4,
+     6,
+     8,
+     10,
+     12,
+     14,
+     16
+    ],
+    "band": [
+     8,
+     36
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 24,
+    "device_block": 4.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     4,
+     8,
+     12,
+     16,
+     20,
+     24,
+     28,
+     32
+    ],
+    "band": [
+     38,
+     90
+    ]
+   },
+   {
+    "font": "Galmuri11-Bold.ttf",
+    "px": 12,
+    "device_block": 2.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     2,
+     4,
+     6,
+     8,
+     10,
+     12,
+     14,
+     16
+    ],
+    "band": [
+     92,
+     120
+    ]
+   },
+   {
+    "font": "Galmuri11-Bold.ttf",
+    "px": 24,
+    "device_block": 4.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     4,
+     8,
+     12,
+     16,
+     20,
+     24,
+     28,
+     36
+    ],
+    "band": [
+     122,
+     174
+    ]
+   },
+   {
+    "font": "Galmuri9.ttf",
+    "px": 10,
+    "device_block": 2.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     2,
+     4,
+     6,
+     8,
+     10,
+     12,
+     18
+    ],
+    "band": [
+     176,
+     200
+    ]
+   },
+   {
+    "font": "Galmuri9.ttf",
+    "px": 20,
+    "device_block": 4.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     4,
+     8,
+     12,
+     16,
+     20,
+     24,
+     36
+    ],
+    "band": [
+     202,
+     246
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 9,
+    "device_block": 1.5,
+    "irregular_runs": 1.0,
+    "run_lengths_sample": [
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9
+    ],
+    "band": [
+     248,
+     270
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 18,
+    "device_block": 3.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     3,
+     6,
+     9,
+     12,
+     15,
+     18,
+     21,
+     24
+    ],
+    "band": [
+     272,
+     312
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 28,
+    "device_block": 4.667,
+    "irregular_runs": 1.0,
+    "run_lengths_sample": [
+     4,
+     5,
+     9,
+     10,
+     14,
+     18,
+     19,
+     23
+    ],
+    "band": [
+     314,
+     374
+    ]
+   }
+  ]
+ },
+ "d3_2400x1080_3x": {
+  "scale": 3.0,
+  "rows": [
+   {
+    "font": "Galmuri11.ttf",
+    "px": 12,
+    "device_block": 3.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     3,
+     6,
+     9,
+     12,
+     15,
+     18,
+     21,
+     24
+    ],
+    "band": [
+     12,
+     54
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 24,
+    "device_block": 6.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     6,
+     12,
+     18,
+     24,
+     30,
+     36,
+     42,
+     48
+    ],
+    "band": [
+     57,
+     135
+    ]
+   },
+   {
+    "font": "Galmuri11-Bold.ttf",
+    "px": 12,
+    "device_block": 3.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     3,
+     6,
+     9,
+     12,
+     15,
+     18,
+     21,
+     24
+    ],
+    "band": [
+     138,
+     180
+    ]
+   },
+   {
+    "font": "Galmuri11-Bold.ttf",
+    "px": 24,
+    "device_block": 6.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     6,
+     12,
+     18,
+     24,
+     30,
+     36,
+     42,
+     54
+    ],
+    "band": [
+     183,
+     261
+    ]
+   },
+   {
+    "font": "Galmuri9.ttf",
+    "px": 10,
+    "device_block": 3.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     3,
+     6,
+     9,
+     12,
+     15,
+     18,
+     27
+    ],
+    "band": [
+     264,
+     300
+    ]
+   },
+   {
+    "font": "Galmuri9.ttf",
+    "px": 20,
+    "device_block": 6.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     6,
+     12,
+     18,
+     24,
+     30,
+     36,
+     54
+    ],
+    "band": [
+     303,
+     369
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 9,
+    "device_block": 2.25,
+    "irregular_runs": 1.0,
+    "run_lengths_sample": [
+     2,
+     3,
+     4,
+     5,
+     7,
+     9,
+     10,
+     11
+    ],
+    "band": [
+     372,
+     405
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 18,
+    "device_block": 4.5,
+    "irregular_runs": 1.0,
+    "run_lengths_sample": [
+     3,
+     5,
+     8,
+     9,
+     10,
+     12,
+     14,
+     18
+    ],
+    "band": [
+     408,
+     468
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 28,
+    "device_block": 7.0,
+    "irregular_runs": 0.002,
+    "run_lengths_sample": [
+     7,
+     9,
+     14,
+     21,
+     28,
+     35,
+     42,
+     49
+    ],
+    "band": [
+     471,
+     561
+    ]
+   }
+  ]
+ },
+ "d4_1600x900_2.5x": {
+  "scale": 2.5,
+  "rows": [
+   {
+    "font": "Galmuri11.ttf",
+    "px": 12,
+    "device_block": 2.5,
+    "irregular_runs": 1.0,
+    "run_lengths_sample": [
+     3,
+     5,
+     6,
+     8,
+     10,
+     11,
+     13,
+     15
+    ],
+    "band": [
+     10,
+     45
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 24,
+    "device_block": 5.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     5,
+     10,
+     15,
+     20,
+     25,
+     30,
+     35,
+     40
+    ],
+    "band": [
+     48,
+     112
+    ]
+   },
+   {
+    "font": "Galmuri11-Bold.ttf",
+    "px": 12,
+    "device_block": 2.5,
+    "irregular_runs": 1.0,
+    "run_lengths_sample": [
+     3,
+     5,
+     6,
+     8,
+     10,
+     11,
+     13,
+     15
+    ],
+    "band": [
+     115,
+     150
+    ]
+   },
+   {
+    "font": "Galmuri11-Bold.ttf",
+    "px": 24,
+    "device_block": 5.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     5,
+     10,
+     15,
+     20,
+     25,
+     30,
+     35,
+     45
+    ],
+    "band": [
+     152,
+     218
+    ]
+   },
+   {
+    "font": "Galmuri9.ttf",
+    "px": 10,
+    "device_block": 2.5,
+    "irregular_runs": 1.0,
+    "run_lengths_sample": [
+     3,
+     4,
+     5,
+     6,
+     8,
+     10,
+     11,
+     13
+    ],
+    "band": [
+     220,
+     250
+    ]
+   },
+   {
+    "font": "Galmuri9.ttf",
+    "px": 20,
+    "device_block": 5.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     5,
+     10,
+     15,
+     20,
+     25,
+     30,
+     45
+    ],
+    "band": [
+     252,
+     308
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 9,
+    "device_block": 1.875,
+    "irregular_runs": 1.0,
+    "run_lengths_sample": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "band": [
+     310,
+     338
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 18,
+    "device_block": 3.75,
+    "irregular_runs": 1.0,
+    "run_lengths_sample": [
+     3,
+     4,
+     7,
+     8,
+     11,
+     12,
+     15,
+     16
+    ],
+    "band": [
+     340,
+     390
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 28,
+    "device_block": 5.833,
+    "irregular_runs": 1.0,
+    "run_lengths_sample": [
+     4,
+     6,
+     11,
+     12,
+     17,
+     23,
+     24,
+     29
+    ],
+    "band": [
+     392,
+     468
+    ]
+   }
+  ]
+ },
+ "d5_2560x1600_4.44x": {
+  "scale": 4.0,
+  "rows": [
+   {
+    "font": "Galmuri11.ttf",
+    "px": 12,
+    "device_block": 4.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     4,
+     8,
+     12,
+     16,
+     20,
+     24,
+     28,
+     32
+    ],
+    "band": [
+     16,
+     72
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 24,
+    "device_block": 8.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     8,
+     16,
+     24,
+     32,
+     40,
+     48,
+     56,
+     64
+    ],
+    "band": [
+     76,
+     180
+    ]
+   },
+   {
+    "font": "Galmuri11-Bold.ttf",
+    "px": 12,
+    "device_block": 4.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     4,
+     8,
+     12,
+     16,
+     20,
+     24,
+     28,
+     32
+    ],
+    "band": [
+     184,
+     240
+    ]
+   },
+   {
+    "font": "Galmuri11-Bold.ttf",
+    "px": 24,
+    "device_block": 8.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     8,
+     16,
+     24,
+     32,
+     40,
+     48,
+     56,
+     72
+    ],
+    "band": [
+     244,
+     348
+    ]
+   },
+   {
+    "font": "Galmuri9.ttf",
+    "px": 10,
+    "device_block": 4.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     4,
+     8,
+     12,
+     16,
+     20,
+     24,
+     36
+    ],
+    "band": [
+     352,
+     400
+    ]
+   },
+   {
+    "font": "Galmuri9.ttf",
+    "px": 20,
+    "device_block": 8.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     8,
+     16,
+     24,
+     32,
+     40,
+     48,
+     72
+    ],
+    "band": [
+     404,
+     492
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 9,
+    "device_block": 3.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     3,
+     6,
+     9,
+     12,
+     15,
+     18,
+     21,
+     24
+    ],
+    "band": [
+     496,
+     540
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 18,
+    "device_block": 6.0,
+    "irregular_runs": 0.0,
+    "run_lengths_sample": [
+     6,
+     12,
+     18,
+     24,
+     30,
+     36,
+     42,
+     48
+    ],
+    "band": [
+     544,
+     624
+    ]
+   },
+   {
+    "font": "Galmuri11.ttf",
+    "px": 28,
+    "device_block": 9.333,
+    "irregular_runs": 1.0,
+    "run_lengths_sample": [
+     9,
+     10,
+     18,
+     19,
+     28,
+     37,
+     38,
+     47
+    ],
+    "band": [
+     628,
+     748
+    ]
+   }
+  ]
+ }
+}

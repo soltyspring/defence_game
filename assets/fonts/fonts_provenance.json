@@ -1,0 +1,60 @@
+{
+ "source": {
+  "release": "Galmuri v2.40.4",
+  "url": "https://github.com/quiple/galmuri/releases/download/v2.40.4/Galmuri-v2.40.4.zip",
+  "zip_sha256": "C8B3D9861A62AE73C8B1178091401CD79994812437EF386413F6DD54856E60E7",
+  "license": "SIL Open Font License 1.1 (no Reserved Font Name declared)",
+  "copyright": "Copyright (c) 2019-2025 Lee Minseo (quiple@quiple.dev)"
+ },
+ "subset_codepoints": 11630,
+ "fonts": {
+  "Galmuri11.ttf": {
+   "source_file": "Galmuri11.ttf",
+   "source_sha256": "E24256F42E43713D2EA086A1E1669D78B968F5B3CC547E5C157F0606FFA5DEF1",
+   "source_bytes": 5376428,
+   "bytes": 1764716,
+   "sha256": "8CAA22D1020C28D3961B2CDE19110AEE37A3957D807483DB2575705CE688CD9A",
+   "glyphs": 11630,
+   "hangul_syllables": 11172,
+   "native_px": 12,
+   "use": "body/labels/buttons (min Hangul size)",
+   "use_sizes_px": [
+    12,
+    24,
+    36
+   ]
+  },
+  "Galmuri11-Bold.ttf": {
+   "source_file": "Galmuri11-Bold.ttf",
+   "source_sha256": "45D901E379138DD91873AF157640F60AA4CF6BEAA885C3EFD2A8C279E039A237",
+   "source_bytes": 2613660,
+   "bytes": 1469824,
+   "sha256": "D02341D53B372069F9B84F024D09588AC3A91B949AB6725E55284554B391368F",
+   "glyphs": 11571,
+   "hangul_syllables": 11172,
+   "native_px": 12,
+   "use": "emphasis, numbers, titles at 24/36",
+   "use_sizes_px": [
+    12,
+    24,
+    36
+   ]
+  },
+  "Galmuri9.ttf": {
+   "source_file": "Galmuri9.ttf",
+   "source_sha256": "E84E821B18BE15B9E3A907CEB83CFBA25FABF51C80B7EDF0D2921CF8F8E1A11D",
+   "source_bytes": 4649144,
+   "bytes": 10288,
+   "sha256": "1BAD3A8F3DC489AB2F20768617C1D3ECCBEAE3793A7A765E08D1BD60786D37A8",
+   "glyphs": 105,
+   "hangul_syllables": 0,
+   "native_px": 10,
+   "use": "numerals/short Latin ONLY (costs, timers, x2); subset has no Hangul",
+   "use_sizes_px": [
+    10,
+    20,
+    30
+   ]
+  }
+ }
+}
