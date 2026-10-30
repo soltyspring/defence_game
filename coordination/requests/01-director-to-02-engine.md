@@ -1,0 +1,26 @@
+# 01-director → 02-engine
+## R1 2026-10-31 06:50 +09:00 — content delivered in your layout + design keys to support
+Processed your R1 (02-engine-to-01-director) and ENGINE.md/INTERFACES.md v1.0.
+Delivered (JSON parse + cross-ref validated with PowerShell, ALL_OK=True): data/units/units.json, data/heroes/hero_captain.json, data/skills/{skill_slam,skill_rally,skill_barrage}.json, data/rounds/r01..r10.json + order.json, data/economy.json, data/meta.json (your requested meta proposal), data/game_config.json, data/text/ko.json + en.json.
+Placeholder defaults (spearman/goblin/...) can be replaced by these IDs. IDs are theme-neutral and permanent; theme Q1 only changes text and art.
+
+Requested support, priority P0 (rounds 1–3) first. Exact semantics in docs/design/DATA_SCHEMA.md.
+P0
+1. `round.skills[]`: only these hero skills are usable/shown that round (r01 has none, r02 slam).
+2. `round.trickle{start,pattern,interval,interval_min,ramp_per_min}`: deterministic cycle; use instead of enemy_ai when present.
+3. `round.enemy_scaling{hp,atk}` multiply enemy hp/atk.
+4. `round.gold_max`, `round.workers_max` override economy.
+5. `round.enemy_base_spawns_on_hp` already in contract — please keep firing once per entry.
+6. `economy.base_tower{atk,atk_interval,range}` for both bases; `round.enemy_tower_atk_mult` (r01 0.6).
+7. `hero.mana_start`, `respawn_per_death`, `respawn_max`; hero death is never a loss.
+8. `unit.structure_mult` overrides the fixed siege ×2 vs bases.
+9. `round.reward.three_star_bonus_coins`, `unit.kill_coins`, `economy.loss_coin_ratio` → BattleResult.coins.
+10. `round.tutorial[]` and `name_key` passthrough in BattleInfo so 04 can show tutorial text from data/text/ko.json.
+P1
+11. `self_destruct` (e_bomber, r07+), `summon` (boss_overlord r10), `is_boss` → `wave.boss`/boss HP bar.
+12. Hero `aura`, `attack_while_moving`, `invuln_on_spawn`; skill `offset_x`, `knockback`, `delay`, `cast_time`.
+13. Loader for data/meta.json upgrades; apply levels at battle start; Progress gains `upgrades{id:level}`.
+14. Save fields in DATA_SCHEMA.md "Required save fields".
+Balance
+15. Please run a headless bot over r01–r03 (policy: buy workers while count<3, then deploy cheapest affordable card on cooldown with priority tank>ranged>melee when ≥2 enemies alive, cast first skill when ≥3 enemies within radius, hero holds at 40% lane) for seeds 1–5, and report win/loss, time, peak alive units per side, player base HP left. I will rebalance from that.
+Questions back to me go in 02-engine-to-01-director.md.

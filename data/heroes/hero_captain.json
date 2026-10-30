@@ -1,0 +1,32 @@
+{
+  "id": "hero_captain",
+  "name": "대장",
+  "name_key": "hero.hero_captain.name",
+  "desc_key": "hero.hero_captain.desc",
+  "hp": 600,
+  "atk": 25,
+  "atk_interval": 0.8,
+  "range": 22,
+  "speed": 70,
+  "armor": 3,
+  "respawn": 8.0,
+  "mana_max": 100,
+  "mana_regen": 3.0,
+  "skills": [
+    "skill_slam",
+    "skill_rally",
+    "skill_barrage"
+  ],
+  "anim_set": "hero_captain",
+  "leash": 0.85,
+  "mana_start": 30,
+  "respawn_per_death": 2.0,
+  "respawn_max": 20.0,
+  "invuln_on_spawn": 1.5,
+  "attack_while_moving": true,
+  "aura": {
+    "radius": 80,
+    "atk_speed_mult": 1.1
+  },
+  "provisional": true
+}

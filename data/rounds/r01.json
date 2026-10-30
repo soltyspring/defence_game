@@ -1,0 +1,102 @@
+{
+  "id": "r01",
+  "index": 1,
+  "chapter": 1,
+  "name": "첫 경계",
+  "name_key": "round.r01.name",
+  "biome": "biome_01",
+  "lane_length": 1600,
+  "player_base_hp": 1500,
+  "enemy_base_hp": 800,
+  "start_gold": 60,
+  "hero": "hero_captain",
+  "cards": [
+    "melee_basic"
+  ],
+  "skills": [],
+  "waves": [
+    {
+      "at": 25,
+      "spawns": [
+        {
+          "unit": "e_grunt",
+          "count": 2,
+          "interval": 1.5
+        }
+      ]
+    },
+    {
+      "at": 55,
+      "spawns": [
+        {
+          "unit": "e_grunt",
+          "count": 3,
+          "interval": 1.5
+        }
+      ]
+    },
+    {
+      "at": 90,
+      "spawns": [
+        {
+          "unit": "e_grunt",
+          "count": 4,
+          "interval": 1.2
+        }
+      ]
+    }
+  ],
+  "enemy_ai": {
+    "income": 4.0,
+    "start_gold": 0,
+    "pool": [
+      "e_grunt"
+    ],
+    "think": 2.5,
+    "after_waves_loop": true
+  },
+  "trickle": {
+    "start": 12,
+    "pattern": [
+      "e_grunt"
+    ],
+    "interval": 9.0,
+    "interval_min": 6.0,
+    "ramp_per_min": 1.0
+  },
+  "enemy_base_spawns_on_hp": [
+    {
+      "below": 0.5,
+      "spawns": [
+        {
+          "unit": "e_grunt",
+          "count": 3,
+          "interval": 1.0
+        }
+      ]
+    }
+  ],
+  "reward": {
+    "coins": 30,
+    "first_clear_coins": 100,
+    "three_star_bonus_coins": 50
+  },
+  "stars": {
+    "time_3": 150,
+    "base_hp_2": 0.5
+  },
+  "gold_max": 200,
+  "workers_max": 4,
+  "enemy_scaling": {
+    "hp": 1.0,
+    "atk": 1.0
+  },
+  "enemy_tower_atk_mult": 0.6,
+  "tutorial": [
+    "tut_move_hero",
+    "tut_deploy_unit",
+    "tut_buy_worker",
+    "tut_destroy_base"
+  ],
+  "provisional": true
+}

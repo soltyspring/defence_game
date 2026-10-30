@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "provisional": true,
+  "notes": "Meta progression proposal requested by 02 (02-engine-to-01-director R1). Spec in docs/design/DATA_SCHEMA.md.",
+  "currencies": [
+    {
+      "id": "gold",
+      "name_key": "currency.gold",
+      "persistent": true,
+      "start": 0,
+      "max": 9999999
+    },
+    {
+      "id": "gems",
+      "name_key": "currency.gems",
+      "persistent": true,
+      "start": 0,
+      "max": 999999,
+      "enabled": false,
+      "note": "Premium currency disabled until monetization decision (see ECONOMY.md Q2+)."
+    }
+  ],
+  "upgrade_level_start": 1,
+  "upgrades": [
+    {
+      "id": "up_melee_basic",
+      "target": "unit:melee_basic",
+      "name_key": "upgrade.unit",
+      "max_level": 5,
+      "costs": [
+        60,
+        100,
+        160,
+        250
+      ],
+      "per_level": {
+        "hp_mult": 0.08,
+        "atk_mult": 0.08
+      }
+    },
+    {
+      "id": "up_ranged_basic",
+      "target": "unit:ranged_basic",
+      "name_key": "upgrade.unit",
+      "max_level": 5,
+      "costs": [
+        60,
+        100,
+        160,
+        250
+      ],
+      "per_level": {
+        "hp_mult": 0.08,
+        "atk_mult": 0.08
+      }
+    },
+    {
+      "id": "up_tank",
+      "target": "unit:tank",
+      "name_key": "upgrade.unit",
+      "max_level": 5,
+      "costs": [
+        70,
+        115,
+        180,
+        280
+      ],
+      "per_level": {
+        "hp_mult": 0.08,
+        "atk_mult": 0.08
+      }
+    },
+    {
+      "id": "up_fast",
+      "target": "unit:fast",
+      "name_key": "upgrade.unit",
+      "max_level": 5,
+      "costs": [
+        70,
+        115,
+        180,
+        280
+      ],
+      "per_level": {
+        "hp_mult": 0.08,
+        "atk_mult": 0.08
+      }
+    },
+    {
+      "id": "up_siege",
+      "target": "unit:siege",
+      "name_key": "upgrade.unit",
+      "max_level": 5,
+      "costs": [
+        90,
+        150,
+        230,
+        350
+      ],
+      "per_level": {
+        "hp_mult": 0.08,
+        "atk_mult": 0.08
+      }
+    },
+    {
+      "id": "up_hero",
+      "target": "hero:hero_captain",
+      "name_key": "upgrade.hero",
+      "max_level": 5,
+      "costs": [
+        80,
+        130,
+        200,
+        300
+      ],
+      "per_level": {
+        "hp_mult": 0.1,
+        "atk_mult": 0.1
+      }
+    },
+    {
+      "id": "up_supply_regen",
+      "target": "resource:supply",
+      "name_key": "upgrade.supply_regen",
+      "max_level": 5,
+      "costs": [
+        70,
+        120,
+        190,
+        280
+      ],
+      "per_level": {
+        "regen_add": 0.5,
+        "cap_add": 25
+      }
+    },
+    {
+      "id": "up_energy_regen",
+      "target": "resource:energy",
+      "name_key": "upgrade.energy_regen",
+      "max_level": 5,
+      "costs": [
+        70,
+        120,
+        190,
+        280
+      ],
+      "per_level": {
+        "regen_add": 0.4,
+        "cap_add": 10
+      }
+    },
+    {
+      "id": "up_worker",
+      "target": "worker",
+      "name_key": "upgrade.worker",
+      "max_level": 4,
+      "costs": [
+        90,
+        150,
+        240
+      ],
+      "per_level": {
+        "income_add": 0.25
+      }
+    },
+    {
+      "id": "up_base_hp",
+      "target": "base:player",
+      "name_key": "upgrade.base_hp",
+      "max_level": 5,
+      "costs": [
+        50,
+        90,
+        150,
+        230
+      ],
+      "per_level": {
+        "hp_mult": 0.1
+      }
+    }
+  ],
+  "upgrade_rules": "costs[i] = price to go from level i+1 to i+2. Multipliers are additive per level: stat = base * (1 + per_level * (level-1)). Upgrade visible only when its target is unlocked.",
+  "round_rewards_rule": "Win, first clear: first_clear_coins (replaces coins). Later wins: coins. First 3-star: +three_star_bonus_coins. kill_coins summed on win; loss keeps economy.loss_coin_ratio of kill_coins.",
+  "retention_hooks": {
+    "daily_first_win_gold_mult": {
+      "enabled": false,
+      "value": 2.0
+    },
+    "offline_income": {
+      "enabled": false
+    },
+    "rewarded_ads": {
+      "enabled": false,
+      "placements": [
+        {
+          "id": "ad_double_gold",
+          "where": "results_win",
+          "effect": "gold_mult_2",
+          "daily_cap": 5
+        },
+        {
+          "id": "ad_base_repair",
+          "where": "in_round_once_below_30pct",
+          "effect": "player_base_heal_ratio_0_3",
+          "daily_cap": 3
+        }
+      ]
+    }
+  },
+  "iap_catalog": {
+    "enabled": false,
+    "products": [],
+    "note": "Pending user monetization decisions. 04 owns adapter; 01 owns catalog/design."
+  }
+}

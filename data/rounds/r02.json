@@ -1,0 +1,131 @@
+{
+  "id": "r02",
+  "index": 2,
+  "chapter": 1,
+  "name": "떼의 습격",
+  "name_key": "round.r02.name",
+  "biome": "biome_01",
+  "lane_length": 1600,
+  "player_base_hp": 1500,
+  "enemy_base_hp": 1000,
+  "start_gold": 60,
+  "hero": "hero_captain",
+  "cards": [
+    "melee_basic",
+    "ranged_basic"
+  ],
+  "skills": [
+    "skill_slam"
+  ],
+  "waves": [
+    {
+      "at": 20,
+      "spawns": [
+        {
+          "unit": "e_swarm",
+          "count": 3,
+          "interval": 0.8
+        }
+      ]
+    },
+    {
+      "at": 45,
+      "spawns": [
+        {
+          "unit": "e_grunt",
+          "count": 3,
+          "interval": 1.4
+        },
+        {
+          "unit": "e_swarm",
+          "count": 2,
+          "interval": 0.8
+        }
+      ]
+    },
+    {
+      "at": 80,
+      "spawns": [
+        {
+          "unit": "e_swarm",
+          "count": 4,
+          "interval": 0.7
+        },
+        {
+          "unit": "e_grunt",
+          "count": 3,
+          "interval": 1.4
+        }
+      ]
+    },
+    {
+      "at": 120,
+      "spawns": [
+        {
+          "unit": "e_swarm",
+          "count": 6,
+          "interval": 0.6
+        },
+        {
+          "unit": "e_grunt",
+          "count": 4,
+          "interval": 1.2
+        }
+      ]
+    }
+  ],
+  "enemy_ai": {
+    "income": 3.08,
+    "start_gold": 0,
+    "pool": [
+      "e_grunt",
+      "e_swarm"
+    ],
+    "think": 2.5,
+    "after_waves_loop": true
+  },
+  "trickle": {
+    "start": 10,
+    "pattern": [
+      "e_grunt",
+      "e_swarm",
+      "e_swarm"
+    ],
+    "interval": 8.0,
+    "interval_min": 5.0,
+    "ramp_per_min": 1.0
+  },
+  "enemy_base_spawns_on_hp": [
+    {
+      "below": 0.5,
+      "spawns": [
+        {
+          "unit": "e_grunt",
+          "count": 4,
+          "interval": 1.0
+        }
+      ]
+    }
+  ],
+  "reward": {
+    "coins": 42,
+    "first_clear_coins": 140,
+    "three_star_bonus_coins": 50
+  },
+  "stars": {
+    "time_3": 170,
+    "base_hp_2": 0.5
+  },
+  "gold_max": 250,
+  "workers_max": 5,
+  "enemy_scaling": {
+    "hp": 1.0,
+    "atk": 1.0
+  },
+  "enemy_tower_atk_mult": 0.8,
+  "tutorial": [
+    "tut_skill_slam",
+    "tut_ranged_unit"
+  ],
+  "provisional": true
+}

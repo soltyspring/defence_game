@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "locale": "en",
+  "provisional_theme": true,
+  "note": "Theme-neutral placeholder names until Q1 answered. Missing keys fall back to ko.",
+  "strings": {
+    "unit.worker.name": "Worker", "unit.melee_basic.name": "Footman", "unit.ranged_basic.name": "Archer",
+    "unit.tank.name": "Shield", "unit.fast.name": "Raider", "unit.siege.name": "Catapult",
+    "hero.hero_captain.name": "Captain",
+    "skill.skill_slam.name": "Slam", "skill.skill_rally.name": "Rally", "skill.skill_barrage.name": "Barrage",
+    "enemy.e_grunt.name": "Grunt", "enemy.e_swarm.name": "Swarmling", "enemy.e_spitter.name": "Spitter",
+    "enemy.e_brute.name": "Brute", "enemy.e_bomber.name": "Bomber",
+    "enemy.boss_warlord.name": "Warlord", "enemy.boss_overlord.name": "Overlord",
+    "currency.gold": "Gold", "currency.gems": "Gems", "res.supply": "Supply", "res.energy": "Energy"
+  }
+}

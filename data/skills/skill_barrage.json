@@ -1,0 +1,18 @@
+{
+  "id": "skill_barrage",
+  "name": "일제 포격",
+  "name_key": "skill.skill_barrage.name",
+  "desc_key": "skill.skill_barrage.desc",
+  "unlock_round": 8,
+  "mana": 80,
+  "cooldown": 30.0,
+  "kind": "meteor",
+  "radius": 80,
+  "power": 150,
+  "duration": 0,
+  "delay": 0.8,
+  "knockback": 20,
+  "fx": "skill_barrage",
+  "cast_time": 0.4,
+  "provisional": true
+}

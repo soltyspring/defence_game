@@ -1,0 +1,185 @@
+{
+  "id": "r09",
+  "index": 9,
+  "chapter": 1,
+  "name": "총공세",
+  "name_key": "round.r09.name",
+  "biome": "biome_01",
+  "lane_length": 2100,
+  "player_base_hp": 2200,
+  "enemy_base_hp": 2700,
+  "start_gold": 100,
+  "hero": "hero_captain",
+  "cards": [
+    "melee_basic",
+    "ranged_basic",
+    "tank",
+    "fast",
+    "siege"
+  ],
+  "skills": [
+    "skill_slam",
+    "skill_rally",
+    "skill_barrage"
+  ],
+  "waves": [
+    {
+      "at": 20,
+      "spawns": [
+        {
+          "unit": "e_grunt",
+          "count": 5,
+          "interval": 0.8
+        },
+        {
+          "unit": "e_spitter",
+          "count": 3,
+          "interval": 0.9
+        }
+      ]
+    },
+    {
+      "at": 60,
+      "spawns": [
+        {
+          "unit": "e_brute",
+          "count": 3,
+          "interval": 2.0
+        },
+        {
+          "unit": "e_bomber",
+          "count": 2,
+          "interval": 1.2
+        }
+      ]
+    },
+    {
+      "at": 100,
+      "spawns": [
+        {
+          "unit": "e_swarm",
+          "count": 12,
+          "interval": 0.3
+        },
+        {
+          "unit": "e_spitter",
+          "count": 3,
+          "interval": 0.9
+        }
+      ]
+    },
+    {
+      "at": 145,
+      "spawns": [
+        {
+          "unit": "e_brute",
+          "count": 3,
+          "interval": 1.8
+        },
+        {
+          "unit": "e_bomber",
+          "count": 4,
+          "interval": 1.0
+        },
+        {
+          "unit": "e_grunt",
+          "count": 5,
+          "interval": 0.8
+        }
+      ]
+    },
+    {
+      "at": 200,
+      "spawns": [
+        {
+          "unit": "e_brute",
+          "count": 4,
+          "interval": 1.6
+        },
+        {
+          "unit": "e_spitter",
+          "count": 6,
+          "interval": 0.7
+        },
+        {
+          "unit": "e_swarm",
+          "count": 10,
+          "interval": 0.3
+        }
+      ]
+    }
+  ],
+  "enemy_ai": {
+    "income": 7.58,
+    "start_gold": 0,
+    "pool": [
+      "e_grunt",
+      "e_swarm",
+      "e_spitter",
+      "e_brute",
+      "e_bomber"
+    ],
+    "think": 2.5,
+    "after_waves_loop": true
+  },
+  "trickle": {
+    "start": 8,
+    "pattern": [
+      "e_grunt",
+      "e_swarm",
+      "e_spitter",
+      "e_brute",
+      "e_swarm",
+      "e_bomber",
+      "e_grunt"
+    ],
+    "interval": 6.0,
+    "interval_min": 3.8,
+    "ramp_per_min": 0.7
+  },
+  "enemy_base_spawns_on_hp": [
+    {
+      "below": 0.5,
+      "spawns": [
+        {
+          "unit": "e_brute",
+          "count": 2,
+          "interval": 1.5
+        },
+        {
+          "unit": "e_bomber",
+          "count": 3,
+          "interval": 1.0
+        }
+      ]
+    },
+    {
+      "below": 0.2,
+      "spawns": [
+        {
+          "unit": "e_swarm",
+          "count": 12,
+          "interval": 0.3
+        }
+      ]
+    }
+  ],
+  "reward": {
+    "coins": 138,
+    "first_clear_coins": 460,
+    "three_star_bonus_coins": 100
+  },
+  "stars": {
+    "time_3": 300,
+    "base_hp_2": 0.5
+  },
+  "gold_max": 450,
+  "workers_max": 8,
+  "enemy_scaling": {
+    "hp": 1.45,
+    "atk": 1.45
+  },
+  "enemy_tower_atk_mult": 1.2,
+  "tutorial": [],
+  "provisional": true
+}
