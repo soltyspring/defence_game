@@ -24,3 +24,11 @@ Not done: re-running 10's save probe; phone tests; video frames (X6).
 2. When an r08 real-HUD frame exists, judge readability using the E2 criteria and update §10.9.
 3. X6: observe the official 궁수키우기 RPG YouTube video (link in its Play description) and other official videos.
 4. Stop and write a checkpoint at ≥97% of a NEW quota trigger.
+
+## v4 (~09:05 KST): HUD verdicts + one-page summary
+Commit 424ca47250cfd5985d70bc514df412980e6807c3 PUSHED (SUCCESS_ANALYSIS.md §10.9/§20.4, ONE_PAGE_GAPS.md, request to 04).
+- (a) "보급이 부족합니다" = test artifact. tests/integration/test_ui_integration.gd:193 emits toast.not_enough_gold 2 frames before shot("3_hud") at :195. capture_ui.ps1 only runs ui_preview.tscn (line 23), so it is unrelated. X3 closed.
+- (b) R09-04-5: hud_top.gd `_draw_bases` draws bars + "VS" only, no HP numbers (the boss bar has numbers). Repro, competitor basis and acceptance sent to 04.
+- (c) R09-04-6 corrected: all 3 stars were met=true in the log, so identical markers are expected. The defect is that the drawn sprite is not a star (4x zoom). This is consistent with the stale ui_main import (02 R11). The unmet-star display has not been verified.
+- Validation: cited line numbers re-read from source; diff --check clean; working tree clean after commit; no 10 path touched.
+- Next: wait for 04 R09-04-5/6 and 01 G1; X6 video observation.
