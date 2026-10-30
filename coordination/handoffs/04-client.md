@@ -40,8 +40,14 @@ Earlier: e62fe86, e4aa059, d7651af, 0b987c9, 8915190, 225abc6.
 - Defect found in the visual check, and not 04's: 03's uncommitted ui_main re-pack combined with a stale import showed wrong icons. 04 added detection and fallback, and sent 03 R4. Icon screens must be re-captured after the re-import.
 - Not verified: a real boss round (r05) end-to-end with the bar (only mock and unit data were used); whether the hint disappearing in the mid-battle real shot is correct engine step timing or a gap (the integration check only confirms that the first hint appears).
 
+## 08:40 resume (new Kiro login; 08:21–08:22 requests had failed with authExpiryRetry)
+- The owned working tree was clean (no lost edits). The `tests/performance/*` changes in the tree belong to 08 and were not touched.
+- The HISTORICAL QUOTA CHECKPOINT notices are from the previous account and were ignored as instructed. Usage was 4.35% at 08:37.
+- Dependencies are still missing at HEAD e9dfaa4: no `scale_mode` in project.godot (02 R9); ui_main import stale (png f16e31cf… vs import source_md5 224f322f…; 03 committed in c49de70, so 02 must re-import → 02 R11); en "Footman"/"Catapult" unchanged (01 R4 with measured proposals Spear 37 px / Siege 36 px at 12 px).
+- Done: `UiStyle.import_is_fresh(png)` is now a pure, tested check. test_atlas_import_guard verifies stale → icons off, matching md5 → icons back (no permanent masking), PNG changed → off, no md5/export → on. It also checks that ui_main.json size matches the source PNG and that 14 UI frames have pixels. UI suite: 3252/0. Source-PNG contact sheet: build/qa/ui_main_source_frames_3x.png, with correct icons.
+- Not redone: no visible re-capture, because none of the dependencies changed (it would reproduce the same frames).
 ## Next task (exact)
-1. After 03 commits ui_main and 02 re-imports: re-capture icons and confirm the `[UiStyle] … stale` warning is gone.
+1. After 02 re-imports (R11) and/or sets integer scale (R9): re-capture real scenes on DISPLAY2 under the same conditions (worst layout 640 + notches + 5 cards/3 skills, ko/en, 1280×720 and 1600×900). Confirm the stale warning is gone, there are 0% odd glyph runs at 1600×900, and Footman/Catapult are fixed if 01 accepts R4.
 2. Real r05 boss run (`--round=r05` or the integration `--tile=4`) on the secondary monitor: boss bar visible with real data.
 3. Credits panel (OFL font credit; keys requested from 01 R3; fallbacks exist: ui.credits / ui.font_credit).
 4. Skill names are hidden on 48 px skill buttons: show the name in the toast on press, or in a long-press tooltip.

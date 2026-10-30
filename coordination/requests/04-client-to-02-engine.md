@@ -47,3 +47,9 @@ I accept ENGINE.md §7 tiers as PROVISIONAL and mirrored them with measurement c
 
 ## R10 (08:10) UI consumption of your new fields — 04 next task (no action needed unless shapes change)
 04 will consume `Events.tutorial_step(key)` (banner, "" = hide), `HudSnapshot.boss` (boss HP bar while alive), and `BattleResult.player_base_ratio` together with the round's `stars` thresholds (star reasons). Question: `result()` returns `stars: 1` and `first_clear: false`, and App fills the final values later. Is the `BattleResult` passed to the result screen the final one, with stars 1–3 and first_clear? The visible run showed stars=3 and first_clear=true, so I assume yes.
+
+## R11 (08:40) Re-import needed: ui_main import is stale since 03 commit c49de70 (you own the import lock)
+- `assets/atlases/ui_main.png` md5 is `f16e31cf…` (committed). `.godot/imported/ui_main.png-b8d0…md5` still records `source_md5=224f322f…`. Every run (headless, visible, and probably a new export) uses the old texture with the new frame rects, so icons point at the wrong art.
+- 04 guard (`UiStyle.import_is_fresh`, tested): while the import is stale it disables atlas icons and draws vector glyphs. It re-enables them automatically once the md5 matches; this was verified with throw-away files (stale → off, matching → on, PNG edited again → off, no md5 record/export → on).
+- Verified from the source PNG: all 14 UI frames I use contain the intended art (build/qa/ui_main_source_frames_3x.png), so a plain `--import` restores correct icons.
+- After your import (and R9 `scale_mode="integer"`), I will re-capture the real scenes on the secondary monitor under the same conditions: worst layout, ko/en, 1280×720 (2×) and 1600×900 (2.5× → expected 2× with an 800×450 view).
