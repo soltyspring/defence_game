@@ -490,13 +490,13 @@ CUES = {
     "ui_error":        dict(r=[r_ui_error], bus="UI", vol_db=-9, max=1, gap=0.25, prio=6, pitch=0.0),
     "deploy":          dict(r=[r_deploy], bus="SFX", vol_db=-6, max=2, gap=0.06, prio=7, pitch=0.04),
     "worker_buy":      dict(r=[r_worker_buy], bus="SFX", vol_db=-7, max=1, gap=0.1, prio=7, pitch=0.0),
-    "gold_tick":       dict(r=[r_gold_tick], bus="SFX", vol_db=-16, max=2, gap=0.09, prio=2, pitch=0.05),
+    "gold_tick":       dict(r=[r_gold_tick], bus="SFX", vol_db=-13, max=2, gap=0.09, prio=2, pitch=0.05),
     "hit_melee":       dict(r=[lambda g: r_hit_melee(g, 0), lambda g: r_hit_melee(g, 1), lambda g: r_hit_melee(g, 2)],
-                            bus="SFX", vol_db=-14, max=3, gap=0.045, prio=1, pitch=0.08),
-    "hit_arrow":       dict(r=[r_hit_arrow], bus="SFX", vol_db=-15, max=2, gap=0.05, prio=1, pitch=0.08),
-    "shoot_arrow":     dict(r=[r_shoot_arrow], bus="SFX", vol_db=-17, max=2, gap=0.06, prio=1, pitch=0.08),
-    "shoot_rock":      dict(r=[r_shoot_rock], bus="SFX", vol_db=-13, max=1, gap=0.12, prio=2, pitch=0.06),
-    "shoot_spit":      dict(r=[r_shoot_spit], bus="SFX", vol_db=-15, max=2, gap=0.08, prio=1, pitch=0.08),
+                            bus="SFX", vol_db=-9, max=3, gap=0.045, prio=1, pitch=0.08),
+    "hit_arrow":       dict(r=[r_hit_arrow], bus="SFX", vol_db=-10, max=2, gap=0.05, prio=1, pitch=0.08),
+    "shoot_arrow":     dict(r=[r_shoot_arrow], bus="SFX", vol_db=-12, max=2, gap=0.06, prio=1, pitch=0.08),
+    "shoot_rock":      dict(r=[r_shoot_rock], bus="SFX", vol_db=-10, max=1, gap=0.12, prio=2, pitch=0.06),
+    "shoot_spit":      dict(r=[r_shoot_spit], bus="SFX", vol_db=-11, max=2, gap=0.08, prio=1, pitch=0.08),
     "hit_base":        dict(r=[r_hit_base], bus="SFX", vol_db=-9, max=1, gap=0.35, prio=5, pitch=0.05),
     "explosion":       dict(r=[r_explosion], bus="SFX", vol_db=-8, max=2, gap=0.12, prio=5, pitch=0.06),
     "death_ally":      dict(r=[lambda g: r_death(g, False)], bus="SFX", vol_db=-12, max=2, gap=0.08, prio=3, pitch=0.06),
@@ -681,7 +681,7 @@ MENU = dict(
 )
 
 MUSIC = {
-    "music_battle": dict(spec=BATTLE, seed=7001, vol_db=-8),
+    "music_battle": dict(spec=BATTLE, seed=7001, vol_db=-10),
     "music_menu": dict(spec=MENU, seed=7002, vol_db=-9),
 }
 

@@ -138,7 +138,7 @@
   },
   "gold_tick": {
    "bus": "SFX",
-   "vol_db": -16,
+   "vol_db": -13,
    "max": 2,
    "gap": 0.09,
    "prio": 2,
@@ -159,7 +159,7 @@
   },
   "hit_melee": {
    "bus": "SFX",
-   "vol_db": -14,
+   "vol_db": -9,
    "max": 3,
    "gap": 0.045,
    "prio": 1,
@@ -196,7 +196,7 @@
   },
   "hit_arrow": {
    "bus": "SFX",
-   "vol_db": -15,
+   "vol_db": -10,
    "max": 2,
    "gap": 0.05,
    "prio": 1,
@@ -217,7 +217,7 @@
   },
   "shoot_arrow": {
    "bus": "SFX",
-   "vol_db": -17,
+   "vol_db": -12,
    "max": 2,
    "gap": 0.06,
    "prio": 1,
@@ -238,7 +238,7 @@
   },
   "shoot_rock": {
    "bus": "SFX",
-   "vol_db": -13,
+   "vol_db": -10,
    "max": 1,
    "gap": 0.12,
    "prio": 2,
@@ -259,7 +259,7 @@
   },
   "shoot_spit": {
    "bus": "SFX",
-   "vol_db": -15,
+   "vol_db": -11,
    "max": 2,
    "gap": 0.08,
    "prio": 1,
@@ -598,7 +598,7 @@
   "music_battle": {
    "file": "res://assets/audio/music/music_battle.ogg",
    "bus": "Music",
-   "vol_db": -8,
+   "vol_db": -10,
    "loop": true,
    "bpm": 140,
    "bars": 16,

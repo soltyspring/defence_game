@@ -27,7 +27,13 @@ Dispatch R4 actions: hostile reject→fix→retest applied to my own pack with m
 
 ## Git
 - 67de63b6eb68aff617732b8e1c3408ea9e5df853 "[Feat] 오리지널 합성 효과음·배경음 팩과 오디오 매니저 추가" → PUSHED origin/main (38 files).
-- Docs/coordination commit: see status file (recorded after push).
+- 067c5948758e77f15cff903d42e51d12a1831852 "[Docs] 오디오 이벤트 계약·검증 보고서와 통합 요청 추가" → PUSHED origin/main (6 files).
+- M2 "[Fix] 전투 효과음 믹스 균형 조정과 스펙트로그램·라우드니스 증거 추가": SHA in status file after push.
+
+## M2 (mix balance + reviewer evidence)
+- tools/audio/preview.py → docs/audio/previews/sfx_contact_sheet.png (29 spectrogram+waveform panels), previews/music_overview.png (loop shown twice, seam marked), docs/audio/LOUDNESS.md (BS.1770 K-weighted max momentary loudness per cue).
+- Hostile finding (measured): combat cues mixed −28…−30 LUFS vs battle music −18.6, about 10 dB buried. Fix: hit/shoot/gold gains +3…+5 dB, battle music vol_db −8 → −10. Retest: combat −22…−25 vs music −20.6; validate.py --determinism PASS; run_godot_checks.ps1 PASS. Audio files unchanged (only manifest gains).
+- The shared checkout's editor imported my assets: committed assets/audio/**/*.import (WAV QOA compress/mode=2, Ogg loop=false; loop is set at runtime) and src/audio/*.gd.uid, tools/audio/audio_selftest.gd.uid.
 
 ## Requests sent
 - 05-audio-to-02-engine.md: A1 autoload `Audio` after Save; A2 `signal sfx(cue, params)`; A3 combat cue emission table; A4 .gitignore `/tools/audio/_render/`; A5 leave audio .import/.uid unstaged for 05; A6 Audio.snapshot in perf print.
@@ -37,7 +43,6 @@ Dispatch R4 actions: hostile reject→fix→retest applied to my own pack with m
 02 A1/A2/A3 for full integration (audio already works through existing signals once autoloaded). 04 C1/C2. Q1 theme (01) for re-voicing timbres. A human listening pass (through 01, one question at a time, not asked yet).
 
 ## Next task (05)
-1. Watch 02/04 responses; after 02 imports, commit generated assets/audio/**/*.import + src/audio/*.uid + tools/audio/*.uid.
-2. Spectrogram/waveform contact sheet (PNG under docs/audio) for reviewers who cannot listen; loudness (LUFS-style) consistency table per cue.
-3. Theme re-voice once Q1 is answered; extra cues if 01 adds units/skills (e.g. per-unit deploy variants, boss-specific stingers).
-4. Attribute/clean the exit leak warning; add result-screen ambience only if needed.
+1. Watch 02/04 responses to A1–A6 / C1–C4; after autoload lands, run a real battle (headless autoplay) and record Audio.snapshot() voice/drop counts.
+2. Theme re-voice once Q1 is answered; extra cues if 01 adds units/skills (per-unit deploy variants, boss-specific stingers).
+3. Attribute/clean the exit leak warning in the -s run.

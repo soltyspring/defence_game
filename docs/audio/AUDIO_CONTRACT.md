@@ -92,6 +92,9 @@ APK impact: imported QOA SFX ≈ 0.16 MB + OGG ≈ 0.56 MB.
 ## 8. Phone-speaker design rule (measured by validate.py)
 Phone loudspeakers reproduce little below roughly 300 Hz, so every SFX must have ≥ 25 % of its energy at or above 300 Hz. The first pack failed this for 10 impact/boss sounds (sub-bass thumps); they were re-voiced with saturated (harmonic) bodies and mid-band crunch layers, and now all pass. Music bass plays in the 80–260 Hz octave with a click transient on the kick for the same reason.
 
+## 8b. Mix balance review (tools/audio/preview.py → docs/audio/LOUDNESS.md, previews/*.png)
+Finding (measured): in pack v1 the frequent combat cues mixed at −28…−30 LUFS momentary while battle music mixed at −18.6, so hits would sit about 10 dB under the music. Fix: combat cue gains +3…+5 dB and battle music −2 dB (`vol_db` −10). Retest: combat cues now −23…−25 vs music −20.6, still 6–7 dB below one-off cues (skills, alerts) on purpose because they repeat several times per second. Human listening is still required to confirm.
+
 ## 9. Limits of the evidence
 Objective checks (format, peaks, clipping, DC, edge clicks, spectrum share, loop length/seam, determinism, voice logic) are machine-verified. Whether the sounds are pleasant, readable and not fatiguing has NOT been judged by a human listener; the agent cannot listen. That needs a human listening pass on a phone speaker and headphones.
 

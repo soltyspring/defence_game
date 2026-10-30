@@ -103,7 +103,7 @@
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 0.999,
-   "mix_level_db": -28.2
+   "mix_level_db": -25.2
   },
   "hit_melee_1.wav": {
    "cue": "hit_melee",
@@ -118,7 +118,7 @@
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 0.283,
-   "mix_level_db": -29.0
+   "mix_level_db": -24.0
   },
   "hit_melee_2.wav": {
    "cue": "hit_melee",
@@ -133,7 +133,7 @@
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 0.284,
-   "mix_level_db": -30.2
+   "mix_level_db": -25.2
   },
   "hit_melee_3.wav": {
    "cue": "hit_melee",
@@ -148,7 +148,7 @@
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 0.306,
-   "mix_level_db": -29.9
+   "mix_level_db": -24.9
   },
   "hit_arrow.wav": {
    "cue": "hit_arrow",
@@ -163,7 +163,7 @@
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 0.869,
-   "mix_level_db": -28.8
+   "mix_level_db": -23.8
   },
   "shoot_arrow.wav": {
    "cue": "shoot_arrow",
@@ -178,7 +178,7 @@
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 1.0,
-   "mix_level_db": -32.9
+   "mix_level_db": -27.9
   },
   "shoot_rock.wav": {
    "cue": "shoot_rock",
@@ -193,7 +193,7 @@
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 0.35,
-   "mix_level_db": -28.2
+   "mix_level_db": -25.2
   },
   "shoot_spit.wav": {
    "cue": "shoot_spit",
@@ -208,7 +208,7 @@
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 1.0,
-   "mix_level_db": -26.7
+   "mix_level_db": -22.7
   },
   "hit_base.wav": {
    "cue": "hit_base",
@@ -481,7 +481,7 @@
   "disk_budget": 2500000,
   "sfx_pcm_resident_bytes": 792254,
   "sfx_pcm_budget": 2097152,
-  "worst_case_sfx_sum_db": 21.9,
+  "worst_case_sfx_sum_db": 22.8,
   "note": "worst case = every SFX/UI cue at max instances, peaks aligned; runtime voice caps (SFX pool 12, UI pool 3) plus Master limiter keep real output below this"
  },
  "failures": [],
