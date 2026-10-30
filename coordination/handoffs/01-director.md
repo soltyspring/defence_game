@@ -25,5 +25,5 @@ None. Q1 open: A 빵집 기사단 (recommended) / B 도토리 숲 수비대 / C 
 ## Git
 - e42f8090f9aaaf8eae90041e8a6c2efb8982aaf5 "[Design] 초기 기획서, 데이터 스키마와 1~10라운드 임시 데이터 추가" → PUSHED origin/main.
 - ec657bc70f5146629c1ff017f264cb574117d77f "[Fix] 영문 텍스트 누락 키 39개 보완" (data/text/en.json) → PUSHED origin/main. Validation: ko/en parity 60/60.
-- Docs commit for RELEASE_DESIGN_REVIEW.md + doc/request/status updates: see next line (SHA recorded after push).
+- abdb664e2bbda12edc4b7769d42c846bfac08c61 "[Docs] 출시 기준 기획 검토서와 데이터 감사 결과 추가" (9 files) → PUSHED origin/main.
 - Note: Publish-Task.ps1 aborts silently if its output is piped/redirected (git fetch stderr under ErrorActionPreference=Stop). Call it without redirection.
