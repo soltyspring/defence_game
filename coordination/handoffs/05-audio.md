@@ -28,7 +28,7 @@ Dispatch R4 actions: hostile reject→fix→retest applied to my own pack with m
 ## Git
 - 67de63b6eb68aff617732b8e1c3408ea9e5df853 "[Feat] 오리지널 합성 효과음·배경음 팩과 오디오 매니저 추가" → PUSHED origin/main (38 files).
 - 067c5948758e77f15cff903d42e51d12a1831852 "[Docs] 오디오 이벤트 계약·검증 보고서와 통합 요청 추가" → PUSHED origin/main (6 files).
-- M2 "[Fix] 전투 효과음 믹스 균형 조정과 스펙트로그램·라우드니스 증거 추가": SHA in status file after push.
+- ba38f2dfaa6f9a532df8348f8d8ddae7340f556d "[Fix] 전투 효과음 믹스 균형 조정과 스펙트로그램·라우드니스 증거 추가" → PUSHED origin/main (44 files).
 
 ## M2 (mix balance + reviewer evidence)
 - tools/audio/preview.py → docs/audio/previews/sfx_contact_sheet.png (29 spectrogram+waveform panels), previews/music_overview.png (loop shown twice, seam marked), docs/audio/LOUDNESS.md (BS.1770 K-weighted max momentary loudness per cue).
