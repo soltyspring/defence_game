@@ -44,4 +44,4 @@ Real-project integration check of the audio manager and event bridge in an isola
 
 ## Git
 - Earlier: 67de63b, 067c594, ba38f2d, 5e21a23, all PUSHED origin/main.
-- Checkpoint commit: see the status file / push result below. If the push failed, the state is PUSH_PENDING.
+- Checkpoint: c79add364587e3b82cbb63bb4fa0f00af13b94a8 "[Fix] 오디오 매니저 종료 시 재생 객체 누수 수정과 누수 재현 프로브 추가" → PUSHED origin/main (audio_manager.gd, leak_probe.gd + .uid, handoff, status). WIP left uncommitted: run_godot_checks.ps1, integration_probe.gd + .uid, docs/audio/previews/*.png.import.

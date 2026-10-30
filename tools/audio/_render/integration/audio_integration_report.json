@@ -1,0 +1,187 @@
+{
+ "audio_children": [
+  19,
+  19,
+  19,
+  19,
+  19,
+  19,
+  19,
+  19,
+  19,
+  19
+ ],
+ "audio_snapshot": {
+  "active_sfx": 0,
+  "active_ui": 0,
+  "dropped_gap": 1,
+  "dropped_max": 0,
+  "dropped_offscreen": 0,
+  "dropped_voices": 0,
+  "duck_db": 0.0,
+  "load_errors": [],
+  "load_ms": 123,
+  "missing": 0,
+  "music": "music_battle",
+  "paused": false,
+  "peak_voices": 3,
+  "played": 48,
+  "resident_sfx_bytes": 160960,
+  "stolen": 0,
+  "volumes": {
+   "master": 1.0,
+   "music": 0.8,
+   "sfx": 1.0
+  }
+ },
+ "battles_ended": 0,
+ "battles_started": 7,
+ "bridge_derived": {
+  "base": true,
+  "command": true,
+  "death": true,
+  "gold": true,
+  "hero": true,
+  "ui": true
+ },
+ "commands": {
+  "deploy": 13,
+  "deploy_unaffordable": 5,
+  "skill": 5,
+  "worker": 1
+ },
+ "cue_counts": {
+  "death_ally": 1,
+  "death_enemy": 4,
+  "deploy": 13,
+  "gold_tick": 3,
+  "skill_slam": 5,
+  "ui_back": 1,
+  "ui_confirm": 6,
+  "ui_error": 5,
+  "ui_tap": 7,
+  "wave_incoming": 2,
+  "worker_buy": 1
+ },
+ "engine_truth": {
+  "deployed": 13,
+  "hero_deaths": 0,
+  "kills": 3,
+  "skills_cast": 5,
+  "workers_bought": 1
+ },
+ "errors": [],
+ "events_has_sfx": false,
+ "focus": {
+  "battle_paused_out": true,
+  "battle_still_paused_in": true,
+  "master_muted_in": false,
+  "master_muted_out": true,
+  "resumed": true
+ },
+ "max_active_sfx": 3,
+ "max_active_ui": 2,
+ "max_music_playing": 2,
+ "music_timeline": [
+  {
+   "m": "music_battle",
+   "t": 0.1
+  },
+  {
+   "m": "music_menu",
+   "t": 42.4
+  },
+  {
+   "m": "music_battle",
+   "t": 42.6
+  },
+  {
+   "m": "music_menu",
+   "t": 42.8
+  },
+  {
+   "m": "music_battle",
+   "t": 43.1
+  },
+  {
+   "m": "music_menu",
+   "t": 43.4
+  },
+  {
+   "m": "music_battle",
+   "t": 43.6
+  },
+  {
+   "m": "music_menu",
+   "t": 43.9
+  },
+  {
+   "m": "music_battle",
+   "t": 44.1
+  },
+  {
+   "m": "music_menu",
+   "t": 44.4
+  },
+  {
+   "m": "music_battle",
+   "t": 44.7
+  }
+ ],
+ "pause": {
+  "direct_sfx_while_paused": false,
+  "paused_flag": true,
+  "resumed_flag": true,
+  "ui_while_paused": true
+ },
+ "phases": [
+  {
+   "phase": "retry",
+   "t": 30.0
+  },
+  {
+   "phase": "battle2",
+   "t": 30.0
+  },
+  {
+   "phase": "switch",
+   "t": 42.0
+  },
+  {
+   "phase": "settle",
+   "t": 44.7
+  },
+  {
+   "phase": "battle3",
+   "t": 46.7
+  }
+ ],
+ "results": [],
+ "same_frame_duplicates": [],
+ "screens": [
+  "battle",
+  "battle",
+  "round_select",
+  "battle",
+  "round_select",
+  "battle",
+  "round_select",
+  "battle",
+  "round_select",
+  "battle",
+  "round_select",
+  "battle"
+ ],
+ "switch_check": {
+  "children": 19,
+  "in_battle_screen": true,
+  "music": "music_battle",
+  "music_players_playing": 1
+ },
+ "t": 74.5,
+ "toasts": {
+  "not_enough_gold": 4,
+  "on_cooldown": 1,
+  "wave_incoming": 2
+ }
+}
