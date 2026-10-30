@@ -1,5 +1,13 @@
-# 01-director handoff — CHECKPOINT for account change
-Updated: 2026-10-31 +09:00. The user stopped all project work for an account change. No new work after this file.
+# 01-director handoff
+## RECOVERY 2026-10-31 ~08:05 +09:00 (session restored under the new account)
+- Account: `kiro-cli whoami` reports "Logged in with Google, Email: p01034979433@gmail.com". No tokens were printed. Quota usage.json shows 0.23/10000 (0.0023%) at 08:01. triggered.json (07:44, reason "account attribution uncertainty") still exists. I did not remove it because that marker belongs to the coordinator.
+- Checkpoint branch origin/checkpoint/quota-20261031-074449/01-director (sha d88ee8d, PUSHED): data/rounds/r01..r10.json in the working tree are identical to it (git diff, CR/LF ignored). No WIP was lost and nothing was duplicated. main = origin/main at 70522bf. The index is empty. No Godot process is running.
+- The interrupted verify run DID finish: $env:TEMP\verify_out.json was written 07:38:43, after the WIP data (07:24:45) and the script (07:25:04). Result: content_warnings [], script flag passive_all_lose=true. **Critical reading:** in r01 and r02 the passive player "lost" only by the 900 s TIME_LIMIT (passive_t = 900.0). Its base was never destroyed. In r03–r10 the passive player's base was destroyed at 103–154 s. Competent bot with AI off: r01–r03 W, r04–r10 L, the same as finding 4.
+- Conclusion: the WIP "disable enemy_ai" change is NOT acceptable as-is. Without the random AI, r01/r02 enemies cannot kill an idle player's base, which breaks the design intent that losing is possible. It also does not fix r04+. **Not committed. Balance files untouched since recovery.**
+- First actionable task: decide the WIP based on this evidence. Options: (a) restore data/rounds from HEAD and instead ask 02 to make trickle replace the AI by contract; (b) keep AI off but raise r01/r02 trickle pressure so a passive base falls before ~300 s. Then rerun verify_files (passive must lose by base destruction, not timeout; I will tighten the script to check passive_t < 900) and the confirm configs before any commit.
+
+## Earlier checkpoint (before account change)
+Updated: 2026-10-31 +09:00. The user stopped all project work for an account change.
 Session ID: not visible to this agent (Kiro does not show it in-session). Model claude-opus-5.5. The accepted effort level is unverified.
 
 ## User decisions
@@ -40,3 +48,6 @@ Not done: engine load and passive-must-lose check of the edited rounds; any bala
 ## Git
 Earlier: e42f809, ec657bc, abdb664, 4cd16ee, f8823ac, e07b7a3, 3e7025e, all PUSHED origin/main.
 This checkpoint: see the line appended below.
+- Checkpoint commit 0130c21f7499d7bac92e51d2a1ff505774298be8 "[Docs] 계정 변경 전 밸런스 진단 체크포인트와 시뮬레이션 근거 저장" (8 files) → PUSHED origin/main. The first attempt failed the helper's diff check (blank line at EOF) and left those 8 own files staged. I unstaged only those files with `git restore --staged`, which leaves the working tree untouched, fixed the EOF and re-published. The index was empty afterwards.
+- NOT committed (WIP, unverified): data/rounds/r01..r10.json (enemy_ai disabled), docs/design/balance/verify_files.gd.txt. Left for the coordinator checkpoint branch.
+- This final handoff line itself is uncommitted. Status: STOPPED, waiting for the user's new-account login.
