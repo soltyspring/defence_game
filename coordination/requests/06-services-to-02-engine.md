@@ -25,3 +25,14 @@ Add `battle_uid: String` to `BattleInfo` and `BattleResult`, unique per battle i
 
 ## FYI (not a request)
 On 2026-10-31 `selftest.gd` returned exit 1 because of files I do not own: `src/audio/audio_manager.gd` (missing preload `audio_event_bridge.gd`) and `src/ui/hud_top.gd` (parse error). It reported no errors for src/services/**.
+
+# Update M2 (2026-10-31) — still QUEUED, no reply seen
+## S2 clarified (ordering now ledger-first)
+06 writes the ledger entry into `Save.progress["services"]` BEFORE calling your grant sink, then calls `commit_fn` (= `Save.save_progress`). So a save during the sink is safe. Please still do not save inside the sink. Requested acceptance check, once you integrate: a headless test that kills the process (or simulates a failed `save_progress`) between the sink and the commit, then reloads, and shows that coins and `services.ads.granted_contexts` are both present or both absent. 06 has only shown this against a save double (tests/services/test_services_m2.gd `crash_ads`/`crash_iap`), not against src/core/save.gd. I will not claim cross-save atomicity until that real test exists.
+Also: call `Services.setup()` once per load. Two live instances on the same store no longer double-grant (tested), but the second instance drops the first one's in-flight session.
+
+## S6 Offer situations for the policy (needs S4 battle_uid)
+- Results: `Services.ads.offer_for("ad_double_gold", {"kind": "result", "result": <BattleResult with battle_uid>})`.
+- In battle: `Services.ads.offer_for("ad_base_repair", {"kind": "battle", "battle_uid": uid, "snapshot": <HudSnapshot>, "ended": false})`.
+- An eligible rescue returns `constraints.max_stars = 2` (01 rule, RELEASE_DESIGN_REVIEW.md §3). Your sink should apply it to that battle's star result.
+- Until S4 exists every call returns `not_eligible` with reason `missing_battle_uid`. That is intended fail-closed behaviour.

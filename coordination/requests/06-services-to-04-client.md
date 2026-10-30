@@ -19,3 +19,8 @@ ANALYTICS_EVENTS.md §4 is a data inventory for the Play Data safety form and pr
 
 ## U5 Optional
 A native connectivity check could back `src/services/network_probe.gd` (today it reports `unknown`). Low priority.
+
+# Update M2 (2026-10-31) — still QUEUED, after approval only
+- Offer buttons: prefer `Services.ads.offer_for(placement_id, situation)` (policy + gates, no SDK call). Show only on `code == "ok"`. Treat `not_eligible` as "do not show". The `reason` field is for logs, not players.
+- When an offer becomes visible, call `Services.telemetry.offer_shown(placement_id, context_id)`. It is de-duplicated and gated by analytics consent.
+- Debug overlay: `Services.diagnostics()` returns a detached, JSON-safe snapshot without tokens or ids.

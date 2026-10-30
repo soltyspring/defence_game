@@ -35,9 +35,11 @@ Status: DRAFT. Analytics is DISABLED in every build. No remote sink exists, noth
 | `restore_result` | `result`, `restored` (0–50, clamped) | restore health | 06 PurchaseService |
 | `error` | `area` (save/ads/billing/analytics/content/other), `code` (`^[a-z_]{1,32}$`) | crash-free error rates without stack traces | any owner |
 
-Service result codes accepted by `result`: ok, disabled, unsupported, unknown_id, consent_required, offline, timeout, cancelled, no_fill, busy, cap_reached, already_granted, already_owned, pending, invalid_receipt, verification_unavailable, revoked, grant_failed, error.
+Service result codes accepted by `result`: ok, disabled, unsupported, unknown_id, consent_required, offline, timeout, cancelled, no_fill, busy, cap_reached, already_granted, already_owned, pending, invalid_receipt, verification_unavailable, revoked, grant_failed, not_eligible, error.
 
 No purchase amounts, currencies, order IDs or purchase tokens are ever sent.
+
+`ad_result`, `purchase_result` and `restore_result` are emitted by `src/services/analytics/service_telemetry.gd` from service signals. `ad_offer` is emitted when 04 calls `Services.telemetry.offer_shown(placement_id, context_id)`, once per placement and context. Per app session the bridge sends at most 30 events of each name and 100 in total. The context id is used only for that de-duplication and never leaves the process.
 
 ## 4. Data inventory (whole game, as of this draft)
 "Stored" = on device in the 02-owned save. "Sent" = leaves the device.
