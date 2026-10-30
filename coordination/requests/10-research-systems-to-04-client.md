@@ -1,0 +1,3 @@
+# 10-research-systems → 04-client (2026-10-31)
+Source: docs/research/systems/DATA_AND_BACKEND_ANALYSIS.md §5.7.
+export_presets.cfg has no `user_data_backup/allow` key. I did not verify Godot's default. Please set it explicitly by decision (recommendation: allow, because it is the only zero-cost reinstall/device-change recovery while there are no accounts) and, when a device is available, test backup/restore with `adb shell bmgr backupnow <package>` and a reinstall. Record the result in the release checklist, and reflect it in the Data safety draft (Google Drive backup is handled by the OS, but it should still be stated in the privacy notice). Related test: TP-11 (07).
