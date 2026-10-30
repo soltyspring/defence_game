@@ -1,0 +1,39 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] save_progress (res://src/core/save.gd:93)
+       [1] _check_save (res://src/core/diag/selftest.gd:226)
+       [2] _initialize (res://src/core/diag/selftest.gd:26)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] save_progress (res://src/core/save.gd:93)
+       [1] _check_save (res://src/core/diag/selftest.gd:228)
+       [2] _initialize (res://src/core/diag/selftest.gd:26)
+  r01 competent 3/3 [136.8, 136.8, 136.8] | casual W | passive lost@900.0s
+  r02 competent 3/3 [170.0, 170.0, 170.0] | casual W | passive lost@900.0s
+  r03 competent 3/3 [255.0, 255.0, 255.0] | casual W | passive lost@154.3s
+  r04 competent 0/3 [401.5, 401.5, 401.5] | casual L | passive lost@148.9s
+  r05 competent 0/3 [250.9, 250.9, 250.9] | casual L | passive lost@140.9s
+  r06 competent 0/3 [183.6, 183.6, 183.6] | casual L | passive lost@126.4s
+  r07 competent 0/3 [191.6, 191.6, 191.6] | casual L | passive lost@103.4s
+  r08 competent 0/3 [225.3, 225.3, 225.3] | casual L | passive lost@117.9s
+  r09 competent 0/3 [152.4, 152.4, 152.4] | casual L | passive lost@104.1s
+  r10 competent 0/3 [164.9, 164.9, 164.9] | casual L | passive lost@103.7s
+cap_test {"alive_enemy":2,"alive_player":36,"max_projectiles":26,"max_units_seen":97,"pool_free":59,"refused_deploys":962,"step_ms_avg_desktop":0.949,"step_ms_p99_desktop":10.666,"worst_step_ms_desktop":43.023}
+save_tests {"corruption_recovery":true,"migration":1,"roundtrip":true,"tamper_rejected":true}
+scripts ok 60/60, scenes 7, foreign errors []
+BALANCE: round r04: competent bot won 0/3
+BALANCE: round r05: competent bot won 0/3
+BALANCE: round r06: competent bot won 0/3
+BALANCE: round r07: competent bot won 0/3
+BALANCE: round r08: competent bot won 0/3
+BALANCE: round r09: competent bot won 0/3
+BALANCE: round r10: competent bot won 0/3
+report: C:/Users/aghose/AppData/Roaming/defence_audio_sandbox/selftest_report.json
+SELFTEST PASS
+AUDIO_INTEGRATION_REPORT {"audio_children":[19,19],"audio_snapshot":{"active_sfx":0,"active_ui":0,"dropped_gap":0,"dropped_max":0,"dropped_offscreen":0,"dropped_voices":0,"duck_db":0.0,"load_errors":[],"load_ms":254,"missing":0,"music":"","paused":false,"peak_voices":0,"played":0,"resident_sfx_bytes":160960,"stolen":0,"volumes":{"master":1.0,"music":0.8,"sfx":1.0}},"battles_ended":0,"battles_started":0,"bridge_derived":{"base":true,"command":true,"death":true,"gold":true,"hero":true,"ui":true},"commands":{"deploy":0,"deploy_unaffordable":0,"skill":0,"worker":0},"cue_counts":{},"engine_truth":{"deployed":0,"hero_deaths":0,"kills":0,"skills_cast":0,"workers_bought":0},"errors":[],"events_has_sfx":false,"focus":{},"max_active_sfx":0,"max_active_ui":0,"max_music_playing":0,"music_timeline":[{"m":"","t":0.1}],"pause":{},"phases":[],"results":[],"same_frame_duplicates":[],"screens":[],"switch_check":{},"t":0.1,"toasts":{}}
+WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

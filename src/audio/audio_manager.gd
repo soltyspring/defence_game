@@ -331,10 +331,12 @@ func _exit_tree() -> void:
 ## quitting while music plays reports AudioStreamPlayback*/AudioStreamOggVorbis "leaked at exit"
 ## (exit-only; process memory is reclaimed by the OS). Reproduced by leak_probe.gd --mode=quit_*.
 func prepare_quit() -> void:
+	enabled = false   # refuse cues/music queued by the last frames before quit
 	_exit_tree()
 
 # ---------------------------------------------------------------- music
 func play_music(id: StringName, fade := 0.8) -> void:
+	if not enabled: return
 	if id == _music_id and _music_cur >= 0 and _music[_music_cur].playing: return
 	var d: Dictionary = music_defs.get(id, {})
 	if d.is_empty():

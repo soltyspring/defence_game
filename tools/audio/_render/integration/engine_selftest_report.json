@@ -1,0 +1,556 @@
+{
+  "balance_flags": [
+    "round r04: competent bot won 0/3",
+    "round r05: competent bot won 0/3",
+    "round r06: competent bot won 0/3",
+    "round r07: competent bot won 0/3",
+    "round r08: competent bot won 0/3",
+    "round r09: competent bot won 0/3",
+    "round r10: competent bot won 0/3"
+  ],
+  "cap_test": {
+    "alive_enemy": 2,
+    "alive_player": 36,
+    "max_projectiles": 26,
+    "max_units_seen": 97,
+    "pool_free": 59,
+    "refused_deploys": 962,
+    "step_ms_avg_desktop": 0.949,
+    "step_ms_p99_desktop": 10.666,
+    "worst_step_ms_desktop": 43.023
+  },
+  "content_warnings": [],
+  "failures": [],
+  "fallback_round": {
+    "t": 68.5,
+    "won": true
+  },
+  "foreign_script_errors": [],
+  "pass": true,
+  "round_results": [
+    {
+      "casual": {
+        "t": 112.9,
+        "won": true
+      },
+      "competent_times": [
+        136.8,
+        136.8,
+        136.8
+      ],
+      "competent_wins": 3,
+      "passive": {
+        "ended": true,
+        "t": 900.0,
+        "won": false
+      },
+      "round": "r01",
+      "sim_ms_per_step_avg_max": 0.1695,
+      "stars_11": 3,
+      "stars_22": 3,
+      "stars_33": 3,
+      "stats_11": {
+        "deployed": 31,
+        "enemy_spawned": 29,
+        "hero_deaths": 0,
+        "max_projectiles": 1,
+        "max_units": 22,
+        "skills_cast": 0,
+        "workers_bought": 2
+      },
+      "stats_22": {
+        "deployed": 31,
+        "enemy_spawned": 29,
+        "hero_deaths": 0,
+        "max_projectiles": 1,
+        "max_units": 22,
+        "skills_cast": 0,
+        "workers_bought": 2
+      },
+      "stats_33": {
+        "deployed": 31,
+        "enemy_spawned": 29,
+        "hero_deaths": 0,
+        "max_projectiles": 1,
+        "max_units": 22,
+        "skills_cast": 0,
+        "workers_bought": 2
+      }
+    },
+    {
+      "casual": {
+        "t": 114.2,
+        "won": true
+      },
+      "competent_times": [
+        170.0,
+        170.0,
+        170.0
+      ],
+      "competent_wins": 3,
+      "passive": {
+        "ended": true,
+        "t": 900.0,
+        "won": false
+      },
+      "round": "r02",
+      "sim_ms_per_step_avg_max": 0.2108,
+      "stars_11": 3,
+      "stars_22": 3,
+      "stars_33": 3,
+      "stats_11": {
+        "deployed": 41,
+        "enemy_spawned": 54,
+        "hero_deaths": 0,
+        "max_projectiles": 1,
+        "max_units": 26,
+        "skills_cast": 5,
+        "workers_bought": 3
+      },
+      "stats_22": {
+        "deployed": 41,
+        "enemy_spawned": 54,
+        "hero_deaths": 0,
+        "max_projectiles": 1,
+        "max_units": 26,
+        "skills_cast": 5,
+        "workers_bought": 3
+      },
+      "stats_33": {
+        "deployed": 41,
+        "enemy_spawned": 54,
+        "hero_deaths": 0,
+        "max_projectiles": 1,
+        "max_units": 26,
+        "skills_cast": 5,
+        "workers_bought": 3
+      }
+    },
+    {
+      "casual": {
+        "t": 270.7,
+        "won": true
+      },
+      "competent_times": [
+        255.0,
+        255.0,
+        255.0
+      ],
+      "competent_wins": 3,
+      "passive": {
+        "ended": true,
+        "t": 154.3,
+        "won": false
+      },
+      "round": "r03",
+      "sim_ms_per_step_avg_max": 0.235,
+      "stars_11": 2,
+      "stars_22": 2,
+      "stars_33": 2,
+      "stats_11": {
+        "deployed": 66,
+        "enemy_spawned": 84,
+        "hero_deaths": 0,
+        "max_projectiles": 8,
+        "max_units": 28,
+        "skills_cast": 8,
+        "workers_bought": 4
+      },
+      "stats_22": {
+        "deployed": 66,
+        "enemy_spawned": 84,
+        "hero_deaths": 0,
+        "max_projectiles": 8,
+        "max_units": 28,
+        "skills_cast": 8,
+        "workers_bought": 4
+      },
+      "stats_33": {
+        "deployed": 66,
+        "enemy_spawned": 84,
+        "hero_deaths": 0,
+        "max_projectiles": 8,
+        "max_units": 28,
+        "skills_cast": 8,
+        "workers_bought": 4
+      }
+    },
+    {
+      "casual": {
+        "t": 270.6,
+        "won": false
+      },
+      "competent_times": [
+        401.5,
+        401.5,
+        401.5
+      ],
+      "competent_wins": 0,
+      "passive": {
+        "ended": true,
+        "t": 148.9,
+        "won": false
+      },
+      "round": "r04",
+      "sim_ms_per_step_avg_max": 0.2685,
+      "stars_11": 0,
+      "stars_22": 0,
+      "stars_33": 0,
+      "stats_11": {
+        "deployed": 110,
+        "enemy_spawned": 106,
+        "hero_deaths": 0,
+        "max_projectiles": 8,
+        "max_units": 29,
+        "skills_cast": 18,
+        "workers_bought": 3
+      },
+      "stats_22": {
+        "deployed": 110,
+        "enemy_spawned": 106,
+        "hero_deaths": 0,
+        "max_projectiles": 8,
+        "max_units": 29,
+        "skills_cast": 18,
+        "workers_bought": 3
+      },
+      "stats_33": {
+        "deployed": 110,
+        "enemy_spawned": 106,
+        "hero_deaths": 0,
+        "max_projectiles": 8,
+        "max_units": 29,
+        "skills_cast": 18,
+        "workers_bought": 3
+      }
+    },
+    {
+      "casual": {
+        "t": 253.7,
+        "won": false
+      },
+      "competent_times": [
+        250.9,
+        250.9,
+        250.9
+      ],
+      "competent_wins": 0,
+      "passive": {
+        "ended": true,
+        "t": 140.9,
+        "won": false
+      },
+      "round": "r05",
+      "sim_ms_per_step_avg_max": 0.2495,
+      "stars_11": 0,
+      "stars_22": 0,
+      "stars_33": 0,
+      "stats_11": {
+        "deployed": 64,
+        "enemy_spawned": 63,
+        "hero_deaths": 2,
+        "max_projectiles": 7,
+        "max_units": 21,
+        "skills_cast": 13,
+        "workers_bought": 3
+      },
+      "stats_22": {
+        "deployed": 64,
+        "enemy_spawned": 63,
+        "hero_deaths": 2,
+        "max_projectiles": 7,
+        "max_units": 21,
+        "skills_cast": 13,
+        "workers_bought": 3
+      },
+      "stats_33": {
+        "deployed": 64,
+        "enemy_spawned": 63,
+        "hero_deaths": 2,
+        "max_projectiles": 7,
+        "max_units": 21,
+        "skills_cast": 13,
+        "workers_bought": 3
+      }
+    },
+    {
+      "casual": {
+        "t": 181.2,
+        "won": false
+      },
+      "competent_times": [
+        183.6,
+        183.6,
+        183.6
+      ],
+      "competent_wins": 0,
+      "passive": {
+        "ended": true,
+        "t": 126.4,
+        "won": false
+      },
+      "round": "r06",
+      "sim_ms_per_step_avg_max": 0.2848,
+      "stars_11": 0,
+      "stars_22": 0,
+      "stars_33": 0,
+      "stats_11": {
+        "deployed": 46,
+        "enemy_spawned": 60,
+        "hero_deaths": 0,
+        "max_projectiles": 7,
+        "max_units": 32,
+        "skills_cast": 11,
+        "workers_bought": 3
+      },
+      "stats_22": {
+        "deployed": 46,
+        "enemy_spawned": 60,
+        "hero_deaths": 0,
+        "max_projectiles": 7,
+        "max_units": 32,
+        "skills_cast": 11,
+        "workers_bought": 3
+      },
+      "stats_33": {
+        "deployed": 46,
+        "enemy_spawned": 60,
+        "hero_deaths": 0,
+        "max_projectiles": 7,
+        "max_units": 32,
+        "skills_cast": 11,
+        "workers_bought": 3
+      }
+    },
+    {
+      "casual": {
+        "t": 200.5,
+        "won": false
+      },
+      "competent_times": [
+        191.6,
+        191.6,
+        191.6
+      ],
+      "competent_wins": 0,
+      "passive": {
+        "ended": true,
+        "t": 103.4,
+        "won": false
+      },
+      "round": "r07",
+      "sim_ms_per_step_avg_max": 0.2582,
+      "stars_11": 0,
+      "stars_22": 0,
+      "stars_33": 0,
+      "stats_11": {
+        "deployed": 42,
+        "enemy_spawned": 62,
+        "hero_deaths": 0,
+        "max_projectiles": 5,
+        "max_units": 30,
+        "skills_cast": 11,
+        "workers_bought": 3
+      },
+      "stats_22": {
+        "deployed": 42,
+        "enemy_spawned": 62,
+        "hero_deaths": 0,
+        "max_projectiles": 5,
+        "max_units": 30,
+        "skills_cast": 11,
+        "workers_bought": 3
+      },
+      "stats_33": {
+        "deployed": 42,
+        "enemy_spawned": 62,
+        "hero_deaths": 0,
+        "max_projectiles": 5,
+        "max_units": 30,
+        "skills_cast": 11,
+        "workers_bought": 3
+      }
+    },
+    {
+      "casual": {
+        "t": 204.9,
+        "won": false
+      },
+      "competent_times": [
+        225.3,
+        225.3,
+        225.3
+      ],
+      "competent_wins": 0,
+      "passive": {
+        "ended": true,
+        "t": 117.9,
+        "won": false
+      },
+      "round": "r08",
+      "sim_ms_per_step_avg_max": 0.3302,
+      "stars_11": 0,
+      "stars_22": 0,
+      "stars_33": 0,
+      "stats_11": {
+        "deployed": 55,
+        "enemy_spawned": 90,
+        "hero_deaths": 1,
+        "max_projectiles": 4,
+        "max_units": 33,
+        "skills_cast": 14,
+        "workers_bought": 3
+      },
+      "stats_22": {
+        "deployed": 55,
+        "enemy_spawned": 90,
+        "hero_deaths": 1,
+        "max_projectiles": 4,
+        "max_units": 33,
+        "skills_cast": 14,
+        "workers_bought": 3
+      },
+      "stats_33": {
+        "deployed": 55,
+        "enemy_spawned": 90,
+        "hero_deaths": 1,
+        "max_projectiles": 4,
+        "max_units": 33,
+        "skills_cast": 14,
+        "workers_bought": 3
+      }
+    },
+    {
+      "casual": {
+        "t": 155.1,
+        "won": false
+      },
+      "competent_times": [
+        152.4,
+        152.4,
+        152.4
+      ],
+      "competent_wins": 0,
+      "passive": {
+        "ended": true,
+        "t": 104.1,
+        "won": false
+      },
+      "round": "r09",
+      "sim_ms_per_step_avg_max": 0.3795,
+      "stars_11": 0,
+      "stars_22": 0,
+      "stars_33": 0,
+      "stats_11": {
+        "deployed": 34,
+        "enemy_spawned": 68,
+        "hero_deaths": 0,
+        "max_projectiles": 6,
+        "max_units": 37,
+        "skills_cast": 9,
+        "workers_bought": 2
+      },
+      "stats_22": {
+        "deployed": 34,
+        "enemy_spawned": 68,
+        "hero_deaths": 0,
+        "max_projectiles": 6,
+        "max_units": 37,
+        "skills_cast": 9,
+        "workers_bought": 2
+      },
+      "stats_33": {
+        "deployed": 34,
+        "enemy_spawned": 68,
+        "hero_deaths": 0,
+        "max_projectiles": 6,
+        "max_units": 37,
+        "skills_cast": 9,
+        "workers_bought": 2
+      }
+    },
+    {
+      "casual": {
+        "t": 187.9,
+        "won": false
+      },
+      "competent_times": [
+        164.9,
+        164.9,
+        164.9
+      ],
+      "competent_wins": 0,
+      "passive": {
+        "ended": true,
+        "t": 103.7,
+        "won": false
+      },
+      "round": "r10",
+      "sim_ms_per_step_avg_max": 0.3392,
+      "stars_11": 0,
+      "stars_22": 0,
+      "stars_33": 0,
+      "stats_11": {
+        "deployed": 39,
+        "enemy_spawned": 54,
+        "hero_deaths": 0,
+        "max_projectiles": 6,
+        "max_units": 30,
+        "skills_cast": 8,
+        "workers_bought": 3
+      },
+      "stats_22": {
+        "deployed": 39,
+        "enemy_spawned": 54,
+        "hero_deaths": 0,
+        "max_projectiles": 6,
+        "max_units": 30,
+        "skills_cast": 8,
+        "workers_bought": 3
+      },
+      "stats_33": {
+        "deployed": 39,
+        "enemy_spawned": 54,
+        "hero_deaths": 0,
+        "max_projectiles": 6,
+        "max_units": 30,
+        "skills_cast": 8,
+        "workers_bought": 3
+      }
+    }
+  ],
+  "rounds": [
+    "r01",
+    "r02",
+    "r03",
+    "r04",
+    "r05",
+    "r06",
+    "r07",
+    "r08",
+    "r09",
+    "r10"
+  ],
+  "save_tests": {
+    "corruption_recovery": true,
+    "migration": 1,
+    "roundtrip": true,
+    "tamper_rejected": true
+  },
+  "scenes_total": 7,
+  "scripts_ok": 60,
+  "scripts_total": 60,
+  "summary": [
+    "r01 competent 3/3 [136.8, 136.8, 136.8] | casual W | passive lost@900.0s",
+    "r02 competent 3/3 [170.0, 170.0, 170.0] | casual W | passive lost@900.0s",
+    "r03 competent 3/3 [255.0, 255.0, 255.0] | casual W | passive lost@154.3s",
+    "r04 competent 0/3 [401.5, 401.5, 401.5] | casual L | passive lost@148.9s",
+    "r05 competent 0/3 [250.9, 250.9, 250.9] | casual L | passive lost@140.9s",
+    "r06 competent 0/3 [183.6, 183.6, 183.6] | casual L | passive lost@126.4s",
+    "r07 competent 0/3 [191.6, 191.6, 191.6] | casual L | passive lost@103.4s",
+    "r08 competent 0/3 [225.3, 225.3, 225.3] | casual L | passive lost@117.9s",
+    "r09 competent 0/3 [152.4, 152.4, 152.4] | casual L | passive lost@104.1s",
+    "r10 competent 0/3 [164.9, 164.9, 164.9] | casual L | passive lost@103.7s"
+  ],
+  "total_ms": 145801
+}
