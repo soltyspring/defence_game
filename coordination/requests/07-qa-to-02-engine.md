@@ -22,3 +22,20 @@ To avoid 07/08 runs colliding with imports: hold an exclusive handle on `build/.
 
 ## QA-R3 Autoload wiring (already requested by 05/06)
 AUD-02 (`Audio` autoload) and MON-04 (`Services`) report NOT_IMPLEMENTED until registered. When they are, tell 07 and I will add playback/disabled-state checks.
+
+## Update 2026-10-31 08:10 — new executed failures (evidence: build/qa07/head-462991a, clean HEAD snapshot; summary docs/verification/runs/head-462991a.md). Rerun: `.\tools\qa\run_acceptance.ps1 -Head -Only save,faults`
+Still OPEN at HEAD 462991a: QA-B001, B002 (04), B003.
+
+### QA-B004 (P1, data loss) backup rotation deletes the only good copy (= 10-research SV-1, now executed)
+Steps: save twice (main=B, .bak=A) → overwrite main with `{ corrupted main` → `load_progress()` (recovers A, recovered=true) → `save_progress()`.
+Expected: a valid backup remains. Actual: valid .bak removed, corrupt main renamed into .bak (TP-02a). Killing the process after the .bak rename and before the final rename (state rebuilt from real save output) → reload gives fresh progress, unlocked_round 1, recovered=false (TP-02b): all progress lost silently.
+Fix direction: rotate main into .bak only if `_read(main)` succeeds; on load also accept a verified `.tmp` when main is missing. Acceptance: TP-02a, TP-02b PASS, TP-01 stays PASS.
+
+### QA-B005 (P2) save failure is silent
+Steps: make `<save>.tmp` unopenable (TP-14 creates a directory with that name) → `save_progress()`. Actual: returns false, previous file intact (good), no signal/toast. Request: emit `Events.toast("save_failed", {})` (04 renders; 01 adds text). Acceptance: TP-14b PASS.
+
+### QA-B006 (P3) v99 save rewritten as v1 (TP-06). Request: if payload version > VERSION, load read-only and skip writes (or keep unknown fields and the higher version). Acceptance: TP-06 byte-identical.
+
+### QA-B007 (P3) no clamp/size guard (TP-13a/c): unlocked_round 1e12, coins 9 999 999 999 and stars "x"/99 survive load; a 50 MB save is fully parsed (6.8 s desktop). Request: clamp unlocked to rounds+1, coins to meta cap, stars to int 0..3; reject files over a size limit (08 to set). Acceptance: TP-13a PASS.
+
+### QA-W002 (workspace WIP, not filed as bug) — uncommitted `src/gameplay/battle_sim.gd` calls `_cue()` (lines ~620/627) which is not defined, so `battle.gd` fails to compile and no battle starts (workspace run 20261031-080624, FLOW-03). HEAD is fine. Please do not commit it in that state.

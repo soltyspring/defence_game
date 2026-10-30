@@ -1,13 +1,20 @@
 # Bug register (owner: 07-qa)
 Severity: P0 crash/data loss/cannot progress · P1 core feature broken, no workaround · P2 wrong behaviour with workaround · P3 cosmetic.
 Status: OPEN → FIX_CLAIMED (owner says fixed) → VERIFIED (same scenario re-run PASS) / REOPENED.
-Evidence run IDs refer to `build/qa07/<run>/acceptance_report.json` (local, git-ignored); the summary of each cited run is committed under `docs/verification/runs/`.
+Runs named `head-<sha>` / made with `run_acceptance.ps1 -Head` test a clean `git archive HEAD` snapshot (other workers' uncommitted WIP excluded). Plain timestamp runs test the shared workspace. Evidence run IDs refer to `build/qa07/<run>/acceptance_report.json` (local, git-ignored); the summary of each cited run is committed under `docs/verification/runs/`.
 
 | ID | Sev | Owner | Status | Check | Summary |
 |---|---|---|---|---|---|
 | QA-B001 | P2 | 04 (cc 02) | OPEN | FLOW-23, FLOW-23B | One Android back press is handled again by the screen mounted during the same notification walk |
 | QA-B002 | P3 | 04 (cc 02) | OPEN | FLOW-13B | HUD pause menu is shown underneath the result panel |
 | QA-B003 | P2 | 02 | OPEN | SAVE-05/06 | Save migration keeps wrong-typed `stars`/`best_time`; next `record_result` hits a script error and the result is not saved |
+| QA-B004 | **P1** | 02 | OPEN | TP-02a, TP-02b | After one recovery from `.bak`, the next save rotates the corrupt main into `.bak` and deletes the only good copy; a kill during that save resets progress to fresh with `recovered=false` |
+| QA-B005 | P2 | 02 (cc 04) | OPEN | TP-14b | A failed save (storage full / unwritable) is silent: `save_progress` returns false, only `last_error` is set, no toast/signal |
+| QA-B006 | P3 | 02 | OPEN | TP-06 | A save from a newer build (version 99) is rewritten as version 1 on the next save (replaces QA-O003) |
+| QA-B007 | P3 | 02 | OPEN | TP-13a/c | No range clamp on load (`unlocked_round`=1e12 unlocks everything, coins 9 999 999 999, stars "x"/99 kept); no size guard (50 MB save parsed in 6.8 s on desktop) |
+| QA-B008 | P2 | 01 (cc 04) | OPEN | DATA-13/14, FLOW-04B | Engine toast keys `counterattack`, `save_recovered`, `round_locked` have no `toast.*` text in ko/en; HUD shows the raw id "counterattack" in battle (r01 triggers it at 50% enemy base hp) |
+| QA-W001 | P2 | 01 | WARNING (uncommitted WIP) | R1-LOSS, R2-LOSS | Workspace run 20261031-074155 only: with 01's uncommitted round edits (enemy_ai disabled), an idle player in r01/r02 no longer loses (base 1310/1500, 1365/1500 at the 900 s limit). Committed HEAD 462991a passes R1/R2-LOSS. Blocks commit of that data change unless intended |
+| QA-W002 | P1 if committed | 02 | WARNING (uncommitted WIP) | FLOW-03 | Workspace run 20261031-080624: uncommitted `src/gameplay/battle_sim.gd` calls `_cue()` which is not defined; `battle.gd` fails to compile, no battle can start (`battle_info` on Nil). Committed HEAD 462991a is not affected |
 
 ## QA-B001 — Android back is consumed twice (P2, owner 04, cc 02)
 - Repro (run 20261031-072353): finish any round → result screen → press Android back once. Or: open round select → press back once.
@@ -32,12 +39,29 @@ Evidence run IDs refer to `build/qa07/<run>/acceptance_report.json` (local, git-
 - Source of such files: older builds, manual edits, cloud/device restore, partial migrations.
 - Fix: in `Save._migrate`, replace any key whose type differs from `fresh()` with the default (and drop non-numeric star values). Acceptance: SAVE-05 PASS and SAVE-06 (record_result persists stars/unlock) PASS.
 
+## QA-B004 — backup rotation destroys the only good copy (P1 data loss, owner 02)
+Evidence run 20261031-074155 (suite_faults.gd). Reported independently by 10-research-systems as SV-1 (code reading); this is the executed reproduction.
+- Steps: save twice (main = B, .bak = A) → corrupt main → `load_progress()` (recovers A from .bak, `recovered=true`) → `save_progress()`.
+- Expected: a valid backup still exists after the save.
+- Actual: `save_progress` deletes the valid .bak and renames the corrupt main into .bak (TP-02a: .bak invalid). A second corruption of main now loses everything. If the process dies after the bak rename and before the final rename (state rebuilt from real save output), reload gives **fresh progress, unlocked_round 1, recovered=false**: the player loses all progress and is not told (TP-02b).
+- Fix direction: never rotate an unreadable main into .bak (validate main before rotating, else keep the current .bak); on load, also consider a verified `.tmp`. Acceptance: TP-02a and TP-02b PASS; TP-01 stays PASS.
+
+## QA-B005 — silent save failure (P2, owner 02, cc 04)
+- Steps: make `<save>.tmp` unwritable (TP-14 uses a directory with that name) → change progress → `save_progress()`.
+- Actual: returns false, previous file intact (TP-14a PASS), but nothing reaches the player (no `toast`/signal). On a full phone the player keeps playing and loses the session's progress on exit.
+- Fix: emit e.g. `Events.toast("save_failed", {})` (and keep retrying on next save); 04 shows it. Acceptance: TP-14b PASS.
+
+## QA-B008 — raw "counterattack" text in battle (P2, owner 01, cc 04)
+- Steps: start r01, bring the enemy base below 50% (`enemy_base_spawns_on_hp`) → battle.gd emits `toast("counterattack")`. FLOW-04B emits each engine toast key into the live HUD.
+- Actual: HUD toast label shows `counterattack` (no `toast.counterattack` in data/text, 04 fallback table lacks it). `toast.save_recovered` and `toast.round_locked` are also missing (not visible today: no HUD is mounted when they fire).
+- Fix: add the three `toast.*` keys to ko.json and en.json. Acceptance: DATA-13, DATA-14, FLOW-04B PASS.
+
 ## Observations (not defects; routed for decision)
 | ID | Owner | Note |
 |---|---|---|
 | QA-O001 | 01 (cc 02) | Scripted-bot win rate, 20 seeds each (probe_winrate.gd, 2026-10-31): r01 casual 17/20, competent 17/20; r02 20/20 and 20/20; **r03 casual 10/20, competent 11/20**. The r03 step is steep relative to r01–r02, and the "competent" bot is no better than casual (it wins later: r01 median ≈ 155 s vs ≈ 118 s). Bot behaviour is not human evidence; flagged as a difficulty-curve hypothesis to test. |
 | QA-O002 | 02 | Interrupted rename (main missing, valid newer `.tmp`, older `.bak`) restores `.bak`; the verified `.tmp` is discarded (SAVE-03). Acceptable, loses the last write. |
-| QA-O003 | 02 | A save written by a newer build (version 99) loads and keeps progress, but is rewritten as version 1 on the next save (SAVE-08). Downgrade policy unspecified. |
+| QA-O003 | 02 | Superseded by QA-B006 (TP-06 asserts byte-identical preservation as requested by 10-research-systems). |
 
 ## Verified (resolved before or during first acceptance)
 - Android back in battle toggles pause exactly once (FLOW-12 PASS; 02 added `_ui_handles_back`).

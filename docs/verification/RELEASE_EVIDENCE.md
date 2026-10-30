@@ -1,6 +1,6 @@
 # Release evidence matrix (owner: 07-qa)
-Latest full run: **20261031-072353** (git HEAD 7c43ebd + 98 uncommitted paths from other workers, Godot 4.7.2 headless, Windows desktop).
-Counts: PASS 114 · FAIL 4 · NOT_IMPLEMENTED 2 · NOT_TESTED 2 · BLOCKED 1. Summary: [runs/20261031-072353.md](runs/20261031-072353.md).
+Latest full run: **head-462991a** (clean `git archive` of committed HEAD 462991a; other workers' WIP excluded; Godot 4.7.2 headless, Windows desktop).
+Counts: PASS 119 · FAIL 12 · NOT_IMPLEMENTED 2 · NOT_TESTED 2 · BLOCKED 1, plus 06 services suites exit 0 (run 20261031-080846). Summary: [runs/head-462991a.md](runs/head-462991a.md). Previous: [runs/20261031-072353.md](runs/20261031-072353.md). Hostile review: [HOSTILE_REVIEW.md](HOSTILE_REVIEW.md).
 
 **Scope warning:** desktop headless acceptance only. This is NOT Android release certification.
 `adb devices` at run time listed `emulator-5580` (an emulator, not a phone); no APK install or
@@ -22,6 +22,8 @@ on-device test has been done by 07-qa.
 | Android back: main menu shows quit dialog | PASS | FLOW-25 |
 | Save corruption / recovery / semantics | PASS (6/8) | SAVE-01..04, 07, 08; recovery notice on menu FLOW-24 |
 | Save type normalisation | FAIL | QA-B003 (SAVE-05), SAVE-06 BLOCKED |
+| Save fault tolerance (TP-01/02/06/13/14) | FAIL (**P1**) | TP-01 PASS, TP-13b/c PASS, TP-14a PASS; TP-02a/b FAIL QA-B004 (data loss), TP-14b QA-B005, TP-06 QA-B006, TP-13a QA-B007 |
+| Localised text for engine toasts | FAIL | DATA-13/14, FLOW-04B (QA-B008); ko/en placeholder parity PASS (DATA-12) |
 | Image integration (atlases, P0 sprites/fx/biome/icons/bases, residency, release) | PASS | ART-01..11; resident battle pages ≤ 32 MiB estimate |
 | Audio assets | PASS | AUD-01 (31 file refs exist) |
 | Audio in game | NOT_IMPLEMENTED | AUD-02: no `Audio` autoload; game is silent. AUD-03 NOT_TESTED |
@@ -30,4 +32,4 @@ on-device test has been done by 07-qa.
 | Android export preset / permissions | PASS (static) | PLAT-01/02 |
 | On-device Android (install, touch, lifecycle, safe area, perf, thermals) | NOT_TESTED | PLAT-03 |
 | Rendered text (Hangul tofu/clipping), colour-blind readability, visual frames | NOT_TESTED | needs 04 secondary-monitor visible-test launcher (requested) |
-| 06 services suites in regression | NOT_TESTED | queued (06-services-to-07-qa Q1) |
+| 06 services suites in regression | PASS | test_services + test_services_m2 exit 0 in runner (run 20261031-080846); mock adapters only |
