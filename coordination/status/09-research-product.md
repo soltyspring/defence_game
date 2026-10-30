@@ -1,7 +1,7 @@
 # 09-research-product status
-Updated: 2026-10-31 ~09:05 KST
+Updated: 2026-10-31 ~09:45 KST
 Session: sess_6ce8ebb1-4e45-454d-a561-e0bad09a8be5 · claude-opus-5.5 / trust-all
-Status: MILESTONE DONE (v4 HUD verdicts, 424ca47 PUSHED) - waiting for 04/01 replies
+Status: MILESTONE DONE (v5 X6, 82a3ed2 PUSHED) - waiting for 01 G1 / 04 replies
 READ: coordinator 08:09 correction (09 role, no 10 paths) and the 08:21–08:22 authExpiryRetry recovery note. HISTORICAL quota notices are not a stop.
 Completed: SUCCESS_ANALYSIS v3 + evidence v3 + follow-ups to 01/04/07 → 0b8bef273d763b535099be78d4c31cd1ade830f2 PUSHED.
 Quota: 4.35% at resume.

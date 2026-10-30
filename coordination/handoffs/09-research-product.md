@@ -32,3 +32,11 @@ Commit 424ca47250cfd5985d70bc514df412980e6807c3 PUSHED (SUCCESS_ANALYSIS.md §10
 - (c) R09-04-6 corrected: all 3 stars were met=true in the log, so identical markers are expected. The defect is that the drawn sprite is not a star (4x zoom). This is consistent with the stale ui_main import (02 R11). The unmet-star display has not been verified.
 - Validation: cited line numbers re-read from source; diff --check clean; working tree clean after commit; no 10 path touched.
 - Next: wait for 04 R09-04-5/6 and 01 G1; X6 video observation.
+
+## v5 (~09:45 KST): X6 official video observation
+Commit 82a3ed24034fddf2ccce9ec93d80de7f7192f7d9 PUSHED (SUCCESS_ANALYSIS §21, ONE_PAGE_GAPS X6 row, evidence/video_storyboards_2026-10-31.json, R09-01-4 to 01).
+- 5 official videos observed via YouTube storyboard thumbnails (1 fps, no audio, not downloaded). All are 27–45 s ads, so the real first 3 minutes, time to first input and first reward are UNOBSERVED. Random Dice 1 official YouTube link has expired. No failure scene in any ad (selection bias).
+- Random Dice 2 official launch date is 2026-08-13 (Digital Today).
+- Our r01 timeline taken from HEAD data, not 01's uncommitted working-tree change.
+- Validation: video and article URLs return 200; JSON parses; diff --check clean; only my 4 files committed (other owners' dirty files untouched).
+- Next: wait for 01 R09-01-4 (G1) and 04 R09-04-5/6.
