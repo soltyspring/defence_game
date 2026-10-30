@@ -636,7 +636,7 @@ func _area_damage(x: float, radius: float, power: float, kb: float, struct_mult:
 ## Damage all units of `victim_side` within radius of x, excluding `skip`.
 func _area_damage_side(victim_side: int, x: float, radius: float, power: float, kb: float, skip: Unit) -> void:
 	var arr: Array[Unit] = enemies if victim_side == SIDE_ENEMY else players
-	for e in arr.duplicate():
+	for e in arr:
 		if e != skip and not e.dying and absf(e.x - x) <= radius:
 			_damage(e, power, kb)
 	if victim_side == SIDE_PLAYER and hero_respawn <= 0.0 and hero != skip and absf(hero.x - x) <= radius:

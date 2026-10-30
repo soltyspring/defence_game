@@ -83,6 +83,8 @@ func boot(p_main: Node, p_world: Node2D, p_ui: CanvasLayer) -> void:
 		start_round(direct, true)
 	else:
 		show_screen(&"menu")
+	print("[App] boot ok platform=%s renderer=%s screen=%s ui_source=%s atlas=%s save_recovered=%s" % [OS.get_name(),
+		RenderingServer.get_video_adapter_name(), str(screen), JSON.stringify(ui_source), JSON.stringify(Atlas.texture_report()), Save.recovered])
 
 func _process(delta: float) -> void:
 	_clock += delta
