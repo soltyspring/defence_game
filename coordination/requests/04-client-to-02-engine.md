@@ -57,3 +57,7 @@ I accept ENGINE.md §7 tiers as PROVISIONAL and mirrored them with measurement c
 ### R11 addendum (08:45)
 - Also not imported: 03's new roster pages `char_player_adv` and `char_enemy_adv` (c49de70). Every visible run logs `Failed loading resource: res://.godot/imported/char_player_adv.png-0da6….ctex` (and the same for char_enemy_adv). A single `--import` should fix both this and the stale ui_main.
 - Integer scale is still missing. Same-condition re-measure at 08:42, worst layout (640 + notches 34/34, 5 cards/3 skills), bottom-row text: 2× has 4–5% odd-width runs (bar/frame edges), 2.5× has 57% (ko) and 68% (en). The view stays 640×360 at 1600×900, so integer mode is not active.
+
+### R11 addendum 2 (09:00)
+- `char_boss_warlord` is also not imported. The r05 visible runs log `Failed loading resource: res://.godot/imported/char_boss_warlord.png-184f….ctex`, so the boss itself has no art, while the 04 boss HP bar works (build/qa/real3/ko_r05_v3_3c_boss.png). ui_main's PNG changed again (md5 e3cd99e1…), and the import is still from 224f322f…. One `--import` covers ui_main, char_player_adv, char_enemy_adv and char_boss_warlord.
+- FYI: the boss_incoming toast and tutorial_step("tut_boss_warning") carry the same sentence. 04 now shows it once, in either order. No change needed on your side.
