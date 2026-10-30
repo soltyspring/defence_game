@@ -50,6 +50,7 @@ func _run() -> void:
 	await test_round_select()
 	await test_menu_and_settings()
 	await test_korean_text_fit()
+	test_atlas_import_guard()
 	for s in SECTIONS:
 		check(done.has(s), "section %s ran to completion (aborted by a script error otherwise)" % s)
 	print("[test_ui] passed=%d failed=%d" % [passes, failures.size()])
@@ -59,7 +60,7 @@ func _run() -> void:
 		print("  - " + f)
 	quit(1 if failures.size() > 0 else 0)
 
-const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text"]
+const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard"]
 var done := {}
 
 func test_compile_all(dir_path: String) -> void:
@@ -544,3 +545,65 @@ func test_korean_text_fit() -> void:
 		fa.close()
 	print("[typography] fonts=%s ko_chars=%d en_ellipsized=%d report=%s" % [UiStyle.font_sources, report.locales.ko.unique_chars, report.locales.en.ellipsized, out.path_join("typography_report.json")])
 	done["korean_text"] = true
+
+# ---------------------------------------------------------------- atlas import guard
+
+## The stale-import guard (UiStyle.import_is_fresh) must (a) detect a stale import, (b) let icons
+## come back as soon as the import matches (no permanent masking), (c) never trigger without an md5
+## record (exported builds). Uses throw-away files under user:// only.
+func test_atlas_import_guard() -> void:
+	var UiStyle := load("res://src/ui/ui_style.gd")
+	var dir := "user://atlas_guard_test"
+	DirAccess.make_dir_recursive_absolute(dir)
+	var png := dir.path_join("probe.png")
+	var img := Image.create(4, 4, false, Image.FORMAT_RGBA8)
+	img.fill(Color.RED)
+	img.save_png(png)
+	var md5 := FileAccess.get_md5(png)
+	var ctex := dir.path_join("probe.png-test.ctex")
+	var imp := FileAccess.open(png + ".import", FileAccess.WRITE)
+	imp.store_string('[remap]\n\nimporter="texture"\npath="%s"\n' % ctex)
+	imp.close()
+	var rec_path := ctex.get_basename() + ".md5"
+	# (c) no md5 record → fresh (exported-build case)
+	if FileAccess.file_exists(rec_path):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(rec_path))
+	check(UiStyle.import_is_fresh(png), "guard: no md5 record → icons allowed")
+	# (a) stale record → not fresh
+	var rec := FileAccess.open(rec_path, FileAccess.WRITE)
+	rec.store_string('source_md5="00000000000000000000000000000000"\ndest_md5="x"\n')
+	rec.close()
+	check(not UiStyle.import_is_fresh(png), "guard: stale source_md5 → icons disabled")
+	# (b) re-import (record matches the PNG) → fresh again
+	rec = FileAccess.open(rec_path, FileAccess.WRITE)
+	rec.store_string('source_md5="%s"\ndest_md5="x"\n' % md5)
+	rec.close()
+	check(UiStyle.import_is_fresh(png), "guard: matching source_md5 → icons restored")
+	# PNG edited again after import → stale again
+	img.fill(Color.BLUE)
+	img.save_png(png)
+	check(not UiStyle.import_is_fresh(png), "guard: PNG changed after import → stale")
+	# real project state, reported (not asserted: depends on 03/02 re-import)
+	var real := "res://assets/atlases/ui_main.png"
+	var fresh: bool = UiStyle.import_is_fresh(real)
+	print("[atlas_guard] ui_main import fresh=%s (png md5 %s)" % [fresh, FileAccess.get_md5(real)])
+	# the committed frames file must match the SOURCE png size, so icons are right once re-imported
+	var src_img := Image.load_from_file(ProjectSettings.globalize_path(real))
+	var j := JSON.new()
+	j.parse(FileAccess.get_file_as_string("res://assets/atlases/ui_main.json"))
+	var sz: Array = j.data.get("size", [0, 0])
+	check(src_img != null and src_img.get_width() == int(sz[0]) and src_img.get_height() == int(sz[1]), "ui_main.json size %s matches source PNG %s" % [sz, src_img.get_size() if src_img else null])
+	for fr in ["icon_supply", "icon_energy", "icon_gold", "icon_pause", "icon_lock", "icon_star", "icon_star_empty", "btn_move_left", "btn_move_right", "card_worker", "card_melee_basic", "card_ranged_basic", "card_tank", "icon_skill_slam"]:
+		var f = j.data.frames.get(fr)
+		var inside: bool = f is Dictionary and f.x + f.w <= int(sz[0]) and f.y + f.h <= int(sz[1])
+		var opaque := 0
+		if inside and src_img:
+			for yy in int(f.h):
+				for xx in int(f.w):
+					if src_img.get_pixel(int(f.x) + xx, int(f.y) + yy).a > 0.5:
+						opaque += 1
+		check(inside and opaque > 0, "UI frame %s exists in source PNG with pixels (%d opaque)" % [fr, opaque])
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(png))
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(png + ".import"))
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(rec_path))
+	done["atlas_guard"] = true

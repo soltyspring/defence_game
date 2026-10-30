@@ -347,6 +347,17 @@ static func _atlas_consistent(atlas: Node, atlas_id: String) -> bool:
 ## contain no source PNG, so this check is skipped there.
 static func _import_fresh(atlas_id: String) -> bool:
 	var png := "res://assets/atlases/%s.png" % atlas_id
+	var ok := import_is_fresh(png)
+	if not ok:
+		var msg := "[UiStyle] atlas %s import is stale (source PNG md5 %s not in its .godot/imported md5) → icons disabled until re-import" % [atlas_id, FileAccess.get_md5(png)]
+		atlas_warnings.append(msg)
+		push_warning(msg)
+	return ok
+
+## Pure check, testable with any png + .import pair: false ONLY when an import md5 record exists and
+## its source_md5 differs from the current PNG. Missing PNG/.import/.md5 (e.g. exported build) → true,
+## so the guard can never hide icons once the import matches again (recovery is automatic).
+static func import_is_fresh(png: String) -> bool:
 	var imp := png + ".import"
 	if not FileAccess.file_exists(png) or not FileAccess.file_exists(imp):
 		return true
@@ -360,14 +371,13 @@ static func _import_fresh(atlas_id: String) -> bool:
 	var md5_path := dest.get_basename() + ".md5"
 	if dest == "" or not FileAccess.file_exists(md5_path):
 		return true
-	var txt := FileAccess.get_file_as_string(md5_path)
-	var want := FileAccess.get_md5(png)
-	if txt.find(want) < 0:
-		var msg := "[UiStyle] atlas %s import is stale (source PNG md5 %s not in %s) → icons disabled until re-import" % [atlas_id, want, md5_path]
-		atlas_warnings.append(msg)
-		push_warning(msg)
-		return false
-	return true
+	var rec := ConfigFile.new()
+	var src := ""
+	if rec.load(md5_path) == OK:
+		src = str(rec.get_value("", "source_md5", ""))
+	if src == "":
+		return true
+	return src == FileAccess.get_md5(png)
 
 static func clear_icon_cache() -> void:
 	_icon_cache.clear()
