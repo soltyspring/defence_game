@@ -12,6 +12,7 @@
 #   .\tools\build\visible_launch.ps1 -ListOnly
 param(
     [string]$Scene = '',                  # empty = project main scene (real game)
+    [string]$Script = '',                 # optional: run a SceneTree script (-s res://...) visibly, e.g. the real-engine UI integration test
     [string]$Resolution = '1280x720',     # window client size; must fit the secondary work area
     [string[]]$UserArgs = @(),            # passed after `--` to the game (OS.get_cmdline_user_args)
     [int]$TimeoutSec = 120,
@@ -97,7 +98,9 @@ $x = [int]($work[0] + ($ww - $w) / 2); $y = [int]($work[1] + [math]::Max(32, ($w
 # 0,330 on the PRIMARY monitor). Use --screen <index> (Godot enumerates monitors in EnumDisplayMonitors
 # order, same as $mons) so the window is created on the secondary display; exact rect fixed below.
 $screenIdx = [array]::IndexOf(@($mons | ForEach-Object { $_.Device }), $sec.Device)
-$gargs = @('--path', $Root, '--screen', "$screenIdx", '--resolution', "${w}x${h}")
+$logFile = Join-Path $EvidenceDir "godot_$stamp.log"   # GUI exe has no console: keep stdout/stderr as evidence
+$gargs = @('--path', $Root, '--screen', "$screenIdx", '--resolution', "${w}x${h}", '--log-file', $logFile)
+if ($Script) { $gargs += @('-s', $Script) }
 if ($Scene) { $gargs += $Scene }
 if ($UserArgs.Count -gt 0) { $gargs += '--'; $gargs += $UserArgs }
 Write-Host "launch: $GodotGui $($gargs -join ' ')"
@@ -134,6 +137,7 @@ if (-not $st.OnChosen) {
     Start-Sleep -Milliseconds 300
     $st = Test-OnSecondary
 }
+$evidence.log = $logFile
 $evidence.window = [ordered]@{ hwnd = $hwnd.ToInt64(); pid = $p.Id; first_seen = $firstSeen; rect = $st.Rect; on_secondary = $st.OnChosen; requested = @($x, $y, $w, $h); screen_index = $screenIdx }
 if ($st.OnChosen) { [void][DefWin.Native]::SetWindowPos($hwnd, [IntPtr]::Zero, $x, $y, 0, 0, 0x0001 -bor 0x0004); Start-Sleep -Milliseconds 200; $st = Test-OnSecondary; $evidence.window.rect = $st.Rect }
 if (-not $st.OnChosen) {

@@ -470,10 +470,10 @@ func test_korean_text_fit() -> void:
 			if txt == it[0]:
 				check(false, "[%s] missing text key %s" % [loc, it[0]])
 				continue
-			var fit: Array = UiStyle.fit_text(txt, it[1], it[2], it[3])
+			var fit: Array = UiStyle.fit_label(txt, it[1], it[2], it[3])   # what TouchButton actually draws
 			var truncated: bool = fit[0] != txt
 			var w: float = UiStyle.text_width(txt, it[2], it[3])
-			rows.append({"key": it[0], "where": it[4], "text": txt, "width": w, "max_w": it[1], "size": it[2], "font": str(it[3]), "drawn": fit[0], "truncated": truncated})
+			rows.append({"key": it[0], "where": it[4], "text": txt, "width": w, "max_w": it[1], "size": it[2], "font": str(it[3]), "drawn": fit[0], "drawn_size": fit[1], "drawn_font": str(fit[2]), "truncated": truncated})
 			if loc == "ko":
 				check(not truncated, "[ko] %s '%s' fits %s at %d px (w=%.0f max=%.0f)" % [it[0], txt, it[4], it[2], w, it[1]])
 			elif truncated:

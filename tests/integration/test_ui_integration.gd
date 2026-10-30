@@ -23,6 +23,23 @@ var app: Node
 var events: Node
 var snaps: Array = []
 var main: Node
+var shot_dir := ""
+var shot_tag := "real"
+var tile := 0
+
+## Saves the real rendered frame (only in a visible run with --shot-dir). Records UI root script.
+func shot(label: String) -> void:
+	if shot_dir == "" or DisplayServer.get_name() == "headless":
+		return
+	await RenderingServer.frame_post_draw
+	var img := root.get_texture().get_image()
+	DirAccess.make_dir_recursive_absolute(shot_dir)
+	var p := shot_dir.path_join("%s_%s.png" % [shot_tag, label])
+	img.save_png(p)
+	var roots := []
+	for c in app.ui_layer.get_children():
+		roots.append(c.get_script().resource_path if c.get_script() else "?")
+	print("[shot] %s %dx%d view=%s ui_roots=%s" % [p, img.get_width(), img.get_height(), root.get_visible_rect().size, roots])
 
 func _initialize() -> void:
 	_run.call_deferred()
@@ -93,6 +110,18 @@ func _run() -> void:
 			DirAccess.remove_absolute(ProjectSettings.globalize_path(f))
 	save.load_progress()
 	events.hud_snapshot.connect(func(s): snaps.append(s))
+	# visible-run options (headless runs ignore them): --shot-dir=<abs> --tag=<name> --locale=ko|en
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--shot-dir="):
+			shot_dir = a.get_slice("=", 1)
+		elif a.begins_with("--tag="):
+			shot_tag = a.get_slice("=", 1)
+		elif a.begins_with("--tile="):
+			tile = int(a.get_slice("=", 1))
+			if tile > 0:
+				save.progress.unlocked_round = 99   # visible layout run of a later round (5 cards/3 skills)
+		elif a.begins_with("--locale="):
+			load("res://src/ui/ui_text.gd").load_locale(a.get_slice("=", 1))
 
 	main = load("res://scenes/gameplay/main.tscn").instantiate()
 	root.add_child(main)
@@ -102,6 +131,7 @@ func _run() -> void:
 	var menu := assert_screen(&"menu")
 	if menu == null:
 		_finish(); return
+	await shot("1_menu")
 	tap(menu.btn_select)
 	await _frames(3)
 
@@ -110,8 +140,10 @@ func _run() -> void:
 	if rs == null:
 		_finish(); return
 	check(rs.rounds.size() >= 3, "round select lists real rounds from Content (%d)" % rs.rounds.size())
-	check(not rs.tiles[0].disabled and rs.tiles[1].disabled, "fresh save: r01 open, r02 locked")
-	tap(rs.tiles[0])
+	if tile == 0:
+		check(not rs.tiles[0].disabled and rs.tiles[1].disabled, "fresh save: r01 open, r02 locked")
+	await shot("2_round_select")
+	tap(rs.tiles[tile])
 	await _frames(4)
 
 	# ---- battle HUD ----
@@ -146,6 +178,9 @@ func _run() -> void:
 	var x1: float = sim.hero.x if sim.hero else 0.0
 	check(x1 > x0 + 10.0, "holding ▶ moved hero right (%.1f→%.1f)" % [x0, x1])
 	check(sim.hero_dir == 0, "release stops hero (dir=%d)" % sim.hero_dir)
+	events.toast.emit("not_enough_gold", {})
+	await _frames(2)
+	await shot("3_hud")
 	# pause via HUD
 	tap(hud.btn_pause)
 	await _frames(3)
@@ -154,6 +189,7 @@ func _run() -> void:
 	check(sim.paused or paused, "pause button paused the real sim")
 	check(absf(sim.t - t_paused) < 0.001, "sim time frozen while paused (%.3f vs %.3f)" % [sim.t, t_paused])
 	check(hud.pause_layer.visible, "pause overlay visible")
+	await shot("4_pause")
 	tap(hud.pause_buttons[0])
 	await _seconds(0.3)
 	check(not sim.paused and sim.t > t_paused, "resume continues sim (t %.2f→%.2f)" % [t_paused, sim.t])
@@ -169,6 +205,8 @@ func _run() -> void:
 		_finish(); return
 	check(bool(res.result.get("won", false)), "result screen shows a win (%s)" % [res.result])
 	check(res.btn_retry.visible and res.btn_menu.visible, "result has retry + menu")
+	await _seconds(0.8)   # star pop-in animation
+	await shot("5_result")
 	# retry from result restarts battle with the 04 HUD again
 	tap(res.btn_retry)
 	await _frames(4)

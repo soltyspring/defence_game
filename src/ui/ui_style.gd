@@ -156,6 +156,18 @@ static func fit_text(text: String, max_w: float, size: int, kind: StringName = &
 static func text_width(text: String, size: int, kind: StringName = &"ui") -> float:
 	return font(kind).get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
 
+## Grid-safe label fit. Returns [text, size, kind]:
+## 1) as requested if it fits; 2) ASCII-only text at 12 px may step down to Galmuri9 10 px (Latin/
+## numerals cut, still on its native grid; Hangul never shrinks); 3) otherwise ellipsis at the
+## requested size. Used for button labels where English expands (~35%) beyond Korean.
+static func fit_label(text: String, max_w: float, size: int, kind: StringName = &"ui") -> Array:
+	if text_width(text, size, kind) <= max_w:
+		return [text, size, kind]
+	if size == FONT_S and _is_numeric(text) and font_sources.get(&"num", "").begins_with("bundled") and text_width(text, NUM_S, &"num") <= max_w:
+		return [text, NUM_S, &"num"]
+	var f: Array = fit_text(text, max_w, size, kind)
+	return [f[0], size, kind]
+
 static func _baseline_y(f: Font, center_y: float, size: int) -> float:
 	return roundf(center_y - f.get_height(size) / 2.0 + f.get_ascent(size))
 
