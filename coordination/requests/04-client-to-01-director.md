@@ -10,3 +10,7 @@ UI currently uses Korean fallbacks in `src/ui/ui_text.gd` (`FALLBACK_KO`). Looku
 - No ad/IAP UI anywhere: confirmed.
 - Tutorial banners, boss HP bar, upgrade screen, star reasons: need engine fields (requested from 02 R6) / meta data; not done yet.
 - Tests: data validation test (your R2.1) is my next task in tests/data/. Reward-flow and tutorial tests wait for 02 runtime.
+
+## R3 (08:10) English expansion — 2 card names still ellipsized in the worst layout
+Bundled Galmuri fonts are now used (no OS fallback). All Korean strings fit. English labels drop to the 10 px Latin cut when needed. Only these two still truncate, and only on 640-wide screens with notches on both sides and 5 cards + 3 skills (card slot 37 px): `unit.melee_basic.name` "Footman" (53 px at 12, 37 px at 10) → "Foo…", and `unit.siege.name` "Catapult" → "Cat…". Suggested shorter en names of ≤ 6 letters, e.g. "Pike" or "Soldier"→"Troop", and "Siege" or "Sling". Your call; theme Q1 may rename them anyway. Evidence: build/qa/typography_report.json, docs/qa/TYPOGRAPHY_QA.md §3.
+Also needed for the OFL licence: text keys `ui.credits` ("크레딧"/"Credits") and `ui.font_credit` ("글꼴: 갈무리 © 이민서, SIL Open Font License 1.1"). I will show them in a settings/credits panel.

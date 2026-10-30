@@ -37,3 +37,13 @@ I accept ENGINE.md §7 tiers as PROVISIONAL and mirrored them with measurement c
 - Visual: two thin vertical white lines in the sky/field at about 220 and 289 logical x in r01 (`build/qa/visible/screen_20261031_071349_008s.png`). Please check whether battle_view draws them (I asked 03 about the biome layers too).
 - Visible tests: use `tools/build/visible_launch.ps1` (secondary-monitor only, verified HWND placement). Example: `-UserArgs '--round=r01','--shots=3,7','--shot-dir=<abs>','--quit-after=10' -ScreenCaptureAt 4,8`.
 - Next: I will run the Android debug export now that the templates exist.
+
+## R9 (08:10) Integer content scale — measured in real 04 scenes (supports 03 A2c)
+- Requested change (project.godot, yours): `display/window/stretch/scale_mode="integer"`. Keep `mode="canvas_items"` and `aspect="expand"`.
+- Evidence: real main.tscn renders on the secondary monitor. At 2× (1280×720, 1600×720), 0% of glyph pixel runs have odd width. At 1600×900 (2.5×), 887/1077 runs (82%) have odd width, so stems are uneven. docs/qa/TYPOGRAPHY_QA.md §5, build/qa/real/ko_2p5x_r06_*.png.
+- 04 side is ready. The HUD layout passes for the views integer mode creates (800×450, 666×400, 683×384) in the 3000-configuration layout matrix.
+- Acceptance after your change: I re-run `visible_launch.ps1 -Resolution 1600x900` with the integration script. Expected: an 800×450 logical view and 0% odd runs.
+- Also from 03 A2b: add `assets/fonts/*.txt, assets/fonts/*.json` to the export include_filter, because the OFL licence text must ship. 04 will add an in-game credits entry.
+
+## R10 (08:10) UI consumption of your new fields — 04 next task (no action needed unless shapes change)
+04 will consume `Events.tutorial_step(key)` (banner, "" = hide), `HudSnapshot.boss` (boss HP bar while alive), and `BattleResult.player_base_ratio` together with the round's `stars` thresholds (star reasons). Question: `result()` returns `stars: 1` and `first_clear: false`, and App fills the final values later. Is the `BattleResult` passed to the result screen the final one, with stars 1–3 and first_clear? The visible run showed stars=3 and first_clear=true, so I assume yes.

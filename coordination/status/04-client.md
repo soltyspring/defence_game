@@ -1,8 +1,6 @@
 # 04-client status
-Updated: 2026-10-31 07:22 +09:00
-Status: IN PROGRESS. The real engine now mounts the 04 UI (headless integration and a secondary-monitor visible run were both verified). Android APK: not built yet.
-Current task: Android debug APK export (templates now present) → emulator install/start evidence.
-Pushed: e62fe86 (UI), e4aa059 (HUD fix + icons + text fit), d7651af (tests), 0b987c9 (build scripts), 8915190 (QA/typography docs + requests).
-Validation: tests/ui/test_ui.gd 2274 pass / 0 fail; tests/integration/test_ui_integration.gd 27/27 pass (real App/BattleSim, no mock); visible run on DISPLAY2 EXIT_0 with OS screen captures.
-Open risks: no bundled Korean font (127/131 chars come from OS fallback, Android unverified); no device; APK not yet built.
-Quota: usage.json 80.7% at 07:03; no ACCOUNT_REQUIRED, not rate limited in this session.
+Updated: 2026-10-31 08:12 +09:00
+Status: ACTIVE. The bundled-font and real-scene visual milestone is done and pushed (8b24e59, 0333cd3, plus a docs commit).
+Validation: UI suite 3223/0; real-engine integration 27/27 headless and in visible runs on DISPLAY2; 230/230 Hangul glyphs in the bundled fonts; 0% irregular glyph pixels at 2×, 82% at 2.5× (open, needs 02 integer scale).
+Next: tutorial banner, boss HP bar, result star reasons, credits (handoff "Next task").
+Not claimed: device/APK usability, release readiness.
