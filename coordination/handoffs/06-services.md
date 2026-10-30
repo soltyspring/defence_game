@@ -35,7 +35,7 @@ Last processed decisions: D1–D12 (all DEFAULT), Q1 PENDING. Monetization: D9 D
 
 ## Git
 - 17623c14e1b054d024e8029049b58d5fc373a93b `[Feat] 광고 보상·결제·복원·분석 서비스 경계와 비활성/모의 어댑터, 상태 머신 계약 테스트 추가` (32 files: src/services/**, tests/services/test_services.gd) → PUSHED origin/main; `git ls-remote origin main` = 17623c1…. A first helper invocation piped through `2>&1 | Select-Object` exited 1 right after fetch with no commit/staging; the identical second call succeeded.
-- Docs/coordination commit: see status file / next handoff update (this file is part of it). First attempt was refused by the helper's `git diff --check` (trailing space in this file, line 41); I fixed it and unstaged only my 8 files (`git restore --staged`, no foreign files were staged), then retried.
+- 9c207630e2049befa9a0e7aec2269f88dedf4620 `[Docs] 서비스 아키텍처·운영 요구사항·분석 이벤트 계약 문서와 02/04/01 연동 요청, 상태 인수인계 추가` (8 files: docs/services/*.md, 3 request files, status, handoff) → PUSHED origin/main; `git ls-remote origin main` = 9c20763…. The first attempt was refused by the helper's `git diff --check` (trailing space in this file, line 41). I fixed it and unstaged only my 8 files (`git restore --staged`; no foreign files were staged), then retried. Note for all roles: piping Publish-Task.ps1 stderr (`2>&1`, `2>$null`) makes git fetch's progress text throw under `$ErrorActionPreference='Stop'` (exit 1, nothing committed). Call it without redirection.
 
 ## Next task (06)
 M2 (owned, no external dependency):
