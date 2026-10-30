@@ -8,7 +8,7 @@ extends RefCounted
 ##   store, clock, network: injected boundaries (defaults: memory store, system clock, unknown net)
 ##   debug_build: bool override for tests (default OS.is_debug_build())
 ## Returns {"mode", "requested_mode", "warnings", "consent", "ads", "purchases", "analytics",
-##          "ad_provider", "billing", "verifier", "sink", "store"}.
+##          "telemetry", "ad_provider", "billing", "verifier", "sink", "store"}.
 
 const Config := preload("res://src/services/service_config.gd")
 const Store := preload("res://src/services/service_store.gd")
@@ -26,6 +26,7 @@ const MockVerifier := preload("res://src/services/billing/mock_receipt_verifier.
 const AnalyticsS := preload("res://src/services/analytics/analytics_service.gd")
 const NullSink := preload("res://src/services/analytics/analytics_sink.gd")
 const MemorySink := preload("res://src/services/analytics/memory_sink.gd")
+const Telemetry := preload("res://src/services/analytics/service_telemetry.gd")
 
 const PRIVACY_POLICY_VERSION := 1
 
@@ -77,11 +78,13 @@ static func create(options: Dictionary = {}) -> Dictionary:
 	var billing = MockBilling.new() if mode == Config.MODE_MOCK else DisabledBilling.new()
 	var verifier = MockVerifier.new() if mode == Config.MODE_MOCK else UnavailableVerifier.new()
 	var sink = MemorySink.new() if mode == Config.MODE_MOCK else NullSink.new()
+	var ads = AdsS.new(ad_provider, consent, store, clock, network, ads_cfg)
+	var purchases = PurchaseS.new(billing, verifier, store, clock, network, iap_cfg)
+	var analytics = AnalyticsS.new(sink, consent, an_cfg)
 	return {
 		"mode": mode, "requested_mode": requested, "warnings": warnings,
 		"store": store, "consent": consent,
 		"ad_provider": ad_provider, "billing": billing, "verifier": verifier, "sink": sink,
-		"ads": AdsS.new(ad_provider, consent, store, clock, network, ads_cfg),
-		"purchases": PurchaseS.new(billing, verifier, store, clock, network, iap_cfg),
-		"analytics": AnalyticsS.new(sink, consent, an_cfg),
+		"ads": ads, "purchases": purchases, "analytics": analytics,
+		"telemetry": Telemetry.new(analytics, ads, purchases),
 	}

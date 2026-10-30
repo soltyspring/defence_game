@@ -69,14 +69,34 @@ func _init(p_provider, p_verifier, p_store, p_clock, p_network, config: Dictiona
 	provider.acknowledged.connect(_on_acknowledged)
 	provider.consumed.connect(_on_consumed)
 	verifier.verified.connect(_on_verified)
+	_sanitize()
 
 # ---------------- public API ----------------
 
+## An entitlement is trusted only if its ledger entry says "granted". Local saves are not
+## tamper-proof; this only rejects damaged/partial state, not a determined local editor.
 func has_entitlement(entitlement_id: String) -> bool:
-	return _entitlements().has(entitlement_id)
+	var e = _entitlements().get(entitlement_id)
+	if not (e is Dictionary) or not (e.get("key") is String):
+		return false
+	var led = _ledger().get(e.key)
+	return led is Dictionary and str(led.get("state", "")) == "granted"
 
 func entitlements() -> Array:
-	return _entitlements().keys()
+	return _entitlements().keys().filter(func(k): return has_entitlement(str(k)))
+
+## Repair a damaged service section: drop malformed entitlements (restore rebuilds them) and
+## malformed ledger entries (the token is re-verified if the store reports it again).
+## Risk accepted and documented: a corrupted ledger can let one consumable be granted again.
+func _sanitize() -> void:
+	var led := _ledger()
+	for k in led.keys():
+		if not (led[k] is Dictionary):
+			led.erase(k)
+	var ents := _entitlements()
+	for k in ents.keys():
+		if not (ents[k] is Dictionary) or not (ents[k].get("key") is String):
+			ents.erase(k)
 
 func availability(product_id: String) -> String:
 	if not enabled:
@@ -284,14 +304,23 @@ func _grant(p: Dictionary, key: String) -> String:
 	var pid := str(p.product_id)
 	var item: Dictionary = catalog[pid]
 	var persisted := true
+	# Another instance/path on the same store may have granted this token while we verified.
+	var prior = _ledger().get(key)
+	if prior is Dictionary and str(prior.get("state", "")) == "granted":
+		diagnostics.duplicate_updates += 1
+		_ensure_entitlement(pid, key)
+		_ack(pid, str(p.token))
+		return Result.OK
 	if str(item.get("type", "")) == TYPE_CONSUMABLE:
 		var g: Dictionary = item.get("grant", {}).duplicate(true)
-		if not grant_sink.is_valid() or not bool(grant_sink.call(pid, g, key)):
-			return Result.GRANT_FAILED     # not acknowledged/consumed -> store may refund
+		# Ledger-first: any save during the sink (even one it triggers) carries both.
 		_ledger()[key] = {"product_id": pid, "state": "granted", "acknowledged": false}
+		if not grant_sink.is_valid() or not bool(grant_sink.call(pid, g, key)):
+			_ledger().erase(key)
+			return Result.GRANT_FAILED     # not acknowledged/consumed -> store may refund
 		persisted = store.commit()
 		consumable_granted.emit(pid, g, persisted)
-		provider.consume(str(p.token))
+		_ack(pid, str(p.token))
 	else:
 		_ledger()[key] = {"product_id": pid, "state": "granted", "acknowledged": false}
 		_ensure_entitlement(pid, key)

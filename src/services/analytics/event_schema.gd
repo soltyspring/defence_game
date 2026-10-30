@@ -9,7 +9,7 @@ const VERSION := 1
 
 const RESULT_CODES := ["ok", "disabled", "unsupported", "unknown_id", "consent_required", "offline",
 	"timeout", "cancelled", "no_fill", "busy", "cap_reached", "already_granted", "already_owned",
-	"pending", "invalid_receipt", "verification_unavailable", "revoked", "grant_failed", "error"]
+	"pending", "invalid_receipt", "verification_unavailable", "revoked", "grant_failed", "not_eligible", "error"]
 
 const EVENTS := {
 	"session_start": {

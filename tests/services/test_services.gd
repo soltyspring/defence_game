@@ -70,7 +70,9 @@ func _group(name: String, fn: Callable) -> void:
 	current = name
 	var before := failures.size()
 	var p0 := passes
-	fn.call()
+	var completed = fn.call()
+	if completed != true:
+		check(false, "group aborted before its end (script error or early exit)")
 	report.groups[name] = "PASS (%d checks)" % (passes - p0) if failures.size() == before else "FAIL"
 
 func check(cond: bool, msg: String) -> void:
@@ -127,7 +129,7 @@ func ads_setup(b: Dictionary) -> AdRec:
 
 # ---------------------------------------------------------------- factory/config
 
-func test_factory_config() -> void:
+func test_factory_config() -> bool:
 	var d := Factory.create({})
 	eq(d.mode, "disabled", "default mode disabled")
 	eq(d.ads.availability("ad_double_gold", "x"), R.DISABLED, "default ads disabled")
@@ -170,10 +172,11 @@ func test_factory_config() -> void:
 	eq(sc.ads.placements.ad_x.daily_cap, 5, "daily cap mapped")
 	eq(sc.iap.catalog.size(), 1, "subscriptions skipped")
 	eq(Config.from_meta({"iap_catalog": {"enabled": true, "products": []}}).iap.enabled, false, "enabled with empty catalog -> disabled")
+	return true
 
 # ---------------------------------------------------------------- consent
 
-func test_consent() -> void:
+func test_consent() -> bool:
 	var st := Store.new()
 	var c := ConsentS.new(st, 1)
 	eq(c.check(ConsentS.PURPOSE_ADS), R.CONSENT_REQUIRED, "unknown blocks ads")
@@ -197,10 +200,11 @@ func test_consent() -> void:
 	c2.withdraw_all()
 	eq(c2.check(ConsentS.PURPOSE_ANALYTICS), R.CONSENT_REQUIRED, "withdraw_all blocks")
 	eq(c2.apply_external({"ads": "granted", "analytics": "bogus", "x": "granted"}), 1, "external result: only valid keys applied")
+	return true
 
 # ---------------------------------------------------------------- ads
 
-func test_ads_once_only() -> void:
+func test_ads_once_only() -> bool:
 	var b := mock_bundle()
 	var rec := ads_setup(b)
 	var r: Dictionary = b.ads.request("ad_double_gold", "result:r01:a1")
@@ -233,8 +237,9 @@ func test_ads_once_only() -> void:
 	pump(b.ads)
 	eq(rec.grants.size(), 2, "stray earned while idle grants nothing")
 	eq(b.ads.diagnostics.late_or_stray, stray0 + 2, "stray callbacks counted")
+	return true
 
-func test_ads_failures() -> void:
+func test_ads_failures() -> bool:
 	var b := mock_bundle()
 	var rec := ads_setup(b)
 	b.ad_provider.set_scenarios(["cancel", "no_fill", "offline", "show_fail", "load_hang", "show_hang", "earned_no_close", "late_earned"])
@@ -280,8 +285,9 @@ func test_ads_failures() -> void:
 	b.ads.request("ad_double_gold", "c9")
 	eq(b.ads.request("ad_base_repair", "c10").code, R.BUSY, "busy while active")
 	pump(b.ads, 10, 1.0)
+	return true
 
-func test_ads_gates() -> void:
+func test_ads_gates() -> bool:
 	var clock := FakeClock.new()
 	var net := FakeNet.new()
 	var st := Store.new()
@@ -323,8 +329,9 @@ func test_ads_gates() -> void:
 	eq(rec3.grants.size(), 1, "granted after 20 days")
 	check(not st.section("ads").granted_contexts.has("g1"), "old ledger entries pruned")
 	check(st.section("ads").granted_contexts.has("g20"), "new ledger entry kept")
+	return true
 
-func test_ads_grant_persistence() -> void:
+func test_ads_grant_persistence() -> bool:
 	# Grant sink refuses (e.g. battle already ended) -> grant_failed, nothing recorded, retry possible.
 	var b := mock_bundle()
 	var rec := ads_setup(b)
@@ -349,6 +356,7 @@ func test_ads_grant_persistence() -> void:
 	b2.ads.request("ad_base_repair", "p3"); pump(b2.ads)
 	eq(persisted, [false, true], "next grant persisted")
 	eq(rec2.grants.size(), 2, "two distinct contexts granted")
+	return true
 
 # ---------------------------------------------------------------- purchases
 
@@ -377,7 +385,7 @@ func p_setup(b: Dictionary) -> PRec:
 	b.purchases.grant_sink = rec.sink
 	return rec
 
-func test_purchase_flows() -> void:
+func test_purchase_flows() -> bool:
 	var st := Store.new()
 	var b := mock_bundle(st)
 	var rec := p_setup(b)
@@ -453,8 +461,9 @@ func test_purchase_flows() -> void:
 	eq(b6.purchases.purchase("test.supporter").code, R.OFFLINE, "known offline purchase gate")
 	eq(b6.purchases.restore().code, R.OFFLINE, "known offline restore gate")
 	eq(b6.billing.launches, 0, "no launch offline")
+	return true
 
-func test_purchase_verification() -> void:
+func test_purchase_verification() -> bool:
 	# Forged token -> invalid, never granted or acknowledged.
 	var b := mock_bundle()
 	var rec := p_setup(b)
@@ -510,8 +519,9 @@ func test_purchase_verification() -> void:
 	b3.purchases.restore(); pump(b3.purchases)
 	eq(b3.purchases.has_entitlement("remove_ads"), false, "revoked purchase removes entitlement")
 	eq(rec3.ents[-1], ["remove_ads", false], "entitlement_changed false on revoke")
+	return true
 
-func test_purchase_restore() -> void:
+func test_purchase_restore() -> bool:
 	var st := Store.new()
 	var b := mock_bundle(st)
 	p_setup(b)
@@ -572,8 +582,9 @@ func test_purchase_restore() -> void:
 	b4.purchases.restore(); pump(b4.purchases)
 	eq(b4.purchases.has_entitlement("remove_ads"), false, "forged owned purchase not restored")
 	eq(rec4.restores[-1].invalid, 1, "invalid counted in restore summary")
+	return true
 
-func test_purchase_consumable() -> void:
+func test_purchase_consumable() -> bool:
 	var st := Store.new()
 	var b := mock_bundle(st)
 	var rec := p_setup(b)
@@ -599,10 +610,11 @@ func test_purchase_consumable() -> void:
 	b.purchases.restore(); pump(b.purchases)
 	eq(rec.consumables.size(), 3, "unconsumed purchase granted on restore retry")
 	eq(b.billing.consumes, c0 + 1, "consumed after successful retry")
+	return true
 
 # ---------------------------------------------------------------- analytics
 
-func test_analytics() -> void:
+func test_analytics() -> bool:
 	var b := mock_bundle()
 	var an = b.analytics
 	var sink = b.sink
@@ -648,20 +660,22 @@ func test_analytics() -> void:
 	# Session id is not persisted anywhere in the store.
 	check(not JSON.stringify(b.store.data).contains(an.session_id), "session id not persisted")
 	check(an.session_id.length() == 16, "session id 64-bit random hex")
+	return true
 
-func test_analytics_doc_sync() -> void:
+func test_analytics_doc_sync() -> bool:
 	var path := "res://docs/services/ANALYTICS_EVENTS.md"
 	check(FileAccess.file_exists(path), "ANALYTICS_EVENTS.md exists")
 	if not FileAccess.file_exists(path):
-		return
+		return true
 	var doc := FileAccess.get_file_as_string(path)
 	check(doc.contains("Schema version: %d" % Schema.VERSION), "doc schema version matches")
 	for ev in Schema.EVENTS:
 		check(doc.contains("`%s`" % ev), "doc lists event " + ev)
 		for p in Schema.EVENTS[ev]:
 			check(doc.contains("`%s`" % p), "doc lists param %s.%s" % [ev, p])
+	return true
 
-func test_static_guards() -> void:
+func test_static_guards() -> bool:
 	# Privacy/secret guards over 06-owned source: no device IDs, no ad unit IDs, no keys, no URLs.
 	var forbidden := ["OS.get_unique_id", "get_unique_id(", "ca-app-pub-", "BEGIN PRIVATE KEY", "http://", "https://",
 		"advertising_id", "OS.get_model_name"]
@@ -676,6 +690,7 @@ func test_static_guards() -> void:
 	check(mv.contains("!= \"mock\""), "mock verifier gates on mock environment")
 	var uv := FileAccess.get_file_as_string("res://src/services/billing/unavailable_receipt_verifier.gd")
 	check(not uv.contains("Result.OK"), "unavailable verifier never returns OK")
+	return true
 
 func _list_gd(dir: String) -> Array[String]:
 	var out: Array[String] = []
@@ -689,7 +704,7 @@ func _list_gd(dir: String) -> Array[String]:
 		out.append_array(_list_gd(dir + "/" + sub))
 	return out
 
-func test_services_node() -> void:
+func test_services_node() -> bool:
 	var n = ServicesNode.new()
 	root.add_child(n)
 	# In SceneTree._initialize the root may not deliver _ready yet; autoload boot calls it normally.
@@ -700,3 +715,4 @@ func test_services_node() -> void:
 	eq(n.purchases.has_entitlement("remove_ads"), false, "node no entitlements")
 	n._process(0.016)
 	n.queue_free()
+	return true

@@ -21,6 +21,7 @@ const INVALID_RECEIPT := "invalid_receipt"
 const VERIFICATION_UNAVAILABLE := "verification_unavailable"  # no trusted verifier: NEVER grant
 const REVOKED := "revoked"                         # refunded/cancelled by store
 const GRANT_FAILED := "grant_failed"               # game-side grant/persist failed; nothing recorded
+const NOT_ELIGIBLE := "not_eligible"               # offer policy says no in this game situation
 const ERROR := "error"
 
 static func make(code: String, data: Dictionary = {}) -> Dictionary:

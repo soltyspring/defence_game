@@ -18,6 +18,7 @@ extends RefCounted
 
 const Result := preload("res://src/services/service_result.gd")
 const Consent := preload("res://src/services/consent_service.gd")
+const Policy := preload("res://src/services/ads/reward_policy.gd")
 
 const IDLE := "idle"
 const LOADING := "loading"
@@ -63,6 +64,7 @@ func _init(p_provider, p_consent, p_store, p_clock, p_network, config: Dictionar
 	provider.reward_earned.connect(_on_reward_earned)
 	provider.show_failed.connect(_on_show_failed)
 	provider.closed.connect(_on_closed)
+	_sanitize()
 
 ## Cheap check for UI: should a "watch ad" button be offered? Does not call the SDK.
 func availability(placement_id: String, context_id: String) -> String:
@@ -85,6 +87,31 @@ func availability(placement_id: String, context_id: String) -> String:
 	if state != IDLE:
 		return Result.BUSY
 	return Result.OK
+
+## Policy-aware check: is an offer allowed in this situation (reward_policy.gd) AND does the
+## service allow it? Returns {"code", "context_id", "reason", "constraints"}.
+## code "not_eligible" means the policy said no (reason explains); other codes come from availability().
+func offer_for(placement_id: String, situation: Dictionary) -> Dictionary:
+	if not enabled:
+		return Result.make(Result.DISABLED, {"context_id": "", "reason": "", "constraints": {}})
+	if not placements.has(placement_id):
+		return Result.make(Result.UNKNOWN_ID, {"context_id": "", "reason": "", "constraints": {}})
+	var ev := Policy.evaluate(placements[placement_id], situation)
+	if not ev.eligible:
+		return Result.make(Result.NOT_ELIGIBLE, {"context_id": "", "reason": ev.reason, "constraints": {}})
+	var code := availability(placement_id, ev.context_id)
+	return Result.make(code, {"context_id": ev.context_id, "reason": "", "constraints": ev.constraints})
+
+## Start an ad for a situation. Same result shape as request() plus context_id/constraints.
+func request_for(placement_id: String, situation: Dictionary) -> Dictionary:
+	var o := offer_for(placement_id, situation)
+	if o.code != Result.OK:
+		o["request_id"] = 0
+		return o
+	var r := request(placement_id, o.context_id)
+	r["context_id"] = o.context_id
+	r["constraints"] = o.constraints
+	return r
 
 ## Start load+show. Returns {"code", "request_id"}; final outcome arrives via `finished`.
 func request(placement_id: String, context_id: String) -> Dictionary:
@@ -140,7 +167,7 @@ func _on_show_started(placement_id: String) -> void:
 func _on_reward_earned(placement_id: String) -> void:
 	if not _matches(placement_id, SHOWING):
 		return
-	if _session.granted or _session.grant_failed:
+	if _session.granted or _session.grant_failed or _session.get("already", false):
 		diagnostics.duplicate_reward += 1
 		return
 	_grant()
@@ -155,6 +182,8 @@ func _on_closed(placement_id: String) -> void:
 		return
 	if _session.granted:
 		_finish(Result.OK)
+	elif _session.get("already", false):
+		_finish(Result.ALREADY_GRANTED)
 	elif _session.grant_failed:
 		_finish(Result.GRANT_FAILED)
 	else:
@@ -164,28 +193,34 @@ func _grant() -> void:
 	var pid: String = _session.placement_id
 	var ctx: String = _session.context_id
 	var reward: Dictionary = placements[pid].get("reward", {}).duplicate(true)
-	# Re-check the ledger: another path (restart, second device of same save) may have granted it.
+	# Re-check the ledger: another path (restart, second instance on the same save) may have granted it.
 	if _ledger().has(ctx):
 		diagnostics.duplicate_reward += 1
-		_session.grant_failed = true
+		_session.already = true
 		return
+	# Ledger-first: record the grant BEFORE calling the sink, so any save that happens while
+	# the sink runs (even one the sink triggers itself) carries reward and ledger together.
+	var day: String = clock.local_day()
+	var daily := _daily()
+	var daily_before := daily.duplicate(true)
+	_ledger()[ctx] = {"placement_id": pid, "day": day}
+	if str(daily.get("day", "")) != day or not (daily.get("counts") is Dictionary):
+		daily.clear()
+		daily["day"] = day
+		daily["counts"] = {}
+	var counts: Dictionary = daily["counts"]
+	counts[pid] = _num(counts.get(pid, 0)) + 1
 	var applied := false
 	if grant_sink.is_valid():
 		applied = bool(grant_sink.call(pid, reward, ctx))
 	if not applied:
+		# Roll back in memory. Nothing was committed by the service.
+		_ledger().erase(ctx)
+		daily.clear()
+		daily.merge(daily_before)
 		diagnostics.grant_failed += 1
 		_session.grant_failed = true
 		return
-	var day: String = clock.local_day()
-	_ledger()[ctx] = {"placement_id": pid, "day": day}
-	var daily := _daily()
-	if str(daily.get("day", "")) != day:
-		daily.clear()
-		daily["day"] = day
-		daily["counts"] = {}
-	var counts: Dictionary = daily.get("counts", {})
-	counts[pid] = int(counts.get(pid, 0)) + 1
-	daily["counts"] = counts
 	_prune_ledger()
 	_session.granted = true
 	var persisted: bool = store.commit()
@@ -222,19 +257,38 @@ func _granted_today(placement_id: String) -> int:
 	var daily := _daily()
 	if str(daily.get("day", "")) != clock.local_day():
 		return 0
-	return int(daily.get("counts", {}).get(placement_id, 0))
+	var counts = daily.get("counts", {})
+	if not (counts is Dictionary):
+		return 0
+	return _num(counts.get(placement_id, 0))
+
+static func _num(v: Variant) -> int:
+	return int(v) if (v is int or v is float) else 0
+
+## Repair a store section loaded from a damaged/edited save. Corrupt ledger entries are kept
+## (conservative: they still block their context) and re-dated to today so they age out.
+func _sanitize() -> void:
+	var led := _ledger()
+	for k in led.keys():
+		var e = led[k]
+		if not (e is Dictionary) or not (e.get("day") is String) or _day_index(str(e.day)) == 0:
+			led[k] = {"placement_id": str(e.get("placement_id", "")) if e is Dictionary else "", "day": clock.local_day(), "repaired": true}
+	var daily := _daily()
+	if not (daily.get("counts") is Dictionary):
+		daily.clear()
 
 ## Keep ledger bounded. Context ids must be unique within LEDGER_KEEP_DAYS (battle uid etc).
 func _prune_ledger() -> void:
 	var cutoff := _day_index(clock.local_day()) - LEDGER_KEEP_DAYS
 	var led := _ledger()
 	for k in led.keys():
-		if _day_index(str(led[k].get("day", ""))) < cutoff:
+		var e = led[k]
+		if e is Dictionary and _day_index(str(e.get("day", ""))) < cutoff:
 			led.erase(k)
 
 static func _day_index(day: String) -> int:
 	var parts := day.split("-")
-	if parts.size() != 3:
+	if parts.size() != 3 or not parts[0].is_valid_int() or not parts[1].is_valid_int() or not parts[2].is_valid_int():
 		return 0
 	var t := Time.get_unix_time_from_datetime_dict({"year": int(parts[0]), "month": int(parts[1]), "day": int(parts[2]), "hour": 0, "minute": 0, "second": 0})
 	return int(t / 86400)
