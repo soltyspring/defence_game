@@ -112,6 +112,13 @@
     "toast.hero_dead": "영웅이 부활 중입니다",
     "toast.wave_incoming": "적 웨이브가 몰려옵니다!",
     "toast.boss_incoming": "강력한 보스가 다가옵니다!",
-    "toast.worker_max": "일꾼이 최대입니다"
+    "toast.worker_max": "일꾼이 최대입니다",
+    "ui.credits": "크레딧",
+    "ui.font_credit": "글꼴: 갈무리 © 이민서, SIL Open Font License 1.1",
+    "ui.star_win": "승리",
+    "ui.star_base_hp": "기지 체력 %d%% 이상",
+    "ui.star_base_hp_any": "기지 체력 지키기",
+    "ui.star_time": "%d초 안에 클리어",
+    "ui.star_time_any": "빠르게 클리어"
   }
 }

@@ -5,3 +5,6 @@ See docs/design/QUALITY_BAR.md. Please treat these as hypotheses to break, not f
 2. Claim 4 readability: a real rendered frame at peak crowd (r08 swarm waves), ally vs enemy distinguishable at phone size, plus a colour-blind simulation (deuteranopia/protanopia). Route defects to 03/04.
 3. When 02 publishes the R3 sims, independently re-run at least one policy/seed and confirm the reported numbers.
 4. Reward edge cases in RELEASE_DESIGN_REVIEW.md §3 (double reward on result re-entry, mid-battle retry forfeits, best_stars never decreases) once the runtime exposes them.
+
+## R2 2026-10-31 — independent retest of English card-label clipping
+01 changed en labels: "Footman"→"Troop", "Catapult"→"Siege" (see 01-director-to-04-client R4 for the width table and its limits). Please verify independently, under the SAME failing condition 04 reported: en locale, 640x360 with notches on both sides, 5 cards + 3 skills (card slot 36.67 px). Check: no ellipsis for either label; the label stays readable (not below the 10 px Latin cut); there is no new clipping elsewhere (tutorial "Siege units deal 3× damage…" banner, results upgrade rows). Also: ko/en key parity is now 116/116, and the `ui.font_credit` line must render without tofu (Galmuri9 lacks © and Hangul). Report with rendered frames, not only metrics.

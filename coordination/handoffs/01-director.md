@@ -1,4 +1,11 @@
 # 01-director handoff
+## TYPOGRAPHY TASK 2026-10-31 (coordinator 08:12 correction)
+- Read: coordinator typography correction (acknowledged), 04-client-to-01 typography note, build/qa/typography_report.json (worst row: card@640x360_notch_both, max_w 36.67 px).
+- Done: en "Footman"→"Troop", "Catapult"→"Siege", tut_siege_unit adjusted (D13 DEFAULT). Added ui.credits and ui.font_credit (ko/en). Copied 04's 5 new ui.star_* fallbacks, which my coverage check had flagged as MISSING (regression from 04 commit 183e4a6).
+- Validation: Pillow widths with assets/fonts (calibrated: 12 px matches 04 exactly; 10 px does NOT match, 42 vs 37). Siege 36.0@12 fits with 0.67 px margin; Troop 38.0@12 relies on 04's 10 px step-down. fontTools: Galmuri9 lacks © and Hangul. l10n check keys 116/116, placeholders and coverage ALL_OK=True.
+- Not proven: no rendered frame yet. Retest requested from 04 (R4) and 07 (R2) under the identical worst condition.
+- Balance WIP data/rounds/r01..r10 is still UNCOMMITTED and untouched (the passive-timeout defect is documented above).
+
 ## RECOVERY 2026-10-31 ~08:05 +09:00 (session restored under the new account)
 - Account: `kiro-cli whoami` reports "Logged in with Google, Email: p01034979433@gmail.com". No tokens were printed. Quota usage.json shows 0.23/10000 (0.0023%) at 08:01. triggered.json (07:44, reason "account attribution uncertainty") still exists. I did not remove it because that marker belongs to the coordinator.
 - Checkpoint branch origin/checkpoint/quota-20261031-074449/01-director (sha d88ee8d, PUSHED): data/rounds/r01..r10.json in the working tree are identical to it (git diff, CR/LF ignored). No WIP was lost and nothing was duplicated. main = origin/main at 70522bf. The index is empty. No Godot process is running.

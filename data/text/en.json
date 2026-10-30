@@ -6,7 +6,7 @@
   "strings": {
     "unit.worker.name": "Worker",
     "unit.worker.desc": "Raises supply income.",
-    "unit.melee_basic.name": "Footman",
+    "unit.melee_basic.name": "Troop",
     "unit.melee_basic.desc": "Cheap, quick-to-deploy basic melee soldier.",
     "unit.ranged_basic.name": "Archer",
     "unit.ranged_basic.desc": "Attacks from long range. Low HP.",
@@ -14,7 +14,7 @@
     "unit.tank.desc": "Tough and slow. Holds the front line.",
     "unit.fast.name": "Raider",
     "unit.fast.desc": "Rushes ahead and strikes rapidly.",
-    "unit.siege.name": "Catapult",
+    "unit.siege.name": "Siege",
     "unit.siege.desc": "Slow, but deals heavy damage to bases and groups.",
     "hero.hero_captain.name": "Captain",
     "hero.hero_captain.desc": "Your hero. Speeds up nearby allies' attacks.",
@@ -61,7 +61,7 @@
     "tut_skill_rally": "Use Rally to empower your army.",
     "tut_fast_unit": "Raiders quickly reach enemy ranged units.",
     "tut_boss_warning": "A powerful boss approaches!",
-    "tut_siege_unit": "Catapults deal 3× damage to the enemy base.",
+    "tut_siege_unit": "Siege units deal 3× damage to the enemy base.",
     "tut_bomber_warning": "Bombers explode on contact. Kill them from range.",
     "tut_skill_barrage": "Barrage wipes out incoming crowds at once!",
     "ui.title": "Lane Defence",
@@ -112,6 +112,13 @@
     "toast.hero_dead": "Hero is respawning",
     "toast.wave_incoming": "Enemy wave incoming!",
     "toast.boss_incoming": "A powerful boss approaches!",
-    "toast.worker_max": "Workers at maximum"
+    "toast.worker_max": "Workers at maximum",
+    "ui.credits": "Credits",
+    "ui.font_credit": "Font: Galmuri © Lee Minseo, SIL Open Font License 1.1",
+    "ui.star_win": "Win",
+    "ui.star_base_hp": "Base HP %d%%+",
+    "ui.star_base_hp_any": "Keep your base healthy",
+    "ui.star_time": "Clear within %ds",
+    "ui.star_time_any": "Clear quickly"
   }
 }

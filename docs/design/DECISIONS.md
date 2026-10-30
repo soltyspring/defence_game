@@ -16,4 +16,5 @@ A DEFAULT is never user approval.
 | D10 | 2026-10-31 | DEFAULT | Follow 02 contract: flat armor, worker cost ×1.3, data split per INTERFACES §2, meta in data/meta.json | design ★ keys requested from 02 |
 | D11 | 2026-10-31 | DEFAULT | Human pilots are problem discovery only (5 players, decision rules fixed in advance). No human win-rate targets until a ≥ 35–97 player closed test exists | RELEASE_DESIGN_REVIEW §8, QUALITY_BAR; 07 pilot logistics later |
 | D12 | 2026-10-31 | DEFAULT | Persistent currency label "골드" (ui.coins overrides 04 fallback "코인") | 04 UI text; consistent with currency.gold |
+| D13 | 2026-10-31 | DEFAULT | English card labels shortened: melee_basic "Footman"→"Troop", siege "Catapult"→"Siege" (tutorial text adjusted) | Fixes worst-layout clipping (card slot 36.67 px). Theme Q1 may rename again. 04/07 retest |
 | Q1 | 2026-10-31 | PENDING | Theme/characters: A bakery (recommended) / B forest / C lantern | blocks final art, names, title |
