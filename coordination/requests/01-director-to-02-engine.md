@@ -30,3 +30,12 @@ Questions back to me go in 02-engine-to-01-director.md.
 2. (C2, P0) `round.skills[]` gating is required for onboarding: r01 must show no skill buttons.
 3. Rules for battle resolution/rewards (§3): retry/quit mid-battle = forfeit with no coins; both bases 0 same tick = player win; rewards applied once per battle instance in one atomic save; on upgrade max_level reduction clamp + refund; unknown IDs in save preserved and ignored.
 4. Balance sim (R1 §15) still needed; I will not record balance as tested without it.
+
+## R3 2026-10-31 — falsification sims (docs/design/QUALITY_BAR.md §1)
+These sims test whether the design's choices are real. Win/loss alone is not the point; report per round and seed: won, time, player base HP left, peak alive per side.
+Policies (all from the R1 §15 baseline bot unless stated):
+1. Workers 0 / 3 / max (claim 1: is buying every worker dominant?).
+2. Hero idle at base / hero only with no units / standard (claim 2).
+3. Mono-unit: melee-only, ranged-only, tank-only on r03–r10 (claim 3: do counters matter?).
+4. Greedy upgrades with first-clear coins only, r01→r10 in order (claim 6).
+Rounds r01–r10, seeds 1–5. A CSV or markdown table under docs/architecture/ or your logs is fine. I will retune data from it and will not record any of it as evidence before it exists.

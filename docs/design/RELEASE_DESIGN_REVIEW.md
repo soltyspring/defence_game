@@ -20,7 +20,7 @@ Checked: order.json vs `index`, enemy first appearance vs `first_round`, cards/s
 | R1 | r04 introduces 3 things at once (fast unit, Rally, brute) | pacing risk | Recommendation §2.3. Not changed: not an unambiguous defect |
 
 ## 2. First session and rounds 1–3 pacing
-### 2.1 First-session flow (target ≤ 30 s from cold start to first deployed unit)
+### 2.1 First-session flow (internal target, arbitrary and unmeasured: ≤ 30 s from cold start to first deployed unit; 30 s is a design choice, not a benchmark)
 1. Launch → optional short logo → main menu with a single large "Play" button (round select hidden until r01 is cleared).
 2. r01 starts with hero, 1 card (melee), the worker button and **no skill buttons**.
 3. Tutorial banners are non-blocking and trigger on events:
@@ -32,12 +32,13 @@ Checked: order.json vs `index`, enemy first appearance vs `first_round`, cards/s
 4. First enemy contact: trickle starts at t=12, first wave at t=25. The enemy tower at 60% power gives the first push a real but non-lethal obstacle.
 5. Win → results (stars + coins) → "Next" is the primary button. The upgrade screen is introduced after r02 (one free nudge, "Buy your first upgrade", with enough coins: 240 after r02 against a 60-coin first upgrade).
 6. 2× speed and the pause menu are visible from r01, but 2× stays disabled during tutorial steps.
-### 2.2 Intended rhythm (targets, to verify by sim and playtest)
-| Round | New element | Planned decisions | Target first-try win | Target length |
+### 2.2 Intended rhythm (internal design intent, NOT measured and NOT derived from market data)
+| Round | New element | Planned decisions | Intended difficulty (hypothesis) | Intended length (hypothesis) |
 |---|---|---|---|---|
-| r01 | hero, melee, worker | invest vs spend | ≥ 95% | 90–150 s |
-| r02 | ranged, Slam; swarm | first AoE timing, front/back line | ≥ 85% | 110–170 s |
-| r03 | tank; spitter | composition (tank front), comeback spike at 60% / 25% | 60–80% (≥ 90% within 3 tries) | 140–200 s |
+| r01 | hero, melee, worker | invest vs spend | tutorial: losing should require not playing | 90–150 s |
+| r02 | ranged, Slam; swarm | first AoE timing, front/back line | most first-time players win; a loss should be traceable to a taught mechanic | 110–170 s |
+| r03 | tank; spitter | composition (tank front), comeback spike at 60% / 25% | first real check: some first-try losses intended, a retry with an upgrade should usually win | 140–200 s |
+Basis: these are the designer's intent for a tutorial → check curve. The length bands come from the par times in data and are arbitrary internal choices. The earlier version gave exact win-rate percentages (≥ 95% / ≥ 85% / 60–80%); those were removed because no data supports them and a small pilot cannot measure them (§8).
 ### 2.3 Recommendations (unapproved, reversible)
 - r04 overload: move Rally to r05 so the boss round introduces the "push window" skill and r04 only teaches fast vs brute. Cost: one `unlock_round` edit plus moving a tutorial key. I will apply it only after the sim shows r04 is harder than its target, or on user or Codex direction.
 - Show a one-line "why you lost" hint on the loss screen, chosen from data: base killed by spitters → suggest tank; by swarm → Slam; by brute → ranged.
@@ -103,20 +104,41 @@ Atlas page budget and packing are owned by 03. The figures below are design-side
 - Text: no text baked into art. Allow ~35% longer English strings. The pixel font must cover Hangul (licence checked by 03/04). Numbers formatted per locale. ko is the primary locale, en is complete (F1).
 - Audio cues (boss incoming, base under attack) always have a visual equivalent (banner, base HP bar flash).
 
-## 8. Measurable playtest acceptance criteria (targets, not results)
-Automated (deterministic sim, seeds 1–5, bot policy in 01-director-to-02-engine R1 §15):
-- A1 bot wins r01–r03 on all seeds without upgrades. r04–r10 wins with the upgrade budget of first clears only.
-- A2 round length within ±25% of `time_3` par.
-- A3 peak alive units per side ≤ 36; no projectile/fx cap overflow except queued enemies.
-- A4 zero-spend clear of chapter 1 (no ads, no purchases) with the first-clear-only upgrade budget.
-- A5 data validation (parse, references, ko/en parity) passes in CI (04 request R2).
-Human playtest (≥ 5 first-time testers, phone, landscape):
-- H1 median time from launch to first deployed unit ≤ 30 s. ≥ 90% clear r01 with no outside help.
-- H2 first-try win rates r01 ≥ 95%, r02 ≥ 85%, r03 60–80%. r03 ≥ 90% within 3 tries.
-- H3 ≥ 80% can explain what workers do after r01 (exit question).
-- H4 ≥ 70% buy at least one upgrade before starting r03.
-- H5 Slam used ≥ 1 per minute in r02 (median). Hero damage share 15–35% in r01–r03.
-- H6 loss-to-restart ≤ 3 s on the low-tier test device.
-- H7 first chapter-1 clear takes 35–60 min of total play.
-- H8 no tester reports being unable to tell allies from enemies. A colour-blind simulation screenshot review passes.
-Results go into RELEASE_READINESS_DESIGN.md as TESTED only with linked evidence.
+## 8. Acceptance checks, split by what each kind of evidence can show
+Critique of the earlier version (coordinator finding C01): it asked ≥ 5 first-time testers to hit precise rates such as 95 / 90 / 85 %. With 5 people one person moves the rate by 20 percentage points, so 90% and 85% cannot even be observed. 5/5 wins is still consistent with a true rate as low as 57% (95% Wilson interval [0.57, 1.00]). Those numbers were arbitrary and are withdrawn. The claim-by-claim evidence map is in QUALITY_BAR.md.
+
+### 8.1 Automated correctness (proves feasibility and stability, NOT fun or usability)
+Deterministic sim, seeds 1–5, bot policy in 01-director-to-02-engine R1 §15:
+- A1 Bot wins r01–r03 on all seeds without upgrades, and r04–r10 with only the upgrade budget from first clears. This shows the rounds can be won, not that they are well paced.
+- A2 Round length within ±25% of `time_3` par. Fail → retune par or waves.
+- A3 Peak alive units per side ≤ 36; no projectile/FX cap overflow except queued enemies.
+- A4 Zero-spend clear of chapter 1 with the first-clear-only budget (non-pay-to-win guarantee).
+- A5 Data validation in CI: parse, references, ko/en key and placeholder parity (04/07 request R3).
+- A6 Loss-to-restart ≤ 3 s on the low-tier test device. This is a measurement by 08/04, not a human judgement.
+
+### 8.2 Exploratory pilot: problem discovery, not rate estimation
+Setup: 5 first-time players per iteration, phone, landscape, think-aloud, no help unless stuck > 60 s. Pick participants who have **not** seen this game. Record which genre games they already know; we do not invent personas.
+What 5 players can and cannot show (binomial arithmetic, independent players assumed):
+- A problem that affects 31% of players is seen at least once with probability 0.84, so common blockers are very likely to surface. Basis: Nielsen 2000 (RESEARCH.md S7). It is a usability-problem model, so its transfer to game difficulty is an assumption.
+- A problem that affects 10% of players is seen with probability only 0.41, and one affecting 5% with 0.23. A clean pilot does **not** show that rare problems are absent.
+- No market, retention or population claim may be made from a pilot.
+Observation sheet per player (facts only): time from launch to first deploy; r01–r03 outcome and attempts; stuck points (screen, seconds, what they tried); whether they bought workers or upgrades unprompted; skill use count; verbatim answers to "What does the worker do?" and "Why did you lose/win?"; any ally/enemy confusion.
+Decision rules, set before running so results cannot be rationalised afterwards:
+| Observation in a 5-player pilot | Interpretation | Action |
+|---|---|---|
+| ≥ 2 players stuck on the same step for > 60 s, or ≥ 2 lose r01 | Likely a common onboarding defect | P1: redesign that step, then rerun a fresh 5-player pilot on the same step |
+| 1 player stuck or loses r01 | Possible issue; can't tell an individual difference from a design flaw | Log it, inspect the recording, fix if a concrete cause is visible, re-observe next pilot |
+| ≥ 2 players cannot say what workers do after r01 | Core economy is not communicated | Change the worker tutorial/feedback (income popup) and retest |
+| ≥ 3 players win r03 on the first try with no upgrade and never use tank | r03 does not test the intended counter | Strengthen the spitter/tank lesson and re-run the sim (A1 must still pass) |
+| ≥ 3 players lose r03 three times | Check is too steep, or the upgrade hint is missing | Retune or add the loss hint (B24), re-run sim and pilot |
+| Any player confuses allies and enemies | Readability defect (pillar 1) | P1 to 03: palette/silhouette fix, then a screenshot check plus the next pilot |
+| No player uses Slam in r02 | The skill is not discoverable | Change the tutorial prompt or the button's visual weight |
+A pass in a pilot means "no common blocker observed in this iteration". It never means "% of players succeed".
+
+### 8.3 Later validation (only after pilots stop finding common blockers)
+Rate estimates need far larger samples. A ±15 pp margin at 95% confidence needs about 43 players (worst case p = 0.5). ±10 pp needs about 97, ±5 pp about 385. When the true rate is near 90%, ±10 pp needs about 35.
+Source: an internal closed test (Play internal/closed track, 04) with opt-in, local-first telemetry. This depends on a privacy decision and disclosure (Q-series, 04/06), so it is BLOCKED until that decision. Only then may rate targets be set. Their basis must be stated (e.g. "r01 completion ≥ 90% because it is a tutorial") and labelled internal.
+Market claims (retention, conversion) are out of scope until a real release. Comparable-game numbers are not available from primary sources and will not be invented.
+
+### 8.4 Reporting rule
+A result goes into RELEASE_READINESS_DESIGN.md as TESTED only with linked evidence (sim log, observation sheet, recording note). Pilot results are written as counts ("2 of 5 got stuck at worker purchase"), never as percentages.

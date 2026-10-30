@@ -21,3 +21,10 @@
 - Audit (actual PowerShell check): order/index, enemy first appearance, unlocks, tutorials, upgrades all pass. Fixed F1 en.json 21→60/60 keys; F2 ROUNDS.md worker timing. Added source-of-truth rule to DATA_SCHEMA.
 - Requests: 02 R2 (reward semantics, skill gating, resolution rules), 04 R2 (executable tests).
 - 02 balance sim not received; balance remains UNTESTED.
+
+## 2026-10-31 — coordinator findings C01–C03
+- C01: rewrote RELEASE_DESIGN_REVIEW §2.2/§8 and ROUNDS.md assumption 1. Precise human win-rate targets withdrawn. The pilot is now problem discovery with pre-set decision rules; later validation is sized by computed margins (Python: Wilson CIs for n=5, sample sizes 43/97/385).
+- C02: new QUALITY_BAR.md (10 claims: evidence class, counterargument, smallest test, decision rule). RESEARCH.md rebuilt with 10 primary sources (store listings, developer interview, NN/g, AdMob policy, Android docs) plus observation/inference split. No hands-on play claimed.
+- C03: 49 UI/toast keys added to ko/en. Checks: key parity 109/109, placeholder parity, coverage of the 04 request + FALLBACK_KO + src literals → ALL_OK=True.
+- Also fixed stale doc values: GDD hero armor 15→flat 3, ROUNDS tank armor 30→3 and enemy cap 40→36, ECONOMY "60% of tracks" → 62% of upgrade spend.
+- Analytic finding (not engine evidence): in a simplified r01 model the hero alone dies at ~75 s with the enemy base at 375/800. Worker paybacks are 27–99 s for workers 1–6, so buying all workers may be dominant. Both are routed to the 02 R3 sim.

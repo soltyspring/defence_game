@@ -20,7 +20,7 @@ R2: first swarm wave at t=20 bunches 3 swarms; Slam unlocked with 30 start energ
 R3: spitter range 100 < ranged 110 so our archers out-range them; tank absorbs volleys. Base triggers at 60% and 25% create a comeback spike.
 
 ## Balance assumptions to verify (02 headless sim requested)
-1. R1 win rate ~100% with any reasonable play; R2 ≥ 90%; R3 70–85% first try without upgrades, ~95% with 2 upgrades.
+1. Bot feasibility (sim, not humans): bot wins r01–r03 on seeds 1–5 without upgrades; r03 bot margin (player base HP left) clearly lower than r01. Human difficulty is judged only by the pilot decision rules in RELEASE_DESIGN_REVIEW.md §8.2; no human win-rate targets are set until §8.3 validation exists.
 2. Round durations within ±25% of par for a competent bot (deploy cheapest affordable + 3 workers + Slam on cooldown).
-3. Enemy alive count stays under cap 40 (queue policy otherwise); R8/R9 swarm floods are the stress cases.
-Baseline unit economy (L1): melee 40 DPS/100 supply, fast 36, ranged 29, siege 17 (+splash, ×3 vs base), tank 600 HP/100 supply + armor 30.
+3. Enemy alive count stays under cap 36 (ENGINE.md §7; over-cap enemies wait); R8/R9 swarm floods are the stress cases.
+Baseline unit economy (L1): melee 40 DPS/100 supply, fast 36, ranged 29, siege 17 (+splash, ×3 vs base), tank 600 HP/100 supply + flat armor 3.

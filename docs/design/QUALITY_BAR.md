@@ -1,0 +1,36 @@
+# Quality bar — experience claims vs evidence (01-director)
+Created 2026-10-31 in response to coordinator finding C02. Theme Q1 is unanswered and every theme stays open. Method: for each claim that would make or break this game, record the evidence we actually have, the strongest argument against it, the smallest real test, and a decision rule fixed in advance. This is an internal, unvalidated rubric. There is no contest, external score or juror.
+
+## 0. Evidence classes (never mix them)
+| Class | What it can prove | What it can NOT prove | Current state |
+|---|---|---|---|
+| C: correctness (parse, references, sim, unit tests) | data is consistent; a round is winnable by a scripted policy; caps hold | fun, strategy depth, usability, retention | data parse/reference/ko-en parity pass (PROGRESS.md). Engine sim not received from 02 |
+| A: analytic estimate (my arithmetic on data, simplified models) | where to look first; obvious dominant strategies | real behaviour (models ignore engine details) | §1 rows marked "analytic" |
+| O: human observation (pilot, think-aloud, recordings) | that a common problem exists; what players do and say | population rates, market preference | **none yet: zero players have played** |
+| M: market hypothesis | nothing until a release or closed test | — | all of §1 rows 8–10 |
+| U: untested | — | — | everything not listed with evidence |
+A green CI, a test count or a successful push is class C at most.
+
+## 1. Critical experience claims
+| # | Claim | Actual evidence now | Strongest counterargument | Smallest real test | Decision rule (fixed in advance) |
+|---|---|---|---|---|---|
+| 1 | Worker purchase is a real invest-vs-spend decision | A: payback = cost / 1.5 per s gives 27, 35, 45, 59, 76, 99 s for workers 1–6 (cost 40·1.3ⁿ). Round pars are 150–330 s | Workers 1–5 pay back well inside every round, so "buy all workers immediately" is probably dominant and the only choice left is timing. That is a solved decision, not a strategic one | 02 sim: same bot with worker policies 0 / 3 / max on r01–r10, seeds 1–5. Compare win and base-HP margin | If max-workers has the best margin in ≥ 9 of 10 rounds, the decision is fake. Then raise growth to ×1.45 or make workers raidable (B20) and re-run. If 0 workers wins comfortably anywhere after r01, income is irrelevant: raise enemy pressure |
+| 2 | Direct hero control matters but does not carry the round | A: simplified r01 model (hero alone, no units, no respawn, enemy tower 0.6×). The hero dies at ~75 s with the enemy base at 375/800. This is not the engine | (a) With respawn (8 s + 2 s per death) the hero may grind the base down alone, making units optional. (b) The opposite: hero damage is too small to matter, so control is decorative | 02 sim: policies "hero idle at base" vs "hero only, no units" vs the standard bot on r01–r05 | Hero-only win on any round ≥ r02 → nerf hero or buff the enemy tower. Hero-idle margin within 10% of standard bot → hero irrelevant: raise aura or Slam value |
+| 3 | Enemy types demand counters (spitter→tank/ranged, swarm→Slam/siege, brute→ranged, bomber→ranged/fast) | A: melee has the best DPS per supply (40/100); flat armor is small (brute 5) | Spamming the cheapest efficient unit may beat every round, so the roster and counters are cosmetic | 02 sim: mono-unit policies (melee-only, ranged-only, tank-only) on r03–r10 | A mono policy that wins every round from r04 on all seeds → counters fail: retune armor/cost and re-run. Target state: no single mono policy wins all of r04–r10 |
+| 4 | Outcomes are readable on a phone (who is winning, what killed me) | none (O and visual review not done by 01) | Pixel sprites at 24–32 px on a 5" screen and ally/enemy colour coding may blur in crowds of 20–36 units | 03/04/07: real-device screenshot at the r08 peak crowd, plus a colour-blind simulation; then the pilot "ally/enemy confusion" rule | Any confusion observed → P1 to 03 (silhouette/palette). Recheck with a new screenshot and the next pilot |
+| 5 | A first-time player learns the loop without help | none | Two resources, workers, cards and a hero at once is a lot; banners may be ignored | 5-player exploratory pilot (RELEASE_DESIGN_REVIEW.md §8.2) | Rules in §8.2 table, e.g. ≥ 2 of 5 stuck on the same step for > 60 s → P1 redesign + fresh pilot |
+| 6 | Progression is fair: chapter 1 can be cleared with zero spending | C: data-level arithmetic only (first-clear + 3-star coins 3,920 vs total upgrade cost 6,280). Monetization disabled | Enemy scaling to +55% by r10 vs a +32% max unit upgrade may force grinding that feels like a paywall once ads/IAP exist | 02 sim A4: bot buys upgrades greedily with first-clear coins only | Any round unwinnable on all seeds → retune that round. Never fix it by adding a purchase |
+| 7 | Sessions are short (2–5 min) and retry is instant | A: pars 150–330 s are arbitrary internal choices | Swarm-heavy late rounds may stall into 6+ minute stalemates | 02 sim A2 durations; 08 loss-to-restart timing on a device | Sim length > par +25% → shorten waves or base HP. Restart > 3 s on the low tier → P1 to 02/04 |
+| 8 | Players would choose and replay THIS game over existing lane battlers | M: none. Observation (RESEARCH.md S2/S3): leaders list "hundreds of stages" (Battle Cats) and many modes plus weekly missions (Stick War: Legacy) | Ten rounds and one hero cannot compete on volume. An original theme alone does not create preference | Not testable before a playable build. Later: closed test with return-visit telemetry (blocked by privacy decision) | Until tested, claim no superiority. Candidate differentiators remain hypotheses: offline play (Battle Cats' listing says it needs a network: observed), no gacha, short sessions, theme pending Q1 |
+| 9 | Retention without stamina works | M: none | Without a session gate or live ops, players may finish 10 rounds in about an hour and leave | Closed test (later). Before that, design only replay challenges (B23) | No retention claims in release notes or the store until closed-test data exists |
+| 10 | Rewarded ads (if chosen) are not pay-to-win and are policy-compliant | Observation: AdMob rewarded-ads policy (S8) requires opt-in, prior disclosure, skippable ads and delivery of the promised reward | A rescue ad still sells survival, and players may perceive it as pay-to-win | Only after Q2. Pilot question: "Did anything feel like you had to watch or pay?" | Any 2 of 5 say yes → remove or weaken that placement |
+
+## 2. What would make me reject this game today (hostile summary)
+1. No human has played it. Every fun or usability statement is intent, not evidence.
+2. Claims 1 and 3 are at risk from simple arithmetic: worker buying looks dominant, and melee looks over-efficient. Both may reduce strategy to "buy workers, spam the cheap unit".
+3. The content volume is tiny next to genre leaders. There is no evidenced reason to prefer it yet.
+These stay open until the tests in §1 report. No average of other strengths closes them.
+
+## 3. Requests issued
+- 02 (01-director-to-02-engine R3): sim policies for claims 1, 2, 3, 6, 7.
+- 04/07 (01-director-to-04-client R3, 01-director-to-07-qa R1): l10n key/placeholder parity regression; screenshot and colour-blind check for claim 4; pilot logistics later.

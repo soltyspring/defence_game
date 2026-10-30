@@ -28,3 +28,6 @@ Priority P0 (slice) / P1 (chapter 1) / P2 (production) / P3 (post-launch). Owner
 | B23 | P1 | Replay challenge modifiers (data-only content) | 01/02 | proposal |
 | B24 | P1 | Loss-screen hint by cause of base death | 01/04 | proposal |
 | B25 | P1 | Consider moving Rally r04→r05 (pending sim) | 01 | pending sim |
+| B26 | P0 | Falsification sims for QUALITY_BAR claims 1/2/3/6/7 | 02 | requested R3 |
+| B27 | P1 | Retune worker growth / unit efficiency if claims 1 or 3 fail | 01 | blocked on B26 |
+| B28 | P1 | First 5-player exploratory pilot (§8.2 sheet + rules) | 01/07/04 | blocked on playable phone build |

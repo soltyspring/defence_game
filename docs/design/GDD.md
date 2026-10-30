@@ -12,7 +12,7 @@ Role mapping for A (illustrative only until answered): worker=little baker, mele
 ## 2. Design pillars
 1. Readable in one glance on a 5" phone: max ~6 unit silhouettes on screen types, strong ally/enemy colour split, big HP bars on bases.
 2. One decision every 2–4 seconds: invest (worker) vs spend (unit) vs save (skill/expensive unit).
-3. Hero matters but does not carry: hero ~25% of early damage, falls to ~15% later; units win the round.
+3. Hero matters but does not carry (hypothesis H-HERO in QUALITY_BAR.md, shares are intent not measurement): hero ~25% of early damage, falls to ~15% later; units win the round.
 4. Short sessions: 2–5 min rounds, instant retry, play one-handed-ish with thumbs.
 5. Fair progression: every round beatable with upgrades purchasable from first clears of previous rounds, no payment required.
 
@@ -20,7 +20,7 @@ Role mapping for A (illustrative only until answered): worker=little baker, mele
 See IMPLEMENTATION_BRIEF.md §2. Moment-to-moment decision tension: worker payback is 27 s for the first worker, 45 s for the third, 99 s for the sixth, so late workers are a gamble against round length.
 
 ## 4. Hero
-`hero_captain`: sturdy melee (600 HP, 31 DPS, armor 15), speed 70 (faster than all ally units except fast). Attacks while moving so kiting is possible. Aura +10% attack speed to allies within 80 px rewards fighting with the army instead of solo pushing. Death → respawn at base (8 s +2 s per death, max 20 s).
+`hero_captain`: sturdy melee (600 HP, 31 DPS, flat armor 3), speed 70 (faster than all ally units except fast). Attacks while moving so kiting is possible. Aura +10% attack speed to allies within 80 px rewards fighting with the army instead of solo pushing. Death → respawn at base (8 s +2 s per death, max 20 s).
 Skills: Slam (R2, cheap crowd control, 40 energy/8 s), Rally (R4, push window, 60/20 s), Barrage (R8, long-range AoE that rewards positioning ahead of the army, 80/30 s). Energy cap 100 forces a choice between Slam spam and saving for Barrage.
 Future heroes (backlog): ranged support hero, summoner hero — heroes.json is already an array.
 
