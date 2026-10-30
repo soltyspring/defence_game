@@ -29,6 +29,8 @@ func _cycle_once() -> void:
 	a.free()
 
 var _frame := 0
+var _t_prep := 0
+const QUIT_WAIT_MS := 300
 var _o0 := 0.0
 var _b0 := 0
 var _fx0 := 0
@@ -60,7 +62,14 @@ func _process(_d: float) -> bool:
 		rep.music_fx = [_mfx0, AudioServer.get_bus_effect_count(AudioServer.get_bus_index(&"Music"))]
 		rep.pass = rep.object_delta <= 0 and _b0 == AudioServer.bus_count and _fx0 == rep.master_fx[1] and _mfx0 == rep.music_fx[1]
 	elif mode == "audio":
-		_cycle_once()
+		# single create/use/free, then idle frames before quit (AudioServer releases playbacks per frame)
+		if _frame == 1:
+			_cycle_once()
+			return false
+		if _frame == 2:
+			_t_prep = Time.get_ticks_msec()
+		if _frame < 3 or Time.get_ticks_msec() - _t_prep < QUIT_WAIT_MS:
+			return false
 	elif mode == "quit_direct" or mode == "quit_prepared":
 		# autoload Audio playing battle music, then quit like App --quit-after does
 		var au := root.get_node_or_null("Audio")
@@ -72,9 +81,13 @@ func _process(_d: float) -> bool:
 			return false
 		elif _frame < 10:
 			return false
-		elif mode == "quit_prepared" and _frame == 10:
-			au.prepare_quit()
-			return false
+		elif mode == "quit_prepared":
+			if _frame == 10:
+				au.prepare_quit()
+				_t_prep = Time.get_ticks_msec()
+				return false
+			if Time.get_ticks_msec() - _t_prep < QUIT_WAIT_MS:
+				return false   # wall-clock wait: the mixer thread releases stopped playbacks
 	_done = true
 	print("LEAK_PROBE ", JSON.stringify(rep))
 	quit(0 if rep.get("pass", true) else 1)

@@ -18,11 +18,12 @@ const CATEGORIES := {
 	"base": [&"hit_base"],
 	"gold": [&"gold_tick"],
 	"hero": [&"hero_death", &"hero_respawn"],
+	"alert": [&"wave_incoming", &"boss_incoming"],
 }
 
 var audio: Node
 var ev: Node
-var derived := {"ui": true, "command": true, "death": true, "base": true, "gold": true, "hero": true}
+var derived := {"ui": true, "command": true, "death": true, "base": true, "gold": true, "hero": true, "alert": true}
 var screen: StringName = &""
 var in_battle := false
 var _pending: Array = []      # [cue, category]
@@ -108,7 +109,8 @@ func _queue(cue: StringName, cat: String) -> void:
 func _flush() -> void:
 	_flush_queued = false
 	if not _pending_cancel:
-		for p in _pending: audio.play(p[0])
+		for p in _pending:
+			if derived[p[1]]: audio.play(p[0])
 	_pending.clear()
 	_pending_cancel = false
 
@@ -118,8 +120,10 @@ func _on_toast(key: String, _args: Dictionary) -> void:
 		_ui(&"ui_error")
 		return
 	match key:
-		"wave_incoming": audio.play(&"wave_incoming")
-		"boss_incoming": audio.play(&"boss_incoming")
+		"wave_incoming":
+			if derived.alert: audio.play(&"wave_incoming")
+		"boss_incoming":
+			if derived.alert: audio.play(&"boss_incoming")
 		"counterattack": audio.play(&"wave_incoming", {"pitch": 0.85})
 		"hero_dead":
 			if derived.hero: audio.play(&"hero_death")

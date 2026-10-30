@@ -1,5 +1,5 @@
 # AUDIO_CONTRACT.md — audio event contract, mixer and budgets (owner: 05-audio)
-Version 1.0 (2026-10-31). Godot 4.7.2 / GDScript. Additive changes only without a version bump.
+Version 1.1 (2026-10-31; v1.1 = off-screen policy, alert category, prepare_quit). Godot 4.7.2 / GDScript. Additive changes only without a version bump.
 Reads: docs/contracts/ENGINE.md v1.0, INTERFACES.md v1.0. Nothing here changes 02/04 files; integration is requested in `coordination/requests/05-audio-to-*.md`.
 
 ## 1. Files
@@ -36,7 +36,7 @@ Anyone (02 gameplay, 04 UI) may emit. Audio is the only listener. `cue` is eithe
 | `&"skill"` | `skill`: skill id | by `Content.skills[id].kind` via manifest `skill_kind_cue` (`aoe_damage`→`skill_slam`, `rally`→`skill_rally`, `meteor`→`skill_barrage`, `heal_allies`→`skill_heal`, `summon`/unknown→`skill_cast`) |
 | `&"explosion"` | `x` | `explosion` |
 
-Optional params for every cue: `x` (world px; cues outside the camera view are attenuated up to −9 dB, low-priority ones far off-screen are skipped), `vol_db` (additive), `pitch` (multiplier).
+Optional params for every cue: `x` (world px), `vol_db` (additive), `pitch` (multiplier). Off-screen policy (v1.1): 0 dB inside the camera view, linear down to −9 dB at half a screen past the edge, −9 dB beyond; only cues with priority < 5 more than 2 view widths away are dropped. v1.0 dropped everything past ~0.7 screens; in a real r02 battle that silenced all 30 combat cues because the frontline is usually off-screen while the camera follows the hero (fixed and retested: 22 audible, 0 dropped).
 
 Emission volume: the manager rate-limits each cue (`gap`) and caps instances (`max`), so 02 can emit per hit. To keep `sim.events` allocations low, 02 may collapse to at most one `hit`/`shoot` per kind per frame.
 
@@ -55,7 +55,7 @@ Emission volume: the manager rate-limits each cue (`gap`) and caps instances (`m
 | `hud_snapshot` deltas (10 Hz) | base HP drop → `hit_base`; army count drop → `death_enemy`/`death_ally`; bounty gold → `gold_tick`; hero alive false→true → `hero_respawn` |
 | `cmd_set_setting` / `progress_changed` keys `sfx`, `music`, optional `master` | bus volumes |
 
-No double playback after integration: each derived category (`ui`, `command`, `death`, `base`, `gold`, `hero`) switches itself off the first time a direct `Events.sfx` cue of that category arrives.
+No double playback after integration: each derived category (`ui`, `command`, `death`, `base`, `gold`, `hero`, `alert` = wave/boss) switches itself off the first time a direct `Events.sfx` cue of that category arrives. Queued optimistic command cues re-check their category at flush time, so a direct cue that lands in the same frame does not double up.
 
 ### 3.3 Public API of `Audio` (for 02/04/07/08; prefer `Events.sfx` from UI)
 `play(cue, params={}) -> bool`, `play_music(id, fade=0.8)`, `stop_music(fade=0.8)`, `current_music()`, `duck(db, hold)`, `set_volume(kind, value)`, `get_volume(kind)`, `apply_settings(dict)`, `set_battle_paused(p)`, `stop_all_sfx()`, `snapshot() -> Dictionary` (played/dropped/stolen counters, active voices, peak voices, resident SFX bytes, load errors), signal `cue_played(cue, voice)`.
@@ -85,6 +85,7 @@ Style is theme-neutral (chip/arcade timbres). When Q1 (theme) is decided, timbre
 APK impact: imported QOA SFX ≈ 0.16 MB + OGG ≈ 0.56 MB.
 
 ## 7. Mobile lifecycle
+- Quit: call `Audio.prepare_quit()` and quit at least ~0.3 s later (wall clock). AudioServer frees stopped playbacks on its mix thread; quitting while music plays otherwise reports AudioStreamPlayback*/Ogg objects "leaked at exit" (exit-only, OS reclaims memory). Measured: 5/5 runs clean with prepare+wait, 5/5 runs leak 4–6 objects without it. Requested from 02 (A7).
 - `NOTIFICATION_APPLICATION_PAUSED` or `FOCUS_OUT` → Master muted; `RESUMED` / `FOCUS_IN` → restored. Desktop focus-out mute can be disabled with `mute_on_focus_loss = false`.
 - The engine already auto-pauses the battle on app pause (ENGINE.md §7); audio follows `battle_paused`.
 - UNTESTED on device: Android audio focus (calls, other media apps), Bluetooth latency, output latency, speaker loudness. Device evidence is required before release claims.

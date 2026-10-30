@@ -20,6 +20,7 @@ const DUCK_RELEASE_DB_S := 14.0
 const PAUSE_MUSIC_DB := -6.0
 const PAUSE_LOWPASS_HZ := 900.0
 const OFFSCREEN_MAX_ATTEN_DB := 9.0
+const OFFSCREEN_DROP_SCREENS := 2.0
 
 signal cue_played(cue: StringName, voice: int)
 
@@ -60,7 +61,7 @@ var _bus_idx := {}
 var _lowpass_slot := -1
 var bridge: Node = null
 
-var stats := {"played": 0, "dropped_gap": 0, "dropped_max": 0, "dropped_voices": 0, "dropped_offscreen": 0,
+var stats := {"played": 0, "dropped_gap": 0, "dropped_max": 0, "dropped_voices": 0, "dropped_offscreen": 0, "attenuated_offscreen": 0,
 	"stolen": 0, "missing": 0, "peak_voices": 0, "load_ms": 0, "resident_sfx_bytes": 0}
 
 func _ready() -> void:
@@ -249,9 +250,10 @@ func play(cue: StringName, params: Dictionary = {}) -> bool:
 	var vol := float(c.get("vol_db", 0.0)) + float(params.get("vol_db", 0.0))
 	if params.has("x"):
 		var att := _offscreen_atten(float(params.x))
-		if att < -OFFSCREEN_MAX_ATTEN_DB and prio < 5:
+		if att <= -80.0 and prio < 5:
 			stats.dropped_offscreen += 1
 			return false
+		if att < 0.0: stats.attenuated_offscreen += 1
 		vol += maxf(att, -OFFSCREEN_MAX_ATTEN_DB)
 	var p: AudioStreamPlayer
 	if bus == "Music":
@@ -301,13 +303,18 @@ func _acquire(pool: Array[AudioStreamPlayer], prio: int) -> AudioStreamPlayer:
 		return victim
 	return null
 
+## Off-screen policy: 0 dB inside the view; linear to -9 dB at half a screen beyond the edge, -9 dB
+## further out (the frontline is often off-screen while the camera follows the hero, and must stay
+## audible); returns -80 (drop, low priority only) beyond OFFSCREEN_DROP_SCREENS view widths.
 func _offscreen_atten(x: float) -> float:
 	var vp := get_viewport()
 	var cam := vp.get_camera_2d() if vp else null
 	if cam == null: return 0.0
 	var half := vp.get_visible_rect().size.x * 0.5
 	var d := absf(x - cam.global_position.x) - half
-	return 0.0 if d <= 0.0 else -OFFSCREEN_MAX_ATTEN_DB * (d / half) * 1.5
+	if d <= 0.0: return 0.0
+	if d > OFFSCREEN_DROP_SCREENS * half * 2.0: return -80.0
+	return -OFFSCREEN_MAX_ATTEN_DB * minf(1.0, d / half)
 
 func stop_all_sfx() -> void:
 	for p in _sfx + _ui:
@@ -326,15 +333,17 @@ func _exit_tree() -> void:
 	_music_id = &""
 	_music_fade = [{}, {}]
 
-## Call before SceneTree.quit() and quit one frame later: AudioServer releases stopped playbacks
-## during its per-frame update, which no longer runs once the tree is finalised. Without this,
+## Call before SceneTree.quit() and quit >= ~0.3 s later (wall clock, not frames): AudioServer releases
+## stopped playbacks asynchronously on its mix thread; one headless frame can be < 1 ms. Without this,
 ## quitting while music plays reports AudioStreamPlayback*/AudioStreamOggVorbis "leaked at exit"
 ## (exit-only; process memory is reclaimed by the OS). Reproduced by leak_probe.gd --mode=quit_*.
 func prepare_quit() -> void:
+	enabled = false   # refuse cues/music queued by the last frames before quit
 	_exit_tree()
 
 # ---------------------------------------------------------------- music
 func play_music(id: StringName, fade := 0.8) -> void:
+	if not enabled: return
 	if id == _music_id and _music_cur >= 0 and _music[_music_cur].playing: return
 	var d: Dictionary = music_defs.get(id, {})
 	if d.is_empty():

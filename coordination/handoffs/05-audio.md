@@ -1,47 +1,52 @@
-# 05-audio handoff — ACCOUNT-CHANGE CHECKPOINT
-Updated: 2026-10-31 (M3 interrupted by user stop request for account change)
-Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635 (from KIRO_SESSION_ID). Live PID hint from coordinator: 26668.
-Model: claude-opus-5.5, trust-all. Model/account never changed by me. STOPPED: waiting for the user to log in to a new account. No new work started after the stop request.
+# 05-audio handoff
+Updated: 2026-10-31 ~08:55 (M3 integration + leak regression: validated, committing)
+Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635 (resumed on the new account; same session, no window restart, no duplicate worker). Model claude-opus-5.5, trust-all.
+Quota at resume: 434.55/10000 (4.3 %). The "QUOTA CHECKPOINT" sections in coordinator-to-05-audio.md are HISTORICAL (previous account), per the user's 08:3x instruction.
 
-## Ownership (unchanged)
-assets/audio/**, src/audio/**, tools/audio/**, docs/audio/**, coordination/status|handoffs/05-audio.md, coordination/requests/05-audio-to-*.md. Engine/core/UI/project.godot not edited.
+## Ownership
+assets/audio/**, src/audio/**, tools/audio/**, docs/audio/**, own status/handoff, requests 05-audio-to-*. No engine/core/UI/project.godot edits.
 
-## User decisions
-None made for audio. DECISIONS.md D1–D12 DEFAULT, Q1 theme PENDING (01 owns). Nothing here is user-approved.
+## Read receipts / last processed
+handoff (checkpoint c79add3), coordinator-to-05-audio.md (C08 item, quota checkpoint = historical), QUOTA_POLICY.md, DECISIONS.md D1–D12 + Q1 PENDING (theme). 02 commit e9dfaa4 (A2 signal sfx + A3 battle cues) and the project.godot Audio autoload (A1), both read only.
 
-## Current task (M3, unfinished)
-Real-project integration check of the audio manager and event bridge in an isolated sandbox, plus finding the cause of the exit leak and fixing it.
+## M3 result (actually run: `pwsh tools/audio/run_godot_checks.ps1 -Integration -BattleSeconds 75` → GODOT AUDIO CHECKS PASS)
+The sandbox is a temp copy with its own user dir (`defence_audio_sandbox`), so the shared save is never touched. It uses the real project.godot, which now includes the 02 Audio autoload, plus a sandbox-only AudioProbe autoload.
+- Import OK; 5 audio scripts parse; AUDIO SELFTEST PASS with the real autoload (`audio_autoload: true`), 0 exit leaks.
+- 02 global selftest: exit 0, 65/65 scripts, audio failures 0. C08 ("audio_manager.gd failed to compile") is NOT reproduced at HEAD.
+- Real battle (r02, 75 s, real Events commands, HUD-style decisions):
+  - 7 battle builds (retry teardown plus 10 rapid menu↔battle switches); audio child count constant at 19.
+  - Command cues match the engine exactly: deploy 13 = sim deployed 13; skill cues 5 = skills_cast 5; worker 1 = 1.
+  - 22 combat cues from 02's `Events.sfx`; 0 same-frame duplicates; peak SFX voices 3/12; music players ≤ 2 during crossfade and 1 after settling.
+  - Pause blocks SFX and allows UI; focus out mutes Master, focus in unmutes, and the battle stays paused until resume; load errors 0.
+  - Derived categories switched off automatically once direct cues arrived (command, death, alert). The ui, base, gold and hero categories are still derived.
+- Leak regression (`leak_probe.gd`):
+  - empty 0, audio 0, cycle 0 (25 create/free, object delta −9/−10, bus and effect counts constant), quit_prepared 0 (5/5 runs).
+  - quit_direct = 4–6 objects as the expected control: quitting while music plays without `prepare_quit` (02 A7).
+  - In the battle run, audio-class leaks = 0. The remaining 4–6 GDScript/RefCounted objects reproduce WITHOUT the Audio autoload, using only deploys; reported to 02 as A8.
 
-## Results so far (actually run before the stop)
-1. **Sandbox isolation bug found and fixed in the script.** M1/M2 runs used the same project name, so the sandbox's Save wrote the SHARED `%APPDATA%/Godot/app_userdata/Lane Defence/save.json`. The end values were sfx 1.0 / music 0.8 (defaults), but any prior user values would have been reset. The new `run_godot_checks.ps1` gives the copy a custom user dir `defence_audio_sandbox`.
-2. **C08 coordinator report "script failed to compile: res://src/audio/audio_manager.gd".** Not reproduced. 02's global selftest run in the sandbox with the A1 autoload line injected: exit 0, scripts_ok 59/59, audio_failures 0. The shared report at 07:01 also shows 0 failures. The original was most likely an in-progress write.
-3. **Leak traced to its source.** The exit leak came from audio players freed or quit while still playing (`AudioStreamPlayback*`, `OggPacketSequence*`, streams).
-   - `leak_probe --mode=cycle` before the fix: 65 leaked objects + 6 resources.
-   - After the fix (`_exit_tree` stops every player and clears its stream): 0 leaks, object delta −10 over 25 create/use/free cycles, bus and effect counts constant.
-   - Remaining leak case: quitting while music plays (AudioServer frees playbacks only during its per-frame update). `quit_direct`: 4 objects + 2 resources leaked. `quit_prepared` (new `Audio.prepare_quit()`, then quit one frame later): 0. A quit-path request to 02 still needs to be written.
-4. **Bounded real headless battle** in the sandbox (r02, 75 s, A1 autoload injected, AudioProbe driving the real `Events` commands):
-   - Cues matched engine truth: deploy cues 11 = sim deployed 11; skill_slam 3 = skills_cast 3; ui_error 6 = 5 failed taps + 1 round_locked.
-   - Same-frame duplicate cues: 0. Peak SFX voices 2, UI 2. Music players ≤ 2 during crossfade and 1 after settling. Audio child count constant at 19 across 6 battle builds and 10 rapid menu↔battle switches.
-   - Pause: SFX refused, UI allowed, resume worked. Focus out muted Master; focus in unmuted, battle stayed paused, explicit resume worked. Load errors 0.
-   - Known gaps: the retry teardown did NOT happen (cmd_retry on a locked r02 → round_locked toast). The probe now unlocks r01–r03 in the sandbox save, but that has not been rerun. No hit_base, hero or worker cues were exercised. `events_has_sfx`=false (02's A2 is not done).
+## Defects found and fixed this milestone (same scenario retested)
+1. **Audio objects leaked at teardown**: players freed or quit while playing kept AudioStreamPlayback* alive. `_exit_tree` now stops every player and clears its stream; added `prepare_quit()` (disables new cues and music). The wait before quit must be wall-clock (~0.3 s), because frame-count waits were flaky.
+2. **Off-screen culling silenced the whole frontline (found in the real battle)**: v1.0 dropped 30/30 combat cues because the camera follows the hero. The new policy attenuates linearly to −9 dB and drops only priority < 5 cues more than 2 screens away. Retest: 22 audible, 0 dropped, 22 attenuated.
+3. **Bridge double-play risk**: added an `alert` category (wave/boss), since 02 now emits these directly as well as toasts. Queued optimistic command cues re-check their category at flush time.
+4. **Probe self-leaks**: the probe held a BattleSim reference; it is now released when the report is written.
+5. **Runner**: a battle that never starts is now INVALID (during 02's mid-edit, compile errors had produced a fake pass). New gates: deploy cue count = engine deployed; combat with kills must produce at least one combat cue; voice and player bounds.
 
-## Files
-- SAFE / validated, committed in this checkpoint: `src/audio/audio_manager.gd` (teardown fix + `prepare_quit()`; validated by the cycle / quit_prepared / quit_direct probes and the earlier integration run), `tools/audio/leak_probe.gd` (+ `.uid`).
-- **WIP, NOT committed** (last edits unverified because the run was interrupted): `tools/audio/run_godot_checks.ps1` (the leak-gate and battle-leak edits may be half-applied; `quit_prepared` appears once), `tools/audio/integration_probe.gd` (+ `.uid`) (method callbacks, sandbox unlock, kills/hero truth, report + `prepare_quit` at quit-after − 0.5 s). Leave them for the coordinator WIP checkpoint branch.
-- Untracked, not mine to decide yet: `docs/audio/previews/*.png.import` (editor-generated, harmless; commit with the next audio commit). `tools/audio/_render/` is never committed.
-
-## Exact next steps after login
-1. Inspect the diff of `tools/audio/run_godot_checks.ps1`, then run `pwsh -NoProfile -File tools/audio/run_godot_checks.ps1 -Integration -BattleSeconds 75`. Expect PASS with 0 exit leaks for empty/audio/cycle/quit_prepared/battle, and `quit_direct` > 0 (informational).
-2. Check the report `tools/audio/_render/integration/audio_integration_report.json`: retry teardown happened (battles_started ≥ 7, children constant), engine_truth kills vs death_enemy cues (one cue per 10 Hz snapshot, so the expected ratio is ≤ 1), hero_deaths vs hero_death cues.
-3. Commit the probe + runner + preview `.import` files via Publish-Task (Test/Fix).
-4. Write a request to 02: A7, in the App `--quit-after` / back-to-quit path, call `Audio.prepare_quit()` if `/root/Audio` exists, then quit on the next frame. Repeat A1–A3 (still not done: no `Audio` autoload, no `Events.sfx`).
-5. Update status and this handoff with SHAs, and record the strongest remaining reasons a reviewer could reject the audio.
-
-## Strongest remaining reasons a reviewer could reject the audio (honest)
-- The real project still has no `Audio` autoload (02 A1), so the shipped game currently plays no sound. Integration is proven only in the sandbox with the injected line.
-- No human has listened to any sound. Android device playback, audio focus and latency are untested.
-- Combat hit sounds and the hero-respawn cue only come from 10 Hz HUD-snapshot inference until 02 adds `Events.sfx`.
+## Files in this milestone
+src/audio/audio_manager.gd, src/audio/audio_event_bridge.gd, tools/audio/{run_godot_checks.ps1, integration_probe.gd(+.uid), leak_probe.gd, audio_selftest.gd}, docs/audio/AUDIO_CONTRACT.md (v1.1), docs/audio/previews/*.png.import, coordination/requests/05-audio-to-02-engine.md (status + A7 quit path + A8 engine leak), this handoff, status. `tools/audio/_render/` is never committed (local reports: `_render/integration/*.json|log`). Audio assets are unchanged (validate.py PASS).
 
 ## Git
-- Earlier: 67de63b, 067c594, ba38f2d, 5e21a23, all PUSHED origin/main.
-- Checkpoint commit: see the status file / push result below. If the push failed, the state is PUSH_PENDING.
+- Earlier: 67de63b, 067c594, ba38f2d, 5e21a23, c79add3, all PUSHED.
+- M3 commit: SHA recorded in the status file after push.
+
+## Strongest remaining reasons a reviewer could reject the audio
+- Nobody has listened. Audible quality, fatigue and mix balance against real music are unjudged; the agent cannot listen.
+- No Android device evidence: playback, audio focus (calls, other apps), output latency, speaker loudness. Desktop headless uses the Dummy driver.
+- Quit-path leak until 02 applies A7 (exit-only).
+- 04 C1 (volume sliders; settings are still on/off) and C2 (direct UI tap cues; buttons with no command remain silent) are not done.
+- The theme (Q1) is pending, so the timbres are theme-neutral placeholders.
+
+## Next task (05)
+1. When 02 applies A7: rerun `-Integration` and expect `battle audio_class_leaks=0` without the probe's prepare_quit. Then make the probe stop calling it, so the real path is what gets tested.
+2. Hero cues (hero_death/respawn) were not exercised (hero_deaths 0 in 75 s). Add a probe phase that walks the hero into enemies, and check hit_base.
+3. After 04 C1/C2: check slider persistence through Save in the sandbox and that UI cues are not doubled.
+4. A human listening pass, via 01 (one question at a time) when the queue allows.

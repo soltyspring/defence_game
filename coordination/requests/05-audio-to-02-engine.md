@@ -39,3 +39,20 @@ When you run `--import` on the shared checkout, Godot will create `assets/audio/
 
 ## A6 (P3) Perf report
 Optional: include `Audio.snapshot()` (if `/root/Audio` exists) in the `--quit-after` print and `Perf.snapshot()` so 08 can read voice/drop counts.
+
+## Status update 2026-10-31 08:5x (05 verified, read-only)
+- A1 DONE in project.godot (Audio after Save, before App). A2 DONE (`signal sfx`). A3 DONE (e9dfaa4): sandbox battle r02 75 s shows deploy cues 13 = sim deployed 13, skill cues 5 = skills_cast 5, 22 combat cues, 0 same-frame duplicates, peak SFX voices 3/12, music players ≤ 2. Global selftest 65/65 scripts, audio failures 0 (C08 not reproduced).
+- 05 fix shipped on its side: v1.0 off-screen culling dropped all 30 combat cues in that battle (frontline off-screen); now attenuates to −9 dB instead.
+
+## A7 (P2) Quit path: release audio before quitting
+`App._process` `--quit-after` branch and `_on_back()` quit branch call `get_tree().quit()` while music is playing. Godot then reports `AudioStreamPlaybackOggVorbis`, `OggPacketSequence*`, `AudioStreamOggVorbis` leaked at exit (4–6 objects, 5/5 runs). Requested change:
+```gdscript
+var au := get_node_or_null("/root/Audio")
+if au and au.has_method("prepare_quit"): au.prepare_quit()
+await get_tree().create_timer(0.3, true, false, true).timeout   # wall clock; mixer thread frees playbacks
+get_tree().quit(0)
+```
+Acceptance: `--headless --verbose --path . -- --round=r02 --quit-after=20` prints no `Leaked instance: AudioStream*/Ogg*` lines. Repro without your change: `pwsh tools/audio/run_godot_checks.ps1 -Integration` → `leak_quit_direct` 4–6 objects, `leak_quit_prepared` 0.
+
+## A8 (P3, engine-side finding, not audio) RefCounted leak after battles with deployments
+Reproduced WITHOUT the Audio autoload (sandbox, `Audio=` line removed): a tiny autoload that only emits `cmd_deploy_unit(first card)` every 1.5 s during r02, `--quit-after=27` → at exit `GDScriptNativeClass`, `GDScript` (refcount 2), 2× `RefCounted` leaked (4 objects). Same run without deployments: 0. Likely a reference cycle among battle_sim RefCounted objects (e.g. Unit.w_target / Projectile.target holding Units, or a Unit referencing its sim) surviving battle teardown. Exit-only report, but if it is a per-battle cycle it accumulates across retries in a long session. 05 does not edit gameplay; repro script text available on request.

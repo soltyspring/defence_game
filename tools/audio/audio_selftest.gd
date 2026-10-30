@@ -33,9 +33,22 @@ func _initialize() -> void:
 		A.name = "Audio"
 		root.add_child(A)
 
-## Runs on the first frame, after the added nodes received _ready().
+## Runs on the first frame, after the added nodes received _ready(). Then stops all audio and waits a few
+## frames before quitting so AudioServer can release stopped playbacks (otherwise Godot reports them as
+## "leaked at exit"; see leak_probe.gd).
+var _quit_frames := -1
+var _t_prep := 0
+
 func _process(_delta: float) -> bool:
-	if _done: return true
+	if _quit_frames > 0:
+		if Time.get_ticks_msec() - _t_prep < 300: return false   # mixer thread releases playbacks
+		_quit_frames -= 1
+		if _quit_frames == 0:
+			if not rep.audio_autoload: A.free()
+			if not rep.events_autoload: E.free()
+			quit(0 if fails.is_empty() else 1)
+		return false
+	if _done: return false
 	_done = true
 	_run()
 	rep.snapshot = A.snapshot()
@@ -43,10 +56,10 @@ func _process(_delta: float) -> bool:
 	rep.pass = fails.is_empty()
 	print(JSON.stringify(rep, " "))
 	print("AUDIO SELFTEST ", "PASS" if fails.is_empty() else "FAIL (%d)" % fails.size())
-	if not rep.audio_autoload: A.free()
-	if not rep.events_autoload: E.free()
-	quit(0 if fails.is_empty() else 1)
-	return true
+	A.prepare_quit()
+	_t_prep = Time.get_ticks_msec()
+	_quit_frames = 1
+	return false
 
 func _bus(n: StringName) -> int:
 	return AudioServer.get_bus_index(n)
