@@ -120,6 +120,11 @@ func _run() -> void:
 			tile = int(a.get_slice("=", 1))
 			if tile > 0:
 				save.progress.unlocked_round = 99   # visible layout run of a later round (5 cards/3 skills)
+		elif a.begins_with("--safe="):
+			# simulated notch insets L,T,R,B in logical px (same as ui_preview); worst case = 34,0,34,0
+			var p := a.get_slice("=", 1).split(",")
+			var vs := root.get_visible_rect().size
+			load("res://src/ui/safe_area.gd").override_safe_rect = Rect2(float(p[0]), float(p[1]), vs.x - float(p[0]) - float(p[2]), vs.y - float(p[1]) - float(p[3]))
 		elif a.begins_with("--locale="):
 			load("res://src/ui/ui_text.gd").load_locale(a.get_slice("=", 1))
 

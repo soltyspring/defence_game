@@ -310,7 +310,7 @@ static func ui_icon(frame: String) -> Texture2D:
 		var ui = atlas.manifest.get("ui", {})
 		if ui is Dictionary and ui.has("atlas"):
 			atlas_id = str(ui.atlas)
-	var tex := icon_texture({"atlas": atlas_id, "frame": frame}) if _atlas_consistent(atlas, atlas_id) else null
+	var tex := icon_texture({"atlas": atlas_id, "frame": frame})   # guard applied inside icon_texture
 	_icon_cache[frame] = tex
 	return tex
 
@@ -404,6 +404,9 @@ static func icon_texture(icon: Variant) -> Texture2D:
 		return null
 	var atlas := _atlas_node()
 	if atlas == null or not atlas.has_method("get_frame_texture"):
+		return null
+	# same stale-import guard as ui_icon: engine-supplied icons (BattleInfo cards/skills) must not bypass it
+	if not _atlas_consistent(atlas, str(icon.atlas)):
 		return null
 	var tex = atlas.get_frame_texture(str(icon.atlas), str(icon.frame))
 	return tex if tex is Texture2D else null

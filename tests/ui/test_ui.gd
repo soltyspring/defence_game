@@ -603,6 +603,15 @@ func test_atlas_import_guard() -> void:
 					if src_img.get_pixel(int(f.x) + xx, int(f.y) + yy).a > 0.5:
 						opaque += 1
 		check(inside and opaque > 0, "UI frame %s exists in source PNG with pixels (%d opaque)" % [fr, opaque])
+	# every atlas icon path the HUD uses must obey the guard (regression 08:42: BattleInfo card icons
+	# went through icon_texture and showed wrong art while ui_icon was guarded)
+	UiStyle.clear_icon_cache()
+	var direct = UiStyle.icon_texture({"atlas": "ui_main", "frame": "card_melee_basic"})
+	var via_ui = UiStyle.ui_icon("card_melee_basic")
+	if not fresh:
+		check(direct == null and via_ui == null, "stale ui_main: both icon_texture and ui_icon return null (direct=%s ui=%s)" % [direct, via_ui])
+	else:
+		check(direct != null and via_ui != null, "fresh ui_main: icons available")
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(png))
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(png + ".import"))
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(rec_path))
