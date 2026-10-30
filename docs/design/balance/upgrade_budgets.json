@@ -1,0 +1,269 @@
+{
+ "policy": "before each round, greedily buy the cheapest affordable unlocked upgrade (ties: meta.json order). LOW = first-clear coins only; HIGH = first-clear + first 3-star bonus. Kill coins ignored (both are lower than a real player).",
+ "low": {
+  "r01": {
+   "levels": {},
+   "spent_levels": 0,
+   "leftover": 0
+  },
+  "r02": {
+   "levels": {
+    "up_base_hp": 2
+   },
+   "spent_levels": 1,
+   "leftover": 50
+  },
+  "r03": {
+   "levels": {
+    "up_melee_basic": 2,
+    "up_ranged_basic": 2,
+    "up_tank": 2,
+    "up_base_hp": 2
+   },
+   "spent_levels": 4,
+   "leftover": 0
+  },
+  "r04": {
+   "levels": {
+    "up_melee_basic": 2,
+    "up_ranged_basic": 2,
+    "up_tank": 2,
+    "up_fast": 2,
+    "up_supply_regen": 2,
+    "up_base_hp": 2
+   },
+   "spent_levels": 6,
+   "leftover": 40
+  },
+  "r05": {
+   "levels": {
+    "up_melee_basic": 2,
+    "up_ranged_basic": 2,
+    "up_tank": 2,
+    "up_fast": 2,
+    "up_hero": 2,
+    "up_supply_regen": 2,
+    "up_energy_regen": 2,
+    "up_worker": 2,
+    "up_base_hp": 2
+   },
+   "spent_levels": 9,
+   "leftover": 20
+  },
+  "r06": {
+   "levels": {
+    "up_melee_basic": 3,
+    "up_ranged_basic": 2,
+    "up_tank": 2,
+    "up_fast": 2,
+    "up_siege": 2,
+    "up_hero": 2,
+    "up_supply_regen": 2,
+    "up_energy_regen": 2,
+    "up_worker": 2,
+    "up_base_hp": 3
+   },
+   "spent_levels": 12,
+   "leftover": 40
+  },
+  "r07": {
+   "levels": {
+    "up_melee_basic": 3,
+    "up_ranged_basic": 3,
+    "up_tank": 3,
+    "up_fast": 3,
+    "up_siege": 2,
+    "up_hero": 2,
+    "up_supply_regen": 2,
+    "up_energy_regen": 2,
+    "up_worker": 2,
+    "up_base_hp": 3
+   },
+   "spent_levels": 15,
+   "leftover": 50
+  },
+  "r08": {
+   "levels": {
+    "up_melee_basic": 3,
+    "up_ranged_basic": 3,
+    "up_tank": 3,
+    "up_fast": 3,
+    "up_siege": 2,
+    "up_hero": 3,
+    "up_supply_regen": 3,
+    "up_energy_regen": 3,
+    "up_worker": 2,
+    "up_base_hp": 3
+   },
+   "spent_levels": 18,
+   "leftover": 60
+  },
+  "r09": {
+   "levels": {
+    "up_melee_basic": 3,
+    "up_ranged_basic": 3,
+    "up_tank": 3,
+    "up_fast": 3,
+    "up_siege": 3,
+    "up_hero": 3,
+    "up_supply_regen": 3,
+    "up_energy_regen": 3,
+    "up_worker": 3,
+    "up_base_hp": 4
+   },
+   "spent_levels": 21,
+   "leftover": 30
+  },
+  "r10": {
+   "levels": {
+    "up_melee_basic": 4,
+    "up_ranged_basic": 4,
+    "up_tank": 3,
+    "up_fast": 3,
+    "up_siege": 3,
+    "up_hero": 3,
+    "up_supply_regen": 3,
+    "up_energy_regen": 3,
+    "up_worker": 3,
+    "up_base_hp": 4
+   },
+   "spent_levels": 23,
+   "leftover": 170
+  }
+ },
+ "high": {
+  "r01": {
+   "levels": {},
+   "spent_levels": 0,
+   "leftover": 0
+  },
+  "r02": {
+   "levels": {
+    "up_melee_basic": 2,
+    "up_base_hp": 2
+   },
+   "spent_levels": 2,
+   "leftover": 40
+  },
+  "r03": {
+   "levels": {
+    "up_melee_basic": 2,
+    "up_ranged_basic": 2,
+    "up_tank": 2,
+    "up_supply_regen": 2,
+    "up_base_hp": 2
+   },
+   "spent_levels": 5,
+   "leftover": 30
+  },
+  "r04": {
+   "levels": {
+    "up_melee_basic": 2,
+    "up_ranged_basic": 2,
+    "up_tank": 2,
+    "up_fast": 2,
+    "up_hero": 2,
+    "up_supply_regen": 2,
+    "up_energy_regen": 2,
+    "up_base_hp": 2
+   },
+   "spent_levels": 8,
+   "leftover": 50
+  },
+  "r05": {
+   "levels": {
+    "up_melee_basic": 3,
+    "up_ranged_basic": 2,
+    "up_tank": 2,
+    "up_fast": 2,
+    "up_hero": 2,
+    "up_supply_regen": 2,
+    "up_energy_regen": 2,
+    "up_worker": 2,
+    "up_base_hp": 3
+   },
+   "spent_levels": 11,
+   "leftover": 50
+  },
+  "r06": {
+   "levels": {
+    "up_melee_basic": 3,
+    "up_ranged_basic": 3,
+    "up_tank": 3,
+    "up_fast": 3,
+    "up_siege": 2,
+    "up_hero": 2,
+    "up_supply_regen": 2,
+    "up_energy_regen": 2,
+    "up_worker": 2,
+    "up_base_hp": 3
+   },
+   "spent_levels": 15,
+   "leftover": 10
+  },
+  "r07": {
+   "levels": {
+    "up_melee_basic": 3,
+    "up_ranged_basic": 3,
+    "up_tank": 3,
+    "up_fast": 3,
+    "up_siege": 2,
+    "up_hero": 3,
+    "up_supply_regen": 3,
+    "up_energy_regen": 3,
+    "up_worker": 2,
+    "up_base_hp": 3
+   },
+   "spent_levels": 18,
+   "leftover": 60
+  },
+  "r08": {
+   "levels": {
+    "up_melee_basic": 3,
+    "up_ranged_basic": 3,
+    "up_tank": 3,
+    "up_fast": 3,
+    "up_siege": 3,
+    "up_hero": 3,
+    "up_supply_regen": 3,
+    "up_energy_regen": 3,
+    "up_worker": 3,
+    "up_base_hp": 4
+   },
+   "spent_levels": 21,
+   "leftover": 80
+  },
+  "r09": {
+   "levels": {
+    "up_melee_basic": 4,
+    "up_ranged_basic": 4,
+    "up_tank": 4,
+    "up_fast": 3,
+    "up_siege": 3,
+    "up_hero": 3,
+    "up_supply_regen": 3,
+    "up_energy_regen": 3,
+    "up_worker": 3,
+    "up_base_hp": 4
+   },
+   "spent_levels": 24,
+   "leftover": 90
+  },
+  "r10": {
+   "levels": {
+    "up_melee_basic": 4,
+    "up_ranged_basic": 4,
+    "up_tank": 4,
+    "up_fast": 4,
+    "up_siege": 3,
+    "up_hero": 3,
+    "up_supply_regen": 4,
+    "up_energy_regen": 4,
+    "up_worker": 3,
+    "up_base_hp": 4
+   },
+   "spent_levels": 27,
+   "leftover": 90
+  }
+ }
+}
