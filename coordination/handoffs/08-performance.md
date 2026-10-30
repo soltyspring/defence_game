@@ -1,6 +1,34 @@
 # 08-performance handoff
-Updated: 2026-10-31 07:25 +09:00
-Status: M1 delivered and pushed (3c1719a): harness, inventory, desktop proxy baseline, phone procedures, owner requests.
+Updated: 2026-10-31 07:32 +09:00
+Status: **STOPPED FOR ACCOUNT CHANGE (user request 07:32).** M1 delivered and pushed (3c1719a, 65fa163). M2 was only started (reading inputs); no M2 code or result exists.
+
+## ACCOUNT-CHANGE CHECKPOINT (07:32)
+- Session ID: not exposed to this agent (no session id visible in the CLI context). Model claude-opus-5.5, trust-all. No ACCOUNT_REQUIRED.md was written by 08, because no quota/auth error was observed; the stop came from the user.
+- User decisions: none of them concern 08. DECISIONS.md D1–D10 are DEFAULT and Q1 is PENDING. They are preserved unchanged, and 08 never edits them.
+- Current task when stopped: **M2**. User instruction 07:29: (1) read 03's typography evidence and 02/04 replies; (2) build and run an isolated benchmark of Galmuri glyph-cache memory and first-use hitch at the real UI sizes (Galmuri11/Bold 12/24/36, Galmuri9 10/20), with a baseline and recorded conditions, coordinated with other Godot runs; (3) re-test only the engine fixes that are available, using identical seeds; (4) label contended results and missing device evidence; (5) check budget_fails against exit semantics and add strict mode for adopted thresholds; (6) commit/push; (7) send fix requests to owners.
+- Done in M2 before the stop (reading only, nothing written):
+  - TYPOGRAPHY.md: 03 measured a glyph cache of one 256×256 L8 page (64 KiB) per (font, size), 0.56 MiB for 9 caches. Allowed sizes are 12/24/36 and 10/20.
+  - src/ui/ui_style.gd: FONT_S/M=12, L=24, XL=36, NUM 10/20. Pixel flags are forced at load. Galmuri9 falls back to Galmuri11.
+  - assets/fonts/*.ttf.import: dynamic fontdata, `compress=true`, `antialiasing=0`.
+  - Replies: none yet from 02, 03 or 04 in their requests sections (no C09 slot either).
+  - 02 has **uncommitted** WIP in src/gameplay/battle_sim.gd (`_area_damage_side` no longer duplicates the array, i.e. my P3 item), src/core/atlas.gd, app.gd and selftest.gd. These are not committed, so there is no committed engine fix to re-test yet.
+  - Shared lock convention found: hold or wait on `build/.godot-import.lock` (07 QA-R2). 07 uses `<base>/.run.lock`. 04 has `tools/build/visible_launch.ps1`, a secondary-monitor launcher with MonitorFromWindow verification.
+  - At 07:29, 3 other Godot pairs were running, so the machine was not isolated.
+- Unfinished files: none. No M2 file was created, so there is no WIP for the checkpoint branches. The only uncommitted 08 change is this handoff file.
+- Checkpoint commit: **PUSH_PENDING / NOT COMMITTED.** At 07:33, `Publish-Task.ps1 -Type Docs -Paths coordination/handoffs/08-performance.md` refused with "Index is not empty. Ask coordinator; do not modify other staged files." Another role had files staged in the shared index, and I did not touch the index. This handoff is saved on disk. Please commit it via the coordinator checkpoint branch or by re-running the same helper command once the index is empty. Last pushed 08 commits: 3c1719a, 65fa163 (both `PUSHED ... origin/main`).
+- Known failures and open issues (unchanged from M1): with PROVISIONAL budgets the bench reports `harness=OK budgets=FAIL` (4 checks: round_step_p99, cap_clash_step_p95, cap_clash_step_avg, save_p95), and all runs are CONTENDED. There is no phone evidence (adb lists no devices). The texture-memory gap (+2.3 MiB measured vs 5.1 MiB of pages) is unexplained. android_capture.ps1 has only been verified on the no-device path.
+- Validation state: M1 validation is the last valid one (see Validation below). Nothing was run in M2.
+
+## Exact next steps after login (M2)
+1. Reread coordinator-to-08-performance.md, DECISIONS.md, the 02/03/04 handoffs and the replies in 08-performance-to-*.md.
+2. Add `tests/performance/perf_font_probe.gd`. For each font (Galmuri11, Bold, Galmuri9) at each allowed size, plus the forbidden sizes as a control, measure on a cold start: font load time; first-draw hitch of an ASCII string, a 20–40-syllable Korean UI string and a full ko.json text pass; RENDER_TEXTURE_MEM_USED and static memory before and after; and the cache page count/size via FontFile.get_texture_count/get_texture_image per size. Run it windowed on the secondary monitor (04's visible_launch.ps1 or my --screen path), because glyph rasterisation needs a real renderer, and record the baseline (fallback-font run) and the conditions.
+3. Before any Godot run: wait while `build/.godot-import.lock` is held or another heavy Godot run is active. Record the process inventory and label the class CONTENDED or isolated.
+4. Strict mode for adopted thresholds: in perf_bench.gd and budget_inventory.py, tag each check `adopted|provisional`. `--strict` fails only adopted checks (`--strict-all` fails all). Extend test_bench_semantics.ps1 with an adopted-vs-provisional case. Adopted candidates: object leak = 0, unexplained drift = 0, page-size hard limit, APK ≤ 60 MB.
+5. Re-test only engine fixes that 02 has committed, with seeds 11/22/33 and the r06 stress A/B, against the M1 runs (build/perf/20261031-070413, -071525).
+6. Publish with Publish-Task.ps1, then update requests (02 font/cache or batching findings; 03/04 font sizes) and this handoff.
+
+## Previous status line
+M1 delivered and pushed (3c1719a): harness, inventory, desktop proxy baseline, phone procedures, owner requests.
 Evidence classes: STATIC (files), DESKTOP_PROXY / CONTENDED_DESKTOP_PROXY (this PC, debug editor binary), DEVICE (none yet), EMULATOR (not phone evidence).
 
 ## Ownership (acknowledged, exact)
@@ -55,7 +83,10 @@ R4 device install info, C09 window. 03: A1 page plan for 6 missing anim sets, A2
 ## Commits / push
 - `3c1719aae18dc8bf353e90ccabcf2fd056bc919d` `[Test] 성능 측정 하네스와 리소스 예산 인벤토리, 데스크톱 기준선 추가` — 18 owned files,
   Publish-Task.ps1 output `PUSHED 3c1719aae18dc8bf353e90ccabcf2fd056bc919d origin/main` (7c43ebd..3c1719a HEAD -> main), 2026-10-31 07:26.
-- This SHA-record update is a follow-up [Docs] commit of status/handoff only.
+- This SHA-record update is a follow-up [Docs] commit of status/handoff only: `65fa163a54e214bddd78acde582b3cd4d32e8af8`
+  `[Docs] 08 성능 상태·인수인계에 커밋과 푸시 기록 반영`, output `PUSHED 65fa163... origin/main` (3c1719a..65fa163). Two earlier attempts
+  exited 1 before committing (error text not captured by my output filter; the third attempt succeeded unchanged). This line itself is
+  recorded locally and will ride with the next 08 commit.
 
 ## Next task (08)
 1. Read replies in 02/03/04/01 request files; on 02 P1/P2 changes re-run `run_perf.ps1 -Frame` (same seeds, same r06 stress) and post deltas.
