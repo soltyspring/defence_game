@@ -173,6 +173,10 @@ func _check_caps(content) -> void:
 	sim.gold = 99999.0
 	sim.gold_max = 999999.0
 	var foe: String = content._first_enemy_id()
+	for uid in content.units:   # prefer a ranged enemy so projectiles are stressed too
+		if str(content.units[uid].faction) == "enemy" and str(content.units[uid].attack_type) == "ranged":
+			foe = uid
+			break
 	var refused := 0
 	for i in 200:
 		for id in sim.card_ids:
@@ -180,18 +184,28 @@ func _check_caps(content) -> void:
 			if sim.deploy(id) == "army_full": refused += 1
 		for j in 3:
 			if sim.army_count(-1) < sim.caps.enemy:
-				sim._spawn_enemy(foe)
+				var e = sim._spawn_enemy(foe)
+				e.x = sim.player_base.x + 260.0 + j * 20.0   # force contact so combat/projectiles are stressed
 		sim.step(1.0 / 60.0)
 	var max_ms := 0.0
+	var samples := PackedFloat32Array()
 	for k in 600:
 		var us := Time.get_ticks_usec()
 		sim.step(1.0 / 60.0)
-		max_ms = maxf(max_ms, (Time.get_ticks_usec() - us) / 1000.0)
+		var ms := (Time.get_ticks_usec() - us) / 1000.0
+		samples.append(ms)
+		max_ms = maxf(max_ms, ms)
 		for id in sim.card_ids:
 			sim.card_cd[id] = 0.0
 			sim.deploy(id)
+	samples.sort()
+	var avg := 0.0
+	for s in samples: avg += s
+	avg /= samples.size()
 	report.cap_test = {"refused_deploys": refused, "max_units_seen": sim.stats.max_units,
 		"max_projectiles": sim.stats.max_projectiles, "pool_free": sim._unit_pool.size(),
+		"alive_player": sim.army_count(1), "alive_enemy": sim.army_count(-1),
+		"step_ms_avg_desktop": snappedf(avg, 0.001), "step_ms_p99_desktop": snappedf(samples[int(samples.size() * 0.99)], 0.001),
 		"worst_step_ms_desktop": snappedf(max_ms, 0.001)}
 	if sim.army_count(1) > sim.caps.ally or sim.army_count(-1) > sim.caps.enemy:
 		_fail("unit cap exceeded")
