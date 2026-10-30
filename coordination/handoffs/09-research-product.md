@@ -30,3 +30,5 @@ Git protocol read and acknowledged. Processed: coordinator-to-09-research-produc
 2. When 04/02 produce a real-HUD r08 frame, re-run §10.8 observation and support 07 on E2.
 3. Optional deepening: official gameplay video frames, App Store KR review sample, confirm Random Dice Roll Roll termination.
 4. Stop and checkpoint at ≥97% quota.
+
+Git note: 195b3aa4d58ee050c0d347f30117dd7c21ae7b18 (PUSHED) committed status + an OLDER handoff text (ordering mistake); this corrected handoff is published in the following commit.
