@@ -8,7 +8,7 @@ extends RefCounted
 ##   store, clock, network: injected boundaries (defaults: memory store, system clock, unknown net)
 ##   debug_build: bool override for tests (default OS.is_debug_build())
 ## Returns {"mode", "requested_mode", "warnings", "consent", "ads", "purchases", "analytics",
-##          "telemetry", "ad_provider", "billing", "verifier", "sink", "store"}.
+##          "telemetry", "consent_provider", "consent_flow", "ad_provider", "billing", "verifier", "sink", "store"}.
 
 const Config := preload("res://src/services/service_config.gd")
 const Store := preload("res://src/services/service_store.gd")
@@ -27,6 +27,9 @@ const AnalyticsS := preload("res://src/services/analytics/analytics_service.gd")
 const NullSink := preload("res://src/services/analytics/analytics_sink.gd")
 const MemorySink := preload("res://src/services/analytics/memory_sink.gd")
 const Telemetry := preload("res://src/services/analytics/service_telemetry.gd")
+const ConsentFlow := preload("res://src/services/consent/consent_flow.gd")
+const DisabledConsent := preload("res://src/services/consent/disabled_consent_provider.gd")
+const MockConsent := preload("res://src/services/consent/mock_consent_provider.gd")
 
 const PRIVACY_POLICY_VERSION := 1
 
@@ -81,10 +84,13 @@ static func create(options: Dictionary = {}) -> Dictionary:
 	var ads = AdsS.new(ad_provider, consent, store, clock, network, ads_cfg)
 	var purchases = PurchaseS.new(billing, verifier, store, clock, network, iap_cfg)
 	var analytics = AnalyticsS.new(sink, consent, an_cfg)
+	var consent_provider = MockConsent.new() if mode == Config.MODE_MOCK else DisabledConsent.new()
 	return {
 		"mode": mode, "requested_mode": requested, "warnings": warnings,
 		"store": store, "consent": consent,
 		"ad_provider": ad_provider, "billing": billing, "verifier": verifier, "sink": sink,
 		"ads": ads, "purchases": purchases, "analytics": analytics,
 		"telemetry": Telemetry.new(analytics, ads, purchases),
+		"consent_provider": consent_provider,
+		"consent_flow": ConsentFlow.new(consent_provider, consent),
 	}

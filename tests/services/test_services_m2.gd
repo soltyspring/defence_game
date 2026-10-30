@@ -281,11 +281,11 @@ func test_crash_iap() -> bool:
 	b4.purchases.grant_sink = sink2.iap
 	b4.store.commit_fn = func() -> bool: return false
 	b4.purchases.purchase("test.coins_small")
-	var owned_copy := {}
-	for i in 30:
-		b4.purchases.tick(0.0)
-		if owned_copy.is_empty() and b4.billing.owned.has("test.coins_small"):
-			owned_copy = b4.billing.owned.duplicate(true)
+	# Capture store ownership BEFORE the mock consumes it in-process (M3 fix: the old capture
+	# after tick() was always empty, which made the no-regrant check below vacuous).
+	var owned_copy: Dictionary = b4.billing.owned.duplicate(true)
+	check(owned_copy.has("test.coins_small"), "B: precondition: store reports purchase")
+	pump(b4.purchases)
 	sd2.crash_reload()
 	eq(int(sd2.progress.coins), 100, "B: sink's own save persisted consumable")
 	var b5 := bundle(sd2.make_store(), clock)

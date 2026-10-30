@@ -24,6 +24,7 @@ var purchases
 var analytics
 var consent
 var telemetry
+var consent_flow
 var _flush_t := 0.0
 const FLUSH_INTERVAL_S := 60.0
 
@@ -40,6 +41,7 @@ func setup(options: Dictionary) -> void:
 	analytics = bundle.analytics
 	consent = bundle.consent
 	telemetry = bundle.telemetry
+	consent_flow = bundle.consent_flow
 	for w in bundle.warnings:
 		print_verbose("[Services] " + w)
 
@@ -52,6 +54,7 @@ func _process(delta: float) -> void:
 	ads.tick(delta)
 	purchases.tick(delta)
 	analytics.tick(delta)
+	consent_flow.tick(delta)
 	_flush_t += delta
 	if _flush_t >= FLUSH_INTERVAL_S:
 		_flush_t = 0.0

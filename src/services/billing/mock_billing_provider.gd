@@ -5,7 +5,7 @@ extends "res://src/services/billing/billing_provider.gd"
 ##
 ## launch_purchase scenarios (consumed in order, default "success"):
 ##   success, cancel, offline, error, item_unavailable, already_owned,
-##   pending   (pending now; call complete_pending(product_id) later for the paid update)
+##   pending   (pending now; complete_pending(product_id) pays it, cancel_pending() cancels it)
 ##   duplicate (same purchased update delivered twice)
 ##   hang      (no callback at all; service purchase timeout)
 ##   tampered  (purchased update with a forged token)
@@ -83,6 +83,24 @@ func complete_pending(product_id: String) -> void:
 func refund(product_id: String) -> void:
 	owned.erase(product_id)
 
+## Simulate a pending payment that was cancelled / expired (e.g. cash payment never made).
+## Play does not send a "purchased" update; the purchase simply stops being reported.
+## notify=true additionally sends an update with an unspecified state, which some plugins do.
+func cancel_pending(product_id: String, notify: bool = false) -> void:
+	if not _pending.has(product_id):
+		return
+	var p: Dictionary = _pending[product_id]
+	_pending.erase(product_id)
+	if notify:
+		var u := p.duplicate()
+		u.state = "unspecified"
+		_push("purchase_updated", ["ok", [u]])
+
+## Simulate acknowledgement by another device or a server: store reports acknowledged=true.
+func acknowledge_elsewhere(product_id: String) -> void:
+	if owned.has(product_id):
+		owned[product_id].acknowledged = true
+
 func query_owned() -> void:
 	var sc: String = query_scenarios.pop_front() if not query_scenarios.is_empty() else "ok"
 	if sc == "offline":
@@ -91,6 +109,8 @@ func query_owned() -> void:
 	var list: Array = []
 	for k in owned:
 		list.append(owned[k].duplicate())
+	for k in _pending:   # Play's owned-purchases query also returns PENDING purchases
+		list.append(_pending[k].duplicate())
 	_push("owned_queried", ["ok", list])
 
 func acknowledge(token: String) -> void:
