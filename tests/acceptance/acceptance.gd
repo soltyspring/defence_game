@@ -6,7 +6,7 @@ extends SceneTree
 ## Owner: 07-qa.
 
 const Q := preload("res://tests/acceptance/qa_lib.gd")
-const SUITES := ["data", "assets", "sim", "save", "flow", "release"]
+const SUITES := ["data", "assets", "sim", "save", "faults", "flow", "release"]
 
 var q = Q.new()
 var out_dir := "user://qa07"
