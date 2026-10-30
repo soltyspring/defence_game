@@ -10,7 +10,8 @@ gongmojeon SKILL.md (outside the workspace) not read yet; the hostile-review met
 - e4aa059 [Fix] hud_top.gd parse error (from my own bad batch edit), ui_main atlas icons, Korean text auto-fit, locale auto-detect, engine toast key fallback
 - d7651af [Test] compile gate + Korean typography fit test + real-engine UI integration test
 - 0b987c9 [Chore] tools/build: common.ps1, run_tests.ps1, capture_ui.ps1, visible_launch.ps1
-- docs/mobile, docs/qa, coordination files: see the next commit after 0b987c9 (SHA recorded in git log; "[Docs] ..." by 04-client)
+- 8915190 [Docs] QA_CHECKLIST, TYPOGRAPHY_QA, BUILD_PLAN update, requests to 01/02/03/coordinator
+- (this handoff/status refresh: separate [Docs] commit after 8915190)
 
 ## Delivered and how it was validated
 | Item | Evidence | Type of evidence |
