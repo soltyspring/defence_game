@@ -1,0 +1,61 @@
+extends SceneTree
+## 01-director paired balance diagnostic (NOT runtime code; stored as .txt so Godot never imports it).
+## Uses 02's unmodified battle_sim.gd + bot_player.gd; only in-memory copies of content/upgrade levels differ.
+## Run (copy to a temp .gd first):
+##   copy docs\design\balance\paired_sim.gd.txt $env:TEMP\paired_sim.gd
+##   tools\engine\Godot_v4.7.2-stable_win64_console.exe --headless --path . -s $env:TEMP\paired_sim.gd -- <out.json>
+const ContentS := preload("res://src/core/content.gd")
+const SimS := preload("res://src/gameplay/battle_sim.gd")
+const BotS := preload("res://src/gameplay/bot_player.gd")
+const SEEDS := [11]
+
+func _initialize() -> void:
+	var args := OS.get_cmdline_user_args()
+	var out_path: String = args[0] if args.size() > 0 else "user://paired_sim.json"
+	var budgets = JSON.parse_string(FileAccess.get_file_as_string("res://docs/design/balance/upgrade_budgets.json"))
+	var content = ContentS.new()
+	content.load_all("res://data")
+	# keep pristine copies of enemy_ai per round
+	var ai_orig := {}
+	for rid in content.round_order:
+		ai_orig[rid] = content.rounds[rid].enemy_ai.duplicate(true)
+	var configs := [
+		{"id": "P1_D", "ai": false, "upg": "low", "wmax": false, "flat": false},
+		{"id": "P2_D_workermax", "ai": false, "upg": "low", "wmax": true, "flat": false},
+		{"id": "P3_D_scaling1", "ai": false, "upg": "low", "wmax": false, "flat": true},
+		{"id": "P4_D_workermax_scaling1", "ai": false, "upg": "low", "wmax": true, "flat": true},
+	]
+	var sc_orig := {}
+	for rid in content.round_order: sc_orig[rid] = content.rounds[rid].get("enemy_scaling", {}).duplicate()
+	var rows := []
+	for cfg in configs:
+		for rid in content.round_order:
+			var r: Dictionary = content.rounds[rid]
+			r.enemy_ai = ai_orig[rid].duplicate(true) if cfg.ai else {"pool": []}
+			r.enemy_scaling = {"hp": 1.0, "atk": 1.0} if cfg.flat else sc_orig[rid].duplicate()
+			var lv: Dictionary = {}
+			if cfg.upg != "":
+				lv = budgets[cfg.upg][rid]["levels"]
+			for s in SEEDS:
+				var sim = SimS.new()
+				sim.setup(content, rid, s, lv)
+				var bot = BotS.new(2, s)
+				var step := 1.0 / 60.0
+				while not sim.ended and sim.t < 900.0:
+					if cfg.wmax and sim.workers < sim.workers_max and sim.gold >= sim.worker_cost(): sim.buy_worker()
+					bot.act(sim, step)
+					sim.step(step)
+				rows.append({"config": cfg.id, "round": rid, "seed": s, "won": sim.won,
+					"t": snappedf(sim.t, 0.1),
+					"player_base_hp_ratio": snappedf(float(sim.player_base.hp) / float(sim.player_base.hp_max), 0.01),
+					"enemy_base_hp_ratio": snappedf(float(sim.enemy_base.hp) / float(sim.enemy_base.hp_max), 0.01),
+					"enemy_spawned": sim.stats.enemy_spawned, "deployed": sim.stats.deployed,
+					"workers": sim.workers, "max_units": sim.stats.max_units, "hero_deaths": sim.stats.hero_deaths})
+		for rid in content.round_order:
+			content.rounds[rid].enemy_ai = ai_orig[rid].duplicate(true)
+	var f := FileAccess.open(out_path, FileAccess.WRITE)
+	f.store_string(JSON.stringify({"seeds": SEEDS, "rows": rows}, " "))
+	f.close()
+	print("PAIRED_SIM_DONE rows=", rows.size(), " -> ", out_path)
+	content.free()
+	quit(0)
