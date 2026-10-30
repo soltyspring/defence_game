@@ -40,3 +40,6 @@ Not done: engine load and passive-must-lose check of the edited rounds; any bala
 ## Git
 Earlier: e42f809, ec657bc, abdb664, 4cd16ee, f8823ac, e07b7a3, 3e7025e, all PUSHED origin/main.
 This checkpoint: see the line appended below.
+- Checkpoint commit 0130c21f7499d7bac92e51d2a1ff505774298be8 "[Docs] 계정 변경 전 밸런스 진단 체크포인트와 시뮬레이션 근거 저장" (8 files) → PUSHED origin/main. The first attempt failed the helper's diff check (blank line at EOF) and left those 8 own files staged. I unstaged only those files with `git restore --staged`, which leaves the working tree untouched, fixed the EOF and re-published. The index was empty afterwards.
+- NOT committed (WIP, unverified): data/rounds/r01..r10.json (enemy_ai disabled), docs/design/balance/verify_files.gd.txt. Left for the coordinator checkpoint branch.
+- This final handoff line itself is uncommitted. Status: STOPPED, waiting for the user's new-account login.
