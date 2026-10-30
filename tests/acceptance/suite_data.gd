@@ -101,6 +101,32 @@ func run(q, _tree) -> void:
 	for k in kos:
 		if not ens.has(k): en_gap.append(k)
 	q.check("DATA-09", "en.json contains every ko.json key", en_gap.is_empty(), "missing in en: %s" % [en_gap])
+	# placeholder parity (printf tokens and {named} tokens must match between locales)
+	var ph_bad := []
+	var rx := RegEx.create_from_string("%[-0-9.]*[sdif]|\\{[a-zA-Z_]+\\}")
+	for k in kos:
+		if not ens.has(k): continue
+		var a := []; var b := []
+		for m in rx.search_all(str(kos[k])): a.append(m.get_string())
+		for m in rx.search_all(str(ens[k])): b.append(m.get_string())
+		a.sort(); b.sort()
+		if a != b: ph_bad.append("%s ko=%s en=%s" % [k, a, b])
+	q.check("DATA-12", "ko/en placeholder parity (%d keys)" % kos.size(), ph_bad.is_empty(), "; ".join(ph_bad.slice(0, 10)))
+	# every ui.*/toast.* key used in code exists in BOTH locale files (UiText's built-in Korean fallback is not English)
+	var used := {}
+	var rx_t := RegEx.create_from_string("\"((?:ui|toast)\\.[a-z0-9_]+)\"")
+	var rx_toast := RegEx.create_from_string("toast\\.emit\\(\"([a-z0-9_]+)\"")
+	for f in _gd_files("res://src"):
+		var src := FileAccess.get_file_as_string(f)
+		if f.ends_with("ui_text.gd"): continue
+		for m in rx_t.search_all(src): used[m.get_string(1)] = f.get_file()
+		for m in rx_toast.search_all(src): used["toast." + m.get_string(1)] = f.get_file()
+	var lit_ko := []; var lit_en := []
+	for k in used:
+		if not kos.has(k): lit_ko.append("%s(%s)" % [k, used[k]])
+		if not ens.has(k): lit_en.append("%s(%s)" % [k, used[k]])
+	q.check("DATA-13", "ui.*/toast.* keys referenced in src exist in ko.json (%d keys)" % used.size(), lit_ko.is_empty(), "missing: %s" % [lit_ko])
+	q.check("DATA-14", "ui.*/toast.* keys referenced in src exist in en.json", lit_en.is_empty(), "missing: %s" % [lit_en])
 
 	# runtime loader view of the same data
 	var content = _tree.root.get_node_or_null("Content")
@@ -111,6 +137,15 @@ func run(q, _tree) -> void:
 		q.check("DATA-10", "Content autoload loads data/ without warnings", w.is_empty(), "; ".join(w.slice(0, 10)), {"warnings": w})
 		var ro: Array = Array(content.round_order)
 		q.check("DATA-11", "runtime round order equals order.json", ro == order.map(func(x): return str(x)), "runtime=%s file=%s" % [ro, order])
+
+func _gd_files(root: String, out: Array = []) -> Array:
+	var d := DirAccess.open(root)
+	if d == null: return out
+	for f in d.get_files():
+		if f.ends_with(".gd"): out.append(root + "/" + f)
+	for s in d.get_directories():
+		if not s.begins_with("."): _gd_files(root + "/" + s, out)
+	return out
 
 func _round_refs(rid: String, r: Dictionary) -> Array:
 	var out := []

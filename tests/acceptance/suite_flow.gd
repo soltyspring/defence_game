@@ -193,6 +193,12 @@ func run(p_q, p_tree) -> void:
 	if hud == null:
 		q.record("FLOW-05", Q.BLOCKED, "HUD instance", "hud.gd not mounted")
 		return
+	# every toast key the engine emits must render as localized text, not the raw key
+	var raw_keys := []
+	for k in ["not_enough_gold", "army_full", "on_cooldown", "not_enough_mana", "hero_dead", "wave_incoming", "boss_incoming", "worker_max", "counterattack"]:
+		ev.toast.emit(k, {})
+		if str(hud.toast_label.text) == k: raw_keys.append(k)
+	q.check("FLOW-04B", "HUD shows localized text for every engine toast key (no raw ids)", raw_keys.is_empty(), "raw key shown for: %s" % [raw_keys])
 	await _touch_targets("TOUCH-HUD-R1", "HUD %s" % p0[0], hud)
 	await _safe_area_matrix("SAFE-R1", hud)
 	# deploy via touch

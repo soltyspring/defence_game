@@ -1,10 +1,12 @@
 # 07-qa acceptance runner. Owner: 07-qa.
-# Usage (workspace root):  .\tools\qa\run_acceptance.ps1 [-Only data,assets,sim,save,flow,release] [-WaitSeconds 180]
+# Usage (workspace root):  .\tools\qa\run_acceptance.ps1 [-Only data,assets,sim,save,faults,flow,release,services] [-WaitSeconds 180]
 # Output (git-ignored):    build/qa07/<timestamp>/acceptance_report.{json,md}, godot.log, env.txt
 # Exit code: 0 = no FAIL, 1 = FAIL present, 2 = watchdog/crash, 3 = engine busy (import/editor) or missing.
 # Coordination: never runs --import or the editor. Waits while a Godot import/editor/export is running
 # or while build/.godot-import.lock is held by 02/04 (see coordination/requests/07-qa-to-02-engine.md).
-param([string[]]$Only = @(), [int]$WaitSeconds = 180)
+# -Head: run against a clean `git archive HEAD` snapshot in %TEMP%\qa07_head (own .godot import) so other
+#        workers' uncommitted WIP cannot contaminate results. Current tests/acceptance/** files are overlaid.
+param([string[]]$Only = @(), [int]$WaitSeconds = 180, [switch]$Head)
 $ErrorActionPreference = 'Stop'
 $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 Set-Location $Root
@@ -46,20 +48,47 @@ try {
     $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
     $out = Join-Path $base $stamp
     New-Item -ItemType Directory -Force $out | Out-Null
+    $ErrorActionPreference = 'Continue'   # git/adb write progress to stderr
     $git = (& git rev-parse --short HEAD 2>$null)
     $dirty = (& git status --porcelain 2>$null | Measure-Object).Count
     $adb = Join-Path $env:LOCALAPPDATA 'Android\Sdk\platform-tools\adb.exe'
     $devices = if (Test-Path $adb) { (& $adb devices 2>&1 | Out-String).Trim() } else { 'adb not found' }
     @("timestamp=$stamp", "git_head=$git", "dirty_paths=$dirty", "godot=$(& $Godot --version 2>$null)", "adb_devices:", $devices) | Set-Content (Join-Path $out 'env.txt') -Encoding utf8
-    $gargs = @('--headless', '--path', '.', '-s', 'res://tests/acceptance/acceptance.gd', '--', "--qa-out=$($out.Replace('\','/'))")
+    $proj = '.'
+    if ($Head) {
+        $proj = Join-Path $env:TEMP 'qa07_head'
+        if (Test-Path $proj) { Remove-Item -Recurse -Force $proj }
+        New-Item -ItemType Directory -Force $proj | Out-Null
+        & git archive --format=zip -o "$proj.zip" HEAD
+        Expand-Archive "$proj.zip" $proj -Force; Remove-Item "$proj.zip"
+        Copy-Item (Join-Path $Root 'tests\acceptance\*.gd') (Join-Path $proj 'tests\acceptance') -Force
+        & $Godot --headless --path $proj --import 2>&1 | Out-Null
+        Add-Content -Path (Join-Path $out 'env.txt') -Value "mode=HEAD snapshot $git (workspace WIP excluded; tests overlaid from workspace)"
+    } else { Add-Content -Path (Join-Path $out 'env.txt') -Value 'mode=workspace (includes uncommitted WIP of all workers)' }
+    $gargs = @('--headless', '--path', $proj, '-s', 'res://tests/acceptance/acceptance.gd', '--', "--qa-out=$($out.Replace('\','/'))")
     if ($Only.Count -gt 0) { $gargs += "--only=$($Only -join ',')" }
-    $prev = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+    $prev = 'Stop'
     $log = & $Godot @gargs 2>&1 | Out-String
     $code = $LASTEXITCODE
     $ErrorActionPreference = $prev
     Set-Content -Path (Join-Path $out 'godot.log') -Value $log -Encoding utf8
     $log -split "`n" | Where-Object { $_ -match '^\[acceptance\]|FAIL|BLOCKED|NOT_IMPLEMENTED|NOT_TESTED|SCRIPT ERROR|Parse Error' } | ForEach-Object { Write-Host $_.TrimEnd() }
     $errs = ([regex]::Matches($log, 'SCRIPT ERROR')).Count
+    # 06-services suites (06-services-to-07-qa Q1): separate processes, counted in the exit code
+    $svc = @()
+    foreach ($s in @('test_services', 'test_services_m2')) {
+        if (-not (Test-Path (Join-Path $Root "tests\services\$s.gd"))) { continue }
+        if ($Only.Count -gt 0 -and -not ($Only -contains 'services')) { continue }
+        $ErrorActionPreference = 'Continue'
+        $slog = & $Godot --headless --path $proj -s "res://tests/services/$s.gd" 2>&1 | Out-String
+        $scode = $LASTEXITCODE
+        $ErrorActionPreference = $prev
+        Set-Content -Path (Join-Path $out "$s.log") -Value $slog -Encoding utf8
+        $svc += "$s exit=$scode"
+        Write-Host "[services] $s exit=$scode"
+        if ($scode -ne 0 -and $code -eq 0) { $code = 1 }
+    }
+    Add-Content -Path (Join-Path $out 'env.txt') -Value ("services: " + ($svc -join '; '))
     Write-Host "script_errors_in_log=$errs  exit=$code  report=$out"
     Set-Content -Path (Join-Path $base 'latest.txt') -Value $out -Encoding utf8
     exit $code
