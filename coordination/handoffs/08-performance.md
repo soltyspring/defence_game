@@ -1,6 +1,6 @@
 # 08-performance handoff
 Updated: 2026-10-31 07:25 +09:00
-Status: M1 delivered locally (harness, inventory, desktop proxy baseline, phone procedures, owner requests). Publishing now; SHA below.
+Status: M1 delivered and pushed (3c1719a): harness, inventory, desktop proxy baseline, phone procedures, owner requests.
 Evidence classes: STATIC (files), DESKTOP_PROXY / CONTENDED_DESKTOP_PROXY (this PC, debug editor binary), DEVICE (none yet), EMULATOR (not phone evidence).
 
 ## Ownership (acknowledged, exact)
@@ -53,7 +53,9 @@ R4 device install info, C09 window. 03: A1 page plan for 6 missing anim sets, A2
 01: queue one user question about a physical low-tier phone.
 
 ## Commits / push
-(filled after Publish-Task.ps1)
+- `3c1719aae18dc8bf353e90ccabcf2fd056bc919d` `[Test] 성능 측정 하네스와 리소스 예산 인벤토리, 데스크톱 기준선 추가` — 18 owned files,
+  Publish-Task.ps1 output `PUSHED 3c1719aae18dc8bf353e90ccabcf2fd056bc919d origin/main` (7c43ebd..3c1719a HEAD -> main), 2026-10-31 07:26.
+- This SHA-record update is a follow-up [Docs] commit of status/handoff only.
 
 ## Next task (08)
 1. Read replies in 02/03/04/01 request files; on 02 P1/P2 changes re-run `run_perf.ps1 -Frame` (same seeds, same r06 stress) and post deltas.

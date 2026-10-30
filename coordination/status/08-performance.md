@@ -1,7 +1,7 @@
 # 08-performance status
 Updated: 2026-10-31 07:25 +09:00
-Status: MILESTONE 1 (perf harness + budget inventory + desktop proxy baseline) VERIFIED LOCALLY, publishing. No phone evidence exists.
-Current task: publish M1 via Publish-Task.ps1, then wait for owner responses (02 P1/P2, 04 R1, exclusive bench window C09) and re-measure.
+Status: MILESTONE 1 (perf harness + budget inventory + desktop proxy baseline) VERIFIED LOCALLY and PUSHED (3c1719a, origin/main). No phone evidence exists.
+Current task: wait for owner responses (02 P1/P2, 04 R1, exclusive bench window C09) and re-measure; meanwhile font glyph-cache cost prep.
 
 Completed files (owned):
 - tests/performance/perf_bench.gd — headless CPU/memory bench (content load, bot rounds, N/side scaling walk+clash best-of-3, verified step-section mirror, HUD snapshot, leak, save/load).
