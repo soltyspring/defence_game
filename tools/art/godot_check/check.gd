@@ -15,7 +15,12 @@ var _atlas_docs := {}
 
 
 func _ready() -> void:
-	_move_to_secondary_screen()
+	if DisplayServer.get_name() != "headless":
+		_move_to_secondary_screen()
+	if "--font-sheet" in OS.get_cmdline_user_args():
+		add_child(load("res://font_sheet.gd").new())
+		set_process(false)
+		return
 	var m: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/manifest.json"))
 	var pages := []
 	for a in m["atlases"]:
@@ -27,6 +32,19 @@ func _ready() -> void:
 			"size_ok": tex != null and tex.get_width() == int(a["size"][0]) and tex.get_height() == int(a["size"][1]),
 			"frames": doc["frames"].size()})
 	_report["pages"] = pages
+	# exported-pack evidence: in a PCK only .ctex (via remap) + included json exist
+	_report["cmdline_user"] = OS.get_cmdline_user_args()
+	_report["raw_png_present"] = FileAccess.file_exists("res://assets/atlases/char_player.png")
+	_report["remap_present"] = FileAccess.file_exists("res://assets/atlases/char_player.png.import") or FileAccess.file_exists("res://assets/atlases/char_player.png.remap")
+	_report["json_present"] = FileAccess.file_exists("res://assets/atlases/char_player.json")
+	if "--pack-check" in OS.get_cmdline_user_args():
+		var at := _frame_tex("char_player", "hero_captain/idle/0")
+		var img := at.get_image()
+		_report["pack_frame_image"] = [img.get_width(), img.get_height()] if img else []
+		_report["fonts"] = _font_report()
+		print("ART_PACK_JSON " + JSON.stringify(_report))
+		get_tree().quit(0)
+		return
 	_build_scene(m)
 	_cam = Camera2D.new()
 	_cam.position = Vector2(320, 180)
@@ -54,6 +72,28 @@ func _move_to_secondary_screen() -> void:
 	DisplayServer.window_set_current_screen(target)
 	DisplayServer.window_set_size(size)
 	DisplayServer.window_set_position(r.position + (r.size - size) / 2)
+
+
+func _font_report() -> Array:
+	var out := []
+	if not DirAccess.dir_exists_absolute("res://assets/fonts"):
+		return out
+	for fn in DirAccess.get_files_at("res://assets/fonts"):
+		var f := fn.trim_suffix(".import").trim_suffix(".remap")
+		if not (f.ends_with(".ttf") or f.ends_with(".otf") or f.ends_with(".woff2")):
+			continue
+		var p := "res://assets/fonts/" + f
+		var font: Font = load(p)
+		if font == null:
+			out.append({"file": f, "loaded": false})
+			continue
+		var probe := "가나다한글漢ABCabc0123456789,.!?%+-/:"
+		var missing := []
+		for ch in probe:
+			if not font.has_char(ch.unicode_at(0)):
+				missing.append(ch)
+		out.append({"file": f, "loaded": true, "name": font.get_font_name(), "missing_probe": missing})
+	return out
 
 
 func _frame_tex(atlas_id: String, frame: String) -> AtlasTexture:
