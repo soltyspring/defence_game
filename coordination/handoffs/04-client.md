@@ -8,7 +8,9 @@ coordinator-to-04-client (R3–R5, C04, C06, completion gate, window stability, 
 ## Commits this session (Publish-Task.ps1, all PUSHED origin/main)
 - 8b24e59 [Feat] bundled Galmuri fonts (no OS fallback, pixel flags forced), 12/24/36 + 10/20 grid sizes only, fixed-cell numerals, typography gate
 - 0333cd3 [Fix] grid-safe label fit for English (Latin falls to Galmuri9 10; ellipsis 15 → 2), real-scene shots in the integration test (`--shot-dir/--tag/--tile/--locale`), `visible_launch.ps1 -Script` + `--log-file`, capture_ui.ps1 routed through the secondary-monitor launcher
-- (this commit) [Docs] TYPOGRAPHY_QA.md rewrite, QA_CHECKLIST update, requests 02 R9/R10 and 01 R3, this handoff
+- c1bf13d [Docs] TYPOGRAPHY_QA.md rewrite, QA_CHECKLIST update, requests 02 R9/R10 and 01 R3, handoff
+- 183e4a6 [Feat] tutorial hint (Events.tutorial_step), boss HP bar (HudSnapshot.boss), result star-condition rows with real round thresholds, feedback strips kept clear of the stacked skill column, stale-atlas-import guard (vector fallbacks)
+- (this commit) [Docs] handoff/status + request 03 R4
 Earlier: e62fe86, e4aa059, d7651af, 0b987c9, 8915190, 225abc6.
 
 ## Validation actually run
@@ -31,7 +33,21 @@ Earlier: e62fe86, e4aa059, d7651af, 0b987c9, 8915190, 225abc6.
 - OFL credits not shown in-game yet (keys requested from 01; export include of the licence requested from 02).
 - White vertical lines in the biome are still visible; 02 is fixing the seam (22cd2bb, from 03).
 
-## Next task (exact): tutorial / boss / result-star UI gap
+## Tutorial / boss / result-star milestone (183e4a6) — validation
+- tests/ui/test_ui.gd: 3232 pass / 0 fail. New checks: tutorial hint shown/hidden; boss bar drawn only while the boss is alive; star reasons win✓/base✓/time✗ with thresholds 50/120 and no mismatch; loss shows none met. Layout matrix (3000 configurations) now also checks that the boss/tutorial/toast/banner strips avoid every touch target and stay inside the safe area. The first run caught 7 layouts where the banner overlapped a stacked skill column, and a missing "≥" glyph in Galmuri; both were fixed and the same tests rerun to 0 failures.
+- tests/integration (real App/BattleSim): 29/29. The real r01 tutorial hint was shown ("◀ ▶ 버튼을 누르고 있으면…"). Star reasons from the real r01 thresholds (base 50%, 150 s) match the engine stars (3/3).
+- Visible on DISPLAY2: build/qa/screens/guard_20x9_{3_hud,5_result_win}.png (mock data: boss bar, tutorial, toast, star rows); build/qa/real/ko_16x9_r01_v2_*.png (real engine).
+- Defect found in the visual check, and not 04's: 03's uncommitted ui_main re-pack combined with a stale import showed wrong icons. 04 added detection and fallback, and sent 03 R4. Icon screens must be re-captured after the re-import.
+- Not verified: a real boss round (r05) end-to-end with the bar (only mock and unit data were used); whether the hint disappearing in the mid-battle real shot is correct engine step timing or a gap (the integration check only confirms that the first hint appears).
+
+## Next task (exact)
+1. After 03 commits ui_main and 02 re-imports: re-capture icons and confirm the `[UiStyle] … stale` warning is gone.
+2. Real r05 boss run (`--round=r05` or the integration `--tile=4`) on the secondary monitor: boss bar visible with real data.
+3. Credits panel (OFL font credit; keys requested from 01 R3; fallbacks exist: ui.credits / ui.font_credit).
+4. Skill names are hidden on 48 px skill buttons: show the name in the toast on press, or in a long-press tooltip.
+5. Integer-scale retest after 02 R9; upgrade screen (P1, data/meta.json).
+
+## (superseded) previous next-task list
 The engine already provides these, and the UI does not consume them yet:
 1. `Events.tutorial_step(key)`: a non-blocking banner under the top bar using text `<key>` from data/text (e.g. tut_move_hero). "" hides it. 01 R1 says never pause after step 2.
 2. `HudSnapshot.boss {alive, hp, hp_max, name_key}`: a boss HP bar with its name under the base bars while the boss is alive, plus the existing boss_incoming banner.
