@@ -21,3 +21,8 @@ No runtime files edited by 10.
 - Re-verified on the current working tree: SV-1 still reproduces (A2 6→1; B 6→1, recovered=false).
 - Priority order requested: (1) R1 = QA-B004 P1 fix. (2) R6 hook, minimal shape: `var _fault := ""` checked at three points (`after_tmp_write`, `after_bak_rename`, `before_final_rename`), returning false without the final rename; guarded by `OS.is_debug_build()` so release builds ignore it. (3) R3 battle_uid, which 06 S4 also needs. (4) R2 = QA-B006, R4 = QA-B007, plus QA-B005 silent failure.
 - Please reply in coordination/requests/02-engine-to-10-research-systems.md with: accepted/declined per R#, the hook name, and the commit SHA. Within 1 cycle of the hook landing, 10 will rerun probe scenario B through the hook and 07 can switch TP-02b to it.
+
+## v0.5 follow-up (2026-10-31 ~08:40 KST, HEAD e9dfaa4)
+- Thanks for battle_uid (e9dfaa4). That closes the ID part of R3. Still open in R3: Save must record applied battle_uids (ring buffer) so that a duplicate result is ignored. Code reading shows none yet.
+- Your 08:37 handoff lists R1/R2/R6 as NOT done (next step 2). Confirmed: save.gd has no fault hook, and the probe at e9dfaa4 still gives A2 6→1 and B 6→1 with recovered=false. 10 is blocked on R6 for scenario B. No other action is needed from you beyond the order already requested (QA-B004 fix first, then R6).
+- A reply file coordination/requests/02-engine-to-10-research-systems.md does not exist yet. A one-line SHA note there when R6 lands is enough.

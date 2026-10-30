@@ -1,5 +1,5 @@
 # 데이터·백엔드 분석: 성공한 디펜스 게임의 온라인 기능과 우리 게임의 최소 설계
-작성: 10-research-systems · 버전 v0.4 (v0.1 증거 보고서, v0.2 §9.1, v0.3 SV-1 실행 재현·§5.8, v0.4 02/06/07/01 회신 추적과 HEAD 재실행) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
+작성: 10-research-systems · 버전 v0.5 (v0.1 증거 보고서, v0.2 §9.1, v0.3 SV-1 실행 재현·§5.8, v0.4 회신 추적, v0.5 e9dfaa4 재확인) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
 범위: 경쟁작에서 **관찰되는** 온라인 기능, 그 기능의 **공개 문서화된** 기술, **UNKNOWN**, 우리 오프라인 우선 Godot 게임에 필요한 최소 콘텐츠 DB·세이브·거래 계약. 런타임 코드는 수정하지 않았다. 내부 DB나 비공개 구현에 접근한 적 없다. 게임을 직접 플레이하지 않았다(스토어 텍스트·공개 스크린샷만 확인).
 
 ## 0. 현재 판단 (요약)
@@ -304,6 +304,11 @@ PROBE10_SAVE_ROTATION {"A_recovered":true,"A_unlocked_after_load":6,"A_save_ok":
 - 02의 **R6 장애 훅은 아직 없다.** HEAD 30a14bd의 `src/core/save.gd`에 `_fault` 등 훅이 없다. 커밋 이력상 save.gd의 마지막 커밋은 1eb4637이다. 작업 트리에는 02의 미커밋 변경(`fresh()`에 `tutorial_done: []` 추가) 1줄만 있다. 02는 10의 R1~R9에 회신하지 않았다. 02의 마지막 인수인계는 07:32 계정 전환 체크포인트이고, 그 커밋은 "Index is not empty"로 실패했다고 기록돼 있다.
 - 그래서 시나리오 B를 훅으로 재실행하지 못했다. 대신 같은 프로브를 현재 작업 트리(30a14bd + 02의 미커밋 1줄)에서 다시 실행했다. 결과는 위 출력과 같다(A2 6→1, B 6→1, `recovered=false`). SV-1은 현재 코드에서도 그대로다.
 - 01은 #5/#6에 회신하지 않았다(01 요청 파일과 docs/design에 관련 기록 없음). `data/migrations.json`도 없다.
+
+**v0.5 추적(2026-10-31 ~08:40 KST, HEAD e9dfaa4):**
+- 02가 e9dfaa4에서 `battle_uid`를 넣었다(`src/gameplay/battle.gd` `_make_battle_uid()`. BattleInfo와 BattleResult에 실린다). 이것은 R3의 **ID 부분**만이다. `Save`에는 `applied_battles` 같은 적용 기록이 없다. 그래서 같은 결과가 두 번 들어오면 두 번 반영된다. 이 판단은 코드 읽기에 근거하며 실행하지 않았다.
+- 같은 커밋에서 save.gd는 `fresh()`에 `tutorial_done: []`가 추가된 1줄만 바뀌었다. 02 handoff(08:37)에는 "10 R1/R2/R6 save `.bak` quarantine, newer-version read-only, fault-injection hook — NOT done"이 다음 작업 2번으로 적혀 있다. **R6 훅은 아직 없다.**
+- 프로브를 e9dfaa4에서 다시 실행했다: A2 6→1, B 6→1, `recovered=false`. SV-1(QA-B004)은 그대로다.
 
 ## 7. 위협/실패 사례와 실행 테스트 제안 (07 acceptance, 06 services, 02 훅)
 실행 방식: Godot 헤드리스 `--headless -s res://tests/acceptance/<file>.gd`. 02가 `Save.path` 주입(이미 var)과 쓰기 단계별 장애 주입 훅(`Save._fault = "after_bak_rename"` 등, 디버그 빌드 전용)을 제공해야 한다.

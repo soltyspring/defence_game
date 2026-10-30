@@ -1,29 +1,31 @@
 # 10-research-systems handoff
-Updated: 2026-10-31 ~08:21 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce (per coordinator correction 08:09) · claude-opus-5.5 / trust-all, same window
+Updated: 2026-10-31 ~08:41 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same window (restored under the new Kiro login)
 Owned: docs/research/systems/**, coordination/status|handoffs/10-research-systems.md, coordination/requests/10-research-systems-to-*.md
-Git protocol acknowledged. DECISIONS D1–D12 DEFAULT, Q1 PENDING. Unchanged, and no user questions from 10.
+Git protocol acknowledged. DECISIONS D1–D12 DEFAULT, Q1 PENDING. Unchanged, and no user questions from 10. No 09 paths touched.
 
-## READ ACK / START (~08:19 KST)
-Read: coordinator-to-10-research-systems.md including the 08:09 correction (10 role confirmed, the 09 dispatch was misrouted, and the old quota notices are HISTORICAL); 07-qa-to-10 (08:10); 06-services-to-10 (08:12); 09-to-10 R09-10-1 (answered in v0.3 §5.8). No reply files exist from 02 or 01. STARTED the follow-up task. No 09 paths were touched.
+## READ ACK / START
+- ~08:19: read the coordinator correction 08:09 (10 role, the 09 dispatch was misrouted, old quota notices are historical). STARTED the follow-up.
+- ~08:39: resume order after the new login read. Checked the state after 3c8cddb/c4a3d93/198e40a. Quota 434.55/10000 = 4.35% at 08:38, no triggered.json.
 
-## Follow-up result
+## Follow-up state (HEAD e9dfaa4)
 | Owner | Request | State |
 |---|---|---|
-| 02 | R1–R9 | **NO REPLY.** The R6 fault hook does NOT exist: save.gd at HEAD 30a14bd has no hook, its last commit is 1eb4637, and the working tree only has 02's uncommitted `tutorial_done: []`. 02's last handoff is the 07:32 checkpoint with an uncommitted WIP note |
-| 07 | SV-1 | DONE by 07: TP-02 FAIL → QA-B004 P1 (owner 02). Also QA-B005/B006/B007. TP-03/04/05/11 NOT_TESTED because the runtime APIs are missing |
-| 06 | TP-08 etc. | DONE by 06: the "both or neither" policy was verified with a real save.gd and a child-process kill (desktop only) |
-| 01 | #5/#6 | NO REPLY. data/migrations.json absent |
-Scenario B could NOT be rerun through a hook (blocker: 02 R6). As a substitute, I re-executed the probe on the current tree (30a14bd + 02's uncommitted line): A2 6→1, B 6→1 with recovered=false. SV-1 is unchanged.
+| 02 | R6 fault hook | **NOT READY.** save.gd at e9dfaa4 changed only `tutorial_done: []`. The 02 handoff (08:37) says "10 R1/R2/R6 ... NOT done" (next step 2). No 02-engine-to-10 reply file |
+| 02 | R3 battle_uid | ID DONE in e9dfaa4 (battle.gd `_make_battle_uid`, in BattleInfo/BattleResult). Applied-uid dedup in Save still missing (code reading) |
+| 02 | R1/R2/R4/R5/R7–R9 | open |
+| 07 | SV-1 | QA-B004 P1 OPEN (owner 02). B005/B006/B007 OPEN |
+| 06 | TP-08 | done by 06 (desktop) |
+| 01 | #5/#6 | no reply; data/migrations.json absent |
+**Scenario B via hook: NOT rerun. Reason: R6 does not exist.** Substitute evidence: the probe re-executed at e9dfaa4 gives A2 6→1 and B 6→1 with recovered=false (unchanged).
 
-## Commits
-- v0.1 6ab1d482ffea0bc84f587da3415da76821f54f97 PUSHED; v0.2 9e3953f2027d5746f47cc7b603d3975745b35785 PUSHED; v0.3 462991ae8dc335e045901f9e702f364144d24170 PUSHED; status 14f7084da3e43c1d3808314b77e9b94810b40a2c PUSHED
-- v0.4 (this follow-up): SHA in status after the helper call
+## Commits (all PUSHED origin/main)
+6ab1d48 v0.1 · 9e3953f v0.2 · 462991a v0.3 · 14f7084 status · 3c8cddb v0.4 · c4a3d93 status · 198e40a status fix · v0.5: SHA in status after the helper call
 
 ## Exact next steps
-1. Wait for coordination/requests/02-engine-to-10-research-systems.md, and for the R6 hook to land in save.gd (grep `_fault`).
-2. Once it lands: adapt probe scenario B to set the hook (`before_final_rename`) instead of emulating, rerun, update §6.4, notify 07, and publish.
-3. Wait for 01's reply on #5/#6.
-4. Stop at ≥97% of the current account's quota (2.84% at 08:18).
+1. Poll at milestones (not in a loop): grep `_fault` in src/core/save.gd, and check for coordination/requests/02-engine-to-10-research-systems.md.
+2. When R6 lands: switch probe scenario B to the hook (`before_final_rename`), rerun, update §6.4, notify 07, publish.
+3. When QA-B004 is fixed: rerun the probe and expect A2/B unlocked 6.
+4. Stop at ≥97% quota.
 
 ## Errors / caveats
-The probe's scenario B emulates the order of file operations; it does not inject a fault inside save.gd. One harmless "get_node absolute path" probe-environment error. Other roles' Godot processes were running and were not touched.
+Scenario B is an emulation of the file-operation order (no in-code fault). A harmless probe-environment get_node error appears. Other roles' Godot processes were not touched.
