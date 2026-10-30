@@ -15,3 +15,6 @@ Exit 0 = pass. Reports: `user://services_test_report.json`, `user://services_m2_
 
 ## Q3 Diagnostics for reports
 `Services.diagnostics()` (once 02 registers the autoload), or `preload("res://src/services/service_diagnostics.gd").snapshot(bundle)`. JSON-safe, no tokens or ids. Use `live.*` flags to confirm nothing real is enabled in a build under test.
+
+# Update M3 (2026-10-31) — QUEUED
+Add `res://tests/services/test_services_m3.gd` (real src/core/save.gd in isolated user://svc_m3_test, spawns 3 child Godot processes and kills them; ~5–10 s; cleans up its directory). It proves both-or-neither persistence for that save script in isolation, not game integration (02 S2 still open).

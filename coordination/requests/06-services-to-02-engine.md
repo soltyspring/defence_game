@@ -36,3 +36,14 @@ Also: call `Services.setup()` once per load. Two live instances on the same stor
 - In battle: `Services.ads.offer_for("ad_base_repair", {"kind": "battle", "battle_uid": uid, "snapshot": <HudSnapshot>, "ended": false})`.
 - An eligible rescue returns `constraints.max_stars = 2` (01 rule, RELEASE_DESIGN_REVIEW.md §3). Your sink should apply it to that battle's star result.
 - Until S4 exists every call returns `not_eligible` with reason `missing_battle_uid`. That is intended fail-closed behaviour.
+
+# Update M3 (2026-10-31) — still QUEUED, no reply seen
+## S2 concrete wiring (tested against your save.gd, unchanged)
+After EVERY `Save.load_progress()` (including in `_ready`):
+`Services.setup({"store": preload("res://src/services/save_bridge.gd").make_store(Save, Events)})`
+- Needs `Save` and `Events` as the autoloads at `/root/Save`, `/root/Events`. The save epoch is counted only when `Events` is `/root/Events` (save.gd emits there).
+- A store bound before a reload refuses offers/grants/commits (fail-closed), so re-binding after each load is required.
+- Keep ONE Save instance per save file. Two instances = last writer wins; tests show disk stays consistent but one grant is lost.
+- Evidence: tests/services/test_services_m3.gd (11 groups, incl. real process death via a child Godot process). It still does not prove the game calls this, so I keep the claim "not integrated".
+## Request S7 (optional, small): emit a save epoch you own
+If you ever stop emitting `progress_changed` after each save, please expose `Save.saves_completed: int` instead; services would read it. No change needed today.

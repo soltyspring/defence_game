@@ -1,5 +1,5 @@
 # Services architecture: rewarded ads, purchases, entitlements, consent, analytics (owner: 06-services)
-Version: 0.2 (2026-10-31, M2). Godot 4.7.2 / GDScript. Status: boundaries + DISABLED/MOCK adapters only.
+Version: 0.3 (2026-10-31, M3). Godot 4.7.2 / GDScript. Status: boundaries + DISABLED/MOCK adapters only.
 
 **Nothing here is live.** No ad network, store billing, verification server or remote analytics is integrated. The user has not approved a business model, products or placements (DECISIONS.md D9 DEFAULT, Q2 not asked). Every build runs in `disabled` mode. `mock` mode exists for tests and debug builds and contacts nothing. The tests prove the state machines and gates. They do not prove that any real SDK or store works.
 
@@ -15,6 +15,9 @@ src/services/
   services_factory.gd      builds a bundle for a mode
   services.gd              Node facade, intended autoload `Services` (02 decides)
   service_diagnostics.gd   read-only diagnostics snapshot (§9)
+  save_bridge.gd           binds service state to 02's real Save node (§7.1)
+  consent/  consent_provider.gd (interface), disabled_consent_provider.gd, mock_consent_provider.gd,
+            consent_flow.gd (platform consent state machine, §5.1)
   ads/      ad_provider.gd (interface), disabled_ad_provider.gd, mock_ad_provider.gd, rewarded_ad_service.gd,
             reward_policy.gd (offer rules, §3.1)
   billing/  billing_provider.gd (interface), disabled_billing_provider.gd, mock_billing_provider.gd,
@@ -24,6 +27,8 @@ src/services/
              service_telemetry.gd (bounded service events, §8.1)
 tests/services/test_services.gd      M1 contract tests
 tests/services/test_services_m2.gd   M2 crash/persistence, duplicate, corrupt-state, policy, telemetry, diagnostics tests
+tests/services/test_services_m3.gd   M3 tests against the REAL src/core/save.gd (isolated paths), process death, consent flow, billing transitions
+tests/services/m3_child.gd           child process used by the process-death cases (not standalone)
 docs/services/                    this file, ANALYTICS_EVENTS.md, PRODUCTION_REQUIREMENTS.md
 ```
 Run tests (each exit 0 = pass): `tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://tests/services/test_services.gd` (report `user://services_test_report.json`) and the same with `test_services_m2.gd` (report `user://services_m2_test_report.json`, optional `-- --only=group1,group2`). A group that aborts on a script error is reported as a failure.
@@ -159,3 +164,42 @@ Detached deep copy for debug overlays, QA and bug reports: mode, warnings, adapt
 - No real persistence until 02 S2. Factory warns `store_memory_only`; diagnostics shows `store.persistent=false`.
 - `Services.setup()` during an active ad or purchase drops that in-memory session. The ledger prevents double grants; a lost session may need restore (IAP) or a new offer (ads).
 - Mock adapters only. No real SDK callback order, Android lifecycle or Play Billing behaviour is observed.
+
+## 11. M3 additions
+### 11.1 Grant-sink contract: enforced, not just documented
+Contract: a grant sink applies the reward **in memory** and returns true, or changes nothing and returns false. It must not save. Enforcement:
+- The store exposes a save epoch (`ServiceStore.save_epoch()`), fed by `Events.progress_changed`, which save.gd emits after every successful save. A sink that saved is detected by an epoch change.
+- Sink saved and returned true: safe (ledger-first). Flagged `ads_sink_saved` / `iap_sink_saved` (`contract_violation` signal, `push_warning`, `diagnostics.contract_violation`).
+- Sink saved and returned false, **or** the store is persistent but has no epoch source: the outcome on disk is unknown. The service keeps the ledger entry (ads: `grant_unknown: true`; consumables: ledger state `grant_unknown`) and commits it. Never reward-without-ledger, so never a duplicate; the player may lose that one reward. A `grant_unknown` consumable is never regranted and never consumed, so Play refunds it after the acknowledgement window. Flagged `*_sink_saved_then_failed` / `*_failed_epoch_unknown`.
+- Sink returned false without saving (epoch known): normal rollback, retry allowed.
+- Stale store (Save.progress replaced by a reload after binding): `availability()` returns `error`, an in-flight grant is refused before the sink runs (`ads_stale_store` / `iap_stale_store`), and commits through the stale store return false.
+
+### 11.2 Billing transitions
+- Purchases whose state is neither `pending` nor `purchased` (e.g. a cancelled pending payment reported with an unspecified state) are never granted (`diagnostics.unknown_state`); a waiting flow finishes `cancelled`.
+- A pending payment that is cancelled silently just stops being reported; nothing was recorded, so the product can be bought again. The mock owned-query now also returns pending purchases, as Play does.
+- Non-consumable already `acknowledged` by the store (another device or a server): recorded as acknowledged, no redundant acknowledge (`diagnostics.ack_elsewhere`).
+- A consumable that is already granted but still reported owned is consumed (the earlier consume did not complete).
+
+### 11.3 Consent flow (`consent/consent_flow.gd`) — §5.1
+```
+IDLE --start()--> CHECKING --required--> FORM_REQUIRED --show_form()--> SHOWING_FORM --ok--> DONE
+                     | not_required / obtained -> DONE        | dismissed / error / timeout -> FORM_REQUIRED
+                     | offline / error / timeout -> DONE (nothing changed, ads stay blocked)
+DONE --show_privacy_options()--> SHOWING_FORM;  any --withdraw()--> IDLE (all denied + platform reset)
+```
+The platform form covers ads purposes only; analytics consent stays with our own UI (04). `not_required` turns only `unknown` ads purposes into `not_required`; an explicit `denied` (including after withdrawal) is never overridden. Late or stray callbacks are ignored. Default build uses `disabled_consent_provider.gd` → `start()` returns `unsupported`. No UMP plugin is installed or approved.
+
+### 11.4 Evidence against the real save.gd (`test_services_m3.gd`)
+Uses `src/core/save.gd` unchanged, at `user://svc_m3_test/<case>/`, through `save_bridge.gd`.
+| Case | Result |
+|---|---|
+| Round trip | one service commit = one real save; reloaded save blocks the context |
+| Real save failure (directory blocks `save.json.tmp`) | `persisted=false`; disk has neither reward nor ledger; after reload the grant is retryable and lands once; without a crash the next routine save writes both |
+| Sink saves then fails (with and without epoch) | disk has reward + ledger (`grant_unknown`); no retry, no duplicate after restart |
+| Corrupt main file / checksum tamper | save.gd recovers `.bak`; recovered state satisfies coins == 100 × ledger; contexts lost with the main file are retryable once |
+| v0 payload migration, pre-06 save | `services` survives `_migrate`; bridge adds an empty section |
+| Two Save instances on one file | last writer wins; disk stays consistent but one instance's grant is lost entirely (02 must keep a single Save) |
+| Reload during an ad | grant refused, disk consistent, fresh store works |
+| Consumable: failed real save + crash; sink saves then fails | restore grants once / never regrants a `grant_unknown`, never consumes it |
+| **Process death** (child Godot process killed with `OS.kill(own pid)`) | kill before commit → disk `[coins 0, ledger 0]`; kill after commit → `[100, 1]`; sink saved then kill → `[100, 1]`. Same test with ledger written after the sink (mutation) → `[100, 0]`, i.e. a duplicate on retry |
+Not proven: that the game wires `save_bridge` this way (02 S2 unanswered), Android process death and storage behaviour, real SDK/billing. Windows desktop only.

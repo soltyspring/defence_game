@@ -58,3 +58,11 @@ No purchase amounts, currencies, order IDs or purchase tokens are ever sent.
 ## 5. Not yet decided (questions go through 01, one at a time)
 1. Remote analytics at all? Options: none (keep local), own minimal endpoint, vendor SDK. Recommendation: none until after launch metrics are needed; ship with the null sink.
 2. Child-directed audience (affects consent and ad SDK choice, ECONOMY.md Q5).
+
+## 6. Known limitation: retention cannot be measured (recorded M3, from 10-research-systems request)
+The session id is random per launch and never saved, so D1/D7 retention and return visits cannot be computed from these events. This is a deliberate privacy choice, not a bug. Options are routed to 01 as a design decision (coordination/requests/06-services-to-01-director.md, M3 update): (A) Play Console aggregate retention only, (B) consented install-scoped random id with a published retention period, (C) retention measured in a closed test only. No option is implemented.
+
+## 7. Proposed events (NOT in the schema, not emitted)
+- `ftue_step` with `step_id` (enum of tutorial steps defined by 01).
+- `save_recovered` with `source` (`bak` | `fresh`), emitted by 02 when save.gd sets `recovered`.
+Both follow §1 rules. They are added to `event_schema.gd` only after 01 accepts them and 02/04 own the emit points.
