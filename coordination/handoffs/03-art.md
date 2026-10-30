@@ -11,7 +11,8 @@ The gongmojeon skill file is outside the workspace and I have not read it yet. I
 
 ## Commits
 - 9b4ee0b `[Design] 초기 도트 아트 팩과 텍스처 아틀라스 6종 추가` — PUSHED origin/main (32 files: assets/manifest.json, assets/atlases/*.png/json, tools/art/**).
-- Docs/evidence commit: see below (filled in after publishing).
+- e93acdd `[Docs] 아트 방향·아틀라스 계약·예산 문서와 검증 증거 추가` — PUSHED origin/main (54 files: docs/art/**, previews, evidence, palette, own coordination files).
+- Note: one publish attempt exited 1 with no commit (most likely the shared lock was busy). A retry succeeded. No duplicate commit.
 
 ## What exists (real paths)
 - Runtime: `assets/manifest.json`, `assets/atlases/{char_player,char_enemy,bases,fx_combat,ui_main,biome_meadow}.{png,json}` (8-bit indexed PNG, 42 KiB total disk, 5.12 MiB GPU at RGBA8).

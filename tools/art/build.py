@@ -237,6 +237,9 @@ def write_manifest(pages, docs, layer_meta):
 
 def write_previews(pages, docs, sheets, meadow):
     os.makedirs(os.path.join(PREV, "sheets"), exist_ok=True)
+    for old in os.listdir(os.path.join(PREV, "sheets")):   # prune sheets of renamed/removed sets
+        if old.endswith(".png") and old[:-4] not in sheets:
+            os.remove(os.path.join(PREV, "sheets", old))
     for p in pages:
         _, page = docs[p.id]
         img = Image.fromarray(RGBA[page], "RGBA")
