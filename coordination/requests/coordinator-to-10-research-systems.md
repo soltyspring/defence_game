@@ -1,0 +1,21 @@
+
+# Success-analysis research expansion (user authorized two additional windows)
+09-research-product owns docs/research/product/** and own status/handoff/requests ONLY. Deep factual game identity/success-evidence/gameplay/progression/economy/monetization/graphics/font/UI comparison, with sources and adoption/rejection tests. No runtime/art/data edits.
+10-research-systems owns docs/research/systems/** and own status/handoff/requests ONLY. Observed online features vs publicly known backend, unknowns, inferred suitable content/save/DB/server schemas, transactions/security/analytics/LiveOps and lean application to OUR game. No claim access to competitor private DB; no runtime edits.
+All prior owners unchanged. Both use Opus5.5/trust-all, commit/push verified research via Publish-Task.ps1, read quota guard and preserve windows. 01 remains sole user-question funnel; keep Q1 pending, title identification assumptions explicit. There are now TEN workers;97% checkpoint includes09/10 too.
+
+Research review gate: recruiting tags AWS/GCP/NoSQL from company postings are company/team hiring evidence, NOT proof a specific released game's DB/vendor/schema. Do not infer competitor internal DB/retention from that. Separate content tables, player persistence and server-authoritative economy. Give our game's minimal adequate MVP first; avoid gratuitous multiplayer/backend infrastructure before core retention evidence. Produce first unknown/evidence matrix early, then deepen; preserve own paths.
+
+Source hygiene: .git/info/exclude now ignores **/.local_inspect/ raw fetched HTML. Do not publish full third-party page snapshots/scripts or claim extracted vendor libraries prove backend DB schema. Publish original analysis/citations/short permitted excerpts and provenance only. Actual sources fetched may be cached locally for inspection; no fake hands-on play or private metrics. First useful findings report remains priority.
+
+# User update: 97% work stop and individual handoffs
+At >=97% stop ongoing work at the earliest safe boundary and write one role-specific file coordination/handoffs/<role>.md containing current task, completed/unfinished work, exact next steps, session ID, actual validation, errors and commit/push state. Commit and push owned WIP safely (checkpoint branch if unverified). Stop issuing new work and await user login. Quota guard generates fallback handoff only if missing, explicitly marked coordinator snapshot, and preserves existing handoffs; it creates independent WIP branches and reports actual push results. Never claim a worker authored an unconfirmed handoff or that it stopped merely because a request file exists. On trigger, coordinator must actively verify each session and deliver stop/checkpoint instruction using a supported safe session mechanism; if busy sessions cannot be stopped and instructed without losing work, report specific limitation, preserve windows and save snapshots. No authentication automation.
+
+## QUOTA CHECKPOINT
+Stop current work at a safe boundary. Write coordination/handoffs/10-research-systems.md with completed work, unfinished work, exact next steps, validation, errors, session ID and commit/push status; commit/push owned work where possible. Await account login.
+
+## QUOTA CHECKPOINT
+Stop current work at a safe boundary. Write coordination/handoffs/10-research-systems.md with completed work, unfinished work, exact next steps, validation, errors, session ID and commit/push status; commit/push owned work where possible. Await account login.
+
+## QUOTA CHECKPOINT
+Stop current work at a safe boundary. Write coordination/handoffs/10-research-systems.md with completed work, unfinished work, exact next steps, validation, errors, session ID and commit/push status; commit/push owned work where possible. Await account login.
