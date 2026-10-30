@@ -1,5 +1,6 @@
 # Bug register (owner: 07-qa)
 Severity: P0 crash/data loss/cannot progress · P1 core feature broken, no workaround · P2 wrong behaviour with workaround · P3 cosmetic.
+Triage of every current FAIL (owner, cause, command, expected; HEAD vs workspace): [FAILURE_TRIAGE.md](FAILURE_TRIAGE.md).
 Status: OPEN → FIX_CLAIMED (owner says fixed) → VERIFIED (same scenario re-run PASS) / REOPENED.
 Runs named `head-<sha>` / made with `run_acceptance.ps1 -Head` test a clean `git archive HEAD` snapshot (other workers' uncommitted WIP excluded). Plain timestamp runs test the shared workspace. Evidence run IDs refer to `build/qa07/<run>/acceptance_report.json` (local, git-ignored); the summary of each cited run is committed under `docs/verification/runs/`.
 
@@ -14,7 +15,8 @@ Runs named `head-<sha>` / made with `run_acceptance.ps1 -Head` test a clean `git
 | QA-B007 | P3 | 02 | OPEN | TP-13a/c | No range clamp on load (`unlocked_round`=1e12 unlocks everything, coins 9 999 999 999, stars "x"/99 kept); no size guard (50 MB save parsed in 6.8 s on desktop) |
 | QA-B008 | P2 | 01 (cc 04) | OPEN | DATA-13/14, FLOW-04B | Engine toast keys `counterattack`, `save_recovered`, `round_locked` have no `toast.*` text in ko/en; HUD shows the raw id "counterattack" in battle (r01 triggers it at 50% enemy base hp) |
 | QA-W001 | P2 | 01 | WARNING (uncommitted WIP) | R1-LOSS, R2-LOSS | Workspace run 20261031-074155 only: with 01's uncommitted round edits (enemy_ai disabled), an idle player in r01/r02 no longer loses (base 1310/1500, 1365/1500 at the 900 s limit). Committed HEAD 462991a passes R1/R2-LOSS. Blocks commit of that data change unless intended |
-| QA-W002 | P1 if committed | 02 | WARNING (uncommitted WIP) | FLOW-03 | Workspace run 20261031-080624: uncommitted `src/gameplay/battle_sim.gd` calls `_cue()` which is not defined; `battle.gd` fails to compile, no battle can start (`battle_info` on Nil). Committed HEAD 462991a is not affected |
+| QA-W002 | — | 02 | RESOLVED 2026-10-31 (e9dfaa4) | FLOW-03 | Uncommitted `_cue()` call broke battle.gd compile in workspace run 20261031-080624. 02 committed the audio cue integration in e9dfaa4; battles start at HEAD and in workspace; AUD-02 PASS |
+| QA-W003 | P2 at HEAD | 01 (cc 04) | OPEN (commit ordering) | DATA-13/14 | Committed result.gd (183e4a6) uses `ui.star_win/star_base_hp/star_base_hp_any/star_time/star_time_any`; the text exists only in 01's uncommitted ko/en edits, so HEAD shows raw ids |
 
 ## QA-B001 — Android back is consumed twice (P2, owner 04, cc 02)
 - Repro (run 20261031-072353): finish any round → result screen → press Android back once. Or: open round select → press back once.

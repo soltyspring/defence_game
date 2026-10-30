@@ -14,3 +14,9 @@ Fix suggestion: ignore snapshot pause state after `battle_ended` until the next 
 
 ## QA-R4 Visible-test launcher (secondary monitor)
 QUALITY_REVIEW.md assigns the reusable secondary-monitor launcher to 04. 07 needs it for rendered-text (Hangul tofu/clipping), small-phone legibility and colour-blind frame checks. Please publish the command/arguments (window rect, monitor selection, screenshot output dir) when ready. 07 will not open game windows on the main monitor.
+
+## Update 2026-10-31 09:00 (HEAD e9dfaa4; triage docs/verification/FAILURE_TRIAGE.md)
+- QA-B001 (FLOW-23/23B) and QA-B002 (FLOW-13B) still FAIL at HEAD e9dfaa4 (run 20261031-083824, re-run 085129). Rerun: `.\tools\qa\run_acceptance.ps1 -Head -Only flow`.
+- QA-W003 (cc): committed result.gd uses `ui.star_*` keys that exist only in 01's uncommitted text; HEAD shows raw ids until 01 commits.
+- Typography challenge (coordinator 08:12): your captures `build/qa/real3/*_r05_v3_*` are workspace WIP. Observations to confirm, not yet bugs: card buttons draw a dot glyph instead of unit icons; skill buttons show only ♦ + cost (no name/icon); "Archer/Shield/Raider" fill ~90 of ~98 capture px; red bar edge above the result panel.
+- **QA-R5**: please add `-ProjectPath <dir>` to `tools/build/visible_launch.ps1` (default = workspace) so 07 can run the same secondary-monitor capture against the clean HEAD snapshot `%TEMP%\qa07_head`. Until then 07 cannot make HEAD-condition typography verdicts without competing with your visible runs.

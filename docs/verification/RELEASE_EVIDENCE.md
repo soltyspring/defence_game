@@ -1,6 +1,6 @@
 # Release evidence matrix (owner: 07-qa)
-Latest full run: **head-462991a** (clean `git archive` of committed HEAD 462991a; other workers' WIP excluded; Godot 4.7.2 headless, Windows desktop).
-Counts: PASS 119 · FAIL 12 · NOT_IMPLEMENTED 2 · NOT_TESTED 2 · BLOCKED 1, plus 06 services suites exit 0 (run 20261031-080846). Summary: [runs/head-462991a.md](runs/head-462991a.md). Previous: [runs/20261031-072353.md](runs/20261031-072353.md). Hostile review: [HOSTILE_REVIEW.md](HOSTILE_REVIEW.md).
+Latest full run: **HEAD e9dfaa4** (`-Head` clean snapshot; runs 20261031-083824 + flow re-run 20261031-085129; Godot 4.7.2 headless, Windows desktop). Triage: [FAILURE_TRIAGE.md](FAILURE_TRIAGE.md).
+Counts: PASS 120 · FAIL 12 · NOT_IMPLEMENTED 1 · NOT_TESTED 2 · BLOCKED 1; 06 services suites exit 0. Previous: [runs/head-462991a.md](runs/head-462991a.md). Hostile review: [HOSTILE_REVIEW.md](HOSTILE_REVIEW.md).
 
 **Scope warning:** desktop headless acceptance only. This is NOT Android release certification.
 `adb devices` at run time listed `emulator-5580` (an emulator, not a phone); no APK install or
@@ -26,7 +26,7 @@ on-device test has been done by 07-qa.
 | Localised text for engine toasts | FAIL | DATA-13/14, FLOW-04B (QA-B008); ko/en placeholder parity PASS (DATA-12) |
 | Image integration (atlases, P0 sprites/fx/biome/icons/bases, residency, release) | PASS | ART-01..11; resident battle pages ≤ 32 MiB estimate |
 | Audio assets | PASS | AUD-01 (31 file refs exist) |
-| Audio in game | NOT_IMPLEMENTED | AUD-02: no `Audio` autoload; game is silent. AUD-03 NOT_TESTED |
+| Audio in game | PARTIAL | AUD-02 PASS at e9dfaa4 (`Audio` autoload registered). AUD-03 (cues fire on events, honour settings/pause) NOT_TESTED; nothing was listened to |
 | Monetization disabled (D9) | PASS | MON-01..03 (data flags off, no SDK singletons, services default `disabled`) |
 | Services wired | NOT_IMPLEMENTED | MON-04 (no `Services` autoload; consistent with D9) |
 | Android export preset / permissions | PASS (static) | PLAT-01/02 |

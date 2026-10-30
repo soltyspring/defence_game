@@ -15,3 +15,7 @@ Engine emits `toast("counterattack")` (battle.gd, r01 enemy base < 50%), `toast(
 ### QA-W001 (warning on your uncommitted round edits)
 Workspace run 20261031-074155 with your uncommitted r01–r10 edits (enemy_ai disabled): an idle player in r01/r02 no longer loses; the 900 s time limit ends the battle (base 1310/1500, 1365/1500). Committed HEAD passes. If a passive player should still lose (INTERFACES §2.4 loss = base hp 0), please recheck before committing: `.\tools\qa\run_acceptance.ps1 -Only sim`.
 ### R1 progress: placeholder parity ko/en PASS (DATA-12, 109 keys); `ui.*`/`toast.*` literal coverage now checked (DATA-13/14).
+
+## Update 2026-10-31 08:55 (HEAD e9dfaa4, triage docs/verification/FAILURE_TRIAGE.md)
+- QA-B008 still FAIL at HEAD. **QA-W003**: committed result.gd (04, 183e4a6) uses `ui.star_win`, `ui.star_base_hp`, `ui.star_base_hp_any`, `ui.star_time`, `ui.star_time_any`; these exist only in your uncommitted ko/en files, so committed HEAD shows raw ids on the result screen. Please commit the text keys (plus the 3 `toast.*` keys). Acceptance: `.\tools\qa\run_acceptance.ps1 -Head -Only data,flow` → DATA-13/14, FLOW-04B PASS.
+- QA-W001 still present in the workspace (R1/R2-LOSS FAIL with your uncommitted round data); HEAD passes.

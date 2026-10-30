@@ -35,6 +35,9 @@ A. release blocker (data loss, crash, cannot progress) · B. contract/logic cont
 ## 3. What is already strong (E only; does not offset any item above)
 First three rounds are winnable and losable at HEAD with deterministic seeds; touch, multi-touch hold-and-tap, background/resume pause, safe-area layouts across 16:9–21:9 and 4:3, atlas residency/release, monetization disabled in every layer, 06 service suites green (run 20261031-080846). These are necessary conditions, not reasons a player would choose this game.
 
+## 3b. Method additions
+Evidence staleness and vertical-slice gate from the external reference: [EXTERNAL_REFERENCE_REVIEW.md](EXTERNAL_REFERENCE_REVIEW.md) (A2: emulator frames used in R8–R10 predate the font/UI commits; A4: slice gate is NOT PROCEED, Q4 = NO because of QA-B004).
+
 ## 4. Not reviewed yet (gaps, not passes)
 Rendered Hangul text (tofu/clipping), colour-blind readability, peak-crowd frames (r08), rounds r04–r10 rules, reward edge cases (double reward on re-entry, mid-battle retry), audio mix in context, low-end device performance (08 owns), store/privacy disclosures (04).
 
