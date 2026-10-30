@@ -314,6 +314,25 @@ func stop_all_sfx() -> void:
 		p.stop()
 		_v_end.erase(p)
 
+## Teardown: stop every voice and drop stream references so AudioServer can release its
+## playback objects (players freed while playing left AudioStreamPlayback* + stream refs
+## alive until exit: reproduced by tools/audio/leak_probe.gd --mode=cycle).
+func _exit_tree() -> void:
+	for p in _sfx + _ui + _music + ([_stinger] if _stinger else []):
+		p.stop()
+		p.stream = null
+	_v_cue.clear(); _v_prio.clear(); _v_start.clear(); _v_end.clear()
+	_music_cur = -1
+	_music_id = &""
+	_music_fade = [{}, {}]
+
+## Call before SceneTree.quit() and quit one frame later: AudioServer releases stopped playbacks
+## during its per-frame update, which no longer runs once the tree is finalised. Without this,
+## quitting while music plays reports AudioStreamPlayback*/AudioStreamOggVorbis "leaked at exit"
+## (exit-only; process memory is reclaimed by the OS). Reproduced by leak_probe.gd --mode=quit_*.
+func prepare_quit() -> void:
+	_exit_tree()
+
 # ---------------------------------------------------------------- music
 func play_music(id: StringName, fade := 0.8) -> void:
 	if id == _music_id and _music_cur >= 0 and _music[_music_cur].playing: return
