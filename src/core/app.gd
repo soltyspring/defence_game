@@ -97,6 +97,9 @@ func _process(delta: float) -> void:
 			print("[App] quit-after reached. perf=", JSON.stringify(Perf.snapshot()), " atlas=", JSON.stringify(Atlas.texture_report()))
 			if battle and battle.sim:
 				print("[App] battle t=%.1f paused=%s ended=%s players=%d enemies=%d gold=%d" % [battle.sim.t, battle.sim.paused, battle.sim.ended, battle.sim.players.size(), battle.sim.enemies.size(), battle.sim.gold])
+			var au := get_node_or_null("/root/Audio")
+			if au and au.has_method("snapshot"):
+				print("[App] audio=", JSON.stringify(au.snapshot()))
 			get_tree().quit(0)
 	if _result_delay > 0.0:
 		_result_delay -= delta
@@ -174,7 +177,7 @@ func start_round(round_id: String, force := false) -> void:
 	if not autoplay: seed_v = randi()
 	battle.start(round_id, seed_v, Save.progress.get("upgrades", {}), autoplay)
 	if hud.has_method("ui_setup"):
-		hud.ui_setup({"info": battle.sim.battle_info()})
+		hud.ui_setup({"info": battle.battle_info()})
 	Events.screen_changed.emit(&"battle", {"round_id": round_id})
 
 func _on_battle_finished(r: Dictionary) -> void:
@@ -192,6 +195,10 @@ func _on_battle_finished(r: Dictionary) -> void:
 	result.coins = coins
 	result.first_clear = first_clear
 	result.next_round_id = Content.next_round_id(result.round_id) if result.won else ""
+	var td: Array = Save.progress.get("tutorial_done", [])
+	for k in result.get("tutorial_done", []):
+		if not td.has(k): td.append(k)
+	Save.progress["tutorial_done"] = td
 	Save.record_result(result, idx)
 	last_result = result
 	print("[App] battle ended ", JSON.stringify(result))

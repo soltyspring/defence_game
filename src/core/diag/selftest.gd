@@ -23,6 +23,9 @@ func _initialize() -> void:
 	_check_fallback_content()
 	_check_rounds(content)
 	_check_caps(content)
+	_check_find_target(content)
+	_check_rules(content)
+	_check_tutorial(content)
 	_check_save()
 	content.free()
 	report.total_ms = Time.get_ticks_msec() - t0
@@ -40,6 +43,9 @@ func _initialize() -> void:
 	for line in report.summary: print("  ", line)
 	print("cap_test ", JSON.stringify(report.get("cap_test", {})))
 	print("save_tests ", JSON.stringify(report.get("save_tests", {})))
+	print("find_target ", JSON.stringify(report.get("find_target_equivalence", {})))
+	print("rules ", JSON.stringify(report.get("rules", {})))
+	print("tutorial ", JSON.stringify(report.get("tutorial", {})))
 	print("scripts ok %d/%d, scenes %d, foreign errors %s" % [report.scripts_ok, report.scripts_total, report.scenes_total, str(report.foreign_script_errors)])
 	for b in balance_flags: print("BALANCE: ", b)
 	print("report: ", ProjectSettings.globalize_path("user://selftest_report.json"))
@@ -262,3 +268,99 @@ func _check_save() -> void:
 		_fail("migration v0->v1 failed")
 	report.save_tests = {"roundtrip": true, "corruption_recovery": s3.recovered, "tamper_rejected": int(s4.progress.coins) != 999, "migration": int(s5.progress.version)}
 	for n in [s, s2, s3, s4, s5]: n.free()
+
+## Sorted-lane target lookup must pick a target at the same distance as the O(n) reference scan.
+func _check_find_target(content) -> void:
+	var sim = SimS.new()
+	sim.setup(content, content.round_order[content.round_order.size() - 1], 4)
+	sim.gold = 99999.0
+	sim.gold_max = 999999.0
+	var checked := 0
+	var mismatches := 0
+	for i in 900:
+		for id in sim.card_ids:
+			sim.card_cd[id] = 0.0
+			sim.deploy(id)
+		sim.step(1.0 / 60.0)
+		if sim.ended: break
+		if i % 15 == 0:
+			sim._sort_lanes()   # fresh lanes: results must match exactly by distance
+			var all: Array = sim.players + sim.enemies + [sim.hero]
+			for u in all:
+				if u.dying: continue
+				var a = sim._find_target(u)
+				var b = sim._find_target_linear(u)
+				checked += 1
+				var da: float = 1e9 if a == null else (a.x - u.x) * u.side
+				var db: float = 1e9 if b == null else (b.x - u.x) * u.side
+				if absf(da - db) > 0.0001:
+					mismatches += 1
+	report.find_target_equivalence = {"checked": checked, "mismatches": mismatches}
+	if checked < 100: _fail("find_target equivalence: too few samples (%d)" % checked)
+	if mismatches > 0: _fail("find_target sorted lookup mismatched linear scan %d/%d" % [mismatches, checked])
+
+## 01 RELEASE_DESIGN_REVIEW §3 rules + round skill gating (01 R2 C2).
+func _check_rules(content) -> void:
+	var sim = SimS.new()
+	sim.setup(content, content.round_order[0], 1)
+	sim.player_base.hp = 1.0
+	sim.enemy_base.hp = 1.0
+	sim._in_step = true
+	sim._damage_base(-1, 10.0)
+	sim._damage_base(1, 10.0)
+	sim._in_step = false
+	sim.step(1.0 / 60.0)
+	var both_ok: bool = sim.ended and sim.won
+	if not both_ok: _fail("both bases destroyed same tick must be a player win")
+	var gating := {}
+	for rid in content.round_order:
+		gating[rid] = content.round_skills(content.get_round(rid))
+	var r01: Array = gating[content.round_order[0]]
+	if not r01.is_empty(): _fail("r01 must have no skills, got %s" % str(r01))
+	var roster: Array = content.round_enemy_roster(content.get_round(content.round_order[0]))
+	report.rules = {"same_tick_both_bases_player_win": both_ok, "skills_by_round": gating, "r01_enemy_roster": roster}
+	if roster.is_empty(): _fail("r01 enemy roster empty")
+
+## Drives TutorialDirector the way battle.gd does, with the competent bot on the first round.
+func _check_tutorial(content) -> void:
+	var TutS = load("res://src/gameplay/tutorial_director.gd")
+	var rid: String = content.round_order[0]
+	var rd: Dictionary = content.get_round(rid)
+	var sim = SimS.new()
+	sim.setup(content, rid, 7)
+	var bot = BotS.new(2, 7)
+	var tut = TutS.new()
+	tut.setup(rd.get("tutorial", []), [])
+	var shown_seq: Array = []
+	var cue_counts := {}
+	var dt := 1.0 / 60.0
+	while not sim.ended and sim.t < 600.0:
+		bot.act(sim, dt)
+		if sim.hero_dir != 0: tut.moved = true
+		sim.step(dt)
+		for k in sim.cues:
+			var c: String = str(sim.cues[k][0])
+			cue_counts[c] = int(cue_counts.get(c, 0)) + 1
+		sim.cues.clear()
+		for e in sim.events:
+			match e[0]:
+				"deploy":
+					tut.deployed += 1
+					tut.deployed_kinds[str(e[1].unit)] = true
+				"worker": tut.workers_bought += 1
+				"skill":
+					tut.skills_cast += 1
+					tut.cast_ids[str(e[1].skill)] = true
+				"boss": tut.boss_seen = true
+		sim.events.clear()
+		var k = tut.update(sim, dt)
+		if k != null and str(k) != "":
+			shown_seq.append([str(k), snappedf(sim.t, 0.1)])
+	report.tutorial = {"round": rid, "steps": rd.get("tutorial", []), "shown": shown_seq, "done": tut.done, "cues": cue_counts}
+	var steps: Array = rd.get("tutorial", [])
+	if shown_seq.size() != steps.size():
+		_fail("tutorial: shown %d of %d steps" % [shown_seq.size(), steps.size()])
+	for i in mini(shown_seq.size(), steps.size()):
+		if shown_seq[i][0] != str(steps[i]): _fail("tutorial order mismatch at %d" % i)
+	for c in ["hit", "death", "base_hit"]:
+		if int(cue_counts.get(c, 0)) == 0: _fail("no '%s' audio cues in a full battle" % c)

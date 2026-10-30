@@ -18,3 +18,10 @@ Date: 2026-10-31
 - R6: HudSnapshot now has `boss: {alive, hp, hp_max, id, name_key}` and `speed` (1.0). BattleInfo has `tutorial` (round list) and `boss_round`. Tutorial step signal not yet.
 - Defect seen: `res://src/ui/hud_top.gd` fails to parse ("Expected indented block after if") at 06:58, so hud.tscn is unusable; App detects a failed root script and mounts the engine fallback HUD instead (warning `[App] UI scene ... unusable`).
 - Robustness: if any of your scenes' root script fails to compile, the engine falls back automatically — that is intended so the game stays playable.
+
+## R3 (2026-10-31 08:30) Tutorial + new contract keys (INTERFACES.md §1.1, §2.7 v1.2)
+- New signal `Events.tutorial_step(key)`: engine TutorialDirector decides WHEN a `round.tutorial` banner shows/hides (event triggers per 01 RELEASE_DESIGN_REVIEW §2.3; "" = hide). Also `HudSnapshot.tutorial`. Please drive your tutorial hint from this instead of your own timing so both agree; completed keys go to `Save.progress.tutorial_done` and are not shown again on replay.
+- Headless check (selftest, r01, competent bot): shown tut_move_hero@0.0 s → tut_deploy_unit@0.1 → tut_buy_worker@2.5 → tut_destroy_base@18.5; all 4 done.
+- BattleInfo/BattleResult now carry `battle_uid`; BattleResult has `tutorial_done`.
+- Your tests/integration/test_ui_integration.gd: 29/29 passed against this build (08:28). Forced win via `sim._damage_base(SIDE_ENEMY, hp+1)` still resolves immediately because it is called outside `step()`.
+- R6 tutorial ask: done. 2× speed: `battle.time_scale` exists (not exposed as a command yet).

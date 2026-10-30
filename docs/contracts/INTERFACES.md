@@ -15,6 +15,8 @@ UI (04) emits `cmd_*` signals and listens to state signals. Gameplay (02) does t
 | `toast(key: String, args: Dictionary)` | keys: `not_enough_gold`, `army_full`, `on_cooldown`, `not_enough_mana`, `hero_dead`, `wave_incoming`, `boss_incoming`, `worker_max` | feedback |
 | `progress_changed(p: Dictionary)` | see §1.3 `Progress` | after save/unlock |
 | `floating_text(world_pos: Vector2, text: String, kind: StringName)` | kind `dmg`,`heal`,`gold`,`crit` | optional; engine draws its own fallback |
+| `tutorial_step(key: String)` | key from `round.tutorial` (text: data/text/<locale>.json), `""` = hide | engine TutorialDirector (src/gameplay/tutorial_director.gd): shows on trigger, hides when the player does the action or on timeout; never pauses. Also mirrored in `HudSnapshot.tutorial` |
+| `sfx(cue: StringName, params: Dictionary)` | cues `deploy{unit}`, `worker_buy`, `skill{skill}`, `hero_death`, `hero_respawn`, `wave_incoming`/`boss_incoming{index,boss}`, `hit{kind: melee/ranged/siege, x}`, `shoot{projectile,x}`, `death{side,x,boss}`, `base_hit{side}`, `explosion{x}` | for 05-audio; combat cues coalesced to ≤1 per cue+kind per sim step |
 
 ### 1.2 UI → Engine (commands)
 | Signal | Args | Effect |
@@ -121,6 +123,9 @@ Gold income/s = base_income + workers × worker_income.
 - Meta (`data/meta.json` upgrades): applied at battle start from `Save.progress.upgrades{upgrade_id: level}` — `unit:<id>` hp/atk mult, `hero:<id>` hp/atk mult, `resource:supply` regen_add/cap_add, `resource:energy` regen_add/cap_add, `worker` income_add, `base:player` hp_mult.
 - Rewards (App): win → first clear `first_clear_coins` else `coins`, + kill_coins, + 3★ bonus once. Loss → kill_coins × loss_coin_ratio.
 - Not yet implemented (ignored): `hit_frame`, `cast_time`, `chapter`, data/text localisation (04 owns UI text).
+- v1.2 (2026-10-31): `round.skills` explicit list (including `[]` = no skills, r01) is authoritative; only absent or all-null lists derive from `unlock_round`. Both bases reaching 0 HP in the same sim step = player win. Damage applied outside `step()` (commands/tests) resolves the battle immediately.
+- v1.2 additive keys: BattleInfo `battle_uid` (`"<unix>-<32 hex>"`, 128 random bits, unique per battle instance), `tutorial`, `boss_round`; BattleResult `battle_uid`, `tutorial_done` (keys completed this battle); HudSnapshot `tutorial` (current key or ""), `boss{alive,hp,hp_max,id,name_key}`, `speed`. Progress `tutorial_done: Array[String]` (completed keys are not shown again).
+- Per-battle atlas residency uses `Content.round_enemy_roster(round)` (waves, AI pool, trickle, HP triggers, boss summons) instead of every enemy.
 
 ## 3. Save file (engine-owned; 04 may build settings UI on top)
 `user://save.json` (+ `user://save.json.bak`). Written atomically via `save.json.tmp` → rename; previous file kept as `.bak`. Content: `{"version":1,"checksum":"<sha256 of payload string>","payload":"<Progress serialised as JSON string>"}` (payload is a string so the checksum is byte-exact). On parse/checksum failure → load `.bak` → else fresh defaults, and record `recovered:true` (UI may toast). Migration hook `Save._migrate(payload, from_version)`.

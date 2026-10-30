@@ -10,6 +10,10 @@ signal battle_paused(paused: bool)
 signal toast(key: String, args: Dictionary)
 signal progress_changed(p: Dictionary)
 signal floating_text(world_pos: Vector2, text: String, kind: StringName)
+## Tutorial banner: key from round.tutorial (text in data/text/<locale>.json); "" = hide banner.
+signal tutorial_step(key: String)
+## Semantic audio cue for 05-audio (docs/audio/AUDIO_CONTRACT.md). At most one per cue+kind per frame.
+signal sfx(cue: StringName, params: Dictionary)
 
 # ---- UI -> Engine ----
 signal cmd_start_round(round_id: String)

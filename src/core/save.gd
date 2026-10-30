@@ -13,7 +13,7 @@ func _ready() -> void:
 
 static func fresh() -> Dictionary:
 	return {"version": VERSION, "unlocked_round": 1, "stars": {}, "best_time": {}, "coins": 0,
-		"clears": 0, "settings": {"fps_cap": 60, "sfx": 1.0, "music": 0.8, "show_damage": true, "screen_shake": true}}
+		"clears": 0, "tutorial_done": [], "settings": {"fps_cap": 60, "sfx": 1.0, "music": 0.8, "show_damage": true, "screen_shake": true}}
 
 func load_progress() -> void:
 	recovered = false

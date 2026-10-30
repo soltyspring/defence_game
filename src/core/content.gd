@@ -148,11 +148,14 @@ func _validate_refs() -> void:
 			else:
 				warnings.append("round %s: card %s missing, dropped" % [rid, c])
 		r.cards = cards
+		var raw_skills = r.get("skills", null)
+		var explicit_skills: bool = raw_skills is Array and (raw_skills.is_empty() or raw_skills.any(func(x): return x != null))
 		var sk: Array = []
-		for s in r.get("skills", []):
+		for s in (raw_skills if raw_skills is Array else []):
 			if s != null and skills.has(str(s)):
 				sk.append(str(s))
 		r["skills"] = sk
+		r["_skills_explicit"] = explicit_skills
 		for w in r.waves:
 			for s in w.get("spawns", []):
 				if not units.has(str(s.get("unit", ""))):
@@ -188,14 +191,33 @@ func round_cards(r: Dictionary) -> Array:
 		ids = ["spearman"] if units.has("spearman") else [units.keys()[0]]
 	return ids.slice(0, 5)
 
+## Enemy unit ids that can appear in a round (waves, AI pool, trickle, HP triggers, boss summons).
+## Used for per-round atlas residency (08 P6).
+func round_enemy_roster(r: Dictionary) -> Array:
+	var ids: Array = []
+	var add := func(id) -> void:
+		var s := str(id)
+		if units.has(s) and not ids.has(s): ids.append(s)
+	for w in r.get("waves", []):
+		for s in w.get("spawns", []): add.call(s.get("unit", ""))
+	for id in r.get("enemy_ai", {}).get("pool", []): add.call(id)
+	for id in r.get("trickle", {}).get("pattern", []): add.call(id)
+	for trg in r.get("enemy_base_spawns_on_hp", []):
+		for s in trg.get("spawns", []): add.call(s.get("unit", ""))
+	for id in ids.duplicate():
+		var sm = units[id].get("summon")
+		if sm is Dictionary: add.call(sm.get("unit", ""))
+	return ids
+
 ## Hero skills for a round: explicit round list, else hero skills with unlock_round <= index.
 func round_skills(r: Dictionary) -> Array:
 	var hero: Dictionary = heroes.get(str(r.hero), {})
 	var hs: Array = hero.get("skills", [])
 	var explicit: Array = r.get("skills", [])
+	var is_explicit := bool(r.get("_skills_explicit", false))
 	var out: Array = []
 	for s in hs:
-		if explicit.is_empty():
+		if not is_explicit:
 			if int(skills[s].get("unlock_round", 1)) <= int(r.index):
 				out.append(s)
 		elif explicit.has(s):

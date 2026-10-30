@@ -11,6 +11,7 @@ const BASE_INSET := 40.0
 const BASE_HALF := 22.0
 const TIME_LIMIT := 900.0
 const KB_DECAY := 300.0
+const SIDES: Array[int] = [1, -1]
 enum { S_WALK, S_ATTACK, S_DYING, S_IDLE }
 
 class Unit:
@@ -42,6 +43,7 @@ class Unit:
 	var is_boss := false
 	var contact := 6.0
 	var summon_t := 0.0
+	var in_lane := false
 
 class Projectile:
 	var alive := false
@@ -141,6 +143,14 @@ var trickle_i := 0
 var hp_triggers_fired: Dictionary = {}
 var events: Array = []             # drained by battle.gd: [type:String, data:Dictionary]
 var refused_spawns := 0
+var time_limit := TIME_LIMIT        # <= 0 disables (QA long runs)
+var cues: Dictionary = {}           # audio cues coalesced per step: "cue:kind" -> [cue, params]; drained by battle.gd
+var _lane_p: Array[Unit] = []
+var _lane_e: Array[Unit] = []
+var _base_dead_enemy := false
+var _base_dead_player := false
+var _in_step := false
+var _linear_targets := false        # A/B benchmark switch only (selftest/perf); never set in gameplay
 var stats := {"deployed": 0, "workers_bought": 0, "skills_cast": 0, "enemy_spawned": 0, "max_units": 0, "max_projectiles": 0, "hero_deaths": 0}
 
 func setup(p_content, round_id: String, seed_value: int = 1, p_upgrades: Dictionary = {}) -> void:
@@ -339,6 +349,11 @@ func set_hero_dir(d: int) -> void:
 func step(dt: float) -> void:
 	if ended or paused:
 		return
+	_in_step = true
+	_step_inner(dt)
+	_in_step = false
+
+func _step_inner(dt: float) -> void:
 	t += dt
 	gold = minf(gold_max, gold + income() * dt)
 	mana = minf(mana_max, mana + mana_regen * dt)
@@ -353,6 +368,7 @@ func step(dt: float) -> void:
 	_step_hp_triggers()
 	_step_delayed()
 	_step_aura()
+	_sort_lanes()
 	_step_hero(dt)
 	for u in players: _step_unit(u, dt)
 	for u in enemies: _step_unit(u, dt)
@@ -361,8 +377,40 @@ func step(dt: float) -> void:
 	_step_fx(dt)
 	_reap()
 	stats.max_units = maxi(stats.max_units, players.size() + enemies.size())
-	if t >= TIME_LIMIT and not ended:
+	# both bases destroyed in the same tick resolve as a player win (01 RELEASE_DESIGN_REVIEW §3)
+	if not ended and (_base_dead_enemy or _base_dead_player):
+		_end(_base_dead_enemy)
+	if time_limit > 0.0 and t >= time_limit and not ended:
 		_end(false)
+
+## Per-step x-ordered views of each side (insertion sort: lanes are nearly sorted step to step).
+## Used by _find_target for O(log n) lookups instead of O(n) scans (08-performance P2).
+func _sort_lanes() -> void:
+	_sorted_into(players, _lane_p)
+	_sorted_into(enemies, _lane_e)
+
+func _sorted_into(src: Array[Unit], dst: Array[Unit]) -> void:
+	# persistent, nearly-sorted lane: drop dead/dying, append newcomers, insertion sort in place (≈O(n) per step)
+	var w := 0
+	for r in dst.size():
+		var u: Unit = dst[r]
+		if u.alive and not u.dying:
+			dst[w] = u
+			w += 1
+		else:
+			u.in_lane = false
+	dst.resize(w)
+	for u in src:
+		if not u.dying and not u.in_lane:
+			u.in_lane = true
+			dst.append(u)
+	for i in range(1, dst.size()):
+		var cur: Unit = dst[i]
+		var j := i - 1
+		while j >= 0 and dst[j].x > cur.x:
+			dst[j + 1] = dst[j]
+			j -= 1
+		dst[j + 1] = cur
 
 func _step_wave_announce() -> void:
 	while _wave_announced < wave_times.size() and wave_times[_wave_announced] <= t:
@@ -587,12 +635,14 @@ func _resolve_attack(u: Unit) -> void:
 		p.homing = not siege
 		p.target = tgt
 		p.hit_base = tgt == null
+		_cue(&"shoot", p.kind, {"projectile": p.kind, "x": u.x})
 	else:
 		if tgt:
 			_damage(tgt, atk, kb)
 			if float(u.def.get("splash", 0.0)) > 0.0:
 				_area_damage_side(-u.side, tgt.x, float(u.def.get("splash", 0.0)), atk, kb, tgt)
 			_fx("hit_spark", tgt.x, -12.0, 0.25, 0.0)
+			_cue(&"hit", "melee", {"kind": "melee", "x": tgt.x})
 		elif u.w_base:
 			_damage_base(-u.side, atk * _struct_mult(u))
 			if float(u.def.get("splash", 0.0)) > 0.0:
@@ -603,8 +653,66 @@ func _resolve_attack(u: Unit) -> void:
 		u.hp = 0.0
 		_kill(u, false)
 
-## Nearest living opponent ahead of u (may overlap slightly behind).
+## Nearest living opponent ahead of u (may overlap up to 10 px behind). Uses the per-step sorted lanes:
+## binary search for the first foe with (x - u.x) * side >= -10, i.e. the minimum of that distance.
 func _find_target(u: Unit) -> Unit:
+	if _linear_targets:
+		return _find_target_linear(u)
+	var best: Unit = null
+	var best_d := 1e9
+	if u.side == SIDE_PLAYER:
+		# foes = enemies sorted by x ascending; want min d = e.x - u.x with d >= -10.
+		# Units move within a step, so the lane is only nearly sorted: binary search, then check a few neighbours.
+		var lane := _lane_e
+		var lo := 0
+		var hi := lane.size()
+		var limit := u.x - 10.0
+		while lo < hi:
+			var mid := (lo + hi) >> 1
+			if lane[mid].x < limit: lo = mid + 1
+			else: hi = mid
+		var i := maxi(0, lo - 3)
+		var found := 0
+		while i < lane.size() and found < 4:
+			var e: Unit = lane[i]
+			i += 1
+			if e.dying: continue
+			var d := e.x - u.x
+			if d < -10.0: continue
+			found += 1
+			if d < best_d:
+				best_d = d
+				best = e
+	else:
+		# foes = players sorted ascending; want min d = u.x - e.x with d >= -10.
+		var lane2 := _lane_p
+		var lo2 := 0
+		var hi2 := lane2.size()
+		var limit2 := u.x + 10.0
+		while lo2 < hi2:
+			var mid2 := (lo2 + hi2) >> 1
+			if lane2[mid2].x <= limit2: lo2 = mid2 + 1
+			else: hi2 = mid2
+		var j := mini(lane2.size() - 1, lo2 + 2)
+		var found2 := 0
+		while j >= 0 and found2 < 4:
+			var e2: Unit = lane2[j]
+			j -= 1
+			if e2.dying: continue
+			var d2 := u.x - e2.x
+			if d2 < -10.0: continue
+			found2 += 1
+			if d2 < best_d:
+				best_d = d2
+				best = e2
+		if hero_respawn <= 0.0 and not hero.dying:
+			var d := (hero.x - u.x) * u.side
+			if d >= -10.0 and d < best_d:
+				best = hero
+	return best
+
+## Reference O(n) implementation kept for the selftest equivalence check.
+func _find_target_linear(u: Unit) -> Unit:
 	var best: Unit = null
 	var best_d := 1e9
 	var foes: Array[Unit] = enemies if u.side == SIDE_PLAYER else players
@@ -674,6 +782,13 @@ func _kill(u: Unit, rewarded: bool) -> void:
 		gold = minf(gold_max, gold + b)
 		mana = minf(mana_max, mana + float(econ.get("mana_on_kill", 2)))
 		if b > 0: _text(u.x, -40.0, "+%d" % b, &"gold")
+	_cue(&"death", "player" if u.side == SIDE_PLAYER else "enemy", {"side": "player" if u.side == SIDE_PLAYER else "enemy", "x": u.x, "boss": u.is_boss})
+
+## Coalesce audio cues: at most one per cue+kind per step (05-audio A3 performance note).
+func _cue(cue: StringName, kind: String, params: Dictionary) -> void:
+	var key := str(cue) + ":" + kind
+	if not cues.has(key):
+		cues[key] = [cue, params]
 
 func _damage_base(side: int, amount: float) -> void:
 	var b: Dictionary = player_base if side == SIDE_PLAYER else enemy_base
@@ -682,15 +797,19 @@ func _damage_base(side: int, amount: float) -> void:
 	b.flash = 0.12
 	if side == SIDE_PLAYER:
 		events.append(["shake", {"amp": 2.0 if amount < 40.0 else 4.0}])
+	_cue(&"base_hit", "player" if side == SIDE_PLAYER else "enemy", {"side": "player" if side == SIDE_PLAYER else "enemy"})
 	_text(b.x, -70.0, str(int(amount)), &"dmg")
 	if b.hp <= 0.0:
-		_end(side == SIDE_ENEMY)
+		if side == SIDE_ENEMY: _base_dead_enemy = true
+		else: _base_dead_player = true
+		if not _in_step:
+			_end(_base_dead_enemy)   # damage applied outside step() (commands/tests) resolves immediately
 
 ## Each base has a defensive tower (economy.base_tower). Enemy tower atk x round.enemy_tower_atk_mult.
 func _step_towers(dt: float) -> void:
 	if tower.is_empty():
 		return
-	for side in [SIDE_PLAYER, SIDE_ENEMY]:
+	for side: int in SIDES:
 		var b: Dictionary = player_base if side == SIDE_PLAYER else enemy_base
 		b.tower_cd = float(b.tower_cd) - dt
 		if b.tower_cd > 0.0: continue
@@ -754,6 +873,8 @@ func _step_projectiles(dt: float) -> void:
 					_fx("explosion", p.x1, -6.0, 0.35, p.splash)
 				elif hit_any:
 					_fx("hit_spark", p.x1, -12.0, 0.2, 0.0)
+				if hit_any and p.kind != "tower_bolt":
+					_cue(&"hit", "siege" if not p.homing else "ranged", {"kind": "siege" if not p.homing else "ranged", "x": p.x1})
 	stats.max_projectiles = maxi(stats.max_projectiles, n)
 
 func _step_fx(dt: float) -> void:
@@ -768,23 +889,31 @@ func _step_fx(dt: float) -> void:
 			if tx.t >= 0.8: tx.alive = false
 
 func _reap() -> void:
-	for arr in [players, enemies]:
-		var i: int = arr.size() - 1
-		while i >= 0:
-			var u: Unit = arr[i]
-			if u.dying and u.dead_t <= 0.0:
-				u.alive = false
-				u.w_target = null
-				_unit_pool.append(u)
-				arr.remove_at(i)
-			i -= 1
+	var reaped := _reap_side(players) + _reap_side(enemies)
+	if reaped == 0:
+		return
 	for p in projectiles:
 		if p.target != null and not p.target.alive:
 			p.target = null
-	for arr2 in [players, enemies]:
-		for u in arr2:
-			if u.w_target != null and not u.w_target.alive:
-				u.w_target = null
+	for u in players:
+		if u.w_target != null and not u.w_target.alive: u.w_target = null
+	for u in enemies:
+		if u.w_target != null and not u.w_target.alive: u.w_target = null
+	if hero.w_target != null and not hero.w_target.alive: hero.w_target = null
+
+func _reap_side(arr: Array[Unit]) -> int:
+	var n := 0
+	var i: int = arr.size() - 1
+	while i >= 0:
+		var u: Unit = arr[i]
+		if u.dying and u.dead_t <= 0.0:
+			u.alive = false
+			u.w_target = null
+			_unit_pool.append(u)
+			arr.remove_at(i)
+			n += 1
+		i -= 1
+	return n
 
 func _end(player_won: bool) -> void:
 	if ended: return
@@ -823,6 +952,7 @@ func _new_unit(d: Dictionary, side: int, x: float) -> Unit:
 	u.is_hero = false
 	u.is_boss = bool(d.get("is_boss", false)) or (d.get("tags", []) as Array).has("boss")
 	u.summon_t = 0.0
+	u.in_lane = false
 	u.contact = 5.0 * float(d.get("size", 1.0))
 	return u
 
@@ -839,6 +969,8 @@ func _new_projectile() -> Projectile:
 	return np
 
 func _fx(kind: String, x: float, y: float, dur: float, radius: float) -> void:
+	if kind == "explosion":
+		_cue(&"explosion", "", {"x": x})
 	var f: Fx = null
 	for e in fxs:
 		if not e.alive:

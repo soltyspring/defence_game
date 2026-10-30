@@ -20,6 +20,7 @@ Perf="*res://src/core/perf.gd"
 Content="*res://src/core/content.gd"
 Atlas="*res://src/core/atlas.gd"
 Save="*res://src/core/save.gd"
+Audio="*res://src/audio/audio_manager.gd"
 App="*res://src/core/app.gd"
 
 [display]
