@@ -1,0 +1,643 @@
+{
+ "version": 1,
+ "generator": "tools/audio/synth.py",
+ "generator_version": 1,
+ "technique": "deterministic numpy synthesis (oscillators/noise/envelopes/filters); no samples, no AI services",
+ "license": "original work for this project",
+ "sfx_format": {
+  "codec": "pcm_s16le",
+  "rate": 22050,
+  "channels": 1
+ },
+ "cues": {
+  "ui_tap": {
+   "bus": "UI",
+   "vol_db": -8,
+   "max": 2,
+   "gap": 0.03,
+   "prio": 6,
+   "pitch": 0.03,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/ui_tap.wav"
+   ],
+   "variants": [
+    {
+     "file": "ui_tap.wav",
+     "seconds": 0.045,
+     "bytes": 2028,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -11.27
+    }
+   ]
+  },
+  "ui_back": {
+   "bus": "UI",
+   "vol_db": -8,
+   "max": 1,
+   "gap": 0.05,
+   "prio": 6,
+   "pitch": 0.0,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/ui_back.wav"
+   ],
+   "variants": [
+    {
+     "file": "ui_back.wav",
+     "seconds": 0.12,
+     "bytes": 5336,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -12.24
+    }
+   ]
+  },
+  "ui_confirm": {
+   "bus": "UI",
+   "vol_db": -7,
+   "max": 1,
+   "gap": 0.05,
+   "prio": 7,
+   "pitch": 0.0,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/ui_confirm.wav"
+   ],
+   "variants": [
+    {
+     "file": "ui_confirm.wav",
+     "seconds": 0.2,
+     "bytes": 8864,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -11.85
+    }
+   ]
+  },
+  "ui_error": {
+   "bus": "UI",
+   "vol_db": -9,
+   "max": 1,
+   "gap": 0.25,
+   "prio": 6,
+   "pitch": 0.0,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/ui_error.wav"
+   ],
+   "variants": [
+    {
+     "file": "ui_error.wav",
+     "seconds": 0.2,
+     "bytes": 8864,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -8.17
+    }
+   ]
+  },
+  "deploy": {
+   "bus": "SFX",
+   "vol_db": -6,
+   "max": 2,
+   "gap": 0.06,
+   "prio": 7,
+   "pitch": 0.04,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/deploy.wav"
+   ],
+   "variants": [
+    {
+     "file": "deploy.wav",
+     "seconds": 0.26,
+     "bytes": 11510,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -13.21
+    }
+   ]
+  },
+  "worker_buy": {
+   "bus": "SFX",
+   "vol_db": -7,
+   "max": 1,
+   "gap": 0.1,
+   "prio": 7,
+   "pitch": 0.0,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/worker_buy.wav"
+   ],
+   "variants": [
+    {
+     "file": "worker_buy.wav",
+     "seconds": 0.42,
+     "bytes": 18566,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -11.85
+    }
+   ]
+  },
+  "gold_tick": {
+   "bus": "SFX",
+   "vol_db": -16,
+   "max": 2,
+   "gap": 0.09,
+   "prio": 2,
+   "pitch": 0.05,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/gold_tick.wav"
+   ],
+   "variants": [
+    {
+     "file": "gold_tick.wav",
+     "seconds": 0.11,
+     "bytes": 4896,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -12.17
+    }
+   ]
+  },
+  "hit_melee": {
+   "bus": "SFX",
+   "vol_db": -14,
+   "max": 3,
+   "gap": 0.045,
+   "prio": 1,
+   "pitch": 0.08,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/hit_melee_1.wav",
+    "res://assets/audio/sfx/hit_melee_2.wav",
+    "res://assets/audio/sfx/hit_melee_3.wav"
+   ],
+   "variants": [
+    {
+     "file": "hit_melee_1.wav",
+     "seconds": 0.1,
+     "bytes": 4454,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -14.98
+    },
+    {
+     "file": "hit_melee_2.wav",
+     "seconds": 0.1,
+     "bytes": 4454,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -16.15
+    },
+    {
+     "file": "hit_melee_3.wav",
+     "seconds": 0.1,
+     "bytes": 4454,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -15.9
+    }
+   ]
+  },
+  "hit_arrow": {
+   "bus": "SFX",
+   "vol_db": -15,
+   "max": 2,
+   "gap": 0.05,
+   "prio": 1,
+   "pitch": 0.08,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/hit_arrow.wav"
+   ],
+   "variants": [
+    {
+     "file": "hit_arrow.wav",
+     "seconds": 0.08,
+     "bytes": 3572,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -13.79
+    }
+   ]
+  },
+  "shoot_arrow": {
+   "bus": "SFX",
+   "vol_db": -17,
+   "max": 2,
+   "gap": 0.06,
+   "prio": 1,
+   "pitch": 0.08,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/shoot_arrow.wav"
+   ],
+   "variants": [
+    {
+     "file": "shoot_arrow.wav",
+     "seconds": 0.12,
+     "bytes": 5336,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -15.9
+    }
+   ]
+  },
+  "shoot_rock": {
+   "bus": "SFX",
+   "vol_db": -13,
+   "max": 1,
+   "gap": 0.12,
+   "prio": 2,
+   "pitch": 0.06,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/shoot_rock.wav"
+   ],
+   "variants": [
+    {
+     "file": "shoot_rock.wav",
+     "seconds": 0.16,
+     "bytes": 7100,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -15.21
+    }
+   ]
+  },
+  "shoot_spit": {
+   "bus": "SFX",
+   "vol_db": -15,
+   "max": 2,
+   "gap": 0.08,
+   "prio": 1,
+   "pitch": 0.08,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/shoot_spit.wav"
+   ],
+   "variants": [
+    {
+     "file": "shoot_spit.wav",
+     "seconds": 0.13,
+     "bytes": 5776,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -11.75
+    }
+   ]
+  },
+  "hit_base": {
+   "bus": "SFX",
+   "vol_db": -9,
+   "max": 1,
+   "gap": 0.35,
+   "prio": 5,
+   "pitch": 0.05,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/hit_base.wav"
+   ],
+   "variants": [
+    {
+     "file": "hit_base.wav",
+     "seconds": 0.38,
+     "bytes": 16802,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -18.1
+    }
+   ]
+  },
+  "explosion": {
+   "bus": "SFX",
+   "vol_db": -8,
+   "max": 2,
+   "gap": 0.12,
+   "prio": 5,
+   "pitch": 0.06,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/explosion.wav"
+   ],
+   "variants": [
+    {
+     "file": "explosion.wav",
+     "seconds": 0.7,
+     "bytes": 30914,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -17.81
+    }
+   ]
+  },
+  "death_ally": {
+   "bus": "SFX",
+   "vol_db": -12,
+   "max": 2,
+   "gap": 0.08,
+   "prio": 3,
+   "pitch": 0.06,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/death_ally.wav"
+   ],
+   "variants": [
+    {
+     "file": "death_ally.wav",
+     "seconds": 0.22,
+     "bytes": 9746,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -14.5
+    }
+   ]
+  },
+  "death_enemy": {
+   "bus": "SFX",
+   "vol_db": -12,
+   "max": 2,
+   "gap": 0.07,
+   "prio": 3,
+   "pitch": 0.08,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/death_enemy.wav"
+   ],
+   "variants": [
+    {
+     "file": "death_enemy.wav",
+     "seconds": 0.22,
+     "bytes": 9746,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -13.53
+    }
+   ]
+  },
+  "hero_death": {
+   "bus": "SFX",
+   "vol_db": -5,
+   "max": 1,
+   "gap": 1.0,
+   "prio": 9,
+   "pitch": 0.0,
+   "duck": -6,
+   "files": [
+    "res://assets/audio/sfx/hero_death.wav"
+   ],
+   "variants": [
+    {
+     "file": "hero_death.wav",
+     "seconds": 1.0,
+     "bytes": 44144,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -11.62
+    }
+   ]
+  },
+  "hero_respawn": {
+   "bus": "SFX",
+   "vol_db": -8,
+   "max": 1,
+   "gap": 1.0,
+   "prio": 8,
+   "pitch": 0.0,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/hero_respawn.wav"
+   ],
+   "variants": [
+    {
+     "file": "hero_respawn.wav",
+     "seconds": 0.6,
+     "bytes": 26504,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -13.1
+    }
+   ]
+  },
+  "skill_slam": {
+   "bus": "SFX",
+   "vol_db": -4,
+   "max": 1,
+   "gap": 0.2,
+   "prio": 9,
+   "pitch": 0.0,
+   "duck": -4,
+   "files": [
+    "res://assets/audio/sfx/skill_slam.wav"
+   ],
+   "variants": [
+    {
+     "file": "skill_slam.wav",
+     "seconds": 0.6,
+     "bytes": 26504,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -19.74
+    }
+   ]
+  },
+  "skill_rally": {
+   "bus": "SFX",
+   "vol_db": -6,
+   "max": 1,
+   "gap": 0.2,
+   "prio": 9,
+   "pitch": 0.0,
+   "duck": -4,
+   "files": [
+    "res://assets/audio/sfx/skill_rally.wav"
+   ],
+   "variants": [
+    {
+     "file": "skill_rally.wav",
+     "seconds": 0.85,
+     "bytes": 37528,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -14.38
+    }
+   ]
+  },
+  "skill_barrage": {
+   "bus": "SFX",
+   "vol_db": -4,
+   "max": 1,
+   "gap": 0.2,
+   "prio": 9,
+   "pitch": 0.0,
+   "duck": -5,
+   "files": [
+    "res://assets/audio/sfx/skill_barrage.wav"
+   ],
+   "variants": [
+    {
+     "file": "skill_barrage.wav",
+     "seconds": 1.6,
+     "bytes": 70604,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -18.15
+    }
+   ]
+  },
+  "skill_heal": {
+   "bus": "SFX",
+   "vol_db": -7,
+   "max": 1,
+   "gap": 0.2,
+   "prio": 9,
+   "pitch": 0.0,
+   "duck": -3,
+   "files": [
+    "res://assets/audio/sfx/skill_heal.wav"
+   ],
+   "variants": [
+    {
+     "file": "skill_heal.wav",
+     "seconds": 0.8,
+     "bytes": 35324,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -13.37
+    }
+   ]
+  },
+  "skill_cast": {
+   "bus": "SFX",
+   "vol_db": -7,
+   "max": 1,
+   "gap": 0.2,
+   "prio": 8,
+   "pitch": 0.0,
+   "duck": -3,
+   "files": [
+    "res://assets/audio/sfx/skill_cast.wav"
+   ],
+   "variants": [
+    {
+     "file": "skill_cast.wav",
+     "seconds": 0.35,
+     "bytes": 15478,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -11.74
+    }
+   ]
+  },
+  "wave_incoming": {
+   "bus": "SFX",
+   "vol_db": -6,
+   "max": 1,
+   "gap": 1.0,
+   "prio": 8,
+   "pitch": 0.0,
+   "duck": -4,
+   "files": [
+    "res://assets/audio/sfx/wave_incoming.wav"
+   ],
+   "variants": [
+    {
+     "file": "wave_incoming.wav",
+     "seconds": 0.9,
+     "bytes": 39734,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -14.74
+    }
+   ]
+  },
+  "boss_incoming": {
+   "bus": "SFX",
+   "vol_db": -4,
+   "max": 1,
+   "gap": 2.0,
+   "prio": 10,
+   "pitch": 0.0,
+   "duck": -8,
+   "files": [
+    "res://assets/audio/sfx/boss_incoming.wav"
+   ],
+   "variants": [
+    {
+     "file": "boss_incoming.wav",
+     "seconds": 1.8,
+     "bytes": 79424,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -14.66
+    }
+   ]
+  },
+  "stinger_win": {
+   "bus": "Music",
+   "vol_db": -3,
+   "max": 1,
+   "gap": 1.0,
+   "prio": 10,
+   "pitch": 0.0,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/stinger_win.wav"
+   ],
+   "variants": [
+    {
+     "file": "stinger_win.wav",
+     "seconds": 2.8,
+     "bytes": 123524,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -15.4
+    }
+   ]
+  },
+  "stinger_defeat": {
+   "bus": "Music",
+   "vol_db": -3,
+   "max": 1,
+   "gap": 1.0,
+   "prio": 10,
+   "pitch": 0.0,
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/stinger_defeat.wav"
+   ],
+   "variants": [
+    {
+     "file": "stinger_defeat.wav",
+     "seconds": 3.0,
+     "bytes": 132344,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -13.9
+    }
+   ]
+  }
+ },
+ "music": {
+  "music_battle": {
+   "file": "res://assets/audio/music/music_battle.ogg",
+   "bus": "Music",
+   "vol_db": -8,
+   "loop": true,
+   "bpm": 140,
+   "bars": 16,
+   "loop_samples": 1209600,
+   "rate": 44100,
+   "seconds": 27.429,
+   "samples_per_beat": 18900,
+   "encoded": true,
+   "bytes": 347602,
+   "peak_dbfs": -3.0,
+   "rms_dbfs": -12.82
+  },
+  "music_menu": {
+   "file": "res://assets/audio/music/music_menu.ogg",
+   "bus": "Music",
+   "vol_db": -9,
+   "loop": true,
+   "bpm": 105,
+   "bars": 8,
+   "loop_samples": 806400,
+   "rate": 44100,
+   "seconds": 18.286,
+   "samples_per_beat": 25200,
+   "encoded": true,
+   "bytes": 207256,
+   "peak_dbfs": -3.0,
+   "rms_dbfs": -19.27
+  }
+ },
+ "skill_kind_cue": {
+  "aoe_damage": "skill_slam",
+  "rally": "skill_rally",
+  "meteor": "skill_barrage",
+  "heal_allies": "skill_heal",
+  "summon": "skill_cast"
+ },
+ "projectile_cue": {
+  "arrow": "shoot_arrow",
+  "rock": "shoot_rock",
+  "spit": "shoot_spit"
+ }
+}
