@@ -1,5 +1,5 @@
 # Renders every 04 UI screen against the mock adapter at several phone/tablet shapes and saves PNGs
-# to build/qa/screens/ (git-ignored). Requires a GPU/desktop session (not headless).
+# to build/qa/screens/ (git-ignored). Requires a GPU/desktop session and a secondary monitor (exit 3 otherwise).
 # Usage: .\tools\build\capture_ui.ps1
 . "$PSScriptRoot\common.ps1"
 Assert-File $GodotConsole 'Godot console editor'
@@ -15,10 +15,15 @@ $profiles = @(
 )
 $fail = 0
 foreach ($p in $profiles) {
-    $a = @('--path', '.', '--resolution', $p[0], 'res://scenes/ui/ui_preview.tscn', '--', '--capture=build/qa/screens', "--tag=$($p[1])")
-    if ($p[2]) { $a += $p[2] }
+    # Visible windows must open on the SECONDARY monitor only (QUALITY_REVIEW.md) → route via visible_launch.ps1.
+    $ua = @('--capture=build/qa/screens', "--tag=$($p[1])")
+    if ($p[2]) { $ua += $p[2] }
     $ErrorActionPreference = 'Continue'
-    $out = & $GodotConsole @a 2>&1 | Out-String
+    $evid = Join-Path $Root 'build\qa\screens'
+    $null = & (Join-Path $PSScriptRoot 'visible_launch.ps1') -Scene 'res://scenes/ui/ui_preview.tscn' -Resolution $p[0] -UserArgs $ua -TimeoutSec 60 -EvidenceDir $evid 6>&1
+    if ($LASTEXITCODE -eq 3) { Write-Host 'BLOCKED: no secondary monitor'; exit 3 }
+    $log = Get-ChildItem $evid -Filter 'godot_*.log' | Sort-Object LastWriteTime | Select-Object -Last 1
+    $out = if ($log) { Get-Content $log.FullName -Raw } else { '' }
     $shots = ($out -split "`n" | Where-Object { $_ -match '^\[capture\].*err=0' }).Count
     Write-Host ("{0,-14} {1,-10} screens={2}" -f $p[1], $p[0], $shots)
     if ($shots -lt 6) { $fail++; Write-Host $out }

@@ -129,10 +129,10 @@ func _draw() -> void:
 			last_text_drawn = text
 			last_text_truncated = false
 		else:
-			var fit := UiStyle.fit_text(text, size.x - 6, font_size)
+			var fit := UiStyle.fit_label(text, size.x - 6, font_size)
 			last_text_drawn = fit[0]
 			last_text_truncated = fit[0] != text
-			UiStyle.draw_text_centered(self, fit[0], Vector2(size.x / 2, name_y) + off, font_size, tc)
+			UiStyle.draw_text_centered(self, fit[0], Vector2(size.x / 2, name_y) + off, fit[1], tc, true, fit[2])
 	if has_sub:
 		UiStyle.draw_number(self, sub_text, Vector2(size.x / 2, cost_y) + off, UiStyle.NUM_S, UiStyle.C_GOLD if not disabled else UiStyle.C_TEXT_DIM, 0)
 	if cooldown_ratio > 0.0:

@@ -144,7 +144,9 @@ func test_layout_matrix() -> void:
 	# logical sizes with stretch canvas_items + expand at 640x360 base:
 	# 16:9 → 640x360, 18:9 → 720x360, 19.5:9 → 780x360, 20:9 → 800x360, 21:9 → 840x360,
 	# 16:10 tablet → 640x400, 4:3 tablet → 640x480
-	var views := [Vector2(640, 360), Vector2(720, 360), Vector2(780, 360), Vector2(800, 360), Vector2(840, 360), Vector2(640, 400), Vector2(640, 480)]
+	var views := [Vector2(640, 360), Vector2(720, 360), Vector2(780, 360), Vector2(800, 360), Vector2(840, 360), Vector2(640, 400), Vector2(640, 480),
+		# integer scale_mode candidates (03/04 request to 02): 1600x900@2x, 2000x1200@3x, 1366x768@2x
+		Vector2(800, 450), Vector2(666, 400), Vector2(683, 384)]
 	# safe insets (left, top, right, bottom) in logical px: none, notch left, notch both, gesture bar bottom
 	var insets := [[0, 0, 0, 0], [34, 0, 0, 0], [34, 0, 34, 0], [0, 0, 0, 12], [34, 0, 34, 12]]
 	var targets := [40.0, 44.0, 48.0]
@@ -470,10 +472,10 @@ func test_korean_text_fit() -> void:
 			if txt == it[0]:
 				check(false, "[%s] missing text key %s" % [loc, it[0]])
 				continue
-			var fit: Array = UiStyle.fit_text(txt, it[1], it[2], it[3])
+			var fit: Array = UiStyle.fit_label(txt, it[1], it[2], it[3])   # what TouchButton actually draws
 			var truncated: bool = fit[0] != txt
 			var w: float = UiStyle.text_width(txt, it[2], it[3])
-			rows.append({"key": it[0], "where": it[4], "text": txt, "width": w, "max_w": it[1], "size": it[2], "font": str(it[3]), "drawn": fit[0], "truncated": truncated})
+			rows.append({"key": it[0], "where": it[4], "text": txt, "width": w, "max_w": it[1], "size": it[2], "font": str(it[3]), "drawn": fit[0], "drawn_size": fit[1], "drawn_font": str(fit[2]), "truncated": truncated})
 			if loc == "ko":
 				check(not truncated, "[ko] %s '%s' fits %s at %d px (w=%.0f max=%.0f)" % [it[0], txt, it[4], it[2], w, it[1]])
 			elif truncated:
