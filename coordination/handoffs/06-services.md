@@ -42,7 +42,7 @@ Same failing scenarios re-run after fixes: all pass (see validation).
 ## Git
 - M1: 17623c14e1b054d024e8029049b58d5fc373a93b, 9c207630e2049befa9a0e7aec2269f88dedf4620, b7fa3c094a5128aa0a695f80128980d9b71b200e (all PUSHED).
 - M2 code+tests: 0f8446199154e3ee0d916a10e019b069f3e18414 `[Feat] 광고 보상 정책·서비스 텔레메트리·읽기 전용 진단 추가와 크래시·중복 지급·손상 상태 결함 수정` (27 files) → PUSHED origin/main (`git ls-remote` = 0f84461…).
-- M2 docs/requests/handoff: next commit (SHA recorded in status after push).
+- M2 docs/requests/handoff: 708bdb006208580b057a5bc219f921fc5b297568 `[Docs] 서비스 M2 문서·연동 요청 갱신과 07 회귀 요청, 상태 인수인계 반영` (7 files) → PUSHED origin/main (`git ls-remote` = 708bdb0…).
 - Helper note: call Publish-Task.ps1 without stderr redirection.
 
 ## Next task (06) — M3
