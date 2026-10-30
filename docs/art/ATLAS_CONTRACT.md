@@ -19,6 +19,7 @@ Future biomes add `biome_<id>` pages, with only one resident at a time. If char 
 - MaxRects (best-short-side-fit), deterministic order. Page = smallest power-of-two that fits. Preferred max is 1024 and the hard max is 2048.
 - Each region gets **1 px edge extrusion** (duplicated border texels) and then **2 px fully transparent gap** before the next region and the page border.
 - Identical frames are deduplicated: many frame names can point to one rect, e.g. repeated idle frames and the `die`→`death` alias.
+- **Layout locks** (`tools/art/layout_lock/<page>.json`): a region that already exists keeps its exact page position on rebuild. New regions fill free space, and the page only grows, never shrinks. If the locks cannot be honoured, build.py prints a WARNING and repacks; a re-import is then mandatory. Reason: 04 R4. A stale local `.godot` import showed old pixels at new rects (reproduced: 95/103 ui_main frames wrong; after `--import` 0/103; docs/art/evidence/ui_import/).
 - Frames are untrimmed fixed-size cells per anim_set, which keeps the pivot constant across frames. Trimming is not worth it at this size (all pages total 5 MiB).
 - PNGs are 8-bit indexed with tRNS. They decode to exact RGBA, are the smallest download, and contain no timestamps, so builds are reproducible.
 
@@ -59,4 +60,5 @@ Runtime requirements on 02/04: nearest filter, mipmaps off, integer scale, `snap
 | Draw calls at entity caps | TESTED (desktop proxy only) | Synthetic worst case: 71 units (y-sorted, both factions interleaved) + 64 projectiles + 32 FX + 5 parallax layers + 2 bases = 218 objects → **13 draw calls** (min=median=max over 120 frames). Compatibility renderer, GL 3.3, RTX 2070 SUPER (docs/art/evidence/godot_check.json) |
 | Texture memory in engine | TESTED (desktop) | `RENDER_TEXTURE_MEM_USED` = 14.57 MB for the whole process. This includes Godot's own render targets and default textures. Our pages account for 5.37 MB (5.12 MiB), computed exactly |
 | Bleeding in the real renderer | TESTED (desktop) | Captures at 1× and at 4× zoom with all sprites offset by (+0.37, +0.61) px contain **0 non-palette pixels** (only palette colours or palette + one shadow blend), so no filter blending and no neighbour texels (docs/art/evidence/capture_palette_check.txt, battle_cap_*.png) |
+| Stale-import guard | TESTED (desktop, isolated) | `pwsh tools/art/run_godot_ui_check.ps1`: GPU readback + rendered contact sheet vs source PNG + json for all 9 pages; validate.py reports local cache md5 mismatch |
 | Draw calls / memory / frame time on Android devices | UNTESTED | Needs 02/04 device profiling (low/mid tier) |

@@ -1,0 +1,73 @@
+{
+  "pages": [
+    {
+      "frames": 152,
+      "id": "char_player",
+      "mismatch": 0,
+      "mismatch_sample": []
+    },
+    {
+      "frames": 77,
+      "id": "char_enemy",
+      "mismatch": 0,
+      "mismatch_sample": []
+    },
+    {
+      "frames": 48,
+      "id": "char_player_adv",
+      "mismatch": 0,
+      "mismatch_sample": []
+    },
+    {
+      "frames": 54,
+      "id": "char_enemy_adv",
+      "mismatch": 0,
+      "mismatch_sample": []
+    },
+    {
+      "frames": 32,
+      "id": "char_boss_warlord",
+      "mismatch": 0,
+      "mismatch_sample": []
+    },
+    {
+      "frames": 17,
+      "id": "bases",
+      "mismatch": 0,
+      "mismatch_sample": []
+    },
+    {
+      "frames": 83,
+      "id": "fx_combat",
+      "mismatch": 0,
+      "mismatch_sample": []
+    },
+    {
+      "frames": 103,
+      "id": "ui_main",
+      "mismatch": 95,
+      "mismatch_sample": [
+        "icon_gold",
+        "icon_mana",
+        "icon_worker",
+        "icon_star",
+        "icon_star_empty",
+        "icon_heart",
+        "icon_lock",
+        "icon_pause"
+      ]
+    },
+    {
+      "frames": 5,
+      "id": "biome_meadow",
+      "mismatch": 0,
+      "mismatch_sample": []
+    }
+  ],
+  "primary_screen": 0,
+  "sheet_items": 103,
+  "window_screen": 1,
+  "state": "stale",
+  "cache_source_md5": "224f322f7b011d59c0149d8ffb094c91",
+  "png_md5": "f16e31cffff13d07f786f9f829c99d09"
+}

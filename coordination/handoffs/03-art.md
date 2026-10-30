@@ -1,5 +1,5 @@
 # 03-art handoff
-Updated: 2026-10-31 08:35 +09:00 · Resumed after the account change (quota 0.1% at 08:05, account verified by coordinator). Same session, same window.
+Updated: 2026-10-31 08:52 +09:00 · Resumed after authExpiryRetry (08:21-08:22 requests failed; no files had been written for that task; worktree was clean vs HEAD at resume).
 
 ## Status
 MILESTONE 3: r04–r07 roster art delivered and the white-line root cause handed to 02. Theme is still the reversible default (Q1 PENDING, not user-approved). Nothing here is release completion.
@@ -29,6 +29,14 @@ Outgoing: 03-art-to-02-engine A4 (white-line root cause), A5 (new pages); 03-art
 - No Android device evidence for any art/font.
 - Brute/warlord are shorter than 01's height guidance (32/45 vs 36/52 px), flagged to 01.
 - boss_overlord art is missing. A8, A2, A3, A6/A7 (runtime), A9 are open with other owners.
+
+## Milestone 4 (this session): ui_main stale import (04 R4)
+- Found: the committed png/json/.import are consistent (c49de70). The main tree has a stale local `.godot/imported/ui_main…md5` (224f322f = abd327d pixels vs png f16e31cf).
+- Reproduced in an isolated copy with the same condition: 95/103 ui_main frames wrong (GPU readback + Godot-rendered contact sheet vs source + manifest). After `--import`: 0/103, 0 px. The other 8 pages had 0 mismatches in both states. The window was on the secondary monitor (screen 1). Evidence: docs/art/evidence/ui_import/.
+- Real game, main tree, 08:44 secondary-monitor capture: still stale (UiStyle fallback warning). Not fixed in the main tree until 02 re-imports (A6). 04 asked to re-verify (A4).
+- Prevention: layout locks in atlas.py/build.py (adding a frame moved 0/98 regions). validate.py checks the local import cache md5 and the lock size. Rebuild output is byte-identical to c49de70 (git diff of assets empty). validate --determinism PASS with 4 expected WARNs (stale/unimported local cache).
+
+- Commit: a48ce17 [Fix] ui_main stale-import repro/verify tools + layout locks. PUSHED origin/main (verified with `git branch -r --contains`).
 
 ## Next tasks (03)
 1. boss_overlord (r10, summon anim, own page `char_boss_overlord`).

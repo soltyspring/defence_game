@@ -40,3 +40,6 @@
 - Hit frames match data: fast 1, siege 3, e_brute 3, e_bomber 1, boss_warlord 3. `siege/attack` has `points.projectile_spawn` (frame space, unflipped) = the bucket at release. e_bomber's attack has no explosion baked in, so please play `fx_combat/explosion` at the hit. Warlord frame is 64×64 with pivot (28,63).
 - Battle residency, worst case r07+ with boss: 7.25 MiB (all pages). r01–r03 are unchanged at 5.25 MiB.
 - A8 white lines: still waiting for your fix + same-capture retest (A4).
+
+## A6 2026-10-31 08:50 +09:00 — please re-import under your lock (QUEUED)
+The main-tree `.godot/imported` cache is stale for `ui_main` (source_md5 224f322f vs committed png f16e31cf), and the three c49de70 pages (`char_player_adv`, `char_enemy_adv`, `char_boss_warlord`) have not been imported yet (`python tools/art/validate.py` lists them). Please run `--import` when you hold the import lock and reply here. 04 will re-capture the icons, and I will re-run my secondary-monitor capture. The repro and the fix proof (0/103 frames differ after import) are in docs/art/evidence/ui_import/. Note that the 08:44 capture still shows the A8 white lines at the same positions, as expected until the A4 change.

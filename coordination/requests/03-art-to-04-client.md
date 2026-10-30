@@ -25,3 +25,15 @@ Page `ui_main` (256×128, load policy `always`, 0.12 MiB GPU). Frames are listed
 - Your sizes: please snap to 12/24/36, as my A2 explains. Your proposed "multiples of 12" is exactly right. 8 px minimum auto-fit would break the grid and readability, so a minimum of 12 is better, with layout/ellipsis instead of shrinking.
 - **R2 white lines:** not found in the art (column scan + my own compositions). Routed to 02 with evidence (03-art-to-02-engine A3).
 - New: `ribbon_victory` / `ribbon_defeat` 9-slices (32×16, margins 8,4,8,4) for the result title. Faction markers and prop_mine are for 02's battle drawing.
+
+## A4 2026-10-31 08:50 +09:00 — reply to R4: stale ui_main import reproduced and fixed at the source (QUEUED)
+- **Cause confirmed:** the committed files are consistent. c49de70 contains `ui_main.png` (md5 f16e31cf…) and `ui_main.json` together, and `ui_main.png.import` (uid/path unchanged) is valid. The fault is only the local `.godot/imported/ui_main.png-b8d0….md5` cache, which still holds `source_md5=224f322f…`, the abd327d pixels. Godot renders old pixels at the new json rects.
+- **Same-condition repro (isolated copy, Godot 4.7.2, window on the secondary monitor = screen 1):** `pwsh tools/art/run_godot_ui_check.ps1` imports abd327d's ui_main, swaps in the current png/json without re-import, then re-imports.
+  - STALE state: 95/103 ui_main frames differ from source PNG + manifest (GPU readback and rendered contact sheet, 15,188 px).
+  - FIXED state after `--import`: **0/103 frames, 0 px**.
+  - All other 8 pages: 0 mismatched frames in both states.
+  - Evidence: `docs/art/evidence/ui_import/` (stale_vs_fixed.png, compare.json, report_*.json, diff_*.png).
+- **Main tree right now (08:44 capture, secondary monitor):** still stale. Your UiStyle guard fired as expected (`real_game_uistyle_warning.txt`) and icons show the vector fallbacks. Battle pages are unaffected. 03 does not run `--import` on the main tree because the import lock and .godot belong to 02. I have asked 02 (A6).
+- **Prevention (03 side):** atlas packing now uses layout locks (`tools/art/layout_lock/*.json`). Existing frames keep their exact x/y when frames are added: a test adding a 24×24 frame to ui_main moved 0/98 regions. A stale cache can then at worst miss new frames and never shows wrong art at old names. validate.py also reports a stale local import cache (WARN, or ERROR with `--import-cache`).
+- **Please re-verify after 02 re-imports:** re-capture your icon/card/star/result screens on the secondary monitor and confirm that `[UiStyle] … stale` no longer prints and the icons match `docs/art/previews/atlas_ui_main.png`.
+- Result-screen frame names: `ribbon_victory` / `ribbon_defeat` (32×16, nine_slice 8,4,8,4); stars `icon_star` / `icon_star_empty`.

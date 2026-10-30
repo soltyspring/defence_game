@@ -36,6 +36,8 @@ from preview import anim_sheet, checker  # noqa: E402
 ATLAS_DIR = os.path.join(ROOT, "assets", "atlases")
 REL_ATLAS = "assets/atlases"
 PREV = os.path.join(ROOT, "docs", "art", "previews")
+# Layout locks: existing regions keep their page position across rebuilds (see atlas._pack).
+LOCK_DIR = os.path.join(HERE, "layout_lock")
 ART_VERSION = "0.5.0"
 
 REQUIRED_CHAR_ANIMS = ("idle", "walk", "attack", "death")
@@ -165,7 +167,7 @@ def build():
     # --- pack + write ----------------------------------------------------------
     docs = {}
     for p in pages:
-        p.pack()
+        p.pack(lock_dir=LOCK_DIR)
         doc, page = p.write(ATLAS_DIR, REL_ATLAS)
         # No .png.import is written here: Godot must generate it (uid + remap path),
         # see 02-engine R2. project.godot [importer_defaults] gives Lossless/no-mip.

@@ -91,9 +91,22 @@ class MaxRects:
         self.free = pruned
 
 
-def _pack(regions, pw, ph):
+def _pack(regions, pw, ph, locked=None):
+    """locked: {key: (x, y)} content positions from the previous build. Locked regions keep
+    their exact place (so adding frames never moves existing ones -> a stale GPU import can
+    at worst miss NEW frames, never show wrong art); others fill the remaining space."""
     mr = MaxRects(pw - GAP, ph - GAP)  # keep GAP margin on right/bottom too
-    order = sorted(regions, key=lambda r: (-r.h, -r.w, r.key))
+    locked = locked or {}
+    for r in sorted(regions, key=lambda r: r.key):
+        if r.key in locked:
+            x, y = locked[r.key]
+            cw, ch = r.w + 2 * EXTRUDE + GAP, r.h + 2 * EXTRUDE + GAP
+            cx, cy = x - GAP - EXTRUDE, y - GAP - EXTRUDE
+            if cx < 0 or cy < 0 or cx + cw > pw - GAP or cy + ch > ph - GAP:
+                return False
+            mr._split(cx, cy, cw, ch)
+            r.x, r.y = x, y
+    order = sorted((r for r in regions if r.key not in locked), key=lambda r: (-r.h, -r.w, r.key))
     for r in order:
         cw = r.w + 2 * EXTRUDE + GAP
         ch = r.h + 2 * EXTRUDE + GAP
@@ -161,18 +174,41 @@ class Atlas:
         self.images[image_id] = e
 
     # -- build ---------------------------------------------------------------
-    def pack(self):
+    def pack(self, lock_dir=None):
         regions = list(self.unique.values())
-        for (pw, ph) in page_sizes(HARD_MAX_PAGE):
+        locked, lock_size = {}, None
+        lock_path = os.path.join(lock_dir, f"{self.id}.json") if lock_dir else None
+        if lock_path and os.path.exists(lock_path):
+            lk = json.load(open(lock_path, encoding="utf-8"))
+            lock_size = tuple(lk["size"])
+            locked = {k: tuple(v) for k, v in lk["regions"].items() if k in self.unique}
+        self.dropped_locks = 0 if not lock_path or not os.path.exists(lock_path) else \
+            len(json.load(open(lock_path, encoding="utf-8"))["regions"]) - len(locked)
+        sizes = page_sizes(HARD_MAX_PAGE)
+        if lock_size:   # never shrink below the locked page; grow only if needed
+            sizes = [s for s in sizes if s[0] >= lock_size[0] and s[1] >= lock_size[1]]
+        for (pw, ph) in sizes:
             if pw * ph < sum((r.w + 2 * EXTRUDE + GAP) * (r.h + 2 * EXTRUDE + GAP) for r in regions):
                 continue
-            if _pack(regions, pw, ph):
+            if _pack(regions, pw, ph, locked):
                 self.size = (pw, ph)
                 break
+        if self.size is None and locked:          # locks cannot be honoured -> full repack
+            print(f"WARNING atlas {self.id}: layout lock dropped (repack moves existing frames; re-import required)")
+            for (pw, ph) in page_sizes(HARD_MAX_PAGE):
+                if _pack(regions, pw, ph):
+                    self.size = (pw, ph)
+                    break
         if self.size is None:
             raise RuntimeError(f"atlas {self.id} does not fit in {HARD_MAX_PAGE}")
         if max(self.size) > MAX_PAGE:
             print(f"WARNING atlas {self.id} exceeds preferred max {MAX_PAGE}: {self.size}")
+        if lock_path:
+            os.makedirs(lock_dir, exist_ok=True)
+            with open(lock_path, "w", encoding="utf-8", newline="\n") as f:
+                json.dump({"atlas": self.id, "size": list(self.size),
+                           "regions": {k: [r.x, r.y] for k, r in sorted(self.unique.items())}}, f, indent=0)
+                f.write("\n")
         return self.size
 
     def render_index(self) -> np.ndarray:

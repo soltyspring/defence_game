@@ -189,6 +189,31 @@ def check_tiling(doc, img):
             err(f"{doc['atlas']}:{name} seam diff {seam} > 99.5th pct of inner column diffs {lim:.0f}")
 
 
+def check_import_cache(manifest):
+    out = []
+    imp = os.path.join(ROOT, ".godot", "imported")
+    if not os.path.isdir(imp):
+        return out
+    for a in manifest["atlases"]:
+        png = os.path.join(ROOT, a["image"].replace("res://", ""))
+        ip = png + ".import"
+        if not os.path.exists(ip):
+            continue
+        t = open(ip, encoding="utf-8").read()
+        m = [ln for ln in t.splitlines() if ln.startswith('path="res://.godot/imported/')]
+        if not m:
+            continue
+        md5f = os.path.join(ROOT, m[0].split('"')[1].replace("res://", "")).rsplit(".", 1)[0] + ".md5"
+        have = hashlib.md5(open(png, "rb").read()).hexdigest()
+        if not os.path.exists(md5f):
+            out.append(f"{a['id']}: not imported in local .godot cache (02 --import needed)")
+            continue
+        want = [ln.split('"')[1] for ln in open(md5f, encoding="utf-8").read().splitlines() if ln.startswith("source_md5")]
+        if want and want[0] != have:
+            out.append(f"{a['id']}: STALE local import (cache source_md5 {want[0][:8]} != png {have[:8]}) -> 02 --import")
+    return out
+
+
 def determinism():
     import importlib
     import build
@@ -246,6 +271,23 @@ def main():
     for sid, aid in manifest["anim_sets"].items():
         if not any(a["id"] == aid for a in manifest["atlases"]):
             err(f"anim_set {sid} -> unknown atlas {aid}")
+    # local Godot import cache (READ ONLY; .godot is 02's, git-ignored). A source PNG whose md5
+    # differs from the cached import's source_md5 renders OLD pixels at NEW rects (04 R4).
+    stale = check_import_cache(manifest)
+    for s in stale:
+        (err if "--import-cache" in sys.argv else warn)(s)
+    report.append(f"  import cache: {'%d stale page(s)' % len(stale) if stale else 'all pages match source md5'}")
+    # layout lock: committed regions must not move between builds
+    lockdir = os.path.join(HERE, "layout_lock")
+    for a in manifest["atlases"]:
+        lp = os.path.join(lockdir, a["id"] + ".json")
+        if not os.path.exists(lp):
+            err(f"{a['id']}: no layout lock (tools/art/layout_lock)")
+            continue
+        lk = json.load(open(lp, encoding="utf-8"))
+        doc = json.load(open(os.path.join(ROOT, a["frames"].replace("res://", "")), encoding="utf-8"))
+        if lk["size"] != doc["size"]:
+            err(f"{a['id']}: page size {doc['size']} != lock {lk['size']}")
     missing = check_data_refs(manifest, all_frames)
     for (p, k, v) in missing:
         warn(f"data ref not in art yet: {p} {k}={v}")

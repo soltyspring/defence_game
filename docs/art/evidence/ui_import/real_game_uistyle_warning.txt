@@ -1,0 +1,1 @@
+WARNING: [UiStyle] atlas ui_main import is stale (source PNG md5 f16e31cffff13d07f786f9f829c99d09 not in its .godot/imported md5) → icons disabled until re-import

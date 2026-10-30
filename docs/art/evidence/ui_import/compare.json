@@ -1,0 +1,27 @@
+{
+ "stale": {
+  "frames": 103,
+  "frames_differing": 95,
+  "sample": [
+   "bar_fill_enemy",
+   "bar_fill_mana",
+   "bar_frame",
+   "btn",
+   "btn_disabled",
+   "btn_gold",
+   "btn_pressed",
+   "card_fast",
+   "card_frame",
+   "card_frame_disabled"
+  ],
+  "pixels_differing": 15188,
+  "capture_scale": 2
+ },
+ "fixed": {
+  "frames": 103,
+  "frames_differing": 0,
+  "sample": [],
+  "pixels_differing": 0,
+  "capture_scale": 2
+ }
+}
