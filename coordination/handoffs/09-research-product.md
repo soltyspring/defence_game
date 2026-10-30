@@ -31,4 +31,4 @@ Git protocol read and acknowledged. Processed: coordinator-to-09-research-produc
 3. Optional deepening: official gameplay video frames, App Store KR review sample, confirm Random Dice Roll Roll termination.
 4. Stop and checkpoint at ≥97% quota.
 
-Git note: 195b3aa4d58ee050c0d347f30117dd7c21ae7b18 (PUSHED) committed status + an OLDER handoff text (ordering mistake); this corrected handoff is published in the following commit.
+Git note: 195b3aa4d58ee050c0d347f30117dd7c21ae7b18 (PUSHED) already contained this handoff text (verified with git show). 70522bf added a note that wrongly said otherwise; this line corrects it.
