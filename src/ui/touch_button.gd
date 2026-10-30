@@ -108,7 +108,8 @@ func _draw() -> void:
 		UiStyle.draw_glyph(self, glyph, icon_c, minf(size.x, size.y) * 0.22, UiStyle.C_TEXT if not disabled else UiStyle.C_TEXT_DIM)
 	if text != "":
 		var ty := icon_c.y if (icon == null and glyph == &"") else size.y - (18 if has_sub else 9)
-		UiStyle.draw_text_centered(self, text, Vector2(size.x / 2, ty) + off, font_size, UiStyle.C_TEXT if not disabled else UiStyle.C_TEXT_DIM)
+		var fit := UiStyle.fit_text(text, size.x - 6, font_size)
+		UiStyle.draw_text_centered(self, fit[0], Vector2(size.x / 2, ty) + off, fit[1], UiStyle.C_TEXT if not disabled else UiStyle.C_TEXT_DIM)
 	if has_sub:
 		UiStyle.draw_text_centered(self, sub_text, Vector2(size.x / 2, size.y - 8) + off, UiStyle.FONT_S + 1, UiStyle.C_GOLD if not disabled else UiStyle.C_TEXT_DIM)
 	if cooldown_ratio > 0.0:

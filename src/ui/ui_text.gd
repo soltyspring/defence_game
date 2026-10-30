@@ -58,7 +58,10 @@ const FALLBACK_KO := {
 static var _strings: Dictionary = {}
 static var _loaded_locale := ""
 
-static func load_locale(locale := "ko") -> void:
+## "" = auto: Korean device locale → ko, anything else → en (if en.json exists), else ko.
+static func load_locale(locale := "") -> void:
+	if locale == "":
+		locale = "ko" if OS.get_locale_language() == "ko" or not FileAccess.file_exists("res://data/text/en.json") else "en"
 	_strings = {}
 	_loaded_locale = locale
 	var path := "res://data/text/%s.json" % locale

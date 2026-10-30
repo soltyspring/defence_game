@@ -83,7 +83,9 @@ func _draw() -> void:
 	for k in 3:
 		# stars pop in one by one
 		var on := k < stars and _shown_t >= (k + 1) / 4.0
-		UiStyle.draw_star(self, Vector2(cx + (k - 1) * 34, panel.position.y + 72), 13.0, on)
+		var sc := Vector2(cx + (k - 1) * 40, panel.position.y + 72)
+		if not UiStyle.draw_ui_icon(self, "icon_star" if on else "icon_star_empty", sc, 2.0):
+			UiStyle.draw_star(self, sc, 13.0, on)
 	var t := float(result.get("time", 0))
 	var lines := [
 		[UiText.t("ui.time"), "%d:%02d" % [int(t) / 60, int(t) % 60]],

@@ -54,18 +54,22 @@ func _build() -> void:
 
 	btn_pause = make_button("", _on_pause_pressed)
 	btn_pause.glyph = &"pause"
+	btn_pause.icon = UiStyle.ui_icon("icon_pause")
 
 	btn_left = make_button("", func(): pass, TouchButton.Mode.HOLD)
 	btn_left.glyph = &"left"
+	btn_left.icon = UiStyle.ui_icon("btn_move_left")
 	btn_left.pressed_down.connect(_on_move_press.bind(-1))
 	btn_left.released.connect(func(_inside): _on_move_release(-1))
 	btn_right = make_button("", func(): pass, TouchButton.Mode.HOLD)
 	btn_right.glyph = &"right"
+	btn_right.icon = UiStyle.ui_icon("btn_move_right")
 	btn_right.pressed_down.connect(_on_move_press.bind(1))
 	btn_right.released.connect(func(_inside): _on_move_release(1))
 
 	btn_worker = make_button(UiText.t("ui.worker", "Worker"), _on_worker)
 	btn_worker.glyph = &"worker"
+	btn_worker.icon = UiStyle.ui_icon("card_worker")
 	btn_worker.fill = Color(0.30, 0.26, 0.16, 0.95)
 
 	toast_label = _make_label(UiStyle.FONT_M)
@@ -124,6 +128,8 @@ func _on_battle_started(p_info: Dictionary) -> void:
 		b.sub_text = str(int(c.get("cost", 0)))
 		b.icon = UiStyle.icon_texture(c.get("icon"))
 		if b.icon == null:
+			b.icon = UiStyle.ui_icon("card_" + cid)
+		if b.icon == null:
 			b.glyph = &"unit"
 		b.tapped.connect(_on_card.bind(cid))
 		add_child(b)
@@ -136,6 +142,8 @@ func _on_battle_started(p_info: Dictionary) -> void:
 		b.sub_text = str(int(s.get("mana", 0)))
 		b.fill = Color(0.18, 0.24, 0.42, 0.95)
 		b.icon = UiStyle.icon_texture(s.get("icon"))
+		if b.icon == null:
+			b.icon = UiStyle.ui_icon("icon_" + sid)
 		if b.icon == null:
 			b.glyph = &"mana"
 		b.tapped.connect(_on_skill.bind(sid))
@@ -202,7 +210,10 @@ func _on_snapshot(s: Dictionary) -> void:
 		_on_paused(bool(s.paused))
 
 func _on_toast(key: String, _args: Dictionary) -> void:
-	show_toast(UiText.t("toast." + key, key))
+	var k := "toast." + key
+	if not UiText.has(k) and UiText.has("ui." + key):
+		k = "ui." + key          # e.g. engine toast "save_recovered" -> ui.save_recovered
+	show_toast(UiText.t(k, key))
 	if key == "boss_incoming":
 		show_banner(UiText.t("ui.boss"))
 

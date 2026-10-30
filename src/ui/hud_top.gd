@@ -24,7 +24,8 @@ func _draw_resources(r: Rect2) -> void:
 	var gmax := int(snap.get("gold_max", 0))
 	var income := float(snap.get("income", 0))
 	var y1 := r.position.y + 11
-	UiStyle.draw_glyph(self, &"coin", Vector2(r.position.x + 11, y1), 5)
+	if not UiStyle.draw_ui_icon(self, "icon_supply", Vector2(r.position.x + 11, y1)):
+		UiStyle.draw_glyph(self, &"coin", Vector2(r.position.x + 11, y1), 5)
 	var gtxt := "%d" % gold
 	if gmax > 0:
 		gtxt += "/%d" % gmax
@@ -33,7 +34,8 @@ func _draw_resources(r: Rect2) -> void:
 	var mana := float(snap.get("mana", 0))
 	var mmax := maxf(1.0, float(snap.get("mana_max", 100)))
 	var y2 := r.position.y + 27
-	UiStyle.draw_glyph(self, &"mana", Vector2(r.position.x + 11, y2), 5)
+	if not UiStyle.draw_ui_icon(self, "icon_energy", Vector2(r.position.x + 11, y2)):
+		UiStyle.draw_glyph(self, &"mana", Vector2(r.position.x + 11, y2), 5)
 	UiStyle.draw_bar(self, Rect2(r.position.x + 20, y2 - 4, r.size.x - 28, 8), mana / mmax, UiStyle.C_MANA)
 
 func _draw_bases(r: Rect2, wr: Rect2) -> void:

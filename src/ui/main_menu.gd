@@ -117,7 +117,8 @@ func _draw() -> void:
 	UiStyle.draw_text_centered(self, UiText.t("ui.title"), tc, UiStyle.FONT_XL + 8, UiStyle.C_GOLD)
 	UiStyle.draw_text_centered(self, UiText.t("ui.subtitle"), tc + Vector2(0, 30), UiStyle.FONT_M, UiStyle.C_TEXT)
 	var p := progress()
-	UiStyle.draw_glyph(self, &"coin", Vector2(safe.position.x + 14, safe.position.y + 14), 5)
+	if not UiStyle.draw_ui_icon(self, "icon_gold", Vector2(safe.position.x + 14, safe.position.y + 14)):
+		UiStyle.draw_glyph(self, &"coin", Vector2(safe.position.x + 14, safe.position.y + 14), 5)
 	UiStyle.draw_text_left(self, str(int(p.get("coins", 0))), Vector2(safe.position.x + 24, safe.position.y + 14), UiStyle.FONT_M, UiStyle.C_GOLD)
 	var ver := str(ProjectSettings.get_setting("application/config/version", ""))
 	UiStyle.draw_text_left(self, "v" + ver, Vector2(safe.end.x - 40, safe.end.y - 10), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)

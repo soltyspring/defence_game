@@ -72,6 +72,7 @@ func _refresh() -> void:
 		t.text = UiText.name_of("round", str(r.id), str(r.get("name", "")))
 		t.disabled = not unlocked
 		t.glyph = &"" if unlocked else &"lock"
+		t.icon = null if unlocked else UiStyle.ui_icon("icon_lock")
 		t.badge = ""
 		t.set_meta("stars", int(stars.get(str(r.id), 0)))
 		t.set_meta("number", int(r.get("index", idx + 1)))
@@ -136,4 +137,6 @@ func _draw_tile_overlay(t: Control) -> void:
 	if not t.disabled:
 		var st := int(t.get_meta("stars", 0))
 		for k in 3:
-			UiStyle.draw_star(t, Vector2(t.size.x / 2 + (k - 1) * 14, t.size.y - 30), 5.5, k < st)
+			var sc := Vector2(t.size.x / 2 + (k - 1) * 18, t.size.y - 30)
+			if not UiStyle.draw_ui_icon(t, "icon_star" if k < st else "icon_star_empty", sc):
+				UiStyle.draw_star(t, sc, 5.5, k < st)

@@ -32,6 +32,7 @@ static func theme() -> Theme:
 		return _theme
 	var th := Theme.new()
 	th.default_font_size = FONT_M
+	th.default_font = font()
 	for t in ["Label", "Button"]:
 		th.set_color("font_color", t, C_TEXT)
 	th.set_color("font_outline_color", "Label", C_EDGE)
@@ -55,8 +56,45 @@ static func box(fill: Color, border := C_EDGE, bw := 2) -> StyleBoxFlat:
 	s.anti_aliasing = false
 	return s
 
+static var _font: Font
+static var font_source := ""      # "bundled:<path>" or "fallback" (evidence for typography report)
+
+## UI font: assets/manifest.json "fonts"."ui" (03-owned, OFL Korean+Latin font) when present,
+## otherwise Godot's fallback font (Hangul then comes from OS system-font fallback, which is NOT
+## guaranteed on every Android device; see docs/qa/TYPOGRAPHY_QA.md).
 static func font() -> Font:
-	return ThemeDB.fallback_font
+	if _font != null:
+		return _font
+	var path := ""
+	if FileAccess.file_exists("res://assets/manifest.json"):
+		var j := JSON.new()
+		if j.parse(FileAccess.get_file_as_string("res://assets/manifest.json")) == OK and j.data is Dictionary:
+			var fonts = j.data.get("fonts", {})
+			if fonts is Dictionary:
+				var ui = fonts.get("ui", "")
+				path = str(ui.get("path", "")) if ui is Dictionary else str(ui)
+	if path != "" and ResourceLoader.exists(path):
+		var f = load(path)
+		if f is Font:
+			_font = f
+			font_source = "bundled:" + path
+			return _font
+	_font = ThemeDB.fallback_font
+	font_source = "fallback"
+	return _font
+
+## Shrinks font size (down to min_size) then ellipsizes so text fits max_w. Returns [text, size].
+static func fit_text(text: String, max_w: float, size: int, min_size := 8) -> Array:
+	var f := font()
+	var s := size
+	while s > min_size and f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, s).x > max_w:
+		s -= 1
+	if f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, s).x <= max_w:
+		return [text, s]
+	var t := text
+	while t.length() > 1 and f.get_string_size(t + "…", HORIZONTAL_ALIGNMENT_LEFT, -1, s).x > max_w:
+		t = t.substr(0, t.length() - 1)
+	return [t + "…", s]
 
 ## Pixel-style bevelled box: dark edge, fill, 1px top highlight.
 static func draw_pixel_box(ci: CanvasItem, r: Rect2, fill: Color, pressed := false) -> void:
@@ -128,13 +166,43 @@ static func draw_glyph(ci: CanvasItem, glyph: StringName, c: Vector2, s: float, 
 			ci.draw_circle(c, s * 0.6, color)
 
 ## Icon texture from the 03 atlas via the Atlas autoload (INTERFACES.md §4), or null.
-static func icon_texture(icon: Variant) -> Texture2D:
-	if not (icon is Dictionary) or not icon.has("atlas") or not icon.has("frame"):
-		return null
+static var _icon_cache: Dictionary = {}
+
+## Frame from the always-resident UI atlas (manifest "ui".atlas, default ui_main). Cached; null if absent.
+static func ui_icon(frame: String) -> Texture2D:
+	if _icon_cache.has(frame):
+		return _icon_cache[frame]
+	var atlas_id := "ui_main"
+	var atlas := _atlas_node()
+	if atlas != null and atlas.get("manifest") is Dictionary:
+		var ui = atlas.manifest.get("ui", {})
+		if ui is Dictionary and ui.has("atlas"):
+			atlas_id = str(ui.atlas)
+	var tex := icon_texture({"atlas": atlas_id, "frame": frame})
+	_icon_cache[frame] = tex
+	return tex
+
+static func clear_icon_cache() -> void:
+	_icon_cache.clear()
+
+static func _atlas_node() -> Node:
 	var loop := Engine.get_main_loop()
 	if not (loop is SceneTree):
 		return null
-	var atlas: Node = (loop as SceneTree).root.get_node_or_null("Atlas")
+	return (loop as SceneTree).root.get_node_or_null("Atlas")
+
+## Draw a ui atlas icon centred at c with integer scale k; returns false if unavailable.
+static func draw_ui_icon(ci: CanvasItem, frame: String, c: Vector2, k := 1.0, modulate := Color.WHITE) -> bool:
+	var t := ui_icon(frame)
+	if t == null:
+		return false
+	var sz := t.get_size() * k
+	ci.draw_texture_rect(t, Rect2((c - sz / 2).round(), sz), false, modulate)
+	return true
+static func icon_texture(icon: Variant) -> Texture2D:
+	if not (icon is Dictionary) or not icon.has("atlas") or not icon.has("frame"):
+		return null
+	var atlas := _atlas_node()
 	if atlas == null or not atlas.has_method("get_frame_texture"):
 		return null
 	var tex = atlas.get_frame_texture(str(icon.atlas), str(icon.frame))
