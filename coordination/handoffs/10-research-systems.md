@@ -12,9 +12,10 @@ Limitations: no hands-on play; review sample = 3 en reviews shown by Play; scree
 ## Requests issued
 02 (R1–R7), 07 (TP acceptance), 06 (TP-08 policy, retention limitation), 04 (user_data_backup/allow + bmgr test), 01 (title note, migrations.json, defaults).
 
-## Commit
-(see below after publish)
+## Commits
+- v0.1: 6ab1d482ffea0bc84f587da3415da76821f54f97 → origin/main PUSHED ([Docs] 경쟁작 온라인 기능 증거 매트릭스와 데이터·백엔드 분석 초판 추가)
+- v0.2: §9.1 content-table mapping + read-only referential integrity check (0 errors) + R8 (unlocked_round index risk). SHA recorded in status after publish.
 
 ## Next task
-v0.2: field-level content-table spec cross-check vs data/*.json, Korean-locale review sampling, test skeleton specs for 07. Stop at 97% quota.
+Korean-locale review sampling (transparent selection), test skeleton specs for 07 once 02 hook exists. Quota was 90.4% at 07:30; stop new work at ≥97%.
 Outstanding questions: none.

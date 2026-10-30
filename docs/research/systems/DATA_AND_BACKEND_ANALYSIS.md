@@ -1,5 +1,5 @@
 # 데이터·백엔드 분석: 성공한 디펜스 게임의 온라인 기능과 우리 게임의 최소 설계
-작성: 10-research-systems · 버전 v0.1 (첫 증거 보고서) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
+작성: 10-research-systems · 버전 v0.2 (v0.1 첫 증거 보고서 + §9.1 콘텐츠 테이블 매핑) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
 범위: 경쟁작에서 **관찰되는** 온라인 기능, 그 기능의 **공개 문서화된** 기술, **UNKNOWN**, 우리 오프라인 우선 Godot 게임에 필요한 최소 콘텐츠 DB·세이브·거래 계약. 런타임 코드는 수정하지 않았다. 내부 DB나 비공개 구현에 접근한 적 없다. 게임을 직접 플레이하지 않았다(스토어 텍스트·공개 스크린샷만 확인).
 
 ## 0. 현재 판단 (요약)
@@ -296,6 +296,20 @@ commit;
 3. 06: TP-08 정책 확정, `save_recovered`/`ftue_step` 이벤트 검토, 리텐션 측정 불가에 대한 01 결정 요청.
 4. 04: `user_data_backup/allow` 명시와 실기기 백업/복원 시험, 데이터 안전 답변 초안에 반영.
 5. 01: `data/migrations.json` 규칙, 오프라인 보상 비활성 유지, PvP 비MVP 유지(모두 기본값이며 사용자 승인 아님). 사용자 질문은 Q1 이후 01만.
+
+## 9.1 콘텐츠 테이블 관점 매핑 (v0.2 추가, 현재 data/** 기준)
+JSON 파일을 관계형 테이블로 보면 무결성 규칙이 명확해진다. 실제 DB로 바꾸자는 제안이 아니다.
+| 논리 테이블 | 파일 | 기본키 | 외래키(참조) | 버전·변경 규칙 |
+|---|---|---|---|---|
+| unit | data/units/units.json `units[]` | `id` | `projectile` → fx anim, `summon.unit` → unit | ID 영구. 수치는 자유롭게 변경 가능(세이브는 ID만 저장) |
+| hero | data/heroes/*.json | `id` | `skills[]` → skill | 동일 |
+| skill | data/skills/*.json | `id` | `fx` → anim | 동일 |
+| round | data/rounds/rNN.json | `id` | `cards[]`/`waves[].spawns[].unit`/`trickle.pattern[]` → unit, `skills[]` → skill, `hero` → hero | `order.json`이 진행 순서. 순서 변경은 `unlocked_round`(인덱스 저장) 의미를 바꾼다 → 마이그레이션 필요 |
+| upgrade | data/meta.json `upgrades[]` | `id` | `target` → unit/hero/resource | `max_level` 축소 시 클램프 + 환불(§5.1 migrations) |
+| currency | data/meta.json `currencies[]` | `id` | — | `max` 클램프 |
+| text | data/text/<locale>.json | key | `name_key`/`desc_key`에서 참조 | 01의 ko/en parity 검사 |
+실행한 검증(읽기 전용 PowerShell, 2026-10-31 07:30): 유닛 12개 ID 중복 0, 영웅 스킬 참조 누락 0, r01~r10의 cards/waves/skills/trickle 참조 오류 0, upgrades의 `costs` 길이 = `max_level−1` 위반 0, `unit:` 대상 누락 0. 이 검사는 참조 무결성만 증명한다. 밸런스나 재미는 증명하지 않는다.
+관찰된 설계 위험 [I]: 세이브의 `unlocked_round`가 **순서 인덱스**라서, 라운드를 중간에 끼워 넣으면 이미 깬 라운드가 잠기거나 안 깬 라운드가 열릴 수 있다. v2에서는 진행도를 `rounds{id:{clears}}`에서 파생하는 쪽을 권한다(02/01 결정).
 
 ## 10. 출처 (모두 2026-10-31 KST 접근)
 | ID | 출처 | URL | 한계 |

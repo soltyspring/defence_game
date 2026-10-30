@@ -1,9 +1,8 @@
 # 10-research-systems status
-Updated: 2026-10-31 07:30 KST
+Updated: 2026-10-31 07:32 KST
 Model/agent: claude-opus-5.5 / trust-all (no switch)
-Status: MILESTONE 1 DONE (first evidence report v0.1). Publishing via Publish-Task.ps1.
-Current task: docs/research/systems/DATA_AND_BACKEND_ANALYSIS.md v0.1 (Korean)
-Quota: 4486.19/5000 = 89.72% at 07:28:53; triggered.json absent. At ≥97% stop new work.
-Completed files: docs/research/systems/DATA_AND_BACKEND_ANALYSIS.md; requests 10-research-systems-to-{01-director,02-engine,04-client,06-services,07-qa}.md
-Validation: all 20 source IDs referenced/defined (script check); every source URL fetched 2026-10-31; save risks SV-1..5 are from code reading only (save.gd unchanged in working tree), NOT executed.
-Next: deepen v0.2 (Korean review sample, content-table field-level schema for units/rounds/meta, executable test skeleton specs) only if quota allows.
+Status: MILESTONE 2 (v0.2) publishing. v0.1 PUSHED 6ab1d482ffea0bc84f587da3415da76821f54f97.
+Current task: DATA_AND_BACKEND_ANALYSIS.md v0.2 (§9.1 content-table mapping)
+Quota: 4518.47/5000 = 90.37% at 07:30:29; triggered.json absent.
+Validation: source IDs 20/20 defined; read-only data FK check 0 errors (units 12, rounds r01–r10, meta upgrades). Save risks SV-1..5 code-reading only, NOT executed.
+Next: Korean review sampling; 07 test skeletons after 02 fault hook. Idle-wait if quota ≥97%.
