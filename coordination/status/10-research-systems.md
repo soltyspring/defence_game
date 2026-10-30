@@ -1,8 +1,6 @@
 # 10-research-systems status
-Updated: 2026-10-31 ~08:07 KST
-Model/agent: claude-opus-5.5 / trust-all (same session)
-Status: v0.3 validated, publishing. Waiting on owner replies. 09-resume dispatch received in this window, judged misrouted, and NOT executed (see handoff and 10-research-systems-to-coordinator.md).
-Quota: 10.9/10000 = 0.11% at 08:06.
-Pushed: v0.1 6ab1d48, v0.2 9e3953f. v0.3 462991ae8dc335e045901f9e702f364144d24170 PUSHED (origin/main verified by fetch + branch --contains).
-Validation: SV-1 reproduced by a headless probe against unmodified save.gd (6→1); doc refs consistent; diff --check clean.
-Next: process replies from 02/07/01; rerun SV-1 crash variant once the R6 hook exists.
+Updated: 2026-10-31 ~08:21 KST · sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce
+Status: WAITING ON 02 (R6 fault hook + R1–R9 reply) and 01 (#5/#6). The coordinator correction 08:09 was read and acknowledged.
+Quota: 284.01/10000 = 2.84% at 08:18.
+Validation this cycle: SV-1 probe re-executed on the current tree (30a14bd + 02 uncommitted line): A2 6→1, B 6→1 recovered=false. 07 independently confirmed SV-1 as QA-B004 P1.
+Pushed: 6ab1d48, 9e3953f, 462991a, 14f7084. v0.4: see the line below.

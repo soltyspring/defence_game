@@ -1,5 +1,5 @@
 # 데이터·백엔드 분석: 성공한 디펜스 게임의 온라인 기능과 우리 게임의 최소 설계
-작성: 10-research-systems · 버전 v0.3 (v0.1 증거 보고서 + v0.2 §9.1 콘텐츠 테이블 매핑 + v0.3 SV-1 실행 재현, §5.8 09 증상 대응, 진행 중 전투 체크포인트) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
+작성: 10-research-systems · 버전 v0.4 (v0.1 증거 보고서, v0.2 §9.1, v0.3 SV-1 실행 재현·§5.8, v0.4 02/06/07/01 회신 추적과 HEAD 재실행) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
 범위: 경쟁작에서 **관찰되는** 온라인 기능, 그 기능의 **공개 문서화된** 기술, **UNKNOWN**, 우리 오프라인 우선 Godot 게임에 필요한 최소 콘텐츠 DB·세이브·거래 계약. 런타임 코드는 수정하지 않았다. 내부 DB나 비공개 구현에 접근한 적 없다. 게임을 직접 플레이하지 않았다(스토어 텍스트·공개 스크린샷만 확인).
 
 ## 0. 현재 판단 (요약)
@@ -282,7 +282,7 @@ commit;
 ### 6.4 세이브 위험(실행 증거 표시)
 | ID | 관찰(파일·줄) | 영향 | 심각도(제안) | 수정 제안 | 수용 기준 |
 |---|---|---|---|---|---|
-| SV-1 | `save_progress()`는 기존 `.bak`을 지운 뒤 현재 main을 `.bak`으로 옮긴다. main이 손상되어 `.bak`에서 복구한 직후의 첫 저장은 **정상 `.bak`을 지우고 손상된 main을 `.bak`으로 만든다** | **실행 재현(v0.3, 아래 프로브):** 복구 후 저장 성공 → `.bak` 내용이 손상 파일 → main이 다시 손상되면 `unlocked_round` 6→1(`recovered=true`). 저장 중 종료를 흉내 내면 6→1이고 `recovered=false`라서 사용자에게 알림이 없다 | **P1 후보(조용한 데이터 유실)**. 판정은 02/07이 한다 | `recovered`이면 손상 main을 `save.json.corrupt-<n>`으로 격리하고 정상 `.bak`은 유지. 로드할 때 검증된 `.tmp`도 후보로 확인(07 QA-O002와 같은 개선) | TP-02: 프로브 시나리오 A2/B에서 `unlocked_round == 6` |
+| SV-1 | `save_progress()`는 기존 `.bak`을 지운 뒤 현재 main을 `.bak`으로 옮긴다. main이 손상되어 `.bak`에서 복구한 직후의 첫 저장은 **정상 `.bak`을 지우고 손상된 main을 `.bak`으로 만든다** | **실행 재현(v0.3, 아래 프로브):** 복구 후 저장 성공 → `.bak` 내용이 손상 파일 → main이 다시 손상되면 `unlocked_round` 6→1(`recovered=true`). 저장 중 종료를 흉내 내면 6→1이고 `recovered=false`라서 사용자에게 알림이 없다 | **P1: 07 QA-B004로 등록(OPEN, 02 담당)** | `recovered`이면 손상 main을 `save.json.corrupt-<n>`으로 격리하고 정상 `.bak`은 유지. 로드할 때 검증된 `.tmp`도 후보로 확인(07 QA-O002와 같은 개선) | TP-02: 프로브 시나리오 A2/B에서 `unlocked_round == 6` |
 | SV-2 | `_migrate`는 `from_version`이 `VERSION`보다 커도 `p.version = VERSION`으로 덮어쓴다 | 07이 SAVE-08로 재현했다(QA-O003): v99 세이브를 읽은 뒤 v1로 다시 쓴다 | P2 | `from_version > VERSION`이면 읽기 전용 모드로 열고 원본 보존 | TP-06 |
 | SV-3 | 전투 결과에 고유 ID가 없다. `first_clear = not stars.has(rid)` | 결과 이벤트가 중복되면 보상이 중복된다(현재 `ended` 가드로 막히는지 미확인). 06 광고 context에 `battle_uid`가 필요하다(06 요청과 같음) | P2 | `battle_uid` + `applied_battles` | TP-03 |
 | SV-4 | `record_result`가 저장 실패를 무시한다 | 메모리와 디스크 불일치. 다음 저장 때 해소된다 | P3 | transact 계약 | TP-04 |
@@ -297,6 +297,13 @@ PROBE10_SAVE_ROTATION {"A_recovered":true,"A_unlocked_after_load":6,"A_save_ok":
 - A/A2는 수정하지 않은 `save.gd` 코드 경로를 그대로 실행했다. B는 save.gd와 같은 순서의 파일 조작을 프로브가 직접 수행한 **에뮬레이션**이다. save.gd 내부에 장애를 주입한 것이 아니므로, 02의 장애 주입 훅(R6)으로 다시 확인해야 한다.
 - 실행 중 `get_node() with absolute paths from outside the active scene tree` 오류가 한 번 출력됐다. `SceneTree._initialize` 시점에 `save_progress()`가 `/root/Events`를 찾으면서 생긴 프로브 환경 문제이고, 저장 결과(`A_save_ok=true`)에는 영향이 없었다.
 - 다른 작업자의 Godot 헤드리스 프로세스가 동시에 돌고 있었다. 그 프로세스들은 건드리지 않았다. 처음 실행은 `_init` 사용 실수로 멈췄고, 그 프로브 프로세스 2개만 종료했다.
+
+**v0.4 추적(2026-10-31 ~08:20 KST):**
+- 07이 독립적으로 실행해 확인했다(`tests/acceptance/suite_faults.gd`, 커밋 f99094f, HEAD 462991a): TP-02 FAIL → **QA-B004 P1(02 담당)**. TP-01 PASS. TP-06 FAIL → QA-B006 P3(이전 QA-O003 대체). TP-13 클램프 FAIL → QA-B007 P3. TP-14 파일 보존은 PASS지만 사용자 알림이 없어 FAIL → QA-B005 P2. TP-03/04/05/11은 NOT_TESTED(battle_uid, 업그레이드 구매 API, data/migrations.json, restore 흐름이 런타임에 없음). 07도 장애 훅이 없어 kill 직후 파일 상태를 재구성하는 방식을 썼다. 따라서 10의 시나리오 B와 07의 TP-02b는 **같은 한계(코드 내부 장애 주입이 아님)** 를 공유한다.
+- 06이 회신했다: TP-08 정책은 "둘 다 아니면 둘 다 없음"이다. 실제 save.gd와 자식 프로세스 OS.kill로 검증했다(데스크톱만, 게임에는 아직 연결되지 않음).
+- 02의 **R6 장애 훅은 아직 없다.** HEAD 30a14bd의 `src/core/save.gd`에 `_fault` 등 훅이 없다. 커밋 이력상 save.gd의 마지막 커밋은 1eb4637이다. 작업 트리에는 02의 미커밋 변경(`fresh()`에 `tutorial_done: []` 추가) 1줄만 있다. 02는 10의 R1~R9에 회신하지 않았다. 02의 마지막 인수인계는 07:32 계정 전환 체크포인트이고, 그 커밋은 "Index is not empty"로 실패했다고 기록돼 있다.
+- 그래서 시나리오 B를 훅으로 재실행하지 못했다. 대신 같은 프로브를 현재 작업 트리(30a14bd + 02의 미커밋 1줄)에서 다시 실행했다. 결과는 위 출력과 같다(A2 6→1, B 6→1, `recovered=false`). SV-1은 현재 코드에서도 그대로다.
+- 01은 #5/#6에 회신하지 않았다(01 요청 파일과 docs/design에 관련 기록 없음). `data/migrations.json`도 없다.
 
 ## 7. 위협/실패 사례와 실행 테스트 제안 (07 acceptance, 06 services, 02 훅)
 실행 방식: Godot 헤드리스 `--headless -s res://tests/acceptance/<file>.gd`. 02가 `Save.path` 주입(이미 var)과 쓰기 단계별 장애 주입 훅(`Save._fault = "after_bak_rename"` 등, 디버그 빌드 전용)을 제공해야 한다.

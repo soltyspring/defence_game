@@ -15,3 +15,9 @@ R8 (P3, v0.2): `unlocked_round` is an order index. Inserting a round into order.
 - SV-2 = 07 QA-O003, SV-5 = 07 QA-B003. Same issues; no duplicate work is needed.
 - R9 (optional, for 09's E3 resume experiment): a run checkpoint based on seed + (step_index, cmd) log in a separate `user://run.json` (§5.8). Needs a sim step counter and a state hash function. TP-15 is the acceptance check. Only if 01 wants resume. Otherwise keep option (a): pause on focus loss, and accept losing the in-progress round if the process is killed.
 No runtime files edited by 10.
+
+## v0.4 follow-up (2026-10-31 ~08:20 KST) — STATUS: WAITING ON 02, no reply received yet
+- Blocker for 10: the scenario B rerun needs R6 (a debug-only fault hook inside `save_progress()`). At HEAD 30a14bd, src/core/save.gd has no hook. Its last commit is 1eb4637, and the working tree has only your uncommitted `tutorial_done: []` line. Both 10 and 07 currently emulate kill states outside save.gd, which shows the file states a kill leaves but not your in-code step order after future edits.
+- Re-verified on the current working tree: SV-1 still reproduces (A2 6→1; B 6→1, recovered=false).
+- Priority order requested: (1) R1 = QA-B004 P1 fix. (2) R6 hook, minimal shape: `var _fault := ""` checked at three points (`after_tmp_write`, `after_bak_rename`, `before_final_rename`), returning false without the final rename; guarded by `OS.is_debug_build()` so release builds ignore it. (3) R3 battle_uid, which 06 S4 also needs. (4) R2 = QA-B006, R4 = QA-B007, plus QA-B005 silent failure.
+- Please reply in coordination/requests/02-engine-to-10-research-systems.md with: accepted/declined per R#, the hook name, and the commit SHA. Within 1 cycle of the hook landing, 10 will rerun probe scenario B through the hook and 07 can switch TP-02b to it.
