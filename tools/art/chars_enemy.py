@@ -159,39 +159,46 @@ def spitter_anims():
 # SWARM (enemy_swarm) bramble beetle, custom quadruped (24x24)
 # ---------------------------------------------------------------------------
 BEETLE_SHELL = Sprite.parse("""
-....pPPPPp....
-..pPVVvVPPPp..
-.pPVvVVPPPPPp.
-pPPVVPPPPPPPpg
-pPPPPPPPPPppgF
-.ppppppppppgFF
+.....pPPPPPp......
+...pPVVvvVPPPp....
+..pPVvVVVPPPPPp...
+.pPVVVPPPPPPPPPp..
+pPPVVPPPPPPPPPPPpg
+pPPPPPPPPPPPPPPpgF
+pPPPPPPPPPPPPpppgF
+.pppppppppppppggFF
 """)
 BEETLE_HEAD = Sprite.parse("""
-.gGg.
-gFFFg
-GFKfF
-gFFFE
-.gGr.
+.gGGg.
+gFFFFg
+GFfKfF
+GFFKFF
+gFFFFE
+.gGGr.
 """)
 
 
 def beetle_frame(phase, open_jaw=False, lunge=0, squash=0):
-    cv = Canvas(28, 24)
+    """e_swarm: ~16 px tall incl. outline (01 R1 guidance), 32x24 frame."""
+    cv = Canvas(32, 24)
     gy = 22
-    bx, by = 4 + lunge, gy - 9 + squash
+    bx, by = 4 + lunge, gy - 12 + squash
     # 3 legs per visible side, alternating tripod gait
-    for k, lx in enumerate((3, 7, 11)):
+    for k, lx in enumerate((3, 8, 13)):
         up = ((k + phase) % 2) == 0
-        x0, y0 = bx + lx, by + 5
+        x0, y0 = bx + lx, by + 7
         cv.line(x0, y0, x0 + (1 if up else -1), gy - (1 if up else 0), c("g"))
+        cv.line(x0 + 1, y0, x0 + (2 if up else 0), gy - (1 if up else 0), c("g"))
     cv.stamp(BEETLE_SHELL, bx, by)
-    cv.stamp(BEETLE_HEAD, bx + 13, by + 2 + (1 if open_jaw else 0))
+    cv.stamp(BEETLE_HEAD, bx + 16, by + 3 + (1 if open_jaw else 0))
     # mandibles
-    hx, hy = bx + 18, by + 5 + (1 if open_jaw else 0)
+    hx, hy = bx + 22, by + 6 + (1 if open_jaw else 0)
     cv.put(hx, hy - (2 if open_jaw else 1), c("U"))
+    cv.put(hx + 1, hy - (2 if open_jaw else 1), c("U"))
     cv.put(hx, hy + (2 if open_jaw else 1), c("U"))
+    cv.put(hx + 1, hy + (2 if open_jaw else 1), c("U"))
     # antenna
-    cv.line(bx + 15, by + 2, bx + 18, by - 2 - (phase % 2), c("g"))
+    cv.line(bx + 18, by + 3, bx + 21, by - 1 - (phase % 2), c("g"))
     cv.outline(c("K"))
     return cv
 
@@ -202,7 +209,7 @@ def swarm_anims():
     hit = [beetle_frame(0, False, -1, 1), beetle_frame(0, False, 0, 0)]
     flipped = beetle_frame(0)
     flipped.a = flipped.a[::-1, :].copy()      # on its back
-    ground_fit(flipped, 13)
+    ground_fit(flipped, 14)
     death = [beetle_frame(1, True, -1), flipped]
     for d in (6, 11, 14):
         f = flipped.copy()
@@ -226,5 +233,5 @@ class _B:  # minimal Body-like descriptor for non-rig sprites
 ALL = {
     "e_grunt": (GRUNT, grunt_anims),
     "e_spitter": (SPITTER, spitter_anims),
-    "e_swarm": (_B(28, 24, 13), swarm_anims),
+    "e_swarm": (_B(32, 24, 14), swarm_anims),
 }

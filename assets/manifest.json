@@ -1,6 +1,6 @@
 {
  "version": 1,
- "art_version": "0.3.0",
+ "art_version": "0.4.0",
  "schema": "INTERFACES.md §5.1 (02-engine) + additive keys",
  "pixel_scale": 1,
  "reference_view": [
@@ -55,7 +55,7 @@
     512,
     512
    ],
-   "disk_bytes": 11816,
+   "disk_bytes": 11890,
    "gpu_bytes": 1048576,
    "biome": "",
    "anim_sets": [
@@ -77,7 +77,7 @@
     512,
     256
    ],
-   "disk_bytes": 4794,
+   "disk_bytes": 5000,
    "gpu_bytes": 524288,
    "biome": "",
    "anim_sets": [
@@ -97,14 +97,15 @@
     512,
     512
    ],
-   "disk_bytes": 10051,
+   "disk_bytes": 10303,
    "gpu_bytes": 1048576,
    "biome": "",
    "anim_sets": [
     "base_enemy",
-    "base_player"
+    "base_player",
+    "prop_mine"
    ],
-   "image_frames": 2
+   "image_frames": 3
   },
   {
    "id": "fx_combat",
@@ -116,7 +117,7 @@
     512,
     256
    ],
-   "disk_bytes": 4457,
+   "disk_bytes": 4590,
    "gpu_bytes": 524288,
    "biome": "",
    "anim_sets": [
@@ -137,7 +138,7 @@
     "spit",
     "tower_bolt"
    ],
-   "image_frames": 4
+   "image_frames": 10
   },
   {
    "id": "ui_main",
@@ -147,13 +148,13 @@
    "frames": "res://assets/atlases/ui_main.json",
    "size": [
     256,
-    128
+    256
    ],
-   "disk_bytes": 4425,
-   "gpu_bytes": 131072,
+   "disk_bytes": 4685,
+   "gpu_bytes": 262144,
    "biome": "",
    "anim_sets": [],
-   "image_frames": 96
+   "image_frames": 98
   },
   {
    "id": "biome_meadow",
@@ -183,6 +184,7 @@
   "e_swarm": "char_enemy",
   "base_player": "bases",
   "base_enemy": "bases",
+  "prop_mine": "bases",
   "arrow": "fx_combat",
   "tower_bolt": "fx_combat",
   "spit": "fx_combat",
@@ -355,6 +357,38 @@
  "ui": {
   "atlas": "ui_main"
  },
+ "fonts": {
+  "ui": "res://assets/fonts/Galmuri11.ttf",
+  "ui_bold": "res://assets/fonts/Galmuri11-Bold.ttf",
+  "numerals": "res://assets/fonts/Galmuri9.ttf",
+  "sizes_px": {
+   "ui": [
+    12,
+    24,
+    36
+   ],
+   "ui_bold": [
+    12,
+    24,
+    36
+   ],
+   "numerals": [
+    10,
+    20
+   ]
+  },
+  "numerals_charset": "ASCII + ★☆♥×·…%‰▶◀▲ only (no Hangul)",
+  "render": {
+   "antialiasing": "none",
+   "hinting": "none",
+   "subpixel_positioning": "disabled",
+   "msdf": false,
+   "mipmaps": false,
+   "allow_system_fallback": false
+  },
+  "license": "SIL OFL 1.1 — res://assets/fonts/OFL-Galmuri.txt (Galmuri © Lee Minseo)",
+  "doc": "docs/art/TYPOGRAPHY.md"
+ },
  "icons": {
   "resource": {
    "in_round_currency": "icon_gold (alias icon_supply)",
@@ -393,8 +427,8 @@
   "license": "Original work created for this project; owned by the project owner. No third-party assets included."
  },
  "totals": {
-  "disk_bytes": 42959,
-  "gpu_bytes_all_pages": 5373952,
+  "disk_bytes": 43884,
+  "gpu_bytes_all_pages": 5505024,
   "note": "GPU = w*h*4 (RGBA8, lossless import, no mipmaps). See docs/art/ATLAS_BUDGET.md"
  }
 }

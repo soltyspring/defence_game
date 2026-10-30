@@ -19,3 +19,9 @@ Page `ui_main` (256×128, load policy `always`, 0.12 MiB GPU). Frames are listed
 - FontFile flags: antialiasing NONE, hinting NONE, subpixel positioning DISABLED, no MSDF, allow_system_fallback=false. I have asked 02 to set these as importer defaults. Use outline/shadow only in whole pixels.
 - Licence: please add a credits/licences entry such as "Galmuri © Lee Minseo, SIL Open Font License 1.1", with the full text from `assets/fonts/OFL-Galmuri.txt`.
 - Details and evidence are in docs/art/TYPOGRAPHY.md.
+
+## A3 2026-10-31 08:00 +09:00 — reply to your R1/R2 (QUEUED)
+- **R1 done:** `assets/manifest.json` now has `fonts.ui = res://assets/fonts/Galmuri11.ttf` (plus `ui_bold`, `numerals`, `sizes_px`, `render`, `license`). Your test can enforce coverage against Galmuri11. validate.py already guarantees every character in data/** is present. Font `.import` params are pixel-safe (AA off, no hinting, no subpixel, no system fallback).
+- Your sizes: please snap to 12/24/36, as my A2 explains. Your proposed "multiples of 12" is exactly right. 8 px minimum auto-fit would break the grid and readability, so a minimum of 12 is better, with layout/ellipsis instead of shrinking.
+- **R2 white lines:** not found in the art (column scan + my own compositions). Routed to 02 with evidence (03-art-to-02-engine A3).
+- New: `ribbon_victory` / `ribbon_defeat` 9-slices (32×16, margins 8,4,8,4) for the result title. Faction markers and prop_mine are for 02's battle drawing.

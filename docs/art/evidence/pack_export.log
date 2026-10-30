@@ -41,10 +41,10 @@ Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 res://assets/fonts/Galmuri9.ttf: Pixel font detected, disabling subpixel positioning.
 res://assets/fonts/Galmuri9.ttf: Pixel font detected, disabling hinting.
 [  10% ] [90m[1mreimport[22m | Galmuri11-Bold.ttf[39m[0m
-res://assets/fonts/Galmuri11.ttf: Pixel font detected, disabling subpixel positioning.
-res://assets/fonts/Galmuri11.ttf: Pixel font detected, disabling hinting.
 res://assets/fonts/Galmuri11-Bold.ttf: Pixel font detected, disabling subpixel positioning.
 res://assets/fonts/Galmuri11-Bold.ttf: Pixel font detected, disabling hinting.
+res://assets/fonts/Galmuri11.ttf: Pixel font detected, disabling subpixel positioning.
+res://assets/fonts/Galmuri11.ttf: Pixel font detected, disabling hinting.
 [  20% ] [90m[1mreimport[22m | Galmuri11.ttf[39m[0m
 [  30% ] [90m[1mreimport[22m | Galmuri9.ttf[39m[0m
 [  40% ] [90m[1mreimport[22m | Galmuri11-Bold.ttf[39m[0m

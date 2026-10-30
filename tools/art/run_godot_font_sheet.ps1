@@ -10,12 +10,12 @@ New-Item -ItemType Directory -Force "$tmp\assets\atlases", "$tmp\assets\fonts", 
 Copy-Item "$PSScriptRoot\godot_check\*" $tmp
 Copy-Item "$root\assets\manifest.json" "$tmp\assets\"
 Copy-Item "$root\assets\atlases\*" "$tmp\assets\atlases\" -Exclude *.import
-Copy-Item "$root\assets\fonts\*" "$tmp\assets\fonts\" -Exclude *.import
+Copy-Item "$root\assets\fonts\*" "$tmp\assets\fonts\"   # incl. committed .import params (uid/path are re-resolved by Godot)
 Copy-Item "$root\data\text\ko.json" "$tmp\data\text\"
 $out = Join-Path $root 'docs\art\evidence\fonts'
 New-Item -ItemType Directory -Force $out | Out-Null
 & $G --headless --path $tmp --import 2>&1 | ForEach-Object { "$_".TrimEnd() } | Out-File -Encoding utf8 "$out\font_import.log"
-$log = & $G --path $tmp --rendering-driver opengl3 --resolution 320x180 -- --font-sheet 2>&1
+$log = & $G --path $tmp --rendering-driver opengl3 --resolution 320x180 -- --font-sheet --import-flags-only 2>&1
 $log | ForEach-Object { "$_".TrimEnd() } | Out-File -Encoding utf8 "$out\font_run.log"
 $line = $log | Where-Object { "$_" -like 'ART_FONT_JSON *' } | Select-Object -Last 1
 if (!$line) { throw "no ART_FONT_JSON; see $out\font_run.log" }

@@ -1,10 +1,8 @@
 # 03-art status
-Updated: 2026-10-31 07:08 +09:00
-Status: MILESTONE 1 DELIVERED (initial art pack + atlases). Theme is still the reversible default (Q1 PENDING).
-Current task: publish docs/evidence commit, then next = typography/font candidates (QUALITY_REVIEW) and r04+ roster art.
-Tool inventory (actual): Python 3.11.9 + Pillow 11.2.1 + numpy 2.2.4. No ImageGen/AI tool, no Aseprite/ImageMagick. Godot 4.7.2 (02's) is used only in an isolated temp copy.
-Technique: hand-written deterministic code (tools/art/*.py). No AI image generation.
-Completed: 6 atlas pages + manifest (commit 9b4ee0b, PUSHED), ART_DIRECTION.md, ATLAS_CONTRACT.md, ATLAS_BUDGET.md, previews, Godot evidence.
-Validation evidence: validate.py PASS (bounds, overlap, extrusion, 0 foreign texels in nearest+bilinear sampling simulation, palette, anim contract, data refs, seamless tiling, determinism). Godot isolated import: 6/6 load. 13 draw calls at caps (desktop). 0 non-palette px in captures.
-Dependencies: 02 to run --import → 03 commits generated .import. 01 Q1 theme.
+Updated: 2026-10-31 08:05 +09:00
+Status: MILESTONE 2 DELIVERED (Godot imports verified, exported-pack loading proven, licensed fonts, hostile art audit round 1 with fixes). Theme is still the reversible default (Q1 PENDING, not approved).
+Current task: done with round 1. Next = r04+ roster art (fast, e_brute, boss_warlord own page).
+Tools: Python 3.11 + Pillow + numpy + fontTools 4.66. Godot 4.7.2 is used only in isolated temp copies (visible windows on the secondary monitor).
+Validation evidence: validate.py PASS (atlases + font coverage + font import params + determinism). Exported PCK: 6/6 pages + 3 fonts load with no raw PNG. Font renders regular at 1/2/3/4× for 12/24 px.
+Dependencies: 02 (re-import, scale_mode integer, draw markers/prop_mine, white lines), 04 (font sizes 12/24/36, ribbons), 01 (Q1).
 Outstanding questions: none to user.

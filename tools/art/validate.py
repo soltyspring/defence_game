@@ -257,6 +257,18 @@ def main():
         for req in ("OFL-Galmuri.txt", "fonts_provenance.json"):
             if not os.path.exists(os.path.join(ROOT, "assets", "fonts", req)):
                 err(f"fonts: missing assets/fonts/{req}")
+        for name in fontmod.FONTS:
+            ip = os.path.join(ROOT, "assets", "fonts", name + ".import")
+            if not os.path.exists(ip):
+                warn(f"fonts: {name}.import not generated yet (02 --import)")
+                continue
+            t = open(ip, encoding="utf-8").read()
+            for k in ("antialiasing=0", "hinting=0", "subpixel_positioning=0", "allow_system_fallback=false",
+                      "multichannel_signed_distance_field=false", "generate_mipmaps=false"):
+                if k not in t.replace("\r", "").split("\n") and f"\n{k}\n" not in t.replace("\r", "") + "\n":
+                    err(f"fonts: {name}.import lacks pixel-font param {k}")
+            if "uid=" not in t or 'path="res://.godot/imported/' not in t:
+                err(f"fonts: {name}.import is not Godot-generated")
         report.append("  fonts: " + ", ".join(sorted(fontmod.FONTS)) + " -> data text coverage checked")
     except ImportError as e:  # fontTools missing
         warn(f"font check skipped: {e}")

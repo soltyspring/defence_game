@@ -1,5 +1,5 @@
 # ART_DIRECTION.md — visual identity and asset contract (owner: 03-art)
-Art version 0.3.0 · 2026-10-31 · Status: **initial production pack, theme still PROVISIONAL** (Q1 pending in coordination/requests/USER_QUESTION.md). The default theme below is a reversible working assumption. The user has not approved it.
+Art version 0.4.0 · 2026-10-31 · Status: **initial production pack, theme still PROVISIONAL** (Q1 pending in coordination/requests/USER_QUESTION.md). The default theme below is a reversible working assumption. The user has not approved it.
 
 ## 1. How the art is made (provenance)
 - Tool inventory on this machine: Python 3.11.9, Pillow 11.2.1, numpy 2.2.4. There are **no** image-generation, Aseprite or ImageMagick tools. Godot 4.7.2 is in tools/engine (owned by 02).
@@ -16,7 +16,7 @@ Art version 0.3.0 · 2026-10-31 · Status: **initial production pack, theme stil
 
 ## 3. Scale and display
 - Reference view 640×360, `canvas_items` stretch, `expand` aspect, **integer scaling**, nearest filter, pixel snap on (project.godot already sets these).
-- Sizes in reference pixels: infantry figures 22–24 px tall in 32×32 frames, hero ~33 px in a 48×48 frame, swarm beetle 28×24, bases 96×128, HUD icons 16×16, skill/card icons 24×24, move buttons 32×32.
+- Sizes in reference pixels: infantry figures 22–24 px tall in 32×32 frames, hero ~33 px in a 48×48 frame, swarm beetle ~16 px tall in 32×24, bases 96×128, HUD icons 16×16, skill/card icons 24×24, move buttons 32×32.
 - Lane: the feet line is row 15 of the `ground` layer. Place the ground layer at `view_y = ground_y − 15`. The previews use ground_y = 295.
 
 ## 4. Frame and pivot conventions (matches INTERFACES.md §5.2)
@@ -35,8 +35,9 @@ Art version 0.3.0 · 2026-10-31 · Status: **initial production pack, theme stil
 | tank (shieldbearer) | char_player | 32×32 | idle 3@3, walk 6@8, attack 4@9 (hit 2), hit 2, death 6 |
 | e_grunt | char_enemy | 32×32 | idle 4, walk 6@11, attack 4@10 (hit 2), hit 2, death 6 |
 | e_spitter | char_enemy | 32×32 | idle 4, walk 6, attack 4@10 (hit 2, projectile_spawn), hit 2, death 6 |
-| e_swarm (beetle) | char_enemy | 28×24 | idle 2, walk 4@14, attack 3@10 (hit 1), hit 2, death 5 |
+| e_swarm (beetle) | char_enemy | 32×24 (~16 px tall) | idle 2, walk 4@14, attack 3@10 (hit 1), hit 2, death 5 |
 | base_player / base_enemy | bases | 96×128 | idle 2@3, damaged 2@5, ruined 2@5 (+ static frame `base_player` / `base_enemy`) |
+| prop_mine | bases | 48×32 | idle 2@3 (worker destination behind the keep, static frame `prop_mine`) |
 | arrow, tower_bolt, spit, rock | fx_combat | small | fly |
 | hit_spark, hit_spit, explosion, death_poof, dust, spawn | fx_combat | | play |
 | skill_slam, skill_barrage / skill_rally, heal, fire, coin | fx_combat | | play / loop |
@@ -50,7 +51,8 @@ Icons: `icon_gold` (alias `icon_supply`), `icon_mana` (alias `icon_energy`), `ic
 Cards: `card_<unit_id>` for worker, melee_basic, ranged_basic, tank, hero_captain. These are 24×24 portraits cropped automatically from idle frame 0, so they stay in sync with the sprites. Enemy portraits are `portrait_<enemy_id>`. Skills are `icon_<skill_id>` and `skill_<skill_id>`, both 24×24.
 9-slice (frame JSON has `nine_slice: [l,t,r,b]`): `btn`, `btn_pressed`, `btn_disabled`, `btn_gold`, `panel`, `panel_dark`, `card_frame`, `card_frame_disabled`, `card_frame_selected`, `bar_frame`. Bar fills (4×6, 9-slice 1): `bar_fill_ally`, `bar_fill_enemy`, `bar_fill_mana`, `bar_fill_gold`, `bar_fill_cooldown`.
 Digits 5×7 incl. outline: `digit_0..9`, `digit_plus/minus/slash/x` in white, plus `digit_gold_*` and `digit_red_*` variants (for damage and income popups).
-Text font: no font is bundled. Korean needs a full Hangul pixel font. Recommendation for 04: an OFL-licensed pixel font such as Galmuri, verified by 04, with its licence file shipped. 03 can supply a Latin/digit bitmap font if needed.
+Result ribbons (9-slice 8,4,8,4): `ribbon_victory`, `ribbon_defeat`. Faction ground markers (in `fx_combat`): `marker_ally_{s,m,l}`, `marker_enemy_{s,m,l}`.
+Text font: Galmuri11 Regular/Bold (OFL 1.1) + numeral-only Galmuri9 in `assets/fonts/`. Sizes are 12/24/36 px only (numerals 10/20). Rules and evidence: docs/art/TYPOGRAPHY.md. Hostile review: docs/art/ART_AUDIT.md.
 
 ## 7. Backgrounds (`biome_meadow` = data `biome_01`)
 Layers (back to front) with view_y and parallax: `sky` 16×360 (repeat every 16 px horizontally, parallax 0, clear colour `#3b5aa8`), `far` 640×150 mountains + clouds (y 100, 0.15), `mid` 640×120 hills/trees (y 180, 0.45), `ground` 640×80 lane (y = ground_y − 15, 1.0, tile), `front` 640×18 grass tufts (y 342, 1.15, drawn above units but below the HUD). Every layer is seamless at 640 px, which validate.py checks. Use Parallax2D `repeat_size=(640,0)` (or 16 for sky). The atlas regions keep repeat off.

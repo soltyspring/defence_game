@@ -328,6 +328,18 @@ def frames9():
     bar.hline(1, 10, 0, c("K")); bar.hline(1, 10, 7, c("K")); bar.vline(0, 1, 6, c("K")); bar.vline(11, 1, 6, c("K"))
     bar.hline(1, 10, 1, c("K"))
     out["bar_frame"] = (bar, (3, 3, 3, 3))
+    # result ribbons (victory/defeat banners), 9-slice horizontally
+    for name, (mid, lo, hi) in {"ribbon_victory": ("Y", "y", "Z"), "ribbon_defeat": ("R", "r", "E")}.items():
+        rb = Canvas(32, 16)
+        rb.rect(4, 2, 24, 11, c(mid))
+        rb.hline(4, 27, 2, c(hi)); rb.hline(4, 27, 12, c(lo))
+        for x0, d in ((0, 1), (31, -1)):     # swallow-tail ends
+            for i in range(4):
+                xx = x0 + d * i
+                rb.vline(xx, 4 + (i == 0), 14 - (i == 0), c(lo))
+            rb.put(x0, 9, 0); rb.put(x0 + d, 9, 0)
+        rb.outline(c("K"))
+        out[name] = (rb, (8, 4, 8, 4))
     return out
 
 

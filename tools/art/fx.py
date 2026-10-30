@@ -318,6 +318,15 @@ def shadows():
         cv = _cv(w, h)
         cv.ellipse(w / 2, h / 2, w / 2, h / 2, c("_"))
         out[name] = cv
+    # faction ground markers (opaque 1 px ring arcs, front half only) so allies and enemies
+    # stay separable when they overlap in melee; drawn under the unit, over the shadow.
+    for faction, (col, hi) in {"ally": ("C", "c"), "enemy": ("E", "e")}.items():
+        for size, (w, h) in {"s": (14, 5), "m": (20, 6), "l": (34, 8)}.items():
+            cv = _cv(w, h)
+            ring(cv, w / 2, h / 2, w / 2, 1.2, col, ry_scale=h / w)
+            cv.a[: h // 2, :] = 0                 # keep only the front (lower) half
+            cv.put(w // 2, h - 1, c(hi))
+            out[f"marker_{faction}_{size}"] = cv
     return out
 
 

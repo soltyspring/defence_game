@@ -61,6 +61,32 @@
       "scale": 4.0
     }
   ],
+  "flags_from_import": {
+    "Galmuri11-Bold.ttf": {
+      "allow_system_fallback": false,
+      "antialiasing": 0,
+      "hinting": 0,
+      "mipmaps": false,
+      "msdf": false,
+      "subpixel_positioning": 0
+    },
+    "Galmuri11.ttf": {
+      "allow_system_fallback": false,
+      "antialiasing": 0,
+      "hinting": 0,
+      "mipmaps": false,
+      "msdf": false,
+      "subpixel_positioning": 0
+    },
+    "Galmuri9.ttf": {
+      "allow_system_fallback": false,
+      "antialiasing": 0,
+      "hinting": 0,
+      "mipmaps": false,
+      "msdf": false,
+      "subpixel_positioning": 0
+    }
+  },
   "fonts": {
     "Galmuri11-Bold.ttf": {
       "cache_bytes_est": 262144,

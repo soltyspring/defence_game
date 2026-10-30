@@ -21,8 +21,9 @@ const SPECS := [
 var _vps := []
 var _fonts := {}
 var _frames := 0
-var _report := {"devices": [], "fonts": {}}
+var _report := {"devices": [], "fonts": {}, "flags_from_import": {}}
 var _ko := {}
+var _set_flags_in_code := true
 
 
 func _ready() -> void:
@@ -38,6 +39,15 @@ func _font(file: String) -> FontFile:
 	if _fonts.has(file):
 		return _fonts[file]
 	var f: FontFile = load("res://assets/fonts/" + file)
+	# record what the .import delivered BEFORE any code override (proves import params)
+	_report["flags_from_import"][file] = {"antialiasing": f.antialiasing, "hinting": f.hinting,
+		"subpixel_positioning": f.subpixel_positioning, "msdf": f.multichannel_signed_distance_field,
+		"allow_system_fallback": f.allow_system_fallback, "mipmaps": f.generate_mipmaps}
+	if "--import-flags-only" in OS.get_cmdline_user_args():
+		_set_flags_in_code = false
+	if not _set_flags_in_code:
+		_fonts[file] = f
+		return f
 	# pixel-font rendering rules (also requested as importer defaults from 02)
 	f.antialiasing = TextServer.FONT_ANTIALIASING_NONE
 	f.hinting = TextServer.HINTING_NONE

@@ -208,14 +208,14 @@ def pole(cv: Canvas, hand, ang, back_len, fwd_len, shaft="o", shaft_dark="O", he
 
 
 def spear_head(cv, tip, ang, col="N", hi="W", dark="M"):
+    """Leaf blade: dark collar, 2 widened rows, tapering point with highlight."""
     dx, dy = _dir(ang)
     x, y = tip
     px_, py_ = -dy, dx
-    # leaf-shaped head, 4 long, 3 wide
-    for i in range(0, 4):
-        w = [1, 1, 0, 0][i]
+    cv.put(round(x - dx), round(y - dy), c("y"))                 # brass collar on the shaft
+    for i in range(0, 5):
         cx, cy = x + dx * i, y + dy * i
-        cv.put(round(cx), round(cy), c(col if i < 3 else hi))
-        if w:
+        cv.put(round(cx), round(cy), c(hi if i >= 3 else col))
+        if i in (1, 2):
             cv.put(round(cx + px_), round(cy + py_), c(dark))
             cv.put(round(cx - px_), round(cy - py_), c(col))

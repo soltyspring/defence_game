@@ -36,7 +36,7 @@ from preview import anim_sheet, checker  # noqa: E402
 ATLAS_DIR = os.path.join(ROOT, "assets", "atlases")
 REL_ATLAS = "assets/atlases"
 PREV = os.path.join(ROOT, "docs", "art", "previews")
-ART_VERSION = "0.3.0"
+ART_VERSION = "0.4.0"
 
 REQUIRED_CHAR_ANIMS = ("idle", "walk", "attack", "death")
 
@@ -86,6 +86,13 @@ def build():
                                            "states": {"idle": ">0.5 hp", "damaged": "<=0.5 hp", "ruined": "0 hp"}})
         bp.add_image(sid, anims["idle"]["frames"][0].a, pivot=bases.PIVOT)
         sheets[sid] = (anims, bases.W, bases.H, bases.PIVOT)
+    mine_frames = [bases.mine(0), bases.mine(1)]
+    bp.add_sprite("prop_mine", bases.MINE_W, bases.MINE_H, bases.MINE_PIVOT,
+                  {"idle": dict(frames=[f.a for f in mine_frames], fps=3, loop=True)},
+                  facing="right", meta={"kind": "prop", "no_flip": True,
+                                        "note": "worker destination behind the player keep"})
+    bp.add_image("prop_mine", mine_frames[0].a, pivot=bases.MINE_PIVOT)
+    sheets["prop_mine"] = ({"idle": dict(frames=mine_frames, fps=3, loop=True)}, bases.MINE_W, bases.MINE_H, bases.MINE_PIVOT)
     pages.append(bp)
 
     # --- fx ------------------------------------------------------------------
@@ -97,7 +104,9 @@ def build():
                       facing="right", meta={"kind": "projectile" if sid.startswith("proj_") else "fx"})
         sheets[sid] = (anims, w, h, piv)
     for sid, cv in fx.shadows().items():
-        fp.add_image(sid, cv.a, pivot=(cv.w // 2, cv.h // 2), meta={"blend": "alpha", "note": "translucent 96/255"})
+        meta = {"blend": "alpha", "note": "translucent 96/255"} if sid.startswith("shadow") else \
+            {"note": "faction ground marker, draw under unit after shadow"}
+        fp.add_image(sid, cv.a, pivot=(cv.w // 2, cv.h // 2), meta=meta)
     pages.append(fp)
 
     # --- ui ------------------------------------------------------------------
@@ -195,6 +204,17 @@ def write_manifest(pages, docs, layer_meta):
             for bid in ("biome_01", "meadow")
         },
         "ui": {"atlas": "ui_main"},
+        "fonts": {
+            "ui": "res://assets/fonts/Galmuri11.ttf",
+            "ui_bold": "res://assets/fonts/Galmuri11-Bold.ttf",
+            "numerals": "res://assets/fonts/Galmuri9.ttf",
+            "sizes_px": {"ui": [12, 24, 36], "ui_bold": [12, 24, 36], "numerals": [10, 20]},
+            "numerals_charset": "ASCII + ★☆♥×·…%‰▶◀▲ only (no Hangul)",
+            "render": {"antialiasing": "none", "hinting": "none", "subpixel_positioning": "disabled",
+                       "msdf": False, "mipmaps": False, "allow_system_fallback": False},
+            "license": "SIL OFL 1.1 — res://assets/fonts/OFL-Galmuri.txt (Galmuri © Lee Minseo)",
+            "doc": "docs/art/TYPOGRAPHY.md",
+        },
         "icons": {
             "resource": {"in_round_currency": "icon_gold (alias icon_supply)", "skill_energy": "icon_mana (alias icon_energy)",
                          "worker": "icon_worker", "meta_currency_candidate": "icon_gem"},
@@ -272,8 +292,9 @@ def battle_mock(sheets, meadow, docs):
         im = Image.fromarray(RGBA[f], "RGBA")
         img.alpha_composite(im, (int(x - pvx), int(ground_y - piv[1])))
 
-    # shadows
+    # shadows + faction markers
     shadow = Image.fromarray(RGBA[fx.shadows()["shadow_m"].a], "RGBA")
+    mk = {k: Image.fromarray(RGBA[v.a], "RGBA") for k, v in fx.shadows().items() if k.startswith("marker_")}
     put("base_player", "idle", 0, 40)
     put("base_enemy", "damaged", 0, 600)
     ally = [("worker", "work", 3, 92), ("tank", "walk", 1, 190), ("melee_basic", "attack", 2, 260),
@@ -282,6 +303,10 @@ def battle_mock(sheets, meadow, docs):
              ("e_spitter", "attack", 2, 430), ("e_swarm", "walk", 3, 452)]
     for sid, a, fi, x in ally + enemy:
         img.alpha_composite(shadow, (x - 10, ground_y - 3))
+    for sid, a, fi, x in ally:
+        img.alpha_composite(mk["marker_ally_m"], (x - 10, ground_y - 3))
+    for sid, a, fi, x in enemy:
+        img.alpha_composite(mk["marker_enemy_m"], (x - 10, ground_y - 3))
     for sid, a, fi, x in ally:
         put(sid, a, fi, x)
     for sid, a, fi, x in enemy:

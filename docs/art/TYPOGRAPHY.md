@@ -37,7 +37,7 @@ Rules derived from this:
 1. **Font sizes must be integer multiples of the native grid:** Galmuri11/Bold use 12, 24 or 36 px only, and Galmuri9 uses 10 or 20 px (numerals only). Never 9/18/28.
 2. **Minimum Hangul size is 12 px** (≈ 2.1–2.4 mm on 5–6.5" phones, estimated; device check pending with 04/07).
 3. **Non-integer content scale breaks pixel text** (2.5× → irregular 12 px rows) and sprites alike. Recommendation to 02: `display/window/stretch/scale_mode="integer"` with aspect `expand`, so a 1600×900 device renders at 2× with an 800×450 view.
-4. Font flags (FontFile or importer defaults): `antialiasing=NONE`, `hinting=NONE`, `subpixel_positioning=DISABLED`, `multichannel_signed_distance_field=false`, `generate_mipmaps=false`, `allow_system_fallback=false` (system fallback would mix in non-pixel glyphs instead of failing visibly).
+4. Font flags: `antialiasing=NONE`, `hinting=NONE`, `subpixel_positioning=DISABLED`, `multichannel_signed_distance_field=false`, `generate_mipmaps=false`, `allow_system_fallback=false`. System fallback would mix in non-pixel glyphs instead of failing visibly. **These flags are now in the committed `assets/fonts/*.ttf.import`.** 02 generated those files and 03 edited only the `[params]` values. validate.py fails if any flag regresses. A render that loads the fonts with only the import params (no code overrides, `--import-flags-only`) gave regular rows at 1×/2×/3×/4× (font_report.json `flags_from_import`).
 5. Use outline/shadow only in whole pixels (`outline_size` 0 or a multiple of the scale). For contrast on the battlefield, draw text on the `panel_dark` 9-slice or with a 1 px dark shadow offset (1,1).
 6. Do not use all-caps Latin for body text or ornamental fonts. Bold is for numbers, titles and buttons.
 

@@ -60,7 +60,7 @@
       "size_ok": true
     },
     {
-      "frames": 14,
+      "frames": 17,
       "id": "bases",
       "loaded": true,
       "size": [
@@ -70,7 +70,7 @@
       "size_ok": true
     },
     {
-      "frames": 77,
+      "frames": 83,
       "id": "fx_combat",
       "loaded": true,
       "size": [
@@ -80,12 +80,12 @@
       "size_ok": true
     },
     {
-      "frames": 96,
+      "frames": 98,
       "id": "ui_main",
       "loaded": true,
       "size": [
         256,
-        128
+        256
       ],
       "size_ok": true
     },
@@ -102,5 +102,5 @@
   ],
   "raw_png_present": false,
   "remap_present": true,
-  "pck_bytes": 1168676
+  "pck_bytes": 1172452
 }

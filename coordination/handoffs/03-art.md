@@ -1,43 +1,41 @@
 # 03-art handoff
-Updated: 2026-10-31 07:08 +09:00
+Updated: 2026-10-31 08:05 +09:00
 
 ## Status
-MILESTONE 1 delivered: the initial usable art pack, packed into 6 texture atlases with a manifest. The theme is the reversible default "Lantern Kingdom vs Bramble Horde" (knights vs goblins), because Q1 is PENDING and this is not user-approved. First playable is an internal milestone only, not release completion.
+MILESTONE 2 delivered. Theme is the reversible default "Lantern Kingdom vs Bramble Horde" (Q1 PENDING, not user-approved). The first playable is an internal milestone, not release completion.
 
 ## Read receipts / processed IDs
-BRIEF.md, OWNERSHIP.md, GIT_WORKFLOW.md (publishing only via Publish-Task.ps1), coordinator-to-03-art.md (production/atlas/git/heartbeat/8-worker expansion/R4 quality/completion gate), QUALITY_REVIEW.md (acknowledged: 03 owns font assets + typography audit; visible tests on secondary monitor only), ENGINE.md v1.0, INTERFACES.md v1.0 §5, IMPLEMENTATION_BRIEF.md, DECISIONS.md D1–D10 + Q1 PENDING, 01-director-to-03-art R1, 02-engine-to-03-art R1 + R2.
-Ownership note: assets/audio/** now belongs to 05-audio, and 03 does not touch it.
-The gongmojeon skill file is outside the workspace and I have not read it yet. It will be applied in the next task (typography audit).
+BRIEF, OWNERSHIP, GIT_WORKFLOW, QUALITY_REVIEW.md (03 obligations: font assets/provenance, typography audit, visual refinements, secondary-monitor visible tests; all actioned below), WINDOW_STABILITY.md (no window restarts; complied), QUOTA_POLICY.md (usage 80.2% at 07:02, under the 97% checkpoint), coordinator-to-03-art through "Latest user checkpoint/CPU", gongmojeon SKILL.md (method applied in ART_AUDIT.md), DECISIONS D1–D12 + Q1 PENDING.
+Requests processed: 01→03 R1 (ids, sizes: swarm now ~16 px), 02→03 R1 + R2 (no hand-written .import; Godot-generated ones committed), 04→03 R1 (font + manifest `fonts.ui`), R2 (white lines: art scan says not art; routed to 02), R3 (noted).
+Outgoing: 03-art-to-02-engine A1–A3, 03-art-to-04-client A1–A3, 03-art-to-01-director A1. Delivery state: QUEUED until each owner acknowledges.
 
-## Commits
-- 9b4ee0b `[Design] 초기 도트 아트 팩과 텍스처 아틀라스 6종 추가` — PUSHED origin/main (32 files: assets/manifest.json, assets/atlases/*.png/json, tools/art/**).
-- e93acdd `[Docs] 아트 방향·아틀라스 계약·예산 문서와 검증 증거 추가` — PUSHED origin/main (54 files: docs/art/**, previews, evidence, palette, own coordination files).
-- Note: one publish attempt exited 1 with no commit (most likely the shared lock was busy). A retry succeeded. No duplicate commit.
+## Commits (all PUSHED origin/main)
+- 9b4ee0b [Design] initial art pack + 6 atlases
+- e93acdd [Docs] art direction / atlas contract / budget / evidence
+- 6cf3d01 [Chore] prune renamed preview sheets
+- 4088ae0 [Chore] Godot-generated atlas .import + exported-pack loading check
+- 5e157e3 [Design] OFL Galmuri font subsets + provenance + real render checks
+- (this round) [Design] hostile audit fixes: see the git log entry after 5e157e3
+- Publish lesson: never pipe Publish-Task.ps1 through `2>&1` (git's fetch stderr becomes a terminating error and no commit is made).
 
 ## What exists (real paths)
-- Runtime: `assets/manifest.json`, `assets/atlases/{char_player,char_enemy,bases,fx_combat,ui_main,biome_meadow}.{png,json}` (8-bit indexed PNG, 42 KiB total disk, 5.12 MiB GPU at RGBA8).
-- Generator: `python tools/art/build.py`. Validator: `python tools/art/validate.py [--determinism]`. Godot proof: `pwsh tools/art/run_godot_check.ps1` (temp project, secondary monitor).
-- Docs: `docs/art/ART_DIRECTION.md`, `docs/art/ATLAS_CONTRACT.md`, `docs/art/ATLAS_BUDGET.md` (generated), palette `docs/art/palette/hearth48.{gpl,hex}`.
-- Previews: `docs/art/previews/atlas_<id>.png`, `docs/art/previews/sheets/<anim_set>.png`, `docs/art/previews/battle_mock_{1x,2x}.png`. Evidence: `docs/art/evidence/` (godot_check.json, captures, ctex sizes, palette check).
-- Content: hero_captain, worker, melee_basic, ranged_basic, tank, e_grunt, e_swarm, e_spitter; projectiles arrow/rock/spit/tower_bolt; 12 FX; both bases × idle/damaged/ruined; meadow 5-layer parallax; UI icons, cards, skill icons, 9-slices, bars, digits, move buttons.
+- Runtime: `assets/manifest.json` (now with `fonts`), `assets/atlases/*.{png,json,png.import}`, `assets/fonts/{Galmuri11,Galmuri11-Bold,Galmuri9}.ttf(+.import)`, `OFL-Galmuri.txt`, `fonts_provenance.json`.
+- Tools: `tools/art/build.py`, `validate.py [--determinism]`, `fonts.py <galmuri dir>`, `font_contact.py`, `run_godot_check.ps1` (draw calls, secondary monitor), `run_godot_pack_check.ps1` (exported PCK, headless), `run_godot_font_sheet.ps1` (device-emulated font renders, secondary monitor).
+- Docs: `docs/art/ART_DIRECTION.md` (v0.4.0), `ATLAS_CONTRACT.md`, `ATLAS_BUDGET.md`, `TYPOGRAPHY.md`, `ART_AUDIT.md`. Evidence: `docs/art/evidence/**`.
 
-## Validation evidence (actually run)
-- validate.py: PASS. 0 foreign texels in nearest+bilinear ±0.49 px sampling simulation. Palette-only, anims complete, data refs resolved, seamless 640 px tiling, deterministic rebuild. The 6 warnings are expected: Godot-generated .import files do not exist yet.
-- Godot 4.7.2 isolated import: 6/6 pages load with correct sizes, 47,352 B .ctex. Synthetic worst case at caps (218 objects): 13 draw calls on desktop GL3.3 (RTX 2070 SUPER). Captures at 1× and 4× with fractional offsets: 0 non-palette pixels.
-- Visual review: I inspected every contact sheet and the battle mock, and fixed the hero size, the slash arcs, the swarm clipping, the enemy-fort depth and the sky banding.
+## Validation evidence (actually run this round)
+- validate.py PASS: bleed/extrusion/sampling simulation 0 foreign texels, palette, anim contract, data refs, tiling, determinism, Godot-generated .import (atlases + fonts), pixel-font params, font coverage of all data text.
+- Exported pack (`--export-pack` + `--main-pack`): raw PNG absent, remap present, 6/6 pages load (ui_main now 256×256), 3 fonts load, Hangul present (Galmuri9 numeral-only by design). PCK 1,172,452 B.
+- Font renders in the real Godot renderer, 5 emulated devices: 12/24 px Galmuri11/Bold regular at 1×/2×/3×/4×. 9/18/28 px (04's current sizes) and the 2.5× scale are irregular. Flags came from the .import alone.
+- Visual fixes re-inspected on contact sheets + battle mock: swarm ~16 px, spear blade, faction markers, prop_mine, ribbons.
 
 ## Strongest rejection reasons / untested
-- Theme unconfirmed: if Q1 ≠ the current default, character art must be redrawn (the rig/pipeline stays).
-- No Android device evidence (draw calls, memory, frame time, thermal). The desktop proxy is not proof.
-- The engine has not yet loaded the atlases through Godot-generated .import in the main project (02 R2 pending import).
-- Missing roster art: fast, siege, e_brute, e_bomber, boss_warlord, boss_overlord. No font asset yet. No 2nd biome.
-- The swarm figure is ~13 px tall vs 01's ~16 px guidance. Allies are blue/gold rather than "warm" (flagged to 01).
+- No Android device render (fonts, sprites, markers), no physical-size readability test, no player test.
+- Runtime use of markers/prop_mine (02), font sizes 12/24/36 and ribbons (04), and the integer scale mode (02) are not done yet. These defects stay OPEN until they are wired and recaptured.
+- White lines (A8) are unresolved and probably 02 runtime drawing; unproven.
+- Theme unapproved (P1 schedule risk). Roster art still missing: fast, siege, e_brute, e_bomber, both bosses, 2nd biome.
 
 ## Next tasks (03)
-1. After 02's --import: commit the generated .import files and re-run validate.
-2. Typography: research OFL Korean+Latin pixel fonts (Hangul completeness, licence, memory), add assets/fonts + licence + docs/art/TYPOGRAPHY.md, render test sheets at 1×/2×/3×. Apply gongmojeon hostile review to the art.
-3. Roster r04+: fast, e_brute, boss_warlord (own page), siege, e_bomber, boss_overlord.
-4. Re-theme immediately when Q1 is answered.
-
-## Dependencies
-02: --import + confirmation in 02-engine-to-03-art. 01: Q1 answer. 04: shimmer/scale feedback on UI art.
+1. Roster r04–r07: fast (mounted, 18 px footprint), e_brute (~36 px, 48×48), boss_warlord (~52 px, own page `char_boss_warlord`), siege, e_bomber; then boss_overlord.
+2. Re-run the same-attack retests once 02/04 wire markers/prop_mine/fonts. Capture with 04's `tools/build/visible_launch.ps1` (secondary monitor).
+3. Re-theme immediately if Q1 is answered.

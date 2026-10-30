@@ -17,13 +17,13 @@
  "repeat": false,
  "gpu_format": "RGBA8 (lossless, no VRAM compression)",
  "gpu_bytes": 524288,
- "disk_bytes": 4457,
- "unique_regions": 73,
- "occupancy": 0.502,
+ "disk_bytes": 4590,
+ "unique_regions": 79,
+ "occupancy": 0.509,
  "frames": {
   "arrow/fly/0": {
-   "x": 317,
-   "y": 159,
+   "x": 307,
+   "y": 222,
    "w": 14,
    "h": 5,
    "pivot": [
@@ -32,8 +32,8 @@
    ]
   },
   "tower_bolt/fly/0": {
-   "x": 271,
-   "y": 247,
+   "x": 331,
+   "y": 159,
    "w": 16,
    "h": 5,
    "pivot": [
@@ -42,8 +42,8 @@
    ]
   },
   "spit/fly/0": {
-   "x": 303,
-   "y": 201,
+   "x": 317,
+   "y": 159,
    "w": 10,
    "h": 8,
    "pivot": [
@@ -53,7 +53,7 @@
   },
   "spit/fly/1": {
    "x": 317,
-   "y": 147,
+   "y": 171,
    "w": 10,
    "h": 8,
    "pivot": [
@@ -62,8 +62,8 @@
    ]
   },
   "spit/fly/2": {
-   "x": 303,
-   "y": 201,
+   "x": 317,
+   "y": 159,
    "w": 10,
    "h": 8,
    "pivot": [
@@ -752,8 +752,8 @@
    ]
   },
   "shadow_s": {
-   "x": 291,
-   "y": 247,
+   "x": 331,
+   "y": 177,
    "w": 14,
    "h": 5,
    "pivot": [
@@ -764,7 +764,7 @@
    "note": "translucent 96/255"
   },
   "shadow_m": {
-   "x": 247,
+   "x": 295,
    "y": 247,
    "w": 20,
    "h": 6,
@@ -798,6 +798,72 @@
    ],
    "blend": "alpha",
    "note": "translucent 96/255"
+  },
+  "marker_ally_s": {
+   "x": 307,
+   "y": 213,
+   "w": 14,
+   "h": 5,
+   "pivot": [
+    7,
+    2
+   ],
+   "note": "faction ground marker, draw under unit after shadow"
+  },
+  "marker_ally_m": {
+   "x": 247,
+   "y": 247,
+   "w": 20,
+   "h": 6,
+   "pivot": [
+    10,
+    3
+   ],
+   "note": "faction ground marker, draw under unit after shadow"
+  },
+  "marker_ally_l": {
+   "x": 303,
+   "y": 201,
+   "w": 34,
+   "h": 8,
+   "pivot": [
+    17,
+    4
+   ],
+   "note": "faction ground marker, draw under unit after shadow"
+  },
+  "marker_enemy_s": {
+   "x": 331,
+   "y": 168,
+   "w": 14,
+   "h": 5,
+   "pivot": [
+    7,
+    2
+   ],
+   "note": "faction ground marker, draw under unit after shadow"
+  },
+  "marker_enemy_m": {
+   "x": 271,
+   "y": 247,
+   "w": 20,
+   "h": 6,
+   "pivot": [
+    10,
+    3
+   ],
+   "note": "faction ground marker, draw under unit after shadow"
+  },
+  "marker_enemy_l": {
+   "x": 317,
+   "y": 147,
+   "w": 34,
+   "h": 8,
+   "pivot": [
+    17,
+    4
+   ],
+   "note": "faction ground marker, draw under unit after shadow"
   }
  },
  "anims": {

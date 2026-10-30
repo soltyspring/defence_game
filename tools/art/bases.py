@@ -286,3 +286,50 @@ def base_anims(fn):
         "damaged": dict(frames=[fn("damaged", 0), fn("damaged", 1)], fps=5, loop=True),
         "ruined": dict(frames=[fn("ruined", 0), fn("ruined", 1)], fps=5, loop=True),
     }
+
+
+# ---------------------------------------------------------------------------
+# prop_mine: worker destination behind the player keep (replaces 02's brown box)
+# 48x32, pivot bottom-centre (24, 31). Static; lantern flicker as 2-frame anim.
+# ---------------------------------------------------------------------------
+MINE_W, MINE_H = 48, 32
+MINE_PIVOT = (24, 31)
+
+
+def mine(phase: int) -> Canvas:
+    rng = np.random.default_rng(3003)
+    cv = Canvas(MINE_W, MINE_H)
+    g = MINE_H - 1
+    # rocky mound
+    cv.ellipse(24, g + 4, 23, 20, c("A"))
+    cv.ellipse(20, g + 2, 18, 15, c("X"))
+    cv.ellipse(16, g - 2, 8, 6, c("x"))
+    for _ in range(26):
+        x, y = int(rng.integers(4, 44)), int(rng.integers(12, g))
+        if cv.get(x, y):
+            cv.put(x, y, c("A"))
+            cv.put(x + 1, y, c("a"))
+    # grass on top
+    for x in range(6, 40):
+        ys = [y for y in range(MINE_H) if cv.get(x, y)]
+        if ys and (x * 7) % 3:
+            cv.put(x, ys[0], c("F"))
+    # timber entrance (dark shaft)
+    cv.rect(18, 15, 14, g - 15, c("K"))
+    cv.rect(19, 16, 12, g - 16, c("a"))
+    cv.vline(17, 14, g, c("o")); cv.vline(18, 14, g, c("O"))
+    cv.vline(32, 14, g, c("o")); cv.vline(33, 14, g, c("O"))
+    cv.hline(16, 34, 13, c("T")); cv.hline(16, 34, 14, c("O"))
+    # gold ore glints inside + ore cart
+    for (x, y) in [(22, 22), (27, 19), (25, 25)]:
+        cv.put(x, y, c("Y"))
+    cv.rect(36, g - 5, 9, 4, c("O"))
+    cv.hline(36, 44, g - 6, c("o"))
+    for (x, y, k) in [(37, g - 7, "Y"), (39, g - 8, "Z"), (41, g - 7, "Y"), (43, g - 7, "y")]:
+        cv.put(x, y, c(k))
+    cv.put(38, g, c("m")); cv.put(43, g, c("m"))
+    # lantern on the frame
+    cv.put(33, 11, c("w"))
+    cv.put(34, 12, c("Z" if phase == 0 else "Y"))
+    cv.outline(c("K"))
+    return cv

@@ -17,9 +17,9 @@
  "repeat": false,
  "gpu_format": "RGBA8 (lossless, no VRAM compression)",
  "gpu_bytes": 1048576,
- "disk_bytes": 10051,
- "unique_regions": 12,
- "occupancy": 0.562,
+ "disk_bytes": 10303,
+ "unique_regions": 14,
+ "occupancy": 0.574,
  "frames": {
   "base_player/idle/0": {
    "x": 103,
@@ -141,6 +141,26 @@
     127
    ]
   },
+  "prop_mine/idle/0": {
+   "x": 3,
+   "y": 399,
+   "w": 48,
+   "h": 32,
+   "pivot": [
+    24,
+    31
+   ]
+  },
+  "prop_mine/idle/1": {
+   "x": 3,
+   "y": 435,
+   "w": 48,
+   "h": 32,
+   "pivot": [
+    24,
+    31
+   ]
+  },
   "base_player": {
    "x": 103,
    "y": 3,
@@ -159,6 +179,16 @@
    "pivot": [
     48,
     127
+   ]
+  },
+  "prop_mine": {
+   "x": 3,
+   "y": 399,
+   "w": 48,
+   "h": 32,
+   "pivot": [
+    24,
+    31
    ]
   }
  },
@@ -214,6 +244,16 @@
     "fps": 5,
     "loop": true
    }
+  },
+  "prop_mine": {
+   "idle": {
+    "frames": [
+     "prop_mine/idle/0",
+     "prop_mine/idle/1"
+    ],
+    "fps": 3,
+    "loop": true
+   }
   }
  },
  "anim_sets_meta": {
@@ -252,6 +292,20 @@
     "damaged": "<=0.5 hp",
     "ruined": "0 hp"
    }
+  },
+  "prop_mine": {
+   "frame_size": [
+    48,
+    32
+   ],
+   "pivot": [
+    24,
+    31
+   ],
+   "facing": "right",
+   "kind": "prop",
+   "no_flip": true,
+   "note": "worker destination behind the player keep"
   }
  }
 }
