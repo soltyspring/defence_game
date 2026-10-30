@@ -6,7 +6,9 @@ extends SceneTree
 ## Measures: content load latency, per-round sim step distribution (bot-driven), sustained combat at
 ## N units per side (scaling curve up to caps), HUD snapshot cost, object/static-memory drift (leak and
 ## pooling proxy), save/load latency and size. Budgets are PROVISIONAL (docs/performance/BUDGETS.md).
-## Exit: 0 = harness ran (budget results in JSON), 1 = harness error, or budget FAIL with --strict.
+## Exit: 0 = harness ran (budget results in JSON); 1 = harness error, or with --strict an ADOPTED check failed, or with
+## --strict-all ANY check failed. Checks are tagged "adopted" (release invariants already in contracts: no leaked or unpooled
+## objects, ENGINE.md §7) or "provisional" (numeric targets awaiting device data). --strict never fails on provisional targets.
 ## Owner: 08-performance.
 
 const ContentS := preload("res://src/core/content.gd")
@@ -27,6 +29,7 @@ var report := {}
 var checks := []
 var quick := false
 var strict := false
+var strict_all := false
 var out_path := ""
 
 func _initialize() -> void:
@@ -35,7 +38,8 @@ func _initialize() -> void:
 func _run() -> void:
 	var args := OS.get_cmdline_user_args()
 	quick = args.has("--quick")
-	strict = args.has("--strict")
+	strict_all = args.has("--strict-all")
+	strict = args.has("--strict") or strict_all
 	var git_sha := ""
 	var contended := -1
 	var selfcheck := ""
@@ -57,7 +61,9 @@ func _run() -> void:
 	if selfcheck != "":
 		# Exit-semantics regression mode (tests/performance/test_bench_semantics.ps1): no measurements, one synthetic check.
 		report.mode = "selfcheck"
-		_check("selfcheck_synthetic", 1.0 if selfcheck == "fail" else 0.0, 0.5, "synthetic")
+		# pass | fail (a provisional check fails) | fail_adopted (an adopted check fails)
+		_check("selfcheck_provisional", 1.0 if selfcheck == "fail" else 0.0, 0.5, "synthetic")
+		_check("selfcheck_adopted", 1.0 if selfcheck == "fail_adopted" else 0.0, 0.5, "synthetic", true)
 		_finish(0, t0)
 		return
 	report.noise = _noise_floor()
@@ -105,14 +111,19 @@ func _finish(code: int, t0: int) -> void:
 	for c in checks:
 		if c.result == "FAIL": fails += 1
 	report.budget_fails = fails
+	var adopted_fails := 0
+	for c in checks:
+		if c.result == "FAIL" and c.status == "adopted": adopted_fails += 1
+	report.adopted_fails = adopted_fails
+	report.provisional_fails = fails - adopted_fails
 	var failed_ids := PackedStringArray()
 	for c in checks:
 		if c.result == "FAIL": failed_ids.append(c.id)
 	report.failed_checks = Array(failed_ids)
 	report.harness = "OK" if code == 0 else "ERROR"
 	report.budgets = "PASS" if fails == 0 else "FAIL"
-	report.strict = strict
-	if code == 0 and strict and fails > 0:
+	report.strict = "all" if strict_all else ("adopted" if strict else "off")
+	if code == 0 and ((strict_all and fails > 0) or (strict and adopted_fails > 0)):
 		code = 1
 	report.exit_code = code
 	report.total_ms = Time.get_ticks_msec() - t0
@@ -126,17 +137,17 @@ func _finish(code: int, t0: int) -> void:
 		printerr("cannot write ", out_path)
 	print(txt)
 	for c in checks:
-		print("[perf] %-4s %s: %s (budget %s)" % [c.result, c.id, str(c.value), str(c.budget)])
+		print("[perf] %-4s %-11s %s: %s (budget %s)" % [c.result, c.status, c.id, str(c.value), str(c.budget)])
 	print("[perf] report ", out_path)
 
 	# Harness completion and budget verdict are reported separately: "harness=OK budgets=FAIL" is NOT a pass.
-	# Default exit 0 = harness ran (budgets are PROVISIONAL); --strict turns any budget FAIL into exit 1.
-	print("PERF_BENCH harness=%s budgets=%s fails=%d [%s] class=%s strict=%s exit=%d" % [
-		report.harness, report.budgets, fails, ",".join(failed_ids), report.evidence_class, str(strict), code])
+	# Default exit 0 = harness ran. --strict: exit 1 on ADOPTED failures only. --strict-all: exit 1 on any failure.
+	print("PERF_BENCH harness=%s budgets=%s fails=%d adopted_fails=%d provisional_fails=%d [%s] class=%s strict=%s exit=%d" % [
+		report.harness, report.budgets, fails, adopted_fails, fails - adopted_fails, ",".join(failed_ids), report.evidence_class, report.strict, code])
 	quit(code)
 
-func _check(id: String, value: float, budget: float, note := "") -> void:
-	checks.append({"id": id, "value": snappedf(value, 0.0001), "budget": budget,
+func _check(id: String, value: float, budget: float, note := "", adopted := false) -> void:
+	checks.append({"id": id, "value": snappedf(value, 0.0001), "budget": budget, "status": "adopted" if adopted else "provisional",
 		"result": "PASS" if value <= budget else "FAIL", "note": note})
 
 static func _stats(us: PackedFloat32Array) -> Dictionary:
@@ -264,7 +275,7 @@ func _bench_scaling(content) -> void:
 	_check("cap_clash_step_p95_ms_desktop", cap_row.p95_ms, SIM_BUDGET_MID_MS / PHONE_SLOWDOWN_ASSUMED,
 		"36/side sustained mid-lane combat, best-of-runs; gate = mid-tier 2 ms / assumed slowdown")
 	_check("cap_clash_step_avg_ms_desktop", cap_row.avg_ms, SIM_BUDGET_MID_MS / PHONE_SLOWDOWN_ASSUMED, "mean step at cap")
-	_check("cap_clash_unexplained_object_drift", absf(cap_row.object_drift_unexplained), 0.0, "objects not held by sim pools (leak proxy)")
+	_check("cap_clash_unexplained_object_drift", absf(cap_row.object_drift_unexplained), 0.0, "objects not held by sim pools (ENGINE.md §7 pooling)", true)
 
 func _scale_row(content, rid: String, mode: String, n: int, measured: int, pids: Array, eids: Array) -> Dictionary:
 	var sim = SimS.new()
@@ -490,7 +501,7 @@ func _bench_leak(content) -> void:
 	var mem1 := OS.get_static_memory_usage()
 	report.leak = {"battles": reps, "object_delta": obj1 - obj0, "static_mem_delta_bytes": mem1 - mem0,
 		"note": "after releasing the sim; >0 means objects outlive a battle (RefCounted cycle or cache)"}
-	_check("battle_object_leak", absf(obj1 - obj0), 0.0, "objects retained after %d full battles" % reps)
+	_check("battle_object_leak", absf(obj1 - obj0), 0.0, "objects retained after %d full battles" % reps, true)
 
 # ---------------------------------------------------------------- save
 func _bench_save() -> void:
