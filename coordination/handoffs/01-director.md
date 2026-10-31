@@ -1,4 +1,10 @@
 # 01-director handoff
+## TASK 2026-11-01 — r05 structure experiment (coordination/prompts/01-r05-structure.txt)
+- Pass criteria were pre-registered in 3d44666 (BALANCE_DIAGNOSIS Update 10). 02 R12 (boss-death hooks, request only) and the 04 R10 threat-marker condition were also in 3d44666.
+- Blue screen 03:55: my job 01-r05-structure (queued 03:18:44) never got the lock. heavy_run.log has no 01-r05-structure START/END, so there is no partial result to discard. Working tree clean, no empty or NUL files, data JSON ok.
+- 06:53 requeued ONCE (detached): build/heavy/01-r05-structure-20261101-065321.log; variants s1 boss 60 s, s2 smaller 150 s wave, s3 no 40% trigger, s4 s1+s2; 10 seeds × 2 bots × none/LOW, headless, isolated.
+- Result: HEAVY_JOB_DONE exit=0 at 07:03:02. D40: no variant passes (closest s1 boss at 60 s: casual median 345 s, and the block is lost). No data change, so no full sweep and no 07 re-run. 02 R13: hook #1 is low priority (estimate 332 s).
+- Open: the block-vs-length conflict in r05 needs a design choice (D40). D36 still waits for 02 R10/R11. Q5 unanswered.
 ## TASK 2026-11-01 01:1x–03:2x — r05 splash/knockback (D38), zoom opinion (D39)
 - 5 variants × 10 seeds × 2 bots (none/LOW), isolated, one per heavy_run: d38_a…e.json/.md. No variant meets all 3 criteria. Splash and knockback (and boss speed) create the block; the length is structural.
 - D38: keep the boss values; recommend (NOT applied) r05 time_3 260 → 300 as a target change. D39: zoom warning-time opinion, no data change. Replies 04 R9, 03 R5.

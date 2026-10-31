@@ -159,3 +159,15 @@ Variants (data only, one Godot run each, queued in one detached job):
 - s3: the 40% HP trigger (brute 2 + swarm 6) is removed.
 - s4: s1 + s2.
 Engine-only variants (requested from 02, not run): cancel the remaining waves/triggers when the boss dies; damage the enemy base when the boss dies.
+## Update 2026-11-01 (11) — r05 structure results (D40). Bot sims, not human playtests
+One detached heavy job (01-r05-structure, START 06:53:22, HEAVY_JOB_DONE exit=0 at 07:03:02), headless, isolated, 10 seeds, 2 bots, none/LOW. The 03:18 queue entry was lost in the 03:55 blue screen before it took the lock (no START in heavy_run.log), so no partial result existed.
+| variant | casual LOW W | competent LOW W | none W (cas/comp) | LOW median t cas/comp (s) | comp LOW end base med | comp LOW after-boss med (s) | LOW losses before boss death | pass |
+|---|---|---|---|---|---|---|---|---|
+| a_current | 7/10 | 8/10 | 0/10 / 0/10 | 368 / 370 | 0.08 | 75 | 5/5 | fail |
+| s1_boss60 | 10/10 | 10/10 | 4/10 / 10/10 | 345 / 316 | 0.80 | 81 | 0/0 | fail |
+| s2_wave150_small | 10/10 | 10/10 | 10/10 / 10/10 | 351 / 351 | 0.94 | 80 | 0/0 | fail |
+| s3_no_hp_trigger | 10/10 | 10/10 | 10/10 / 10/10 | 92 / 335 | 0.93 | 66 | 0/0 | fail |
+| s4_boss60_and_small150 | 10/10 | 10/10 | 10/10 / 10/10 | 342 / 312 | 0.93 | 80 | 0/0 | fail |
+Extra facts: in the current data every LOW loss happens while the boss is alive (5/5), so the block is "boss plus adds". Removing ANY one structural element (earlier boss, smaller 150 s wave, no 40% trigger) lets the no-upgrade bots win (4–10/10). In s3 the casual bot destroys the nest before the boss even appears (9/10 at ~90 s): the 1000 HP enemy base is only protected by the 40% trigger.
+Hook estimate (no engine change, arithmetic on d38_a): capping the post-boss phase at 20 s would give LOW medians of 332 s (casual) and 317 s (competent), still over 325 s for casual. The boss itself dies at 297–312 s.
+Conclusion: no variant passes. Closest = s1 (boss at 60 s): competent LOW median 316 s ✓, casual 345 s (20 s over), end base 0.80 (at the limit), after-boss 81 s ✓, but none 4/10 (casual) and 10/10 (competent) instead of 0/10, so the block is lost. In this data the block and the 325 s length need the same thing (a long boss fight with adds), so they cannot both hold.

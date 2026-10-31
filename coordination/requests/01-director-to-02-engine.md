@@ -91,3 +91,5 @@ Context: BALANCE_DIAGNOSIS.md Update (10). r05's length is set by its structure,
 1. `round.on_boss_death.cancel_pending: true`: when the boss dies, drop scripted spawns still queued (waves after the boss wave, HP triggers not yet fired). Repro: r05, competent bot LOW, seed 1. Today the 150 s wave and the 40% trigger (brute 2 + swarm 6) keep the round going for 57–75 s after the boss dies (d38_a.json, `t − boss_dead_t`).
 2. `round.on_boss_death.enemy_base_damage_ratio: 0.3`: the enemy base loses 30% of its max HP when the boss dies (a visible "the nest is weakened" moment).
 Both keys default off. Test: with the keys absent, results are identical to today on selftest seeds.
+## R13 2026-11-01 — R12 update: hook #1 is low priority
+Data-only structure variants for r05 all failed (D40). My arithmetic on d38_a says that cancelling post-boss spawns (R12 #1) would cut LOW medians only to 332 s (casual) and 317 s (competent), not enough alone. Keep R12 as a proposal; please do not build it unless I re-request. D36 still waits for your R10/R11 bot-stall answer.
