@@ -1,0 +1,73 @@
+{
+  "time": "2026-10-31T19:12:46.2818403+09:00",
+  "monitors": [
+    {
+      "Device": "\\\\.\\DISPLAY1",
+      "Primary": true,
+      "Bounds": [
+        0,
+        0,
+        2560,
+        1440
+      ],
+      "Work": [
+        0,
+        0,
+        2560,
+        1392
+      ],
+      "Dpi": 96,
+      "Scale": 1.0
+    },
+    {
+      "Device": "\\\\.\\DISPLAY2",
+      "Primary": false,
+      "Bounds": [
+        -1920,
+        174,
+        0,
+        1254
+      ],
+      "Work": [
+        -1920,
+        174,
+        0,
+        1206
+      ],
+      "Dpi": 96,
+      "Scale": 1.0
+    }
+  ],
+  "chosen": "\\\\.\\DISPLAY2",
+  "window": {
+    "hwnd": 16585226,
+    "pid": 33416,
+    "first_seen": {
+      "rect": [
+        -1608,
+        299,
+        -312,
+        1058
+      ],
+      "on_secondary": true
+    },
+    "rect": [
+      -1600,
+      330,
+      -304,
+      1089
+    ],
+    "on_secondary": true,
+    "requested": [
+      -1600,
+      330,
+      1280,
+      720
+    ],
+    "screen_index": 1,
+    "topmost": true
+  },
+  "result": "EXIT_0",
+  "project": "C:\\Users\\aghose\\AppData\\Local\\Temp\\art03_imp",
+  "log": "Z:\\.solty\\dev\\appintoss\\defence\\build\\qa\\art03_ab\\base\\godot_20261031_191246.log"
+}

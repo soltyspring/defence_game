@@ -1,6 +1,6 @@
 # 03-art status
-Updated: 2026-10-31 18:59 +09:00
-Status: MILESTONE 15 DELIVERED (commit aee329b, PUSHED origin/main, verified with git branch -r --contains). Launcher icon set in assets/branding (192, adaptive fg/bg/mono 432; 0 px outside the safe circle, 0 clipped by 4 masks), store icon 512 and 1024x500 feature graphic with a separate title layer, hero apron emblem 6x3. APK wiring waits for 02 (A14).
-Current task: done. Next = APK icon check with 06 after 02's preset change; A26 for the other allies.
-Validation: validate.py --determinism PASS; launcher_icons.py byte-identical rerun; 06 check_store_graphics.py PASS for icon/adaptive; exported PCK 12/12; real-game capture on DISPLAY2.
-Open with other owners: 02 A12-A14 (re-import, camera, preset keys), 04 A11/A12, 06 A4, 08 A8/A9.
+Updated: 2026-10-31 19:23 +09:00
+Status: MILESTONE 16 DELIVERED (commit SHA in coordination/handoffs/03-art.md). Launcher logo 48 dp (0 px outside the safe circle), bakery identity by silhouette chosen by a real-game A/B (A: taller hat + longer rolling pin), import audit 12/12 PASS on a clean HEAD, English label clipping not reproducible (0 truncations).
+Current task: done. Next = main-tree import audit after 02 re-imports; APK icon check after 02 A14.
+Validation: validate.py --determinism PASS; exported PCK 12/12 + 3 fonts; import_audit PASS; real-game captures on DISPLAY2.
+Open with other owners: 02 A12-A15 (re-import, camera, preset keys), 04 A11-A13, 06 A4/A5, 08 A8/A9.

@@ -447,6 +447,57 @@ BAKER_TORSO = Sprite.parse("""
 """)
 
 
+# A26 silhouette variants (art 0.12.3). Real-game A/B (lineup_cam.gd, ART_AUDIT round 13): A ADOPTED
+# (hero silhouette in the attack pose 74.3 -> 77.3 %), B rejected (no silhouette gain, dE vs enemies -0.3..-1.7).
+# ART_VARIANT env selects for re-measurement: "A" (default, shipped), "B" (rejected trial), "0" (0.12.2 art).
+#   A = taller chef hat (+2 rows, wider puff) + rolling pin 2 px longer (hero)
+#   B = bigger loaf-slice shield (tank, 9x12) + full-width toast-slice helmet (melee_basic)
+import os as _os
+VARIANT = _os.environ.get("ART_VARIANT", "A")
+BAKER_HEAD_TALL = Sprite.parse("""
+...JJJ.JJJ....
+..JJJJJJJJJJ..
+..JJJJJJJJJJU.
+..UJJJJJJJJJU.
+...UJJJJJJJU..
+....JJJJJJJ...
+....JJJJJJJ...
+....UJJJJJJ...
+....RRRRRRR...
+..hhHLLLLLLLL.
+.hhHHSLLLKLLL.
+.hhHHSSLLKLeL.
+.hhHhSSShhhSs.
+..hhhsSSSSSs..
+...hh.sSSSs...
+""")
+LOAF_SHIELD_BIG = Sprite.parse("""
+.oTTo.oTTo.
+oTUUUoUUUTo
+OUUUUUUUUUO
+OUUTUUUTUUO
+OUUUURUUUUO
+OUUURRRUUUO
+OUUUURUUUUO
+OUTUUUUUTUO
+OUUUUUUUUUO
+OUUUUUUUUUO
+OoUUUUUUUoO
+.OOOOOOOOO.
+""")
+SPEAR_HEAD_TOAST = Sprite.parse("""
+.mmm..mmm.
+mcTcmmcTcm
+mccccTcccm
+.mmmmmmmmm
+..hLLLLLL.
+..hSLLKLL.
+..hSSLKSe.
+..hSSSSSs.
+...sSSSs..
+""")
+
+
 def rolling_pin(cv, hand, pose, body):
     """Held by one handle like a club: handle in the fist, 9 px barrel, end handle."""
     hx, hy = hand
@@ -459,11 +510,12 @@ def rolling_pin(cv, hand, pose, body):
         cv.put(round(hx + dx * t + px_ * s), round(hy + dy * t + py_ * s), c(k))
     for t in (-1.5, -1, -0.5, 0, 0.5, 1, 1.5):
         put(t, 0, "O")
-    for i in range(4, 23):
+    end = 27 if VARIANT == "A" else 23                # variant A: barrel 2 px longer
+    for i in range(4, end):
         t = i * 0.5
         for s in (1.5, 1.0, 0.5, 0.0, -0.5, -1.0, -1.5):
             put(t, s, "U" if s >= 1.0 else ("o" if s <= -1.0 else "T"))
-    for t in (11.5, 12, 12.5, 13):
+    for t in ((13.5, 14, 14.5, 15) if VARIANT == "A" else (11.5, 12, 12.5, 13)):
         put(t, 0, "O")
     for t in (4, 7.5):                                # A26: flour dust on the barrel
         put(t, 0.5, "J")
@@ -471,6 +523,10 @@ def rolling_pin(cv, hand, pose, body):
 
 def hero_baker_body():
     import chars_player
+    if VARIANT == "A":
+        return replace(chars_player.HERO, head=BAKER_HEAD_TALL, torso=BAKER_TORSO, weapon=rolling_pin,
+                       arm_col="J", arm_shade="U", hand_col="N",
+                       blink_px=[(9, 10, "L"), (9, 11, "S")])
     return replace(chars_player.HERO, head=BAKER_HEAD, torso=BAKER_TORSO, weapon=rolling_pin,
                    arm_col="J", arm_shade="U", hand_col="N",
                    blink_px=[(9, 8, "L"), (9, 9, "S")])

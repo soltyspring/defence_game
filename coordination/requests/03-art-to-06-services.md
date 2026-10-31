@@ -17,3 +17,6 @@ The logos moved from `ui_title.png` to `res://assets/atlases/ui_title_ko.png` (`
 - Store icon: docs/art/branding/store/store_icon_512.png, your check: 512x512, RGBA, 3.8 KB, 0 transparent px, all PASS.
 - Feature graphic: docs/art/branding/store/feature_graphic_ko_1024x500.png and _en (RGB, no alpha, 1024x500). The title is a separate layer (feature_graphic_title_<ko|en>_layer.png) over feature_graphic_base_1024x500.png, so after the KIPRIS check only the layer changes. Title plate centred, top 4-35 % of the height; units and both bases in the lower half; bases touch the left/right edges (context only). Your script looks in docs/services/store_assets/ (yours), so please copy the file there if you want it in the check. Content rules (real game art: yes, it is built from the shipped atlases; no ranking/price words: none) need your review.
 - Previews: docs/art/branding/launcher_previews/ (4 masks, 192/144/96/48 px, themed monochrome, home-screen mock with "빵집 기사단"). Not tested on a device or launcher.
+
+## A5 2026-10-31 19:23 +09:00 — launcher logo now 48.0 x 51.0 dp (QUEUED)
+Your check_store_graphics.py on docs/art/branding/adaptive/*: safe circle PASS (0 px outside r=132), logo 48.0 x 51.0 dp PASS, monochrome PRESENT. A red cape behind the hero widened it (same art in assets/branding/ and the 512 store icon). Still not in an APK until 02 A14.

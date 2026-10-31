@@ -406,7 +406,7 @@ def mace(cv, hand, pose, body):
 def shield_front(cv, a, pose, body):
     x, y = a["hb"]
     dx = pose.extra.get("shield_dx", 0)
-    cv.stamp(SHIELD, x + 3 + dx, y - 6)
+    cv.stamp(SHIELD, x + 3 + dx - (SHIELD.w - 7) // 2, y - 6 - (SHIELD.h - 9) // 2)   # 7x9 -> same as before
 
 
 TANK = Body(

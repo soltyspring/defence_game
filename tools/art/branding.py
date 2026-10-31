@@ -181,6 +181,11 @@ def icon48_fg() -> Canvas:
     fg.rect(21, 20, 2, 3, c("K"))                     # eye (facing right)
     fg.put(24, 23, c("e"))                            # cheek
     fg.hline(20, 23, 24, c("w"))                      # determined mouth
+    # jam-red cape behind the body (matches the sprite; art 0.12.3: also widens the logo to >= 48 dp)
+    for y in range(28, 37):
+        x0 = 10 - (y - 28) // 3 if y < 34 else 9
+        fg.hline(x0, 12, y, c("R"))
+        fg.put(x0, y, c("r"))
     # body (art 0.12.2, matches the sprite): white chef jacket, egg-wash apron with a loaf emblem
     fg.rect(12, 27, 15, 11, c("W"))
     fg.vline(12, 27, 37, c("x"))

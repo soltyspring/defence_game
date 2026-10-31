@@ -73,7 +73,7 @@ REL_ATLAS = "assets/atlases"
 PREV = os.path.join(ROOT, "docs", "art", "previews")
 # Layout locks: existing regions keep their page position across rebuilds (see atlas._pack).
 LOCK_DIR = os.path.join(HERE, "layout_lock")
-ART_VERSION = "0.12.2"
+ART_VERSION = "0.12.3"
 
 REQUIRED_CHAR_ANIMS = ("idle", "walk", "attack", "death")
 
@@ -110,7 +110,12 @@ def apply_name_redraws():
         for sid in list(reg):
             if sid in ov:
                 reg[sid] = ov[sid]
-    chars_player.SHIELD = chars_retheme.LOAF_SHIELD
+    chars_player.SHIELD = chars_retheme.LOAF_SHIELD_BIG if chars_retheme.VARIANT == "B" else chars_retheme.LOAF_SHIELD
+    if chars_retheme.VARIANT == "B":
+        from dataclasses import replace as _rp
+        chars_player.SPEARMAN = _rp(chars_player.SPEARMAN, head=chars_retheme.SPEAR_HEAD_TOAST,
+                                    blink_px=[(6, 5, "L"), (6, 6, "S")])
+        chars_player.ALL["melee_basic"] = (chars_player.SPEARMAN, chars_player.spearman_anims)
     fx.SETS["arrow"] = (chars_retheme.proj_roll, 14, 5, (7, 2))
 
 

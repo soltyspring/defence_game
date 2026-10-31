@@ -9,13 +9,14 @@ Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 [  83% ] [90m[1mfirst_scan_filesystem[22m | ?뚯씪 ?ㅼ틪 ?쒖옉 以?..[39m[0m
 [92m[ DONE ][39m [1mfirst_scan_filesystem[22m
 [0m
-[   0% ] [90m[1mupdate_scripts_classes[22m | Started ?꾩뿭 ?대옒?ㅻ? ?깅줉?섎뒗 以?.. (6 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started ?꾩뿭 ?대옒?ㅻ? ?깅줉?섎뒗 以?.. (7 steps)[39m[0m
 [   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
-[  14% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
-[  28% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
-[  42% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
-[  57% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
-[  71% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  12% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  25% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  37% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  75% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
 [92m[ DONE ][39m [1mupdate_scripts_classes[22m
 [0m
 [   0% ] [90m[1m_update_scan_actions[22m | Started ?≪뀡 ?ㅼ틪 以?.. (15 steps)[39m[0m
@@ -59,9 +60,9 @@ res://assets/fonts/Galmuri9.ttf: Pixel font detected, disabling hinting.
 [   6% ] [90m[1mreimport[22m | Galmuri11-Bold.ttf[39m[0m
 res://assets/fonts/Galmuri11-Bold.ttf: Pixel font detected, disabling subpixel positioning.
 res://assets/fonts/Galmuri11-Bold.ttf: Pixel font detected, disabling hinting.
+[  12% ] [90m[1mreimport[22m | Galmuri11.ttf[39m[0m
 res://assets/fonts/Galmuri11.ttf: Pixel font detected, disabling subpixel positioning.
 res://assets/fonts/Galmuri11.ttf: Pixel font detected, disabling hinting.
-[  12% ] [90m[1mreimport[22m | Galmuri11.ttf[39m[0m
 [  18% ] [90m[1mreimport[22m | Galmuri9.ttf[39m[0m
 [  25% ] [90m[1mreimport[22m | Galmuri11-Bold.ttf[39m[0m
 [  31% ] [90m[1mreimport[22m | Galmuri11.ttf[39m[0m
@@ -102,56 +103,58 @@ Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 [   3% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/bases.png-7cea66318d28e7c4ad5e2a7f61e1cbf8.ctex[39m[0m
 [   3% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/bases.png.import[39m[0m
 [   6% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/biome_meadow.json[39m[0m
-[   9% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/biome_meadow.png-85b1b5ff68f9a2f47452b0aaa7782020.ctex[39m[0m
-[   9% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/biome_meadow.png.import[39m[0m
+[   8% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/biome_meadow.png-85b1b5ff68f9a2f47452b0aaa7782020.ctex[39m[0m
+[   8% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/biome_meadow.png.import[39m[0m
 [  11% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_boss_overlord.json[39m[0m
 [  14% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/char_boss_overlord.png-8dc3d38db2e702f52956042baf7d959a.ctex[39m[0m
 [  14% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_boss_overlord.png.import[39m[0m
-[  17% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_boss_warlord.json[39m[0m
+[  16% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_boss_warlord.json[39m[0m
 [  19% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/char_boss_warlord.png-184f6b0b5ba5afb7475466837f3f2e87.ctex[39m[0m
 [  19% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_boss_warlord.png.import[39m[0m
 [  22% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_enemy.json[39m[0m
-[  25% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/char_enemy.png-e5df2b163b25820b3fcce88fdb139e13.ctex[39m[0m
-[  25% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_enemy.png.import[39m[0m
-[  28% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_enemy_adv.json[39m[0m
-[  30% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/char_enemy_adv.png-50efdc536346e5ccbf0992855ba3a53c.ctex[39m[0m
-[  30% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_enemy_adv.png.import[39m[0m
-[  33% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_player.json[39m[0m
-[  35% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/char_player.png-a822b4a4d58c09b9090b7f17c9f835e2.ctex[39m[0m
-[  35% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_player.png.import[39m[0m
-[  37% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_player_adv.json[39m[0m
-[  40% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/char_player_adv.png-0da60882c8f7e680cc0b908c47bb1366.ctex[39m[0m
-[  40% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_player_adv.png.import[39m[0m
-[  43% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/fx_combat.json[39m[0m
-[  45% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/fx_combat.png-e6354d67123718b0bffb7ceec69fc478.ctex[39m[0m
-[  45% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/fx_combat.png.import[39m[0m
-[  48% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/ui_main.json[39m[0m
-[  51% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/ui_main.png-b8d0216391e4b08a56e7bd555a45b7f3.ctex[39m[0m
-[  51% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/ui_main.png.import[39m[0m
-[  54% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/ui_title_en.json[39m[0m
-[  56% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/ui_title_en.png-b7feef78a712d275e740646c9c8ac486.ctex[39m[0m
-[  56% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/ui_title_en.png.import[39m[0m
-[  59% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/ui_title_ko.json[39m[0m
-[  62% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/ui_title_ko.png-c71d048683fa3a42fd50d6efbca8f3e8.ctex[39m[0m
-[  62% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/ui_title_ko.png.import[39m[0m
-[  64% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/fonts/fonts_provenance.json[39m[0m
-[  66% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/Galmuri9.ttf-98ce197f22f89047170858fe1b62fb4f.fontdata[39m[0m
-[  66% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/fonts/Galmuri9.ttf.import[39m[0m
-[  69% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/Galmuri11-Bold.ttf-3a23d149e7b99ee54cc37134f38f9040.fontdata[39m[0m
-[  69% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/fonts/Galmuri11-Bold.ttf.import[39m[0m
-[  71% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/Galmuri11.ttf-dc494bdf43221ea4068442166ca7b6a4.fontdata[39m[0m
-[  71% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/fonts/Galmuri11.ttf.import[39m[0m
-[  74% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/manifest.json[39m[0m
-[  77% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://check.gdc[39m[0m
-[  80% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://font_sheet.gdc[39m[0m
-[  82% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/exported/133200997/export-3070c538c03ee49b7677ff960a3f5195-main.scn[39m[0m
+[  24% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/char_enemy.png-e5df2b163b25820b3fcce88fdb139e13.ctex[39m[0m
+[  24% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_enemy.png.import[39m[0m
+[  27% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_enemy_adv.json[39m[0m
+[  29% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/char_enemy_adv.png-50efdc536346e5ccbf0992855ba3a53c.ctex[39m[0m
+[  29% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_enemy_adv.png.import[39m[0m
+[  32% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_player.json[39m[0m
+[  34% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/char_player.png-a822b4a4d58c09b9090b7f17c9f835e2.ctex[39m[0m
+[  34% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_player.png.import[39m[0m
+[  36% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_player_adv.json[39m[0m
+[  39% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/char_player_adv.png-0da60882c8f7e680cc0b908c47bb1366.ctex[39m[0m
+[  39% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/char_player_adv.png.import[39m[0m
+[  42% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/fx_combat.json[39m[0m
+[  44% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/fx_combat.png-e6354d67123718b0bffb7ceec69fc478.ctex[39m[0m
+[  44% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/fx_combat.png.import[39m[0m
+[  47% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/ui_main.json[39m[0m
+[  50% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/ui_main.png-b8d0216391e4b08a56e7bd555a45b7f3.ctex[39m[0m
+[  50% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/ui_main.png.import[39m[0m
+[  52% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/ui_title_en.json[39m[0m
+[  55% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/ui_title_en.png-b7feef78a712d275e740646c9c8ac486.ctex[39m[0m
+[  55% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/ui_title_en.png.import[39m[0m
+[  57% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/ui_title_ko.json[39m[0m
+[  60% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/ui_title_ko.png-c71d048683fa3a42fd50d6efbca8f3e8.ctex[39m[0m
+[  60% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/atlases/ui_title_ko.png.import[39m[0m
+[  63% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/fonts/fonts_provenance.json[39m[0m
+[  65% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/Galmuri9.ttf-98ce197f22f89047170858fe1b62fb4f.fontdata[39m[0m
+[  65% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/fonts/Galmuri9.ttf.import[39m[0m
+[  67% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/Galmuri11-Bold.ttf-3a23d149e7b99ee54cc37134f38f9040.fontdata[39m[0m
+[  67% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/fonts/Galmuri11-Bold.ttf.import[39m[0m
+[  70% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/imported/Galmuri11.ttf-dc494bdf43221ea4068442166ca7b6a4.fontdata[39m[0m
+[  70% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/fonts/Galmuri11.ttf.import[39m[0m
+[  72% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/manifest.json[39m[0m
+[  75% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://check.gdc[39m[0m
+[  77% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://font_sheet.gdc[39m[0m
+[  80% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://lineup_cam.gdc[39m[0m
+[  83% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://.godot/exported/133200997/export-3070c538c03ee49b7677ff960a3f5195-main.scn[39m[0m
 [  85% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://nest_cam.gdc[39m[0m
 [  88% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://readability.gdc[39m[0m
-[  90% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://title_sheet.gdc[39m[0m
+[  91% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://title_sheet.gdc[39m[0m
 [  93% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://ui_sheet.gdc[39m[0m
 [  96% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://assets/fonts/OFL-Galmuri.txt[39m[0m
 [  96% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://check.gd.remap[39m[0m
 [  96% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://font_sheet.gd.remap[39m[0m
+[  96% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://lineup_cam.gd.remap[39m[0m
 [  96% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://main.tscn.remap[39m[0m
 [  96% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://nest_cam.gd.remap[39m[0m
 [  96% ] [90m[1msavepack[22m | ?뚯씪 ???以? res://readability.gd.remap[39m[0m

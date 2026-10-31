@@ -1,0 +1,706 @@
+{
+ "base": {
+  "attack": [
+   {
+    "set": "ranged_basic",
+    "side": 1,
+    "x": 220.0,
+    "silhouette_pct": 100.0,
+    "px": 796,
+    "dE_enemy_min": {
+     "normal": 41.9,
+     "protan": 35.9,
+     "deutan": 40.5,
+     "tritan": 39.1
+    }
+   },
+   {
+    "set": "tank",
+    "side": 1,
+    "x": 260.0,
+    "silhouette_pct": 100.0,
+    "px": 1084,
+    "dE_enemy_min": {
+     "normal": 42.0,
+     "protan": 33.9,
+     "deutan": 39.2,
+     "tritan": 41.9
+    }
+   },
+   {
+    "set": "melee_basic",
+    "side": 1,
+    "x": 300.0,
+    "silhouette_pct": 99.2,
+    "px": 936,
+    "dE_enemy_min": {
+     "normal": 45.4,
+     "protan": 39.2,
+     "deutan": 44.5,
+     "tritan": 42.2
+    }
+   },
+   {
+    "set": "hero_captain",
+    "side": 1,
+    "x": 345.0,
+    "silhouette_pct": 74.3,
+    "px": 2208,
+    "dE_enemy_min": {
+     "normal": 36.4,
+     "protan": 29.4,
+     "deutan": 35.5,
+     "tritan": 38.9
+    }
+   },
+   {
+    "set": "melee_basic",
+    "side": 1,
+    "x": 390.0,
+    "silhouette_pct": 99.2,
+    "px": 936,
+    "dE_enemy_min": {
+     "normal": 45.4,
+     "protan": 39.2,
+     "deutan": 44.5,
+     "tritan": 42.2
+    }
+   },
+   {
+    "set": "e_grunt",
+    "side": -1,
+    "x": 440.0,
+    "silhouette_pct": 100.0,
+    "px": 872
+   },
+   {
+    "set": "e_spitter",
+    "side": -1,
+    "x": 480.0,
+    "silhouette_pct": 92.0,
+    "px": 868
+   }
+  ],
+  "walk": [
+   {
+    "set": "ranged_basic",
+    "side": 1,
+    "x": 220.6,
+    "silhouette_pct": 100.0,
+    "px": 772,
+    "dE_enemy_min": {
+     "normal": 42.9,
+     "protan": 36.3,
+     "deutan": 41.2,
+     "tritan": 40.6
+    }
+   },
+   {
+    "set": "tank",
+    "side": 1,
+    "x": 260.466666666667,
+    "silhouette_pct": 100.0,
+    "px": 932,
+    "dE_enemy_min": {
+     "normal": 41.7,
+     "protan": 33.6,
+     "deutan": 39.1,
+     "tritan": 41.6
+    }
+   },
+   {
+    "set": "melee_basic",
+    "side": 1,
+    "x": 300.666666666667,
+    "silhouette_pct": 100.0,
+    "px": 808,
+    "dE_enemy_min": {
+     "normal": 42.2,
+     "protan": 35.7,
+     "deutan": 41.2,
+     "tritan": 40.5
+    }
+   },
+   {
+    "set": "hero_captain",
+    "side": 1,
+    "x": 345.0,
+    "silhouette_pct": 100.0,
+    "px": 1732,
+    "dE_enemy_min": {
+     "normal": 36.3,
+     "protan": 28.4,
+     "deutan": 34.8,
+     "tritan": 39.0
+    }
+   },
+   {
+    "set": "melee_basic",
+    "side": 1,
+    "x": 390.666666666667,
+    "silhouette_pct": 100.0,
+    "px": 808,
+    "dE_enemy_min": {
+     "normal": 42.2,
+     "protan": 35.7,
+     "deutan": 41.2,
+     "tritan": 40.5
+    }
+   },
+   {
+    "set": "e_grunt",
+    "side": -1,
+    "x": 439.366666666667,
+    "silhouette_pct": 100.0,
+    "px": 740
+   },
+   {
+    "set": "e_spitter",
+    "side": -1,
+    "x": 480.0,
+    "silhouette_pct": 100.0,
+    "px": 704
+   }
+  ]
+ },
+ "A": {
+  "attack": [
+   {
+    "set": "ranged_basic",
+    "side": 1,
+    "x": 220.0,
+    "silhouette_pct": 100.0,
+    "px": 796,
+    "dE_enemy_min": {
+     "normal": 41.9,
+     "protan": 35.9,
+     "deutan": 40.5,
+     "tritan": 39.1
+    }
+   },
+   {
+    "set": "tank",
+    "side": 1,
+    "x": 260.0,
+    "silhouette_pct": 100.0,
+    "px": 1084,
+    "dE_enemy_min": {
+     "normal": 42.0,
+     "protan": 33.9,
+     "deutan": 39.2,
+     "tritan": 41.9
+    }
+   },
+   {
+    "set": "melee_basic",
+    "side": 1,
+    "x": 300.0,
+    "silhouette_pct": 99.2,
+    "px": 936,
+    "dE_enemy_min": {
+     "normal": 45.4,
+     "protan": 39.2,
+     "deutan": 44.5,
+     "tritan": 42.2
+    }
+   },
+   {
+    "set": "hero_captain",
+    "side": 1,
+    "x": 345.0,
+    "silhouette_pct": 77.3,
+    "px": 2296,
+    "dE_enemy_min": {
+     "normal": 36.4,
+     "protan": 29.5,
+     "deutan": 35.5,
+     "tritan": 38.8
+    }
+   },
+   {
+    "set": "melee_basic",
+    "side": 1,
+    "x": 390.0,
+    "silhouette_pct": 99.2,
+    "px": 936,
+    "dE_enemy_min": {
+     "normal": 45.4,
+     "protan": 39.2,
+     "deutan": 44.5,
+     "tritan": 42.2
+    }
+   },
+   {
+    "set": "e_grunt",
+    "side": -1,
+    "x": 440.0,
+    "silhouette_pct": 100.0,
+    "px": 872
+   },
+   {
+    "set": "e_spitter",
+    "side": -1,
+    "x": 480.0,
+    "silhouette_pct": 92.0,
+    "px": 868
+   }
+  ],
+  "walk": [
+   {
+    "set": "ranged_basic",
+    "side": 1,
+    "x": 220.6,
+    "silhouette_pct": 100.0,
+    "px": 772,
+    "dE_enemy_min": {
+     "normal": 42.9,
+     "protan": 36.3,
+     "deutan": 41.2,
+     "tritan": 40.6
+    }
+   },
+   {
+    "set": "tank",
+    "side": 1,
+    "x": 260.466666666667,
+    "silhouette_pct": 100.0,
+    "px": 932,
+    "dE_enemy_min": {
+     "normal": 41.7,
+     "protan": 33.6,
+     "deutan": 39.1,
+     "tritan": 41.6
+    }
+   },
+   {
+    "set": "melee_basic",
+    "side": 1,
+    "x": 300.666666666667,
+    "silhouette_pct": 100.0,
+    "px": 808,
+    "dE_enemy_min": {
+     "normal": 42.2,
+     "protan": 35.7,
+     "deutan": 41.2,
+     "tritan": 40.5
+    }
+   },
+   {
+    "set": "hero_captain",
+    "side": 1,
+    "x": 345.0,
+    "silhouette_pct": 99.3,
+    "px": 1832,
+    "dE_enemy_min": {
+     "normal": 36.1,
+     "protan": 28.7,
+     "deutan": 34.9,
+     "tritan": 38.8
+    }
+   },
+   {
+    "set": "melee_basic",
+    "side": 1,
+    "x": 390.666666666667,
+    "silhouette_pct": 100.0,
+    "px": 808,
+    "dE_enemy_min": {
+     "normal": 42.2,
+     "protan": 35.7,
+     "deutan": 41.2,
+     "tritan": 40.5
+    }
+   },
+   {
+    "set": "e_grunt",
+    "side": -1,
+    "x": 439.366666666667,
+    "silhouette_pct": 100.0,
+    "px": 740
+   },
+   {
+    "set": "e_spitter",
+    "side": -1,
+    "x": 480.0,
+    "silhouette_pct": 100.0,
+    "px": 704
+   }
+  ]
+ },
+ "B": {
+  "attack": [
+   {
+    "set": "ranged_basic",
+    "side": 1,
+    "x": 220.0,
+    "silhouette_pct": 100.0,
+    "px": 796,
+    "dE_enemy_min": {
+     "normal": 41.9,
+     "protan": 35.9,
+     "deutan": 40.5,
+     "tritan": 39.1
+    }
+   },
+   {
+    "set": "tank",
+    "side": 1,
+    "x": 260.0,
+    "silhouette_pct": 100.0,
+    "px": 1252,
+    "dE_enemy_min": {
+     "normal": 39.3,
+     "protan": 32.2,
+     "deutan": 37.9,
+     "tritan": 39.3
+    }
+   },
+   {
+    "set": "melee_basic",
+    "side": 1,
+    "x": 300.0,
+    "silhouette_pct": 99.2,
+    "px": 992,
+    "dE_enemy_min": {
+     "normal": 44.8,
+     "protan": 38.7,
+     "deutan": 44.1,
+     "tritan": 41.8
+    }
+   },
+   {
+    "set": "hero_captain",
+    "side": 1,
+    "x": 345.0,
+    "silhouette_pct": 74.3,
+    "px": 2208,
+    "dE_enemy_min": {
+     "normal": 36.4,
+     "protan": 29.4,
+     "deutan": 35.5,
+     "tritan": 38.9
+    }
+   },
+   {
+    "set": "melee_basic",
+    "side": 1,
+    "x": 390.0,
+    "silhouette_pct": 99.2,
+    "px": 992,
+    "dE_enemy_min": {
+     "normal": 44.8,
+     "protan": 38.7,
+     "deutan": 44.1,
+     "tritan": 41.8
+    }
+   },
+   {
+    "set": "e_grunt",
+    "side": -1,
+    "x": 440.0,
+    "silhouette_pct": 100.0,
+    "px": 872
+   },
+   {
+    "set": "e_spitter",
+    "side": -1,
+    "x": 480.0,
+    "silhouette_pct": 92.0,
+    "px": 868
+   }
+  ],
+  "walk": [
+   {
+    "set": "ranged_basic",
+    "side": 1,
+    "x": 220.6,
+    "silhouette_pct": 100.0,
+    "px": 772,
+    "dE_enemy_min": {
+     "normal": 42.9,
+     "protan": 36.3,
+     "deutan": 41.2,
+     "tritan": 40.6
+    }
+   },
+   {
+    "set": "tank",
+    "side": 1,
+    "x": 260.466666666667,
+    "silhouette_pct": 100.0,
+    "px": 1112,
+    "dE_enemy_min": {
+     "normal": 39.8,
+     "protan": 33.3,
+     "deutan": 39.0,
+     "tritan": 39.4
+    }
+   },
+   {
+    "set": "melee_basic",
+    "side": 1,
+    "x": 300.666666666667,
+    "silhouette_pct": 100.0,
+    "px": 864,
+    "dE_enemy_min": {
+     "normal": 41.8,
+     "protan": 35.4,
+     "deutan": 40.9,
+     "tritan": 40.2
+    }
+   },
+   {
+    "set": "hero_captain",
+    "side": 1,
+    "x": 345.0,
+    "silhouette_pct": 100.0,
+    "px": 1732,
+    "dE_enemy_min": {
+     "normal": 36.3,
+     "protan": 28.4,
+     "deutan": 34.8,
+     "tritan": 39.0
+    }
+   },
+   {
+    "set": "melee_basic",
+    "side": 1,
+    "x": 390.666666666667,
+    "silhouette_pct": 100.0,
+    "px": 864,
+    "dE_enemy_min": {
+     "normal": 41.8,
+     "protan": 35.4,
+     "deutan": 40.9,
+     "tritan": 40.2
+    }
+   },
+   {
+    "set": "e_grunt",
+    "side": -1,
+    "x": 439.366666666667,
+    "silhouette_pct": 100.0,
+    "px": 740
+   },
+   {
+    "set": "e_spitter",
+    "side": -1,
+    "x": 480.0,
+    "silhouette_pct": 100.0,
+    "px": 704
+   }
+  ]
+ },
+ "summary": {
+  "ranged_basic@220": {
+   "attack": {
+    "base": {
+     "sil": 100.0,
+     "dE_protan": 35.9,
+     "dE_min_all": 35.9,
+     "px": 796
+    },
+    "A": {
+     "sil": 100.0,
+     "dE_protan": 35.9,
+     "dE_min_all": 35.9,
+     "px": 796
+    },
+    "B": {
+     "sil": 100.0,
+     "dE_protan": 35.9,
+     "dE_min_all": 35.9,
+     "px": 796
+    }
+   },
+   "walk": {
+    "base": {
+     "sil": 100.0,
+     "dE_protan": 36.3,
+     "dE_min_all": 36.3,
+     "px": 772
+    },
+    "A": {
+     "sil": 100.0,
+     "dE_protan": 36.3,
+     "dE_min_all": 36.3,
+     "px": 772
+    },
+    "B": {
+     "sil": 100.0,
+     "dE_protan": 36.3,
+     "dE_min_all": 36.3,
+     "px": 772
+    }
+   }
+  },
+  "tank@260": {
+   "attack": {
+    "base": {
+     "sil": 100.0,
+     "dE_protan": 33.9,
+     "dE_min_all": 33.9,
+     "px": 1084
+    },
+    "A": {
+     "sil": 100.0,
+     "dE_protan": 33.9,
+     "dE_min_all": 33.9,
+     "px": 1084
+    },
+    "B": {
+     "sil": 100.0,
+     "dE_protan": 32.2,
+     "dE_min_all": 32.2,
+     "px": 1252
+    }
+   },
+   "walk": {
+    "base": {
+     "sil": 100.0,
+     "dE_protan": 33.6,
+     "dE_min_all": 33.6,
+     "px": 932
+    },
+    "A": {
+     "sil": 100.0,
+     "dE_protan": 33.6,
+     "dE_min_all": 33.6,
+     "px": 932
+    },
+    "B": {
+     "sil": 100.0,
+     "dE_protan": 33.3,
+     "dE_min_all": 33.3,
+     "px": 1112
+    }
+   }
+  },
+  "melee_basic@300": {
+   "attack": {
+    "base": {
+     "sil": 99.2,
+     "dE_protan": 39.2,
+     "dE_min_all": 39.2,
+     "px": 936
+    },
+    "A": {
+     "sil": 99.2,
+     "dE_protan": 39.2,
+     "dE_min_all": 39.2,
+     "px": 936
+    },
+    "B": {
+     "sil": 99.2,
+     "dE_protan": 38.7,
+     "dE_min_all": 38.7,
+     "px": 992
+    }
+   },
+   "walk": {
+    "base": {
+     "sil": 100.0,
+     "dE_protan": 35.7,
+     "dE_min_all": 35.7,
+     "px": 808
+    },
+    "A": {
+     "sil": 100.0,
+     "dE_protan": 35.7,
+     "dE_min_all": 35.7,
+     "px": 808
+    },
+    "B": {
+     "sil": 100.0,
+     "dE_protan": 35.4,
+     "dE_min_all": 35.4,
+     "px": 864
+    }
+   }
+  },
+  "hero_captain@345": {
+   "attack": {
+    "base": {
+     "sil": 74.3,
+     "dE_protan": 29.4,
+     "dE_min_all": 29.4,
+     "px": 2208
+    },
+    "A": {
+     "sil": 77.3,
+     "dE_protan": 29.5,
+     "dE_min_all": 29.5,
+     "px": 2296
+    },
+    "B": {
+     "sil": 74.3,
+     "dE_protan": 29.4,
+     "dE_min_all": 29.4,
+     "px": 2208
+    }
+   },
+   "walk": {
+    "base": {
+     "sil": 100.0,
+     "dE_protan": 28.4,
+     "dE_min_all": 28.4,
+     "px": 1732
+    },
+    "A": {
+     "sil": 99.3,
+     "dE_protan": 28.7,
+     "dE_min_all": 28.7,
+     "px": 1832
+    },
+    "B": {
+     "sil": 100.0,
+     "dE_protan": 28.4,
+     "dE_min_all": 28.4,
+     "px": 1732
+    }
+   }
+  },
+  "melee_basic@390": {
+   "attack": {
+    "base": {
+     "sil": 99.2,
+     "dE_protan": 39.2,
+     "dE_min_all": 39.2,
+     "px": 936
+    },
+    "A": {
+     "sil": 99.2,
+     "dE_protan": 39.2,
+     "dE_min_all": 39.2,
+     "px": 936
+    },
+    "B": {
+     "sil": 99.2,
+     "dE_protan": 38.7,
+     "dE_min_all": 38.7,
+     "px": 992
+    }
+   },
+   "walk": {
+    "base": {
+     "sil": 100.0,
+     "dE_protan": 35.7,
+     "dE_min_all": 35.7,
+     "px": 808
+    },
+    "A": {
+     "sil": 100.0,
+     "dE_protan": 35.7,
+     "dE_min_all": 35.7,
+     "px": 808
+    },
+    "B": {
+     "sil": 100.0,
+     "dE_protan": 35.4,
+     "dE_min_all": 35.4,
+     "px": 864
+    }
+   }
+  }
+ }
+}

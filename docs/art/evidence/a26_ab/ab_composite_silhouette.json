@@ -1,0 +1,53 @@
+{
+ "base": {
+  "hero_captain": {
+   "meadow": 81.4,
+   "dark": 83.6,
+   "bright": 67.7
+  },
+  "melee_basic": {
+   "meadow": 100.0,
+   "dark": 64.9,
+   "bright": 100.0
+  },
+  "tank": {
+   "meadow": 100.0,
+   "dark": 68.9,
+   "bright": 100.0
+  }
+ },
+ "A": {
+  "hero_captain": {
+   "meadow": 85.5,
+   "dark": 85.0,
+   "bright": 71.4
+  },
+  "melee_basic": {
+   "meadow": 100.0,
+   "dark": 64.9,
+   "bright": 100.0
+  },
+  "tank": {
+   "meadow": 100.0,
+   "dark": 68.9,
+   "bright": 100.0
+  }
+ },
+ "B": {
+  "hero_captain": {
+   "meadow": 81.4,
+   "dark": 83.6,
+   "bright": 67.7
+  },
+  "melee_basic": {
+   "meadow": 100.0,
+   "dark": 65.0,
+   "bright": 100.0
+  },
+  "tank": {
+   "meadow": 100.0,
+   "dark": 73.8,
+   "bright": 100.0
+  }
+ }
+}

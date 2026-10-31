@@ -87,3 +87,8 @@ Redrawn to match 01's names: e_swarm (flies), e_bomber (yeast puff), e_brute (bo
 - `launcher_icons/adaptive_background_432x432="res://assets/branding/launcher_adaptive_background_432.png"`
 - `launcher_icons/adaptive_monochrome_432x432="res://assets/branding/launcher_adaptive_monochrome_432.png"` (optional, themed icons)
 The files are committed with Godot-generated `.import` files (imported in a HEAD snapshot) and are inside the export filter (all_resources; docs/ and tools/ are excluded, which is why they are under assets/). Sizes are exact (192x192, 432x432). Optionally also point `application/config/icon` at the 192 file so the desktop window icon matches. 06 will check the rebuilt APK's icon_foreground/icon_background against these layers. Also still pending: main-tree re-import (A12/A13).
+
+## A15 2026-10-31 19:23 +09:00 — import audit result: please re-import 3 pages; fallback names FYI (QUEUED)
+- tools/art/import_audit.py on a clean HEAD snapshot: all 12 pages PASS (lossless, no mipmaps, nearest, 0 pixel/rect mismatch). In the main tree (read-only check) char_player, bases and ui_main are stale; only the frames 03 redrew differ (no other frame moved). Please run `--import` in the main tree. Report: docs/art/evidence/import_audit/.
+- FYI: src/core/default_content.gd (yours) still names units "Catapult"/"Shieldbearer"/"Goblin". It is only the fallback when data fails to load, and those names do not appear in the real game today (07's narrow capture: 0 truncations). If the fallback is ever shown, it would use the old theme and the old, longer English names.
+- Still open: A14 (launcher icon preset keys).

@@ -1,0 +1,600 @@
+{
+  "insets": [
+    34.0,
+    0.0,
+    34.0,
+    0.0
+  ],
+  "screens": {
+    "1_menu": {
+      "buttons": [
+        {
+          "drawn": "이어하기",
+          "inside_safe": true,
+          "rect": [
+            194.0,
+            180.0,
+            252.0,
+            50.0
+          ],
+          "text": "이어하기",
+          "truncated": false
+        },
+        {
+          "drawn": "라운드 선택",
+          "inside_safe": true,
+          "rect": [
+            194.0,
+            238.0,
+            80.0,
+            44.0
+          ],
+          "text": "라운드 선택",
+          "truncated": false
+        },
+        {
+          "drawn": "강화",
+          "inside_safe": true,
+          "rect": [
+            280.0,
+            238.0,
+            80.0,
+            44.0
+          ],
+          "text": "강화",
+          "truncated": false
+        },
+        {
+          "drawn": "설정",
+          "inside_safe": true,
+          "rect": [
+            366.0,
+            238.0,
+            80.0,
+            44.0
+          ],
+          "text": "설정",
+          "truncated": false
+        }
+      ],
+      "problems": [],
+      "safe": [
+        34.0,
+        0.0,
+        572.0,
+        360.0
+      ]
+    },
+    "2_round_select": {
+      "buttons": [
+        {
+          "drawn": "뒤로",
+          "inside_safe": true,
+          "rect": [
+            38.0,
+            4.0,
+            72.0,
+            40.0
+          ],
+          "text": "뒤로",
+          "truncated": false
+        },
+        {
+          "drawn": "강화",
+          "inside_safe": true,
+          "rect": [
+            522.0,
+            4.0,
+            80.0,
+            40.0
+          ],
+          "text": "강화",
+          "truncated": false
+        },
+        {
+          "drawn": "첫 번째 굽기",
+          "inside_safe": true,
+          "rect": [
+            84.0,
+            52.0,
+            89.0,
+            148.0
+          ],
+          "text": "첫 번째 굽기",
+          "truncated": false
+        },
+        {
+          "drawn": "초파리의 습격",
+          "inside_safe": true,
+          "rect": [
+            179.0,
+            52.0,
+            89.0,
+            148.0
+          ],
+          "text": "초파리의 습격",
+          "truncated": false
+        },
+        {
+          "drawn": "포자가 날아온다",
+          "inside_safe": true,
+          "rect": [
+            274.0,
+            52.0,
+            89.0,
+            148.0
+          ],
+          "text": "포자가 날아온다",
+          "truncated": false
+        },
+        {
+          "drawn": "썩은 발굽 소리",
+          "inside_safe": true,
+          "rect": [
+            369.0,
+            52.0,
+            89.0,
+            148.0
+          ],
+          "text": "썩은 발굽 소리",
+          "truncated": false
+        },
+        {
+          "drawn": "곰팡이 장군",
+          "inside_safe": true,
+          "rect": [
+            464.0,
+            52.0,
+            89.0,
+            148.0
+          ],
+          "text": "곰팡이 장군",
+          "truncated": false
+        },
+        {
+          "drawn": "곰팡이 성벽을 부숴라",
+          "inside_safe": true,
+          "rect": [
+            84.0,
+            206.0,
+            89.0,
+            148.0
+          ],
+          "text": "곰팡이 성벽을 부숴라",
+          "truncated": false
+        },
+        {
+          "drawn": "부풀어 터지는 효모",
+          "inside_safe": true,
+          "rect": [
+            179.0,
+            206.0,
+            89.0,
+            148.0
+          ],
+          "text": "부풀어 터지는 효모",
+          "truncated": false
+        },
+        {
+          "drawn": "끝없는 초파리",
+          "inside_safe": true,
+          "rect": [
+            274.0,
+            206.0,
+            89.0,
+            148.0
+          ],
+          "text": "끝없는 초파리",
+          "truncated": false
+        },
+        {
+          "drawn": "곰팡이 총공세",
+          "inside_safe": true,
+          "rect": [
+            369.0,
+            206.0,
+            89.0,
+            148.0
+          ],
+          "text": "곰팡이 총공세",
+          "truncated": false
+        },
+        {
+          "drawn": "부패 대군주",
+          "inside_safe": true,
+          "rect": [
+            464.0,
+            206.0,
+            89.0,
+            148.0
+          ],
+          "text": "부패 대군주",
+          "truncated": false
+        }
+      ],
+      "problems": [],
+      "safe": [
+        34.0,
+        0.0,
+        572.0,
+        360.0
+      ]
+    },
+    "3_r08_hud": {
+      "base_hp_drawn": {
+        "enemy": "2400/2400",
+        "player": "2000/2000"
+      },
+      "base_hp_full": {
+        "enemy": "2400/2400",
+        "player": "2000/2000"
+      },
+      "buttons": [
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            562.0,
+            4.0,
+            40.0,
+            40.0
+          ],
+          "text": "",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            38.0,
+            304.0,
+            52.0,
+            52.0
+          ],
+          "text": "",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            98.0,
+            304.0,
+            52.0,
+            52.0
+          ],
+          "text": "",
+          "truncated": false
+        },
+        {
+          "drawn": "제빵사",
+          "inside_safe": true,
+          "rect": [
+            162.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "제빵사",
+          "truncated": false
+        },
+        {
+          "drawn": "식빵병",
+          "inside_safe": true,
+          "rect": [
+            209.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "식빵병",
+          "truncated": false
+        },
+        {
+          "drawn": "롤빵병",
+          "inside_safe": true,
+          "rect": [
+            255.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "롤빵병",
+          "truncated": false
+        },
+        {
+          "drawn": "통식빵",
+          "inside_safe": true,
+          "rect": [
+            302.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "통식빵",
+          "truncated": false
+        },
+        {
+          "drawn": "프레첼",
+          "inside_safe": true,
+          "rect": [
+            349.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "프레첼",
+          "truncated": false
+        },
+        {
+          "drawn": "화덕포",
+          "inside_safe": true,
+          "rect": [
+            395.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "화덕포",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            450.0,
+            308.0,
+            48.0,
+            48.0
+          ],
+          "text": "밀대 내려찍기",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            502.0,
+            308.0,
+            48.0,
+            48.0
+          ],
+          "text": "갓 구운 함성",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            554.0,
+            308.0,
+            48.0,
+            48.0
+          ],
+          "text": "빵가루 포격",
+          "truncated": false
+        }
+      ],
+      "problems": [],
+      "safe": [
+        34.0,
+        0.0,
+        572.0,
+        360.0
+      ]
+    },
+    "4_r08_result": {
+      "base_hp_drawn": {
+        "enemy": "0/2400",
+        "player": "2000/2000"
+      },
+      "base_hp_full": {
+        "enemy": "0/2400",
+        "player": "2000/2000"
+      },
+      "buttons": [
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            562.0,
+            4.0,
+            40.0,
+            40.0
+          ],
+          "text": "",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            38.0,
+            304.0,
+            52.0,
+            52.0
+          ],
+          "text": "",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            98.0,
+            304.0,
+            52.0,
+            52.0
+          ],
+          "text": "",
+          "truncated": false
+        },
+        {
+          "drawn": "제빵사",
+          "inside_safe": true,
+          "rect": [
+            162.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "제빵사",
+          "truncated": false
+        },
+        {
+          "drawn": "식빵병",
+          "inside_safe": true,
+          "rect": [
+            209.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "식빵병",
+          "truncated": false
+        },
+        {
+          "drawn": "롤빵병",
+          "inside_safe": true,
+          "rect": [
+            255.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "롤빵병",
+          "truncated": false
+        },
+        {
+          "drawn": "통식빵",
+          "inside_safe": true,
+          "rect": [
+            302.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "통식빵",
+          "truncated": false
+        },
+        {
+          "drawn": "프레첼",
+          "inside_safe": true,
+          "rect": [
+            349.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "프레첼",
+          "truncated": false
+        },
+        {
+          "drawn": "화덕포",
+          "inside_safe": true,
+          "rect": [
+            395.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "화덕포",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            450.0,
+            308.0,
+            48.0,
+            48.0
+          ],
+          "text": "밀대 내려찍기",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            502.0,
+            308.0,
+            48.0,
+            48.0
+          ],
+          "text": "갓 구운 함성",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            554.0,
+            308.0,
+            48.0,
+            48.0
+          ],
+          "text": "빵가루 포격",
+          "truncated": false
+        },
+        {
+          "drawn": "다시하기",
+          "inside_safe": true,
+          "rect": [
+            324.0,
+            258.0,
+            83.0,
+            40.0
+          ],
+          "text": "다시하기",
+          "truncated": false
+        },
+        {
+          "drawn": "다음 라운드",
+          "inside_safe": true,
+          "rect": [
+            415.0,
+            258.0,
+            83.0,
+            40.0
+          ],
+          "text": "다음 라운드",
+          "truncated": false
+        },
+        {
+          "drawn": "메뉴로",
+          "inside_safe": true,
+          "rect": [
+            142.0,
+            258.0,
+            83.0,
+            40.0
+          ],
+          "text": "메뉴로",
+          "truncated": false
+        },
+        {
+          "drawn": "강화",
+          "inside_safe": true,
+          "rect": [
+            233.0,
+            258.0,
+            83.0,
+            40.0
+          ],
+          "text": "강화",
+          "truncated": false
+        }
+      ],
+      "problems": [],
+      "safe": [
+        34.0,
+        0.0,
+        572.0,
+        360.0
+      ]
+    }
+  },
+  "total_problems": 0,
+  "view": "(640.0, 360.0)"
+}

@@ -77,3 +77,7 @@ Menu residency is at 08's 0.50 MiB cap (ui_main 0.25 + ui_title 0.25). Full tabl
 ## A12 2026-10-31 18:03 +09:00 — icon_nest ready (optional) + ui_main pixels changed (QUEUED)
 - `icon_nest` (ui_main, 16x16, pivot centre) is available if you add the right-edge nest indicator (A11). ui_main size is unchanged (256x256).
 - card_melee_basic and card_hero_captain pixels changed (A26 bread detail); rects unchanged. Main-tree cache is stale until 02 re-imports. No real-game capture of this change yet (08 quiet window).
+
+## A13 2026-10-31 19:23 +09:00 — Footman/Catapult clipping: not reproducible; card art changed (QUEUED)
+- Real render, 07's capture_narrow.gd, r08 (5 cards + worker + 3 skills), insets 34/0/34/0, en 1x/2x and ko 2x on DISPLAY2: 0 truncated or out-of-safe buttons. en cards draw "Baker Toast Roll Loaf Twist Oven" in full (43 px slots). The old labels are gone from data/text (01 D13, then the theme names), so there is nothing for 03 (font/atlas) or for your layout to fix. Evidence: docs/art/evidence/labels_worst_layout/.
+- card_hero_captain changed again (taller chef hat, art 0.12.3); rects unchanged. Main-tree cache stale until 02 re-imports.

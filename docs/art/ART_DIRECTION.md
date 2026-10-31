@@ -1,5 +1,5 @@
 # ART_DIRECTION.md — visual identity and asset contract (owner: 03-art)
-Art version 0.12.2 · 2026-10-31 · Status: **theme DECIDED by the user (Q1 = A "빵집 기사단 vs 곰팡이 군단", 2026-10-31)**. Art 0.8.0 applies it as a palette-level retheme (tools/art/theme.py). Silhouettes, frame sizes, pivots, hit/spawn frames and frame names are unchanged. A bread-specific detail pass (crust scoring, loaf-shaped helmets) is still open.
+Art version 0.12.3 · 2026-10-31 · Status: **theme DECIDED by the user (Q1 = A "빵집 기사단 vs 곰팡이 군단", 2026-10-31)**. Art 0.8.0 applies it as a palette-level retheme (tools/art/theme.py). Silhouettes, frame sizes, pivots, hit/spawn frames and frame names are unchanged. A bread-specific detail pass (crust scoring, loaf-shaped helmets) is still open.
 
 ## 1. How the art is made (provenance)
 - Tool inventory on this machine: Python 3.11.9, Pillow 11.2.1, numpy 2.2.4. There are **no** image-generation, Aseprite or ImageMagick tools. Godot 4.7.2 is in tools/engine (owned by 02).
@@ -10,7 +10,7 @@ Art version 0.12.2 · 2026-10-31 · Status: **theme DECIDED by the user (Q1 = A 
 ## 2. Visual identity (default theme: "Lantern Kingdom vs Bramble Horde")
 - **Rim light (0.7.0):** interior pixels touching the exterior outline on the top/left side are one ramp step lighter (two for very dark ramps). This is applied automatically in build.py (`ART_RIM=1`) to every character frame. It keeps silhouettes readable on dark backgrounds (ART_AUDIT A22).
 - **Style:** chibi pixel art, side view facing right, 1 px dark outline (`outline #1b1325`) on every character/prop. Light comes from the upper left. Each material has a 2–4 step ramp, and anti-aliasing is used only inside shapes.
-- **Hero (art 0.11.0):** `hero_captain` = 제빵 대장: tall white chef hat with a jam-red band, crust hair and moustache, white chef jacket, egg-wash apron, red cape, rolling pin (the Slam weapon). Same rig, poses and frame contract as the knight it replaced.
+- **Hero (art 0.11.0):** `hero_captain` = 제빵 대장: tall white chef hat with a jam-red band, crust hair and moustache, white chef jacket, egg-wash apron, red cape, rolling pin (the Slam weapon). Same rig, poses and frame contract as the knight it replaced. Art 0.12.3: taller chef hat and a 2 px longer rolling pin (identity read by silhouette, A/B tested in the real game, ART_AUDIT round 13).
 - **Faction colour coding (mobile readability, pre-theme note):** the player side uses blue `#2f5fb3` / gold `#e5a826` / steel / warm skin. The enemy side uses green `#2f6d3a` skin with purple `#5b3488` cloth and crude wood. Hero = red plume and red cape (the only red on the player side) so it stands out in a crowd.
 - **Silhouette rule:** every unit class has a unique silhouette at 1× (spear line, bow arc, tower shield, pickaxe, club, hood + gourd, low beetle).
 - **Palette:** Hearth-48 = 47 opaque colours + 1 translucent shadow (alpha 96). Files: `docs/art/palette/hearth48.gpl` (GIMP/Aseprite), `.hex`, `hearth48_swatch.png` (outside game content, so they are never packed). validate.py fails any texel outside the palette.

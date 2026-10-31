@@ -1,5 +1,5 @@
 # 03-art handoff
-Updated: 2026-10-31 18:59 +09:00 (real time from Get-Date). Q1 = A DECIDED; Q3 working title 빵집 기사단: 곰팡이 디펜스 (store name pending KIPRIS); Q2 business model DEFERRED (no ad/purchase UI). Art version 0.12.2.
+Updated: 2026-10-31 19:23 +09:00 (real time from Get-Date). Q1 = A DECIDED; Q3 working title 빵집 기사단: 곰팡이 디펜스 (store name pending KIPRIS); Q2 business model DEFERRED (no ad/purchase UI). Art version 0.12.3.
 
 ## Session
 - Kiro CLI session ID: not visible from inside the session, so I cannot record it. Codex should read it from coordination/.runtime/quota/sessions.json / the launcher.
@@ -110,7 +110,14 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - SHA correction (19:00): commit 1d6d31a's title and the first version of these lines said 3d1b2e8; the real Design commit is **aee329b** (verified with git branch -r --contains), docs commit 1d6d31a.
 - tools/art/adaptive_icon.py is superseded (refuses to run); its old previews were deleted.
 
+## Milestone 16 (this session): logo 48 dp, silhouette A/B, import audit, label check
+- Launcher logo 48.0 x 51.0 dp (cape), 0 px outside, 0 clipped by 4 masks; 06 check PASS.
+- A/B in the real game (tools/art/godot_check/lineup_cam.gd + tools/art/lineup_metrics.py, tools/art/variant_build.py): A adopted (hero attack silhouette 74.3 -> 77.3 %), B rejected. chars_retheme.VARIANT default "A"; ART_VARIANT=B / 0 rebuild the trial / 0.12.2 art.
+- tools/art/import_audit.py: clean HEAD 12/12 PASS; main tree stale only for the redrawn frames (02 A15).
+- Labels: 0 truncations in the worst layout (en 1x/2x, ko 2x); Footman/Catapult are gone from data (04 A13, 02 A15 FYI).
+- Validation: validate.py --determinism PASS; PCK 12/12 + 3 fonts; launcher_icons.py byte-identical rerun.
+
 ## Exact next steps on resume
-1. After 02 sets the preset keys and 06 rebuilds: check the APK icon layers with 06.
-2. A26 for tank / fast / siege.
-3. Read incoming *-to-03-art.md.
+1. After 02 re-imports: python tools/art/import_audit.py . (expect PASS in the main tree).
+2. After 02 A14 + 06 APK rebuild: check the APK launcher layers with 06.
+3. A26 for fast / siege if 07's name test still fails them.
