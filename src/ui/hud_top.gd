@@ -134,6 +134,15 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 	base_labels.player = _hp_text(pb, half - 8)
 	base_labels.enemy = _hp_text(eb, half - 8)
 	var cy := y + h / 2
+	# solid backing plate under the digits: the enemy stripes broke glyph shapes (an "8" read as "3"
+	# in the 16:56 CVD capture); same plate on both bars so only the bar fill differs
+	var pw := UiStyle.number_width(base_labels.player, UiStyle.NUM_S)
+	var ew0 := UiStyle.number_width(base_labels.enemy, UiStyle.NUM_S)
+	var plate := Color(0.05, 0.05, 0.08, 0.78)
+	if pw > 0:
+		draw_rect(Rect2(r.position.x + 2, y + 2, pw + 4, h - 4), plate)
+	if ew0 > 0:
+		draw_rect(Rect2(er_rect.end.x - 6 - ew0, y + 2, ew0 + 4, h - 4), plate)
 	UiStyle.draw_number(self, base_labels.player, Vector2(r.position.x + 4, cy), UiStyle.NUM_S, UiStyle.C_TEXT, -1)
 	UiStyle.draw_number(self, base_labels.enemy, Vector2(er_rect.end.x - 4, cy), UiStyle.NUM_S, UiStyle.C_TEXT, 1)
 	base_label_rects.player = Rect2(r.position.x + 4, y, UiStyle.number_width(base_labels.player, UiStyle.NUM_S), h)
