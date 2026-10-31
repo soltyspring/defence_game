@@ -2,7 +2,8 @@
 Updated: 2026-11-01 07:10 +09:00
 Status: ACTIVE. Task: coordination/prompts/02-stall-zoom.txt (bot stall fix + world zoom flag) + 10 AC1 (content.gd CRLF) + 01 R12 answer.
 Verified on a clean HEAD snapshot (job `02-verify`, 07:06–07:11): selftest PASS 77/77, UI integration 49/0, 07 sim/flow/save/faults 106/0,
-AC1 CRLF = LF = c1-989c3422c910. Being committed; SHA (from git ls-remote) in the status file after the push.
+AC1 CRLF = LF = c1-989c3422c910. PUSHED 780c30a (git ls-remote origin refs/heads/main = 780c30a9769ece445c961ab4388f7d8254dc8243, 07:1x KST).
+Code/data/tests did not change between the verified snapshot HEAD 3f70d8f and the commit's parent 8bc03e2.
 Resumed after the 2nd blue screen (0x3B, 03:55 KST). My files had no NUL bytes and were not truncated (byte scan 06:53). heavy_run.log:
 my `02-snap-verify` (03:27) never reached START, so it had no result to discard; the two `02-zoom-caps` exit 1 are explained below.
 Model claude-opus-5.5, trust-all. Session ID: not exposed inside the session.
@@ -35,11 +36,9 @@ Q4 home-screen name ko "빵집 기사단", en "Bakery Knights". Q5 difficulty un
   logo failure was the shared tree); 07 acceptance sim+flow+save+faults PASS 106/0; AC1 CRLF (2,758 CR) = LF = c1-989c3422c910 = python `lf`.
 
 ## Commits (PUSHED, verified with git ls-remote)
-… eceb9f4, c6fbf1f, 52f9fa3 (save migration + QA-B012), 2944cc0 (SHA record). This round: pending.
+… eceb9f4, c6fbf1f, 52f9fa3 (save migration + QA-B012), 2944cc0 (SHA record), **780c30a** (bot stall fix + world zoom flag + AC1; ls-remote verified).
 
 ## Next
-1. When `02-verify` is done (log build/heavy/02-verify-20261101-065518.log, outputs build/save_evidence/verify02/): read results, fix if needed,
-   commit bot_player.gd, battle.gd, app.gd, content.gd, project.godot, the two diag scripts, INTERFACES.md, evidence docs and request files; record the
-   ls-remote SHA here.
+1. React to re-verification: 10 AC1/AC4 + package check on 780c30a, 07 `-Head`, 01 r05 decision with the fixed bot (R12 hooks only if 01 confirms).
 2. 01: r05 block with the fixed bot; R12 only if 01 confirms. 03: D1 art, then one main-tree import if still needed. Zoom switch stays off.
 3. 04 R16 threat field, R17-2 bottom inset (70 + inset), R19 damage-number size. 08 P9 after re-measure. QA-B013, 06 AAB/launcher icons, 10 Part D.
