@@ -60,8 +60,9 @@ HERO = Body(
 HERO_BASE = Pose(feet=((3, 0), (-3, 0)), hand_f=(2, 6), hand_b=(-1, 6), weapon_ang=50)
 
 
-def hero_anims():
-    b = HERO
+def hero_anims(b=None):
+    """Poses are body-independent: art 0.11.0 passes the 제빵 대장 body (chars_retheme.HERO_BAKER)."""
+    b = b or HERO
     idle_p = [replace(HERO_BASE, bob=0, cape=0),
               replace(HERO_BASE, bob=0, cape=1),
               replace(HERO_BASE, bob=1, cape=1, hand_f=(2, 7)),

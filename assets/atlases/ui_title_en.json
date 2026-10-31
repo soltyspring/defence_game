@@ -1,0 +1,51 @@
+{
+ "schema": "defence.atlas/1",
+ "atlas": "ui_title_en",
+ "image": "ui_title_en.png",
+ "image_res": "res://assets/atlases/ui_title_en.png",
+ "size": [
+  256,
+  128
+ ],
+ "padding": 2,
+ "extrude": 1,
+ "group": "title",
+ "load_policy": "menu",
+ "note": "Working-title logos, locale en (Q3 16:19 KST). Acquire only the current locale's page on the main menu/splash; release on battle enter.",
+ "filter": "nearest",
+ "mipmaps": false,
+ "repeat": false,
+ "gpu_format": "RGBA8 (lossless, no VRAM compression)",
+ "gpu_bytes": 131072,
+ "disk_bytes": 3321,
+ "unique_regions": 2,
+ "occupancy": 0.512,
+ "frames": {
+  "logo_title_en": {
+   "x": 3,
+   "y": 69,
+   "w": 203,
+   "h": 21,
+   "pivot": [
+    101,
+    10
+   ],
+   "working_title": true,
+   "locale": "en"
+  },
+  "logo_title_en_2line": {
+   "x": 3,
+   "y": 3,
+   "w": 202,
+   "h": 62,
+   "pivot": [
+    101,
+    31
+   ],
+   "working_title": true,
+   "locale": "en"
+  }
+ },
+ "anims": {},
+ "anim_sets_meta": {}
+}

@@ -1,0 +1,51 @@
+{
+ "schema": "defence.atlas/1",
+ "atlas": "ui_title_ko",
+ "image": "ui_title_ko.png",
+ "image_res": "res://assets/atlases/ui_title_ko.png",
+ "size": [
+  512,
+  64
+ ],
+ "padding": 2,
+ "extrude": 1,
+ "group": "title",
+ "load_policy": "menu",
+ "note": "Working-title logos, locale ko (Q3 16:19 KST). Acquire only the current locale's page on the main menu/splash; release on battle enter.",
+ "filter": "nearest",
+ "mipmaps": false,
+ "repeat": false,
+ "gpu_format": "RGBA8 (lossless, no VRAM compression)",
+ "gpu_bytes": 131072,
+ "disk_bytes": 2516,
+ "unique_regions": 2,
+ "occupancy": 0.558,
+ "frames": {
+  "logo_title_ko": {
+   "x": 165,
+   "y": 3,
+   "w": 304,
+   "h": 30,
+   "pivot": [
+    152,
+    15
+   ],
+   "working_title": true,
+   "locale": "ko"
+  },
+  "logo_title_ko_2line": {
+   "x": 3,
+   "y": 3,
+   "w": 158,
+   "h": 58,
+   "pivot": [
+    79,
+    29
+   ],
+   "working_title": true,
+   "locale": "ko"
+  }
+ },
+ "anims": {},
+ "anim_sets_meta": {}
+}

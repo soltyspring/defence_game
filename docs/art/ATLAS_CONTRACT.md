@@ -13,7 +13,8 @@ Version 1 · 2026-10-31. This file implements ENGINE.md §8 and INTERFACES.md §
 | `char_boss_overlord` 1024×512 | boss_overlord + `portrait_boss_overlord` (portrait kept here so ui_main stays byte-identical) | `battle_roster` (r10 only) |
 | `bases` 512×512 | base_player, base_enemy × idle/damaged/ruined | `battle` |
 | `fx_combat` 512×256 | projectiles, impacts, skill FX, shadows, coin | `battle` |
-| `biome_meadow` 1024×512 | sky/far/mid/ground/front layers | `per_round` (data biome `biome_01` / `meadow`) |
+| `biome_meadow` 1024×512 | sky/far/mid/ground/front layers (art 0.11.0: Wheatfield Village art, same frames) | `per_round` (data biome `biome_01` / `meadow`) |
+| `ui_title_ko` 512×64, `ui_title_en` 256×128 | `logo_title_<locale>`, `logo_title_<locale>_2line` | `menu`, group `title`: acquire only the current locale's page (lazy, via the menu's logo lookup); not preloaded by app.gd |
 Future biomes add `biome_<id>` pages, with only one resident at a time. If char pages grow past 1024×1024, they split by roster (`char_player_2`, etc.) and are never merged into one page.
 
 ## 2. Packing rules (enforced by tools/art/atlas.py, checked by validate.py)

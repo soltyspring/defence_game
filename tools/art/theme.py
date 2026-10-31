@@ -44,6 +44,8 @@ ENEMY = {
 OVERRIDE = {
     # little baker: white chef hat instead of the jam-red that gold would become
     "worker": {"Y": "W", "Z": "W", "y": "x"},
+    # 제빵 대장 (art 0.11.0): chef hat + jacket drawn in J -> pure white
+    "hero_captain": {"J": "W", "L": "U", "S": "T", "s": "o"},   # face toast-cream, darker than the white hat
     # bomber keeps its orange fuse/bandana = the one hazard accent
     "e_bomber": {"E": "E", "e": "e", "Z": "Z"},
     # overlord keeps the lilac eyes/orb glow (small area, boss-only cue)
@@ -80,7 +82,7 @@ BAKERY_KEEP = {   # stone keep -> bakery: dough-brick walls, crust trims, jam-re
 }
 MOULD_FORT = ENEMY    # palisade/purple/bramble -> rotten grey wood, blue mould, spores
 FLOUR_STORE = {"X": "T", "x": "U", "A": "o", "a": "O", "M": "o", "N": "T", "m": "O"}   # mine -> flour store
-SPORE_FX = {"G": "l", "F": "t", "f": "z", "Z": "z"}    # enemy spit -> spore glob
+SPORE_FX = {"G": "l", "F": "t", "f": "t", "Z": "z"}    # enemy spit -> spore glob (0.11.0: sage body, white only in the core, reads on light walls)
 DOUGH_ROCK = {"X": "o", "x": "T", "J": "U", "A": "O", "a": "w"}   # siege rock -> hard-baked loaf
 WHEAT_FRONT = {"G": "y", "F": "Y", "g": "O"}            # front grass tufts -> wheat stalks
 ENEMY_PORTRAIT = dict(bg="D", rim="l", hi="t")

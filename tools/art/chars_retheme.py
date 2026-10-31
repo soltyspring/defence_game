@@ -412,10 +412,74 @@ OoUUUoO
 """)
 
 
+# =============================================================================
+# hero_captain — 제빵 대장 Head Baker (art 0.11.0, 01 WORLD.md): tall white chef hat
+# with a jam-red band, crust-brown hair and moustache, white chef jacket with an
+# egg-wash apron, rolling pin instead of the sword (Slam weapon). Same rig, same
+# poses, same frame contract as the knight it replaces. Pre-theme keys: theme.ALLY
+# applies, and theme.OVERRIDE["hero_captain"] maps J -> pure white for the hat/jacket.
+# =============================================================================
+BAKER_HEAD = Sprite.parse("""
+....JJ.JJJ....
+...JJJJJJJJU..
+..JJJJJJJJJJU.
+..UJJJJJJJJJU.
+...UJJJJJJJU..
+....JJJJJJJ...
+....RRRRRRR...
+..hhHLLLLLLLL.
+.hhHHSLLLKLLL.
+.hhHHSSLLKLeL.
+.hhHhSSShhhSs.
+..hhhsSSSSSs..
+...hh.sSSSs...
+""")
+BAKER_TORSO = Sprite.parse("""
+...JJJJJJ...
+..JJJJJJJJU.
+.JJBBBBBBJU.
+.JJBBCCBBJJ.
+.UJBBCCBBJU.
+.UyyyyZyyyU.
+.bBBBBBBCCb.
+.bBBBBBBBCb.
+.bbBBBBBBbb.
+""")
+
+
+def rolling_pin(cv, hand, pose, body):
+    """Held by one handle like a club: handle in the fist, 9 px barrel, end handle."""
+    hx, hy = hand
+    dx, dy = _dir(pose.weapon_ang)
+    px_, py_ = -dy, dx
+    if py_ > 0 or (py_ == 0 and px_ > 0):      # highlight on the upper side
+        px_, py_ = -px_, -py_
+
+    def put(t, s, k):
+        cv.put(round(hx + dx * t + px_ * s), round(hy + dy * t + py_ * s), c(k))
+    for t in (-1.5, -1, -0.5, 0, 0.5, 1, 1.5):
+        put(t, 0, "O")
+    for i in range(4, 23):
+        t = i * 0.5
+        for s in (1.5, 1.0, 0.5, 0.0, -0.5, -1.0, -1.5):
+            put(t, s, "U" if s >= 1.0 else ("o" if s <= -1.0 else "T"))
+    for t in (11.5, 12, 12.5, 13):
+        put(t, 0, "O")
+
+
+def hero_baker_body():
+    import chars_player
+    return replace(chars_player.HERO, head=BAKER_HEAD, torso=BAKER_TORSO, weapon=rolling_pin,
+                   arm_col="J", arm_shade="U", hand_col="N",
+                   blink_px=[(9, 8, "L"), (9, 9, "S")])
+
+
 def build_overrides():
     import chars_player
     ar = chars_player.ARCHER
+    hb = hero_baker_body()
     return {
+        "hero_captain": (hb, lambda: chars_player.hero_anims(hb)),
         "e_swarm": (_B(32, 24, 14), swarm_anims),
         "e_bomber": (_B(32, 32, 13), yeast_anims),
         "e_brute": (_B(48, 48, 21), boar_anims),

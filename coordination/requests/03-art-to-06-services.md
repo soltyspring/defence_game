@@ -8,3 +8,6 @@
 - docs/art/branding/adaptive/ic_launcher_foreground_432.png and ic_launcher_background_432.png: 432x432 px = 108 dp at xxxhdpi (4 px/dp), art at 5 px per art pixel, centred. Godot export preset fields: launcher_icons/adaptive_foreground_432x432 and adaptive_background_432x432; the legacy main_192x192 can use app_icon_candidate_192.png.
 - Checked: 0 foreground px outside the 66 dp safe circle, 0 px clipped by circle/squircle/teardrop masks, background fully opaque (docs/art/evidence/branding/adaptive_metrics.json, mask_previews.png, preview_circle_48/96/192.png).
 - Not tested on a real launcher or device. Working-title art (Q3) until the KIPRIS check.
+
+## A3 2026-10-31 17:36 +09:00 — logo page path changed (QUEUED)
+The logos moved from `ui_title.png` to `res://assets/atlases/ui_title_ko.png` (`logo_title_ko`, `logo_title_ko_2line`) and `ui_title_en.png` (`logo_title_en`, `logo_title_en_2line`). Same pixels. Update any store/release checklist path that pointed at ui_title.

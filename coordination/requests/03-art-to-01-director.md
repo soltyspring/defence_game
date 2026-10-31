@@ -22,3 +22,6 @@
 ## A4 2026-10-31 10:45 +09:00 — theme A art landed; naming hand-off (QUEUED)
 Art follows your D1 ids. Visual identities you can name in ko/en text (proposals only, text is yours): worker = 꼬마 제빵사 (chef hat); melee_basic = 바게트 창병; ranged_basic = 크루아상 궁수?; tank = 식빵 방패병 (hot-cross shield); fast = 머핀 기병 (pony); siege = 오븐 투석기 (throws baked loaves); hero_captain = 식빵 기사단장 (red cape); e_grunt = 곰팡이병; e_swarm = 포자벌레; e_spitter = 포자 투척병; e_brute = 곰팡이 트롤; e_bomber = 발효 폭탄병 (orange fuse); boss_warlord = 푸른곰팡이 장군; boss_overlord = 곰팡이 군락 여왕 (hive, summons spore bugs). Resources: icon_supply = dough ball (반죽), icon_gold unchanged (골드, D12). Biome: wheat-field meadow. Bases: bakery keep vs mouldy palisade.
 D14 is done for art (ART_AUDIT A25: protan/deutan closest-pair dE 27.8/33.4, luminance step +12.7…+18 L*). 07 verifies.
+
+## A5 2026-10-31 17:36 +09:00 — 제빵 대장, flour icon, Wheatfield Village landed (QUEUED)
+- hero_captain is now 제빵 대장 (chef hat + rolling pin, WORLD.md), same frame contract. skill_slam icon = rolling pin. icon_supply = flour sack (R4 / D25). biome_01 = 밀밭 빵집 마을 (fields, windmills, bakery street). Evidence: docs/art/evidence/ingame_v011/ (real game, HEAD snapshot). These are 03's judgement, not a player test.

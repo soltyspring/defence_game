@@ -1,0 +1,22 @@
+{
+"atlas": "ui_title_en",
+"size": [
+256,
+128
+],
+"keyed_by": "frame_name",
+"frames": {
+"logo_title_en": [
+3,
+69,
+203,
+21
+],
+"logo_title_en_2line": [
+3,
+3,
+202,
+62
+]
+}
+}

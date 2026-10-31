@@ -1,0 +1,47 @@
+{
+ "snapshot": "git archive HEAD e282045 + 03 working-tree assets (manifest, atlases); --import only in %TEMP%\\art03_v011; main-tree .godot untouched",
+ "display": "visible_launch.ps1 on \\\\.\\DISPLAY2, 1280x720 (2x of 640x360), all runs EXIT_0",
+ "battle_frames": [
+  "ko_r01_autoplay_04s.png",
+  "ko_r01_autoplay_10s.png",
+  "ko_r03_autoplay_32s.png",
+  "ko_r03_autoplay_45s.png",
+  "ko_r01_hud.png",
+  "en_r01_hud.png"
+ ],
+ "not_battle": {
+  "ko_r01_autoplay_20s_PAUSE_MENU.png": "pause menu was open at 20 s (detected by the orange 'continue' button); not used as battle evidence"
+ },
+ "title": {
+  "ko_menu_client_as_is_text_fallback.png": "current client (title_block.gd looks up atlas ui_title, which no longer exists): text title fallback",
+  "*_SIM_title_block_ui_title_locale.png": "snapshot-only edit of title_block.gd line 31 to \"ui_title_%s\" % locale (04's change, NOT in the repo): logo shown"
+ },
+ "resident_gpu_bytes_from_logs": {
+  "menu, client as-is": {
+   "pages": [
+    "ui_main"
+   ],
+   "bytes": 262144
+  },
+  "menu, simulated 04 change (ko)": {
+   "pages": [
+    "ui_main",
+    "ui_title_ko"
+   ],
+   "bytes": 393216
+  },
+  "previous build (both title pages group ui)": {
+   "pages": [
+    "ui_main",
+    "ui_title_ko",
+    "ui_title_en"
+   ],
+   "bytes": 524288
+  }
+ },
+ "sky_share_of_screen_pct_r03_45s": {
+  "before (ingame_head, meadow)": 45.3,
+  "after (village)": 18.2,
+  "method": "pixels equal to the 4 sky colours, rows above the first row (y>=200 at 2x) whose sky share < 30 %"
+ }
+}

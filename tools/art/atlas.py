@@ -122,6 +122,8 @@ def page_sizes(max_side):
     sizes = []
     s = 64
     while s <= max_side:
+        if s >= 512:
+            sizes.append((s, s // 8))      # very wide strips (per-locale title logos, art 0.11.0)
         if s >= 256:
             sizes.append((s, s // 4))      # wide strips (title logos); locked pages never shrink
         sizes.append((s, s // 2) if s >= 128 else (s, s))

@@ -1,0 +1,52 @@
+{
+ "rev": "HEAD",
+ "frames_added": [],
+ "frames_removed": [],
+ "frame_changes": {},
+ "frame_page_moves": {
+  "logo_title_en": [
+   "ui_title",
+   "ui_title_en"
+  ],
+  "logo_title_en_2line": [
+   "ui_title",
+   "ui_title_en"
+  ],
+  "logo_title_ko": [
+   "ui_title",
+   "ui_title_ko"
+  ],
+  "logo_title_ko_2line": [
+   "ui_title",
+   "ui_title_ko"
+  ]
+ },
+ "anim_changes": {},
+ "anim_sets_added": [],
+ "anim_sets_removed": [],
+ "page_sizes": {
+  "ui_title": [
+   [
+    512,
+    128
+   ],
+   null
+  ],
+  "ui_title_en": [
+   null,
+   [
+    256,
+    128
+   ]
+  ],
+  "ui_title_ko": [
+   null,
+   [
+    512,
+    64
+   ]
+  ]
+ },
+ "moved_rects": 4,
+ "contract_changed": true
+}

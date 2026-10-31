@@ -11,13 +11,13 @@
  "extrude": 1,
  "group": "biome",
  "load_policy": "per_round",
- "note": "Meadow parallax layers (640 px seamless period). Acquire for rounds with biome=meadow.",
+ "note": "biome_01 'Wheatfield Village' (밀밭 빵집 마을, art 0.11.0) parallax layers, 640 px seamless period. Page id kept from the meadow for the contract. Acquire for rounds with biome=meadow/biome_01.",
  "filter": "nearest",
  "mipmaps": false,
  "repeat": false,
  "gpu_format": "RGBA8 (lossless, no VRAM compression)",
  "gpu_bytes": 2097152,
- "disk_bytes": 7438,
+ "disk_bytes": 12346,
  "unique_regions": 5,
  "occupancy": 0.46,
  "frames": {
@@ -44,7 +44,7 @@
     0,
     0
    ],
-   "view_y": 100,
+   "view_y": 50,
    "parallax": 0.15
   },
   "mid": {

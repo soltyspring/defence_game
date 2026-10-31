@@ -229,15 +229,28 @@ VVVVPPp
 }
 # aliases (same pixels, deduped in the atlas): 01 names supply/energy, 02 names gold/mana
 ALIASES = {"icon_energy": "icon_mana"}
-# theme A: in-round supply = dough ball (01 Q1 option text: resource "반죽")
+# in-round supply = 밀가루/Flour (01 R4, D25): a tied flour sack with a wheat mark and a puff
 ICONS16["icon_supply"] = S("""
-...TTTT...
-.TUUUUUT..
-TUUWUUUUT.
-TUWUUUUUTo
-TUUUUUUUTo
-.TUUUUUTo.
-..oTTTTo..
+...oOo.W..
+..oUUUoWW.
+...OoO..W.
+..oUUUUo..
+.oUUUUUUo.
+oUUWyUUUUo
+oUWyYyUUUo
+oUUUyUUUTo
+oUUUUUUTTo
+.ooooooOo.
+""")
+# allied army icon: toast-helmet soldier in egg-wash gold (was steel + blue tabard)
+ICONS16["icon_army"] = S("""
+..oo.oo..
+.oTToTTo.
+.oTTTTTo.
+.oUUUUUo.
+.YYZZZYY.
+.YYZZZYY.
+.yYYYYYy.
 """)
 
 
@@ -262,43 +275,49 @@ def framed(w, h, bg="b", rim="B", hi="C"):
 
 
 def skill_slam():
-    cv = framed(24, 24, "p", "P", "V")
-    # sword plunging down into ground
-    cv.vline(12, 3, 14, c("N")); cv.vline(13, 3, 14, c("M"))
-    cv.hline(9, 16, 4, c("Y")); cv.vline(12, 1, 3, c("O")); cv.put(12, 1, c("Y"))
-    cv.rect(2, 17, 20, 5, c("O")); cv.hline(2, 21, 17, c("F"))
-    for (x, y) in [(12, 16), (10, 18), (9, 19), (14, 18), (16, 19), (17, 20), (7, 20)]:
-        cv.put(x, y, c("Z"))
-    for dx in (-1, 1):
-        for i in range(1, 5):
-            cv.put(12 + dx * (3 + i * 2), 15 - i, c("Z" if i < 3 else "e"))
+    """밀대 내려찍기: rolling pin coming down on the ground, flour puff (art 0.11.0)."""
+    cv = framed(24, 24, "O", "w", "o")
+    cv.rect(2, 18, 20, 4, c("w")); cv.hline(2, 21, 18, c("y"))
+    # rolling pin, diagonal, barrel 3 px thick, handles at both ends
+    for t in range(0, 15):
+        x, y = 4 + t, 3 + t * 0.85
+        for s_, k in ((-1, "U"), (0, "T"), (1, "o")):
+            if 2 <= t <= 12:
+                cv.put(round(x + s_ * 0.6), round(y - s_), c(k))
+            elif s_ == 0:
+                cv.put(round(x), round(y), c("w"))
+    for (x, y, k) in [(17, 17, "W"), (19, 16, "W"), (21, 17, "U"), (14, 17, "U"), (12, 16, "W"), (20, 14, "U"),
+                      (15, 15, "U"), (9, 17, "U")]:
+        cv.put(x, y, c(k))
     return cv
 
 
 def skill_rally():
+    """갓 구운 함성: cream banner with egg-wash stripes and rising steam."""
     cv = framed(24, 24, "r", "R", "E")
     cv.vline(7, 3, 20, c("o"))
     cv.put(7, 2, c("Y"))
     for y in range(4, 13):
         w = 10 - max(0, y - 10) * 3
-        cv.hline(8, 8 + w, y, c("B" if y % 4 else "C"))
+        cv.hline(8, 8 + w, y, c("U" if y % 4 else "Y"))
     for (dx, dy) in [(3, 2), (4, 3), (5, 2), (3, 6), (4, 7), (5, 6)]:
-        cv.put(8 + dx, 4 + dy - 1, c("Z"))
+        cv.put(8 + dx, 4 + dy - 1, c("o"))
     for k in range(3):
         y = 20 - k * 3
-        cv.put(17, y - 1, c("Z")); cv.put(16, y, c("Y")); cv.put(18, y, c("Y"))
+        cv.put(17, y - 1, c("W")); cv.put(16, y, c("U")); cv.put(18, y, c("U"))
     return cv
 
 
 def skill_barrage():
-    cv = framed(24, 24, "b", "B", "C")
-    for (x0, y0) in [(5, 2), (11, 4), (16, 1)]:
-        cv.line(x0, y0, x0 + 3, y0 + 9, c("o"))
-        cv.put(x0 + 3, y0 + 10, c("W"))
-        cv.put(x0 - 1, y0, c("c")); cv.put(x0 + 1, y0 - 1, c("c"))
-    cv.ellipse(12, 19, 8, 3, c("E"))
-    cv.ellipse(12, 19, 5, 2, c("e"))
-    cv.ellipse(12, 19, 2, 1, c("Z"))
+    """빵가루 포격: three crumb shells falling into a crumb burst."""
+    cv = framed(24, 24, "y", "w", "Y")
+    for (x0, y0) in [(4, 2), (10, 4), (15, 1)]:
+        cv.put(x0, y0, c("Z")); cv.put(x0 + 1, y0 + 2, c("Z"))
+        cv.ellipse(x0 + 2.5, y0 + 6.5, 2.0, 2.0, c("T"))
+        cv.put(x0 + 2, y0 + 6, c("U")); cv.put(x0 + 3, y0 + 7, c("o"))
+    cv.ellipse(12, 19, 8, 3, c("o"))
+    cv.ellipse(12, 19, 5, 2, c("T"))
+    cv.ellipse(12, 19, 2, 1, c("W"))
     return cv
 
 
@@ -320,17 +339,17 @@ def nine(w, h, m, fill, rim, hi, lo, outline="K"):
 def frames9():
     out = {}
     m = 5
-    out["btn"] = (nine(16, 16, m, "B", "b", "C", "b"), (m, m, m, m))
-    out["btn_pressed"] = (nine(16, 16, m, "b", None, "b", "B"), (m, m, m, m))
-    out["btn_disabled"] = (nine(16, 16, m, "A", "a", "X", "a"), (m, m, m, m))
+    out["btn"] = (nine(16, 16, m, "O", "w", "o", "w"), (m, m, m, m))            # crust (art 0.11.0; was blue)
+    out["btn_pressed"] = (nine(16, 16, m, "w", None, "w", "O"), (m, m, m, m))
+    out["btn_disabled"] = (nine(16, 16, m, "a", "a", "A", "K"), (m, m, m, m))   # dark slate: text 5.8:1, dL* 12.7 vs btn
     out["btn_gold"] = (nine(16, 16, m, "Y", "y", "Z", "y"), (m, m, m, m))
     out["panel"] = (nine(24, 24, 8, "U", "T", "U", "o"), (8, 8, 8, 8))
-    out["panel_dark"] = (nine(24, 24, 8, "p", None, "P", "K"), (8, 8, 8, 8))
+    out["panel_dark"] = (nine(24, 24, 8, "w", None, "O", "K"), (8, 8, 8, 8))   # dark crust (was purple)
     # card: frame with dark inset for the portrait
-    card = nine(20, 24, 6, "b", "b", "C", "b")
+    card = nine(20, 24, 6, "O", "w", "o", "w")
     out["card_frame"] = (card, (6, 6, 6, 6))
     out["card_frame_disabled"] = (nine(20, 24, 6, "a", "a", "A", "a"), (6, 6, 6, 6))
-    sel = nine(20, 24, 6, "y", "y", "Z", "y")
+    sel = nine(20, 24, 6, "Y", "y", "Z", "y")          # butter fill: dark text 8.5:1 (was 3.5:1 on y)
     out["card_frame_selected"] = (sel, (6, 6, 6, 6))
     # bars
     bar = Canvas(12, 8)
@@ -371,18 +390,18 @@ def bar_fills():
 def move_button(direction):
     cv = Canvas(32, 32)
     cv.ellipse(16, 16, 15, 15, c("K"))
-    cv.ellipse(16, 16, 14, 14, c("b"))
-    cv.ellipse(15.5, 15, 13, 12.5, c("B"))
-    cv.ellipse(13, 11, 6, 4, c("C"))
+    cv.ellipse(16, 16, 14, 14, c("w"))       # crust bun button (art 0.11.0; was blue)
+    cv.ellipse(15.5, 15, 13, 12.5, c("O"))
+    cv.ellipse(13, 11, 6, 4, c("o"))
     # right-pointing arrow head + shaft
     for y in range(8, 25):
         d = abs(y - 16)
         cv.hline(14, 22 - d, y, c("W"))
     cv.rect(8, 13, 7, 7, c("W"))
-    cv.hline(8, 14, 19, c("j"))
+    cv.hline(8, 14, 19, c("U"))
     for y in range(17, 25):
         d = abs(y - 16)
-        cv.put(22 - d, y, c("j"))
+        cv.put(22 - d, y, c("U"))
     if direction < 0:
         cv.flip_h()
     return cv
@@ -414,7 +433,7 @@ def digits(col="W", name_prefix="digit_"):
 
 
 # --- portraits cropped from character idle frames -------------------------------
-def portrait(frame: np.ndarray, bg="b", rim="B", hi="C", size=24, head_rows=20):
+def portrait(frame: np.ndarray, bg="O", rim="w", hi="o", size=24, head_rows=20):   # ally = crust (art 0.11.0)
     ys, xs = np.nonzero(frame)
     top = ys.min()
     cx = int(np.median(xs[ys < top + 12]))

@@ -130,11 +130,21 @@
       "size_ok": true
     },
     {
-      "frames": 4,
-      "id": "ui_title",
+      "frames": 2,
+      "id": "ui_title_ko",
       "loaded": true,
       "size": [
         512,
+        64
+      ],
+      "size_ok": true
+    },
+    {
+      "frames": 2,
+      "id": "ui_title_en",
+      "loaded": true,
+      "size": [
+        256,
         128
       ],
       "size_ok": true
@@ -152,5 +162,5 @@
   ],
   "raw_png_present": false,
   "remap_present": true,
-  "pck_bytes": 1255352
+  "pck_bytes": 1261900
 }

@@ -33,3 +33,9 @@ Now: menu = ui_main 256x256 (0.25 MiB) + ui_title 512x128 (0.25 MiB) = **0.50 Mi
 03 recommends B first (no visual change, one client line), then C if you also want battle headroom. Option A is not recommended. C needs a measured target page (free room on bases/fx_combat not checked yet). All options except D change the atlas contract, so 03 will build nothing until you (cap) and 04 (loader) agree and Codex/01 approve.
 
 Correction to A1: the dynamic font cache pages are LA8, 128 KiB per 256x256 page (512x512 at 36 px = 512 KiB), as you measured, not "L8 64 KiB". docs/art/TYPOGRAPHY.md section 4 is fixed.
+
+## A8 2026-10-31 17:36 +09:00 — option B built: new numbers (QUEUED)
+- Pages: `ui_title` removed; `ui_title_ko` 512x64 and `ui_title_en` 256x128, RGBA8, 0.125 MiB each, load_policy `menu`, **group `title`** (not `ui`). All pages 9.50 MiB (12 pages), PNG 81.7 KiB. Other page sizes unchanged.
+- Real residency from snapshot logs (texture_report): menu with the current client = ui_main 0.25 MiB (logo falls back to text until 04 A10); with 04's one-line change simulated = ui_main + ui_title_ko = **0.375 MiB**. With group `ui` (first build) app.gd preloaded both pages = 0.50 MiB, which is why I changed the group.
+- Your `asset_budget_check.py --worktree` PASS but reports menu 0.25 / worst battle 9.25 because budget_inventory.py counts group `ui` only. Suggest: menu = always pages + the largest `menu` page (one locale); battle +0.125 MiB unless 04 releases the title page on battle enter (04 A10). Locale switching in one session adds the other page (+0.125).
+- biome_meadow (now Wheatfield Village art), char_player, fx_combat, ui_main: pixels changed, sizes and rects unchanged.
