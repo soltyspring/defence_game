@@ -21,7 +21,9 @@ param(
     [switch]$NoWait,
     [double[]]$ScreenCaptureAt = @(),   # seconds after placement: OS-level grab of the window rect on the secondary display
     [string]$EvidenceDir = '',
-    [string]$ProjectPath = ''           # Godot project dir to run (default: this workspace). 07 QA-R5: clean HEAD snapshot, e.g. %TEMP%\qa07_head
+    [string]$ProjectPath = '',          # Godot project dir to run (default: this workspace). 07 QA-R5: clean HEAD snapshot, e.g. %TEMP%\qa07_head
+    [string]$IsolateAppData = ''        # 10's isolated_godot.ps1 method: the child gets APPDATA=<dir>, so user:// (save.json) can
+                                        # never resolve to the real player folder %APPDATA%\Godot\app_userdata\<name>
 )
 . "$PSScriptRoot\common.ps1"
 $ErrorActionPreference = 'Stop'
@@ -109,7 +111,17 @@ if ($Script) { $gargs += @('-s', $Script) }
 if ($Scene) { $gargs += $Scene }
 if ($UserArgs.Count -gt 0) { $gargs += '--'; $gargs += $UserArgs }
 Write-Host "launch: $GodotGui $($gargs -join ' ')"
-$p = Start-Process -FilePath $GodotGui -ArgumentList ($gargs | ForEach-Object { if ($_ -match '\s') { '"' + $_ + '"' } else { $_ } }) -PassThru -WorkingDirectory $proj
+$prevAppData = $env:APPDATA
+if ($IsolateAppData) {
+    New-Item -ItemType Directory -Force $IsolateAppData | Out-Null
+    $env:APPDATA = (Resolve-Path $IsolateAppData).Path   # inherited by the child only; restored right after the start
+    $evidence['isolated_appdata'] = $env:APPDATA
+}
+try {
+    $p = Start-Process -FilePath $GodotGui -ArgumentList ($gargs | ForEach-Object { if ($_ -match '\s') { '"' + $_ + '"' } else { $_ } }) -PassThru -WorkingDirectory $proj
+} finally {
+    $env:APPDATA = $prevAppData
+}
 
 # find the game's top-level visible window by PID
 $hwnd = [IntPtr]::Zero
