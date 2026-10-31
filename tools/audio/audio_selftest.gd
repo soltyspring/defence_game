@@ -235,6 +235,19 @@ func _run() -> void:
 	p0 = A.stats.played
 	E.emit_signal("sfx", &"skill", {"skill": "skill_slam"})
 	_ok(A.stats.played == p0 + 1 and not br.derived.command, "direct skill plays and disables optimistic command cues")
+	# v3.3: ranged/siege hits on faction cues get a pitch offset (ranged x1.15, siege x0.85; cue jitter +-0.08)
+	var last := {"cue": &"", "voice": -1}
+	var grab := func(cue: StringName, voice: int) -> void:
+		last.cue = cue
+		last.voice = voice
+	A.cue_played.connect(grab)
+	for case in [["ranged", 1.15], ["siege", 0.85], ["melee", 1.0]]:
+		A.advance(5.0)
+		E.emit_signal("sfx", &"hit", {"kind": case[0], "target_side": "enemy", "x": 0.0})
+		var ps: float = A._sfx[last.voice].pitch_scale if last.voice >= 0 else -1.0
+		_ok(last.cue == &"hit_mold" and absf(ps - case[1]) <= case[1] * 0.081 + 0.001,
+			"%s hit on mold: cue %s pitch %.3f, expected %.2f +-8%%" % [case[0], last.cue, ps, case[1]])
+	A.cue_played.disconnect(grab)
 	if E.has_signal("upgrade_result"):
 		A.advance(5.0)
 		p0 = A.stats.played

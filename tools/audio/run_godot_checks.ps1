@@ -142,6 +142,9 @@ if ($Integration) {
     "battle combat cues=$combat kills=$($ij.engine_truth.kills) deploy cues=$($cc.deploy)/engine $($ij.engine_truth.deployed) skill cues=$([int]$cc.skill_slam + [int]$cc.skill_rally + [int]$cc.skill_barrage + [int]$cc.skill_heal + [int]$cc.skill_cast)/engine $($ij.engine_truth.skills_cast) dropped_offscreen=$($ij.audio_snapshot.dropped_offscreen) attenuated=$($ij.audio_snapshot.attenuated_offscreen)"
     if ($ij.events_has_sfx -and [int]$ij.engine_truth.kills -gt 0 -and $combat -eq 0) { $fail++; "  ^ combat happened but no combat cue was audible" }
     if ([int]$cc.deploy -ne [int]$ij.engine_truth.deployed) { $fail++; "  ^ deploy cue count != engine deployed" }
+    # v3.3: 02 A9 (09508b1) sends target_side on hit cues -> victim-material cues must replace the neutral fallback
+    "hits: hit_mold=$([int]$cc.hit_mold) hit_bread=$([int]$cc.hit_bread) fallback hit_melee=$([int]$cc.hit_melee) hit_arrow=$([int]$cc.hit_arrow)"
+    if ([int]$ij.engine_truth.kills -gt 0 -and ([int]$cc.hit_mold + [int]$cc.hit_bread) -eq 0) { $fail++; "  ^ no hit_mold/hit_bread: target_side is not reaching the bridge" }
     $wce = [int]$ij.wave_cleared_events; $wcc = [int]$cc.wave_cleared
     "wave_cleared: events=$wce cues=$wcc indices=$(@($ij.wave_cleared_index) -join ',')"
     if ($wcc -ne $wce) { $fail++; "  ^ wave_cleared cue count != wave_cleared events (missing or duplicated)" }

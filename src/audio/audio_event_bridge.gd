@@ -107,6 +107,13 @@ func _on_direct(cue: StringName, params: Dictionary) -> void:
 			derived[cat] = false
 	if c == &"hit_base" and str(params.get("side", "")) == "enemy":
 		params = params.merged({"pitch": 1.12, "vol_db": -2.0})   # only if hit_base_mold is absent
+	# v3.3 (02 A9, 09508b1): ranged/siege hits now also resolve to the victim's material cue. Keep the
+	# attack weight audible: arrows/spit lighter and higher, siege (oven cannon) heavier and lower.
+	# UNVERIFIED in Godot (written during 08's quiet window); harness rerun pending.
+	if cue == &"hit" and (c == &"hit_mold" or c == &"hit_bread"):
+		match str(params.get("kind", "melee")):
+			"ranged": params = params.merged({"pitch": 1.15, "vol_db": -2.0})
+			"siege": params = params.merged({"pitch": 0.85, "vol_db": 1.0})
 	audio.play(c, params)
 
 # ------------------------------------------------------------ derived cues
