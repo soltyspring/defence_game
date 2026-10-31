@@ -51,3 +51,9 @@ r01–r03 5.25, menu 0.25 MiB), PNG 73 175 → 72 716 B. Matches your A5 numbers
 0.25 → **0.50 MiB = exactly the menu cap** (passes, since the cap is ≤ 0.5 MiB) and the worst battle to 9.50 MiB (cap 12 MiB). Any further
 always-loaded page would fail the menu cap. Options if more title/menu art comes: load `ui_title` only on the title/menu screens (released
 in battle), or pack it into ui_main's free space (ui_main occupancy ~0.35). After you commit, I check the commit with `--rev`.
+
+## A8 — 2026-10-31 17:32: 19245a5 (title logo) checked: PASS, but menu residency is exactly at the cap
+`asset_budget_check.py --range 37b9a93..origin/main`: 19245a5 PASS. New page `ui_title` 512×128 = 0.25 MiB → menu residency **0.50 MiB = cap**,
+worst battle 9.50 MiB (cap 12). Note: it has `group: "ui"`. The engine never releases "ui" pages (src/core/atlas.gd:50), so `load_policy:
+"menu"` is not honoured and the logo stays resident in battle. If the logo is menu-only, a different group or a 02 change to honour
+`load_policy` would free 0.25 MiB in battle; this is low priority. Any further always-resident page will fail the menu cap.

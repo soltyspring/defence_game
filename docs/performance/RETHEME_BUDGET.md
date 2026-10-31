@@ -109,3 +109,16 @@ run with cwd = workspace root, so they never had the defect. The only wrong run 
 `--out`. It reported worst/menu 0 MiB, was caught before being recorded, and was redone. Requests to owners: none needed.
 Heads-up (working tree, uncommitted 03 WIP, `--worktree`): a new always-resident page `ui_title` 512×128 (0.25 MiB) raises **menu
 residency to 0.50 MiB = exactly the cap** (PASS at ≤) and the worst battle to 9.50 MiB. Any further always-loaded page would fail; sent to 03 (A7).
+
+### 2026-10-31 17:32 — range re-check to origin/main cc5dbb8 (`--range 37b9a93..origin/main`, all PASS, exit 0)
+| Commit (time, owner) | What | Atlas worst / all / menu | PNG | SFX count / PCM | Music |
+|---|---|---|---|---|---|
+| 19245a5 (16:39, 03) | title logo page `ui_title` 512×128 + icon candidates, pixel tweaks | 9.50 / 9.50 / **0.50 MiB (= menu cap)** | 76.3 KiB | 38 / 0.83 MiB | 0.56 MiB |
+| c15e43a (16:50, 01 data) | — | unchanged | 76.3 KiB | 38 / 0.83 | 0.56 |
+| a262640 (17:12, 01 data) | — | unchanged | 76.3 KiB | 38 / 0.83 | 0.56 |
+| cc5dbb8 (17:16, 05) | wave-cleared + 4 upgrade SFX; **all 43 `.wav` now have `.wav.import`** | unchanged | 76.3 KiB | **43 / 0.93 MiB (972 180 B)** | 0.56 |
+Notes: (1) `ui_title` has `group: "ui"`, `load_policy: "menu"`. `Atlas.release()` (src/core/atlas.gd:50) never drops a page of group
+`"ui"`, so the title page stays resident in battle too (+0.25 MiB; the inventory counts it, worst battle 9.50 MiB). Small, but the menu cap
+is now reached exactly. (2) SFX count 43 of 48 (5 files left before the count cap). The PCM upper bound of 0.93 MiB is within the 2 MiB cap.
+The AU3 import defect (f0646dd) is **resolved** in cc5dbb8: `git ls-tree origin/main assets/audio` lists 43 `.wav` and 43 `.wav.import`
+(and 2 `.ogg` / 2 `.ogg.import`).

@@ -32,3 +32,7 @@ editor checkout. So in an exported build **`hit_bread`, `hit_mold` and `hit_base
 would lose 2 of 5 variants. Ask: get these imported (under the shared import lock with 02/04) and commit the 9 `.wav.import` files with
 the same params as the others (`compress/mode=2`). Acceptance: `git ls-tree` count `.wav` = `.wav.import`, and `load_errors` empty in an
 exported build (07 check).
+
+## AU3 — RESOLVED (2026-10-31 17:32)
+Re-checked on origin/main (cc5dbb8): 43 `.wav` = 43 `.wav.import`, 2 `.ogg` = 2 `.ogg.import`. Nothing missing; thanks. The exported-build
+playback check is still 07's (Q8-2). Budget at cc5dbb8: 43 SFX (cap 48, so 5 left), PCM upper bound 0.93 MiB (cap 2 MiB), music 0.56 MiB → PASS.

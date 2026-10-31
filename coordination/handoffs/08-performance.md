@@ -1,4 +1,15 @@
 # 08-performance handoff
+## M12 — pre-C11 prep and static re-check (2026-10-31 17:35 +09:00)
+- Coordinator decision: **C11 = 18:00–18:30 KST** (other roles: no new Godot/editor/emulator starts). Correction received: the AU3
+  import defect is fixed on origin/main. Verified: 43 `.wav` = 43 `.wav.import` (cc5dbb8, 05). AU3 marked RESOLVED, 07 Q8-2 updated.
+- Static: `--range 37b9a93..origin/main` → all PASS. 19245a5 (03 title logo) puts menu residency at exactly 0.50 MiB = cap, and `group "ui"`
+  keeps it resident in battle (+0.25 MiB) → A8 to 03. cc5dbb8: 43 SFX / 0.93 MiB.
+- Prepared (unverified until the window's step 0): perf_bench `--only=setup` (BattleSim.new+setup time, objects created, pools); frame-probe
+  `event_frames` (battle_start and wave_cleared frame times vs a 30-frame baseline); c11_window.ps1 rewritten to the coordinator's order:
+  (0) parse check, (a) A/B, (b) STEPPING, (c) view/UI A/B HEAD, (c2) UI A/B before 04 1d1e4e3, (d) setup cost, (e) r01 banner frames,
+  (f) equivalence if time; `-Deadline 18:30` → steps not started by then = NOT_RUN.
+- Next step: at 18:00 `.\tools\perf\c11_window.ps1 -Start 18:00 -End 18:10 -EveryMin 1 -Deadline 18:30`.
+- M12 commit: recorded later, only after `git show` verification.
 ## M11 — C11 attempt 17:00–17:25: NOT_RUN (2026-10-31 17:26 +09:00)
 - `tools/perf/c11_window.ps1` (new): scheduled foreign-process checks; when a check finds 0 it runs the sequence (a) A/B `-RequireQuiet`,
   (b) STEPPING probe on a clean HEAD snapshot, (c) view and UI A/B, (d) targeting_equivalence, each run monitored once per second

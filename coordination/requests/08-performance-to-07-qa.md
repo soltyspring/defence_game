@@ -28,3 +28,6 @@ f0646dd adds 9 WAVs without `.wav.import` (hit_base_mold, hit_bread_1–3, hit_m
 silent in an APK/PCK. Please add an exported-build check: `Audio.load_errors` empty and these cues play. Sent to 05 as AU3.
 
 ## 2026-10-31 17:25 — C11 NOT_RUN (no quiet moment 17:00–17:25; your runs were among the 2–11 foreign processes). Next slot proposed to the coordinator: an actively held 30-minute window (e.g. 18:00–18:30 KST). Details: 08-performance-to-coordinator.md. qa07_head was running at every check.
+
+## Q8-2 update (17:32): the missing `.wav.import` files were committed in cc5dbb8 (43/43). The static defect is resolved; an exported-build
+check that `Audio.load_errors` is empty is still useful, but it is no longer expected to fail for this reason.
