@@ -25,6 +25,9 @@ func _initialize() -> void:
 	_group("listing_wording", test_listing_wording)
 	_group("listing_claim_markers", test_listing_markers)
 	_group("privacy_policy_template", test_policy)
+	_group("name_search_log", test_name_search_log)
+	_group("content_rating_draft", test_content_rating)
+	_group("data_safety_draft", test_data_safety)
 	report.passes = passes
 	report.failures = Array(failures)
 	var f := FileAccess.open("user://services_listing_report.json", FileAccess.WRITE)
@@ -231,4 +234,89 @@ func test_policy() -> bool:
 		if not conditional and (line.contains("광고 식별자를 수집") or line.to_lower().contains("we collect your")):
 			check(false, "unconditional collection claim: '%s'" % line.left(50))
 	passes += 1
+	return true
+
+# ------------------------------------------------------------------ M7: name search, rating, data safety
+
+const NAME_LOG := "res://docs/services/NAME_SEARCH_LOG.md"
+const RATING := "res://docs/services/CONTENT_RATING_DRAFT.md"
+const SAFETY := "res://docs/services/DATA_SAFETY_DRAFT.md"
+const NAME_STATUS := ["NO_EXACT_MATCH_FOUND", "SIMILAR_FOUND", "NOT_CHECKED"]
+const NAME_SOURCES := ["Google Play", "Web", "KIPRIS"]
+
+## Every title candidate has one row per source with a date and a fixed status.
+func test_name_search_log() -> bool:
+	if not check(FileAccess.file_exists(NAME_LOG), "NAME_SEARCH_LOG.md exists"):
+		return true
+	var rows := {}
+	for line in FileAccess.get_file_as_string(NAME_LOG).split("\n"):
+		var c := line.split("|")
+		if c.size() < 7 or not NAME_SOURCES.has(c[2].strip_edges()):
+			continue
+		var key := c[1].strip_edges() + "|" + c[2].strip_edges()
+		check(not rows.has(key), "name log: one row for %s" % key)
+		rows[key] = {"date": c[3].strip_edges(), "status": c[4].strip_edges(), "result": c[5].strip_edges()}
+	var candidates: Array = titles("ko") + titles("en")
+	check(candidates.size() == 6, "name log: 6 title candidates in the listing (%d)" % candidates.size())
+	for t in candidates:
+		for src in NAME_SOURCES:
+			var k: String = t + "|" + src
+			if not check(rows.has(k), "name log row for '%s' / %s" % [t, src]):
+				continue
+			var r: Dictionary = rows[k]
+			check(RegEx.create_from_string("^2026-\\d\\d-\\d\\d$").search(r.date) != null, "name log %s has a date" % k)
+			check(NAME_STATUS.has(r.status), "name log %s status '%s' from fixed set" % [k, r.status])
+			check(r.result.length() >= 10, "name log %s records a result" % k)
+	var txt := FileAccess.get_file_as_string(NAME_LOG)
+	check(txt.contains("not a trademark clearance"), "name log states it is not a trademark clearance")
+	return true
+
+## Rating draft: every topic answered, trigger table covers ads/purchases/user interaction/location/internet.
+func test_content_rating() -> bool:
+	if not check(FileAccess.file_exists(RATING), "CONTENT_RATING_DRAFT.md exists"):
+		return true
+	var t := FileAccess.get_file_as_string(RATING)
+	var s2 := t.substr(t.find("## 2."), t.find("## 3.") - t.find("## 2."))
+	var topics := ["Category", "Violence", "Blood / gore", "Fear / horror", "Sexual content", "Language", "Controlled substances", "Gambling", "Users interact", "Shares location", "Unrestricted internet", "Digital purchases", "Ads"]
+	for topic in topics:
+		var found := false
+		for line in s2.split("\n"):
+			var c := line.split("|")
+			if c.size() >= 5 and c[1].strip_edges().begins_with(topic):
+				found = true
+				check(c[2].strip_edges() != "" and c[3].strip_edges() != "", "rating topic '%s' has answer and evidence" % topic)
+				check(c[4].strip_edges() != "", "rating topic '%s' names who confirms" % topic)
+		check(found, "rating topic '%s' present" % topic)
+	var s3 := t.substr(t.find("## 3."))
+	for trig in ["ads", "purchases", "random items", "chat", "Location", "children"]:
+		check(s3.to_lower().contains(trig.to_lower()), "rating change table covers '%s'" % trig)
+	check(t.contains("Not submitted"), "rating draft marked not submitted")
+	check(t.contains("**Open.**"), "open human-looking-character question kept visible")
+	return true
+
+## Data safety draft: "No" answer only while the build really sends nothing.
+func test_data_safety() -> bool:
+	if not check(FileAccess.file_exists(SAFETY), "DATA_SAFETY_DRAFT.md exists"):
+		return true
+	var t := FileAccess.get_file_as_string(SAFETY)
+	var cats := ["Location", "Personal info", "Financial info", "Health and fitness", "Messages", "Photos and videos", "Audio files", "Files and docs", "Calendar", "Contacts", "App activity", "Web browsing", "App info and performance", "Device or other IDs"]
+	var s3 := t.substr(t.find("## 3."), t.find("## 4.") - t.find("## 3."))
+	for c in cats:
+		check(s3.contains(c), "data safety §3 lists category '%s'" % c)
+	check(s3.contains("| **No** |"), "data safety answers No for collect/share")
+	# The "No" answer is valid only if these hold in the repo right now.
+	var inet := "missing"
+	if FileAccess.file_exists("res://export_presets.cfg"):
+		for line in FileAccess.get_file_as_string("res://export_presets.cfg").split("\n"):
+			if line.strip_edges().begins_with("permissions/internet="):
+				inet = line.strip_edges().get_slice("=", 1)
+	check(inet == "false" or inet == "missing", "export INTERNET permission is off (%s); otherwise revise DATA_SAFETY_DRAFT.md" % inet)
+	var d: Dictionary = load("res://src/services/services_factory.gd").create({})
+	var snap: Dictionary = load("res://src/services/service_diagnostics.gd").snapshot(d)
+	check(not snap.live.values().has(true), "default services build has nothing live (%s)" % str(snap.live))
+	check(snap.adapters.analytics_sink == "null", "default analytics sink is null")
+	var s4 := t.substr(t.find("## 4."))
+	for f in ["Rewarded ads", "In-app purchases", "Verification server", "Remote analytics", "Accounts"]:
+		check(s4.contains(f), "data safety change table covers '%s'" % f)
+	check(t.contains("{{PRIVACY_POLICY_URL}}"), "privacy policy URL required even with No")
 	return true

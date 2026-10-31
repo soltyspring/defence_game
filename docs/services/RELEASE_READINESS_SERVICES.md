@@ -52,12 +52,12 @@ Status: `MET` = implemented and tested (mock level), `PARTIAL` = state machine o
 | A4 | MET | No device-ID calls, ad unit IDs or keys in src/services (`test_services` static_guards, integration D5) | Re-check after any SDK is added | 06 |
 | A5 | PARTIAL | Audience `unknown` → no personalised ads; `child` blocks all ads by default (`consent_service.gd`, `test_services` consent) | Target-audience decision, neutral age screen if mixed, Families-certified SDK check | user → 01, 04, 06 |
 | A6 | PARTIAL | Data inventory lists ad-SDK data as "would be sent" (ANALYTICS_EVENTS.md §4) | Final Data safety answers once an SDK is chosen | 04 / user |
-| V1 | PARTIAL | Honest current answer from the inventory: no data collected or shared (everything on device) (ANALYTICS_EVENTS.md §4) | Filling the form in Play Console; privacy policy URL | user / 04 |
+| V1 | PARTIAL | Draft answers in DATA_SAFETY_DRAFT.md ("No" data collected/shared; APK requests no permissions per aapt) | Submitting the form in Play Console; privacy policy URL | user / 04 |
 | V2 | MISSING | — | Privacy policy text, public URL, in-app link (settings/menu), developer contact | user (entity, contact, hosting), 04 (in-app link), 06 draft input |
 | V3 | MET (today) / MISSING (ads) | Nothing is collected now; consent defaults block ads/analytics | Prominent disclosure + consent UI before any SDK collects data | 04, 06 |
 | V4 | N/A-YET | No accounts in the game | Only if accounts are ever added | — |
 | V5 | MISSING | — | 개인정보 처리방침 (Korean) after legal review | user (legal), 01 text |
-| C1 | UNVERIFIED | `export_presets.cfg:31 gradle_build/target_sdk=""` (engine default; value not checked here) | Confirm the exported APK/AAB targets API ≥ 36 | 02 / 04 |
+| C1 | MET | Debug APK `build/qa/apk_head/defence-debug.apk` (2026-10-31 09:03): `aapt dump badging` → targetSdkVersion 36, sdkVersion 24 (DATA_SAFETY_DRAFT.md §2) | Re-check the release AAB before submission | 02 / 04 |
 | C2 | MISSING | — | Account type decision; recruit 12 testers for 14 days if personal | user |
 | C3 | MISSING | — | Developer account + payments profile (ID or D-U-N-S) | user |
 
