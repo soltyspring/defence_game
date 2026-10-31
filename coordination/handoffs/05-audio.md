@@ -14,6 +14,7 @@ Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, tr
    - **G2 FAIL as written** (hit_bread, death_enemy, wave_cleared, hit_base_mold up to +5.7 points).
    - Two recordings of the identical config differ by up to 7.2 points, so real-recording G2 at 3 seeds is noise-dominated. It stays recorded as FAIL; the criterion was not edited.
 No code or asset change in this step (assets byte-identical to 4d6f9bd).
+Git (copied from the PUSHED lines after those calls returned; verified on origin/main): b24412de6300ccc77908ca0b9e4f0ca5b71c547b [Test]; e633790bc75969be218f8c6aed0e8b31c1442189 [Docs].
 Not verified: human listening, real phone.
 Next:
 - G2 open item: either more seeds per config (to bring the variance under 2 points), or accept the same-background A/B as the causal test. That is a decision for the coordinator/01; 05 has not changed the criterion.
