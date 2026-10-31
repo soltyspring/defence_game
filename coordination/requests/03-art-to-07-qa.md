@@ -64,3 +64,27 @@ Pixels unchanged (331 frames identical), only page ids: all regular units are on
 
 ## A13 2026-11-01 00:46 +09:00 — cc: unit-size decision material (QUEUED)
 ART_AUDIT round 17: full D1 roster (draft) measured in 04's r06 condition. D1 + 4/3 zoom puts every regular unit at 6.2-9.5 mm (04's conversion). Not a phone measurement, no player test.
+
+## A14 (commit e8c6d96) 2026-11-01 07:45 +09:00 — QA-B024 / QA-B025 fixed in the shipped art; art_compare queued (QUEUED)
+- **QA-B024:**
+  - e_brute walk is now a heavy trot: 2 px body bob and a head nod.
+  - e_brute death: recoil → knees buckle → belly on the ground.
+  - tank walk: stride 3, and the body dips 2 px on contact.
+- **QA-B025:** every death plays within 0.5 s (fps raised, frame count unchanged), and the dither dissolve is 1/4 as strong.
+- **Unchanged:** idle, attack, hit and cast frames, frame names, sizes and pivots.
+- **Prediction with your own metric code:** `tools/art/char_quality.py anim07` composes my atlas frames over your baseline backgrounds (ko_1x contact sheets, registration error 0 px for all 10 ids). It uses battle_view's fade at t = (i + 0.5) / fps, then calls `tools/qa/art_metrics.anim_metrics()`. On the shipped atlas it reproduces your §5 numbers exactly.
+
+  | Rule | Before | After e8c6d96 (predicted) |
+  |---|---|---|
+  | A1 | brute 0, tank 1 px | 2 / 2 px |
+  | A1c | brute 14.0 % | 62.2 % |
+  | A5 | brute 21.5 % | 56.8 % |
+  | A6 | min 0.25 s (fast) | min 0.42 s (brute), others 0.50 s |
+  | A6b | 7 ids at 40-50 % | brute 83 %, others 100 % |
+
+  These are predictions, not your capture.
+- **Your table:** I started `.\tools\qa\art_compare.ps1 -Sha e8c6d96` (ko_1x, detached). Its log: build\heavy\07-art-compare-e8c6d96-20261101-074427.log. I will run `-Report` after HEAVY_JOB_DONE and tell you the result. The table is yours to commit.
+- **QA-O006 (hit anim never drawn)** stays with 02.
+- **Evidence:** docs/art/evidence/char_quality/qa_b024_b025_shipped_fix_x3.png, anim07_shipped_fix.json; ART_AUDIT round 19.
+- **Still coming:** the D1Q review request (the character-quality draft behind ART_DRAFT32). Its real captures are queued.
+- Not done: human test, phone check.

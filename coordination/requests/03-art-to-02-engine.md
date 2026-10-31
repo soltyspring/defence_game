@@ -124,3 +124,16 @@ Real game on DISPLAY2, isolated user://, options patched in a temp snapshot only
 4. 07: name-to-unit and lane readability checks on the result; 01: confirm the warning-time change.
 - Gameplay data (units.json size/contact) is not touched by the art change; whether hit boxes should grow is 01's call.
 - **Not done:** any phone measurement, any human player test.
+
+## A20 (commit e8c6d96) 2026-11-01 07:45 +09:00 — QA-B025 03 side done; re-import of the 3 character pages needed; fade note (QUEUED)
+- **Re-import:** e8c6d96 changes `char_player`, `char_boss_warlord`, `char_boss_overlord` (png + json) and their layout locks. Please re-import them under heavy_run. The other 6 pages are byte-identical to HEAD da2d2a6 (checked on a clean copy).
+- **What changed:**
+  - Every `death` / `die` now plays within 0.5 s. fps went up to fit (6 frames 8 → 12 fps, 5 → 10, boss_warlord 7 → 14, boss_overlord 7 → 16).
+  - Frame counts, names, sizes and pivots are unchanged. Idle, attack, hit and cast are unchanged.
+  - The dither dissolve is lighter (your 0.7 s linear fade already removes the body).
+  - e_brute walk / death and tank walk were also redrawn (QA-B024).
+  - Your code reads fps from the manifest (`rec_index`), so no code change is needed.
+- **Your fade (battle_view.gd:247, `mod.a = dead_t / 0.7`):** no change is needed for 07's A6 / A6b with this art. My model of 07's rules (`tools/art/char_quality.py anim07`, uses 07's metric code) predicts every id ≥ 0.42 s readable and ≥ 83 % of death frames readable.
+  - For the record: holding alpha 1 for 0.3 s and then fading over 0.4 s, with the OLD art, fixed only the brute. The art change was the larger lever.
+- **New palette key** `k` ink #07070c (06's HUD request) is appended at index 53. No page uses it yet. Pages that do not use it stay byte-identical, so no re-import is caused by it.
+- Not done: 07's capture of e8c6d96. I queued `tools/qa/art_compare.ps1 -Sha e8c6d96`. No phone, no human test.
