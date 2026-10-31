@@ -4,4 +4,4 @@ Status: v3.8 repetition fatigue. Criteria R1–R4 were written first. Before: 13
 - Same-background A/B: D1/D2/G1/G2 PASS (G2 max +1.9).
 - Real recordings: D1/D2 PASS, G2 no anomaly. G1 peak FAIL as written in 1 of 9 (−0.50 dBFS at a 5-cue cluster, 0 clipped, not reproduced in the re-render); open question for the coordinator/01.
 Not verified: human listening, real phone.
-Git: pending; SHAs are written in a separate step after PUSHED.
+Git: 28d6827 [Feat], ab86f27 [Test], 45e384a [Docs] PUSHED (verified on origin).

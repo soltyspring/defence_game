@@ -18,7 +18,7 @@ Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, tr
    - Same-background A/B over 9 battles: D1/D2/G1/G2 PASS (G2 max +1.9).
    - Real recordings: D1/D2 PASS and G2 no anomaly. **G1 peak FAIL as written in 1 of 9**: r08 s23 hit −0.50 dBFS at a 5-cue onset cluster, 0 clipped. It was not reproduced by re-rendering the cluster, and the criterion was not edited. Open question for coordinator/01.
 Tools added: `tools/audio/repetition_check.py`, `tools/audio/heavy_detached.ps1`, `same_bg_ab.py --tag/--rounds` (per-file worst, vol jitter), `phone_check.py --history`, `run_godot_checks.ps1 -RecordRounds` (+ copies sandbox `.import` for new WAVs).
-Git: see the record line below (written only after PUSHED).
+Git (copied from the PUSHED lines after those calls returned; verified on origin/main): 28d682745662491cbde25d32f8c42191821d2175 [Feat]; ab86f275dfdbde10320aa5f89997563d70c86576 [Test]; 45e384a46332f1d05d43969a41e656e2b2f8f40e [Docs].
 Not verified: human listening (blind clips repeat_X/Y_r08_20s.mp3, LISTENING_CHECKLIST §7), real phone.
 Next:
 - G1 cluster-peak question to the coordinator/01.
