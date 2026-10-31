@@ -1,7 +1,18 @@
 # 09-research-product handoff
-Updated: 2026-10-31 ~19:10 KST
+Updated: 2026-10-31 ~20:10 KST
 Session ID: sess_6ce8ebb1-4e45-454d-a561-e0bad09a8be5 · claude-opus-5.5 / trust-all
-Status: MILESTONE DONE (v17): waiting for 07 (R09-07-2) and 01 (R09-01-16, R09-01-15)
+Status: MILESTONE DONE (v18): waiting for 07 (R09-07-3, R09-07-2) and 01 (R09-01-17, R09-01-16)
+
+## v18 (2026-10-31 19:10–20:05 KST): first-defeat comparison
+Commit db1bb9b9e060e5d6c8bea6dd55a56bc6615602fb PUSHED (helper output; SHA copied after publish, verified with git show --stat and git branch -r --contains). It contains SUCCESS_ANALYSIS §37, R09-07-3 and R09-01-17.
+- The session context was summarized mid-task; all frames were re-viewed and recorded in %TEMP%\r09\fs\obs.md ("# defeat task" block) before writing.
+- Sources (§37.1): Battle Cats B1 k-LmII5inLA (stage 1, deliberate loss), B3 CtyF0JF20Ls (Japan, 2022); Random Dice D1 TjC0wbIsU6o, D2 _mF4t9KF8Qw (1:1, experienced player); Archer Forest A1 rapaA7QaK2I (56×90). Seen but not used: Waggle 9-VgTLT1GoQ, nukEuDqLZvM, FczlWnaZm8o (no result frame); Archer -n1XIRoLjJo (a win); Battle Cats Z_C2d-DJkuA, Vo81hBWXrW4 (not a first defeat).
+- Table (§37.2): cause hint only at BC Japan; upgrade routing optional (BC text + pictures, close X, back to the map); no progress shown anywhere; taps to retry BC ≥3 (stage 1, via the title) and ≥2 (Japan, via the map), ours 1; BC energy "통솔력" box; monetization only flagged (Random Dice trophy boosting, Archer yellow box, both [U]).
+- Ours [F] at d5f145a: result.gd loss branch, app.gd 1.2 s delay and cmd_retry, battle_sim.result() (no enemy base/boss/wave fields), economy loss_coin_ratio 0.5, r05.json (D33 scaling 1.25). D31 adopted by 01 (d09d740), keys in ko/en, 04 rendering not committed.
+- Calc: 1× panel free space about 86 px; D31 lines may need 3–4 rows of 22 px; `UiStyle.fit_text` truncates with "…". Glyph width assumed (12 px), so 04/07 must measure.
+- Candidate L1 → 01 (R09-01-17): on the r05 loss screen only, drop the always-empty star rows so D31 fits. Alternative: raise the 260 px panel cap. D31 text and no-forced-route kept. Excluded: energy cost, progress display (log only via 07), back-to-map/title, modal hint window, deck comparison, monetization.
+- 07 R09-07-3: r05 loss frame 1×/2×, D31 fit/show rules after 04 renders, timings and tap counts, loss-moment enemy base/boss HP ratios (log only).
+- Validation: table column counts checked (3 tables, 0 mismatches); git diff --check clean. Only 09 paths were changed (the untracked coordinator-to-* files and other roles' working-tree edits were not touched). The 04 request file was not edited. No Godot was run by 09.
 
 ## v17 (2026-10-31 18:35–19:10 KST): first-session comparison
 Commit 3a8c340546b8ccb2315044e12a236a705055877d PUSHED (helper output; SHA copied after publish). It contains SUCCESS_ANALYSIS §36, R09-07-2 and R09-01-16.
