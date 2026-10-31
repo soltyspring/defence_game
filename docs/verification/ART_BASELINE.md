@@ -104,6 +104,7 @@ How to read the rules:
 | U1 | "all cards look the same" | for every pair of card icons on screen: (mean-colour ΔE ≥ 10 normal and ≥ 8 deutan) or shape distance ≥ 12 | 0.6 / 5.0; failing pairs 6/10 (r06), 1/10 (r08), 2/10 (r10): **FAIL now** |
 | U2 | "the HUD eats the battlefield" | HUD pixels % never more than baseline + 0.5 pp in any scene. A reduction target is 04/01's (layout), not 06's | 10.05–18.55 % |
 | U3 | "the HUD covers my units" | HUD-covered unit pixels stay 0 % | 0: PASS |
+| U4 | "the HUD bar melts into the ground" (06 955adc0 measured 2.60–2.66:1 on 09's new street) | median, over screen columns, of the WCAG relative-luminance contrast between the top 2 px inside the bottom HUD and the ground 2–4 px above it: ≥ 3.0 ([WCAG 2.1 SC 1.4.11](https://www.w3.org/TR/WCAG21/#non-text-contrast) asks 3:1 for UI component boundaries) | ad47eda ko_1x: r01 2.44 (**FAIL now**), r06/r08/r10 3.51; 10th percentile 2.44 everywhere. Shared 06 (HUD frame) + 09 (ground) |
 | U4 | crisp UI | G3 | — |
 | — | logo, menu and result "look good" | **NOT MEASURABLE** (human). Measurable part: menu and result frames render (G1), and the title fits (VISUAL_CHECKS C14) | — |
 

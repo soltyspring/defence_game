@@ -88,7 +88,9 @@
     "touch_min_side_who": "pause",
     "touch_outside_safe": 0,
     "touch_overlaps": 0,
-    "touch_targets": 5
+    "touch_targets": 5,
+    "hud_ground_contrast_median": 2.44,
+    "hud_ground_contrast_p10": 2.44
    },
    "3_r01_t30": {
     "scene": "3_r01_t30",
@@ -155,7 +157,9 @@
     "touch_min_side_who": "pause",
     "touch_outside_safe": 0,
     "touch_overlaps": 0,
-    "touch_targets": 5
+    "touch_targets": 5,
+    "hud_ground_contrast_median": 2.44,
+    "hud_ground_contrast_p10": 2.44
    },
    "4_r06_t46": {
     "scene": "4_r06_t46",
@@ -241,7 +245,9 @@
     "touch_min_side_who": "pause",
     "touch_outside_safe": 0,
     "touch_overlaps": 0,
-    "touch_targets": 11
+    "touch_targets": 11,
+    "hud_ground_contrast_median": 3.51,
+    "hud_ground_contrast_p10": 2.44
    },
    "5_r08_peak": {
     "scene": "5_r08_peak",
@@ -332,7 +338,9 @@
     "touch_min_side_who": "pause",
     "touch_outside_safe": 0,
     "touch_overlaps": 0,
-    "touch_targets": 12
+    "touch_targets": 12,
+    "hud_ground_contrast_median": 3.51,
+    "hud_ground_contrast_p10": 2.44
    },
    "6_r10_boss": {
     "scene": "6_r10_boss",
@@ -426,7 +434,9 @@
     "touch_min_side_who": "pause",
     "touch_outside_safe": 0,
     "touch_overlaps": 0,
-    "touch_targets": 12
+    "touch_targets": 12,
+    "hud_ground_contrast_median": 3.51,
+    "hud_ground_contrast_p10": 2.44
    },
    "7_result": {
     "scene": "7_result",

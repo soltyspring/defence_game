@@ -72,6 +72,7 @@ SCENE_RULES = [
     ("U1c", "06", "closest card pair colour (dE, info)", CARDS, "cards_min_dE_normal", None, None, "higher", 0.5),
     ("U2", "06", "the HUD eats the battlefield (% px, max baseline + 0.5)", BATTLE, "hud_px_pct", "base+", 0.5, "lower", 0.05),
     ("U3", "06", "the HUD covers my units (% of unit px)", BATTLE, "hud_on_units_pct", "<=", 0.0, "lower", 0.0),
+    ("U4", "06+09", "the HUD bar melts into the ground (median contrast ratio of the HUD top edge vs the ground above; WCAG 1.4.11 asks 3:1)", BATTLE, "hud_ground_contrast_median", ">=", 3.0, "higher", 0.05),
     # LAYOUT.md L1-L8 (04 layout overhaul). 393x873 dp phone: 360 view px = 393 dp, so 1 view px = 1.092 dp = 0.173 mm.
     ("L1", "04", "the HUD takes battlefield away (battlefield %, max -0.5 pp vs baseline)", BATTLE, "battlefield_visible_pct", "base-", 0.5, "higher", 0.05),
     ("L2", "04", "the HUD covers the lane where units stand (HUD px in the lane band)", BATTLE, "hud_on_lane_px", "base+", 0, "lower", 0),

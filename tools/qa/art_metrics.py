@@ -201,6 +201,26 @@ def scene_metrics(d, tag, scene, meta, k, view=(800, 360)):
         out["cards_pairs_failing_u1_list"] = fails
     # LAYOUT L1/L2: battlefield left visible by the HUD, and HUD pixels on the lane band (same band as lane_busy_dL)
     out["battlefield_visible_pct"] = round(100.0 - out["hud_px_pct"], 2)
+    # U4 (2026-11-01): contrast of the bottom HUD edge against the ground right above it, per column: WCAG 2.1
+    # relative-luminance ratio between the top 2 px inside the HUD and 2..4 px above it (full frame). Median over columns.
+    lum = lin(full) @ np.array([0.2126, 0.7152, 0.0722])
+    lower = hud.copy()
+    lower[: int(shape[0] * 0.7), :] = False
+    ratios = []
+    for x in range(shape[1]):
+        ys = np.where(lower[:, x])[0]
+        if len(ys) == 0:
+            continue
+        y = int(ys.min())
+        if y - int(4 * k) < 0:
+            continue
+        a_ = float(lum[y:y + int(2 * k), x].mean())
+        b_ = float(lum[y - int(4 * k):y - int(2 * k), x].mean())
+        hi, lo = max(a_, b_), min(a_, b_)
+        ratios.append((hi + 0.05) / (lo + 0.05))
+    if ratios:
+        out["hud_ground_contrast_median"] = round(float(np.median(ratios)), 2)
+        out["hud_ground_contrast_p10"] = round(float(np.percentile(ratios, 10)), 2)
     ly0, ly1 = max(0, int((gy - 34) * k)), min(shape[0], int((gy + 6) * k))   # own names: y0/y1 are reused by the card loop above
     band_hud = hud[ly0:ly1, :]
     out["hud_on_lane_px"] = int(round(band_hud.sum() / (k * k)))
