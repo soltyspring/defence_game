@@ -1,44 +1,39 @@
 # 02-engine handoff
-Updated: 2026-11-01 07:10 +09:00
-Status: ACTIVE. Task: coordination/prompts/02-stall-zoom.txt (bot stall fix + world zoom flag) + 10 AC1 (content.gd CRLF) + 01 R12 answer.
-Verified on a clean HEAD snapshot (job `02-verify`, 07:06–07:11): selftest PASS 77/77, UI integration 49/0, 07 sim/flow/save/faults 106/0,
-AC1 CRLF = LF = c1-989c3422c910. PUSHED 780c30a (git ls-remote origin refs/heads/main = 780c30a9769ece445c961ab4388f7d8254dc8243, 07:1x KST).
-Code/data/tests did not change between the verified snapshot HEAD 3f70d8f and the commit's parent 8bc03e2.
-Resumed after the 2nd blue screen (0x3B, 03:55 KST). My files had no NUL bytes and were not truncated (byte scan 06:53). heavy_run.log:
-my `02-snap-verify` (03:27) never reached START, so it had no result to discard; the two `02-zoom-caps` exit 1 are explained below.
+Updated: 2026-11-01 08:30 +09:00
+Status: ACTIVE. Codex order 2026-11-01 07:1x: (1) 10 v0.34 round re-lock (release-blocker candidate), (2) 07 QA-B025 / QA-O006 animation display,
+(3) 08 P11 hidden clear rect, (4) zoom 3/2 odd-run cause, (5) 04 R16 / R17-2 / R19. All code is in a PRIVATE copy build/wip02/** (not committed, not in
+the shared tree); one verification job `02-anim-p11` is queued (08:26). Nothing of this round is committed yet.
 Model claude-opus-5.5, trust-all. Session ID: not exposed inside the session.
 HISTORICAL / QUOTA CHECKPOINT notices are previous-account records; not acted on.
-Heavy runs: only via `coordination/heavy_run_detached.ps1 -Label 02-<job> -ScriptFile build/heavy/<job>.ps1`, poll `HEAVY_JOB_DONE` in short calls,
-headless unless a screen capture is required (two blue screens during GPU work), private APPDATA, no batching of variants.
-Last processed: DECISIONS up to D37; 01→02 R10/R11/R12 (answered); 03→02 A17–A19 (A19 step 1 done; import deferred); 04→02 R16–R19 (R17-3/R18 done
-behind the flag; R16, R17-2, R19 open); 10→02 v0.24–v0.33 (AC1 fixed in content.gd; Part D open); 08→02 P9/P10 (queued).
+Rules in force: heavy runs only via `coordination/heavy_run_detached.ps1` (poll HEAVY_JOB_DONE in short calls), headless unless a capture is needed,
+private APPDATA, one job per task. **Codex 07:1x: never leave src/gameplay/**, src/core/**, data changes uncommitted in the shared tree; experiment in
+a copy, put only verified changes into the tree and commit at once.** (07:35 I moved a 3-minute battle_sim.gd edit out of the tree into build/wip02.)
+Last processed: DECISIONS up to D37; 10→02 v0.34 (in work); 07→02 QA-B025/QA-O006 (in work); 08→02 P11 (in work); 04→02 R16–R19 (in work);
+03→02 A17–A19 (import deferred); 01→02 R10–R12 (answered in 780c30a: bot conclusions + R12 feasibility; r05 decision is 01's).
 
 ## User decisions
 Q1 theme A "빵집 기사단 vs 곰팡이 군단". Q2 monetization ON HOLD (no ads/billing/shop UI). Q3 work title "빵집 기사단: 곰팡이 디펜스" (store name after KIPRIS).
 Q4 home-screen name ko "빵집 기사단", en "Bakery Knights". Q5 difficulty unanswered; D28 is a default, not approval.
 
-## This round (uncommitted, files intact)
-1. Bot stall (docs/architecture/evidence/bot_stall_20261101.md; probe src/core/diag/bot_stall_probe.gd; raw rows evidence/bot_stall/):
-   cause = competent worker-reserve trap (half-price reserve → 2–4 workers of 5) + hurt hero walking home for good; not the card order.
-   Fix in src/gameplay/bot_player.gd (knobs + `use_legacy_policy()`). LOW s1–5 competent median r02 171.4 → 120.7, r03 212.4 → 125.9,
-   r04 220.7 → 128.8; casual unchanged except r03 s4. Side effects: r05 none 0/10 → 10/10 (both bots), r05 LOW 10/10, r10 comp 460 → 264 s.
-2. World zoom (docs/architecture/evidence/world_zoom_20261101.md; frames evidence/world_zoom/): App.world_zoom(), project setting
-   game/camera/world_zoom_plus_one=false, args --world-zoom/--world-zoom-k; battle.gd camera ground row 70 view px above the bottom (290/360 in
-   all 5 captures). k=2 zoom 3/2: 11.8 % odd runs (off 0.1 %), cause unverified. INTERFACES.md §4 v1.9.
-3. 10 AC1: content.gd hashes CRLF as LF (`_crlf_to_lf`, same rule as content_version.py `lf`); src/core/diag/print_content_version.gd.
-4. 01 R12 (boss-death hooks): feasible, ~1 h, not built (01 asked to wait).
-- `02-zoom-caps` exit 1 causes: 02:35 = my battle.gd parse error (selftest gate, no captures); 03:14 = last step UI integration 48/1
-  "menu draws the ko logo (mode=text)" on the shared tree; captures exit 0.
-- Contamination I caused (reported in coordination/requests/02-engine-to-coordinator.md and to 01/07/08/10): shared-tree bot_player.gd changed
-  since 01:03:49 (01's D38 and r05-structure sweeps used the fixed bot); battle.gd did not compile 01:31–02:43.
-- Validation: shared-tree selftest PASS 03:14 (76 scripts); bot_stall probes A/B/C; captures. Clean snapshot `02-verify` (HEAD 3f70d8f + my
-  files, log build/heavy/02-verify-20261101-065518.log, outputs build/save_evidence/verify02/): selftest PASS 77/77; UI integration 49/0 (the
-  logo failure was the shared tree); 07 acceptance sim+flow+save+faults PASS 106/0; AC1 CRLF (2,758 CR) = LF = c1-989c3422c910 = python `lf`.
+## This round (in build/wip02, verification pending)
+1. save.gd (10 v0.34): id-based `is_unlocked`, `open_rounds`, `_unlock_state`, `round_reach`, `upgrade_locked`; migration step 5 from the old playable ids.
+   First run of 10's relock cases on the WIP save.gd (08:2x): U1 0 cleared-but-locked in 17 boots, U2/U4/U5 met
+   (docs/architecture/evidence/relock_fix_20261101.md). 04 must switch round_select/upgrade_panel to Save.is_unlocked / Save.upgrade_locked.
+2. battle_sim.gd: DEATH_TIME 1.5 (was 0.7), HIT_REARM 0.6, visual-only hit_t / cast_t, hero death drawn. battle_view.gd: anim_for(), death_alpha()
+   (alpha 1 for the whole death, then 0.3 s fade), hit / cast drawn. Pass conditions written first: docs/architecture/evidence/anim_display_20261101.md.
+   Selftest bot round times identical to before (r01 101.8 … r10 851.6), i.e. no gameplay change.
+3. battle_view.gd P11: `_draw_clear` skips rows covered by a layer flagged `opaque: true` (03's data); `clear_segments()` pure; selftest checks flags
+   vs PNG alpha. Pixel check: 07 fixed set A/B (flag off/on in a test copy), one visible run pair in the job.
+4. Zoom 3/2 odd runs: cause = HUD rows inside 03's units band; world part 0.0 % odd (world_zoom_20261101.md last section). No engine change.
+5. battle.gd: R16 `snapshot.threat` (+ `ground_screen_y`), R17-2 bottom safe inset; battle_view R19 damage numbers Galmuri11 12 px.
+- Mistake: my first job run had a parse error in battle_view.gd (dropped `_biome_palette` header); the gate stopped the visible part, but the
+  text probe waited its 300 s timeout. Logged as a NOTE in heavy_run.log; fixed and requeued once.
 
 ## Commits (PUSHED, verified with git ls-remote)
-… eceb9f4, c6fbf1f, 52f9fa3 (save migration + QA-B012), 2944cc0 (SHA record), **780c30a** (bot stall fix + world zoom flag + AC1; ls-remote verified).
+… 52f9fa3, 2944cc0, 780c30a (bot + zoom flag + AC1), d8e4753 (SHA record). This round: none yet.
 
 ## Next
-1. React to re-verification: 10 AC1/AC4 + package check on 780c30a, 07 `-Head`, 01 r05 decision with the fixed bot (R12 hooks only if 01 confirms).
-2. 01: r05 block with the fixed bot; R12 only if 01 confirms. 03: D1 art, then one main-tree import if still needed. Zoom switch stays off.
-3. 04 R16 threat field, R17-2 bottom inset (70 + inset), R19 damage-number size. 08 P9 after re-measure. QA-B013, 06 AAB/launcher icons, 10 Part D.
+1. Read `02-anim-p11` results (log build/heavy/02-anim-p11-20261101-082622.log; outputs build/save_evidence/anim02/). If all pass: copy the
+   build/wip02 files into the tree and commit at once (save.gd, battle_sim.gd, battle_view.gd, battle.gd, selftest.gd, wave_clear_probe.gd,
+   text_overlap_probe.gd, anim_display_probe.gd, INTERFACES.md, evidence docs, requests to 03/04/07/08/10).
+2. Then: 03 to add `opaque: true`; 04 to use Save.is_unlocked / upgrade_locked and the threat field; 07 to update its death fade model; 10 to rerun.

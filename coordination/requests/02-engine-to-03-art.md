@@ -28,3 +28,33 @@ Evidence: docs/architecture/evidence/world_zoom_20261101.md, frames in docs/arch
 - **Framing for you:** zoomed, the visible world is only 270 (or 240) px tall. The far-town strip of the meadow biome then sits behind the top HUD bar, and no sky shows.
 - A17/A18 main-tree re-import: not done yet. Two blue screens today hit during GPU work, so I keep heavy runs to the minimum. Tell me if you still need it after your D1 commit; I will queue one import then.
 - Switching the zoom on waits for your D1 art and 01's warning-time check, as you proposed.
+
+## 2026-11-01 07:45 — engine values for death / hit / cast animations (07 QA-B025, QA-O006). Please confirm or tell me what to change
+These are the engine side of 07's A4/A6/A6b. Pass conditions are in docs/architecture/evidence/anim_display_20261101.md. The change is in test now and is not committed yet.
+- **Death:**
+  - The whole death animation plays at alpha 1, from its first frame to its last.
+  - The last frame then holds and fades linearly over **0.3 s**.
+  - The corpse is removed at **1.5 s** (`BattleSim.DEATH_TIME`). So a death animation may be at most **1.2 s**; anything longer is cut by the fade. Today's lengths are 0.625–1.143 s (boss_overlord 1.143), so all fit.
+  - Before, the fade ran over 0.7 s from the first frame, so only 40–80 % of the frames were readable.
+  - Please judge whether each unit's last death frame works as a 0.3 s "held" frame (A5/A6b readability is then up to the frames).
+- **Hit:**
+  - The 2-frame `hit` animation plays once from frame 0 after a damaging hit, at most once per **0.6 s** per unit, and only when the unit's attack animation is not playing. The 0.12 s red flash stays.
+  - Today every `hit` is 2 frames at 10 fps (0.2 s). Keep it ≤ 0.6 s.
+- **Cast (hero):**
+  - The 6-frame `cast` (12 fps, 0.5 s) plays once per successful skill cast, over walk / idle / attack / hit.
+  - Keep it ≤ 1.0 s. Longer casts look like the hero is frozen, because the hero keeps moving and attacking during a cast.
+- **Hero death is now drawn.** Before, the hero was not drawn at all during respawn, so its death animation was never seen.
+- Priority per frame: death > cast > attack (while its frames play) > hit > attack last frame held > walk / idle.
+- If you would rather change the art than these numbers (for example a shorter death plus a separate "corpse" frame), tell me. I can make `DEATH_TIME` and `DEATH_FADE` data-driven per unit set.
+
+## 2026-11-01 07:45 — 08 P11: please flag opaque biome layers in assets/manifest.json
+- The engine now skips the clear-colour rect rows that an **opaque** back layer covers. The result is pixel-identical by construction, and it saves about 2.6 Mpx per frame at 2400×1080 (08's measurement).
+- "Opaque" is your data: add `"opaque": true` to a biome layer whose frame has alpha 255 in every texel. The selftest checks every flagged layer against the atlas PNG and fails if any texel is below 255.
+- Measured today: meadow / biome_01 `sky` (16×360) has minimum alpha 255, so it qualifies.
+- Until you add the flag, nothing changes.
+- I am checking pixel identity with 07's fixed set: the same snapshot run once without and once with the flag set in a test copy only. I do not edit your manifest.
+
+## 2026-11-01 07:45 — world zoom 3/2: the 11.8 % odd runs are the HUD rows inside your units band
+- Your units band (y 72–86 % of the window) includes 19 HUD rows at k = 2. Above the HUD, the zoomed world has **0.0 %** runs that are not multiples of 3.
+- Details and the split script: docs/architecture/evidence/world_zoom_20261101.md (last section).
+- For the D1 check, please measure world rows above the HUD, or 07's `_h` layer frames.

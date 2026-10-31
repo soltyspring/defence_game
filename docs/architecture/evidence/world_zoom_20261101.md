@@ -63,3 +63,22 @@ Note on the t = 46 s frames: the lane is empty apart from the hero and a worker 
 selftest PASS (77/77 scripts); 04 UI integration **49/0** (the 48/1 logo failure was the shared tree, not this change);
 07 acceptance.gd `--only=sim,flow,save,faults` PASS 106 / FAIL 0. 10 AC1: CRLF data (2,758 CR bytes) and LF data (0 CR) both
 give c1-989c3422c910 = content_version.py `lf` for HEAD.
+
+## Cause of the 11.8 % "odd runs" at k = 2, zoom 3/2 (2026-11-01 07:40, measurement only, no Godot run)
+`docs/architecture/evidence/world_zoom/odd_runs_split.py` uses 03's run definition and 03's "units" band (x 15–85 %,
+y 72–86 % of the window) on `t046_k2_800x360.png` and splits the band at the HUD card-row top (view y 300 = device y 600):
+| part of 03's units band | rows | runs | not a multiple of 3 (world k at 3/2) | not a multiple of 2 (HUD k) |
+|---|---|---|---|---|
+| whole band (y 518–619) | 101 | 16,955 | **11.8 %** | 72.3 % |
+| world part above the HUD (y 518–599) | 82 | 13,847 | **0.0 %** | 80.8 % |
+| HUD part (y 600–619) | 19 | 1,571 | 59.8 % | 36.2 % |
+With the zoom off (`t046_off_800x360.png`) the same split gives 0.0 % in the world part and 1.5 % in the HUD part.
+- **Cause:** the band's lowest 19 rows are the HUD card row, which stays at k = 2 (2 device px per art px) while the
+  zoomed world is 3 device px per art px. Vertical world runs are also cut at the HUD edge (y 600 is not on the world's
+  3-px row grid: world rows start at device y = 3·y_world − 290), which gives the 4/5 px runs in ground colours.
+  Inside the world the pixel grid is exact: camera x is a whole world px, cy is chosen so (ground_y − cy)·zoom is a
+  whole view px, units, bases, HP bars, projectiles and the parallax layer origins are rounded to whole world px.
+- **Fix:** none needed in the engine. For the measurement, use the world rows above the HUD (or 07's `_h`/`_bg` layer
+  frames). Not covered by this frame: effects drawn as vector arcs (`draw_arc`) and fractional fx radii, which are not on
+  any grid at either zoom; they were not in the t = 46 s frame.
+- Turning the zoom on still waits for 03's D1 art and 01's warning-time check.
