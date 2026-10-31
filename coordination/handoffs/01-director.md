@@ -1,4 +1,9 @@
 # 01-director handoff
+## TASK 2026-10-31 — LOW-budget chapter-1 clear check + D23 retune
+- New script docs/design/balance/low_budget_sim.gd.txt (02's bot, LOW/none/high budgets, cause-of-base-damage attribution, idle check, in-memory overrides). Before: LOW r04–r10 L (spitter + brute). Tried A–I in memory; applied I to data (D23). After: LOW 10/10 W, none r05/r09/r10 L, HIGH 10/10 W, idle loses all by destruction. 10 probe ERROR/WARN/INFO 0; l10n ALL_OK. Evidence files low_budget_2026-10-31_{low,none,high}.json, fix_I_overrides.json.
+- OPEN: durations far over par (r10 760 s); one seed; bot artefacts; no human data. 07 (R4) and 10 (R3) asked to retest. Q2 still waiting on the user (watch USER_QUESTION.md).
+- Git: see the commit below.
+
 ## TASK 2026-10-31 — 09 R09-01-7, 10 economy, title queue
 - D21: "first wave broken" = all wave-1 units dead (trickle excluded). D18 waves tagged `pressure: true` (r01 160/210/260, r02 175/225); 02 asked (R5) to exclude them from the HUD total/banner. The 160 s arrival after the 150 s par is intended (soft enrage).
 - D22: intent checkpoints 240/640/2,500 (r05 lowered from 660); L5 is replay-only by design; no post-max sink in MVP (B29). ECONOMY.md updated.

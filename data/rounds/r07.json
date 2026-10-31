@@ -117,11 +117,10 @@
       "e_bomber",
       "e_swarm",
       "e_spitter",
-      "e_grunt",
-      "e_brute"
+      "e_grunt"
     ],
-    "interval": 7.0,
-    "interval_min": 4.5,
+    "interval": 8.5,
+    "interval_min": 6.0,
     "ramp_per_min": 0.8
   },
   "enemy_base_spawns_on_hp": [
@@ -153,12 +152,13 @@
   "gold_max": 400,
   "workers_max": 7,
   "enemy_scaling": {
-    "hp": 1.28,
-    "atk": 1.28
+    "hp": 1.14,
+    "atk": 1.14
   },
   "enemy_tower_atk_mult": 1.1,
   "tutorial": [
     "tut_bomber_warning"
   ],
-  "provisional": true
+  "provisional": true,
+  "balance_note": "D23 (2026-10-31): enemy_scaling halved; r07-r10 trickle without e_brute and 1.5 s slower; validated at the LOW first-clear budget (docs/design/balance/low_budget_2026-10-31_low.json)."
 }

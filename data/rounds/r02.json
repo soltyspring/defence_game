@@ -164,5 +164,6 @@
     "tut_ranged_unit"
   ],
   "provisional": true,
-  "pressure_note": "Waves after the designed last wave and a faster trickle floor exist only so that an idle player loses by base destruction (D18). A competent bot finishes before them."
+  "pressure_note": "Waves after the designed last wave and a faster trickle floor exist only so that an idle player loses by base destruction (D18). A competent bot finishes before them.",
+  "balance_note": "D23 (2026-10-31): enemy_scaling halved; r07-r10 trickle without e_brute and 1.5 s slower; validated at the LOW first-clear budget (docs/design/balance/low_budget_2026-10-31_low.json)."
 }

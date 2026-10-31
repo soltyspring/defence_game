@@ -7,8 +7,8 @@ State: TESTED (evidence linked) / UNTESTED / BLOCKED (reason).
 | Data files parse + cross-refs valid | TESTED | PowerShell check 2026-10-31, PROGRESS.md |
 | Theme/title original, no reference IP names/art | BLOCKED | Q1 pending |
 | R1–R3 beatable by bot without upgrades | UNTESTED | needs 02 headless sim |
-| R1–R10 beatable with first-clear gold only | UNTESTED | needs sim with upgrade purchase policy |
-| Round durations within ±25% par | UNTESTED | sim |
+| R1–R10 beatable with first-clear gold only | TESTED (bot only) | D23: 02 competent bot, LOW path, seed 11, 10/10 W (docs/design/balance/low_budget_2026-10-31_low.json). Not human |
+| Round durations within ±25% par | FAIL | r05 416, r07 447, r09 441, r10 760 s vs par 260–330 (same file) |
 | Entity peak counts under caps in R8–R10 | UNTESTED | sim/profiling (02/04) |
 | Save schema stores IDs/levels only (rebalance-safe) | UNTESTED | 02/04 implementation |
 | Korean text complete for all keys | UNTESTED | placeholder names until Q1 |

@@ -140,13 +140,14 @@
   "gold_max": 350,
   "workers_max": 6,
   "enemy_scaling": {
-    "hp": 1.15,
-    "atk": 1.15
+    "hp": 1.075,
+    "atk": 1.075
   },
   "enemy_tower_atk_mult": 1.0,
   "tutorial": [
     "tut_boss_warning"
   ],
   "provisional": true,
-  "boss_round": true
+  "boss_round": true,
+  "balance_note": "D23 (2026-10-31): enemy_scaling halved; r07-r10 trickle without e_brute and 1.5 s slower; validated at the LOW first-clear budget (docs/design/balance/low_budget_2026-10-31_low.json)."
 }

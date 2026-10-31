@@ -1,0 +1,74 @@
+extends SceneTree
+## 01-director: chapter-1 clear check at the LOW first-clear upgrade budget (no replays).
+## Uses 02's unmodified battle_sim.gd + bot_player.gd (competent, skill 2) on the REAL data files.
+## Optional in-memory overrides (for trying fixes before editing data): JSON file arg 2, {"r04": {"enemy_scaling": {...}}, "_units": {"e_brute": {"armor": 3}}}.
+## Per round reports: won, time, base hp left, and an approximate cause-of-base-damage table:
+## each frame's player-base hp loss is split across enemy units within (range+40) px of the base, weighted by atk/atk_interval.
+## Also runs the passive (idle) player, which must lose by base destruction (t < 899 s).
+## Run: copy to $env:TEMP\low_budget_sim.gd, then
+##   tools\engine\Godot_v4.7.2-stable_win64_console.exe --headless --path . -s $env:TEMP\low_budget_sim.gd -- <out.json> [overrides.json] [budget=low|high|none]
+const ContentS := preload("res://src/core/content.gd")
+const SimS := preload("res://src/gameplay/battle_sim.gd")
+const BotS := preload("res://src/gameplay/bot_player.gd")
+
+func _run(sim, bot, attribute: bool) -> Dictionary:
+	var step := 1.0 / 60.0
+	var cause := {}
+	var prev: float = float(sim.player_base.hp)
+	var first_hit := -1.0
+	while not sim.ended and sim.t < 900.0:
+		if bot.skill > 0: bot.act(sim, step)
+		sim.step(step)
+		var hp: float = float(sim.player_base.hp)
+		if attribute and hp < prev:
+			if first_hit < 0.0: first_hit = sim.t
+			var near := []
+			var wsum := 0.0
+			for e in sim.enemies:
+				if e.dying: continue
+				if absf(e.x - float(sim.player_base.x)) <= float(e.def.range) + 40.0:
+					var w: float = float(e.def.atk) / maxf(0.1, float(e.def.atk_interval))
+					near.append([str(e.def.id), w]); wsum += w
+			var d := prev - hp
+			if near.is_empty():
+				cause["(projectile/other)"] = float(cause.get("(projectile/other)", 0.0)) + d
+			for n in near:
+				cause[n[0]] = float(cause.get(n[0], 0.0)) + d * n[1] / wsum
+		prev = hp
+	for k in cause: cause[k] = snappedf(cause[k], 1.0)
+	return {"cause": cause, "first_base_hit_t": snappedf(first_hit, 0.1)}
+
+func _initialize() -> void:
+	var args := OS.get_cmdline_user_args()
+	var out_path: String = args[0] if args.size() > 0 else "user://low_budget_sim.json"
+	var overrides := {}
+	if args.size() > 1 and args[1] != "-" and FileAccess.file_exists(args[1]):
+		overrides = JSON.parse_string(FileAccess.get_file_as_string(args[1]))
+	var budget: String = args[2] if args.size() > 2 else "low"
+	var budgets = JSON.parse_string(FileAccess.get_file_as_string("res://docs/design/balance/upgrade_budgets.json"))
+	var content = ContentS.new()
+	content.load_all("res://data")
+	if overrides.has("_units"):
+		for uid in overrides["_units"]:
+			for k in overrides["_units"][uid]: content.units[uid][k] = overrides["_units"][uid][k]
+	var rows := []
+	for rid in content.round_order:
+		if rid.begins_with("_"): continue
+		if overrides.has(rid):
+			for k in overrides[rid]: content.rounds[rid][k] = overrides[rid][k]
+		var lv: Dictionary = {} if budget == "none" else budgets[budget][rid]["levels"]
+		var s = SimS.new(); s.setup(content, rid, 11, lv)
+		var a := _run(s, BotS.new(2, 11), true)
+		var p = SimS.new(); p.setup(content, rid, 5)
+		_run(p, BotS.new(0, 5), false)
+		rows.append({"round": rid, "budget": budget, "levels": lv, "won": s.won, "t": snappedf(s.t, 0.1),
+			"pbase": snappedf(float(s.player_base.hp) / float(s.player_base.hp_max), 0.01),
+			"ebase": snappedf(float(s.enemy_base.hp) / float(s.enemy_base.hp_max), 0.01),
+			"workers": s.workers, "deployed": s.stats.deployed, "spawned": s.stats.enemy_spawned, "hero_deaths": s.stats.hero_deaths,
+			"cause": a.cause, "first_base_hit_t": a.first_base_hit_t,
+			"passive_t": snappedf(p.t, 0.1), "passive_destroyed": float(p.player_base.hp) <= 0.0 and p.t < 899.0})
+	var f := FileAccess.open(out_path, FileAccess.WRITE)
+	f.store_string(JSON.stringify({"warnings": Array(content.warnings), "rows": rows}, " ")); f.close()
+	print("LOW_BUDGET_DONE rows=", rows.size())
+	content.free()
+	quit(0)

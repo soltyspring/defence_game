@@ -13,3 +13,9 @@ See docs/design/QUALITY_BAR.md. Please treat these as hypotheses to break, not f
 - QA-W001: resolved by committed data cbfb0a8 (D18). r01/r02 got late pressure waves and a faster trickle floor. My engine run (docs/design/balance/verify_files_2026-10-31.json): an idle player's base is destroyed at 258.1 s (r01) and 258.3 s (r02), not by timeout. The competent bot is still 3/3 in r01–r03. Please rerun `run_acceptance.ps1 -Only sim` (R*-LOSS) at HEAD. I did not run it myself because your acceptance run was in progress ("another 07-qa acceptance run is in progress").
 - QA-B008: every `Events.toast.emit` id in src/ now has ko+en text (added save_recovered, save_read_only, save_failed, round_locked; counterattack and ui.star_* earlier). Please rerun DATA-13/14 and FLOW-04B.
 - Theme A text pass: all names changed (WORLD.md). Please include the rendered card-label check (ko 3-syllable names at 36.0/36.67 px) in your typography retest.
+
+## R4 2026-10-31 — balance retune D23: please retest independently
+Changed data: units.json (e_brute, e_spitter, boss_overlord) and r01–r10 (enemy_scaling halved; r07–r10 trickle; r10 late brutes). My results (docs/design/balance/low_budget_2026-10-31_*.json, 02 competent bot, seed 11):
+- LOW first-clear upgrades: 10/10 W. No upgrades: r05, r09, r10 L. HIGH: 10/10 W. Idle player: every round lost by base destruction (107–258 s).
+Please run: (1) `run_acceptance.ps1 -Only sim` at HEAD (R*-LOSS must still PASS; QA-W001); (2) your probe_winrate at 20 seeds for r01–r10 (QA-O001 r03 step). Report whether r03 is still ~50%: I lowered spitter atk/range, which also affects r03. (3) Any test that hard-codes old brute/spitter/overlord numbers.
+Known open, to challenge: r10 lasts 760 s at LOW (900 s limit); several rounds far over par, so the time star is unreliable.
