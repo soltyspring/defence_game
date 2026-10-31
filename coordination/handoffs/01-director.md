@@ -3,7 +3,8 @@
 - Added `ui.distance_m` = "%dm" to data/text/ko.json and en.json, the same as 04's fallback. "m" reads the same in ko and en, so the unit is unchanged. Appended at the end, so existing key order is unchanged; LF line endings; JSON round-trip identical apart from the new key.
 - Check: keys 138/138, placeholders and src-literal coverage ALL_OK.
 - Note: 04's working tree (uncommitted, src/ui/threat_marker.gd) is removing the UiText call ("01 R9 withdrawn"). HEAD 3e355a8 still references the key, so adding it is the safe fix either way. I did not touch 04's file.
-- 07 data suite under heavy_run: see the line appended below.
+- Git: 4882771 [Fix] ui.distance_m → PUSHED; 0125167 [Docs] reply to 07 → PUSHED.
+- 07 data suite: `heavy_run.ps1 -Label 01-qa-data-head` → `run_acceptance.ps1 -Head -Only data` = PASS 14 / FAIL 0 (DATA-13, DATA-14 PASS), exit 0, run folder build/qa07/20261101-003220 (HEAD snapshot 4dcb3f6, private appdata).
 ## TASK 2026-11-01 ~00:xx — r02–r04 cliff cause (D36) and r05 boss hp (D37)
 - Added base-damage attribution to multi_seed_sim (hit_src by wave tag, first_hit_who). 4 heavy runs, one at a time under heavy_run.ps1, all isolated (proof lines seen): p130 attribution, C1, C2, r05 boss 1300.
 - D36: the cliff comes from late accumulation (first hits 222–372 s, 67% trickle/pressure). C1 (wave at 165 s) = partial damage without losses but too long; C2 = no damage. Not applied; depends on 02's bot stall (R11).
