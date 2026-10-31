@@ -105,6 +105,37 @@ $x = $r.summary.scenes | Where-Object { $_.id -eq 'r08_caps_zoom_off' }
 Check 'blank_screen_invalid' ($x.valid -eq $false -and $x.invalid_reason -match 'BLANK_SCREEN' -and $x.screen.unique_colors -le 2 -and $x.frames -gt 0) "reason=$($x.invalid_reason) colours=$($x.screen.unique_colors) std=$($x.screen.luma_std) frames=$($x.frames)"
 Check 'good_screen_stats' ($off.screen.unique_colors -gt 2 -and $off.screen.luma_std -ge 2 -and $off.blank_screen -eq $false) "colours=$($off.screen.unique_colors) std=$($off.screen.luma_std)"
 
+# ---- REAL Android formats replayed (emulator capture; EMULATOR format check only, not performance)
+$emuDir = Join-Path $real 'emu_formats'
+if (Test-Path (Join-Path $emuDir 'getprop.txt')) {
+    $env:REPLAY_DIR = $emuDir; $env:REPLAY_STATE = Join-Path $Work 'replay_state'
+    if (Test-Path $env:REPLAY_STATE) { Remove-Item $env:REPLAY_STATE -Recurse -Force }
+    $replay = Join-Path $real 'replay_adb.ps1'
+    $pkgR = (Get-Content (Join-Path $emuDir 'package.txt') -Raw).Trim()
+    $out = Join-Path $Work 'out_replay'
+    $prev = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
+    $log = & pwsh -NoProfile -File $Session -Adb $replay -OutRoot $out -TimeScale 0.005 -Interval 5 -Only r08_caps_zoom_off -NoInstall -AllowEmulator -AllowReleasePackage -Package $pkgR 2>&1 | Out-String
+    $code = $LASTEXITCODE; $ErrorActionPreference = $prev
+    $sj = Get-ChildItem -LiteralPath $out -Recurse -Filter 'summary.json' -ErrorAction SilentlyContinue | Select-Object -Last 1
+    $s = if ($sj) { Get-Content $sj.FullName -Raw | ConvertFrom-Json }
+    $x = if ($s) { $s.scenes | Select-Object -First 1 }
+    Check 'real_replay_runs' ($code -eq 0 -and $s -ne $null) "exit=$code"
+    if ($s) {
+        $dv = $s.device
+        Check 'real_getprop_wm_meminfo' ($dv.model -ne '' -and $dv.android -ne '' -and $dv.screen -match '^\d+x\d+$' -and $dv.canvas_scale -ge 1 -and $dv.memtotal_gib -gt 1) "model=$($dv.model) android=$($dv.android) screen=$($dv.screen) scale=$($dv.canvas_scale) mem=$($dv.memtotal_gib)"
+        Check 'real_battery' ($dv.battery_start.temp_c -ne $null -and $dv.battery_start.level -gt 0 -and $dv.battery_start.status -ne '') "temp=$($dv.battery_start.temp_c) level=$($dv.battery_start.level) ac=$($dv.battery_start.ac) usb=$($dv.battery_start.usb) current=$($dv.battery_start.current_ua)"
+        Check 'real_thermal' ($dv.thermal_start.status -ne $null) "status=$($dv.thermal_start.status) keys=$(($dv.thermal_start.PSObject.Properties.Name) -join ',')"
+        Check 'real_cold_start' ($x.cold_start_ms -gt 0) "$($x.cold_start_ms) ms"
+        Check 'real_meminfo_pss' ($x.pss_max_mb -gt 10 -and $x.app_running_samples -gt 0) "pss=$($x.pss_max_mb) MB gfx=$($x.graphics_max_mb) running=$($x.app_running_samples)/$($x.samples)"
+        Check 'real_cpu_top' ($x.cpu_pct_mean -ne $null) "cpu=$($x.cpu_pct_mean)"
+        Check 'real_surfaceflinger' ($x.layer -ne '' -and $x.frames -gt 10 -and $x.refresh_ms -gt 5 -and $x.frame_interval_p50_ms -gt 0) "layer='$($x.layer)' frames=$($x.frames) refresh=$($x.refresh_ms) p50=$($x.frame_interval_p50_ms)"
+        Check 'real_gfxinfo_framestats' ($x.hwui_frames -ne $null) "hwui_frames=$($x.hwui_frames) janky=$($x.hwui_janky_pct)"
+        Check 'real_screencap_stats' ($x.screen.unique_colors -ge 1 -and $x.blank_screen -ne $null) "colours=$($x.screen.unique_colors) std=$($x.screen.luma_std) blank=$($x.blank_screen)"
+        Check 'real_emulator_scene_invalid' ($x.valid -eq $false -and $x.invalid_reason -match 'ARGS_NOT_APPLIED') "reason=$($x.invalid_reason) gles_errors=$($x.gles_errors)"
+    }
+    Remove-Item env:REPLAY_DIR, env:REPLAY_STATE -ErrorAction SilentlyContinue
+} else { Write-Host '[device_selftest] SKIP real_replay (fixtures/android_real/emu_formats not captured yet)' }
+
 # ---- real adb path without a phone (no fake): must also stop with exit 2 when nothing is attached
 Write-Host "[device_selftest] $(if ($bad -eq 0) { 'ALL PASS' } else { "$bad FAILED" })"
 Remove-Item env:FAKE_ADB_MODE, env:FAKE_ADB_STATE -ErrorAction SilentlyContinue
