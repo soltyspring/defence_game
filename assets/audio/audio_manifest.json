@@ -1,7 +1,7 @@
 {
  "version": 1,
  "generator": "tools/audio/synth.py",
- "generator_version": 4,
+ "generator_version": 5,
  "technique": "deterministic numpy synthesis (oscillators/noise/envelopes/filters); no samples, no AI services",
  "license": "Original work created for this project by the 05-audio worker with tools/audio/synth.py. No third-party samples, loops, presets, downloaded audio or AI audio services were used, so no third-party licence or attribution applies. Rights belong to the project owner; the public licence (if any) is the project owner’s decision and has not been chosen.",
  "provenance": {
@@ -798,10 +798,10 @@
    "pitch": 0.0,
    "duck": -4,
    "faction": "bakery",
-   "desc": "brass-like rally horn",
+   "desc": "oven-door whoosh + troop cheer + bell accent (01 R1)",
    "provenance": {
     "recipes": [
-     "r_skill_rally"
+     "r36_skill_rally"
     ],
     "seeds": [
      1031
@@ -813,10 +813,10 @@
    "variants": [
     {
      "file": "skill_rally.wav",
-     "seconds": 0.85,
-     "bytes": 37528,
+     "seconds": 0.9,
+     "bytes": 39734,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -14.38
+     "rms_dbfs": -17.59
     }
    ]
   },

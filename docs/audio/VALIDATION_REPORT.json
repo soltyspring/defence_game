@@ -455,15 +455,15 @@
    "ch": 1,
    "bits": 16,
    "rate": 22050,
-   "seconds": 0.85,
+   "seconds": 0.9,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -14.38,
+   "rms_dbfs": -17.59,
    "clipped": 0,
-   "dc": -0.00035,
+   "dc": 0.0,
    "edge_first": 0.0,
    "edge_last": 0.0,
-   "hf300_share": 0.576,
-   "mix_level_db": -20.4
+   "hf300_share": 0.868,
+   "mix_level_db": -23.6
   },
   "skill_barrage.wav": {
    "cue": "skill_barrage",
@@ -687,9 +687,9 @@
   }
  },
  "budgets": {
-  "disk_bytes_total": 1564917,
+  "disk_bytes_total": 1567123,
   "disk_budget": 2500000,
-  "sfx_pcm_resident_bytes": 977472,
+  "sfx_pcm_resident_bytes": 979678,
   "sfx_pcm_budget": 2097152,
   "worst_case_sfx_sum_db": 25.1,
   "note": "worst case = every SFX/UI cue at max instances, peaks aligned; runtime voice caps (SFX pool 12, UI pool 3) plus Master limiter keep real output below this"

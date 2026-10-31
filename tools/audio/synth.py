@@ -35,7 +35,7 @@ SFX_SR = 22050          # mono 16-bit PCM; chip-style SFX do not need >11 kHz ba
 MUSIC_SR = 44100        # stereo, encoded to Ogg Vorbis (streamed, not decompressed into RAM)
 SFX_PEAK = 10 ** (-1.0 / 20)    # -1 dBFS sample peak ceiling
 MUSIC_PEAK = 10 ** (-3.0 / 20)  # -3 dBFS before lossy encode (leaves inter-sample/encoder headroom)
-GENERATOR_VERSION = 4
+GENERATOR_VERSION = 5
 
 # ----------------------------------------------------------------------------------------------
 # DSP primitives
@@ -804,6 +804,32 @@ def r34_skill_barrage(rng):
     return out
 
 
+# --- v3.6: 01 R1 "Rally = cheer plus an oven whoosh" ------------------------------------------------
+def voice_hey(rng, f0, dur=0.22):
+    """One synthetic 'hey!' shout: buzzy glottal source (saw with jitter) through two vowel formants that glide
+    from 'eh' (F1 530 / F2 1850 Hz) towards 'ay' (F2 2300 Hz). No samples, no speech data."""
+    n = n_samples(dur, SR)
+    f = f0 * ramp(1.0, 1.12, n, "lin") * (1 + 0.01 * rng.standard_normal(n).cumsum() / np.sqrt(n))
+    src = osc(f, n, SR, "saw")
+    f1 = bandpass(src, 430, 650, SR)
+    f2 = bandpass(src, ramp(1650, 2100, n), ramp(2050, 2600, n), SR)
+    return (f1 * 0.8 + f2 * 0.9) * env_adsr(n, SR, 0.015, 0.05, 0.7, 0.09)
+
+
+def r36_skill_rally(rng):
+    """Rally: an oven-door WHOOSH (warm air swell, band-passed noise rising 400 -> 2500 Hz) under a short troop
+    cheer: five 'hey!' voices with different pitches and start times, then a bright bell accent. 0.9 s."""
+    out = np.zeros(n_samples(0.9, SR))
+    n = n_samples(0.55, SR)
+    whoosh = lowpass(highpass(noise(n, rng), ramp(300, 1200, n), SR), ramp(900, 3000, n), SR)
+    place(out, whoosh * env_adsr(n, SR, 0.18, 0.1, 0.6, 0.25) * 0.9, 0)
+    for i, (t0, f0) in enumerate([(0.16, 165), (0.18, 220), (0.20, 196), (0.22, 247), (0.25, 147)]):
+        place(out, voice_hey(rng, f0 * rng.uniform(0.98, 1.02)) * (0.5 - 0.04 * i), n_samples(t0, SR))
+    place(out, bell(midi_hz(88), 0.4, 0.14) * 0.35, n_samples(0.42, SR))
+    place(out, thump(260, 160, 0.1, 0.03) * 0.3, n_samples(0.17, SR))
+    return out
+
+
 CUES = {
     # faction: bakery (player side), mold (enemy side), neutral (UI/flow). desc = sound design intent.
     "ui_tap":          dict(r=[r_ui_tap], bus="UI", vol_db=-8, max=2, gap=0.03, prio=6, pitch=0.03, faction="neutral", desc="short square tick"),
@@ -834,7 +860,7 @@ CUES = {
     "hero_death":      dict(r=[r_hero_death], bus="SFX", vol_db=-5, max=1, gap=1.0, prio=9, pitch=0.0, duck=-6, faction="bakery", desc="head baker falls: 4-note falling triangle line"),
     "hero_respawn":    dict(r=[r_hero_respawn], bus="SFX", vol_db=-8, max=1, gap=1.0, prio=8, pitch=0.0, faction="bakery", desc="rising sparkle arpeggio"),
     "skill_slam":      dict(r=[r_skill_slam], bus="SFX", vol_db=-4, max=1, gap=0.2, prio=9, pitch=0.0, duck=-4, faction="bakery", desc="rolling-pin ground pound"),
-    "skill_rally":     dict(r=[r_skill_rally], bus="SFX", vol_db=-6, max=1, gap=0.2, prio=9, pitch=0.0, duck=-4, faction="bakery", desc="brass-like rally horn"),
+    "skill_rally":     dict(r=[r36_skill_rally], bus="SFX", vol_db=-6, max=1, gap=0.2, prio=9, pitch=0.0, duck=-4, faction="bakery", desc="oven-door whoosh + troop cheer + bell accent (01 R1)"),
     "skill_barrage":   dict(r=[r34_skill_barrage], bus="SFX", vol_db=-5, max=1, gap=0.2, prio=9, pitch=0.0, duck=-5, faction="bakery", desc="crumb-shell volley: 5 oven-cannon launches, impacts rain from 0.8 s (01 R1)"),
     "skill_heal":      dict(r=[r_skill_heal], bus="SFX", vol_db=-7, max=1, gap=0.2, prio=9, pitch=0.0, duck=-3, faction="bakery", desc="warm sine arpeggio"),
     "skill_cast":      dict(r=[r_skill_cast], bus="SFX", vol_db=-7, max=1, gap=0.2, prio=8, pitch=0.0, duck=-3, faction="bakery", desc="rising cast"),
