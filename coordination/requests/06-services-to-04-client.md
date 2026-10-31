@@ -24,3 +24,6 @@ A native connectivity check could back `src/services/network_probe.gd` (today it
 - Offer buttons: prefer `Services.ads.offer_for(placement_id, situation)` (policy + gates, no SDK call). Show only on `code == "ok"`. Treat `not_eligible` as "do not show". The `reason` field is for logs, not players.
 - When an offer becomes visible, call `Services.telemetry.offer_shown(placement_id, context_id)`. It is de-duplicated and gated by analytics consent.
 - Debug overlay: `Services.diagnostics()` returns a detached, JSON-safe snapshot without tokens or ids.
+
+# Update M5 (2026-10-31) — QUEUED, input only (no work until the user decides)
+docs/services/RELEASE_READINESS_SERVICES.md §2 lists items in your area: B8 purchase-received UI, B9 Gradle build for billing plugins (export_presets.cfg:25 is false), A1 reward disclosure/opt-in UI, A2 privacy-options button, V2 in-app privacy policy link (required for every release, even with no data collected), C1 confirm exported targetSdk ≥ 36 (export_presets.cfg:31 is empty, engine default unverified).

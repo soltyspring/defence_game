@@ -1,5 +1,5 @@
 # 06-services handoff
-Updated: 2026-10-31 (M4 complete)
+Updated: 2026-10-31 (M5 complete; M4 blocker still open)
 Status: M4 COMPLETE. **BLOCKER: 02 S1/S2 unanswered → the game does not register `Services` and does not persist service state. There is NO game-integration evidence.** M3 evidence = real `src/core/save.gd` in isolation. No real ads, billing, consent SDK or remote analytics; everything runs in `disabled` mode (verified D1–D6 every gate run). No monetization decision; none invented.
 Session: same Kiro window, resumed after the 08:21–08:22 authExpiryRetry failure under the new login. Session ID not exposed to the agent. HISTORICAL QUOTA CHECKPOINT sections in coordinator-to-06-services.md are previous-account records; not acted on.
 
@@ -39,6 +39,16 @@ src/services/**, docs/services/**, tests/services/**, coordination/status/06-ser
 - M4 gate: 7fe59f926674961e1e7c872294ca6044009e04d0 `[Feat] 게임 Save 연동 게이트(차단 표시·실패 주입·프로세스 종료)와 보상 중복/유실 상태표, Services 자동 연결·재바인딩 추가` (6 files) → PUSHED origin/main (ls-remote = 7fe59f9…).
 - M4 docs/requests/handoff: 47c187bd2e39947a0584b893878dc3cb91e778eb `[Docs] 서비스 M4 연동 차단 요청·07 게이트 안내·아키텍처 문서와 상태 인수인계 갱신` (5 files) → PUSHED origin/main (ls-remote = 47c187b…).
 
+## M5 (2026-10-31): release readiness list + gap table (docs only, nothing installed)
+- `docs/services/RELEASE_READINESS_SERVICES.md`: 23 requirements (B1–B9 billing, A1–A6 ads/consent, V1–V5 privacy, C1–C3 platform/account), each with official URL and check date 2026-10-31, paraphrased. §2 gap table per ID with status MET(mock)/PARTIAL/MISSING/N/A-YET/UNVERIFIED, evidence file/test and owner.
+- Key facts found: Play Billing v7 deadline 2026-08-31 passed (v8 supported to 2027-08-31, latest 9.1.0 of 2026-06-18); acknowledge/consume within 3 days or auto-refund; server verification recommended (Purchases.products:get, purchaseToken as unique key); voided purchases via API (30 days) or RTDN; EEA/UK/CH ads need a certified TCF CMP; AD_ID permission for API 33+; Families rules if children/unknown age; Data safety form + privacy policy (Console AND in-app) required even with no data collected; new apps must target API 36 since 2026-08-31; personal accounts after 2023-11-13 need 12 testers × 14 days.
+- Not verified: Korean PIPA text (law.go.kr did not render; secondary source reports amendments effective 2026-09-11) → V5 marked for legal review. Merchant setup page not checked (C3 note). Godot billing plugin's bundled library version not listed on its README (B9).
+- Real gap found: AdMob rewarded policy requires delivering a promised reward on completion, but services drop a reward callback that arrives after the ad closed (R11). Routed to 01 as design decision DD1; code unchanged.
+- `docs/services/OPEN_DECISIONS.md`: user questions U1–U8 in order (01 asks one at a time) + 01 design decisions DD1–DD3.
+- `test_services_integration.gd` group `readiness_doc_sync` (75 checks): same IDs in §1/§2, https source + date per requirement, fixed status set, consecutive U-numbers. 3 doc mutations each caught (exit 1), restored.
+- Validation: runner OVERALL exit=2 (502/0, 130/0, 161/0, integration 146 passes / 0 failures / blockers I1–I4).
+- Commit: 56cd600e628f3acb092ba461c58b6ae80635db4e `[Docs] 광고·결제·개인정보 출시 요건 목록(공식 출처·확인일)과 코드 대조표, 사용자 결정 순서와 문서 동기화 검사 추가` (4 files) → PUSHED origin/main.
+- Requests: 01 M5 (decision queue U1–U8, DD1), 04 M5 (B8, B9, A1, A2, V2, C1 inputs). QUEUED.
 ## Next task (06)
 1. When 02 adds the autoload line: run `pwsh -File tests/services/run_services_suites.ps1`; require OVERALL exit 0 and every R/P row `binding=game`, then update SAVE_INTEGRATION_CONTRACT.md status and REWARD_STATE_TABLE.md "Game binding" column with the evidence.
 2. If the gate fails after integration: fix 06-side causes; route 02-side causes with the failing row ID.
