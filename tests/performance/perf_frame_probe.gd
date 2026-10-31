@@ -78,6 +78,7 @@ func _boot() -> void:
 	if ev:
 		if ev.has_signal("cmd_set_paused"): ev.cmd_set_paused.connect(_on_pause_signal.bind("cmd_set_paused"))
 		if ev.has_signal("battle_paused"): ev.battle_paused.connect(_on_pause_signal.bind("battle_paused"))
+		if ev.has_signal("wave_cleared"): ev.wave_cleared.connect(_on_wave_cleared)
 	_started = true
 
 func _mon() -> Dictionary:
@@ -100,6 +101,7 @@ func _process(delta: float) -> bool:
 	if uncapped and _frames == 30:
 		Engine.max_fps = 0
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+	_event_track(delta * 1000.0)
 	if app:
 		_sim_track(app)   # from frame 1 (incl. warm-up): a stall may start before measuring
 	if stress and app and app.battle and app.battle.sim:
@@ -238,6 +240,42 @@ var _prev_state := {}
 var _prev_sim_t := -1.0
 var _prev_sim = null
 
+## Event frames: frame times right after a battle starts (pool preallocation + scene setup land in the next frame's delta) and after
+## Events.wave_cleared (first-wave banner = cold Bold 24 glyphs unless pre-rendered, 04 H14). Each record keeps the median of the
+## 30 frames before the event as its baseline. In --autoplay the first battle starts during boot, so its numbers include startup.
+var event_frames := {"battle_start": [], "wave_cleared": []}
+var _recent := PackedFloat32Array()
+var _pending: Array = []
+
+func _on_wave_cleared(info) -> void:
+	_event_open("wave_cleared", {"index": int((info as Dictionary).get("index", 0)) if info is Dictionary else 0}, 4)
+
+func _event_open(kind: String, extra: Dictionary, frames: int) -> void:
+	var rec := {"kind": kind, "probe_t": snappedf(_t, 0.01), "baseline_median_ms": snappedf(_median_f(_recent), 0.001), "frames_ms": [], "left": frames}
+	rec.merge(extra)
+	_pending.append(rec)
+
+func _event_track(fd: float) -> void:
+	for rec in _pending.duplicate():
+		rec.frames_ms.append(snappedf(fd, 0.001))
+		rec.left -= 1
+		if rec.left <= 0:
+			_pending.erase(rec)
+			rec.erase("left")
+			var mx := 0.0
+			for x in rec.frames_ms: mx = maxf(mx, float(x))
+			rec.max_ms = mx
+			rec.spike_over_baseline_ms = snappedf(mx - float(rec.baseline_median_ms), 0.001)
+			if event_frames[rec.kind].size() < 10: event_frames[rec.kind].append(rec)
+	_recent.append(fd)
+	if _recent.size() > 30: _recent.remove_at(0)
+
+static func _median_f(a: PackedFloat32Array) -> float:
+	if a.is_empty(): return 0.0
+	var s := a.duplicate()
+	s.sort()
+	return s[s.size() / 2]
+
 func _on_pause_signal(p, which: String) -> void:
 	if sim_trace.pause_signals.size() >= 12: return
 	var st := []
@@ -256,6 +294,7 @@ func _sim_track(app) -> void:
 		_prev_sim = s
 		_prev_sim_t = s.t
 		_note("battle", "sim", "new sim t=%.2f" % s.t)
+		_event_open("battle_start", {"sim_t": snappedf(s.t, 0.01)}, 6)
 	var adv: float = s.t - _prev_sim_t
 	_prev_sim_t = s.t
 	var steps := int(roundf(adv / (1.0 / 60.0)))
@@ -286,7 +325,10 @@ func _sim_final(app) -> void:
 			"time_scale": b.get("time_scale"), "acc": b.get("_acc"), "players": s.players.size(), "enemies": s.enemies.size(),
 			"autoplay_bot": b.get("autoplay_bot") != null, "tree_paused": paused, "probe_t": snappedf(_t, 0.01)}
 	var expect := int(roundf((_t) * 60.0))
-	sim_trace.verdict = "STEPPING" if sim_trace.steps_total > 0 and sim_trace.frames_running_no_advance < sim_trace.frames / 2 else "NOT_STEPPING"
+	# Verdict by sim time vs wall time (uncapped runs have many frames with 0 steps, so per-frame counts are not a criterion).
+	var ratio: float = float(sim_trace.steps_total) / maxf(1.0, float(expect))
+	sim_trace.steps_ratio_vs_60hz = snappedf(ratio, 0.001)
+	sim_trace.verdict = "STEPPING" if ratio >= 0.9 else "NOT_STEPPING"
 	sim_trace.steps_expected_at_60hz_approx = expect
 
 static func _dist(a: PackedFloat32Array) -> Dictionary:
@@ -329,6 +371,7 @@ func _finish(app) -> void:
 		"readability_load": readability,
 		"stress_reach": stress_reach if stress else {},
 		"sim_trace": sim_trace,
+		"event_frames": event_frames,
 		"ab": {"target": ab_target, "frame_ms_shown": _dist(frame_visible), "frame_ms_hidden": _dist(frame_hidden),
 			"process_worst_per_s_shown": _dist(proc_visible), "process_worst_per_s_hidden": _dist(proc_hidden),
 			"note": "difference = CPU cost of the target (view = battle_view._draw, 02; ui = HUD/menus, 04 or 02 fallback)"} if ab_view else {},

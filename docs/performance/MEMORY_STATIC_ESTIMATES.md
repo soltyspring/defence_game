@@ -50,3 +50,9 @@ is the battle-start hitch, not memory. A new `BattleSim` is created per battle; 
 objects retained after 5 battles, to be re-confirmed with preallocation).
 Measurement plan (when Godot is allowed): `Performance.OBJECT_COUNT` and `MEMORY_STATIC` before/after `BattleSim.setup()` in perf_bench
 (new case), and the battle-start frame time in the frame probe.
+
+## 3. Measured in C11 (18:17, quiet desktop, debug binary) — correction of §2
+`perf_bench.gd --only=setup`: one `BattleSim.new()+setup()` creates **219 objects** (64 + 48 + 24 pooled + 79 units + sim internals) and
+raises static memory by **≈ 478 KB** (r01 478 032 B, r10 476 788 B). Setup takes p50 0.81 ms (max 2.86 ms). The §2 estimate of
+0.16–0.21 MiB was **about 2.3× too low**: measured ≈ 0.46 MiB. It is still ≤ 0.2 % of the 250 MB low-tier PSS budget, and the setup time
+of < 3 ms is not a visible hitch on desktop. Unit pool = 79 (36 + 36 + 8 − the hero, which is created separately).

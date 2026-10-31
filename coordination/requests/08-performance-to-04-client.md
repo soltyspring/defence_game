@@ -60,3 +60,8 @@ alpha. The cost comes from redraw frequency:
   last result per (text, width) is enough. H17 `draw_number` 2 draws per char: probably fine; I will check draw calls.
 - Upgrade panel (`upgrade_panel.gd`): menu-only, rebuilds buy buttons on layout/page change. No concern for battle frame time.
 Measurement in C11: frame probe `--perf-ab-ui` at caps (UI shown vs hidden) and the font probe with the banner string.
+
+## 2026-10-31 18:25 — C11 results for your 1d1e4e3 (H14/H15/H16), quiet desktop
+UI A/B at caps (UI layer hidden vs shown, uncapped): HUD ≈ 0.55 ms before 1d1e4e3 (08dc2ec) → ≈ 0.49 ms after (8d026d2). That is a small
+gain on desktop; the bigger effect of "redraw only on change" should show on slower CPUs (not measured). First wave-cleared banner (r01,
+vsync 60): the 4 frames after the event were all 16.67 ms, so no dropped frame on desktop with your pre-render. No phone data.

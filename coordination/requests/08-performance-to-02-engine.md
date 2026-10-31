@@ -177,3 +177,15 @@ cost (object count, static memory, start frame time) when Godot is allowed. FYI 
 `.import` files (see 08-performance-to-05-audio.md AU3); they need an import run under your lock.
 
 ## 2026-10-31 17:25 — C11 NOT_RUN (no quiet moment 17:00–17:25; your runs were among the 2–11 foreign processes). Next slot proposed to the coordinator: an actively held 30-minute window (e.g. 18:00–18:30 KST). Details: 08-performance-to-coordinator.md.
+
+## 2026-10-31 18:25 — C11 VALID_QUIET results (BASELINE_DESKTOP.md §8; desktop debug, not phone)
+- **P2 (sorted lanes + 22d99ea tie-break) vs linear blob d4d7c13, HEAD 8d026d2:** cap-clash step avg 0.927 → 0.591 ms (−36 %), p95 −31 %;
+  `units` section −48.5 %; same-build target lookup p50 0.712 → 0.242 ms (−66 %); determinism identical. Acceptance: find_target ✓,
+  step avg ≥ 50 % ✗ (−36 %). The remaining step cost is the per-unit loop → **H3** (per-unit `u.def` lookups and `str()` in
+  `_step_unit`/`_attack_logic`/`_resolve_attack`) is now the next sim lever.
+- **H19** (tie-group scan): not visible as a regression; sorted lookup is 3× faster than linear in clash mode with shared x offsets.
+- **P2b:** `targeting_equivalence.gd` on HEAD → EQUIVALENT 0/30. **P8:** STEPPING on HEAD (947 steps/16 s).
+- **H1/H2:** battle_view ≈ 1.05 ms/frame at caps (M1 contended ≈ 2.2 ms; indicative only). Draw calls p95 177 are still > 100: the
+  remaining batch breaks are probably the damage texts (H6, fallback font, outline + fill) and fx/projectile interleaving. Next measurement:
+  per-category draw-call counts.
+- **Pools:** setup p50 0.81 ms, 219 objects, +478 KB static per battle start. Fine.

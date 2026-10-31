@@ -1,5 +1,6 @@
 # 08-performance status
-Updated: 2026-10-31 17:35 +09:00
+Updated: 2026-10-31 18:26 +09:00
+M13: C11 VALID_QUIET 18:00-18:23 (all steps CLEAN): P2 step avg -36% (find_target -66%), STEPPING, EQUIVALENT, view 1.05 ms, draw calls p95 177, HUD 0.49 ms, setup 0.81 ms/+478 KB. Desktop only.
 M12: AU3 resolved (43/43 imports); range gate PASS to cc5dbb8 (menu exactly at cap after 19245a5, A8 to 03); C11 18:00-18:30 runner + setup/banner measurements prepared.
 M11: C11 17:00-17:25 NOT_RUN (8/10/8/2/11/6 foreign Godot processes; nothing touched); next: actively held 30-min slot proposed (e.g. 18:00-18:30).
 M10: f0646dd audio gate PASS; 9 WAVs lack .import (3 cues silent in exports, AU3/Q8-2); pool prealloc ~0.16-0.21 MiB; C11 attempt 17:00-17:25 with -RequireQuiet.

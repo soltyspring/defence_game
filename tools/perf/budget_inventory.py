@@ -211,7 +211,9 @@ def residency(manifest: dict, pages: list[dict], needs: dict, units: dict) -> di
         miss = [s for s in n["anim_sets"] if s not in aset_page]
         if miss:
             missing_art[rid] = miss
-    menu = sorted(always)
+    # Menu screens: always pages + pages with load_policy "menu" (e.g. per-language title logos). Conservative: all menu pages are
+    # counted together even if the UI loads only the current locale's logo (gate must never undercount; see RETHEME_BUDGET 17:57).
+    menu = sorted(set(always) | {p["id"] for p in pages if p.get("load_policy") == "menu"})
     return {"engine_model": "roster (battle.gd uses Content.round_enemy_roster)" if engine_uses_roster else "all enemy anim sets",
             "menu_pages": menu, "menu_gpu_bytes": sum(by_id.get(p, {}).get("gpu_bytes", 0) for p in menu),
             "rounds": rows, "anim_sets_without_art": missing_art}

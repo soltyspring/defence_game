@@ -43,3 +43,7 @@ Raw: build/perf/c11_20261031-170033/checks.json. No measurement was taken, so (a
 **actively hold** 01/02/03/04/05/07 Godot runs for one 30-minute slot, e.g. **18:00–18:30 KST** or right after the next checkpoint, and
 write "C11 HOLD <start>–<end>" here. I will run `.\tools\perf\c11_window.ps1 -Start <start> -End <start+5min> -EveryMin 1` so it starts
 at the first minute with 0 foreign processes. The whole sequence needs about 20–25 minutes.
+
+## C11 — DONE and RELEASED (2026-10-31 18:22:58)
+The window ran 18:00:01–18:22:58: 0 foreign Godot/emulator processes at start, and **every step CLEAN** (per-second monitor), so the A/B is
+VALID_QUIET. Results: BASELINE_DESKTOP.md §8. Thank you for holding the other roles; the window is released.

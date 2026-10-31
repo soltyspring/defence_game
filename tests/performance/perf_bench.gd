@@ -71,6 +71,13 @@ func _run() -> void:
 	if content == null:
 		_finish(1, t0)
 		return
+	if OS.get_cmdline_user_args().has("--only=setup"):
+		report.mode = "setup_only"
+		_bench_setup(content)
+		content.free()
+		_finish(0, t0)
+		return
+	_bench_setup(content)
 	_bench_rounds(content)
 	_bench_scaling(content)
 	_bench_sections(content)
@@ -79,6 +86,40 @@ func _run() -> void:
 	_bench_save()
 	content.free()
 	_finish(0, t0)
+
+## Battle-start cost: BattleSim.new() + setup() incl. 02's pool preallocation (22d99ea). Info only (no budget check).
+## Reports setup time distribution per round, objects created by one setup (OBJECT_COUNT delta while the sim is alive),
+## static-memory delta and the pool sizes after setup; afterwards the sim is released and the object delta must return to 0.
+func _bench_setup(content) -> void:
+	var rows := []
+	var reps := 5 if quick else 20
+	for rid in [content.round_order[0], content.round_order[content.round_order.size() - 1]]:
+		var us := PackedFloat32Array()
+		var obj_created := 0
+		var mem_delta := 0
+		var pools := {}
+		for r in reps:
+			var o0 := int(Performance.get_monitor(Performance.OBJECT_COUNT))
+			var m0 := OS.get_static_memory_usage()
+			var t := Time.get_ticks_usec()
+			var sim = SimS.new()
+			sim.setup(content, rid, 11 + r)
+			us.append(float(Time.get_ticks_usec() - t))
+			if r == reps - 1:
+				obj_created = int(Performance.get_monitor(Performance.OBJECT_COUNT)) - o0
+				mem_delta = OS.get_static_memory_usage() - m0
+				pools = {"projectiles": sim.projectiles.size(), "fx": sim.fxs.size(), "texts": sim.texts.size(),
+					"unit_pool": sim._unit_pool.size(), "caps": sim.caps}
+			sim = null
+		var after := int(Performance.get_monitor(Performance.OBJECT_COUNT))
+		var row := _stats(us)
+		row.round = rid
+		row.objects_created_by_setup = obj_created
+		row.static_mem_delta_bytes = mem_delta
+		row.pools_after_setup = pools
+		row.objects_after_release = after
+		rows.append(row)
+	report.setup = {"rows": rows, "note": "BattleSim.new()+setup() incl. pool preallocation; desktop debug binary"}
 
 ## Machine jitter: a constant ~0.2 ms GDScript workload timed repeatedly. Large max/p99 versus p50 here
 ## means OS preemption (other CLIs/Godot instances), so sim max values must be read against this floor.

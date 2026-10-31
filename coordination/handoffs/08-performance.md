@@ -1,4 +1,20 @@
 # 08-performance handoff
+## M13 — C11 quiet window done (2026-10-31 18:00–18:23 KST)
+- First **VALID_QUIET** desktop run. 0 foreign processes at 18:00:01, and all 10 steps were CLEAN under the per-second monitor. Results:
+  BASELINE_DESKTOP.md §8.
+- Key numbers: P2 A/B cap step avg −36 % (find_target −66 %; the ≥ 50 % step target is not met → H3 next); STEPPING on HEAD; view ≈ 1.05
+  ms/frame, draw calls p95 177 (> 100 target); HUD 0.55 → 0.49 ms with 04 1d1e4e3; setup 0.81 ms / 219 objects / +478 KB (the earlier
+  static estimate was 2.3× low); first banner: no dropped frame at vsync 60 on desktop; equivalence EQUIVALENT 0/30.
+- Fixes in 08 code: probe verdict now uses sim time vs wall time (the uncapped runs were falsely NOT_STEPPING); parse-checked on the
+  snapshot (18:23). Gate: menu residency now counts `load_policy: "menu"` pages (title logos), so the menu reads 0.50 MiB (conservative,
+  both languages) instead of 0.25. Self-test 13/13.
+- Pre-window static check: 03 11ceacb/e3c4621 + 15851e2/7b93d1f → PASS (title split into ko 512×64 / en 256×128, group "title", released
+  outside menus).
+- The window was released to the coordinator at 18:22:58. Owners informed: 02 (P2/H3/H19/P8/P2b/H1-H2/pools), 04 (HUD/banner), 07 (Q8-1
+  closable).
+- Next: H3 re-measure after 02 changes it (`ab_retest -RequireQuiet` needs another quiet slot); per-category draw-call breakdown; asset gate
+  on new commits; still no phone.
+- M13 commit: recorded later, only after `git show` verification.
 ## M12 — pre-C11 prep and static re-check (2026-10-31 17:35 +09:00)
 - Coordinator decision: **C11 = 18:00–18:30 KST** (other roles: no new Godot/editor/emulator starts). Correction received: the AU3
   import defect is fixed on origin/main. Verified: 43 `.wav` = 43 `.wav.import` (cc5dbb8, 05). AU3 marked RESOLVED, 07 Q8-2 updated.

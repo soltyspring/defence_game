@@ -213,3 +213,31 @@ Raw: build/perf/c11_20261031-170033/checks.json. No measurement was taken, so (a
 **actively hold** 01/02/03/04/05/07 Godot runs for one 30-minute slot, e.g. **18:00–18:30 KST** or right after the next checkpoint, and
 write "C11 HOLD <start>–<end>" here. I will run `.\tools\perf\c11_window.ps1 -Start <start> -End <start+5min> -EveryMin 1` so it starts
 at the first minute with 0 foreign processes. The whole sequence needs about 20–25 minutes.
+
+### 8. C11 quiet-window results — 2026-10-31 18:00–18:23 KST, **VALID_QUIET** (first uncontended desktop run)
+Runner `tools/perf/c11_window.ps1 -Start 18:00 -End 18:10 -EveryMin 1 -Deadline 18:30`: the 18:00:01 check found **0 foreign processes**.
+Every step was polled once per second and stayed **CLEAN**: 0 foreign Godot/emulator processes in any step, including all 6 A/B runs.
+Code: HEAD 8d026d2 (git-archive snapshot + import cache copy). Machine: i7-9700K / RTX 2070 SUPER, Godot 4.7.2 **debug** editor binary.
+Evidence class: **DESKTOP_PROXY (quiet)**, still not phone evidence. Raw: build/perf/c11_20261031-175743/ and build/perf/ab_20261031-180018/.
+| Step | Result |
+|---|---|
+| (0) parse check of the 08 probes in the snapshot | exit 0 / 0 |
+| (a) A/B 02 target search: base = linear blob d4d7c13, fix = HEAD 8d026d2, 3 interleaved pairs, same seeds | cap clash 36/side step avg **0.927 → 0.591 ms (−36.2 %)**, p50 −37.4 %, p95 −31.2 %; `units` section −48.5 %; mirrored step −40.1 %; same-build target lookup for 72 units p50 **0.712 → 0.242 ms (−66 %)**, 72/72 same targets; `sort_lanes` 0.06 ms; bot rounds avg 0.124 → 0.151 ms (+21 %, few units, sort overhead); deterministic outcomes identical (won + end time per seed) |
+| (b) STEPPING re-check on HEAD (r06, stress) | STEPPING, 947 steps / 16 s (ratio 0.986), 0 paused frames, 36/36 held; frame p50 16.67 ms (vsync), draw calls p50/p95 175/182 |
+| (c) view A/B (uncapped, stress, 36/36) | frame avg view shown **2.05 ms** vs hidden **1.00 ms** → battle_view ≈ 1.05 ms per frame; draw calls p95 177 |
+| (c) UI A/B HEAD (after 04 1d1e4e3) | shown 2.005 vs hidden 1.511 ms → HUD ≈ **0.49 ms** |
+| (c2) UI A/B before 1d1e4e3 (08dc2ec) | shown 2.24 vs hidden 1.693 ms → HUD ≈ **0.55 ms** (so 1d1e4e3 saved ≈ 0.06 ms; small) |
+| (d) battle start: `BattleSim.new()+setup()` ×20 (r01, r10) | setup p50 **0.81 / 0.74 ms**, max 1.09 / 2.86 ms; 219 objects created per setup (pools 64/48/24 + 79 units + sim); static memory **+478 KB** |
+| (e) first wave-cleared banner (r01 plain autoplay, vsync 60) | wave_cleared at 38.0 s; the 4 following frames were all 16.67 ms (paced), so **no dropped frame on this desktop**. 04's 1d1e4e3 pre-renders banner/toast text; any remaining cost fits inside one 60 Hz frame here |
+| (f) targeting_equivalence on HEAD | **EQUIVALENT**, diverged 0/30, winner changed 0 |
+Judgements (desktop quiet, provisional targets):
+- 02 P2 acceptance "≥ 50 % lower cap-clash step avg **and** find_target": find_target −66 % → met. Step avg −36 % → **not met**. The rest of
+  the unit loop (H3 per-unit def lookups etc.) now dominates.
+- H1/H2 effect: battle_view ≈ 1.05 ms/frame at caps, compared with ≈ 2.2 ms in M1. **M1 was contended, so the delta is indicative only.**
+  Draw calls p95 177 are still above the provisional low-tier target of 100. H2 has not closed that gap.
+- Probe correction: the frame probe's first verdict said NOT_STEPPING for the uncapped runs because it counted frames without a step (at
+  ~500 fps most frames have none). Recomputed from sim time vs wall time, all 5 runs are STEPPING (ratio 0.986–0.996). The verdict formula is
+  fixed (steps vs 60 Hz × elapsed ≥ 0.9) and parse-checked.
+- The battle_start event frames in (b)–(e) are not interpretable: `--autoplay` starts the battle during boot, so the 30-frame baseline is boot
+  time (~145 ms). The battle-start cost comes from (d).
+- Still not measured: phone anything; release-template timings; CPU of 12 audio voices.

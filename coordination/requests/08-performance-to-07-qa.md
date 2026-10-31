@@ -31,3 +31,7 @@ silent in an APK/PCK. Please add an exported-build check: `Audio.load_errors` em
 
 ## Q8-2 update (17:32): the missing `.wav.import` files were committed in cc5dbb8 (43/43). The static defect is resolved; an exported-build
 check that `Audio.load_errors` is empty is still useful, but it is no longer expected to fail for this reason.
+
+## 2026-10-31 18:25 — C11 facts useful for acceptance (quiet desktop)
+HEAD 8d026d2: sim STEPPING (r06 stress, 947 steps/16 s), targeting EQUIVALENT 0/30 vs the linear reference. The working-tree stall from
+16:10 is not present in the committed code. Q8-1 can be closed for 8d026d2.
