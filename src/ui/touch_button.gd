@@ -12,24 +12,61 @@ signal tapped
 enum Mode { TAP, HOLD }
 
 @export var mode: Mode = Mode.TAP
-@export var text := ""
-@export var sub_text := ""        # small line under the main text (cost etc.)
-@export var glyph: StringName = &""
-@export var font_size := 12
-var icon: Texture2D
-var fill := Color(0.22, 0.25, 0.33, 0.95)
+# Every visual property redraws ONLY when its value changes (08 H15/H18: the HUD assigns all of them
+# 10×/s; unconditional queue_redraw() re-ran text measuring on ~12 buttons per snapshot).
+@export var text := "":
+	set(v):
+		if v != text:
+			text = v
+			queue_redraw()
+@export var sub_text := "":       # small line under the main text (cost etc.)
+	set(v):
+		if v != sub_text:
+			sub_text = v
+			queue_redraw()
+@export var glyph: StringName = &"":
+	set(v):
+		if v != glyph:
+			glyph = v
+			queue_redraw()
+@export var font_size := 12:
+	set(v):
+		if v != font_size:
+			font_size = v
+			queue_redraw()
+var icon: Texture2D:
+	set(v):
+		if v != icon:
+			icon = v
+			queue_redraw()
+var fill := Color(0.22, 0.25, 0.33, 0.95):
+	set(v):
+		if v != fill:
+			fill = v
+			queue_redraw()
 var disabled := false:
 	set(v):
-		disabled = v
-		queue_redraw()
+		if v != disabled:
+			disabled = v
+			queue_redraw()
 ## 0..1 remaining cooldown (draws a top-down shade); 0 = ready.
 var cooldown_ratio := 0.0:
 	set(v):
 		if not is_equal_approx(v, cooldown_ratio):
+			var before := ceilf((size.y - 4) * clampf(cooldown_ratio, 0, 1))
 			cooldown_ratio = v
+			if ceilf((size.y - 4) * clampf(v, 0, 1)) != before:
+				queue_redraw()   # only when the shade's whole-pixel height changes
+var badge := "":                   # small corner label e.g. "x3", "MAX"
+	set(v):
+		if v != badge:
+			badge = v
 			queue_redraw()
-var badge := ""                    # small corner label e.g. "x3", "MAX"
-var dim_reason := ""               # shown centred when disabled (e.g. "가득")
+var dim_reason := "":              # shown centred when disabled (e.g. "가득")
+	set(v):
+		if v != dim_reason:
+			dim_reason = v
+			queue_redraw()
 var is_pressed := false
 ## Optional extra drawing on top of the button: func(button: Control) -> void
 var overlay: Callable

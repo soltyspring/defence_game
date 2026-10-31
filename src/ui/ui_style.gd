@@ -145,6 +145,7 @@ static func reset_fonts() -> void:
 ## Strings: the active locale's data/text table + UI fallbacks + digits. Returns elapsed msec.
 static var _prewarmed := false
 static var prewarm_ms := 0.0
+static var prewarm_strings: PackedStringArray = []   # QA: exact strings shaped at boot
 static func prewarm_fonts() -> float:
 	if _prewarmed:
 		return 0.0
@@ -177,6 +178,22 @@ static func prewarm_fonts() -> float:
 		for sz in pair[1]:
 			var s: String = ascii if pair[0] == &"num" else all
 			f.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz)   # shapes + rasterises into the cache
+	# 08 R7/H14: also shape the exact strings that appear first mid-battle / on result, at the font and
+	# size they are drawn with (banner Bold 24, toasts & hints 12, result title Bold 36, star rows 12).
+	prewarm_strings.clear()
+	var exact := []
+	for k in ["banner.first_wave_cleared", "ui.boss", "ui.victory", "ui.defeat"]:
+		exact.append([k, &"bold", 24 if k.begins_with("banner") or k == "ui.boss" else 36])
+	for k in ["toast.not_enough_gold", "toast.army_full", "toast.on_cooldown", "toast.not_enough_mana", "toast.hero_dead",
+			"toast.wave_incoming", "toast.boss_incoming", "toast.worker_max", "toast.counterattack", "ui.star_win",
+			"ui.star_base_hp", "ui.star_time", "ui.first_clear", "tut_boss_warning", "ui.upgrade_ok", "ui.upgrade_not_enough"]:
+		exact.append([k, &"ui", 12])
+	for e in exact:
+		var s: String = UiTextS.t(e[0])
+		if s == e[0]:
+			continue
+		font(e[1]).get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, e[2])
+		prewarm_strings.append("%s@%s%d" % [e[0], e[1], e[2]])
 	prewarm_ms = (Time.get_ticks_usec() - t0) / 1000.0
 	return prewarm_ms
 
@@ -189,10 +206,18 @@ static func fit_text(text: String, max_w: float, size: int, kind: StringName = &
 	var f := font(kind)
 	if f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x <= max_w:
 		return [text, size]
-	var t := text
-	while t.length() > 1 and f.get_string_size(t + "…", HORIZONTAL_ALIGNMENT_LEFT, -1, size).x > max_w:
-		t = t.substr(0, t.length() - 1)
-	return [t + "…", size]
+	# binary search on the prefix length (08 H16: the old shrink-by-one loop was O(n²) measuring)
+	var lo := 1
+	var hi := text.length() - 1
+	var best := 1
+	while lo <= hi:
+		var mid := (lo + hi) / 2
+		if f.get_string_size(text.substr(0, mid) + "…", HORIZONTAL_ALIGNMENT_LEFT, -1, size).x <= max_w:
+			best = mid
+			lo = mid + 1
+		else:
+			hi = mid - 1
+	return [text.substr(0, best) + "…", size]
 
 static func text_width(text: String, size: int, kind: StringName = &"ui") -> float:
 	return font(kind).get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
@@ -363,6 +388,17 @@ static func draw_bar(ci: CanvasItem, r: Rect2, ratio: float, fill: Color) -> voi
 	if w > 0:
 		ci.draw_rect(Rect2(inner.position, Vector2(w, inner.size.y)), fill)
 		ci.draw_rect(Rect2(inner.position, Vector2(w, 1)), fill.lightened(0.35))
+
+## Enemy-side fill pattern (07 QA-B013): dark 1 px vertical stripes every 3 px over the fill, so the
+## enemy bar differs from the solid player bar by a LUMINANCE PATTERN that survives protan/deutan
+## simulation (green and red both turn olive there). Whole pixels only.
+static func draw_hatch(ci: CanvasItem, r: Rect2, base: Color) -> void:
+	ci.draw_rect(r, base)
+	var dark := base.darkened(0.55)
+	var x := r.position.x + 1.0
+	while x < r.end.x:
+		ci.draw_rect(Rect2(x, r.position.y, 1, r.size.y), dark)
+		x += 3.0
 
 static func draw_star(ci: CanvasItem, c: Vector2, r: float, on: bool) -> void:
 	var pts := _star_points(c, r)

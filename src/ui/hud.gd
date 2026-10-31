@@ -195,8 +195,7 @@ func _on_battle_started(p_info: Dictionary) -> void:
 
 func _on_snapshot(s: Dictionary) -> void:
 	snap = s
-	top.snap = s
-	top.queue_redraw()
+	top.snap = s            # hud_top redraws itself only if a drawn value changed
 	var gold := float(s.get("gold", 0))
 	var army: Dictionary = s.get("army", {})
 	var army_full := int(army.get("player", 0)) >= int(army.get("cap", 1 << 30))
@@ -211,7 +210,6 @@ func _on_snapshot(s: Dictionary) -> void:
 		b.cooldown_ratio = float(c.get("cd", 0.0)) / total if total > 0 else 0.0
 		b.disabled = not bool(c.get("affordable", true)) or army_full
 		b.dim_reason = UiText.t("ui.full") if army_full else ""
-		b.queue_redraw()
 	var skills_by := {}
 	for c in s.get("skills", []):
 		skills_by[str(c.get("id", ""))] = c
@@ -222,14 +220,12 @@ func _on_snapshot(s: Dictionary) -> void:
 		var total := float(c.get("cd_total", 0.0))
 		b.cooldown_ratio = float(c.get("cd", 0.0)) / total if total > 0 else 0.0
 		b.disabled = not bool(c.get("ready", true))
-		b.queue_redraw()
 	var workers := int(s.get("workers", 0))
 	var wmax := int(s.get("workers_max", 0))
 	var at_max := wmax > 0 and workers >= wmax
 	btn_worker.sub_text = UiText.t("ui.max") if at_max else str(int(s.get("worker_cost", 0)))
 	btn_worker.badge = "%d" % workers
 	btn_worker.disabled = at_max or gold < float(s.get("worker_cost", 0))
-	btn_worker.queue_redraw()
 	var hero: Dictionary = s.get("hero", {})
 	var dead := not bool(hero.get("alive", true))
 	for b in [btn_left, btn_right]:
@@ -237,7 +233,6 @@ func _on_snapshot(s: Dictionary) -> void:
 		b.badge = ""
 	btn_left.text = str(ceili(float(hero.get("respawn", 0)))) if dead else ""   # big fixed-cell countdown
 	btn_left.font_size = UiStyle.FONT_S
-	btn_left.queue_redraw(); btn_right.queue_redraw()
 	var wave: Dictionary = s.get("wave", {})
 	var wi := int(wave.get("index", 0))
 	if wi != _last_wave and _last_wave != -1 and wi > 0:

@@ -62,6 +62,7 @@ func _run() -> void:
 	await test_wave_cleared_banner()
 	await test_qaj3_and_upgrades()
 	await test_title_block()
+	await test_redraw_and_bar_pattern()
 	for s in SECTIONS:
 		check(done.has(s), "section %s ran to completion (aborted by a script error otherwise)" % s)
 	print("[test_ui] passed=%d failed=%d" % [passes, failures.size()])
@@ -71,7 +72,7 @@ func _run() -> void:
 		print("  - " + f)
 	quit(1 if failures.size() > 0 else 0)
 
-const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard", "back_once", "wave_cleared", "upgrades", "title"]
+const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard", "back_once", "wave_cleared", "upgrades", "title", "redraw_pattern"]
 var done := {}
 
 func test_compile_all(dir_path: String) -> void:
@@ -550,6 +551,10 @@ func test_korean_text_fit() -> void:
 	UiStyle.reset_fonts()
 	var ms: float = UiStyle.prewarm_fonts()
 	check(ms > 0.0 and UiStyle.prewarm_fonts() == 0.0, "font prewarm runs once (%.1f ms) and is idempotent" % ms)
+	check("banner.first_wave_cleared@bold24" in UiStyle.prewarm_strings and "toast.boss_incoming@ui12" in UiStyle.prewarm_strings and "ui.victory@bold36" in UiStyle.prewarm_strings, "prewarm covers banner Bold 24, toasts 12, result Bold 36 (08 H14): %s" % [UiStyle.prewarm_strings])
+	var long_t := "가나다라마바사아자차카타파하 가나다라마바사아자차카타파하"
+	var e1: Array = UiStyle.fit_text(long_t, 100.0, 12)
+	check(str(e1[0]).ends_with("…") and UiStyle.text_width(e1[0], 12) <= 100.0 and UiStyle.text_width(long_t.substr(0, str(e1[0]).length()) + "…", 12) > 100.0, "binary-search ellipsis is maximal and fits (%s)" % e1[0])
 	report["prewarm_ms_headless"] = ms
 	var wrap12: Dictionary = UiStyle.fit_lines("Break the Mold Wall", 97.0, 12, 2)
 	check(wrap12.size == 12 and wrap12.lines.size() == 2 and not wrap12.truncated, "2-line tile prefers wrap at 12 px over the 10 px cut (%s)" % [wrap12])
@@ -963,3 +968,47 @@ func test_title_block() -> void:
 	SafeArea.override_safe_rect = Rect2(0, 0, 640, 360)
 	await _frames()
 	done["title"] = true
+
+# ---------------------------------------------------------------- 08 H15 redraw-on-change + 07 QA-B013
+
+func test_redraw_and_bar_pattern() -> void:
+	var hud: Control = _mount("res://scenes/ui/hud.tscn")
+	bus.battle_started.emit(MockEngine.sample_info(5, 3))
+	var mock := MockEngine.new()
+	root.add_child(mock)
+	mock.attach(bus)
+	mock.start("r05", MockEngine.sample_info(5, 3))
+	mock.running = false
+	await _frames(3)
+	var n := [0]
+	var watch: Array = [hud.top, hud.btn_worker, hud.btn_left, hud.btn_right] + hud.card_buttons + hud.skill_buttons
+	for w in watch:
+		w.draw.connect(func(): n[0] += 1)
+	var s: Dictionary = mock.snapshot()
+	bus.hud_snapshot.emit(s.duplicate(true))
+	await _frames(2)
+	n[0] = 0
+	for i in 10:
+		bus.hud_snapshot.emit(s.duplicate(true))
+		await _frames(1)
+	check(n[0] == 0, "10 identical snapshots → 0 redraws (was 12 per snapshot; got %d)" % n[0])
+	var s2 := s.duplicate(true)
+	s2.gold = int(s.gold) + 7
+	bus.hud_snapshot.emit(s2)
+	await _frames(1)
+	check(n[0] >= 1, "gold change → top bar redraws (%d)" % n[0])
+	n[0] = 0
+	var s3 := s2.duplicate(true)
+	s3.workers = int(s2.workers) + 1
+	bus.hud_snapshot.emit(s3)
+	await _frames(1)
+	check(n[0] >= 1, "worker count change → worker button redraws (%d)" % n[0])
+	# QA-B013: enemy fill is patterned; the luminance of its stripes differs from the solid player fill
+	var Ls := func(c: Color) -> float: return 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b
+	var base: Color = UiStyle_.C_HP_ENEMY
+	var dark: Color = base.darkened(0.55)
+	check(absf(Ls.call(base) - Ls.call(dark)) >= 0.15, "enemy bar stripe luminance step %.2f ≥ 0.15 (pattern visible without hue)" % absf(Ls.call(base) - Ls.call(dark)))
+	mock.queue_free()
+	hud.queue_free()
+	await _frames()
+	done["redraw_pattern"] = true

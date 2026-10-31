@@ -5,9 +5,41 @@ extends Control
 const UiStyle := preload("res://src/ui/ui_style.gd")
 const UiText := preload("res://src/ui/ui_text.gd")
 
-var snap: Dictionary = {}
-var layout: Dictionary = {}
-var round_title := ""
+var snap: Dictionary = {}:
+	set(v):
+		snap = v
+		var sig := _signature(v)
+		if sig != _last_sig:
+			_last_sig = sig
+			queue_redraw()      # only when something this panel draws actually changed (08 H15)
+var _last_sig := ""
+var layout: Dictionary = {}:
+	set(v):
+		layout = v
+		_last_sig = ""
+		queue_redraw()
+var round_title := "":
+	set(v):
+		if v != round_title:
+			round_title = v
+			_last_sig = ""
+			queue_redraw()
+
+## Exactly the values drawn, quantised like the drawing (whole-pixel bar widths, ceil seconds).
+func _signature(s: Dictionary) -> String:
+	var pb: Dictionary = s.get("player_base", {})
+	var eb: Dictionary = s.get("enemy_base", {})
+	var w: Dictionary = s.get("wave", {})
+	var a: Dictionary = s.get("army", {})
+	var b: Dictionary = s.get("boss", {})
+	var mm := maxf(1.0, float(s.get("mana_max", 100)))
+	return "%d|%d|%.1f|%d|%d/%d|%d/%d|%d/%d/%d/%s|%d/%d|%s/%d/%d" % [
+		int(s.get("gold", 0)), int(s.get("gold_max", 0)), float(s.get("income", 0)),
+		int(float(s.get("mana", 0)) / mm * 512.0),
+		ceili(float(pb.get("hp", 0))), int(pb.get("hp_max", 0)), ceili(float(eb.get("hp", 0))), int(eb.get("hp_max", 0)),
+		int(w.get("index", 0)), int(w.get("total", 0)), ceili(float(w.get("next_in", 0))), str(w.get("boss", false)),
+		int(a.get("player", 0)), int(a.get("cap", 0)),
+		str(b.get("alive", false)), ceili(float(b.get("hp", 0))), int(b.get("hp_max", 0))]
 var gold_slot_debug := Rect2()    # QA: fixed gold number slot
 var base_labels := {"player": "", "enemy": ""}        # QA: drawn HP text
 var base_label_rects := {"player": Rect2(), "enemy": Rect2()}
@@ -94,7 +126,8 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 	var inner := er_rect.grow(-1)
 	draw_rect(inner, Color(0.05, 0.05, 0.08))
 	var w := floorf(inner.size.x * clampf(er, 0, 1))
-	draw_rect(Rect2(inner.end.x - w, inner.position.y, w, inner.size.y), UiStyle.C_HP_ENEMY)
+	if w > 0:
+		UiStyle.draw_hatch(self, Rect2(inner.end.x - w, inner.position.y, w, inner.size.y), UiStyle.C_HP_ENEMY)   # pattern: not hue alone (QA-B013)
 	UiStyle.draw_number(self, "VS", Vector2(r.position.x + half + 9, y + h / 2), UiStyle.NUM_S, UiStyle.C_TEXT_DIM, 0)
 	# exact HP numbers (09 R09-04-5): fixed-cell Galmuri9 10 inside each bar, at the OUTER end so they
 	# never touch "VS"; "hp/max" when it fits, else "hp". Bar is 14 high → 12 px inner > 10 px glyph line.
@@ -135,4 +168,9 @@ func _draw_boss(br: Rect2) -> void:
 	draw_rect(Rect2(br.position, Vector2(br.size.x, br.size.y)), UiStyle.C_TOAST_BG)
 	UiStyle.draw_text_left(self, fit[0], Vector2(br.position.x + 3, br.get_center().y), UiStyle.FONT_S, UiStyle.C_HP_ENEMY)
 	var bar := Rect2(br.position.x + name_w + 2, br.position.y + 3, br.size.x - name_w - 4, br.size.y - 6)
-	UiStyle.draw_bar(self, bar, float(b.get("hp", 0)) / maxf(1.0, float(b.get("hp_max", 1))), UiStyle.C_HP_ENEMY)
+	draw_rect(bar, UiStyle.C_EDGE)
+	var bi := bar.grow(-1)
+	draw_rect(bi, Color(0.05, 0.05, 0.08))
+	var bw := floorf(bi.size.x * clampf(float(b.get("hp", 0)) / maxf(1.0, float(b.get("hp_max", 1))), 0.0, 1.0))
+	if bw > 0:
+		UiStyle.draw_hatch(self, Rect2(bi.position, Vector2(bw, bi.size.y)), UiStyle.C_HP_ENEMY)   # enemy pattern (QA-B013)
