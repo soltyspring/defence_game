@@ -23,7 +23,7 @@ Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, tr
    - Selftest PASS including a new shared-gap assertion. No own Godot left running.
 4. Music variation: still only a question candidate (not implemented).
 Not verified: human listening, Android device.
-Git v3.4 (SHAs copied from push output): 65502e837a2ab0ef5b1106640b52cbee41e153e4 [Feat] PUSHED; 48fa978f836b511aff220a6427464fc1ab46d705 [Test] PUSHED; 6ec962a1c0ebe7d93e2d2c4cf2f0d4d61d1458ef [Docs] PUSHED.
+Git v3.4 (SHAs copied from push output): 65502e837a2ab0ef5b1106640b52cbee41e153e4 [Feat] PUSHED; 48fa978f836b511aff220a6427464fc1ab46d705 [Test] PUSHED; 0726ef9325eb9e1ecbd7095cd15f057be46fd3a9 [Docs] PUSHED; 38a66904b42ab81bb28f18f196387038a5e22730 [Docs] PUSHED (it recorded a WRONG, pre-written SHA 6ec962a; corrected by the next commit).
 ## v3.3 verification (after 18:30)
 1. The WIP from the quiet window (bridge ranged/siege pitch offsets + runner target_side gate) was verified with `pwsh tools/audio/run_godot_checks.ps1 -Integration -BattleSeconds 80 -Record -RecordSeconds 60` (sandbox from HEAD b4b33a7) → **GODOT AUDIO CHECKS PASS**:
    - hits: hit_mold 23, hit_bread 32, fallback hit_melee 0, hit_arrow 0
