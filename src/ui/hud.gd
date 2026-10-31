@@ -6,7 +6,11 @@ extends "res://src/ui/ui_screen.gd"
 
 const HudLayout := preload("res://src/ui/hud_layout.gd")
 const TOAST_SECONDS := 1.6
-const BANNER_SECONDS := 1.8          # 09 R09-04-7: ≤ 2 s
+const BANNER_SECONDS := 1.8
+## Engine toast key → tutorial step that explains the same event (show only the hint; 15:59 theme-A capture
+## showed the boss warning three times: hint + toast + banner).
+const TOAST_SAME_AS_HINT := {"boss_incoming": "tut_boss_warning"}
+var _toast_key := ""          # 09 R09-04-7: ≤ 2 s
 
 var info: Dictionary = {}
 var snap: Dictionary = {}
@@ -250,7 +254,12 @@ func _on_toast(key: String, _args: Dictionary) -> void:
 		unknown_toasts.append(key)
 		push_warning("[HUD] toast key without text: %s (add toast.%s to data/text)" % [key, key])
 		return
-	show_toast(UiText.t(k))
+	# same EVENT already explained by the tutorial hint (theme texts differ, so compare keys, not text)
+	if TOAST_SAME_AS_HINT.get(key, "") == tutorial_key and tutorial_key != "":
+		toasts_suppressed += 1
+	else:
+		show_toast(UiText.t(k))
+		_toast_key = key
 	if key == "boss_incoming":
 		show_banner(UiText.t("ui.boss"))
 
@@ -270,7 +279,7 @@ func _on_tutorial_step(key: String) -> void:
 		return
 	tutorial_label.text = UiText.t(key, key)
 	tutorial_label.modulate.a = 1.0
-	if toast_label.modulate.a > 0.0 and toast_label.text == tutorial_label.text:
+	if toast_label.modulate.a > 0.0 and (toast_label.text == tutorial_label.text or TOAST_SAME_AS_HINT.get(_toast_key, "") == key):
 		_toast_left = 0.0                 # toast arrived first with the same sentence → keep only the hint
 		toast_label.modulate.a = 0.0
 		toasts_suppressed += 1

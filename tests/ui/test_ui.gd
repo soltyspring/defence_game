@@ -299,6 +299,17 @@ func test_hud_state() -> void:
 	hud.show_toast(UiText.t("tut_boss_warning"))
 	bus.tutorial_step.emit("tut_boss_warning")
 	check(hud.toast_label.modulate.a == 0.0 and hud.tutorial_label.modulate.a > 0.9, "toast-then-hint order also shows the sentence once")
+	# theme texts differ (hint "곰팡이 군단의 우두머리…" vs toast "강력한 보스…"): key-based, both orders
+	bus.tutorial_step.emit("")
+	bus.tutorial_step.emit("tut_boss_warning")
+	hud.toast_label.modulate.a = 0.0
+	bus.toast.emit("boss_incoming", {})
+	check(hud.toast_label.modulate.a == 0.0 and hud.banner_label.modulate.a > 0.9, "hint shown → boss_incoming toast suppressed, banner kept")
+	bus.tutorial_step.emit("")
+	bus.toast.emit("boss_incoming", {})
+	bus.tutorial_step.emit("tut_boss_warning")
+	check(hud.toast_label.modulate.a == 0.0 and hud.tutorial_label.modulate.a > 0.9, "toast first, then hint → toast hidden")
+	bus.tutorial_step.emit("")
 	bus.tutorial_step.emit("")
 	check(hud.tutorial_label.modulate.a == 0.0, "tutorial hint hidden on empty key")
 	# boss bar from HudSnapshot.boss (stop mock ticks so its own snapshots do not overwrite ours)
