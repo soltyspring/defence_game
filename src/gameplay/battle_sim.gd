@@ -82,6 +82,10 @@ class FText:
 	var t := 0.0
 	var text := ""
 	var kind := &"dmg"
+	var uid := 0          # target unit uid for merging repeated hits (0 = not mergeable)
+	var value := 0        # numeric value of a merged damage text
+	var anchor_set := ""  # target anim_set: renderer places the text above that sprite's frame + hp bar
+	var rise := 0.0       # px risen since spawn (renderer offset)
 
 # ---- config ----
 var content            # content.gd instance (autoload or standalone)
@@ -92,6 +96,7 @@ var caps := {}            # filled from Content.caps() in setup (single source: 
 var upgrades: Dictionary = {}     # upgrade_id -> level (from Save)
 var L := 1200.0
 var rng := RandomNumberGenerator.new()
+var _text_rng := RandomNumberGenerator.new()
 var gold_max := 999.0
 var workers_max := 8
 var enemy_hp_mult := 1.0
@@ -167,6 +172,7 @@ func setup(p_content, round_id: String, seed_value: int = 1, p_upgrades: Diction
 	econ = content.economy
 	hero_def = content.heroes.get(str(round_def.hero), content.heroes.values()[0])
 	rng.seed = seed_value
+	_text_rng.seed = seed_value ^ 0x5eed
 	L = float(round_def.lane_length)
 	_read_caps()
 	_prealloc_pools()
@@ -673,7 +679,8 @@ func _resolve_attack(u: Unit) -> void:
 			if float(u.def.get("splash", 0.0)) > 0.0:
 				_area_damage_side(-u.side, tgt.x, float(u.def.get("splash", 0.0)), atk, kb, tgt)
 			_fx("hit_spark", tgt.x, -12.0, 0.25, 0.0)
-			_cue(&"hit", "melee", {"kind": "melee", "x": tgt.x})
+			var ts := "player" if tgt.side == SIDE_PLAYER else "enemy"
+			_cue(&"hit", "melee:" + ts, {"kind": "melee", "x": tgt.x, "target_side": ts})
 		elif u.w_base:
 			_damage_base(-u.side, atk * _struct_mult(u))
 			if float(u.def.get("splash", 0.0)) > 0.0:
@@ -791,7 +798,7 @@ func _damage(target: Unit, amount: float, kb: float) -> void:
 	target.flash = 0.12
 	if kb > 0.0 and not target.is_boss:
 		target.kb = maxf(target.kb, kb)
-	_text(target.x, -28.0, str(int(dmg)), &"dmg")
+	_text(target.x, -28.0, str(int(dmg)), &"dmg", target.uid, int(dmg), target.anim_set)
 	if target.hp <= 0.0:
 		_kill(target, true)
 
@@ -914,7 +921,9 @@ func _step_projectiles(dt: float) -> void:
 				elif hit_any:
 					_fx("hit_spark", p.x1, -12.0, 0.2, 0.0)
 				if hit_any and p.kind != "tower_bolt":
-					_cue(&"hit", "siege" if not p.homing else "ranged", {"kind": "siege" if not p.homing else "ranged", "x": p.x1})
+					var pk := "siege" if not p.homing else "ranged"
+					var pts := "enemy" if p.side == SIDE_PLAYER else "player"   # victim side
+					_cue(&"hit", pk + ":" + pts, {"kind": pk, "x": p.x1, "target_side": pts})
 	stats.max_projectiles = maxi(stats.max_projectiles, n)
 
 func _step_fx(dt: float) -> void:
@@ -926,6 +935,7 @@ func _step_fx(dt: float) -> void:
 		if tx.alive:
 			tx.t += dt
 			tx.y -= 18.0 * dt
+			tx.rise += 18.0 * dt
 			if tx.t >= 0.8: tx.alive = false
 
 func _reap() -> void:
@@ -1030,7 +1040,15 @@ func _fx(kind: String, x: float, y: float, dur: float, radius: float) -> void:
 	f.dur = dur
 	f.radius = radius
 
-func _text(x: float, y: float, s: String, kind: StringName) -> void:
+func _text(x: float, y: float, s: String, kind: StringName, uid := 0, value := 0, anchor_set := "") -> void:
+	# QA-B012: repeated hits on the same target within 0.35 s merge into one rising number.
+	if uid != 0:
+		for e in texts:
+			if e.alive and e.uid == uid and e.kind == kind and e.t < 0.35:
+				e.value += value
+				e.text = str(e.value)
+				e.t = 0.0
+				return
 	var tx: FText = null
 	for e in texts:
 		if not e.alive:
@@ -1041,11 +1059,15 @@ func _text(x: float, y: float, s: String, kind: StringName) -> void:
 		tx = FText.new()
 		texts.append(tx)
 	tx.alive = true
-	tx.x = x + rng.randf_range(-4.0, 4.0)
+	tx.x = x + _text_rng.randf_range(-4.0, 4.0)   # separate RNG: visual-only, must not shift gameplay randomness
 	tx.y = y
 	tx.t = 0.0
 	tx.text = s
 	tx.kind = kind
+	tx.uid = uid
+	tx.value = value
+	tx.anchor_set = anchor_set
+	tx.rise = 0.0
 
 # ================= outputs =================
 func current_wave() -> Dictionary:

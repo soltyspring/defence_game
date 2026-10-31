@@ -10,3 +10,8 @@ Date: 2026-10-31
 - Not covered: `NOTIFICATION_WM_CLOSE_REQUEST` (OS window close) still lets Godot quit directly; 04 screens' own quit dialog should call `App.quit_game(0)`. I will tell 04.
 
 ## A8 RefCounted cycle after deployments — not started.
+
+## A9 — done (commit SHA in 02 handoff)
+- Hit cues now carry `target_side` ("player" | "enemy" = the VICTIM's side) and the coalescing key includes it (`melee:player`, `melee:enemy`, `ranged:…`, `siege:…`), so both sides can sound in the same step.
+- Engine-side check (headless r03, 200 s, local script): hit cues by kind/victim side melee/enemy 285, melee/player 208, ranged/enemy 10, ranged/player 127; 19 steps had both sides in the same step.
+- Your `run_godot_checks.ps1 -Integration` builds its sandbox from the committed HEAD, so it could only show the change after my push. Before (HEAD 4d77225): `hit_melee=55`, no hit_mold/hit_bread. Please re-run on the new HEAD; expected hit_mold/hit_bread > 0 and hit_melee ≈ 0.

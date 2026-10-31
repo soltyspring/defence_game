@@ -15,6 +15,9 @@ var view_bottom := 360.0
 var show_damage := true
 var _order: Array = []
 var _font: Font
+var _num_font: Font
+const NUM_FONT_PATH := "res://assets/fonts/Galmuri9.ttf"   # 03 bundled OFL font; digits only, native 10 px
+const NUM_PX := 10
 var _biome_layers: Array = []
 var _biome_atlas := ""
 
@@ -39,6 +42,11 @@ func setup(p_sim, p_atlas, p_ground_y: float, p_biome: String) -> void:
 	ground_y = p_ground_y
 	biome = p_biome
 	_font = ThemeDB.fallback_font
+	_num_font = _font
+	if ResourceLoader.exists(NUM_FONT_PATH):
+		var nf = load(NUM_FONT_PATH)
+		if nf is Font:
+			_num_font = nf
 	_biome_layers = []
 	if atlas and atlas.manifest.get("biomes", {}).has(biome):
 		var b: Dictionary = atlas.manifest.biomes[biome]
@@ -69,6 +77,7 @@ func _draw() -> void:
 	for f in sim.fxs:
 		if f.alive: _draw_fx(f)
 	if show_damage:
+		_placed_text.clear()
 		for tx in sim.texts:
 			if tx.alive: _draw_text(tx)
 	if not _biome_layers.is_empty() and atlas:
@@ -410,6 +419,30 @@ func _draw_text(tx) -> void:
 		&"gold": c = Color(1.0, 0.85, 0.3, a)
 		&"heal": c = Color(0.4, 1.0, 0.5, a)
 		&"crit": c = Color(1.0, 0.4, 0.3, a)
-	var p := Vector2(roundf(tx.x - 6.0), roundf(ground_y + tx.y))
-	draw_string_outline(_font, p, tx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, 2, Color(0, 0, 0, a))
-	draw_string(_font, p, tx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, c)
+	# QA-B012: bundled Galmuri9 numerals at their native 10 px grid, 1 px shadow (no outline pass); centred on x.
+	var w := _num_font.get_string_size(tx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, NUM_PX).x
+	var by: float = ground_y + tx.y
+	if tx.anchor_set != "" and atlas:
+		# above the target's frame and its hp bar (bar sits at frame top - 3; lane jitter up to ±6)
+		var rec = atlas.anim_rec(tx.anchor_set, "idle")
+		if rec == null: rec = atlas.anim_rec(tx.anchor_set, "walk")
+		var h: float = rec.rects[0].size.y if rec != null else 24.0
+		by = ground_y - h - 12.0 - tx.rise
+	var p := Vector2(roundf(tx.x - w * 0.5), roundf(by))
+	# vertical stagger: never overlap a number already drawn this frame
+	var r := Rect2(p.x - 1.0, p.y - NUM_PX, w + 2.0, NUM_PX + 1.0)
+	var guard := 0
+	while guard < 6 and _overlaps_placed(r):
+		r.position.y -= NUM_PX
+		guard += 1
+	_placed_text.append(r)
+	p.y = r.position.y + NUM_PX
+	draw_string(_num_font, p + Vector2(1, 1), tx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, NUM_PX, Color(0, 0, 0, a))
+	draw_string(_num_font, p, tx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, NUM_PX, c)
+
+var _placed_text: Array[Rect2] = []
+
+func _overlaps_placed(r: Rect2) -> bool:
+	for q in _placed_text:
+		if q.intersects(r): return true
+	return false

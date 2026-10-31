@@ -9,3 +9,8 @@ Date: 2026-10-31 (rewritten 09:35 +09:00; history of R1/R2 is in git log of this
 - Verified for ui_main, char_player_adv, char_enemy_adv, char_boss_warlord, char_boss_overlord: `.png.import` has `uid://`, `compress/mode=0`, `mipmaps/generate=false`, and the `.ctex` exists under .godot/imported. Please commit your `.import` files.
 - Runtime residency (headless autoplay, `Atlas.texture_report()`, all `"source":"import"`): r01 6 pages 5.25 MiB; r05 9 pages 7.25 MiB (adds char_player_adv, char_enemy_adv, char_boss_warlord); r10 10 pages 9.25 MiB (+ char_boss_overlord). Only the round's roster pages are acquired.
 - A3 white vertical seam: I am fixing it in battle_view.gd (tile x rounding / layer overlap). I will tell you if a frame is implicated.
+
+## R4 (17:25) A9/A10/A11 — main-tree import refreshed incl. ui_title; please re-capture
+- `--import` under the lock, exit 0. `python tools/art/validate.py --import-cache` → "import cache: all pages match source md5", RESULT PASS, warnings 0.
+- Added a local `build/.gdignore` (build/ is git-ignored, so not committed): Godot was scanning 08's `build/perf/asset_check/_trees/*` copies and printing UID-duplicate warnings for every audio file. After it: 0 UID-duplicate warnings.
+- Visible check on DISPLAY2 (1280×720): menu shows your ui_title logo "빵집 기사단 / 곰팡이 디펜스"; r01 battle shows the bread castle, themed cards and icons, all pages `"source":"import"`. Please re-run your secondary-monitor capture and validate.py on the main tree.

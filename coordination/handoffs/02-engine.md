@@ -1,29 +1,27 @@
 # 02-engine handoff
-Updated: 2026-10-31 16:40 +09:00
+Updated: 2026-10-31 17:25 +09:00
 Status: ACTIVE. Model claude-opus-5.5, trust-all. Session ID: not exposed inside the session.
 HISTORICAL QUOTA CHECKPOINT notices are previous-account records; not acted on.
 
 ## User decisions
-Q1 theme DECIDED: A "빵집 기사단 vs 곰팡이 군단". Data IDs unchanged (D1). User: fix all reported defects.
+Q1 theme DECIDED: A "빵집 기사단 vs 곰팡이 군단" (data IDs unchanged, D1). Q3 work title DECIDED (16:19 KST, verbatim "빵집 기사단: 곰팡이 디펜스"); final store name after KIPRIS; ui.title text is 01's. Q2 monetization ON HOLD: no paid currency, no ad-reward paths (02 adds none).
 
-## This step (review priorities 1–2)
-1. `Events.wave_cleared({index,t})` (01 D21): units carry `wave_tag`; per scripted wave pending/alive counters; fired in `_kill` when a wave has fully spawned and all its units are dead; not after a loss. `pressure: true` waves spawn but are excluded from waves_total, HudSnapshot.wave, wave/boss toasts and wave_cleared.
-   - r01 headless, competent bot, seeds 11/22/33: once each, at 56.65 s; order 1→2→3 (56.65 / 79.55 / 104.38 s); HUD total 3 (was 6).
-   - **25–45 s NOT met with current data**: probe `src/core/diag/wave_clear_probe.gd` → hero push 34.67 s, hero home 59.4 s. Lane/speed cause; options sent to 01 (R4) and 09. Selftest keeps this as a BALANCE flag, not a failure.
-2. 08 P7: H1 cached `Atlas.AnimRec` (no per-sprite dicts), H2 bars second pass + negative-width flip (flip_check.gd: 0 px diff) + const colours, H5 cached sort Callable, item 8 caps single source `Content.caps()`, item 9 preallocated pools; also P2b tie-break (08 equivalence `EQUIVALENT 0/30`, was 29/30 diverged, 3 winner changes).
+## This round (Codex priorities 1–4)
+1. `Save.buy_upgrade(id, to_level)` (4d77225, PUSHED): one atomic save for coins + level, rollback on failure, codes ok/already_applied/max_level/not_enough_coins/unknown_id/locked/invalid_level/save_failed/save_uncertain/read_only; `Events.cmd_buy_upgrade` → `Events.upgrade_result`. 10's probe_upgrade_transaction.gd unmodified: C1–C5 all PASS. selftest `buy_upgrade` PASS. 04 told (R7).
+2. 03 A11: main-tree `--import` under lock; validate.py --import-cache PASS (all pages match). Local `build/.gdignore` stops the UID-duplicate scan of 08's build/perf trees (0 warnings now). DISPLAY2 captures: title logo + themed battle art. 03 and 07 asked to re-capture.
+3. 05 A9: `target_side` in hit cues + coalescing key. 05's runner uses committed HEAD, so its counts need a re-run after this push.
+4. QA-B012: Galmuri9 10 px numbers, same-target merge (0.35 s), placement above frame + bar, vertical stagger; separate text RNG (bot outcomes shifted once; noted to 07).
 
-## Validation (16:20–16:38, workspace)
-selftest PASS (69 scripts; find_target identity 2217/0; waves_and_pools; pools_grew=false); 08 targeting_equivalence EQUIVALENT 0/30; tests/ui 3329/0; UI integration 35/35; services suites PASS_INTEGRATED; 07 `run_acceptance.ps1 -Only save,faults,flow` PASS 63 / FAIL 0; visible r03 capture on DISPLAY2 correct (enemies mirrored, bars on top, HUD 웨이브 2/4). `-Head` run: after the push, see the bottom.
+## Validation (17:00–17:22, workspace)
+selftest PASS (70 scripts); targeting_equivalence EQUIVALENT 0/30; tests/ui 3354/0; UI integration 44/0; services PASS_INTEGRATED (earlier this round); 07 acceptance save+faults+flow 63/0; audio checks PASS (sandbox from HEAD); 07 capture_crowd on r08: overlaps {}.
+Balance (selftest, current data): competent bot 3/3 r01–r04, r08, r09; 0/3 r05, r06, r07, r10. r01 wave_cleared(1) still outside D16 25–45 s (01 decision pending).
 
-## Commits this session (all PUSHED)
-… 08ef082, d660311, 141d226, 2884231, abb1809 (Services), f92f9f6 (A7 quit). This step: bottom.
+## Commits this session (PUSHED)
+… 22d99ea, 6e93682, 4d77225 (buy_upgrade). This step: bottom.
 
 ## Next steps
-1. 07 `-Head -Only save,faults,flow` on this commit (result appended below if run).
-2. 08 remaining: H3 def fields, H4 _cue alloc, H6 damage-text font, H8 shake coalescing, H9–H13; P4 save latency log; P5 perf hooks.
-3. 01 decisions: D16 window vs r01 data, D7 caps text, passive loss time, 900 s timer rule.
-4. 05 A8 RefCounted cycle; OS window close → quit_game. 04 R12-2 release preset, R12-3 emulator slot. 07 QA-R1 hooks.
-
-## Commit for this step
-22d99eada99a82c840e8e90f675507f704193d19 [Feat] 웨이브 격파 이벤트와 압박 웨이브 제외, 렌더 할당·배치 개선과 타깃 동률 규칙 통일 — PUSHED origin/main.
-07 `-Head -Only save,faults,flow` (16:38, out build/qa07/20261031-163837): PASS 63 / FAIL 0 / BLOCKED 0 on HEAD snapshot e551fa9, which contains 22d99ea (ancestor; snapshot events.gd has wave_cleared). The runner logged a Remove-Item lock error on %TEMP%\qa07_head (07's own run held it), so the snapshot was probably reused rather than rebuilt; it was at e551fa9 either way.
+1. 07 -Head re-verify (save,faults,flow + B012 crowd) on this HEAD; 05 re-run -Integration; 03 re-capture.
+2. 10 R5 content_version + clamp/refund (probe part D).
+3. 08 remaining H3/H4/H6-done/H8/H9–H13; P4 save latency log; P5 perf hooks.
+4. QA-J1 camera framing (enemies off-screen r01 t=7..32) — coordinate with 04.
+5. 01 decisions: D16 window vs r01 data, D7 caps text, 900 s timer rule. 05 A8 cycle; OS close → quit_game; 04 R12 release preset.
