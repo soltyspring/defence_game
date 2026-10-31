@@ -1,7 +1,7 @@
 {
  "version": 1,
  "generator": "tools/audio/synth.py",
- "generator_version": 6,
+ "generator_version": 7,
  "technique": "deterministic numpy synthesis (oscillators/noise/envelopes/filters); no samples, no AI services",
  "license": "Original work created for this project by the 05-audio worker with tools/audio/synth.py. No third-party samples, loops, presets, downloaded audio or AI audio services were used, so no third-party licence or attribution applies. Rights belong to the project owner; the public licence (if any) is the project owner’s decision and has not been chosen.",
  "provenance": {
@@ -210,6 +210,7 @@
    ]
   },
   "gold_tick": {
+   "vol_jitter": 1.0,
    "bus": "SFX",
    "vol_db": -13,
    "max": 2,
@@ -223,12 +224,14 @@
      "r_gold_tick"
     ],
     "seeds": [
-     1007
+     1007,
+     70060
     ]
    },
    "duck": 0,
    "files": [
-    "res://assets/audio/sfx/gold_tick.wav"
+    "res://assets/audio/sfx/gold_tick.wav",
+    "res://assets/audio/sfx/gold_tick_v2.wav"
    ],
    "variants": [
     {
@@ -237,6 +240,13 @@
      "bytes": 4896,
      "peak_dbfs": -1.0,
      "rms_dbfs": -12.17
+    },
+    {
+     "file": "gold_tick_v2.wav",
+     "seconds": 0.12,
+     "bytes": 5336,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -11.99
     }
    ]
   },
@@ -449,6 +459,7 @@
    ]
   },
   "shoot_arrow": {
+   "vol_jitter": 1.0,
    "bus": "SFX",
    "vol_db": -12,
    "max": 2,
@@ -462,12 +473,14 @@
      "r_shoot_arrow"
     ],
     "seeds": [
-     1020
+     1020,
+     70110
     ]
    },
    "duck": 0,
    "files": [
-    "res://assets/audio/sfx/shoot_arrow.wav"
+    "res://assets/audio/sfx/shoot_arrow.wav",
+    "res://assets/audio/sfx/shoot_arrow_v2.wav"
    ],
    "variants": [
     {
@@ -476,6 +489,13 @@
      "bytes": 5336,
      "peak_dbfs": -1.0,
      "rms_dbfs": -14.73
+    },
+    {
+     "file": "shoot_arrow_v2.wav",
+     "seconds": 0.11,
+     "bytes": 4896,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -14.09
     }
    ]
   },
@@ -511,6 +531,7 @@
    ]
   },
   "shoot_spit": {
+   "vol_jitter": 1.0,
    "bus": "SFX",
    "vol_db": -11,
    "max": 2,
@@ -524,12 +545,16 @@
      "r3_shoot_spit"
     ],
     "seeds": [
-     1022
+     1022,
+     70130,
+     70131
     ]
    },
    "duck": 0,
    "files": [
-    "res://assets/audio/sfx/shoot_spit.wav"
+    "res://assets/audio/sfx/shoot_spit.wav",
+    "res://assets/audio/sfx/shoot_spit_v2.wav",
+    "res://assets/audio/sfx/shoot_spit_v3.wav"
    ],
    "variants": [
     {
@@ -538,6 +563,20 @@
      "bytes": 7982,
      "peak_dbfs": -1.0,
      "rms_dbfs": -14.17
+    },
+    {
+     "file": "shoot_spit_v2.wav",
+     "seconds": 0.18,
+     "bytes": 7982,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -13.67
+    },
+    {
+     "file": "shoot_spit_v3.wav",
+     "seconds": 0.18,
+     "bytes": 7982,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -14.29
     }
    ]
   },
@@ -670,6 +709,7 @@
    ]
   },
   "death_enemy": {
+   "vol_jitter": 1.0,
    "bus": "SFX",
    "vol_db": -11,
    "max": 2,
@@ -683,12 +723,14 @@
      "r3_death_enemy"
     ],
     "seeds": [
-     1027
+     1027,
+     70180
     ]
    },
    "duck": 0,
    "files": [
-    "res://assets/audio/sfx/death_enemy.wav"
+    "res://assets/audio/sfx/death_enemy.wav",
+    "res://assets/audio/sfx/death_enemy_v2.wav"
    ],
    "variants": [
     {
@@ -697,6 +739,13 @@
      "bytes": 18566,
      "peak_dbfs": -1.0,
      "rms_dbfs": -14.33
+    },
+    {
+     "file": "death_enemy_v2.wav",
+     "seconds": 0.42,
+     "bytes": 18566,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -13.92
     }
    ]
   },

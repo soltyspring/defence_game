@@ -270,6 +270,8 @@ func play(cue: StringName, params: Dictionary = {}) -> bool:
 		return false
 	var prio := int(c.get("prio", 1))
 	var vol := float(c.get("vol_db", 0.0)) + float(params.get("vol_db", 0.0))
+	var vj := float(c.get("vol_jitter", 0.0))   # v3.8: small random level change (dB) against identical repeats
+	if vj > 0.0: vol += _rng.randf_range(-vj, vj)
 	var sduck := 0.0
 	if bus == "SFX" and _clock < _sfxduck_until and prio < _sfxduck_below:
 		sduck = _sfxduck_db

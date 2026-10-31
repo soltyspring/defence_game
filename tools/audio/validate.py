@@ -5,6 +5,7 @@ Checks (all measured from the actual files, not from the generator's own claims)
   * SFX WAV format (PCM s16le, mono, 22050 Hz), duration bounds, sample peak <= -0.9 dBFS,
     zero full-scale samples (no clipping), DC offset, click-free first/last samples, not silent,
     share of energy above 300 Hz (phone loudspeakers reproduce little below ~300 Hz).
+  * Extra anti-repetition variants (<cue>_vN.wav): phone-band level within +-0.5 dB of the cue's first file.
   * Music OGG decoded with ffmpeg: format, exact loop length vs manifest, decoded peak,
     loop seam jump vs the track's own 99.9th-percentile sample step, edge RMS continuity.
   * Budgets: disk bytes, SFX decoded-PCM resident bytes, worst-case simultaneous-voice sum.
@@ -16,6 +17,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import re
 import shutil
 import subprocess
 import sys
@@ -34,6 +36,19 @@ BUDGET_SFX_PCM_RESIDENT = 2 * 1024 * 1024
 MAX_SFX_SECONDS = 3.2
 MAX_POOL_SFX = 12
 MAX_POOL_UI = 3
+VARIANT_LEVEL_TOL_DB = 0.5   # v3.8: <cue>_vN.wav vs the cue's first file, phone-band loud-frame energy
+
+
+def phone_level_db(p: Path) -> float:
+    """Phone-band loudness of one SFX file, as tools/audio/phone_check.py hears it (300 Hz HP, K-weighting):
+    mean energy of the 50 ms frames within 15 dB of the loudest frame (the frames its SNR median uses)."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import phone_check as P   # scipy; only needed for files that have extra variants
+    x = P.read_wav(p)
+    fr = int(0.05 * P.SR)
+    k = P.k_weight(np.pad(P.phone(x), (0, fr)), P.SR) ** 2
+    e = np.array([k[i * fr:(i + 1) * fr].mean() for i in range(max(1, len(x) // fr))])
+    return float(10 * np.log10(e[e >= e.max() * 10 ** -1.5].mean()))
 
 
 def res_to_path(res: str) -> Path:
@@ -137,6 +152,18 @@ def main() -> int:
                 fails.append(f"{name}: only {r['hf300_share']:.0%} energy >= 300 Hz (weak on phone speakers)")
         if c["bus"] != "Music":
             worst_sum_lin += c["max"] * 10 ** (c["vol_db"] / 20)  # every cue at max instances, peak-aligned
+        # v3.8: extra anti-repetition variants (<cue>_vN.wav) must sound as loud on a phone as the cue's first file,
+        # otherwise the variant itself is more masked (death_enemy_v2 first version: -1.3 dB -> +5.4 masked points)
+        xv = [r for r in c["files"] if re.search(r"_v\d+$", res_to_path(r).stem)]
+        if xv and res_to_path(c["files"][0]).exists():
+            ref = phone_level_db(res_to_path(c["files"][0]))
+            for res in xv:
+                if not res_to_path(res).exists():
+                    continue
+                d = phone_level_db(res_to_path(res)) - ref
+                rep["sfx"][res_to_path(res).name]["phone_level_vs_first_db"] = round(d, 2)
+                if abs(d) > VARIANT_LEVEL_TOL_DB:
+                    fails.append(f"{res_to_path(res).name}: phone-band level {d:+.2f} dB vs {res_to_path(c['files'][0]).name} (limit +-{VARIANT_LEVEL_TOL_DB})")
     for mid, mu in m["music"].items():
         p = res_to_path(mu["file"])
         if not p.exists():

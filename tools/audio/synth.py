@@ -35,7 +35,7 @@ SFX_SR = 22050          # mono 16-bit PCM; chip-style SFX do not need >11 kHz ba
 MUSIC_SR = 44100        # stereo, encoded to Ogg Vorbis (streamed, not decompressed into RAM)
 SFX_PEAK = 10 ** (-1.0 / 20)    # -1 dBFS sample peak ceiling
 MUSIC_PEAK = 10 ** (-3.0 / 20)  # -3 dBFS before lossy encode (leaves inter-sample/encoder headroom)
-GENERATOR_VERSION = 6
+GENERATOR_VERSION = 7
 
 # ----------------------------------------------------------------------------------------------
 # DSP primitives
@@ -839,6 +839,54 @@ def r36_skill_rally(rng):
     return out
 
 
+# --- v3.8: extra variants for repetition fatigue (docs/audio/REPETITION_CHECK.md) ---------------------
+# Extra variants are listed in a cue's "rx" field. They get their own stable seeds (70000 + n) and file names
+# <cue>_v2.wav, <cue>_v3.wav, so every existing file and every existing seed stays byte-identical.
+def r38_shoot_spit_v(rng, k):
+    """Spore spit variant k (1, 2): different squelch formant range and bubble pattern."""
+    p = [0.88, 1.13][k - 1]
+    out = np.zeros(n_samples(0.18, SR))
+    place(out, squelch(rng, [0.10, 0.11][k - 1], 400 * p, 1800 * p, 900 * p, wet=0.45), 0)
+    # v3.8 level match against shoot_spit.wav in the phone band (loud-frame energy; validate.py allows +-0.5 dB):
+    # first versions were v2 -0.73 dB (0.11 s squelch, bubbles 0.35/0.3) and v3 -1.5 dB (0.09 s, 0.35/0.25/0.2)
+    pat = [[(0.06, 430, 0.4), (0.12, 560, 0.35)], [(0.05, 700, 0.45), (0.09, 600, 0.38), (0.13, 820, 0.3)]][k - 1]
+    for t0, f, g in pat:
+        place(out, bubble(f, 0.025) * g, n_samples(t0, SR))
+    return out
+
+
+def r38_death_enemy_v(rng, k):
+    """Mold burst variant: darker squelch (formant 450-1300 Hz -> 320 Hz instead of 500-1400 -> 350) and a
+    higher bubble line (460/600/780/1000 Hz instead of 380/520/690/900), same 4-bubble timing as death_enemy.wav,
+    then a mild tanh compression (k=0.8) so its body sits at the original's level after peak normalisation.
+    Why the timing is kept: two earlier versions with a shorter or re-timed bubble rhythm were as loud by the
+    loud-frame level (-1.3 / -0.3 dB) but 6.6 points more masked on average in the same-background A/B over the
+    9 v3.8 battle backgrounds (r02/r06/r08 x seeds 11/23/37); this one: masked 11.5 % vs 12.5 % for the original
+    (mean of the 9, p10 -0.8 vs -1.1 dB, same_bg_ab.py renderer and SNR measure)."""
+    out = np.zeros(n_samples(0.42, SR))
+    place(out, squelch(rng, 0.22, 450, 1300, 320, wet=0.7), 0)
+    for i, (t0, f) in enumerate([(0.12, 460), (0.18, 600), (0.25, 780), (0.31, 1000)]):
+        place(out, bubble(f * rng.uniform(0.94, 1.06), 0.03) * (0.5 - 0.08 * i), n_samples(t0, SR))
+    n = len(out)
+    out = out + bandpass(noise(n, rng), 3200, 7500, SR) * env_adsr(n, SR, 0.1, 0.1, 0.3, 0.2) * 0.08
+    out = out / max(float(np.max(np.abs(out))), 1e-9)
+    return np.tanh(0.8 * out) / np.tanh(0.8)
+
+
+def r38_gold_tick_v(rng, k):
+    """Coin glint variant: two notes a fourth apart (E6 -> A6) instead of A6 -> D7, slightly longer ring."""
+    return seq([(0, blip(1319, 1319, 0.035, "square", 0.25, tau=0.012) * 0.6),
+                (0.032, blip(1760, 1760, 0.08, "sine", tau=0.034))], 0.12)
+
+
+def r38_shoot_arrow_v(rng, k):
+    """Baguette throw variant: higher, slightly faster whoosh and a different twang pitch."""
+    n = n_samples(0.11, SR)
+    x = bandpass(noise(n, rng), ramp(3400, 1400, n), ramp(7600, 2800, n), SR)
+    twang = blip(600, 555, 0.075, "tri", tau=0.028) * 0.3
+    return x * env_adsr(n, SR, 0.007, 0.03, 0.5, 0.07) + seq([(0, twang)], 0.11)
+
+
 CUES = {
     # faction: bakery (player side), mold (enemy side), neutral (UI/flow). desc = sound design intent.
     "ui_tap":          dict(r=[r_ui_tap], bus="UI", vol_db=-8, max=2, gap=0.03, prio=6, pitch=0.03, faction="neutral", desc="short square tick"),
@@ -847,7 +895,7 @@ CUES = {
     "ui_error":        dict(r=[r_ui_error], bus="UI", vol_db=-9, max=1, gap=0.25, prio=6, pitch=0.0, faction="neutral", desc="double low buzz"),
     "deploy":          dict(r=[r3_deploy], bus="SFX", vol_db=-7, max=2, gap=0.06, prio=7, pitch=0.04, faction="bakery", desc="oven-door bell + crust footsteps"),
     "worker_buy":      dict(r=[r3_worker_buy], bus="SFX", vol_db=-9, max=1, gap=0.1, prio=7, pitch=0.0, faction="bakery", desc="shop bell ka-ching"),
-    "gold_tick":       dict(r=[r_gold_tick], bus="SFX", vol_db=-13, max=2, gap=0.09, prio=2, pitch=0.05, faction="bakery", desc="coin glint"),
+    "gold_tick":       dict(r=[r_gold_tick], rx=[lambda g: r38_gold_tick_v(g, 1)], vol_jitter=1.0, bus="SFX", vol_db=-13, max=2, gap=0.09, prio=2, pitch=0.05, faction="bakery", desc="coin glint"),
     "hit_melee":       dict(r=[lambda g, v=v: r_hit_melee(g, v) for v in range(5)],
                             bus="SFX", vol_db=-7, max=2, gap=0.26, prio=1, pitch=0.08, faction="neutral", group="hit",
                             desc="fallback hit when the target side is unknown (v2 crack)"),
@@ -858,14 +906,14 @@ CUES = {
                             bus="SFX", vol_db=-6, max=2, gap=0.22, prio=1, pitch=0.08, faction="mold", group="hit",
                             desc="a mold unit is hit: wet squish + bubble"),
     "hit_arrow":       dict(r=[r_hit_arrow], bus="SFX", vol_db=-10, max=2, gap=0.05, prio=1, pitch=0.08, faction="neutral", group="hit", desc="ranged impact fallback"),
-    "shoot_arrow":     dict(r=[r_shoot_arrow], bus="SFX", vol_db=-12, max=2, gap=0.06, prio=1, pitch=0.08, faction="bakery", desc="baguette thrower whoosh"),
+    "shoot_arrow":     dict(r=[r_shoot_arrow], rx=[lambda g: r38_shoot_arrow_v(g, 1)], vol_jitter=1.0, bus="SFX", vol_db=-12, max=2, gap=0.06, prio=1, pitch=0.08, faction="bakery", desc="baguette thrower whoosh"),
     "shoot_rock":      dict(r=[r_shoot_rock], bus="SFX", vol_db=-10, max=1, gap=0.12, prio=2, pitch=0.06, faction="bakery", desc="oven cannon puff + thunk"),
-    "shoot_spit":      dict(r=[r3_shoot_spit], bus="SFX", vol_db=-11, max=2, gap=0.08, prio=1, pitch=0.08, faction="mold", desc="spore spit: wet ptoo + bubbles"),
+    "shoot_spit":      dict(r=[r3_shoot_spit], rx=[lambda g: r38_shoot_spit_v(g, 1), lambda g: r38_shoot_spit_v(g, 2)], vol_jitter=1.0, bus="SFX", vol_db=-11, max=2, gap=0.08, prio=1, pitch=0.08, faction="mold", desc="spore spit: wet ptoo + bubbles"),
     "hit_base":        dict(r=[r3_hit_base_bakery], bus="SFX", vol_db=-4.5, max=1, gap=0.35, prio=5, pitch=0.05, duck_sfx=-6, duck_sfx_below=5, faction="bakery", desc="bakery tower hit: wooden crack + crust shower"),
     "hit_base_mold":   dict(r=[r3_hit_base_mold], bus="SFX", vol_db=-9, max=1, gap=0.35, prio=5, pitch=0.05, faction="mold", desc="mold hive hit: heavy wet thud"),
     "explosion":       dict(r=[r3_explosion], bus="SFX", vol_db=-8, max=2, gap=0.12, prio=5, pitch=0.06, faction="mold", desc="spore bomber burst: splat + hiss + bubbles"),
     "death_ally":      dict(r=[r3_death_ally], bus="SFX", vol_db=-8.5, max=2, gap=0.08, prio=3, pitch=0.06, duck_sfx=-6, duck_sfx_below=3, faction="bakery", desc="bread crumbles: dry crackle + soft falling tone"),
-    "death_enemy":     dict(r=[r3_death_enemy], bus="SFX", vol_db=-11, max=2, gap=0.07, prio=3, pitch=0.08, faction="mold", desc="mold bursts: squelch + bubble fizz"),
+    "death_enemy":     dict(r=[r3_death_enemy], rx=[lambda g: r38_death_enemy_v(g, 1)], vol_jitter=1.0, bus="SFX", vol_db=-11, max=2, gap=0.07, prio=3, pitch=0.08, faction="mold", desc="mold bursts: squelch + bubble fizz"),
     "hero_death":      dict(r=[r_hero_death], bus="SFX", vol_db=-5, max=1, gap=1.0, prio=9, pitch=0.0, duck=-6, faction="bakery", desc="head baker falls: 4-note falling triangle line"),
     "hero_respawn":    dict(r=[r_hero_respawn], bus="SFX", vol_db=-8, max=1, gap=1.0, prio=8, pitch=0.0, faction="bakery", desc="rising sparkle arpeggio"),
     "skill_slam":      dict(r=[r_skill_slam], bus="SFX", vol_db=-4, max=1, gap=0.2, prio=9, pitch=0.0, duck=-4, faction="bakery", desc="rolling-pin ground pound"),
@@ -1137,9 +1185,20 @@ def main() -> int:
             write_wav(SFX_DIR / name, x, SR, seed)
             files.append(f"res://assets/audio/sfx/{name}")
             info.append({"file": name, "seconds": round(len(x) / SR, 3), "bytes": (SFX_DIR / name).stat().st_size, **stats(x)})
-        entry = {k: v for k, v in c.items() if k != "r"}
+        # v3.8 extra variants: stable seeds 70000+n and names <cue>_v2.wav ... (existing files/seeds unchanged)
+        xseeds = []
+        for xi, recipe in enumerate(c.get("rx", [])):
+            xs = 70000 + 10 * list(CUES).index(cue) + xi
+            xseeds.append(xs)
+            rng = np.random.default_rng(xs)
+            x = fade_edges(normalize(highpass(np.asarray(recipe(rng), dtype=np.float64), 30.0, SR), SFX_PEAK), SR)
+            name = f"{cue}_v{xi + 2}.wav"
+            write_wav(SFX_DIR / name, x, SR, xs)
+            files.append(f"res://assets/audio/sfx/{name}")
+            info.append({"file": name, "seconds": round(len(x) / SR, 3), "bytes": (SFX_DIR / name).stat().st_size, **stats(x)})
+        entry = {k: v for k, v in c.items() if k not in ("r", "rx")}
         entry["provenance"] = {"recipes": [getattr(rc, "__name__", "lambda") for rc in c["r"]],
-                               "seeds": list(range(seed - len(c["r"]) + 1, seed + 1))}
+                               "seeds": list(range(seed - len(c["r"]) + 1, seed + 1)) + xseeds}
         entry.setdefault("duck", 0)
         entry["files"] = files
         entry["variants"] = info

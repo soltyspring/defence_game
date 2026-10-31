@@ -1,16 +1,16 @@
 # AUDIO_CONTRACT.md — audio event contract, mixer and budgets (owner: 05-audio)
-Version 1.8 (2026-10-31; v1.8 = danger-cue SFX duck (death_ally, hit_base) and death_ally crust snap; v1.7 = rally = oven whoosh + cheer; swarm buzz waits for 02 A10 (unit id on cues); v1.6 = app background suspends every player and resumes in place; phone-speaker level fixes; v1.5 = shared cue groups (hit min_gap 0.36 s), tray-bell/whisk ui_confirm, crumb-shell barrage; v1.4 = upgrade sounds from the engine reply Events.upgrade_result, already_applied silent; v1.1 = off-screen policy, alert category, prepare_quit; v1.2 = theme cues hit_bread/hit_mold/hit_base_mold, `target_side` hit param; v1.3 = wave_cleared cue, upgrade_result cues, off-screen max attenuation −5 dB). Godot 4.7.2 / GDScript. Additive changes only without a version bump.
+Version 1.9 (2026-11-01; v1.9 = anti-repetition variants: manifest `rx` adds files `<cue>_v2/_v3.wav` (shoot_spit 3 files, death_enemy, shoot_arrow, gold_tick 2 files each) and `vol_jitter` ±1 dB per play, see REPETITION_CHECK.md; v1.8 = danger-cue SFX duck (death_ally, hit_base) and death_ally crust snap; v1.7 = rally = oven whoosh + cheer; swarm buzz waits for 02 A10 (unit id on cues); v1.6 = app background suspends every player and resumes in place; phone-speaker level fixes; v1.5 = shared cue groups (hit min_gap 0.36 s), tray-bell/whisk ui_confirm, crumb-shell barrage; v1.4 = upgrade sounds from the engine reply Events.upgrade_result, already_applied silent; v1.1 = off-screen policy, alert category, prepare_quit; v1.2 = theme cues hit_bread/hit_mold/hit_base_mold, `target_side` hit param; v1.3 = wave_cleared cue, upgrade_result cues, off-screen max attenuation −5 dB). Godot 4.7.2 / GDScript. Additive changes only without a version bump.
 Reads: docs/contracts/ENGINE.md v1.0, INTERFACES.md v1.0. Nothing here changes 02/04 files; integration is requested in `coordination/requests/05-audio-to-*.md`.
 
 ## 1. Files
 | Path | What |
 |---|---|
 | `tools/audio/synth.py` | Deterministic generator: every sound is synthesised with numpy (oscillators, noise, envelopes, one-pole filters). No samples, no downloaded audio, no AI audio service. Re-run gives byte-identical WAV/OGG (`validate.py --determinism`). |
-| `tools/audio/validate.py` | Objective checks on the actual files → `docs/audio/VALIDATION_REPORT.json`. |
+| `tools/audio/validate.py` | Objective checks on the actual files → `docs/audio/VALIDATION_REPORT.json`. v1.9: every extra variant `<cue>_vN.wav` must be within ±0.5 dB of the cue's first file in phone-band loudness. |
 | `tools/audio/run_godot_checks.ps1` | Godot import + parser checks + `audio_selftest.gd` in an isolated temp copy of the project (does not touch the shared `.godot` cache or compete with other workers' editors). |
 | `tools/audio/audio_selftest.gd` | Headless logic test of the runtime (Dummy audio driver: logic only, not audible output). |
 | `assets/audio/audio_manifest.json` | Cue table + runtime policy + measured stats (generated). |
-| `assets/audio/sfx/*.wav` | 29 files / 27 cues. PCM s16le mono 22050 Hz source; Godot imports WAV as QOA by default. |
+| `assets/audio/sfx/*.wav` | 48 files / 35 cues (v1.9; 48 = 08's SFX file cap, 0 left). PCM s16le mono 22050 Hz source; Godot imports WAV as QOA by default. |
 | `assets/audio/music/*.ogg` | `music_battle` (140 BPM, 16 bars, 27.43 s), `music_menu` (105 BPM, 8 bars, 18.29 s). Ogg Vorbis q3, 44.1 kHz stereo, seamless loops. |
 | `src/audio/audio_manager.gd` | Runtime: buses, pooled players, voice limits/stealing, ducking, pause/focus, volumes. Intended autoload `Audio`. |
 | `src/audio/audio_event_bridge.gd` | Maps `Events` signals to cues (child of the manager). |
@@ -68,6 +68,7 @@ No double playback after integration: each derived category (`ui`, `command`, `d
 - Per cue (manifest): `max` simultaneous instances, `gap` minimum retrigger interval, `prio` 0–10, `pitch` random ±jitter, `vol_db` mix gain, `duck` music duck dB.
 - Pool full: steal the lowest-priority, oldest voice if its priority ≤ the new cue's; otherwise drop the new cue (counted in `stats.dropped_voices`). Combat hits (prio 1) never displace skills, boss or hero cues (8–10).
 - Variants never repeat the same file twice in a row; pitch jitter ±8 %.
+- Anti-repetition (v1.9): manifest `rx` lists extra variant recipes (files `<cue>_v2.wav`, `<cue>_v3.wav`, own stable seeds 70000+10·cue_index+n, so older files stay byte-identical); `vol_jitter` (dB) adds a uniform random level change per play on top of `vol_db`. Used on shoot_spit, death_enemy, shoot_arrow, gold_tick (±1 dB). Chosen by REPETITION_CHECK.md R1–R4; not yet confirmed by listening.
 - Danger-cue SFX duck (v1.8): manifest `duck_sfx` (dB) + `duck_sfx_below` (priority). While such a cue sounds, SFX voices with lower priority (playing or new) are lowered; music unaffected. death_ally −6 dB below prio 3, hit_base −6 dB below prio 5. Stats `sfx_duck_events`, `sfx_ducked`. Evidence: PHONE_SPEAKER_CHECK.md v3.7 (3 seeds).
 - Cue groups (v1.5): manifest `groups` + per-cue `group`. Group `hit` (hit_bread, hit_mold, hit_melee, hit_arrow) has `min_gap` 0.36 s shared across its cues (counted in `stats.dropped_group`). Chosen by the same-seed A/B in HIT_DENSITY_AB.md (83 → 49 hits/min); not yet confirmed by listening.
 - Ducking: music only; attack 60 dB/s, release 14 dB/s; deepest active request wins. Boss −8 dB, hero death −6, skills −3…−5, wave −4.
@@ -89,7 +90,7 @@ Listening files: `previews/listen/battle_preview_30s.mp3` (engine recording) and
 ## 6. Budgets (PROVISIONAL; measured values from VALIDATION_REPORT.json / audio_selftest)
 | Item | Budget | Measured (2026-10-31) |
 |---|---|---|
-| Disk, all audio source files | ≤ 2.5 MB | v3 theme: 1,460,181 B (38 SFX WAV ≈ 0.87 MB + 2 OGG ≈ 0.59 MB); v1 was 1,348,388 B |
+| Disk, all audio source files | ≤ 2.5 MB | v3.8: 1,611,885 B (48 SFX WAV, raw PCM 1,024,220 B, + 2 OGG); v3 theme: 1,460,181 B (38 SFX WAV ≈ 0.87 MB + 2 OGG ≈ 0.59 MB); v1 was 1,348,388 B |
 | SFX resident in RAM after import | ≤ 2 MiB | v3: 177,560 B (Godot default QOA import; raw PCM 872,956 B); v1 160,960 B |
 | Music resident | streamed Ogg, compressed packets only | 2 files, 101 / 91 kbps |
 | SFX voices | 12 + UI 3 | selftest stress: peak 12, never exceeded |
