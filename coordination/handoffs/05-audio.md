@@ -24,6 +24,7 @@ Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, tr
 - Phone check on this new recording: worst masked 14.3 % (death_ally, hit_base); before: 12.3–13.0 %. The variation comes from the battle (different background), not from an asset change. Faction hits still classified 100 % correctly.
 - `battle_preview_30s.mp3` was regenerated from this recording, and the checklist timestamps were updated to match.
 No new code or asset changes in this step.
+Git (copied from the PUSHED line after that call returned; verified on origin/main): 131dcf297db150e06d6f0fdc7b05f30cb54a4c0f [Test].
 ## v3.6 (Codex review of 11c29cc–f5f42df)
 01 R1, remaining 3 timbres; only those with a real game event were implemented:
 1. **Rally (implemented)**: the event exists (`Events.sfx(&"skill")` → kind `rally` → `skill_rally`; data r04–r10 list skill_rally).
