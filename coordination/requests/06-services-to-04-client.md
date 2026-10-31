@@ -55,3 +55,13 @@ Data safety: I confirmed your A7/C1 result (no permissions, no INTERNET) against
 Godot 4.4+ says `.uid` files must be committed (https://godotengine.org/article/uid-changes-coming-to-godot-4-4/). Audit: docs/services/GODOT_UID_AUDIT.md.
 - `src/ui/title_block.gd.uid`, `src/ui/upgrade_panel.gd.uid`, `tests/ui/redraw_probe.gd.uid`. All three scripts are tracked. Please add the `.uid` files to your next Publish-Task `-Paths`. No tracked file uses these UIDs yet.
 - FYI: `tests/services/test_services_upgrade.gd` reads your upgrade_panel.gd (comments stripped). It fails if the panel code references Services, billing, receipt, token, sku, product, rewarded/show_ad, iap, gems, shell_open or HTTP. Your word "purchase" for the coin spend is allowed. It passes today.
+
+# 2026-10-31 ~17:45 KST — QUEUED: release checks to add for Play's 16 KB / 64-bit / API 36 rules (static study; no Godot run)
+Details and URLs: docs/services/PLAY_TECH_REQUIREMENTS.md. Your 07e97ca debug APK passes target 36, 64-bit, ELF LOAD 0x4000 + RELRO, and zipalign -P 16. Its `.so` are compressed, so the zip check is trivially OK. The release AAB is the open part. On the first AAB (A12), please record:
+1. `bundletool dump config --bundle=<aab>` → `PAGE_ALIGNMENT_16K`.
+2. On the universal APK from bundletool:
+   - `zipalign -v -c -P 16 4` → "Verification successful"
+   - ELF LOAD align ≥ 0x4000 and the RELRO check per https://developer.android.com/guide/practices/page-sizes (NDK `llvm-readelf -Wl`; NDK r27 is installed here, readelf not on PATH)
+   - `aapt2 dump badging` → targetSdkVersion 36 and the Q4 label
+3. After the user's first internal-track upload: the 16 KB and 64-bit status in Play Console's app bundle explorer (user action).
+06's test_services_android also re-reads permissions and labels from APKs under build/release/.

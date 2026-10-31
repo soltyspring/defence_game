@@ -1,5 +1,9 @@
 # 06-services handoff
-Updated: 2026-10-31 ~18:05 KST (Q4 launcher name recorded and checked; D25 terms before)
+Updated: 2026-10-31 ~17:45 KST (Play technical requirements, static, no Godot; Q4 launcher name before)
+## Play tech requirements (2026-10-31 ~17:45, static)
+- No Godot, editor or emulator was run (coordinator: 18:00–18:30 quiet window for 08, and this task was to be done without Godot).
+- Tools used: zipalign -c and a PowerShell read of ELF64 program headers from the APK zip entries (p_align, GNU_RELRO vaddr+memsz vs the LOAD segments).
+- Next time Godot is allowed again: optionally add an automatic ELF/zip-alignment group to test_services_android for APKs under build/release, then run the full runner. Not done now because it would need a Godot run to validate.
 Status: **M8 COMPLETE. Game Save integration gate PASSES (exit 0, binding=game)** after 02 registered the Services autoload (141d226). Resume check: worktree for 06 paths clean, checkpoint branch checkpoint/quota-20261031-092323/06-services (726e22a) has no diff vs HEAD for 06 paths → nothing lost. No Godot processes left running by 06.
 Session ID: not exposed to the agent (same Kiro window throughout; never closed or restarted).
 Nothing is live: no ad SDK, billing library, consent SDK, server, account or key. All services run in `disabled` mode. No monetization decision exists; none was invented.
@@ -33,6 +37,7 @@ src/services/**, docs/services/**, tests/services/**, coordination/status/06-ser
 | UID/upgrade | GODOT_UID_AUDIT.md (Godot 4.4+ rule: commit .uid; 19 untracked at start → 10 committed 4, 06 committed 4, 12 left for 02/04/07 via requests); godot_uid_tracked group in test_services_android; test_services_upgrade.gd (static scan of save.gd buy_upgrade/app.gd/04 panel, meta.json coin-only upgrades + iap disabled + gems disabled, runtime direct + App path: Services diagnostics and progress.services unchanged, result keys only id/to_level/code/coins/level); 8 mutations on temp copies (no other role's file edited); 01 hosting question candidate (not executed); SAVE_BACKUP_POLICY 10 cross-check | f59587cc763c4bc7fdaf8c9b8c35101d3e9fd7a8, 8f58a1c22c53253883a43dc5d570517afd0076db |
 | D25/Q4 | Store text on 01 D25 words; §7 split blocked vs allowed generic (제빵사, 화덕); lint game_text_overlap (data/text ko/en vs block list, ui.title = working title, store names resource/worker/hero); privacy preview with working title + KIPRIS banner (make_privacy_preview.ps1, lint privacy_preview reverse-transform); §2b launcher name vs store title with Play sources, label unchanged (`Lane Defence`, 02); lint launcher_label_note; 10 mutations caught | 78318a24d4ff5393b7135ad7b778660e17d9adc8 |
 | Q4 | Launcher name decision recorded (§2b launcher blocks, NAME_SEARCH_LOG, OPEN_DECISIONS U10, KIPRIS search-first note); lint: launcher = store title before ":", brand/Bread Defense clean, KIPRIS §3 rows + no-space forms, name-log rows; android launcher_label: aapt2 badging (UTF-8 via temp file) OLD=WAITING / OK=VERIFIED / else FAIL, preset package/name + name_localized checks | c0218449596086c29a3fecd91078e5930effcfb6, 2193dcb6a87598fa00c4eca62f33999df83a3a2e |
+| Play tech | PLAY_TECH_REQUIREMENTS.md: P1 API 36, P2 64-bit, P3 16 KB (ELF LOAD, RELRO own-segment rule, zip alignment), P4 AAB; preset + Godot 4.7.2 config.gradle (AGP 8.6.1, NDK r29, target 36/min 24) + debug APK ELF header read; verdicts PASS/PASS/PASS(APK)/UNKNOWN(AAB zip)/FAIL(AAB); requests to 02 (release Gradle/AAB preset) and 04 (bundletool PAGE_ALIGNMENT_16K etc.). Static only, no Godot run | (this commit, see status) |
 | Checkpoint | this handoff + status | see status file / `git log -- coordination/handoffs/06-services.md` |
 
 ## M7 details (this task)

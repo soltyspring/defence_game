@@ -1,5 +1,11 @@
 # 06-services status
-Updated: 2026-10-31 ~18:05 KST (Q4 launcher name recorded and checked)
+Updated: 2026-10-31 ~17:45 KST (Play technical requirements, static; no Godot run)
+Status: COMPLETE. PLAY_TECH_REQUIREMENTS.md: API 36 (since 2026-08-31) PASS, 64-bit PASS, 16 KB ELF LOAD 0x4000 + RELRO PASS and zipalign -P 16 PASS on the 07e97ca debug APK; AAB (required for new apps) FAIL = no Gradle/AAB preset (02/04 A12); 16 KB zip alignment of a future AAB UNKNOWN (expected with AGP 8.6.1, not measured). No device test, no Play upload. Requests to 02/04. Q2 DEFERRED. Nothing published.
+Current task: none. Next: see handoff.
+Validation: docs-only change; services runner NOT rerun (coordinator: no Godot runs, quiet window 18:00–18:30 for 08). Last full run OVERALL exit=0 at 2193dcb.
+Previous: c021844 / 2193dcb / 26d6809 (Q4 launcher name).
+--- History (older entries, not current) ---
+(Q4 entry) Updated: 2026-10-31 ~18:05 KST (Q4 launcher name recorded and checked)
 Status: COMPLETE. Q4 DECIDED by user 17:19 KST (original "빵집 기사단"): launcher ko 빵집 기사단 / en Bakery Knights; store and in-game titles stay the full working title; final store name after KIPRIS. Recorded in STORE_LISTING §2b (launcher blocks), NAME_SEARCH_LOG, OPEN_DECISIONS U10, KIPRIS §3 (T2/T3, T11/T12 already present; marked search-first; all rows NOT_DONE). Lint: launcher = store title before ":". APK label check: launcher_label=WAITING (both APKs still `Lane Defence`; 02 rebuild pending). Q2 DEFERRED. Nothing published. Gate PASS.
 Current task: none. Next: see handoff.
 Validation (latest): runner 9 suites OVERALL exit=0 (listing 1825/0, android 186/0 launcher_label=WAITING). Label check proven on 4 throwaway aapt2-built APKs (OK→VERIFIED exit 0; typo, full title, wrong ko → FAIL), deleted after. 5 listing mutations caught.

@@ -102,3 +102,17 @@ Godot 4.4+ says `.uid` files must be committed (https://godotengine.org/article/
 - It also checks `export_presets.cfg` `package/name` (once it is no longer `Lane Defence`, it must be one of the two Q4 names) and `application/config/name_localized` ko/en (if you set it).
 - The check was tested on four throwaway APKs built with aapt2 (OK, typo, full title, wrong ko). They were deleted afterwards. Today both existing APKs read `Lane Defence`, so the status is WAITING.
 - Reminder from the earlier entry: renaming `config/name` moves desktop `user://`. Android is unaffected.
+
+# 2026-10-31 ~17:45 KST — QUEUED: Play technical requirements vs your export preset (static study; no Godot run)
+Full table with official URLs: docs/services/PLAY_TECH_REQUIREMENTS.md. Results:
+- **Passes on the 07e97ca debug APK:**
+  - target API 36 (Godot 4.7.2 default; required since 2026-08-31)
+  - 64-bit only (arm64-v8a + x86_64, no 32-bit)
+  - 16 KB ELF LOAD alignment 0x4000 and RELRO layout on all 4 `.so`
+  - zipalign -P 16
+- **FAIL: no AAB.** New apps must ship as an AAB (https://support.google.com/googleplay/android-developer/answer/9844279). The preset uses the prebuilt template (`use_gradle_build=false`, `export_format=0`). Request, when you set up the release build (same as 04 A12):
+  - a release preset with `use_gradle_build=true` and `export_format=1`
+  - `target_sdk` empty or 36, `min_sdk` empty or 24
+  - per Godot 4.7.2 config.gradle: AGP 8.6.1, NDK 29.0.14206865
+  - no ad or billing plugin (Q2 deferred)
+- **UNKNOWN until an AAB exists:** whether the uncompressed `.so` in the AAB are 16 KB zip-aligned (expected with AGP ≥ 8.5.1, not measured). 04 checks it with bundletool.
