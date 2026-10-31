@@ -1,6 +1,6 @@
 # 08-performance status
 Updated: 2026-10-31 15:55 +09:00
-Status: M3 (contamination handling, quiet-window request, re-theme baseline + caps) VERIFIED LOCALLY, publishing.
+Status: M3 (contamination handling, quiet-window request, re-theme baseline + caps) VERIFIED and PUSHED (c58c59e, origin/main).
 Theme Q1 = A "빵집 기사단 vs 곰팡이 군단" (user decision 09:03) processed.
 Current task: wait for C11 quiet window (coordinator) to re-measure 02's target search; wait for 03/05 theme A commits for the after-baseline.
 Key facts: 08:08–09:00 A/B timings INVALID (contaminated); pre-retheme baseline 37b9a93 = atlas 9.25 MiB all/worst battle, 0.25 MiB menu,

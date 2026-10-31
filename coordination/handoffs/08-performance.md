@@ -16,6 +16,7 @@
      before/after APK build requested from 04 (R6). The existing APK (07:23) is stale and labelled as such.
 - Not done / waiting: the quiet A/B re-run (needs C11 grant); after-retheme numbers (03/05 have not committed theme A yet); a fresh APK
   (04); P2b fix (02); 04 R5 font pre-warm; stress-scene unit drop (~40 units) investigation; device data (no phone).
+- Commit: `c58c59e26498a326bcfa0b212ebe2898a3554e13` [Test] (13 owned files). Helper printed `PUSHED c58c59e... origin/main`, and `git branch -r --contains` shows origin/main.
 - Next steps (exact): (1) Read C11 in the coordinator file. When it is granted:
   `.\tools\perf\ab_retest.ps1 -BaseRev d4d7c13 -FixRev HEAD -Files src/gameplay/battle_sim.gd -Pairs 3 -RequireQuiet`. Record the summary
   validity and numbers in BASELINE §7 and the 02 request, then release the window in the coordinator file. (2) When 03/05 commit theme A:
