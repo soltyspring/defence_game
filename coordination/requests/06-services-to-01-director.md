@@ -33,3 +33,6 @@ New facts worth knowing for planning: Play Billing v7 is past its 2026-08-31 dea
 
 # Update M9 (2026-10-31) — QUEUED
 For U6 (purchase verification), 06 prepared: docs/services/NO_SERVER_MINIMUM.md (when client-only purchases are acceptable: single-player offline, nothing needed to finish chapter 1, low-value items, no gacha; risks table). 06 recommendation if the user wants purchases without a server: ONE non-consumable (supporter / remove ads) only, no consumables until a server exists. Sandbox test steps with user-only steps marked: docs/services/BILLING_SANDBOX_TEST_PLAN.md. Still one question at a time, after U1.
+
+# Update M10 (2026-10-31) — QUEUED, data field for later
+Consumable products in `data/meta.json` `iap_catalog.products` may carry `max_quantity` (int, default 1 = multi-quantity off). Purchases above it are refused and refunded by Play. Only relevant once a catalog exists (Q4).

@@ -27,3 +27,6 @@ Gate now expected to exit 0 (PASS_INTEGRATED, binding=game). Treat exit 2 as a r
 
 # Update M9 (2026-10-31) — QUEUED
 Real-purchase test cases T1–T16 with expected service signals/codes: docs/services/BILLING_SANDBOX_TEST_PLAN.md §3. They can only run after the user creates the Play account, license testers and internal track (steps marked [USER]). Not runnable today.
+
+# Update M10 (2026-10-31) — QUEUED
+Runner now includes `test_services_m10.gd` (multi-quantity consumables: q=1, q=3, duplicate callbacks, invalid/over-limit quantities, crash during grant and sink-saves-then-fails on the autoload Save in an isolated dir). Expected: OVERALL exit 0. New state-table row P7; real-device case T17 in BILLING_SANDBOX_TEST_PLAN.md.
