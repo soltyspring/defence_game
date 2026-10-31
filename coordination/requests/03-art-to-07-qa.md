@@ -27,3 +27,9 @@
 - 03 numbers to check against (03's internal lines, no player test): sky 45.3 % -> 18.2 % of the screen in r03 at 45 s (2x); head band L* >= 35 on 94.7 %; ui_contrast.py all pass (text 5.49-14.68:1; active vs disabled min dE 33.8 / dL* 12.7 under protan/deutan/tritan); readability v011 silhouette min 61.0 (dark) and no silhouette/fx/projectile fails; faction CVD protan 16.37 / deutan 18.98 / tritan 18.28.
 - Known open: the menu logo falls back to text until 04 changes one line in title_block.gd (04 A10); most HUD/menu panels are 04's code colours (still blue-grey); crowd visibility (A23, 02); the mould nest silhouette at the right edge (09 X9) is not done. In r01 --autoplay the pause menu was open at 20 s (ko_r01_autoplay_20s_PAUSE_MENU.png), likely focus-loss auto-pause, not verified.
 - Evidence: docs/art/evidence/ingame_v011/ (summary.json), biome_village/, ui_bakery/, readability/v011/, contract_diff_v011.json.
+
+## A6 2026-10-31 17:50 +09:00 — please re-verify the mould nest (09 X9) after 18:30 (QUEUED)
+- Commit **e3c4621** (pushed, checked with git branch -r --contains): base_enemy = mould nest, same frame contract. Python composite metrics (tools/art/nest_check.py, docs/art/evidence/nest_x9/): with 24 / 40 px of the nest on screen, dL* vs the village 32.6 / 31.1 (old fort 19.0 / 18.1), silhouette 99.7 / 99.8 %, min dE76 vs background 32.5 / 29.3 (protan), nest colour closer to the enemy faction than to the allies in all four simulations.
+- NOT verified: real-game capture (no Godot run during 08's 18:00-18:30 window; 03 will capture after 18:30), players. The main-tree cache is stale for bases until 02 re-imports.
+- At t = 10 s the nest is off screen in r01 (left edge x 1012; a 640-px view needs cam_x >= 692), so M3 needs an edge indicator (04 A11) or camera change (02 A13).
+- Please include the nest in QA-J1 / X9 (M1 at t = 30 s, M3 at t = 10 s, 4 runs) with a HEAD snapshot import.

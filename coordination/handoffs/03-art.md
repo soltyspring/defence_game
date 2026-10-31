@@ -85,7 +85,8 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - tools/art/bases.py mould_nest() (build.py uses it for base_enemy). contract_diff vs HEAD: 0 changes. tools/art/nest_check.py (Python composite, 1x/2x, left 24/40/96 px visible): nest dL* 30.4-32.6, silhouette 99.6-99.8 %, min dE76 vs bg 29.3, closer to the enemy mean in all sims; old fort dL* 18.1-21.6 (failed). Evidence docs/art/evidence/nest_x9/.
 - t = 10 s visibility is camera/indicator (04 A11, 02 A13). Real-game capture NOT done (08 quiet window 18:00-18:30; no Godot run after 17:42).
 - Validation: validate.py --determinism PASS (1 WARN: main-tree bases cache stale); exported PCK at 17:42 on this build 12/12 pages, 15 loads, raw PNG absent, 1,262,684 B; 08 asset_budget_check --worktree PASS.
-- A26 not started. 07 / 09 re-verify requests follow the push.
+- A26 not started.
+- Commit e3c4621 [Design]: PUSHED origin/main (verified with git branch -r --contains at 17:50). Then 07 A6 and 09 A2 re-verify requests.
 
 ## Exact next steps on resume
 1. After 18:30: HEAD-snapshot capture of r01/r03 on the secondary monitor when the nest is on screen (e.g. r03 autoplay late, or after the hero walks right); check the left-edge read.
