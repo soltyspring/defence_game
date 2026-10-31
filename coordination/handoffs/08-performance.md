@@ -1,4 +1,14 @@
 # 08-performance handoff
+## M10 — audio residency + pool estimate (16:50), C11 attempt pending at 17:00
+- Static, no Godot. 05 f0646dd: gate PASS (38 SFX, PCM ≤ 0.83 MiB, music 0.56 MiB). All SFX are loaded at startup as QOA (≈ 0.2 MiB), music
+  is loaded on play (≤ 2 during a crossfade), 18 players. **Defect: 9 committed WAVs without `.import`, so 3 cues would be silent in exports**
+  (AU3 to 05, Q8-2 to 07, FYI to 02). Pool preallocation estimate ≈ 0.16–0.21 MiB per battle start (80 units, the coordinator's 72 + 8
+  dying). docs/performance/MEMORY_STATIC_ESTIMATES.md.
+- C11 plan (17:00–17:25, `-RequireQuiet` only, never touch other processes): every 5 min count foreign Godot/emulator processes; start
+  only at 0. Order: (a) `ab_retest.ps1 -BaseRev d4d7c13 -FixRev HEAD -Files src/gameplay/battle_sim.gd -Pairs 3 -RequireQuiet`;
+  (b) frame probe on a clean HEAD snapshot (STEPPING); (c) view/UI A/B on the snapshot; (d) targeting_equivalence on the snapshot. Any
+  foreign process during a run → CONTENDED / INVALID. No quiet moment by 17:25 → record "not run" and propose the next window.
+- M10 commit: recorded only after `git show` verification.
 ## M9 — gate re-judgement, UI hot-path review, 22d99ea review (2026-10-31 16:4x +09:00, no Godot used)
 - (1) Re-ran the fixed gate (14f8edc) on every earlier judged commit (ccf3033, 2b350c4, 5930430, 686af29, 7705aec, 8c8635f, bfcce0e) and on
   the M3 retheme_compare baseline. **0 verdict changes**: all recorded runs used an absolute out dir; only the unrecorded 16:25 relative

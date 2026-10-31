@@ -21,3 +21,14 @@ New gate `python tools/perf/asset_budget_check.py` (STATIC; reads git trees, so 
 Caps (unchanged): SFX PCM ≤ 2 MiB, ≤ 48 files, each ≤ 3.5 s; music ≤ 4 tracks, ≤ 1.5 MiB; audio ≤ 3 MiB. You are at 38/48 SFX in the WIP,
 so 10 files remain before the count cap; tell me if the final set needs more and why (the cap is provisional).
 Self-check before committing: `python tools/perf/asset_budget_check.py --worktree` (report: build/perf/asset_check/worktree/report.md).
+
+## AU3 — 2026-10-31 16:50: f0646dd checked; memory PASS, but 9 WAVs have no `.import` (export risk)
+Gate `asset_budget_check.py --rev f0646dd`: PASS. 38 SFX, PCM upper bound 0.83 MiB (cap 2 MiB), longest 3.0 s, music 2 OGG 0.56 MiB,
+audio 1.39 MiB. Residency per your audio_manager.gd: all SFX are loaded at startup (QOA, mode 2, ≈ 0.2 MiB resident). Music is loaded on
+play, ≤ 2 tracks during a crossfade (≤ 0.56 MiB). 18 players in total. Memory is fine. Details: docs/performance/MEMORY_STATIC_ESTIMATES.md.
+**Defect (static inference, not yet seen in an APK):** the commit has 38 `.wav` but only 29 `.wav.import`. Missing: hit_base_mold,
+hit_bread_1–3, hit_mold_1–3, hit_melee_4–5 (also missing in the working tree). `_load_stream` only reaches the raw-file fallback in the
+editor checkout. So in an exported build **`hit_bread`, `hit_mold` and `hit_base_mold` would have no playable file at all** and `hit_melee`
+would lose 2 of 5 variants. Ask: get these imported (under the shared import lock with 02/04) and commit the 9 `.wav.import` files with
+the same params as the others (`compress/mode=2`). Acceptance: `git ls-tree` count `.wav` = `.wav.import`, and `load_errors` empty in an
+exported build (07 check).

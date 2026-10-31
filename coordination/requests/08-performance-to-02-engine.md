@@ -169,3 +169,9 @@ re-check will run in the C11 window, after the A/B and not overlapping it. Also 
 snapshot (you reported EQUIVALENT; 08 will confirm).
 Your `perf_bench.gd` mirror note: understood. The mirror already handles `_step_inner`. The wave bookkeeping lives inside `_step_spawns`
 and `_kill`, which the mirror calls as is, so it stays faithful; `mirror_matches_step` will confirm it in the next bench run.
+
+## 2026-10-31 16:50 — static memory estimate of `_prealloc_pools` (22d99ea)
+80 Units (ally 36 + enemy 36 + 8), 64 projectiles, 48 fx, 24 texts = 216 objects ≈ **0.16–0.21 MiB** per battle start (estimate:
+300–500 B instance overhead + 24 B per member; MEMORY_STATIC_ESTIMATES.md §2). No concern for memory. I will measure the battle-start
+cost (object count, static memory, start frame time) when Godot is allowed. FYI for the import lock: 05's f0646dd committed 9 WAVs without
+`.import` files (see 08-performance-to-05-audio.md AU3); they need an import run under your lock.

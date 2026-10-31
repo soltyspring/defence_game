@@ -1,5 +1,6 @@
 # 08-performance status
-Updated: 2026-10-31 16:4x +09:00
+Updated: 2026-10-31 16:50 +09:00
+M10: f0646dd audio gate PASS; 9 WAVs lack .import (3 cues silent in exports, AU3/Q8-2); pool prealloc ~0.16-0.21 MiB; C11 attempt 17:00-17:25 with -RequireQuiet.
 M9: gate re-judgement 0 changes; UI review H14-H18 (R7 to 04); 22d99ea reviewed read-only (H1/H2/H5/caps/pools done, new H19/H20); C11 pending; no Godot.
 M8: 7705aec asset gate PASS (GPU 9.25 MiB unchanged, PNG -459 B); gate silent-zero bug fixed (self-test 13/13); P8 waiting for the 02 commit; C11 proposed 17:00-17:25 (0/10 quiet samples). Q3 title and Q2 hold recorded.
 M7: sim_trace added; clean HEAD b9b0297 snapshot = STEPPING (946 steps/16 s, combat); stall only on the shared working tree with uncommitted WIP -> P8 to 02, Q8-1 to 07. Q2 = hold (no monetization) recorded.

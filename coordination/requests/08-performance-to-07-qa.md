@@ -21,3 +21,8 @@ Proposal: open C11 right after these finish. A concrete suggestion is **17:00–
 for 25 minutes. My run uses `ab_retest.ps1 -RequireQuiet`: it waits up to 10 min for zero foreign Godot processes and otherwise exits 2
 without numbers, so nothing needs to be killed.
 If your suites run in that slot, please pause them or tell me another slot here.
+
+## Q8-2 — 2026-10-31 16:50: export check request for 05's new SFX (static finding)
+f0646dd adds 9 WAVs without `.wav.import` (hit_base_mold, hit_bread_1–3, hit_mold_1–3, hit_melee_4–5). The raw-file fallback in
+`audio_manager.gd:132-141` does not work in exported builds, so cues `hit_bread`, `hit_mold` and `hit_base_mold` are expected to be
+silent in an APK/PCK. Please add an exported-build check: `Audio.load_errors` empty and these cues play. Sent to 05 as AU3.
