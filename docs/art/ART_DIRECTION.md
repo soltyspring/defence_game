@@ -84,4 +84,5 @@ Layers (back to front) with view_y and parallax: `sky` 16×360 (repeat every 16 
 - Working title (user Q3, 16:19 KST): **빵집 기사단: 곰팡이 디펜스** / **Bakery Knights: Mold Defense**. The final store name waits for the human KIPRIS check (classes 9/41), so treat these as working-title art.
 - `ui_title` (menu-only page): `logo_title_ko`, `logo_title_ko_2line`, `logo_title_en`, `logo_title_en_2line`. Show them at integer scale only. Pivot = centre.
 - App icon candidate (not a runtime asset): `docs/art/branding/app_icon_candidate_{48,96,192}.png`.
+- Android adaptive icon (art 0.10.1): `docs/art/branding/adaptive/ic_launcher_{foreground,background}_432.png`, 108 dp at xxxhdpi (4 px/dp), art at 5 px per art pixel, foreground inside the 66 dp safe circle (0 px clipped by circle/squircle/teardrop masks). Generator: `tools/art/adaptive_icon.py`. Real launcher untested.
 - Business model is on hold (Q2): no ad/shop/purchase UI art is made.

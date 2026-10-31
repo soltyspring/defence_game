@@ -1,0 +1,19 @@
+{
+ "canvas_px": 432,
+ "dp_px": 4,
+ "art_px_per_pixel": 5,
+ "fg_opaque_px": 18050,
+ "fg_outside_safe_circle_px": 0,
+ "bg_transparent_px": 0,
+ "masks": {
+  "circle": {
+   "fg_clipped_px": 0
+  },
+  "squircle": {
+   "fg_clipped_px": 0
+  },
+  "teardrop": {
+   "fg_clipped_px": 0
+  }
+ }
+}

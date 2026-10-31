@@ -56,3 +56,10 @@ card_ranged_basic (roll thrower), card_siege (oven), card_tank (loaf shield) and
 - These are WORKING-TITLE art (Q3): the store name is not final until the KIPRIS check.
 - App icon candidate: docs/art/branding/app_icon_candidate_48.png / _96.png / _192.png (legacy square). If you wire it into export presets, keep it marked as a candidate. Adaptive icon layers are not made yet.
 - The in-game recapture (16:34) still shows stale art and the fallback icons until 02 re-imports.
+
+## A9 2026-10-31 16:56 +09:00 — menu-budget proposal: what it would mean for the client (no change made) (QUEUED)
+Menu residency is at 08's 0.50 MiB cap (ui_main 0.25 + ui_title 0.25). Full table in 03-art-to-08-performance.md A7 and docs/art/evidence/menu_budget_dryrun.json. Nothing is changed yet; 03 builds only after 08 and you agree and Codex/01 approve.
+- **Option B (03's first choice):** `ui_title` becomes `ui_title_ko` (512x64) and `ui_title_en` (256x128), each holding `logo_title_<locale>` and `logo_title_<locale>_2line` with the same names, sizes and pixels. Client change: in src/ui/title_block.gd the atlas id becomes `"ui_title_%s" % locale`, and the menu acquires/releases only that page. Menu then 0.375 MiB.
+- **Option C:** ui_main shrinks to 256x128 if btn_move_left/right and portrait_boss_warlord/e_bomber/e_brute move to a battle page. hud.gd uses `UiStyle.ui_icon("btn_move_left"/"btn_move_right")`, which assumes ui_main, so those lookups would need the new atlas id. Saves 0.125 MiB in menu and battle.
+- Option A (x1-master logos drawn at x2) changes all 4 logo frame sizes and the look; 03 does not recommend it.
+- Snapshot captures (clean HEAD 9e0487d, imported in %TEMP% only): the logo and card art are visible in KO and EN (docs/art/evidence/ingame_head/). The main tree still needs 02's re-import.

@@ -1,6 +1,6 @@
 # 03-art status
-Updated: 2026-10-31 08:40 +09:00
-Status: MILESTONE 3 DELIVERED. r04-r07 roster art: commit c49de70, PUSHED origin/main and verified with git branch -r --contains. White-line root cause sent to 02 (22cd2bb). Theme is still the Q1 default (PENDING, not approved).
-Current task: done. Next = boss_overlord art; recapture in game after 02 acts on A4/A5.
-Validation: validate.py --determinism PASS (9 pages). Exported PCK: 9/9 pages + 3 fonts load with no raw PNG. Visual inspection of the new sheets and the battle mock.
-Open with other owners: A8 white lines (02), A2 font sizes (04), A3 integer scale (02), A6/A7 markers/mine wiring (02), A9 ribbons (04), A15 heights (01).
+Updated: 2026-10-31 16:55 +09:00
+Status: MILESTONE 10 DELIVERED (commit SHA in coordination/handoffs/03-art.md). Theme A art, KO/EN logos and card art verified in the real game from a clean HEAD snapshot (9e0487d, imported in %TEMP% only). Android adaptive icon layers made (0 px clipped on circle/squircle/teardrop; real launcher untested). Menu-budget proposal sent to 08 (A7) and 04 (A9); no contract change made.
+Current task: done. Next = hero redraw as 제빵 대장, bakery/mould biome with less sky (QA-J1), warmer UI chrome, or menu option B/C once 08/04 agree.
+Validation: validate.py --determinism and exported-PCK check on this build (results in the handoff).
+Open with other owners: main-tree re-import (02 A9-A11), menu option B/C decision (08/04), A23 crowd occlusion (02), A2 font sizes (04), A3 integer scale (02).

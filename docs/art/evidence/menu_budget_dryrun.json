@@ -1,0 +1,88 @@
+{
+ "ui_main": {
+  "unique": 99,
+  "used_px": 23222,
+  "fits": {
+   "256x128": false,
+   "256x256": true
+  }
+ },
+ "ui_title": {
+  "unique": 4,
+  "used_px": 35071,
+  "fits": {
+   "512x64": false,
+   "256x128": false,
+   "512x128": true
+  }
+ },
+ "ui_title_x1_master": {
+  "sizes": {
+   "logo_title_ko": [
+    158,
+    19
+   ],
+   "logo_title_ko_2line": [
+    82,
+    36
+   ],
+   "logo_title_en": [
+    203,
+    21
+   ],
+   "logo_title_en_2line": [
+    104,
+    38
+   ]
+  },
+  "fits": {
+   "256x64": false,
+   "256x128": true
+  }
+ },
+ "ui_title_per_locale": {
+  "ui_title_ko": {
+   "frames": [
+    "logo_title_ko",
+    "logo_title_ko_2line"
+   ],
+   "fits": {
+    "256x64": false,
+    "512x64": true,
+    "256x128": false
+   },
+   "smallest": "512x64",
+   "gpu_mib": 0.125
+  },
+  "ui_title_en": {
+   "frames": [
+    "logo_title_en",
+    "logo_title_en_2line"
+   ],
+   "fits": {
+    "256x64": false,
+    "512x64": false,
+    "256x128": true
+   },
+   "smallest": "256x128",
+   "gpu_mib": 0.125
+  },
+  "note": "frame sizes unchanged; only one locale page resident in menu"
+ },
+ "ui_main_256x128": {
+  "padded_px_now": 35310,
+  "page_px": 32768,
+  "min_move_out_largest_first": [
+   "btn_move_left",
+   "btn_move_right",
+   "portrait_boss_warlord",
+   "portrait_e_bomber",
+   "portrait_e_brute"
+  ],
+  "moved_padded_px": 4944,
+  "fits_after_move": true,
+  "gpu_mib_after": 0.125,
+  "note": "moved frames would need a battle-policy page; target page room not measured"
+ },
+ "method": "tools/art/atlas.py _pack (gap 2, extrude 1), same packer as build.py; dry run only, assets unchanged"
+}

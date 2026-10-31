@@ -42,7 +42,7 @@ Rules derived from this:
 6. Do not use all-caps Latin for body text or ornamental fonts. Bold is for numbers, titles and buttons.
 
 ## 4. Memory and cost (measured in the same run)
-Dynamic glyph cache: one 256×256 single-channel (format 1 = L8) texture per (font, size) for the sample strings, i.e. 64 KiB each. The sheet used 9 size caches = 0.56 MiB. Each extra font size adds at least one cache page, which is one more reason to restrict sizes to 12/24/36. Long Korean sessions may grow a size cache to more pages; 08 should profile this on device. The font files themselves load into memory (~1.7 MB + 1.4 MB RAM).
+Dynamic glyph cache (corrected 16:56 per 08's measurement): one 256×256 two-channel LA8 texture per (font, size) for the sample strings, i.e. 128 KiB each; a 36 px size grows to 512×512 = 512 KiB. My earlier note said L8 / 64 KiB, which undercounted by half. Each extra font size adds at least one cache page, which is one more reason to restrict sizes to 12/24/36. Long Korean sessions may grow a size cache to more pages; 08 should profile this on device. The font files themselves load into memory (~1.7 MB + 1.4 MB RAM).
 
 ## 5. Fallback strategy
 - Primary Galmuri11 (Regular/Bold) covers all of Hangul, so there is no fallback for Korean.

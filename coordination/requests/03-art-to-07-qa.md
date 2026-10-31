@@ -12,5 +12,11 @@
 
 ## A3 2026-10-31 16:38 +09:00 — logos/icon + QA-B011 method note (QUEUED)
 - New: `ui_title` logos and the icon candidate (paths and measured lines in ART_AUDIT round 7; metrics in docs/art/evidence/branding/branding_metrics.json). Please include them in your first-screen review once 04 shows the logo.
-- QA-B011: on the committed art, your method incl. outline gives protan 11.6 / deutan 16.4 / tritan 15.5 dE for the closest pair (cvd numbers in ART_AUDIT round 7). If your runner reads the `.godot/imported` cache, note that it is stale for every page in the main tree (validate.py --import-cache). Please re-run after 02's import.
+- QA-B011 (corrected 16:56): 07 already re-verified QA-B011 as **PASS** at 3b2d830 (07 commit 5b36f4e, 16:30; TH-COL closest dE 19-25, r08 crowd separable in protan/deutan/tritan). The earlier wording here implied it was still failing or measured a stale cache; that was out of date. For reference only, my numbers incl. the outline colour are protan 11.6 / deutan 16.4 / tritan 15.5 dE (different pair method from 07's).
 - White seams (A8): gone in my 16:34 secondary-monitor capture after 02's 141d226 (docs/art/evidence/ingame_1634/).
+
+## A4 2026-10-31 16:56 +09:00 — QA-B011 wording fixed, HEAD-snapshot in-game captures, adaptive icon (QUEUED)
+- A3's QA-B011 line is corrected to your PASS record (5b36f4e at 3b2d830, dE 19-25). No action needed from 07 on that.
+- Real-game captures from a clean HEAD snapshot (git archive of 9e0487d into %TEMP%, `--import` only there, main-tree .godot untouched; visible_launch on \\.\DISPLAY2, all EXIT_0): docs/art/evidence/ingame_head/. KO menu shows the 2-line logo, r01 shows the bakery keep and card art (제빵사/식빵병), r03 autoplay shows toast knights, roll thrower and mould enemies, EN menu shows "Bakery Knights / Mold Defense" and the Dough/Energy HUD. ko_r01_battle_12s_paused.png is the pause menu, not a battle frame.
+- Gaps still visible in those captures (art-side, open): UI chrome is still blue; the biome is still the meadow with ~75 % sky (your QA-J1); the hero sprite is still a sword knight, not 01's 제빵 대장 (chef hat + rolling pin). Please keep QA-J1 open.
+- Android adaptive icon layers: docs/art/branding/adaptive/ (432 px xxxhdpi = 108 dp). 0 foreground px outside the 66 dp safe circle and 0 px clipped by circle/squircle/teardrop masks (docs/art/evidence/branding/adaptive_metrics.json, mask_previews.png). Not tested on a real launcher or device.

@@ -18,3 +18,18 @@ Page sizes are unchanged, so GPU stays 9.25 MiB all pages (r01 5.25 / r05 7.25 /
 
 ## A6 2026-10-31 16:38 +09:00 — new page ui_title (menu) (QUEUED)
 `ui_title` 512x128 RGBA8 = 0.25 MiB, load_policy `menu`, so menu residency is 0.50 MiB (= your cap; `asset_budget_check.py --worktree` PASS). Battle pages are unchanged (all battle pages 9.25 MiB; your check reports 9.50 because it counts ui_title). App icons are in docs/ (not runtime).
+
+## A7 2026-10-31 16:56 +09:00 — menu-budget headroom proposal (no contract change made) (QUEUED)
+Now: menu = ui_main 256x256 (0.25 MiB) + ui_title 512x128 (0.25 MiB) = **0.50 MiB = your cap, 0 headroom**. Occupancy: ui_main 23,222 / 65,536 px (35 %; 99 unique regions, 35,310 px incl. 2 px gap + 1 px extrusion), ui_title 35,071 / 65,536 px (53.5 %). Dry run with the build packer: docs/art/evidence/menu_budget_dryrun.json. Nothing in assets/ was changed.
+
+| Option | Menu MiB | Battle MiB | Contract change | Look change |
+|---|---|---|---|---|
+| B. split ui_title per locale: `ui_title_ko` 512x64 (ko + ko_2line), `ui_title_en` 256x128 (en + en_2line); load only the current locale | 0.375 (-0.125) | 0 | atlas id per locale; frame names, sizes, pixels unchanged | none |
+| C. ui_main 256x128: move 5 battle-only frames (btn_move_left/right, portrait_boss_warlord/e_bomber/e_brute = 4,944 padded px) to a battle page | 0.375 (-0.125) | -0.125 every round | atlas id of 5 frames | none |
+| B + C | 0.25 (-0.25) | -0.125 | both | none |
+| A. logos stored as x1 masters (ko 158x19, ko_2line 82x36, en 203x21, en_2line 104x38) in 256x128, drawn at x2 | 0.375 | 0 | all 4 logo frame sizes | yes (blockier, ko 316x38 vs 304x30; docs/art/evidence/menu_budget_x1master_compare.png) |
+| D. raise the menu cap | - | - | your budget doc | none |
+
+03 recommends B first (no visual change, one client line), then C if you also want battle headroom. Option A is not recommended. C needs a measured target page (free room on bases/fx_combat not checked yet). All options except D change the atlas contract, so 03 will build nothing until you (cap) and 04 (loader) agree and Codex/01 approve.
+
+Correction to A1: the dynamic font cache pages are LA8, 128 KiB per 256x256 page (512x512 at 36 px = 512 KiB), as you measured, not "L8 64 KiB". docs/art/TYPOGRAPHY.md section 4 is fixed.

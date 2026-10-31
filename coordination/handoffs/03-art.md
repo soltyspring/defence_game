@@ -1,5 +1,5 @@
 # 03-art handoff
-Updated: 2026-10-31 16:38 +09:00 (the previous header said 16:40; the real time of that update was 16:19, matching commits 7705aec/f46495a). Q1 = A DECIDED; Q3 working title 빵집 기사단: 곰팡이 디펜스 (store name pending KIPRIS); Q2 business model DEFERRED (no ad/purchase UI). Art version 0.10.0.
+Updated: 2026-10-31 16:55 +09:00 (real time from Get-Date; the previous update was 16:38). Q1 = A DECIDED; Q3 working title 빵집 기사단: 곰팡이 디펜스 (store name pending KIPRIS); Q2 business model DEFERRED (no ad/purchase UI). Art version 0.10.1 (docs/tools only; runtime assets unchanged since 0.10.0).
 
 ## Session
 - Kiro CLI session ID: not visible from inside the session, so I cannot record it. Codex should read it from coordination/.runtime/quota/sessions.json / the launcher.
@@ -59,8 +59,17 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - Requests: 02 A11, 04 A8, 06 A1 (new file), 07 A3, 08 A6.
 - Commit 19245a5 [Design]: PUSHED origin/main (verified with git branch -r --contains).
 
+## Milestone 10 (this session): HEAD-snapshot in-game check, adaptive icon, menu-budget proposal
+- Real game from a clean snapshot: `git archive HEAD` (9e0487d) to %TEMP%\art03_head, config/name changed there, `--import` only there (snapshot `--import-cache`: all pages match). Main-tree .godot NOT touched. visible_launch on \\.\DISPLAY2, KO menu / r01 / r03 autoplay and EN menu / HUD, all EXIT_0. Evidence: docs/art/evidence/ingame_head/.
+- Verified in-engine: theme art, KO/EN logos, card art. Still wrong: blue UI chrome, meadow biome with ~75 % sky (QA-J1), hero is a sword knight instead of 01's 제빵 대장 (chef hat + rolling pin).
+- Adaptive icon: tools/art/adaptive_icon.py -> docs/art/branding/adaptive/ (432 px = 108 dp). 0 px outside the 66 dp safe circle, 0 px clipped by circle/squircle/teardrop. Real launcher/device UNTESTED.
+- Menu budget: dry run only (docs/art/evidence/menu_budget_dryrun.json). Proposal B (per-locale ui_title pages) / C (ui_main 256x128 by moving 5 battle-only frames) / A (x1-master logos, not recommended) / D (raise cap) sent to 08 A7 and 04 A9. No contract change made.
+- Corrections: 07 request A3 now records 07's QA-B011 PASS (5b36f4e at 3b2d830, dE 19-25); TYPOGRAPHY section 4 font cache = LA8 128 KiB per 256x256 (08).
+- Requests: 04 A9, 06 A2, 07 A4 (+A3 fix), 08 A7.
+- Processes: none of mine running at 16:55. Godot PIDs 57532/58828 (05 audio sandbox) and 12768/58768 (multi_seed_sim) are other roles' and were not touched.
+
 ## Exact next steps on resume
-1. Read coordinator-to-03-art.md, DECISIONS.md (Q1 first: re-theme takes priority), and incoming *-to-03-art.md.
-2. If 02 has re-imported: run `python tools/art/validate.py --import-cache` (expect 0 stale), then a real-game capture on the secondary monitor: `& .\tools\build\visible_launch.ps1 -UserArgs @('--round=r01','--shots=2,5,8','--shot-dir=build/qa/art03','--quit-after=10') -EvidenceDir build\qa\art03`. Check icons (no UiStyle stale warning) and white lines (detector in docs/art/evidence/whitelines/analysis.json). Repeat for r05/r10 if the round can be selected.
-3. If 01 approves A17: recolour the purple masses of e_swarm/e_spitter/boss_warlord to bark/green. Then build → validate --determinism → run_godot_readability.ps1 -Tag a17 → pack check → notify 04/08 → publish.
-4. Otherwise: 2nd biome (dark-biome rule L* ≥ 35 on the lane band), measured with the readability tool.
+1. Read coordinator-to-03-art.md, DECISIONS.md and incoming *-to-03-art.md (07 16:50 update: QA-J1 sprites 5.0-6.9 % of screen, lane 16.1 % of height).
+2. If 08/04 accept menu option B and/or C (and Codex/01 approve): build the split pages, keep frame names/sizes, run validate --determinism, pack check, asset_budget_check --worktree, notify 04/08.
+3. Art follow-ups (03 can start without a contract change): hero redraw as 제빵 대장 (chef hat + rolling pin, same frame contract); bakery/mould biome layers with less sky (QA-J1, 09 X10); warmer UI chrome (ask 04 which frames); A26 bread detail.
+4. After 02 re-imports the main tree: `python tools/art/validate.py --import-cache` (expect 0 stale), then recapture in the main tree with visible_launch on the secondary monitor.
