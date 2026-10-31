@@ -1,5 +1,18 @@
 # 01-director handoff
-## CHECKPOINT 2026-10-31 (user ordered full checkpoint/stop)
+## RESUME 2026-10-31 (after the 09:18 checkpoint) — Theme A applied
+- Recovery: the working tree matched checkpoint/quota-20261031-092323/01-director (git diff of 01 paths empty; only the last handoff line was uncommitted). Nothing was lost. Index empty; no Godot process of mine.
+- Q1 **DECIDED by user** (09:03 KST, words "모두 고치고 A) 빵집 기사단 vs 곰팡이 군단이걸로", via coordinator chat). Recorded in DECISIONS.md Q1 + D20.
+- Done: docs/design/WORLD.md (one-page world plus name table); data/text ko/en rethemed (names, descs, tutorials, round names, supply → 반죽/Dough). IDs unchanged. Card names fit: ko 3 syllables = 36.0 px, en 24–36 px at Galmuri11 12 px (slot 36.67). No missing glyphs.
+- QA-B008: added toast.save_recovered/save_read_only/save_failed/round_locked. Every Events.toast.emit id has ko+en text; l10n check keys 122/122 ALL_OK=True.
+- QA-W001: already fixed by committed cbfb0a8 (D18; idle player destroyed at 258 s in r01/r02). 07's `run_acceptance -Only data,sim` was NOT run by me: 07's own run was in progress. Retest requested (01→07 R3).
+- The coordinator's verify_files hang was caused by the old script reading `warnings` after free (a script error before quit). It is already fixed in the committed script (cbfb0a8: `var ok` before free, then quit).
+- Decision replies (03 A17 → D14, summon_frame → D15, 09 G1 → D16, 10 schema_version → D17) were already sent in e4bf698 (01→03 R2, 01→09 R1, 01→10 R1).
+- Requests: 01→03 R3 retheme, 01→04 R5 text/typography retest, 01→05 R1 timbre, 01→07 R3 retest.
+- Q2 (business model) prepared in USER_QUESTION.md and asked in CLI.
+- Git: 14b01e2 [Feat] 빵집 기사단 테마 확정 반영… (9 files) → PUSHED origin/main.
+- Next: wait for the Q2 answer; 02's paired balance runs for r04–r10 (do not retune before them); rendered retests from 04/07; 03 retheme art.
+
+## CHECKPOINT 2026-10-31 (user ordered full checkpoint/stop) — historical
 Session ID: not visible in-session. Account: p01034979433@gmail.com (kiro-cli whoami earlier). Model claude-opus-5.5. Accepted effort unverified. No Godot processes of mine are running (checked; none at all).
 User decisions: NONE. Q1 (theme) is still unanswered and is the only open question. All D1–D19 are DEFAULT.
 
@@ -81,3 +94,5 @@ This checkpoint: see the line appended below.
 - Checkpoint commit 0130c21f7499d7bac92e51d2a1ff505774298be8 "[Docs] 계정 변경 전 밸런스 진단 체크포인트와 시뮬레이션 근거 저장" (8 files) → PUSHED origin/main. The first attempt failed the helper's diff check (blank line at EOF) and left those 8 own files staged. I unstaged only those files with `git restore --staged`, which leaves the working tree untouched, fixed the EOF and re-published. The index was empty afterwards.
 - NOT committed (WIP, unverified): data/rounds/r01..r10.json (enemy_ai disabled), docs/design/balance/verify_files.gd.txt. Left for the coordinator checkpoint branch.
 - This final handoff line itself is uncommitted. Status: STOPPED, waiting for the user's new-account login.
+
+- Checkpoint commit e4bf698d431bff4f3b4cc73e384336099a1a7a61 "[Docs] 디렉터 결정 D14~D19 기록과 담당자 회신, 체크포인트 인수인계" (6 files) → PUSHED origin/main. Afterwards no 01-owned verified work is left uncommitted except this one appended line. STOPPED.

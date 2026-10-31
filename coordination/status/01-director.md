@@ -1,8 +1,6 @@
 # 01-director status
-Updated: 2026-10-31 ~08:05 +09:00
-Status: RESTORED under account p01034979433@gmail.com (kiro-cli whoami). WAITING_ON_USER for Q1.
-Current task: balance diagnosis. The WIP data/rounds edit (enemy_ai disabled) is verified as NOT acceptable: a passive player survives r01/r02 until the 900 s timeout. It is uncommitted, matches checkpoint branch d88ee8d, and has not been altered since recovery.
-Next: decide the WIP (restore vs raise r01/r02 pressure), tighten the verify script (passive_t < 900), rerun, then write BALANCE_DIAGNOSIS.md and the 02/07 paired requests.
-Validation: verify_out.json 07:38 (warnings [], r03–r10 passive base destroyed 103–154 s, r01/r02 timeout only).
-User answers: none. Q1 is the only open question.
-Effort: max requested; actual accepted effort is not readable in-session (unverified).
+Updated: 2026-10-31 (resume after 09:18 checkpoint)
+Status: WAITING_ON_USER for Q2 (business model). Q1 DECIDED by user = Theme A 빵집 기사단 vs 곰팡이 군단.
+Completed: WORLD.md, themed ko/en text (122/122 keys, ALL_OK), QA-B008 toast keys, Q1 recorded (DECISIONS Q1, D20). Commit 14b01e2 PUSHED.
+Open: r04–r10 bot losses (waiting for 02 paired runs); 04/07 rendered retests; 03 retheme art; 07 retest of QA-W001/B008 at HEAD.
+Validation: Pillow card widths (ko 36.0, en ≤ 36.0 at 12 px vs 36.67 slot), glyph coverage OK, l10n check ALL_OK, all data JSON parse. No rendered frame and no 07 acceptance run by me.
