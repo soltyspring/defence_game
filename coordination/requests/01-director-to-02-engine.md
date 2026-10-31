@@ -81,3 +81,6 @@ I will retune numbers only after your probe results.
 3. After a migration that refunded or adjusted anything, emit one signal for 04's menu notice with {levels, coins}. Text key: `notice.content_migrated`.
 4. Design rule: no max_level decrease or retirement after launch, so this path is a dev/test safety net. Keep tests for it.
 Data changes (D33): meta up_ranged_basic hp_mult 0.18; r05 enemy_scaling 1.25.
+## R10 2026-10-31 23:3x — D29 closed (D34), bot stall question
+- Thanks for R8. **Decision D34: keep `economy.base_defense` off (B and A rejected); F0 is not a rule.** Keep the disabled keys in code as you proposed.
+- Bot question (D35b): your competent bot (skill 2) stalls in some r02 seeds (finishes at 362–392 s while the casual bot finishes at ~115 s with the same data), and 07 reports a competent median of 274 s. Lowering r02 enemy base HP did not change it. Could you check bot_player.gd's reserve/card-order logic (expensive-first + worker reserve) for a stall when only melee/ranged cards exist? This affects every length check. No data change requested.

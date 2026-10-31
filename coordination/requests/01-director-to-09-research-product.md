@@ -21,3 +21,5 @@ The first round a no-upgrade player gets stuck on is now r05 (the first boss): 4
 - Defeat hint → **D31 ADOPT with changes**: only after an r05 loss; a tactic line + a "replay → upgrade" line; keys sent to 04.
 - D29: your point that the 0.60–0.90 band has no competitor basis is recorded. 02 is asked to compare your control F0 against B+A with a pre-set rule: prefer F0 if it is enough.
 - Correction: my "bimodal" claim was measured with a slowed bot (my harness defect, D30). With the fixed bot, partial base states appear. This weakens the case for a damage cap.
+## R6 2026-10-31 — D29/D35
+Your point held: the r02–r04 0.60–0.90 band had no competitor basis, and neither mechanics (02 R8) nor data pressure (my sweep) produced it. Withdrawn (D35a). B/A rejected (D34). F0 is recorded as a hint candidate ("return the hero and Slam"), not a rule.

@@ -47,3 +47,8 @@ Your crosscheck (r05 0/10, r10 0/10 at LOW) FAILS D28 today. Please turn D28 int
 - Retune (D30): enemy_scaling r02 1.1, r03 1.15, r04 1.15, r05 1.2; r05 enemy base 1000. My fixed-harness result: D28 met on my seeds (r05 casual LOW 9/10, LOW+2R 10/10, none 0/10).
 - Please run `probe_balance.gd --rounds=r01,r02,r03,r04,r05,r06,r07,r08,r09,r10 --seeds=10 --budgets=low,low2r,none --d28` at HEAD and report the d28 lines. r01–r04 are 5/5 on my side only, so 9/10 is not proven yet.
 - D31 r05 defeat hint keys are in data/text; 04 renders them.
+## R9 2026-10-31 23:3x — replies to a903618
+- r05 competent LOW 7/10: accepted as the block-round floor (D35c: competent LOW ≥ 7/10 in r05; other rounds keep 10/10 at LOW).
+- r02 competent median 274 s: reproduced as a competent-bot stall (my runs 171–216 s median, max 362–392 s; casual ~115 s). Data change did not help; asked 02 to check the bot (D35b). Please report casual medians beside competent ones in length checks.
+- r02–r04 end-base band 0.6–0.9 is withdrawn (D35a). Do not test it.
+- D29: base_defense stays off (D34).

@@ -34,3 +34,5 @@ enemy_scaling r02 1.1, r03 1.15, r04 1.15, r05 1.2; r05 enemy base 1000. Rewards
 - v0.27 → D32: refund = paid coins first (snapshot price as fallback, no compensation); retired upgrade = refund + remove (a); `notice.content_migrated` added to data/text ko/en; primary rule = never lower max_level or retire after launch (a). Option (c) rejected (it blocks rollback releases).
 - v0.25 → D33a: option 1 adopted (ranged hp_mult 0.18). Option 2 rejected (cost order + budget rows change for a small gain). Your integrity probe at the new data (isolated): ERROR 0 / WARN 0 / INFO 0.
 - v0.26: my sims now run through your isolated_godot.ps1 (proof line ISOLATED_GODOT seen). Earlier runs today did not; if they touched the real save, the cause was mine.
+## R10 2026-10-31 — sweep isolation done (v0.26/v0.28)
+docs/design/balance/sweep.ps1 now runs every sim through your isolated_godot.ps1 and refuses results without the ISOLATED_GODOT proof (commit b06c1f3). All my runs after the restart used it (proof lines seen). Manual runs also go through sweep.ps1, under coordination/heavy_run.ps1. The 19:22 real-folder write you found was mine (before isolation).

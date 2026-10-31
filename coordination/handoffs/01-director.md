@@ -1,4 +1,12 @@
 # 01-director handoff
+## TASK 2026-10-31 23:0x–23:4x — restart after quota stop + blue screen (23:08)
+- Recovery: working tree = checkpoint/quota-20261031-202729/01-director (git diff of 01 paths empty). After the blue screen: no empty or NUL files in data/, docs/design, or my coordination files; all data JSON parses. Uncommitted sweep.ps1 isolation survived and was verified.
+- (1) sweep.ps1 isolation (10 v0.26/v0.28): every run goes through isolated_godot.ps1 and requires the proof line → b06c1f3 PUSHED.
+- (2) D34: D29 B/A rejected, base_defense stays off, F0 not a rule (02 R8 evidence).
+- (3) r02–r04 band: isolated sweeps p120/p130 (5 seeds, 2 bots) never reach ≥ 4/5 in 0.6–0.9; target withdrawn (D35a). No data change.
+- (4) 07 a903618: r05 competent LOW floor 7/10 (D35c); r02 length = competent-bot stall (D35b; eb 800 did not help), asked 02 R10.
+- Heavy runs: one at a time via coordination/heavy_run.ps1 (label 01-r02-length). The p120/p130 sweep ran before the crash, without the lock (rule introduced afterwards).
+- Q5 still ASKED; Q6 (backup) queued after Q5. No new question.
 ## TASK 2026-10-31 ~19:30–19:50 — D32 migration rules, D33 ranged/r05 bounds (usage ~91%)
 - D32: refund = paid coins; retired upgrade = refund + remove; notice.content_migrated ko/en; no max_level decrease after launch. Sent to 02 R9, 04 R8, 10 R9.
 - D33: ranged hp_mult 0.18 (10 option 1); r05 scaling 1.25 with upper bounds (casual LOW ≤ 8/10, end base median ≤ 0.6). 10-seed isolated run: casual LOW 7/10, LOW+2R 8/10, none 0/10. The boss fight is ~60% of r05 length; proposal boss hp 1800→1300 (not applied, not run).

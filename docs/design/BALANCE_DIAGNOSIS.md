@@ -102,3 +102,13 @@ Run in an isolated user:// (10's isolated_godot.ps1). Data: r05 scaling 1.25 + r
 | competent | LOW+2R | 10/10 | 0.45 | 95 | 296 | 201 | 60 | 361 |
 | both | none | 0/10 | 0.00 | 95 | — | — | — | — |
 Length cause: about 60% of the round is the boss fight (95 s → ~300 s). Proposal (not applied): boss_warlord hp 1800→1300 (−28%); expected kill time ~150 s and total ~300 s ≤ 325 s. Raising boss atk may be needed to keep the block (to verify with the same 10-seed run).
+## Update 2026-10-31 (7) — r02–r04 pressure sweep and D29 outcome (D34, D35)
+All runs isolated (sweep.ps1 → isolated_godot.ps1), under heavy_run.ps1, 5 seeds, competent and casual bots, fixed dt.
+End base per seed, LOW budget (band 0.6–0.9 hits / 5):
+| data | r02 competent | r03 competent | r04 competent | casual worst case |
+|---|---|---|---|---|
+| D30 (current) | 1,1,1,1,1 (0) | 1,1,1,1,1 (0) | 1,1,1,1,1 (0) | r03 0.48 |
+| p120 (+0.1) | 0.89,0.53,1,1,1 (1) | 1,1,0.22,1,1 (0) | 1,1,1,1,0.60 (1) | r04 0.19, r04 none 3/5 W |
+| p130 (+0.2) | 0.22,0.00,0.94,1,0.57 (0) | 1,1,1,0.47,0.71 (1) | 1,0,1,0.21,0 (0) | r04 casual LOW 3/5 W |
+Conclusion: raising pressure jumps from "untouched" to "heavy damage or loss" without a stable band. The target is withdrawn (D35a). 02's mechanic options did not produce it either (D34).
+r02 length: enemy base 800 → competent median 216 s (max 362), casual 115 s. The competent bot stalls in some seeds; the cause is in the bot, not the round.
