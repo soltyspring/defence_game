@@ -1,0 +1,250 @@
+{
+ "text": [
+  {
+   "frame": "btn",
+   "fill": "6e4528",
+   "text": "C_TEXT",
+   "ratio": 7.22,
+   "pass": true
+  },
+  {
+   "frame": "btn_pressed",
+   "fill": "3d2519",
+   "text": "C_TEXT",
+   "ratio": 12.45,
+   "pass": true
+  },
+  {
+   "frame": "btn_disabled",
+   "fill": "2f3140",
+   "text": "C_TEXT_DIM",
+   "ratio": 5.76,
+   "pass": true
+  },
+  {
+   "frame": "btn_gold",
+   "fill": "e5a826",
+   "text": "K_dark_text",
+   "ratio": 8.54,
+   "pass": true
+  },
+  {
+   "frame": "panel",
+   "fill": "f6e7c1",
+   "text": "K_dark_text",
+   "ratio": 14.68,
+   "pass": true
+  },
+  {
+   "frame": "panel_dark",
+   "fill": "3d2519",
+   "text": "C_TEXT",
+   "ratio": 12.45,
+   "pass": true
+  },
+  {
+   "frame": "panel_dark",
+   "fill": "3d2519",
+   "text": "C_GOLD",
+   "ratio": 9.45,
+   "pass": true
+  },
+  {
+   "frame": "card_frame",
+   "fill": "6e4528",
+   "text": "C_TEXT",
+   "ratio": 7.22,
+   "pass": true
+  },
+  {
+   "frame": "card_frame",
+   "fill": "6e4528",
+   "text": "C_GOLD",
+   "ratio": 5.49,
+   "pass": true
+  },
+  {
+   "frame": "card_frame_disabled",
+   "fill": "2f3140",
+   "text": "C_TEXT_DIM",
+   "ratio": 5.76,
+   "pass": true
+  },
+  {
+   "frame": "card_frame_selected",
+   "fill": "e5a826",
+   "text": "K_dark_text",
+   "ratio": 8.54,
+   "pass": true
+  }
+ ],
+ "states": [
+  {
+   "a": "btn",
+   "b": "btn_disabled",
+   "dE76": {
+    "normal": 38.3,
+    "protan": 33.8,
+    "deutan": 38.5,
+    "tritan": 34.3
+   },
+   "dL": 12.7,
+   "pass": true
+  },
+  {
+   "a": "btn",
+   "b": "btn_pressed",
+   "dE76": {
+    "normal": 20.5,
+    "protan": 19.0,
+    "deutan": 20.6,
+    "tritan": 19.1
+   },
+   "dL": 16.0,
+   "pass": true
+  },
+  {
+   "a": "card_frame",
+   "b": "card_frame_disabled",
+   "dE76": {
+    "normal": 38.3,
+    "protan": 33.8,
+    "deutan": 38.5,
+    "tritan": 34.3
+   },
+   "dL": 12.7,
+   "pass": true
+  },
+  {
+   "a": "card_frame",
+   "b": "card_frame_selected",
+   "dE76": {
+    "normal": 59.5,
+    "protan": 62.7,
+    "deutan": 58.3,
+    "tritan": 41.3
+   },
+   "dL": 39.4,
+   "pass": true
+  },
+  {
+   "a": "btn",
+   "b": "btn_gold",
+   "dE76": {
+    "normal": 59.5,
+    "protan": 62.7,
+    "deutan": 58.3,
+    "tritan": 41.3
+   },
+   "dL": 39.4,
+   "pass": true
+  }
+ ],
+ "faction": {
+  "closest_pair": [
+   "card_tank",
+   "portrait_boss_warlord"
+  ],
+  "dE76": {
+   "normal": 27.4,
+   "protan": 23.8,
+   "deutan": 26.8,
+   "tritan": 29.5
+  },
+  "card_background": {
+   "ally": "d98b5f",
+   "enemy": "1e2b30",
+   "pair": [
+    "card_melee_basic",
+    "portrait_e_grunt"
+   ],
+   "dE76": {
+    "normal": 69.7,
+    "protan": 56.7,
+    "deutan": 67.3,
+    "tritan": 73.0
+   },
+   "dL": 48.4
+  },
+  "pass": true
+ },
+ "code_chrome": {
+  "now": {
+   "C_BG": {
+    "hex": "171a24",
+    "text": "C_TEXT",
+    "ratio": 15.2,
+    "gold_ratio": 11.54
+   },
+   "C_PANEL": {
+    "hex": "212636",
+    "text": "C_TEXT",
+    "ratio": 13.18,
+    "gold_ratio": 10.01
+   },
+   "C_PANEL_LIGHT": {
+    "hex": "384054",
+    "text": "C_TEXT",
+    "ratio": 9.06,
+    "gold_ratio": 6.88
+   },
+   "C_DISABLED": {
+    "hex": "4d4f59",
+    "text": "C_TEXT_DIM",
+    "ratio": 3.65,
+    "gold_ratio": 5.42
+   },
+   "active_vs_disabled": {
+    "dE76": {
+     "normal": 9.6,
+     "protan": 9.1,
+     "deutan": 10.1,
+     "tritan": 8.4
+    },
+    "dL": 6.6
+   }
+  },
+  "proposed": {
+   "C_BG": {
+    "hex": "2a1a12",
+    "text": "C_TEXT",
+    "ratio": 14.65,
+    "gold_ratio": 11.13
+   },
+   "C_PANEL": {
+    "hex": "3d2519",
+    "text": "C_TEXT",
+    "ratio": 12.45,
+    "gold_ratio": 9.45
+   },
+   "C_PANEL_LIGHT": {
+    "hex": "6e4528",
+    "text": "C_TEXT",
+    "ratio": 7.22,
+    "gold_ratio": 5.49
+   },
+   "C_DISABLED": {
+    "hex": "2f3140",
+    "text": "C_TEXT_DIM",
+    "ratio": 5.76,
+    "gold_ratio": 8.54
+   },
+   "active_vs_disabled": {
+    "dE76": {
+     "normal": 38.3,
+     "protan": 33.8,
+     "deutan": 38.5,
+     "tritan": 34.3
+    },
+    "dL": 12.7
+   }
+  }
+ },
+ "lines": {
+  "text": 4.5,
+  "dE": 10.0,
+  "dL": 10.0
+ },
+ "fails": [],
+ "pass": true
+}

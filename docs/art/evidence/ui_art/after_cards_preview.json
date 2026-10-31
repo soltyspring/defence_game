@@ -1,0 +1,199 @@
+{
+ "cards": {
+  "worker": {
+   "plate": "#f6e7c1",
+   "figure_contrast": 3.57,
+   "figure_edge_contrast": 14.68,
+   "figure_coverage": 0.554,
+   "plate_share": 0.446,
+   "plate_vs_card_body": 8.46
+  },
+  "melee_basic": {
+   "plate": "#d98b5f",
+   "figure_contrast": 1.63,
+   "figure_edge_contrast": 6.69,
+   "figure_coverage": 0.568,
+   "plate_share": 0.432,
+   "plate_vs_card_body": 3.24
+  },
+  "ranged_basic": {
+   "plate": "#b4e266",
+   "figure_contrast": 2.93,
+   "figure_edge_contrast": 12.01,
+   "figure_coverage": 0.606,
+   "plate_share": 0.394,
+   "plate_vs_card_body": 5.82
+  },
+  "tank": {
+   "plate": "#b9c6d6",
+   "figure_contrast": 2.53,
+   "figure_edge_contrast": 10.38,
+   "figure_coverage": 0.579,
+   "plate_share": 0.421,
+   "plate_vs_card_body": 5.03
+  },
+  "fast": {
+   "plate": "#d1a6f0",
+   "figure_contrast": 2.18,
+   "figure_edge_contrast": 8.94,
+   "figure_coverage": 0.575,
+   "plate_share": 0.425,
+   "plate_vs_card_body": 4.33
+  },
+  "siege": {
+   "plate": "#e5a826",
+   "figure_contrast": 2.08,
+   "figure_edge_contrast": 8.54,
+   "figure_coverage": 0.63,
+   "plate_share": 0.37,
+   "plate_vs_card_body": 4.14
+  },
+  "hero_captain": {
+   "plate": "#ffe27a",
+   "figure_contrast": 1.76,
+   "figure_edge_contrast": 14.07,
+   "figure_coverage": 0.588,
+   "plate_share": 0.412,
+   "plate_vs_card_body": 6.82
+  }
+ },
+ "card_pairs": [
+  {
+   "a": "worker",
+   "b": "melee_basic",
+   "shape_iou": 0.742,
+   "dE_normal": 40.5,
+   "dE_protan": 32.0,
+   "dE_deutan": 30.6
+  },
+  {
+   "a": "worker",
+   "b": "ranged_basic",
+   "shape_iou": 0.736,
+   "dE_normal": 48.4,
+   "dE_protan": 42.5,
+   "dE_deutan": 32.3
+  },
+  {
+   "a": "worker",
+   "b": "tank",
+   "shape_iou": 0.649,
+   "dE_normal": 32.4,
+   "dE_protan": 31.4,
+   "dE_deutan": 33.6
+  },
+  {
+   "a": "worker",
+   "b": "fast",
+   "shape_iou": 0.675,
+   "dE_normal": 62.1,
+   "dE_protan": 57.6,
+   "dE_deutan": 53.5
+  },
+  {
+   "a": "worker",
+   "b": "siege",
+   "shape_iou": 0.779,
+   "dE_normal": 54.0,
+   "dE_protan": 56.2,
+   "dE_deutan": 50.8
+  },
+  {
+   "a": "melee_basic",
+   "b": "ranged_basic",
+   "shape_iou": 0.776,
+   "dE_normal": 65.3,
+   "dE_protan": 39.0,
+   "dE_deutan": 21.6
+  },
+  {
+   "a": "melee_basic",
+   "b": "tank",
+   "shape_iou": 0.722,
+   "dE_normal": 54.3,
+   "dE_protan": 44.8,
+   "dE_deutan": 49.5
+  },
+  {
+   "a": "melee_basic",
+   "b": "fast",
+   "shape_iou": 0.673,
+   "dE_normal": 67.5,
+   "dE_protan": 67.3,
+   "dE_deutan": 68.3
+  },
+  {
+   "a": "melee_basic",
+   "b": "siege",
+   "shape_iou": 0.717,
+   "dE_normal": 36.9,
+   "dE_protan": 41.4,
+   "dE_deutan": 31.1
+  },
+  {
+   "a": "ranged_basic",
+   "b": "tank",
+   "shape_iou": 0.668,
+   "dE_normal": 72.4,
+   "dE_protan": 71.6,
+   "dE_deutan": 62.1
+  },
+  {
+   "a": "ranged_basic",
+   "b": "fast",
+   "shape_iou": 0.705,
+   "dE_normal": 107.2,
+   "dE_protan": 97.5,
+   "dE_deutan": 82.2
+  },
+  {
+   "a": "ranged_basic",
+   "b": "siege",
+   "shape_iou": 0.757,
+   "dE_normal": 49.4,
+   "dE_protan": 18.5,
+   "dE_deutan": 18.8
+  },
+  {
+   "a": "tank",
+   "b": "fast",
+   "shape_iou": 0.704,
+   "dE_normal": 37.7,
+   "dE_protan": 26.3,
+   "dE_deutan": 20.3
+  },
+  {
+   "a": "tank",
+   "b": "siege",
+   "shape_iou": 0.519,
+   "dE_normal": 80.0,
+   "dE_protan": 81.9,
+   "dE_deutan": 78.4
+  },
+  {
+   "a": "fast",
+   "b": "siege",
+   "shape_iou": 0.633,
+   "dE_normal": 101.8,
+   "dE_protan": 106.7,
+   "dE_deutan": 98.0
+  }
+ ],
+ "skills": {
+  "skill_slam": {
+   "plate": "#4a2a1c",
+   "glyph_contrast": 5.7,
+   "glyph_coverage": 0.312
+  },
+  "skill_rally": {
+   "plate": "#5c1631",
+   "glyph_contrast": 10.61,
+   "glyph_coverage": 0.295
+  },
+  "skill_barrage": {
+   "plate": "#2e1a47",
+   "glyph_contrast": 6.9,
+   "glyph_coverage": 0.3
+  }
+ }
+}

@@ -1,33 +1,31 @@
 # 06-art-ui handoff
-Updated: 2026-11-01 ~02:00 KST. Session: this Kiro window (former 06-services). Quota at last check: not near 97%.
+Updated: 2026-11-01 ~02:35 KST. Session: this Kiro window (former 06-services). Quota: not near 97% at last check.
+Processed: coordinator 01:08 (role), 07-qa-to-06-art-ui (02:17, use 07's fixed set).
 
 ## Current task
-UI art: audit → numeric criteria → redraw (bakery theme) → build → captures → review requests → commit.
+UI art: audit → criteria → redraw → build → captures → review requests → commit. Waiting on 03 R1 for the cards.
 
 ## Done
-- Audit tool `tools/art/ui_art/ui_audit.py` (no Godot): cards, skills, HUD capture, title logo.
-- `docs/art/ui/UI_ART_AUDIT.md` (3 causes, numbers), `docs/art/ui/UI_ART_CRITERIA.md` (criteria, history, results).
-- `tools/art/ui.py`: `card(uid, frame)`, `CARD_STYLE`, `CARD_CROP`, `badge_mask()`; skill_slam plate h, skill_barrage
-  plate p; `icon_star_empty` rim X; `move_button` light bun. `portrait()` unchanged (enemies, boss, fallback).
-- `tools/art/branding.py`: CRUST / MOULD ramps (all face colours ≥ 3:1 on #3d517a). Frame sizes unchanged.
-- Previews without build.py: `tools/art/ui_art/card_preview.py`, `logo_preview.py`.
-- Build from a clean `git archive HEAD` copy + my two files (`%TEMP%\ui06_headbuild`): only ui_main, ui_title_ko,
-  ui_title_en, manifest.json (disk_bytes), ATLAS_BUDGET.md and the 3 atlas_ui_* previews change.
-  battle_mock_1x/2x previews also change (UI icons in the mock; not mine, left at HEAD).
-  `validate.py --determinism` PASS (clean copy). `asset_budget_check.py --tree` PASS, menu 0.50 MiB.
-- Requests: `06-art-ui-to-03-art.md` R1 (build.py one line), `06-art-ui-to-04-client.md` (9-slices, HUD row).
+- 1d359bc: audit tool `tools/art/ui_art/ui_audit.py`, `docs/art/ui/UI_ART_AUDIT.md`, `UI_ART_CRITERIA.md`, before evidence,
+  requests to 03 (R1) and 04.
+- Art commit (SHA in status after push): `tools/art/ui.py` (`card()`, `CARD_STYLE`, `CARD_CROP`, `badge_mask()`, skill plates,
+  `icon_star_empty`, `move_button`), `tools/art/branding.py` (CRUST/MOULD ramps), `tools/art/ui_contrast.py` (card background
+  read for shaped badges, worst pair), previews `card_preview.py`, `logo_preview.py`, capture runner `ui_capture.ps1`,
+  `capture_compare.py`; rebuilt `ui_main`, `ui_title_ko`, `ui_title_en`, `manifest.json`, `ATLAS_BUDGET.md`, atlas_ui_* previews.
+- Pages built in a clean `git archive HEAD` copy (`%TEMP%\ui06_headbuild`) + my files. Changed vs HEAD: only my 3 pages,
+  manifest disk_bytes, budget lines, my previews; battle_mock_1x/2x previews also change (UI icons) and were NOT committed (03's).
+- R1 sandbox `%TEMP%\ui06_r1` (copy's build.py patched): ui_audit PASS, determinism PASS, ui_contrast PASS; only card_* differ.
+- Captures: `build/ui06/shots` (git-ignored), sheets `docs/art/evidence/ui_art/cmp_{ko,en}_1x.png`.
+- A second run (`ui_capture.ps1 -Capture narrow -Scales 2x`, 07's capture_narrow.gd r08, label fit) was queued detached
+  at ~02:20 (log `build/ui06/capture_narrow.log`).
 
 ## Warning for whoever builds
-The shared working tree holds 09's WIP in `tools/art/bases.py` / `biome.py` and 03's in `chars_big.py`.
-Running `build.py` in the shared tree writes bases/biome pages from that WIP. I did this once at ~01:50, then restored
-those generated files to HEAD (`git checkout --` on bases.*, biome_meadow.*, atlas_bases/biome previews,
-sheets/base_*.png, battle_mock_*). Build in a clean copy instead.
+The shared tree holds 09's WIP in `tools/art/bases.py` / `biome.py` and 03's in `chars_big.py`. `build.py` in the shared tree writes
+bases/biome pages from that WIP. I did that once (~01:50) and restored those generated files to HEAD. Build in a clean copy.
 
 ## Next
-1. Wait for `build/ui06/capture_run.log` (detached, inside heavy_run, label 06-ui-capture). Shots in
-   `build/ui06/shots/` (before/after × ko/en × 1x 800x360 / 2x 1600x720). Check menu logo, r01 HUD, result.
-2. Commit (Publish-Task -Role 06-art-ui): tool, docs, evidence, ui.py, branding.py, previews tools, ui_main/ui_title_*
-   png/json, manifest.json, ATLAS_BUDGET.md, atlas_ui_* previews, requests, status, handoff.
-3. When 03 commits R1: rebuild in a clean HEAD copy, run `ui_audit.py --criteria` on the built atlas (expect PASS),
-   capture r01 HUD again, commit ui_main.
-4. Send before/after review requests to 03, 04, 07 (state: no human player test, no real-phone check).
+1. When 03 commits R1: clean HEAD copy build → copy ui_main png/json (+ manifest/budget/preview if changed) → `ui_audit.py --criteria`
+   on the built atlas (expect PASS) → commit.
+2. Run 07's set on that SHA (ART_BASELINE.md §4, all four tags), `art_metrics.py`, compare with art-baseline-ad47eda; report U1/U2/U3/G3.
+3. Read `capture_narrow.log` / shots `*_narrow_*` and the report's truncated flags (label fit).
+4. Review requests to 03, 04, 07 with before/after (state: no human player test, no real-phone check).

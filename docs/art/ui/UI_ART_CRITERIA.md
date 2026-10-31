@@ -48,13 +48,32 @@ HUD 줄 전체 대 흙 바닥 ≥ 3:1(현재 1.86–2.82)은 카드 몸통과 �
 | C5 | 2.18 (화덕포 1.88) | 6.69–14.68 | PASS | 미리보기 |
 | C6 | 밀대 1.88, 포격 2.33, 함성 10.61 | 5.70, 6.90, 10.61 | PASS | 빌드 |
 | C7 | 곰팡이 ko 15.7%, en 12.1%; 빵 ko 63.3%, en 73.3% | 네 줄 모두 100% | PASS | 빌드 |
-| G1 | | 이름·크기·여백·피벗 같음, ui_main json은 disk_bytes만 바뀜 | PASS | 빌드 |
+| G1 | | 104 프레임 위치·크기·피벗·여백 같음. 픽셀이 바뀐 프레임: icon_star_empty, icon/skill_skill_slam, icon/skill_skill_barrage, btn_move_left/right (R1 뒤 card_* 7장 추가). ui_main json은 disk_bytes만 바뀜 | PASS | 빌드 |
 | G2 | | 메뉴 0.50 MiB, 최악 전투 8.75 MiB, 전체 9.00 MiB, PASS | PASS | 빌드 |
 | G3 | | identical page bytes across 2 builds | PASS | 빌드 |
-| G4 | | 진행 중 | 미정 | |
+| G4 | | 06 캡처(아래) 렌더·잘림 이상 없음. 07 고정 세트 판정은 R1 뒤 | 부분 | 캡처 |
 
 "미리보기"는 `card_preview.py` 값이다. 빌드된 `card_*`는 03의 `build.py` 한 줄(R1)이 들어가야 바뀐다.
-그 전까지 빌드된 아틀라스의 C1–C5는 전과 같다(탈락).
+그 전까지 빌드된 아틀라스의 C1–C5는 전과 같다(탈락, `after_build_pre_r1_audit.json`).
+
+R1 효과는 샌드박스에서 확인했다: 깨끗한 `git archive HEAD` 복사본(`%TEMP%\ui06_r1`)에 06의 `ui.py`·`branding.py`를 넣고,
+그 복사본의 `build.py`에만 R1 한 줄을 적용해 빌드했다(저장소의 03 파일은 건드리지 않음).
+
+| 검사 (R1 샌드박스 빌드) | 전 (HEAD) | 후 | 판정 |
+|---|---|---|---|
+| `ui_audit.py --criteria` (빌드된 ui_main) | FAIL 65 | PASS | PASS |
+| `validate.py --determinism` | | identical page bytes, RESULT PASS | PASS |
+| `ui_contrast.py`: 아군 카드 대 적 초상 평균색 최소 ΔE (4개 시뮬레이션 중 최소) | 17.3 | 23.8 | PASS (≥ 10) |
+| `ui_contrast.py`: 카드 배경 대 적 초상 배경, 최악 쌍 \|ΔL*\| | 16.8 | 48.4 | PASS (≥ 10) |
+| `ui_contrast.py`: 글자 대비·상태 구분 | fails 0 | fails 0 | 변화 없음 |
+| `cvd_check.py` (캐릭터 페이지) | | 같음(캐릭터 무변경) | 변화 없음 |
+
+`ui_contrast.py` 수정(06 소유가 됨): 카드 배경을 고정 픽셀(안쪽 오른쪽 위)에서 읽던 것을, 사각 초상은 (1,1), 모양 배지는
+판 색 최빈값으로 읽게 바꿨다. 고정 픽셀은 모양 배지에서 투명이라 #000000으로 읽혔다. 배경 비교도 첫 카드·첫 초상 한 쌍에서
+모든 쌍의 최악값으로 바꿨다. 전(HEAD) 값은 수정한 도구로 다시 잰 값이다.
+
+라벨 맞춤: 06은 글자를 그리지 않고 프레임 크기를 바꾸지 않았다(G1). 로고 프레임 크기도 같다(304×30, 158×58, 203×21, 202×62).
+실제 화면 잘림은 G4 캡처로 확인한다.
 
 배지 모양과 판 색(팔레트 글자):
 
@@ -70,3 +89,20 @@ HUD 줄 전체 대 흙 바닥 ≥ 3:1(현재 1.86–2.82)은 카드 몸통과 �
 
 증거 그림: `docs/art/evidence/ui_art/before_cards_x4.png`, `after_cards_x4.png`(1줄 일반, 2줄 deutan, 3줄 protan,
 4줄 스킬 아이콘을 스킬 버튼 바탕 위에), `after_logo_x2.png`(메뉴 하늘 실측색 위).
+
+## G4 캡처 (06, 2026-11-01 02:12–02:13 KST)
+
+- 명령: `& .\coordination\heavy_run.ps1 -Label '06-ui-capture' -Script { & .\tools\art\ui_art\ui_capture.ps1 }`
+  (분리 프로세스로 실행, 잠금 대기 864 s, 실행 63 s, END status=ok).
+- 전: `git archive HEAD` 스냅숏(ad47eda, 07 기준선과 같은 SHA; 1d359bc와 manifest·아틀라스 차이 없음). 후: 같은 스냅숏에 06 페이지 3장과 manifest만 덮어씀. 덮어쓴 페이지는
+  R1 샌드박스 빌드(`%TEMP%\ui06_r1`)라서 카드도 최종 모습이다. 스냅숏마다 따로 `--import`(격리 APPDATA, exit 0).
+- 장면: 07의 `capture_visual.gd`(메뉴, 라운드 선택, 설정, r01 HUD 0/30/60 s, 결과). ko·en × 800×360·1600×720,
+  8회 모두 exit 0, 회당 PNG 7장. 창은 모두 `\\.\DISPLAY2`, APPDATA 격리(`visible_launch.ps1` 증거 JSON).
+- 비교 그림: `docs/art/evidence/ui_art/cmp_ko_1x.png`, `cmp_en_1x.png`(행: 메뉴, r01 30 s, 결과 / 열: 전, 후).
+- 눈으로 본 결과:
+  - 메뉴: 로고 2줄째가 하늘과 갈려 읽힌다. 잘림·겹침 없음(ko·en).
+  - r01 HUD: 이동 버튼이 밝은 빵 원판·진한 화살표로 바뀌어 흙 바닥과 갈린다. r01 카드 2장(제빵사·식빵병)은 밀가루
+    부족으로 45% 흐림 상태라 배지도 흐리다. 원과 식빵 모양은 흐림 상태에서도 보인다. r01에는 스킬이 없다.
+  - 결과: 별·버튼 배치 같음. 결과 리본은 04 코드 그림이라 바뀌지 않음.
+- 한계: r01은 카드가 2장뿐이고 스킬이 없다. 카드 6장·스킬 3개가 함께 보이는 장면은 07 고정 세트(r06·r08·r10)로 R1 뒤에 판정한다.
+  사람 플레이 시험과 실제 폰 확인은 하지 않았다.

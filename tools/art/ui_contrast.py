@@ -1,4 +1,5 @@
-"""ui_main chrome: text contrast (WCAG 2.x) and state / faction separation under CVD (owner: 03-art).
+"""ui_main chrome: text contrast (WCAG 2.x) and state / faction separation under CVD
+(written by 03-art; owner 06-art-ui since 2026-11-01).
 
     python tools/art/ui_contrast.py [out.json]
 
@@ -12,6 +13,8 @@ Lines (fixed before measuring):
             deutan and tritan (Machado 2009, full severity) AND |dL*| >= 10 (does not rely on hue).
   faction   ally card vs enemy portrait (mean colour of the 24x24 frame, outline excluded):
             dE76 >= 10 in all four simulations AND |dL*| of the frame background >= 10.
+            06-art-ui 1.0: background = worst ally/enemy pair (was the first card and first portrait only);
+            shaped card badges use their most common plate colour.
 Also reports 04's code-drawn chrome colours (blue-grey) and the bakery values 03 proposes for them.
 """
 from __future__ import annotations
@@ -86,8 +89,20 @@ def main(out=None):
         return cr[cr.shape[0] // 2, cr.shape[1] // 2, :3].astype(float)
 
     def bg(n):
+        """Portrait/badge background. Square portraits: the inner top-right pixel (as before). 06-art-ui 1.0 shaped
+        card badges are transparent there, so then: most common opaque non-outline colour 2 px inside the silhouette."""
         cr = crop(n)
-        return cr[2, cr.shape[1] - 3, :3].astype(float)     # inner top-right corner = portrait background
+        a = cr[..., 3] > 0
+        if (not a[0, 0]) and a[1, 1] and a[0, 1] and a[1, 0]:   # ui.framed() square: corner clear, K ring, (1,1) = bg
+            return cr[1, 1, :3].astype(float)               # (portrait() restores the 2-px ring over the figure)
+        m = cr[..., 3] > 0
+        for _ in range(2):
+            p = np.pad(m, 1, constant_values=False)
+            m = m & p[:-2, 1:-1] & p[2:, 1:-1] & p[1:-1, :-2] & p[1:-1, 2:]
+        rgb = cr[..., :3][m]
+        rgb = rgb[~np.all(rgb == [0x1b, 0x13, 0x25], axis=1)]
+        cols, cnt = np.unique(rgb.reshape(-1, 3), axis=0, return_counts=True)
+        return cols[cnt.argmax()].astype(float)
 
     def mean_col(n):
         cr = crop(n)
@@ -118,12 +133,19 @@ def main(out=None):
             m = min(de.values())
             if worst is None or m < worst[0]:
                 worst = (m, a, e, de)
-    bde, bdl = sep(bg(ALLY_CARDS[0]), bg(ENEMY_PORTRAITS[0]))
+    # card backgrounds: every ally badge plate vs every enemy portrait background, worst pair (was first card only)
+    bw = None
+    for a in ALLY_CARDS:
+        for e in ENEMY_PORTRAITS:
+            de_, dl_ = sep(bg(a), bg(e))
+            if bw is None or min(min(de_.values()), dl_) < min(min(bw[2].values()), bw[3]):
+                bw = (a, e, de_, dl_)
+    bde, bdl = bw[2], bw[3]
     ok = worst[0] >= 10 and bdl >= 10
     rep["faction"] = {"closest_pair": [worst[1], worst[2]], "dE76": worst[3],
-                      "card_background": {"ally": "%02x%02x%02x" % tuple(int(v) for v in bg(ALLY_CARDS[0])),
-                                          "enemy": "%02x%02x%02x" % tuple(int(v) for v in bg(ENEMY_PORTRAITS[0])),
-                                          "dE76": bde, "dL": bdl}, "pass": ok}
+                      "card_background": {"ally": "%02x%02x%02x" % tuple(int(v) for v in bg(bw[0])),
+                                          "enemy": "%02x%02x%02x" % tuple(int(v) for v in bg(bw[1])),
+                                          "pair": [bw[0], bw[1]], "dE76": bde, "dL": bdl}, "pass": ok}
     if not ok:
         fails.append(("faction", worst, bde, bdl))
     for label, tbl in (("now", CODE_NOW), ("proposed", CODE_PROPOSED)):

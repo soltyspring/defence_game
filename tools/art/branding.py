@@ -40,8 +40,11 @@ def glyph_mask(text: str, scale: int) -> np.ndarray:
     return np.kron(a, np.ones((scale, scale), bool))
 
 
-CRUST = {"top": "U", "hi": "Z", "mid": "Y", "low": "T", "base": "o", "edge": "w", "shadow": "O"}
-MOULD = {"top": "z", "hi": "t", "mid": "t", "low": "l", "base": "l", "edge": "D", "shadow": "D"}
+# ui-art 1.0 (06-art-ui): every face colour >= 3:1 against the menu sky #3d517a. Before, the 1-px right/bottom
+# edge (about half of a 2-px stroke) was w/D and the mould fill t/l, so only 63-73 % (crust) and 12-16 % (mould)
+# of the glyph face reached 3:1 (tools/art/ui_art/ui_audit.py M4). Mould stays the cool, fuzzy grey-mint line.
+CRUST = {"top": "U", "hi": "Z", "mid": "Y", "low": "Y", "base": "T", "edge": "T", "shadow": "O"}
+MOULD = {"top": "W", "hi": "z", "mid": "z", "low": "x", "base": "x", "edge": "N", "shadow": "D"}
 
 
 def paint(mask: np.ndarray, scheme: dict, spores=False) -> Canvas:

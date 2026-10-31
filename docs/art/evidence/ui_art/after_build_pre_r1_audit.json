@@ -1,0 +1,228 @@
+{
+ "atlas": {
+  "cards": {
+   "worker": {
+    "plate": "#6e4528",
+    "figure_contrast": 1.88,
+    "figure_edge_contrast": 2.18,
+    "figure_coverage": 0.443,
+    "plate_share": 0.557,
+    "plate_vs_card_body": 1.26
+   },
+   "melee_basic": {
+    "plate": "#6e4528",
+    "figure_contrast": 1.88,
+    "figure_edge_contrast": 2.18,
+    "figure_coverage": 0.435,
+    "plate_share": 0.565,
+    "plate_vs_card_body": 1.06
+   },
+   "ranged_basic": {
+    "plate": "#6e4528",
+    "figure_contrast": 1.88,
+    "figure_edge_contrast": 2.18,
+    "figure_coverage": 0.468,
+    "plate_share": 0.532,
+    "plate_vs_card_body": 1.06
+   },
+   "tank": {
+    "plate": "#6e4528",
+    "figure_contrast": 1.88,
+    "figure_edge_contrast": 2.18,
+    "figure_coverage": 0.492,
+    "plate_share": 0.507,
+    "plate_vs_card_body": 1.06
+   },
+   "fast": {
+    "plate": "#6e4528",
+    "figure_contrast": 3.67,
+    "figure_edge_contrast": 2.18,
+    "figure_coverage": 0.637,
+    "plate_share": 0.362,
+    "plate_vs_card_body": 1.06
+   },
+   "siege": {
+    "plate": "#6e4528",
+    "figure_contrast": 1.72,
+    "figure_edge_contrast": 1.88,
+    "figure_coverage": 0.338,
+    "plate_share": 0.662,
+    "plate_vs_card_body": 1.06
+   },
+   "hero_captain": {
+    "plate": "#6e4528",
+    "figure_contrast": 6.73,
+    "figure_edge_contrast": 2.18,
+    "figure_coverage": 0.512,
+    "plate_share": 0.487,
+    "plate_vs_card_body": 1.06
+   }
+  },
+  "card_pairs": [
+   {
+    "a": "worker",
+    "b": "melee_basic",
+    "shape_iou": 1.0,
+    "dE_normal": 0.0,
+    "dE_protan": 0.0,
+    "dE_deutan": 0.0
+   },
+   {
+    "a": "worker",
+    "b": "ranged_basic",
+    "shape_iou": 1.0,
+    "dE_normal": 0.0,
+    "dE_protan": 0.0,
+    "dE_deutan": 0.0
+   },
+   {
+    "a": "worker",
+    "b": "tank",
+    "shape_iou": 1.0,
+    "dE_normal": 0.0,
+    "dE_protan": 0.0,
+    "dE_deutan": 0.0
+   },
+   {
+    "a": "worker",
+    "b": "fast",
+    "shape_iou": 1.0,
+    "dE_normal": 0.0,
+    "dE_protan": 0.0,
+    "dE_deutan": 0.0
+   },
+   {
+    "a": "worker",
+    "b": "siege",
+    "shape_iou": 1.0,
+    "dE_normal": 0.0,
+    "dE_protan": 0.0,
+    "dE_deutan": 0.0
+   },
+   {
+    "a": "melee_basic",
+    "b": "ranged_basic",
+    "shape_iou": 1.0,
+    "dE_normal": 0.0,
+    "dE_protan": 0.0,
+    "dE_deutan": 0.0
+   },
+   {
+    "a": "melee_basic",
+    "b": "tank",
+    "shape_iou": 1.0,
+    "dE_normal": 0.0,
+    "dE_protan": 0.0,
+    "dE_deutan": 0.0
+   },
+   {
+    "a": "melee_basic",
+    "b": "fast",
+    "shape_iou": 1.0,
+    "dE_normal": 0.0,
+    "dE_protan": 0.0,
+    "dE_deutan": 0.0
+   },
+   {
+    "a": "melee_basic",
+    "b": "siege",
+    "shape_iou": 1.0,
+    "dE_normal": 0.0,
+    "dE_protan": 0.0,
+    "dE_deutan": 0.0
+   },
+   {
+    "a": "ranged_basic",
+    "b": "tank",
+    "shape_iou": 1.0,
+    "dE_normal": 0.0,
+    "dE_protan": 0.0,
+    "dE_deutan": 0.0
+   },
+   {
+    "a": "ranged_basic",
+    "b": "fast",
+    "shape_iou": 1.0,
+    "dE_normal": 0.0,
+    "dE_protan": 0.0,
+    "dE_deutan": 0.0
+   },
+   {
+    "a": "ranged_basic",
+    "b": "siege",
+    "shape_iou": 1.0,
+    "dE_normal": 0.0,
+    "dE_protan": 0.0,
+    "dE_deutan": 0.0
+   },
+   {
+    "a": "tank",
+    "b": "fast",
+    "shape_iou": 1.0,
+    "dE_normal": 0.0,
+    "dE_protan": 0.0,
+    "dE_deutan": 0.0
+   },
+   {
+    "a": "tank",
+    "b": "siege",
+    "shape_iou": 1.0,
+    "dE_normal": 0.0,
+    "dE_protan": 0.0,
+    "dE_deutan": 0.0
+   },
+   {
+    "a": "fast",
+    "b": "siege",
+    "shape_iou": 1.0,
+    "dE_normal": 0.0,
+    "dE_protan": 0.0,
+    "dE_deutan": 0.0
+   }
+  ],
+  "skills": {
+   "skill_slam": {
+    "plate": "#4a2a1c",
+    "glyph_contrast": 5.7,
+    "glyph_coverage": 0.312
+   },
+   "skill_rally": {
+    "plate": "#5c1631",
+    "glyph_contrast": 10.61,
+    "glyph_coverage": 0.295
+   },
+   "skill_barrage": {
+    "plate": "#2e1a47",
+    "glyph_contrast": 6.9,
+    "glyph_coverage": 0.3
+   }
+  },
+  "page_size": [
+   256,
+   256
+  ],
+  "gpu_bytes": 262144
+ },
+ "logo": {
+  "crust_ko": {
+   "face_px": 1332,
+   "share_ge3": 1.0,
+   "median_contrast": 3.75
+  },
+  "mould_ko": {
+   "face_px": 1568,
+   "share_ge3": 1.0,
+   "median_contrast": 6.27
+  },
+  "crust_en": {
+   "face_px": 2068,
+   "share_ge3": 1.0,
+   "median_contrast": 3.75
+  },
+  "mould_en": {
+   "face_px": 1888,
+   "share_ge3": 1.0,
+   "median_contrast": 4.69
+  }
+ }
+}

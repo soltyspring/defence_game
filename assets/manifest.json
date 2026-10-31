@@ -173,7 +173,7 @@
     256,
     256
    ],
-   "disk_bytes": 5543,
+   "disk_bytes": 5562,
    "gpu_bytes": 262144,
    "biome": "",
    "anim_sets": [],
@@ -189,7 +189,7 @@
     512,
     64
    ],
-   "disk_bytes": 2516,
+   "disk_bytes": 2489,
    "gpu_bytes": 131072,
    "biome": "",
    "anim_sets": [],
@@ -205,7 +205,7 @@
     256,
     128
    ],
-   "disk_bytes": 3321,
+   "disk_bytes": 3278,
    "gpu_bytes": 131072,
    "biome": "",
    "anim_sets": [],
@@ -493,7 +493,7 @@
   "license": "Original work created for this project; owned by the project owner. No third-party assets included."
  },
  "totals": {
-  "disk_bytes": 88037,
+  "disk_bytes": 87986,
   "gpu_bytes_all_pages": 9437184,
   "note": "GPU = w*h*4 (RGBA8, lossless import, no mipmaps). See docs/art/ATLAS_BUDGET.md"
  }
