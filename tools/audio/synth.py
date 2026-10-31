@@ -671,13 +671,16 @@ def r3_shoot_spit(rng):
 
 
 def r3_explosion(rng):
-    """Spore bomber bursts: wet splat (squelch) + mid-band boom + spore hiss + bubbles raining down."""
-    n = n_samples(0.7, SR)
-    body = lowpass(noise(n, rng), ramp(3500, 400, n), SR) * env_exp(n, SR, 0.15, 0.002)
-    out = mix(body, thump(180, 90, 0.45, 0.14) * 0.35, squelch(rng, 0.3, 300, 1200, 250, wet=0.8) * 0.9)
+    """Spore bomber bursts: wet splat (squelch) + mid-band boom + spore hiss + bubbles raining down.
+    v4.0 (DEATH_SYNC_CHECK.md T1): 03 e8c6d96 made every death animation 0.5 s and a self-destructing bomber dies on
+    the explosion frame, so the tail was shortened: 0.7 -> 0.5 s file, body tau 0.15 -> 0.12, boom decay 0.14 -> 0.10,
+    bubbles 0.12 + 0.05 i (was 0.15 + 0.07 i), hiss release 0.4 -> 0.2. Audible end 0.53 -> 0.40 s; attack unchanged."""
+    n = n_samples(0.5, SR)
+    body = lowpass(noise(n, rng), ramp(3500, 400, n), SR) * env_exp(n, SR, 0.12, 0.002)
+    out = mix(body, thump(180, 90, 0.45, 0.10) * 0.35, squelch(rng, 0.3, 300, 1200, 250, wet=0.8) * 0.9)
     for i in range(6):
-        place(out, bubble(rng.uniform(350, 900), 0.03) * 0.3, n_samples(0.15 + 0.07 * i, SR))
-    hiss = highpass(noise(n, rng), 4000, SR) * env_adsr(n, SR, 0.05, 0.1, 0.25, 0.4) * 0.1
+        place(out, bubble(rng.uniform(350, 900), 0.03) * 0.3, n_samples(0.12 + 0.05 * i, SR))
+    hiss = highpass(noise(n, rng), 4000, SR) * env_adsr(n, SR, 0.05, 0.1, 0.25, 0.2) * 0.1
     return mix(out, hiss)
 
 

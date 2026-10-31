@@ -1,7 +1,16 @@
 RULE (line 1, fixed after 3 violations: af491c2, 53883db, f5f42df batch): a commit SHA is written ONLY in a separate tool call made AFTER the Publish-Task call that printed `PUSHED <sha>` has returned; copy it from that output, confirm it with `git ls-remote origin refs/heads/main` (and `git merge-base --is-ancestor <sha> origin/main` after a fetch), and never record the SHA-record commit's own SHA in the file.
 # 05-audio handoff
-Updated: 2026-11-01 08:5x KST (v3.9 onset peak: cause found and reproducible; rule implemented but kept OFF)
-Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all. Quota 91 %. Heavy runs only via `coordination/heavy_run_detached.ps1` (headless; lock waits 1000–2500 s). Private APPDATA.
+Updated: 2026-11-01 09:1x KST (v4.0: rule kept OFF by coordinator decision; explosion shortened for the 0.5 s death animation)
+Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all. Quota 94 %. Heavy runs only via `coordination/heavy_run_detached.ps1` (headless; lock waits 1000–2500 s). Private APPDATA.
+
+## v4.0 (2026-11-01 ~09:0x, NO heavy runs: quota 91 %, lock wait ~1 h). Coordinator decisions recorded here first.
+- Decision (coordinator, after 30401e3/1db1f59/83520c9): the onset-cluster rule stays OFF. The limiter is only a safety net. A softer variant is tried only if a real recording again shows a peak that needs it.
+- Decisions: Q1 A; Q2 on hold (no ad/purchase/shop UI); Q3/Q4 fixed; **Q5 = B** (fail 2–3 times, then upgrade and win; D28 was only a default).
+- Task now:
+  1. Record the decision in ONSET_PEAK_CHECK.md and AUDIO_CONTRACT.md; explain the P5-after 1/45 miss from the re-render log.
+  2. 03 e8c6d96 made every death animation play within 0.5 s: measure the death/hit SFX lengths and tails against it; change only after writing criteria first; Python checks only (R1–R4 offline, variant level).
+- Done (Python only): decision written in ONSET_PEAK_CHECK.md §6 and AUDIO_CONTRACT.md. P5 after-miss explained: one gold_tick was logged one 512-frame chunk late (time only; verdict stays FAIL). DEATH_SYNC_CHECK.md: criteria T1–T3 first. Only explosion failed T1 (0.56 s); it was shortened 0.7 → 0.5 s, audible end 0.42 s, attack +0.01 dB, −8,820 B. validate/determinism/budget PASS, offline R1–R4 0 fails, 48 files. hero_death 1.0 s is exempt (event cue) and is a listening question for 01/03.`n- Next session (needs Godot via heavy_run_detached, one job): import + selftest, re-record r02/r06/r08 × 11/23/37 with the new explosion, then re-judge D1/D2/G1/G2/R1–R4/P5 with rerender.py. Log fix: read the audio clock BEFORE play() and log both.
+- Not verified: human listening, real phone.
 
 ## v3.9 onset peak (coordinator task coordination/prompts/05-peak-cause.txt). Details: docs/audio/ONSET_PEAK_CHECK.md
 - Blue screen 03:55: the 03:31 job had never started (no START), so nothing was lost. Post-crash integrity scan of all modified 05 files: OK.

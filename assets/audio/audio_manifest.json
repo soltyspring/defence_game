@@ -668,10 +668,10 @@
    "variants": [
     {
      "file": "explosion.wav",
-     "seconds": 0.7,
-     "bytes": 30914,
+     "seconds": 0.5,
+     "bytes": 22094,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -18.72
+     "rms_dbfs": -17.48
     }
    ]
   },

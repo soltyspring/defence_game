@@ -27,3 +27,7 @@ Exported-build playback remains 07's check; not verified by 05.
 - `validate.py` disk total: 1,568,005 B at 64a95c6 → 1,612,767 B now (+44,762 B).
 - What ships is Godot's imported QOA data. Measured as `resident_sfx_bytes` in the same harness: **199,464 → 208,584 B (+9,120 B)**, from the recordings `rb_r02_s11` (64a95c6 assets) and `rd_r02_s11` (current). The exported APK/AAB was not built or measured by 05.
 - v3.9 (onset-cluster limit, docs/audio/ONSET_PEAK_CHECK.md) adds **0 files and 0 bytes**: it is a runtime rule plus a manifest policy entry. SFX files stay at 48 = your cap.
+
+## v4.0 note (2026-11-01 ~09:1x): explosion.wav shortened, 0 new files
+- explosion.wav 30,914 → 22,094 B (**−8,820 B** source WAV; 0.7 → 0.5 s), to fit 03's 0.5 s death animation (docs/audio/DEATH_SYNC_CHECK.md). The imported QOA data shrinks in proportion. Not measured in Godot this session.
+- SFX files stay at 48. `asset_budget_check.py --worktree` PASS.

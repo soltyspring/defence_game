@@ -114,3 +114,11 @@ What the coordinator asked to be explained is now explained and reproducible:
 - The re-render now matches 17 of 18 new recordings within 0.67 dB at their top-5 peaks.
 
 Not verified: human listening (nobody has listened) and a real phone (all phone figures are the desktop proxy). Phone audio drivers use smaller blocks than this headless driver; not measured on a device.
+
+## 6. Coordinator decision (2026-11-01 ~09:0x) and the P5 after-miss
+- **Decision:** the onset-cluster rule stays OFF. None of the 9 new recordings needed it (all ≤ −2.02 dBFS), and enabling it costs hit_bread/hit_mold +5.4 masked points. The limiter is only a safety net. A softer variant is tried only if a real recording shows a peak that needs it again.
+- **P5 after-miss (1 of 45 peaks, pa_r08_s23 at 45.09 s, 2.58 dB): explained from the re-render log; time only.**
+  - The gold_tick logged at audio 45.08154 s really started 956 frames earlier, i.e. −444 − 512. Matched filter: level within 0.03 dB of its logged volume.
+  - Shifting that one cue by one 512-frame mix chunk (`rerender.py --refine-chunks`, diagnostic) makes the peak −0.04 dB; no other cue of the 140 moved.
+  - Likely mechanism: the probe reads the clock voice's playback position right after `play()`. When the mixer finishes a 512-frame chunk in between, the logged position is one chunk late. This is consistent with the data, but it was seen once and not proven in Godot's source.
+  - The verdict stays FAIL as written. A next-session fix to the log: read the clock position BEFORE `play()` in the manager, and log both.

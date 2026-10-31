@@ -429,15 +429,15 @@
    "ch": 1,
    "bits": 16,
    "rate": 22050,
-   "seconds": 0.7,
+   "seconds": 0.5,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -18.72,
+   "rms_dbfs": -17.48,
    "clipped": 0,
-   "dc": -0.00016,
+   "dc": -0.00024,
    "edge_first": 0.0,
    "edge_last": 0.0,
-   "hf300_share": 0.801,
-   "mix_level_db": -26.7
+   "hf300_share": 0.816,
+   "mix_level_db": -25.5
   },
   "death_ally.wav": {
    "cue": "death_ally",
@@ -767,9 +767,9 @@
   }
  },
  "budgets": {
-  "disk_bytes_total": 1612767,
+  "disk_bytes_total": 1603947,
   "disk_budget": 2500000,
-  "sfx_pcm_resident_bytes": 1025102,
+  "sfx_pcm_resident_bytes": 1016282,
   "sfx_pcm_budget": 2097152,
   "worst_case_sfx_sum_db": 25.1,
   "note": "worst case = every SFX/UI cue at max instances, peaks aligned; runtime voice caps (SFX pool 12, UI pool 3) plus Master limiter keep real output below this"
