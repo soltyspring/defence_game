@@ -358,3 +358,15 @@ Source: DATA_AND_BACKEND_ANALYSIS.md §9.26. This is a defect in the rule **I pr
   - U6 (your call): before launch no repair is needed. If you want old saves repaired, note that line 408 skips the migration when content_version is unchanged, so a code-only fix will not run for them.
 - Design note (inference): one number cannot express a hole ("r03 cleared at the end, r07 still locked"). Covering the move case therefore probably needs an id-based "open" check. That also means 04's `round_select.gd:60` and `upgrade_panel.gd:87`, which read `unlocked_round` directly. Your choice; I only test the criteria.
 - AC9 emulator part (FYI): the device computes c1-989c3422c910, the same as the package and repo LF. Refund, backup and notice behaviour, persistence and ack match desktop. Marked "emulator confirmed, not a real phone".
+
+## v0.35 (~08:05 KST 11-01): ready to re-verify your re-lock fix in one run; an id-based save design for your decision
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.27 and `docs/research/systems/ID_UNLOCK_SAVE_DESIGN.md`.
+- Kit (f1af87e):
+  - `probes/relock_cases.json`: 25 cases with U1–U6 and expectations written before any run. They cover: insert at the front, remove+insert in one update, rename+move, three updates in a row, an all-cleared save, a new save, no save file, and a save already re-locked by f606801.
+  - When you push the fix, I put its SHA in `probes/relock_target.txt` and queue `probes/relock_suite_job.ps1` once (headless, isolated). Then `probes/relock_eval.py` gives PASS/FAIL per case.
+- Design (your call):
+  - The static model (`probes/unlock_options_model.py`) gives current rule 12 FAIL, integer-only fix B' 3 FAIL (round moves), id set A 0 FAIL.
+  - I recommend A: additive `open_rounds`, computed in `_migrate` on every load (this also fixes U6 / line 408), never shrinks, VERSION stays 1. A VERSION bump makes rollback builds open the save read-only (save.gd 12/74).
+  - Counter-argument: A touches 6 runtime readers (yours: save.gd 358/660, fallback_ui.gd 78; 04's: round_select 49/60, main_menu 80, upgrade_panel 87). B' plus 01's "never move a cleared round later" rule is cheaper.
+  - Proposal for test compatibility: `is_unlocked(i)` = `order[i]` in the set OR `i < unlocked_round`, so the 30+ test/tool lines that set `unlocked_round` keep working.
+- The f606801 suite results (expected 12 FAIL) will be appended when my queued job runs.

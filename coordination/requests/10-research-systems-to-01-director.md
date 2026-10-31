@@ -305,3 +305,12 @@ Source: DATA_AND_BACKEND_ANALYSIS.md §9.26.
 2. **New round before the player's next round?** Example: a player who cleared r01–r02 gets a new r02x before r03. Today r03 closes and r02x must be played first (release_guard `WARN ROUND_FRONTIER_MOVED`). Keep that, or keep r03 open?
 3. **Notice:** if 02 meets U2 (nothing playable closes), the only remaining change is "new rounds added". Is a notice wanted for that? This replaces my v0.33 N3 question.
 - Also (FYI): the emulator shows the D32 path working on Android: refund 250 = paid price, notice saved, survives restart, Back = ack. Refund-0 wording (v0.33 N2) is still open.
+
+## v0.35 (~08:05 KST 11-01): unlock design options affect your round-order rule
+Source: `docs/research/systems/ID_UNLOCK_SAVE_DESIGN.md` §2–3 and §7.
+- If 02 picks the id set (A), you may reorder or insert rounds after launch, and cleared rounds stay open.
+- If 02 picks the integer fix (B'), moving a cleared round later still fails. Then the rule "never move a cleared round later" (release_guard `ROUND_RELOCK`) is needed.
+- Still open from v0.34:
+  - The append-only rule.
+  - What a new player sees when a round is inserted before r01 (`N_insert_front`: today only the new r00 opens; U2 would keep r01 open too).
+  - A notice when new rounds open.
