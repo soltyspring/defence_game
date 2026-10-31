@@ -27,6 +27,7 @@ func _initialize() -> void:
 	_check_rules(content)
 	_check_tutorial(content)
 	_check_save()
+	_check_save_faults()
 	content.free()
 	report.total_ms = Time.get_ticks_msec() - t0
 	report.failures = Array(failures)
@@ -43,6 +44,7 @@ func _initialize() -> void:
 	for line in report.summary: print("  ", line)
 	print("cap_test ", JSON.stringify(report.get("cap_test", {})))
 	print("save_tests ", JSON.stringify(report.get("save_tests", {})))
+	print("save_faults ", JSON.stringify(report.get("save_faults", {})))
 	print("find_target ", JSON.stringify(report.get("find_target_equivalence", {})))
 	print("rules ", JSON.stringify(report.get("rules", {})))
 	print("tutorial ", JSON.stringify(report.get("tutorial", {})))
@@ -364,3 +366,113 @@ func _check_tutorial(content) -> void:
 		if shown_seq[i][0] != str(steps[i]): _fail("tutorial order mismatch at %d" % i)
 	for c in ["hit", "death", "base_hit"]:
 		if int(cue_counts.get(c, 0)) == 0: _fail("no '%s' audio cues in a full battle" % c)
+
+func _new_save(name: String):
+	var s = SaveS.new()
+	s.path = "user://selftest_faults/" + name + ".json"
+	DirAccess.make_dir_recursive_absolute("user://selftest_faults")
+	var d := DirAccess.open("user://selftest_faults")
+	for f in d.get_files():
+		if f.begins_with(name + ".json"):
+			d.remove(f)
+	s.load_progress()
+	return s
+
+func _reload(s):
+	var r = SaveS.new()
+	r.path = s.path
+	r.load_progress()
+	return r
+
+func _commit(s, unlocked: int, coins: int) -> bool:
+	s.progress.unlocked_round = unlocked
+	s.progress.coins = coins
+	return s.save_progress()
+
+## QA-B004 / SV-1 double fault, R6 fault hooks, R3 battle_uid idempotency, B003/B005/B006/B007.
+func _check_save_faults() -> void:
+	var out := {}
+	var tmp_nodes: Array = []
+	# 1) B004 probe A2: corrupt main, recover (6), save once, corrupt main again -> must still load 6
+	var a = _new_save("b004")
+	_commit(a, 5, 100); _commit(a, 6, 900)
+	FileAccess.open(a.path, FileAccess.WRITE).store_string("{ corrupt")
+	var a1 = _reload(a)
+	var rec1: bool = a1.recovered
+	a1.save_progress()
+	FileAccess.open(a.path, FileAccess.WRITE).store_string("{ corrupt again")
+	var a2 = _reload(a)
+	out.b004_double_fault = {"first_recovered": rec1, "first_source": a1.recovery_source, "recovered_value": int(a1.progress.unlocked_round), "unlocked_after_second_fault": int(a2.progress.unlocked_round), "recovered": a2.recovered, "source": a2.recovery_source}
+	# the recovered state (from .bak = 5) must survive the second fault; before the fix this became 1 (fresh)
+	if int(a2.progress.unlocked_round) != int(a1.progress.unlocked_round) or not a2.recovered: _fail("B004 double fault lost progress: %s" % str(out.b004_double_fault))
+	tmp_nodes.append_array([a, a1, a2])
+	# 2) every fault point during the first save after a recovery and during a normal save
+	var points := {}
+	for pre in ["normal", "after_recovery"]:
+		for fp in SaveS.FAULT_POINTS:
+			var s = _new_save("fp_%s_%s" % [pre, fp])
+			_commit(s, 5, 50); _commit(s, 6, 60)
+			var w = s
+			var committed := 6
+			if pre == "after_recovery":
+				FileAccess.open(s.path, FileAccess.WRITE).store_string("{ corrupt")
+				w = _reload(s)     # recovered from .bak (state 5)
+				committed = int(w.progress.unlocked_round)
+				tmp_nodes.append(w)
+			w.progress.unlocked_round = 7
+			w._fault = fp
+			var ok: bool = w.save_progress()
+			var r = _reload(s)
+			var u := int(r.progress.unlocked_round)
+			points["%s/%s" % [pre, fp]] = {"save_ok": ok, "fired": w.fault_fired, "unlocked": u, "recovered": r.recovered, "source": r.recovery_source}
+			if ok or w.fault_fired != fp: _fail("fault %s/%s did not fire" % [pre, fp])
+			if u < committed: _fail("fault %s/%s lost committed progress (unlocked %d < %d)" % [pre, fp, u, committed])
+			# a non-main source must be reported (QA-B004 "no recovered notice")
+			if r.recovery_source != "main" and not r.recovered: _fail("fault %s/%s silent recovery" % [pre, fp])
+			tmp_nodes.append_array([s, r])
+	out.fault_points = points
+	# 3) R3 battle_uid idempotency
+	var b = _new_save("r3")
+	var res := {"round_id": "r01", "won": true, "stars": 2, "time": 80.0, "coins": 50, "battle_uid": "selftest-uid-1"}
+	var first: bool = b.record_result(res, 0)
+	var second: bool = b.record_result(res, 0)
+	var b2 = _reload(b)
+	var third: bool = b2.record_result(res, 0)   # after a restart the ledger still blocks it
+	var b3 = _reload(b)
+	out.r3 = {"first": first, "second": second, "after_reload": third, "coins": int(b3.progress.coins), "clears": int(b3.progress.clears)}
+	if not first or second or third or int(b3.progress.coins) != 50 or int(b3.progress.clears) != 1:
+		_fail("R3 duplicate battle_uid applied twice: %s" % str(out.r3))
+	# write failure rolls back and is surfaced
+	var c = _new_save("rollback")
+	_commit(c, 3, 10)
+	c._fault = "after_tmp_write"
+	var okc: bool = c.record_result({"round_id": "r03", "won": true, "stars": 1, "time": 99.0, "coins": 70, "battle_uid": "selftest-uid-2"}, 2)
+	out.rollback = {"ok": okc, "coins_in_memory": int(c.progress.coins), "uid_recorded": c.was_applied("selftest-uid-2")}
+	if okc or int(c.progress.coins) != 10 or c.was_applied("selftest-uid-2"): _fail("record_result rollback failed: %s" % str(out.rollback))
+	tmp_nodes.append_array([b, b2, b3, c])
+	# 4) B003 hostile types, B007 clamps, B006 newer version read-only
+	var h = _new_save("hostile")
+	var bad := {"version": 1, "unlocked_round": "abc", "coins": -50, "stars": [3, 2], "best_time": null, "settings": "loud", "services": {"keep": 1}}
+	var bt := JSON.stringify(bad)
+	FileAccess.open(h.path, FileAccess.WRITE).store_string(JSON.stringify({"checksum": bt.sha256_text(), "payload": bt}))
+	var h2 = _reload(h)
+	var okh: bool = h2.record_result({"round_id": "r01", "won": true, "stars": 2, "time": 80.0, "coins": 5}, 0)
+	out.hostile = {"types_ok": h2.progress.stars is Dictionary and h2.progress.best_time is Dictionary and h2.progress.settings is Dictionary, "coins": h2.progress.coins, "unlocked": h2.progress.unlocked_round, "record_ok": okh, "unknown_kept": h2.progress.has("services")}
+	if not out.hostile.types_ok or not okh or not out.hostile.unknown_kept: _fail("hostile save not normalised: %s" % str(out.hostile))
+	var big := {"version": 1, "unlocked_round": 1e12, "coins": 9999999999.0, "stars": {"r01": "x", "r02": 99}}
+	var bgt := JSON.stringify(big)
+	FileAccess.open(h.path, FileAccess.WRITE).store_string(JSON.stringify({"checksum": bgt.sha256_text(), "payload": bgt}))
+	var h3 = _reload(h)
+	out.clamp = {"unlocked": h3.progress.unlocked_round, "coins": h3.progress.coins, "stars": h3.progress.stars}
+	if int(h3.progress.coins) > SaveS.COINS_CAP_DEFAULT or h3.progress.stars.has("r01") or int(h3.progress.stars.get("r02", 0)) > 3: _fail("clamp failed: %s" % str(out.clamp))
+	var nv := {"version": 99, "unlocked_round": 5, "future": {"x": 1}}
+	var nvt := JSON.stringify(nv)
+	var orig := JSON.stringify({"version": 99, "checksum": nvt.sha256_text(), "payload": nvt})
+	FileAccess.open(h.path, FileAccess.WRITE).store_string(orig)
+	var h4 = _reload(h)
+	var oks: bool = h4.save_progress()
+	out.newer = {"read_only": h4.read_only, "save_ok": oks, "byte_identical": FileAccess.get_file_as_string(h.path) == orig}
+	if not h4.read_only or oks or not out.newer.byte_identical: _fail("newer-version save rewritten: %s" % str(out.newer))
+	tmp_nodes.append_array([h, h2, h3, h4])
+	report.save_faults = out
+	for n in tmp_nodes: n.free()

@@ -1,37 +1,100 @@
 extends Node
-## Progress persistence with atomic write, checksum, .bak recovery and migration.
-## Contract: INTERFACES.md §3. Owner: 02-engine.
+## Progress persistence. Contract: INTERFACES.md §3. Owner: 02-engine.
+##
+## Files: <path> (main), <path>.bak (previous good main), <path>.tmp (write staging),
+##        <path>.corrupt-<unix>[-n] (quarantined unreadable mains, never loaded, never rotated into .bak).
+## Write order (save_progress): write+flush tmp -> verify tmp -> [main known good] remove .bak, rename main -> .bak
+##   | [main unreadable] quarantine main -> rename tmp -> main.
+## Load order (load_progress): valid main -> else valid tmp (only exists past verify, so it is the newest state)
+##   -> else valid .bak -> else fresh. Any non-main source sets recovered = true and recovery_source.
+## A main that fails to read is quarantined at load, so the next save can never push it into .bak (QA-B004 / SV-1).
+## Newer-version saves (version > VERSION) are loaded read-only and never rewritten (QA-B006).
+## record_result is idempotent per battle_uid (applied_battles ring buffer) and transactional: on a failed
+## write the in-memory progress is rolled back (10 R3).
+## Debug-only fault injection (10 R6): set `_fault` to one of FAULT_POINTS; save_progress stops there and
+## returns false exactly as a killed process would leave the files. Ignored when OS.is_debug_build() is false.
 
 const VERSION := 1
+const MAX_BYTES := 2 * 1024 * 1024        # PROVISIONAL size guard (08 owns the final limit)
+const APPLIED_KEEP := 32
+const FAULT_POINTS := ["after_tmp_write", "after_bak_rename", "before_final_rename", "torn_tmp"]
+const COINS_CAP_DEFAULT := 9999999        # data/meta.json currencies.gold.max
+
 var path := "user://save.json"
 var progress: Dictionary = {}
 var recovered := false
+var recovery_source := "main"             # main | tmp | bak | fresh
+var read_only := false                    # true when the file came from a newer build
 var last_error := ""
+var _fault := ""                          # debug-only, one-shot
+var fault_fired := ""                     # last fault point that fired (for tests)
+var _main_good := false                   # main on disk is known to be a valid envelope
+var quarantined: Array[String] = []       # files moved aside during the last load
 
 func _ready() -> void:
 	load_progress()
 
 static func fresh() -> Dictionary:
-	return {"version": VERSION, "unlocked_round": 1, "stars": {}, "best_time": {}, "coins": 0,
-		"clears": 0, "tutorial_done": [], "settings": {"fps_cap": 60, "sfx": 1.0, "music": 0.8, "show_damage": true, "screen_shake": true}}
+	return {"version": VERSION, "revision": 0, "unlocked_round": 1, "stars": {}, "best_time": {}, "coins": 0,
+		"clears": 0, "tutorial_done": [], "upgrades": {}, "applied_battles": [],
+		"settings": {"fps_cap": 60, "sfx": 1.0, "music": 0.8, "show_damage": true, "screen_shake": true}}
 
+# ---------------------------------------------------------------- load
 func load_progress() -> void:
 	recovered = false
+	recovery_source = "main"
+	read_only = false
+	quarantined.clear()
+	_main_good = false
+	var main_exists := FileAccess.file_exists(path)
 	var p = _read(path)
-	if p == null:
-		var had_main := FileAccess.file_exists(path)
-		p = _read(path + ".bak")
-		recovered = had_main or p != null
+	if p != null:
+		_main_good = true
+	else:
+		if main_exists:
+			_quarantine(path)          # unreadable main must never become the next .bak
+		p = _read(path + ".tmp")
+		if p != null:
+			recovery_source = "tmp"
+		else:
+			p = _read(path + ".bak")
+			recovery_source = "bak" if p != null else "fresh"
+		# Recovered = progress did not come from a healthy main although something was on disk.
+		recovered = main_exists or recovery_source != "fresh"
 		if p == null:
 			p = fresh()
-			recovered = had_main
-	progress = _migrate(p, int(p.get("version", 0)))
+	var from_v := int(p.get("version", 0)) if (p.get("version") is int or p.get("version") is float) else 0
+	if from_v > VERSION:
+		read_only = true               # keep the newer build's data untouched
+		progress = p
+		return
+	progress = _migrate(p, from_v)
+
+func _quarantine(file: String) -> void:
+	var base := "%s.corrupt-%d" % [file, int(Time.get_unix_time_from_system())]
+	var dst := base
+	var n := 1
+	while FileAccess.file_exists(dst):
+		dst = "%s-%d" % [base, n]
+		n += 1
+	var dir := DirAccess.open(file.get_base_dir())
+	if dir and dir.rename(file.get_file(), dst.get_file()) == OK:
+		quarantined.append(dst)
 
 func _read(file: String) -> Variant:
 	if not FileAccess.file_exists(file):
 		return null
+	var f := FileAccess.open(file, FileAccess.READ)
+	if f == null:
+		last_error = "open failed: " + file
+		return null
+	if f.get_length() > MAX_BYTES:
+		last_error = "file too large (%d bytes): %s" % [f.get_length(), file]
+		return null
+	var txt := f.get_as_text()
+	f.close()
 	var j := JSON.new()
-	if j.parse(FileAccess.get_file_as_string(file)) != OK:
+	if j.parse(txt) != OK:
 		last_error = "parse error in " + file
 		return null
 	var d = j.data
@@ -48,65 +111,181 @@ func _read(file: String) -> Variant:
 		return null
 	return pj.data
 
-func _migrate(p: Dictionary, from_version: int) -> Dictionary:
+## Fill missing keys, replace wrong-typed values, clamp ranges (QA-B003 / QA-B007). Unknown keys are kept
+## (06-services stores `services` here).
+func _migrate(p: Dictionary, _from_version: int) -> Dictionary:
 	var base := fresh()
-	# v0 (no version) -> v1: just fill missing keys. Future migrations go here, step by step.
 	for k in base:
-		if not p.has(k):
-			p[k] = base[k]
-	if p.settings is Dictionary:
-		for k in base.settings:
-			if not p.settings.has(k):
-				p.settings[k] = base.settings[k]
-	else:
-		p.settings = base.settings
-	p.unlocked_round = maxi(1, int(p.unlocked_round))
-	p.coins = maxi(0, int(p.coins))
+		if not p.has(k) or not _same_kind(p[k], base[k]):
+			p[k] = base[k].duplicate(true) if (base[k] is Dictionary or base[k] is Array) else base[k]
+	for k in base.settings:
+		if not p.settings.has(k):
+			p.settings[k] = base.settings[k]
+	var rounds_n := 999
+	var coins_cap := COINS_CAP_DEFAULT
+	if is_inside_tree():
+		var c := get_node_or_null("/root/Content")
+		if c:
+			rounds_n = maxi(1, c.round_order.size())
+			for cur in c.meta.get("currencies", []):
+				if str(cur.get("id", "")) == "gold" and cur.has("max"):
+					coins_cap = int(cur.max)
+	p.unlocked_round = clampi(_to_int(p.unlocked_round, 1), 1, rounds_n + 1)
+	p.coins = clampi(_to_int(p.coins, 0), 0, coins_cap)
+	p.clears = maxi(0, _to_int(p.clears, 0))
+	p.revision = maxi(0, _to_int(p.revision, 0))
+	var stars := {}
+	for k in p.stars:
+		var v = p.stars[k]
+		if v is int or v is float:
+			stars[str(k)] = clampi(int(v), 0, 3)
+	p.stars = stars
+	var bt := {}
+	for k in p.best_time:
+		var v = p.best_time[k]
+		if (v is int or v is float) and float(v) >= 0.0:
+			bt[str(k)] = float(v)
+	p.best_time = bt
+	var ups := {}
+	for k in p.upgrades:
+		var v = p.upgrades[k]
+		if v is int or v is float:
+			ups[str(k)] = clampi(int(v), 1, 99)
+	p.upgrades = ups
+	var td: Array = []
+	for k in p.tutorial_done:
+		if k is String and not td.has(k): td.append(k)
+	p.tutorial_done = td
+	var ab: Array = []
+	for k in p.applied_battles:
+		if k is String: ab.append(k)
+	p.applied_battles = ab.slice(maxi(0, ab.size() - APPLIED_KEEP))
 	p.version = VERSION
 	return p
 
+static func _same_kind(a, b) -> bool:
+	var na := a is int or a is float
+	var nb := b is int or b is float
+	if na or nb:
+		return na and nb
+	return typeof(a) == typeof(b)
+
+static func _to_int(v, dflt: int) -> int:
+	if v is int: return v
+	if v is float:
+		if is_nan(v) or is_inf(v): return dflt
+		return int(clampf(v, -2147483648.0, 2147483647.0))
+	return dflt
+
+# ---------------------------------------------------------------- save
+func _fault_here(point: String) -> bool:
+	if _fault == point and OS.is_debug_build():
+		_fault = ""
+		fault_fired = point
+		last_error = "fault:" + point
+		return true
+	return false
+
 func save_progress() -> bool:
+	if read_only:
+		last_error = "read_only: save from newer version %s" % str(progress.get("version"))
+		return false
+	var old_rev := int(progress.get("revision", 0))
+	progress.revision = old_rev + 1
+	var ok := _write()
+	if not ok:
+		progress.revision = old_rev
+	return ok
+
+func _write() -> bool:
 	var payload_txt := JSON.stringify(progress, "", true)
-	var env := {"version": VERSION, "checksum": payload_txt.sha256_text(), "payload": payload_txt}
+	var env_txt := JSON.stringify({"version": VERSION, "checksum": payload_txt.sha256_text(), "payload": payload_txt}, "", true)
 	var tmp := path + ".tmp"
 	var f := FileAccess.open(tmp, FileAccess.WRITE)
 	if f == null:
-		last_error = "open tmp failed: %d" % FileAccess.get_open_error()
+		return _fail("open tmp failed: %d" % FileAccess.get_open_error())
+	if _fault_here("torn_tmp"):
+		f.store_string(env_txt.substr(0, env_txt.length() / 2))
+		f.close()
 		return false
-	f.store_string(JSON.stringify(env, "", true))
+	f.store_string(env_txt)
 	f.flush()
 	f.close()
-	# verify tmp before swapping in
+	if _fault_here("after_tmp_write"): return false
 	if _read(tmp) == null:
-		last_error = "tmp verify failed"
-		return false
+		return _fail("tmp verify failed")
 	var dir := DirAccess.open(path.get_base_dir())
+	if dir == null:
+		return _fail("open dir failed")
 	var fname := path.get_file()
 	if FileAccess.file_exists(path):
-		if FileAccess.file_exists(path + ".bak"):
-			dir.remove(fname + ".bak")
-		dir.rename(fname, fname + ".bak")
+		if _main_good or _read(path) != null:
+			# rotate the known-good main into .bak (only now is the old .bak dropped)
+			if FileAccess.file_exists(path + ".bak"):
+				dir.remove(fname + ".bak")
+			if dir.rename(fname, fname + ".bak") != OK:
+				return _fail("rotate main->bak failed")
+		else:
+			_quarantine(path)      # unreadable main: keep the existing good .bak
+			if FileAccess.file_exists(path):
+				return _fail("could not move unreadable main aside")
+	if _fault_here("after_bak_rename"): return false
+	if _fault_here("before_final_rename"): return false
 	var err := dir.rename(fname + ".tmp", fname)
 	if err != OK:
-		last_error = "rename failed: %d" % err
-		return false
-	var ev := get_node_or_null("/root/Events")
+		return _fail("rename tmp->main failed: %d" % err)
+	_main_good = true
+	var ev := _events()
 	if ev:
 		ev.progress_changed.emit(progress)
 	return true
 
-## Apply a battle result; returns coins granted.
-func record_result(result: Dictionary, round_index_in_order: int) -> void:
-	var rid: String = result.round_id
-	if result.won:
+func _fail(msg: String) -> bool:
+	last_error = msg
+	var ev := _events()
+	if ev:
+		ev.toast.emit("save_failed", {"error": msg})   # QA-B005: surface write failures
+	return false
+
+func _events() -> Node:
+	return get_node_or_null("/root/Events") if is_inside_tree() else null
+
+# ---------------------------------------------------------------- domain
+func was_applied(battle_uid: String) -> bool:
+	return battle_uid != "" and (progress.get("applied_battles", []) as Array).has(battle_uid)
+
+## Apply a battle result once per battle_uid in one atomic save. Returns true if applied and saved,
+## false if it was a duplicate (no change) or the write failed (progress rolled back).
+func record_result(result: Dictionary, round_index_in_order: int) -> bool:
+	var uid := str(result.get("battle_uid", ""))
+	if was_applied(uid):
+		last_error = "duplicate battle_uid " + uid
+		return false
+	var before := {}
+	for k in ["unlocked_round", "clears", "coins"]:
+		before[k] = progress[k]
+	before.stars = progress.stars.duplicate()
+	before.best_time = progress.best_time.duplicate()
+	before.applied_battles = progress.applied_battles.duplicate()
+	var rid := str(result.round_id)
+	if bool(result.won):
 		var prev := int(progress.stars.get(rid, 0))
 		progress.stars[rid] = maxi(prev, int(result.stars))
 		var bt := float(progress.best_time.get(rid, 1e9))
 		progress.best_time[rid] = minf(bt, float(result.time))
 		progress.unlocked_round = maxi(int(progress.unlocked_round), round_index_in_order + 2)
 		progress.clears = int(progress.clears) + 1
-	progress.coins = int(progress.coins) + int(result.coins)
-	save_progress()
+	progress.coins = int(progress.coins) + int(result.get("coins", 0))
+	if uid != "":
+		var ab: Array = progress.applied_battles
+		ab.append(uid)
+		if ab.size() > APPLIED_KEEP:
+			progress.applied_battles = ab.slice(ab.size() - APPLIED_KEEP)
+	if not save_progress():
+		for k in before:      # roll back only what this result touched; keeps nested refs (06 services) intact
+			progress[k] = before[k]
+		return false
+	return true
 
 func is_unlocked(order_index: int) -> bool:
 	return order_index + 1 <= int(progress.unlocked_round)

@@ -71,7 +71,9 @@ func boot(p_main: Node, p_world: Node2D, p_ui: CanvasLayer) -> void:
 		if str(m.get("group", "")) == "ui" or str(m.get("load_policy", "")) == "always":
 			Atlas.acquire(id)
 	if Save.recovered:
-		Events.toast.emit("save_recovered", {})
+		Events.toast.emit("save_recovered", {"source": Save.recovery_source})
+	if Save.read_only:
+		Events.toast.emit("save_read_only", {})
 	var args := OS.get_cmdline_user_args()
 	var direct := ""
 	for a in args:
@@ -199,7 +201,12 @@ func _on_battle_finished(r: Dictionary) -> void:
 	for k in result.get("tutorial_done", []):
 		if not td.has(k): td.append(k)
 	Save.progress["tutorial_done"] = td
-	Save.record_result(result, idx)
+	var uid := str(result.get("battle_uid", ""))
+	if Save.was_applied(uid):
+		result["saved"] = false      # same battle already rewarded (10 R3): nothing granted twice
+		result["duplicate"] = true
+	else:
+		result["saved"] = Save.record_result(result, idx)
 	last_result = result
 	print("[App] battle ended ", JSON.stringify(result))
 	_pending_result = result

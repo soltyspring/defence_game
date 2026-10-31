@@ -129,6 +129,7 @@ Gold income/s = base_income + workers × worker_income.
 
 ## 3. Save file (engine-owned; 04 may build settings UI on top)
 `user://save.json` (+ `user://save.json.bak`). Written atomically via `save.json.tmp` → rename; previous file kept as `.bak`. Content: `{"version":1,"checksum":"<sha256 of payload string>","payload":"<Progress serialised as JSON string>"}` (payload is a string so the checksum is byte-exact). On parse/checksum failure → load `.bak` → else fresh defaults, and record `recovered:true` (UI may toast). Migration hook `Save._migrate(payload, from_version)`.
+v1.3 (2026-10-31, docs/architecture/SAVE_FAULTS.md): load order main → verified `.tmp` → `.bak` → fresh; unreadable mains are quarantined as `save.json.corrupt-<unix>` and never rotated into `.bak`; `Save.recovery_source` (main|tmp|bak|fresh); `Save.read_only` for newer-version files (never written); `Events.toast("save_failed", {error})`; `record_result(result, idx) -> bool` idempotent per `battle_uid` (`progress.applied_battles`, last 32) with rollback on write failure; `Save.was_applied(uid)`; debug-only `Save._fault` ∈ `Save.FAULT_POINTS` = after_tmp_write | torn_tmp | after_bak_rename | before_final_rename (one-shot; `fault_fired`). New Progress keys: `revision`, `upgrades`, `applied_battles`, `tutorial_done`.
 
 ## 4. Scenes the engine instantiates (04 provides; fallback exists)
 | Path | Root type | Contract |
