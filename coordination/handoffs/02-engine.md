@@ -1,30 +1,25 @@
 # 02-engine handoff
-Updated: 2026-10-31 (resumed after the 09:18 user checkpoint; window re-opened)
+Updated: 2026-10-31 16:40 +09:00
 Status: ACTIVE. Model claude-opus-5.5, trust-all. Session ID: not exposed inside the session.
 HISTORICAL QUOTA CHECKPOINT notices are previous-account records; not acted on.
 
 ## User decisions
 Q1 theme DECIDED: A "빵집 기사단 vs 곰팡이 군단". Data IDs unchanged (D1). User: fix all reported defects.
 
-## Resume check
-checkpoint/quota-20261031-092323/02-engine differed from HEAD only by two Godot .uid files → committed 2884231. No work lost. The interrupted turn had left an unverified `Services=` line; it was verified before commit (below).
+## This step (review priorities 1–2)
+1. `Events.wave_cleared({index,t})` (01 D21): units carry `wave_tag`; per scripted wave pending/alive counters; fired in `_kill` when a wave has fully spawned and all its units are dead; not after a loss. `pressure: true` waves spawn but are excluded from waves_total, HudSnapshot.wave, wave/boss toasts and wave_cleared.
+   - r01 headless, competent bot, seeds 11/22/33: once each, at 56.65 s; order 1→2→3 (56.65 / 79.55 / 104.38 s); HUD total 3 (was 6).
+   - **25–45 s NOT met with current data**: probe `src/core/diag/wave_clear_probe.gd` → hero push 34.67 s, hero home 59.4 s. Lane/speed cause; options sent to 01 (R4) and 09. Selftest keeps this as a BALANCE flag, not a failure.
+2. 08 P7: H1 cached `Atlas.AnimRec` (no per-sprite dicts), H2 bars second pass + negative-width flip (flip_check.gd: 0 px diff) + const colours, H5 cached sort Callable, item 8 caps single source `Content.caps()`, item 9 preallocated pools; also P2b tie-break (08 equivalence `EQUIVALENT 0/30`, was 29/30 diverged, 3 winner changes).
 
-## Incident (fixed, not committed in broken state)
-From about 15:46 the shared tree's src/core/app.gd was one line with no newlines (10,974 bytes). Cause: my PowerShell `git show HEAD:… | Set-Content -NoNewline` A/B step for the 05 leak test, which joined lines without separators, followed by a command timeout before the copy-back. Restored by byte copy of the intended version (300 lines, LF); diff vs HEAD = only 05 A7. selftest PASS, UI integration 32/32. Notified 07, 10, 04. Rule for me: never write source files through PowerShell text pipelines; use the editor tool or byte copies only.
+## Validation (16:20–16:38, workspace)
+selftest PASS (69 scripts; find_target identity 2217/0; waves_and_pools; pools_grew=false); 08 targeting_equivalence EQUIVALENT 0/30; tests/ui 3329/0; UI integration 35/35; services suites PASS_INTEGRATED; 07 `run_acceptance.ps1 -Only save,faults,flow` PASS 63 / FAIL 0; visible r03 capture on DISPLAY2 correct (enemies mirrored, bars on top, HUD 웨이브 2/4). `-Head` run: after the push, see the bottom.
 
-## Commits this session (all PUSHED origin/main)
-1eb4637, fdd4d86, e9dfaa4, 08ef082, f807823, d660311, 141d226, 577cefc, 2884231 (.uid), abb1809 (Services autoload + 06 reply). This step: see the bottom.
-
-## This step: 05 A7 quit path
-`App.quit_game()` → `Audio.prepare_quit()`, 0.3 s wall-clock wait, quit. Before (8 s run, HEAD): 4 leaked Ogg/AudioStream objects + 2 resources in use. After (`--round=r02 --quit-after=20`, 3 runs): 0. selftest PASS, UI integration 32/32.
-
-## Services (06 S1) — abb1809
-`run_services_suites.ps1` OVERALL exit 0 PASS_INTEGRATED (502/130/161/783/156, blockers 0). One earlier run under load failed 3–4 process_death checks with AND without the Services line (not caused by the autoload); isolated reruns 161/0 twice. Reported to 06.
+## Commits this session (all PUSHED)
+… 08ef082, d660311, 141d226, 2884231, abb1809 (Services), f92f9f6 (A7 quit). This step: bottom.
 
 ## Next steps
-1. 07 `run_acceptance.ps1 -Head -Only save,faults` on HEAD (07 runner was busy at 09:50; asked 07).
-2. 04 re-capture at 1600×900 (expects 800×450, odd-run %) and 07 independent visual check — requested (02-engine-to-04-client R5, 02-engine-to-07-qa).
-3. 03 to rerun its white-line detector (A4/A8).
-4. 05 A8 RefCounted cycle after deployments; OS window-close path → quit_game.
-5. 04 R12-2 release preset (exclude mocks/diag, arm64 only), R12-3 emulator install slot.
-6. 08 P1 battle_view allocations/batching, P4 save latency log, P5 perf hooks; 07 QA-R1 hooks; 01 decisions (passive ~258 s, 900 s timer rule).
+1. 07 `-Head -Only save,faults,flow` on this commit (result appended below if run).
+2. 08 remaining: H3 def fields, H4 _cue alloc, H6 damage-text font, H8 shake coalescing, H9–H13; P4 save latency log; P5 perf hooks.
+3. 01 decisions: D16 window vs r01 data, D7 caps text, passive loss time, 900 s timer rule.
+4. 05 A8 RefCounted cycle; OS window close → quit_game. 04 R12-2 release preset, R12-3 emulator slot. 07 QA-R1 hooks.

@@ -44,6 +44,8 @@ class Unit:
 	var contact := 6.0
 	var summon_t := 0.0
 	var in_lane := false
+	var wave_tag := 0      # 1-based scripted wave that spawned this unit; 0 = trickle/AI/trigger/summon/pressure
+	var anim_set := ""
 
 class Projectile:
 	var alive := false
@@ -86,7 +88,7 @@ var content            # content.gd instance (autoload or standalone)
 var round_def: Dictionary
 var econ: Dictionary
 var hero_def: Dictionary
-var caps := {"ally": 30, "enemy": 40, "projectiles": 64, "fx": 32, "text": 24}
+var caps := {}            # filled from Content.caps() in setup (single source: data/game_config.json caps)
 var upgrades: Dictionary = {}     # upgrade_id -> level (from Save)
 var L := 1200.0
 var rng := RandomNumberGenerator.new()
@@ -132,9 +134,12 @@ var _unit_pool: Array[Unit] = []
 var _uid := 0
 var spawn_queue: Array = []        # [{at, unit}] sorted by at
 var waves_total := 0
-var wave_times: Array[float] = []
+var wave_times: Array[float] = []     # scripted waves only (pressure waves excluded, 01 D21)
 var wave_boss: Array[bool] = []
 var _wave_announced := 0
+var _wave_pending: Array[int] = []    # per scripted wave: units still to spawn
+var _wave_alive: Array[int] = []      # per scripted wave: spawned units not yet dead
+var _wave_cleared: Array[bool] = []
 var ai_gold := 0.0
 var ai_think := 2.0
 var trickle: Dictionary = {}
@@ -164,6 +169,7 @@ func setup(p_content, round_id: String, seed_value: int = 1, p_upgrades: Diction
 	rng.seed = seed_value
 	L = float(round_def.lane_length)
 	_read_caps()
+	_prealloc_pools()
 	gold_max = float(round_def.get("gold_max", econ.gold_max))
 	workers_max = int(round_def.get("workers_max", econ.workers_max))
 	var sc: Dictionary = round_def.get("enemy_scaling", {})
@@ -203,11 +209,20 @@ func setup(p_content, round_id: String, seed_value: int = 1, p_upgrades: Diction
 	spawn_queue.clear()
 	wave_times.clear()
 	wave_boss.clear()
+	_wave_pending.clear()
+	_wave_alive.clear()
+	_wave_cleared.clear()
 	for w in round_def.waves:
 		var at := float(w.get("at", 0))
+		if bool(w.get("pressure", false)):
+			_queue_spawns(w.get("spawns", []), at, 0)   # pressure waves spawn but are not counted/announced
+			continue
 		wave_times.append(at)
 		wave_boss.append(bool(w.get("boss", false)))
-		_queue_spawns(w.get("spawns", []), at)
+		_wave_pending.append(0)
+		_wave_alive.append(0)
+		_wave_cleared.append(false)
+		_wave_pending[-1] = _queue_spawns(w.get("spawns", []), at, wave_times.size())
 	waves_total = wave_times.size()
 	var ai: Dictionary = round_def.enemy_ai
 	ai_gold = float(ai.get("start_gold", 0))
@@ -216,12 +231,19 @@ func setup(p_content, round_id: String, seed_value: int = 1, p_upgrades: Diction
 	trickle_next = float(trickle.get("start", -1.0)) if trickle.get("pattern", []).size() > 0 else -1.0
 
 func _read_caps() -> void:
-	var gc: Dictionary = content.config.get("caps", {})
-	caps.ally = clampi(int(gc.get("max_ally_units", 30)), 1, PerfC.CAP_UNITS_PER_SIDE)
-	caps.enemy = clampi(int(gc.get("max_enemy_units", 40)), 1, PerfC.CAP_UNITS_PER_SIDE)
-	caps.projectiles = clampi(int(gc.get("max_projectiles", 64)), 8, PerfC.CAP_PROJECTILES)
-	caps.fx = clampi(int(gc.get("max_vfx", 32)), 8, PerfC.CAP_FX)
-	caps.text = clampi(int(gc.get("max_damage_popups", 24)), 0, PerfC.CAP_FLOATING_TEXT)
+	caps = content.caps()
+
+## Pre-create pooled objects up to the caps so no object is allocated mid-fight (08 P7 item 9).
+func _prealloc_pools() -> void:
+	while projectiles.size() < caps.projectiles:
+		projectiles.append(Projectile.new())
+	while fxs.size() < caps.fx:
+		fxs.append(Fx.new())
+	while texts.size() < caps.text:
+		texts.append(FText.new())
+	var want_units: int = caps.ally + caps.enemy + 8   # + dying units still on screen
+	while _unit_pool.size() < want_units:
+		_unit_pool.append(Unit.new())
 
 func _upgrade_level(target: String) -> int:
 	for u in content.meta.get("upgrades", []):
@@ -243,13 +265,17 @@ func _upgrade_add(target: String, key: String) -> float:
 			return float(u.get("per_level", {}).get(key, 0.0)) * (lvl - 1)
 	return 0.0
 
-func _queue_spawns(spawns: Array, at: float) -> void:
+## Queue spawn entries; `wave` = scripted wave index (1-based) or 0. Returns the number of units queued.
+func _queue_spawns(spawns: Array, at: float, wave: int = 0) -> int:
+	var total := 0
 	for s in spawns:
 		var n := int(s.get("count", 1))
 		var iv := float(s.get("interval", 1.0))
 		for i in n:
-			spawn_queue.append({"at": at + i * iv, "unit": str(s.unit)})
+			spawn_queue.append({"at": at + i * iv, "unit": str(s.unit), "wave": wave})
+			total += 1
 	spawn_queue.sort_custom(func(a, b): return a.at < b.at)
+	return total
 
 # ================= commands =================
 func worker_cost() -> int:
@@ -424,13 +450,18 @@ func _step_spawns() -> void:
 			refused_spawns += 1
 			return
 		var s = spawn_queue.pop_front()
-		_spawn_enemy(s.unit)
+		var su := _spawn_enemy(s.unit)
+		var wv := int(s.get("wave", 0))
+		if wv > 0:
+			su.wave_tag = wv
+			_wave_pending[wv - 1] -= 1
+			_wave_alive[wv - 1] += 1
 
 func _step_trickle() -> void:
 	if trickle_next < 0.0 or t < trickle_next:
 		return
 	var pat: Array = trickle.pattern
-	spawn_queue.push_front({"at": t, "unit": str(pat[trickle_i % pat.size()])})
+	spawn_queue.push_front({"at": t, "unit": str(pat[trickle_i % pat.size()]), "wave": 0})
 	trickle_i += 1
 	var iv := maxf(float(trickle.get("interval_min", 3.0)), float(trickle.get("interval", 8.0)) - float(trickle.get("ramp_per_min", 0.0)) * (t / 60.0))
 	trickle_next = t + iv
@@ -673,14 +704,16 @@ func _find_target(u: Unit) -> Unit:
 			else: hi = mid
 		var i := maxi(0, lo - 3)
 		var found := 0
-		while i < lane.size() and found < 4:
+		while i < lane.size():
 			var e: Unit = lane[i]
 			i += 1
 			if e.dying: continue
 			var d := e.x - u.x
 			if d < -10.0: continue
+			if found >= 4 and d > best_d: break   # past the nearest group (ties are scanned completely)
 			found += 1
-			if d < best_d:
+			# tie-break identical to the linear scan: equal distance -> earliest spawned (lowest uid = array order)
+			if d < best_d or (d == best_d and e.uid < best.uid):
 				best_d = d
 				best = e
 	else:
@@ -695,14 +728,15 @@ func _find_target(u: Unit) -> Unit:
 			else: hi2 = mid2
 		var j := mini(lane2.size() - 1, lo2 + 2)
 		var found2 := 0
-		while j >= 0 and found2 < 4:
+		while j >= 0:
 			var e2: Unit = lane2[j]
 			j -= 1
 			if e2.dying: continue
 			var d2 := u.x - e2.x
 			if d2 < -10.0: continue
+			if found2 >= 4 and d2 > best_d: break
 			found2 += 1
-			if d2 < best_d:
+			if d2 < best_d or (d2 == best_d and e2.uid < best.uid):
 				best_d = d2
 				best = e2
 		if hero_respawn <= 0.0 and not hero.dying:
@@ -775,6 +809,12 @@ func _kill(u: Unit, rewarded: bool) -> void:
 		hero_respawn = minf(rs, float(hero_def.get("respawn_max", 999.0)))
 		events.append(["hero_dead", {"respawn": hero_respawn}])
 		return
+	if u.side == SIDE_ENEMY and u.wave_tag > 0:
+		var wi := u.wave_tag - 1
+		_wave_alive[wi] -= 1
+		if _wave_alive[wi] <= 0 and _wave_pending[wi] <= 0 and not _wave_cleared[wi] and not ended:
+			_wave_cleared[wi] = true
+			events.append(["wave_cleared", {"index": u.wave_tag, "t": t}])
 	if u.side == SIDE_ENEMY and rewarded:
 		kills += 1
 		kill_coins += int(u.def.get("kill_coins", 0))
@@ -953,6 +993,8 @@ func _new_unit(d: Dictionary, side: int, x: float) -> Unit:
 	u.is_boss = bool(d.get("is_boss", false)) or (d.get("tags", []) as Array).has("boss")
 	u.summon_t = 0.0
 	u.in_lane = false
+	u.wave_tag = 0
+	u.anim_set = str(d.get("anim_set", d.id))
 	u.contact = 5.0 * float(d.get("size", 1.0))
 	return u
 

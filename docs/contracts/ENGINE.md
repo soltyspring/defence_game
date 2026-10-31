@@ -71,7 +71,7 @@ docs/contracts/**, docs/architecture/**  02
 | Low | 2–3 GB RAM, Mali-G52 / Adreno 610, Android 9+ | 30 fps locked option, 60 attempted | ≤ 250 MB PSS | ≤ 32 MB GPU |
 | Mid | 4–6 GB, Adreno 6xx/Mali-G7x | 60 fps, p95 frame ≤ 20 ms | ≤ 300 MB | ≤ 48 MB |
 | High | 8 GB+ | 60 fps (120 not targeted) | ≤ 350 MB | ≤ 64 MB |
-- Entity caps (enforced in code): data `game_config.caps` (01 D7: 30 ally / 40 enemy / 64 projectiles / 32 vfx / 24 popups) clamped by engine hard ceilings in `Perf` (40 per side, 64 projectiles, 48 fx, 24 floating text). Ally over cap → deploy refused (`army_full`, not charged); enemy over cap → queued.
+- Entity caps (enforced in code): ONE source = data `game_config.caps` (01) read through `Content.caps()`, clamped by engine hard ceilings in `Perf` (40 per side, 64 projectiles, 48 fx, 24 floating text). Effective 2026-10-31: 36 ally / 36 enemy / 64 projectiles / 48 fx / 24 texts (D7's "30/40" is outdated; 01 to update D7). Ally over cap → deploy refused (`army_full`, not charged); enemy over cap → queued. Pools for projectiles/fx/texts/units are preallocated to these caps at battle setup.
 - Object pooling for units, projectiles, fx, floating text. No per-frame allocations in the battle loop beyond pooled reuse.
 - Simulation: fixed step 1/60 s with accumulator, max 4 steps/frame (spiral-of-death guard). Seeded RNG per battle for deterministic headless tests.
 - CPU target: battle sim ≤ 2 ms/frame on mid tier at cap. Measured via `Perf` in headless sims (desktop numbers are only a proxy; device numbers required before release).

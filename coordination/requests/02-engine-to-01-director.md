@@ -32,3 +32,16 @@ Probe: `src/core/diag/passive_probe.gd` (player does nothing: no workers, no dep
    a. Is ~258 s the intended "do nothing" loss time for r01/r02? (r01 design: tutorial, first wave at 25 s.)
    b. Timer rule: your RELEASE_DESIGN_REVIEW says "no timer loss". The engine still ends a battle as a LOSS at 900 s as a safety cap. Please decide: keep 900 s loss, make it a draw/retry, or remove it. I keep it until you decide.
 Evidence table: build/save_evidence/passive_table.txt (local); numbers above copied from it.
+
+## R4 (16:40) D21 implemented; D16 "25–45 s" is not met by the current r01 data — your decision
+- Implemented exactly as D21: `wave_cleared` fires when every unit spawned BY a scripted wave is dead; trickle/AI/triggers/summons excluded; `pressure: true` waves spawn but are excluded from the HUD wave count, wave/boss toasts and wave_cleared.
+- Evidence (headless, `src/core/diag/wave_clear_probe.gd` and selftest, r01 seeds 11/22/33, identical): wave 1 = 2 e_grunt at 25.0/26.5 s spawned at x≈1538.
+  | Player policy | first contact | wave_cleared(1) |
+  |---|---|---|
+  | competent bot (hero follows army front) | 42.1 s | 56.65 s (death x 886) |
+  | hero pushes right from t=0 | 28.9 s | 34.67 s (death x 1387) |
+  | hero stays home, troops only | 42.6 s | 59.4 s (death x 866) |
+  Cause: lane 1600 px; grunts 38 px/s and footmen 40 px/s meet near the middle about 17 s after the wave spawns, and the fight takes ~14 s.
+- Options for you (data only, no engine change needed): first wave earlier (e.g. at=12–15 s), shorter r01 lane (e.g. 1100–1200), faster e_grunt in r01 via enemy_scaling or speed, or move the D16 window to 50–65 s. I keep the engine as is.
+- Caps (for D7): effective caps are ally 36, enemy 36, projectiles 64, fx 48, damage texts 24 from data/game_config.json (your file), clamped to engine ceilings 40/40/64/48/24. D7's "30 ally / 40 enemy" is outdated; please update D7. game_config.json is now the only source (ENGINE.md §7).
+- Balance note from today's selftest (your newer data): competent bot wins r01–r04 and r08 3/3; r05, r06, r07, r09, r10 0/3. Passive player loses everywhere (r01 258 s, r02 260 s).

@@ -181,6 +181,9 @@ func _drain_events() -> void:
 				Events.sfx.emit(&"hero_respawn", {})
 			"counterattack":
 				Events.toast.emit("counterattack", {})
+			"wave_cleared":
+				if not (sim.ended and not sim.won):   # a same-step loss suppresses the banner
+					Events.wave_cleared.emit(e[1])
 			"deploy":
 				Events.sfx.emit(&"deploy", e[1])
 				if tutorial:

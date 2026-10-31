@@ -25,6 +25,13 @@ const C_ENEMY_D := Color("7d2a25")
 const C_SKIN := Color("f1c79a")
 const C_HERO := Color("f2c14e")
 const C_OUTLINE := Color("1a1c24")
+const C_BAR_PLAYER := Color("6fd36f")
+const C_BAR_ENEMY := Color("e5534b")
+
+var _by_lane_y := func(a, b): return a.lane_y < b.lane_y   # one Callable for the depth sort (08 H5)
+var _bar_rects: Array[Rect2] = []      # queued hp bars: outline rect, fill rect, colour (drawn in _flush_bars)
+var _bar_fills: Array[Rect2] = []
+var _bar_cols: Array[Color] = []
 
 func setup(p_sim, p_atlas, p_ground_y: float, p_biome: String) -> void:
 	sim = p_sim
@@ -53,9 +60,10 @@ func _draw() -> void:
 	for u in sim.players: _order.append(u)
 	for u in sim.enemies: _order.append(u)
 	if sim.hero_respawn <= 0.0: _order.append(sim.hero)
-	_order.sort_custom(func(a, b): return a.lane_y < b.lane_y)
+	_order.sort_custom(_by_lane_y)
 	for u in _order:
 		_draw_unit(u)
+	_flush_bars()   # all hp bars after all sprites: one batch of rects instead of breaking sprite batches (08 H2)
 	for p in sim.projectiles:
 		if p.alive: _draw_projectile(p)
 	for f in sim.fxs:
@@ -153,12 +161,17 @@ func _draw_base(b: Dictionary, side: int) -> void:
 		if not bm.is_empty():
 			var ratio: float = b.hp / b.hp_max
 			var st := "idle" if ratio > 0.5 else ("damaged" if ratio > 0.0 else "ruined")
-			var f: Dictionary = {}
+			var rec = null
 			if bm.has("anim_set"):
-				f = atlas.anim_frame(str(bm.anim_set), st, sim.t)
-				if f.is_empty(): f = atlas.anim_frame(str(bm.anim_set), "idle", sim.t)
-			if f.is_empty():
-				f = atlas.frame(str(bm.get("atlas", "")), str(bm.get("frame", "")))
+				rec = atlas.anim_rec(str(bm.anim_set), st)
+				if rec == null: rec = atlas.anim_rec(str(bm.anim_set), "idle")
+			if rec != null:
+				var mod0 := Color(1, 0.6, 0.6) if b.flash > 0.0 else Color.WHITE
+				var bi: int = atlas.rec_index(rec, sim.t)
+				_blit_rec(rec, bi, Vector2(x, ground_y), side < 0 and bool(bm.get("flip", false)), mod0)
+				_hp_bar(Vector2(x, ground_y - rec.rects[bi].size.y - 8.0), 44.0, b.hp / b.hp_max, side)
+				return
+			var f: Dictionary = atlas.frame(str(bm.get("atlas", "")), str(bm.get("frame", "")))
 			if not f.is_empty():
 				var mod := Color(1, 0.6, 0.6) if b.flash > 0.0 else Color.WHITE
 				_blit(f, Vector2(x, ground_y), side < 0 and bool(bm.get("flip", false)), mod)
@@ -198,9 +211,9 @@ func _draw_workers() -> void:
 		var wy := ground_y - 1.0 + (i % 3) * 2.0
 		var bob := 1.0 if int(sim.t * 8.0 + i) % 2 == 0 else 0.0
 		if atlas:
-			var wf: Dictionary = atlas.anim_frame("worker", "walk" if going else "carry", sim.t + i * 0.13)
-			if not wf.is_empty():
-				_blit(wf, Vector2(roundf(wx), roundf(wy)), not going, Color.WHITE)
+			var wrec = atlas.anim_rec("worker", "walk" if going else "carry")
+			if wrec != null:
+				_blit_rec(wrec, atlas.rec_index(wrec, sim.t + i * 0.13), Vector2(roundf(wx), roundf(wy)), not going, Color.WHITE)
 				continue
 		draw_rect(Rect2(wx - 2.0, wy - 8.0 - bob, 4.0, 6.0), Color("8d6e4a"))
 		draw_rect(Rect2(wx - 2.0, wy - 11.0 - bob, 4.0, 3.0), C_SKIN)
@@ -226,25 +239,36 @@ func _draw_unit(u) -> void:
 	elif u.buff_t > 0.0: mod = mod * Color(1.0, 1.0, 0.8)
 	var drawn := false
 	if atlas:
-		var aset := str(u.def.get("anim_set", u.id))
-		var f: Dictionary = atlas.anim_frame(aset, _anim_name(u), u.anim_t)
-		if f.is_empty() and u.state == SimS.S_IDLE:
-			f = atlas.anim_frame(aset, "walk", 0.0)
-		if not f.is_empty():
-			_blit(f, pos, flip, mod)
+		var rec = atlas.anim_rec(u.anim_set, _anim_name(u))
+		var t: float = u.anim_t
+		if rec == null and u.state == SimS.S_IDLE:
+			rec = atlas.anim_rec(u.anim_set, "walk")
+			t = 0.0
+		if rec != null:
+			var fi: int = atlas.rec_index(rec, t)
+			_blit_rec(rec, fi, pos, flip, mod)
 			drawn = true
 			if not u.dying:
-				_hp_bar(pos + Vector2(0, -f.rect.size.y - 3.0), 12.0 + 4.0 * float(u.def.get("size", 1.0)), u.hp / u.hp_max, u.side)
+				_hp_bar(pos + Vector2(0, -rec.rects[fi].size.y - 3.0), 12.0 + 4.0 * float(u.def.get("size", 1.0)), u.hp / u.hp_max, u.side)
 	if not drawn:
 		_draw_placeholder(u, pos, flip, mod)
+
+## Draw frame `i` of a cached AnimRec. Flip = negative-width destination rect placed at the mirrored left edge;
+## pixel-identical to draw_set_transform(pos, 0, (-1,1)) (src/core/diag/flip_check.gd: 0 px difference) without
+## a transform command per sprite (08 H2).
+func _blit_rec(rec, i: int, pos: Vector2, flip: bool, mod: Color) -> void:
+	var r: Rect2 = rec.rects[i]
+	var pv: Vector2 = rec.pivots[i]
+	if flip:
+		draw_texture_rect_region(rec.tex, Rect2(pos.x - (r.size.x - pv.x), pos.y - pv.y, -r.size.x, r.size.y), r, mod)
+	else:
+		draw_texture_rect_region(rec.tex, Rect2(pos - pv, r.size), r, mod)
 
 func _blit(f: Dictionary, pos: Vector2, flip: bool, mod: Color) -> void:
 	var r: Rect2 = f.rect
 	var pv: Vector2 = f.pivot
 	if flip:
-		draw_set_transform(pos, 0.0, Vector2(-1, 1))
-		draw_texture_rect_region(f.tex, Rect2(-pv, r.size), r, mod)
-		draw_set_transform(Vector2.ZERO)
+		draw_texture_rect_region(f.tex, Rect2(pos.x - (r.size.x - pv.x), pos.y - pv.y, -r.size.x, r.size.y), r, mod)
 	else:
 		draw_texture_rect_region(f.tex, Rect2(pos - pv, r.size), r, mod)
 
@@ -318,8 +342,18 @@ func _hp_bar(center: Vector2, w: float, ratio: float, side: int) -> void:
 	if ratio >= 0.999 and w < 30.0:
 		return   # hide full bars on troops to reduce clutter
 	var r := Rect2(roundf(center.x - w * 0.5), roundf(center.y), roundf(w), 2.0)
-	draw_rect(r.grow(1.0), C_OUTLINE)
-	draw_rect(Rect2(r.position, Vector2(roundf(w * clampf(ratio, 0.0, 1.0)), 2.0)), Color("6fd36f") if side == 1 else Color("e5534b"))
+	_bar_rects.append(r.grow(1.0))
+	_bar_fills.append(Rect2(r.position, Vector2(roundf(w * clampf(ratio, 0.0, 1.0)), 2.0)))
+	_bar_cols.append(C_BAR_PLAYER if side == 1 else C_BAR_ENEMY)
+
+func _flush_bars() -> void:
+	for r in _bar_rects:
+		draw_rect(r, C_OUTLINE)
+	for i in _bar_fills.size():
+		draw_rect(_bar_fills[i], _bar_cols[i])
+	_bar_rects.clear()
+	_bar_fills.clear()
+	_bar_cols.clear()
 
 # ---------------- projectiles / fx / text ----------------
 func _draw_projectile(p) -> void:
@@ -327,9 +361,9 @@ func _draw_projectile(p) -> void:
 	var y: float = ground_y + p.y - sin(k * PI) * p.arc
 	var pos := Vector2(roundf(p.x), roundf(y))
 	if atlas:
-		var f: Dictionary = atlas.anim_frame(p.kind, "fly", p.t)
-		if not f.is_empty():
-			_blit(f, pos, p.side < 0, Color.WHITE)
+		var rec = atlas.anim_rec(p.kind, "fly")
+		if rec != null:
+			_blit_rec(rec, atlas.rec_index(rec, p.t), pos, p.side < 0, Color.WHITE)
 			return
 	match p.kind:
 		"rock":
@@ -346,10 +380,10 @@ func _draw_fx(f) -> void:
 	var k := clampf(f.t / f.dur, 0.0, 1.0)
 	var pos := Vector2(f.x, ground_y + f.y)
 	if atlas:
-		var fr: Dictionary = atlas.anim_frame(f.kind, "play", f.t)
-		if fr.is_empty(): fr = atlas.anim_frame(f.kind, "loop", f.t)
-		if not fr.is_empty():
-			_blit(fr, pos, false, Color.WHITE)
+		var rec = atlas.anim_rec(f.kind, "play")
+		if rec == null: rec = atlas.anim_rec(f.kind, "loop")
+		if rec != null:
+			_blit_rec(rec, atlas.rec_index(rec, f.t), pos, false, Color.WHITE)
 			return
 	match f.kind:
 		"hit_spark":

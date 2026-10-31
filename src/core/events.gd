@@ -14,6 +14,10 @@ signal floating_text(world_pos: Vector2, text: String, kind: StringName)
 signal tutorial_step(key: String)
 ## Semantic audio cue for 05-audio (docs/audio/AUDIO_CONTRACT.md). At most one per cue+kind per frame.
 signal sfx(cue: StringName, params: Dictionary)
+## A scripted wave is broken: every unit spawned BY that wave is dead (01 D21; trickle, triggers, summons and
+## `pressure: true` waves never count). info = {"index": int (same numbering as HudSnapshot.wave.index), "t": float}.
+## Emitted once per wave, never after the battle ended.
+signal wave_cleared(info: Dictionary)
 
 # ---- UI -> Engine ----
 signal cmd_start_round(round_id: String)

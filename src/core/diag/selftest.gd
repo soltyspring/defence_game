@@ -26,6 +26,7 @@ func _initialize() -> void:
 	_check_find_target(content)
 	_check_rules(content)
 	_check_tutorial(content)
+	_check_waves_and_pools(content)
 	_check_save()
 	_check_save_faults()
 	content.free()
@@ -48,6 +49,7 @@ func _initialize() -> void:
 	print("find_target ", JSON.stringify(report.get("find_target_equivalence", {})))
 	print("rules ", JSON.stringify(report.get("rules", {})))
 	print("tutorial ", JSON.stringify(report.get("tutorial", {})))
+	print("waves_and_pools ", JSON.stringify(report.get("waves_and_pools", {})))
 	print("scripts ok %d/%d, scenes %d, foreign errors %s" % [report.scripts_ok, report.scripts_total, report.scenes_total, str(report.foreign_script_errors)])
 	for b in balance_flags: print("BALANCE: ", b)
 	print("report: ", ProjectSettings.globalize_path("user://selftest_report.json"))
@@ -295,7 +297,7 @@ func _check_find_target(content) -> void:
 				checked += 1
 				var da: float = 1e9 if a == null else (a.x - u.x) * u.side
 				var db: float = 1e9 if b == null else (b.x - u.x) * u.side
-				if absf(da - db) > 0.0001:
+				if absf(da - db) > 0.0001 or a != b:
 					mismatches += 1
 	report.find_target_equivalence = {"checked": checked, "mismatches": mismatches}
 	if checked < 100: _fail("find_target equivalence: too few samples (%d)" % checked)
@@ -476,3 +478,78 @@ func _check_save_faults() -> void:
 	tmp_nodes.append_array([h, h2, h3, h4])
 	report.save_faults = out
 	for n in tmp_nodes: n.free()
+
+## 01 D21 wave_cleared, pressure waves excluded from wave counts, caps single source, preallocated pools.
+func _check_waves_and_pools(content) -> void:
+	var out := {}
+	var rid: String = content.round_order[0]
+	var rd: Dictionary = content.get_round(rid)
+	var scripted := 0
+	var pressure := 0
+	for w in rd.waves:
+		if bool(w.get("pressure", false)): pressure += 1
+		else: scripted += 1
+	for seed_v in [11, 22, 33]:
+		var sim = SimS.new()
+		sim.setup(content, rid, seed_v)
+		var bot = BotS.new(2, seed_v)
+		var pools := [sim.projectiles.size(), sim.fxs.size(), sim.texts.size()]
+		var cleared: Array = []
+		var announced: Array = []
+		var dt := 1.0 / 60.0
+		while not sim.ended and sim.t < 600.0:
+			bot.act(sim, dt)
+			sim.step(dt)
+			for e in sim.events:
+				if e[0] == "wave_cleared": cleared.append([int(e[1].index), snappedf(float(e[1].t), 0.01)])
+				if e[0] == "wave": announced.append(int(e[1].index))
+			sim.events.clear()
+			sim.cues.clear()
+		var grown: bool = sim.projectiles.size() != pools[0] or sim.fxs.size() != pools[1] or sim.texts.size() != pools[2]
+		var w1 := []
+		for c in cleared:
+			if c[0] == 1: w1.append(c[1])
+		out["seed_%d" % seed_v] = {"cleared": cleared, "announced": announced, "wave_total": sim.waves_total, "pools": pools, "pools_grew": grown}
+		if w1.size() != 1: _fail("wave_cleared(1) count %d in %s seed %d" % [w1.size(), rid, seed_v])
+		else:
+			var last_spawn: float = sim.wave_times[0]
+			for s in rd.waves[0].get("spawns", []):
+				last_spawn = maxf(last_spawn, float(sim.wave_times[0]) + (int(s.get("count", 1)) - 1) * float(s.get("interval", 1.0)))
+			if float(w1[0]) < last_spawn: _fail("wave_cleared(1) at %.2f s before the wave's last spawn %.2f s" % [w1[0], last_spawn])
+			# 01 D16 design target (data question for 01/09, not an engine rule): first wave broken at 25–45 s
+			if float(w1[0]) < 25.0 or float(w1[0]) > 45.0:
+				balance_flags.append("r01 seed %d: wave_cleared(1) at %.2f s, outside D16 25–45 s (competent bot)" % [seed_v, w1[0]])
+		var prev := 0
+		for c in cleared:
+			if c[0] < prev: _fail("wave_cleared out of order: %s" % str(cleared))
+			prev = c[0]
+		if sim.waves_total != scripted: _fail("wave total %d != scripted waves %d (pressure %d)" % [sim.waves_total, scripted, pressure])
+		for a in announced:
+			if a > scripted: _fail("pressure wave announced (index %d)" % a)
+		var seen := {}
+		for c in cleared:
+			if seen.has(c[0]): _fail("wave_cleared(%d) fired twice" % c[0])
+			seen[c[0]] = true
+		if grown: _fail("pools grew mid-battle: %s" % str(out["seed_%d" % seed_v]))
+	# no wave_cleared after a loss: passive player in r03 loses; any clear must precede the end
+	var ls = SimS.new()
+	ls.setup(content, content.round_order[2], 5)
+	var last_clear_t := -1.0
+	while not ls.ended and ls.t < 900.0:
+		ls.step(1.0 / 60.0)
+		for e in ls.events:
+			if e[0] == "wave_cleared": last_clear_t = float(e[1].t)
+		ls.events.clear()
+		ls.cues.clear()
+	out.loss_case = {"won": ls.won, "end_t": snappedf(ls.t, 0.1), "last_clear_t": last_clear_t}
+	if last_clear_t > ls.t: _fail("wave_cleared after battle end")
+	# caps: one source (data/game_config.json caps, clamped by perf.gd)
+	var gc: Dictionary = content.config.get("caps", {})
+	var cp: Dictionary = content.caps()
+	out.caps = {"data": gc, "effective": cp}
+	var sim2 = SimS.new()
+	sim2.setup(content, rid, 1)
+	if sim2.caps != cp: _fail("sim caps differ from Content.caps()")
+	out.scripted_waves = scripted
+	out.pressure_waves = pressure
+	report.waves_and_pools = out

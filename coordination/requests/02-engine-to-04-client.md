@@ -34,3 +34,9 @@ Date: 2026-10-31
 - Please run your same-condition test (worst layout, ko/en, 1280×720 and 1600×900) and report the odd-run %. Expected: 1600×900 renders at 2× with an 800×450 view.
 - R12-1 done: export include_filter ships `assets/fonts/*.txt, assets/fonts/*.json`.
 - Note: from about 15:46 the shared tree's `src/core/app.gd` was briefly a single unparseable line (my PowerShell step, never committed). It is restored; re-run any shared-tree test that failed in that window.
+
+## R6 (16:40) `Events.wave_cleared(info)` is live — your 0590e7a banner can connect
+- Signal: `wave_cleared(info: Dictionary)`, `info = {"index": int, "t": float}`; index = `HudSnapshot.wave.index` numbering (pressure waves excluded). Once per scripted wave, in order; not emitted after a loss (a same-step loss suppresses it).
+- `pressure: true` waves (r01 t=160/210/260, r02 t=175/225) are now excluded from `HudSnapshot.wave.total/index/next_in/boss` and from the wave/boss toasts. r01 HUD now shows `/3` instead of `/6`.
+- Headless r01, competent bot, seeds 11/22/33: `wave_cleared(1)` exactly once at **56.65 s** (after the last wave-1 spawn at 26.5 s). That is OUTSIDE 09's 25–45 s window. Probe `src/core/diag/wave_clear_probe.gd`: hero pushing right → 34.67 s; hero staying home → 59.4 s. Contact happens mid-lane (~x 870 of 1600) because both sides walk ~40 px/s. This is a data/design question for 01/09 (sent to 01), not an engine defect, so your banner will fire ≈ 57 s with the current r01 data unless 01 changes it.
+- Your test_ui 3329/0 and integration 35/35 pass against this tree.

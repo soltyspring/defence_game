@@ -224,6 +224,26 @@ func round_skills(r: Dictionary) -> Array:
 			out.append(s)
 	return out.slice(0, 3)
 
+## Effective entity caps. ONE source: data/game_config.json `caps` (01). Missing keys use CAPS_DEFAULT (same
+## values as the data at 2026-10-31); every value is clamped to the engine hard ceilings in perf.gd.
+const CAPS_DEFAULT := {"max_ally_units": 36, "max_enemy_units": 36, "max_projectiles": 64, "max_vfx": 48, "max_damage_popups": 24}
+const PerfS := preload("res://src/core/perf.gd")
+
+func caps() -> Dictionary:
+	var gc: Dictionary = CAPS_DEFAULT.duplicate()
+	var src = config.get("caps", {})
+	if src is Dictionary:
+		for k in CAPS_DEFAULT:
+			if src.has(k) and (src[k] is int or src[k] is float):
+				gc[k] = src[k]
+	return {
+		"ally": clampi(int(gc.max_ally_units), 1, PerfS.CAP_UNITS_PER_SIDE),
+		"enemy": clampi(int(gc.max_enemy_units), 1, PerfS.CAP_UNITS_PER_SIDE),
+		"projectiles": clampi(int(gc.max_projectiles), 8, PerfS.CAP_PROJECTILES),
+		"fx": clampi(int(gc.max_vfx), 8, PerfS.CAP_FX),
+		"text": clampi(int(gc.max_damage_popups), 0, PerfS.CAP_FLOATING_TEXT),
+	}
+
 # ---- read-only queries (INTERFACES.md §4) ----
 func get_unit(id: String) -> Dictionary:
 	if units.has(id):

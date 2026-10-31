@@ -50,6 +50,7 @@ func release(atlas_id: String) -> void:
 	if p.refs == 0 and str(p.meta.get("group", "")) != "ui":
 		p.tex = null
 		p.loaded = false
+		_invalidate_recs()
 
 ## Atlas ids needed by a battle: roster anim sets + fx/base groups + biome page.
 func pages_for_battle(anim_set_ids: Array, biome: String) -> PackedStringArray:
@@ -82,6 +83,7 @@ func _load_page(atlas_id: String) -> void:
 		img_path = str(p.meta.get("frames", "")).get_base_dir() + "/" + str(fr.get("image", ""))
 	p.tex = _load_texture(img_path)
 	p.source = _last_source
+	_invalidate_recs()   # records resolved before this page was resident may be null
 	if p.tex == null:
 		warnings.append("atlas %s: image %s not loadable" % [atlas_id, img_path])
 
@@ -102,6 +104,57 @@ func _load_texture(path: String) -> Texture2D:
 			push_warning("[Atlas] %s loaded via raw PNG dev fallback (not imported)" % path)
 			return ImageTexture.create_from_image(img)
 	return null
+
+# ---- allocation-free lookup for per-frame renderers (08 P7 H1) ----
+## Resolved once per (anim_set, anim) while its page is resident; shared, never mutate.
+class AnimRec:
+	var tex: Texture2D
+	var rects: Array[Rect2] = []
+	var pivots: PackedVector2Array = PackedVector2Array()
+	var fps := 8.0
+	var loop := true
+	var hit_frame := -1
+
+var _rec_cache: Dictionary = {}      # anim_set -> {anim_name -> AnimRec or null}
+var _rec_page: Dictionary = {}       # anim_set -> atlas_id it was resolved from
+
+## AnimRec or null (no art). Cached; invalidated when the page is loaded/released.
+func anim_rec(anim_set: String, anim_name: String) -> AnimRec:
+	var per = _rec_cache.get(anim_set)
+	if per == null:
+		per = {}
+		_rec_cache[anim_set] = per
+	if per.has(anim_name):
+		return per[anim_name]
+	var rec: AnimRec = null
+	var a := anim(anim_set, anim_name)
+	if not a.is_empty():
+		rec = AnimRec.new()
+		rec.fps = a.fps
+		rec.loop = a.loop
+		rec.hit_frame = a.hit_frame
+		for fn in a.frames:
+			var f := frame(a.atlas, str(fn))
+			if f.is_empty():
+				rec = null
+				break
+			rec.tex = f.tex
+			rec.rects.append(f.rect)
+			rec.pivots.append(f.pivot)
+		if rec != null:
+			_rec_page[anim_set] = a.atlas
+	per[anim_name] = rec
+	return rec
+
+## Frame index of `rec` at elapsed time t (same rule as anim_frame()).
+static func rec_index(rec: AnimRec, t: float) -> int:
+	var n := rec.rects.size()
+	var i := int(t * rec.fps)
+	return i % n if rec.loop else mini(i, n - 1)
+
+func _invalidate_recs() -> void:
+	_rec_cache.clear()
+	_rec_page.clear()
 
 # ---- lookup API for renderers ----
 ## Returns {"tex":Texture2D, "rect":Rect2, "pivot":Vector2} or {} if unavailable.

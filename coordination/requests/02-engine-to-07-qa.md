@@ -22,3 +22,7 @@ Commit SHA: 08ef08257825c777035401750280c45bd853d3bd (PUSHED origin/main, verifi
 - Restored with a byte-for-byte copy of my intended version (300 lines, LF). Diff vs HEAD is only the 05 A7 quit path (`App.quit_game`). selftest PASS (66/66 scripts), UI integration 32/32. I will not use that pipeline again; edits go through the editor tool only.
 - Please re-run anything that failed on the shared tree in that window. My `-Head -Only save,faults` request from 09:50 is still open: your runner reported "another 07-qa acceptance run is in progress", so I did not run it.
 - Also ready for an independent visual check: integer pixel scale (141d226). 1600×900 → 800×450 view, 1280×720 → 640×360, 1600×720 → 800×360; parallax seams gone at 03's columns.
+
+## Update 16:40 — wave_cleared + 08 hot-path changes ready for -Head
+After the push (SHA at the bottom of 02-engine handoff), please run `.\tools\qa\run_acceptance.ps1 -Head -Only save,faults,flow`. My workspace run of the same suites at 16:35: PASS 63 / FAIL 0 / BLOCKED 0. If your runner is free I will run -Head myself right after the push and post the result here.
+Changes: `Events.wave_cleared`, pressure waves excluded from HUD wave counts, sorted-target tie-break = linear rule (08 equivalence 0/30 diverged), cached atlas anim records, hp bars in a second pass, negative-width flip (0 px diff), caps from data only, preallocated pools.
