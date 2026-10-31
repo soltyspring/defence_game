@@ -17,8 +17,8 @@ Runs named `head-<sha>` / made with `run_acceptance.ps1 -Head` test a clean `git
 | QA-B009 | P2 | 04 (cc 01) | VERIFIED abe2303 (TH-FIT-HUD-EN PASS) | TH-FIT-HUD-EN | English card labels ellipsised at the narrowest HUD (36.7 px slot, r08–r10) |
 | QA-B010 | P2 | 04 (cc 01) | VERIFIED abe2303 (TH-FIT-ROUND PASS, 2-line wrap; render not checked) | TH-FIT-ROUND-EN | 7/10 English round names ellipsised in round select (83 px tile) |
 | QA-B011 | P2 (proxy) | 03 | VERIFIED 3b2d830 (TH-COL-* PASS, closest ΔE 19–25 after 7705aec; CVD-simulated r08 frame separable) | TH-COL-PROTAN/DEUTAN | Ally vs enemy colour separation under CVD |
-| QA-B012 | P3 | 02 | OPEN | VISUAL C4 | Damage numbers: fallback font 8 px, up to 21 at once, stacked numbers merge and overlap HP bars |
-| QA-B013 | P3 | 04 (cc 02) | PARTIAL 97c8b9c (HUD bars striped PASS; world unit/base bars still hue-only) | VISUAL C4 | Green/red base and unit HP bars indistinguishable under protan/deutan simulation |
+| QA-B012 | P3 | 02 | REOPENED fca9346 (1133 overlapping pairs; stagger step 10 px < rect 11 px; low contrast on village walls) | VISUAL C4 | Damage numbers: fallback font 8 px, up to 21 at once, stacked numbers merge and overlap HP bars |
+| QA-B013 | P3 | 04 (cc 02) | PARTIAL fca9346 (HUD PASS; world bars hue-only) | VISUAL C4 | Green/red base and unit HP bars indistinguishable under protan/deutan simulation |
 | QA-B014 | P3 | 01 | VERIFIED 97c8b9c for the 10 keys (c15e43a); new key split to QA-B016 | DATA-13/14 | 10 ui.upgrade* keys missing in data/text ko+en (renders only via 04 fallback) |
 | QA-B015 | P2 (pre-check) | 04 (cc 01) | VERIFIED 97c8b9c (2-line title logo fits at 34+34 notch, 1x/2x, ko/en) | VISUAL C7 | Q3 EN title 'Bakery Knights: Mold Defense' 588 px > 572 px notch safe width at menu title font |
 | QA-J3 | P2 | 04 | VERIFIED 68866e9 (C5) | VISUAL C5 | Worker vs soldier card + resource names |

@@ -107,3 +107,34 @@ Import guard 0 missing, 0 failed loads. Lock-screen guard: mean brightness of ev
 ## C16 APK launcher label (Q4) — PASS on the existing debug APK
 `tools/qa/check_apk_label.ps1` (aapt2 `dump badging`, build-tools 36.1.0) on `build/android/defence-debug.apk` (59 290 830 bytes, modified 17:37:43): default **"Bakery Knights"**, `ko` **"빵집 기사단"**, all other 87 locales "Bakery Knights"; exit 0 (`evidence/apk-label/defence-debug_20261031-1737.txt`).
 Limits: the APK was built by 02 from its working tree at 17:37, before the label commit 4b5926d (17:42); 07 did not export from HEAD (avoids import/export collisions with 02/04). This is a file read, not a launcher on a phone. Package id is still `com.soltyspring.lanedefence` (cannot change after first store upload; flagged to 01/02).
+
+## M12 run — clean origin/main HEAD fca9346 (includes 03 11ceacb/e3c4621/6949499, 04 a6369ba/baa1672/1d1e4e3, 02 09508b1/4b5926d, 01 7b93d1f), 18:32–18:40
+`-Head` run 20261031-183232: PASS 152 · FAIL 0 · NOT_TESTED 2; import guard 0 missing, 0 failed loads; services exit 0. Captures on `\\.\DISPLAY2`, EXIT_0; brightness guard: **0 black of 50** frames (PC not locked). Executed per RETEST_PLAN_1830.md.
+
+### V1 Sky share — PASS (03's line) and near the coordinator's 18 %
+`tools/qa/frame_metrics.py --rev fca9346` (exact sky-layer palette of this revision):
+| Frame | full frame | band y 12–83 % |
+|---|---|---|
+| r01 t≈2 s ko 2× notch | **17.0 %** | 15.7 % |
+| r01 t≈2 s ko 1× notch | 17.0 % | 15.7 % |
+| r08 t 26 s ko 2× | 21.5 % | 21.1 % |
+| r08 t 156 s ko 2× | 20.8 % | 20.1 % |
+Old meadow baseline with the same method: 39.5–46.1 % full frame. Sky share roughly halved; ≤ 35 % in every frame.
+
+### V2/V3 Village identity and nest — PASS (visual)
+Wheat-field village with bakery houses and windmills (`ko_2x_notch_3_r01_hud_t02.png`); enemy base is a dark mould mound with a cave mouth facing left and four spore stalks (`ko_2x_crowd_t026.png`, zoom `zoom_nest.png`). Under deutan the nest stays a dark mass against the light village (`zoom_nest_deutan.png`). QA-J1 identity part satisfied; the J1 enemy-visibility part still has no target (r01 casual bot: objects 5.0–8.0 % of the view; enemies on screen 0 at t = 7–22 s, 1 at 27 s, 4 at 32 s after a262640 moved the first wave earlier; `ko_2x_notch_m8_report.json` j1).
+
+### V4 Damage numbers (QA-B012) — FAIL, reopened with a new cause
+- `capture_crowd.gd` r08, 185 s real time, no pause: `battle_view._placed_text` showed up to **14** numbers drawn in one frame and **1 133** overlapping rectangle pairs summed over 11 089 frames.
+- Cause (code, 09508b1 `_draw_text`): each number's rect is `NUM_PX + 1` = 11 px tall but the stagger step is `NUM_PX` = 10 px, so after one step the new rect still overlaps the old one by 1 px and is shifted again; the 6-step guard is therefore used up after about 3 stacked numbers and the 4th and later are drawn overlapping.
+- New readability problem on the new background: numbers are light grey/white with a 1 px shadow and fade, drawn over light village walls ("2", "25" in `zoom_nums.png`, 4× zoom); contrast is low in normal vision and in deutan (`zoom_nums_deutan.png`).
+- Pass: `damage_number_overlaps == 0` over the same 180 s run and numbers legible over the village (dark outline or plate).
+
+### V5 World HP bars under CVD (QA-B013) — still PARTIAL
+HUD bars stay separable (striped enemy bar). World bars: in `zoom_nums_deutan.png` the ally bar and the enemy unit bars have the same olive fill; only the fill length differs. No pattern or luminance step. Unchanged by 1d1e4e3 (that commit striped the HUD bar).
+
+### V6 Title — PASS
+Logo mode, ko/en, 1×/2× with 34+34 notch (`*_notch_1_menu.png`); 0 monetization words on menu, upgrades, HUD.
+
+### V8 Launcher label — WAITING (QA-W004)
+Only `build/android/defence-debug.apk` from 17:37 exists (pre-4b5926d work tree). No APK with a named commit SHA, so not judged.

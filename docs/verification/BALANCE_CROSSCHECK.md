@@ -30,3 +30,23 @@ Same probe, same seeds. `git diff a262640 09508b1` touches only battle_sim.gd (0
 | r10 | LOW | 10/10 · 445 s · 0.92 | 5/5 · 464 s · 0.69 (d25_r10) | **0/10** |
 | r10 | none | 1/10 | 1/5 | 0/10 |
 Result: unchanged by D25 for r05/r09; r10 median 436 -> 445 s. **Casual still loses r05 and r10 0/10 at LOW.** The r05 'none' disagreement (0.03 vs 1.00) remains. Note 01's own D25 r10 HIGH worst base 0.18 (lower than LOW 0.69), a non-monotonic budget effect 07 did not test.
+
+## Re-run after 7b93d1f (D27) with D28 targets — HEAD fca9346, 2026-10-31 19:10–19:33
+07 casual + competent policies, 10 seeds each (101–110, same noise as above), budgets from 01's `upgrade_budgets.json` (`low`, `low2r`, none). Each round ran in its own process with a **200 s cap** (08 may measure again; a single 10-round process exceeded 28 min and was stopped). r04, r08 and r10 hit the cap, so some rows are missing. Raw rows: `evidence/visual7-fca9346/balance_rows.json`.
+| Round | competent LOW | competent none | casual LOW | casual low2r | D28 target (casual) | D28 |
+|---|---|---|---|---|---|---|
+| r01 | 10/10 · 104 s · 1.00 | 10/10 | **9/10** | – | LOW ≥ 9/10 | PASS |
+| r02 | 9/10 · 159 s · **0.00** (one loss) | 9/10 | **0/10** | – | LOW ≥ 9/10 | **FAIL** |
+| r03 | 10/10 · 218 s | 9/10 | **6/10** | – | LOW ≥ 9/10 | **FAIL** |
+| r04 | 10/10 · 211 s · 0.99 | 8/10 | **0/10** | – | LOW ≥ 9/10 | **FAIL** |
+| r05 | **8/10** · 339 s · 0.00 | **0/10** | **0/10** | **0/10** | LOW ≥ 3/10 and low2r ≥ 7/10 | **FAIL** |
+| r06 | 10/10 · 156 s | 9/10 | **1/10** | – | LOW ≥ 7/10 | **FAIL** |
+| r07 | 10/10 · 158 s | 10/10 | 10/10 · 0.22 | – | LOW ≥ 7/10 | PASS |
+| r08 | 10/10 · 191 s | 10/10 | 10/10 · 0.51 | – | LOW ≥ 7/10 | PASS |
+| r09 | 10/10 · 155 s | 10/10 | 10/10 · 0.81 | – | LOW ≥ 7/10 | PASS |
+| r10 | 10/10 · 312 s · 0.82 | not run (cap) | 7/10 | not run (cap) | low2r ≥ 5/10 | NOT_RUN |
+Readings:
+1. **D27 made chapter-1 rounds r02–r06 much harder for the casual policy**: before D27 (BALANCE_CROSSCHECK first table) casual won r01–r04 and r09; now it loses r02 0/10, r04 0/10, r05 0/10 (even with 2 replays of coins), r06 1/10. 5 of 9 executed D28 rows FAIL.
+2. Competent disagreements with 01's D27 table: **r05 LOW 8/10 with worst base 0.00** (01: 10/10); r05 no-upgrade **0/10** (01: 4/10, "block round"); r02 LOW one loss (worst 0.00).
+3. 01's challenge "r02–r04 LOW worst base stays 1.00": with 07's noise r04 LOW worst is 0.99 and r02 has a full loss, so damage is not strictly bimodal for the competent policy.
+4. Bots are not people. These rows only check 01's own numeric targets.

@@ -52,3 +52,8 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 - QA-B016 (cc): `ui.upgrade_save_uncertain` has no data/text entry (01 to add).
 - Upgrade screen active with coins, 0 monetization words (C12).
 - QA-B017 (cc): no HUD cue for pressure waves after the last counted wave.
+
+## Update 2026-10-31 19:35 (clean HEAD fca9346)
+- Title logo per language (a6369ba/baa1672): PASS ko/en 1x/2x at 34+34 notch. HUD bars (1d1e4e3): still separable under CVD. 0 monetization words.
+- QA-B013 remaining part is the world bars (02). QA-B017 (pressure-wave cue) and QA-B018 (01 text) unchanged.
+- QA-W004: if your build pipeline exports the APK, please record the commit SHA next to it; 07 runs tools/qa/check_apk_label.ps1 on it.

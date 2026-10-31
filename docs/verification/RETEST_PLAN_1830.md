@@ -31,3 +31,6 @@ Clean `git archive` of origin/main HEAD at start time (≥ c6d0e9e), containing 
 - **R-a (data safety, desktop)**: `config/name` is still "Lane Defence". On desktop, Godot's `user://` folder is derived from the project name (`app_userdata/Lane Defence`). If anyone renames `config/name`, existing desktop saves move out of reach unless `application/config/use_custom_user_dir` keeps the folder. Android uses the package id, so phones are not affected. 07 will report this to 02 before any rename, not file it as a bug.
 - **R-b**: package id `com.soltyspring.lanedefence` cannot change after the first store upload (already flagged to 01/02).
 - **R-c**: Python-only measurements (03's composites, 07's frame_metrics) are not game evidence until repeated on a real HEAD frame.
+
+## Executed 2026-10-31 18:32–19:33 at HEAD fca9346 (results in VISUAL_CHECKS M12, BALANCE_CROSSCHECK last section)
+V1 PASS (17.0 %) · V2/V3 PASS · V4 FAIL (QA-B012 reopened) · V5 PARTIAL (as predicted) · V6 PASS · V7 not measured (texture_report not added yet) · V8 WAITING (no SHA-named APK) · V9 not measured (window title read not added) · V10 still FAIL (QA-B018, data) · V11 not designed yet.

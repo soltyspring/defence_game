@@ -7,8 +7,8 @@ Updated 2026-10-31 09:18 +09:00. Scope: desktop headless Godot 4.7.2 on Windows.
 | **HEAD** | `.\tools\qa\run_acceptance.ps1 -Head` | clean `git archive` of committed HEAD in `%TEMP%\qa07_head` (own import, current tests overlaid) → **committed defect** |
 | **Workspace** | `.\tools\qa\run_acceptance.ps1` | shared tree with every worker's uncommitted WIP → only here = **work-tree contamination** |
 
-## Current: HEAD 09508b1, run 20261031-173017 (import guard 0 missing)
-PASS 152 · FAIL 0 · NOT_TESTED 2 (AUD-03, PLAT-03) · BLOCKED 0; services exit 0. Open non-automated findings: QA-B012, QA-B013 (world bars), QA-B017, QA-B018, QA-J1 (see BUG_REGISTER).
+## Current: HEAD fca9346, run 20261031-183232 (import guard 0 missing)
+PASS 152 · FAIL 0 · NOT_TESTED 2 (AUD-03, PLAT-03) · BLOCKED 0; services exit 0. Non-automated open findings: QA-B012 (reopened), QA-B013 (world bars), QA-B017, QA-B018, QA-J1 (visibility target), D28 5/9 FAIL, QA-W004 waiting (OPEN_DEFECTS.md).
 
 ## Verified fixed (same check IDs, HEAD condition)
 | Bug | Fix commit | Verified at | Checks |

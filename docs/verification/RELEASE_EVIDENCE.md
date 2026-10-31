@@ -1,6 +1,6 @@
 # Release evidence matrix (owner: 07-qa)
-Latest full run: **HEAD 09508b1** (`-Head`, import guard 0 missing, run 20261031-173017; Godot 4.7.2 headless, Windows desktop). Triage: [FAILURE_TRIAGE.md](FAILURE_TRIAGE.md). Visual: [VISUAL_CHECKS.md](VISUAL_CHECKS.md). Balance: [BALANCE_CROSSCHECK.md](BALANCE_CROSSCHECK.md).
-Counts: PASS 152 · FAIL 0 · NOT_IMPLEMENTED 0 · NOT_TESTED 2 · BLOCKED 0 (incl. purchase suite PUR-C6..C13); services suites exit 0. Summary: [runs/head-09508b1.md](runs/head-09508b1.md). 0 automated FAILs is not release readiness.
+Latest full run: **HEAD fca9346** (`-Head`, import guard 0 missing, run 20261031-183232; Godot 4.7.2 headless, Windows desktop). Triage: [FAILURE_TRIAGE.md](FAILURE_TRIAGE.md). Visual: [VISUAL_CHECKS.md](VISUAL_CHECKS.md). Balance: [BALANCE_CROSSCHECK.md](BALANCE_CROSSCHECK.md). Open: [OPEN_DEFECTS.md](OPEN_DEFECTS.md).
+Counts: PASS 152 · FAIL 0 · NOT_TESTED 2 · BLOCKED 0; services exit 0. Summary: [runs/head-fca9346.md](runs/head-fca9346.md). 0 automated FAILs is not release readiness: D28 5/9 FAIL, QA-B012 reopened.
 
 **Scope warning:** desktop headless acceptance only. This is NOT Android release certification.
 `adb devices` at run time listed `emulator-5580` (an emulator, not a phone); no APK install or
@@ -43,3 +43,6 @@ on-device test has been done by 07-qa.
 | Upgrade purchase fault tolerance | PASS | PUR-C6..C13 (4 fault points x normal/after recovery, read-only, recovery, balance edges, double tap, interleaving, pause) at 09508b1; desktop only |
 | Launcher label Q4 (APK) | PASS (pre-commit APK) | C16: ko '빵집 기사단', en 'Bakery Knights'; re-read on a HEAD-built APK is WAITING (QA-W004) |
 | Resource wording | FAIL (P3) | C15: QA-B018 'Supply Boost' |
+| Battle background (sky share, identity) | PASS | M12 V1-V3: sky 17 % r01, 21 % r08; village + nest readable incl. deutan |
+| Damage numbers | FAIL (P3) | M12 V4: QA-B012 reopened |
+| Casual difficulty target D28 | FAIL | BALANCE_CROSSCHECK last section: 5/9 rows fail (bots, not humans) |

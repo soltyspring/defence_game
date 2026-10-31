@@ -47,3 +47,9 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 - **QA-W004 (WAITING)**: `tools/qa/check_apk_label.ps1` read build/android/defence-debug.apk (17:37): default 'Bakery Knights', ko '빵집 기사단' -> PASS. That APK predates 4b5926d (17:42). When you next export from a committed HEAD, tell 07 the SHA; 07 re-runs the script on that APK.
 - Package id still `com.soltyspring.lanedefence` (decision for 01 before first upload).
 - QA-B012 / QA-B013 world bars unchanged at 09508b1.
+
+## Update 2026-10-31 19:35 (clean HEAD fca9346, VISUAL_CHECKS M12)
+- **QA-B012 REOPENED (P3)**. Reproduce: `visible_launch.ps1 -ProjectPath %TEMP%\qa07_head -Script res://tests/acceptance/capture_crowd.gd -Resolution 1280x720 -TimeoutSec 260 -UserArgs '--autoplay','--round=r08','--shot-dir=<abs>','--tag=x','--seconds=185'`. Result: up to 14 numbers in one frame, **1 133 overlapping rect pairs** in `battle_view._placed_text` over 11 089 frames.
+  Cause in `_draw_text`: rect height is `NUM_PX + 1` (11 px) but the stagger step is `NUM_PX` (10 px), so a shifted rect still overlaps by 1 px, shifts again, and the 6-step guard runs out after ~3 stacked numbers. Fix: step by the rect height (or 11 px) and/or merge numbers per target. Also, on the new light village walls the light numbers with a 1 px shadow are hard to read (docs/verification/evidence/visual7-fca9346/zoom_nums.png): add a dark outline or plate. Pass: `damage_number_overlaps == 0` over 180 s and legible numbers in the zoom.
+- **QA-B013 world bars** still hue-only (zoom_nums_deutan.png). Pass unchanged.
+- QA-W004 still WAITING: only the 17:37 work-tree APK exists. Please name the commit SHA when you export from HEAD.

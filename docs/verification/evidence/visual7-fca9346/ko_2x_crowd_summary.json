@@ -1,0 +1,32 @@
+{
+  "damage_number_overlaps": 1133,
+  "damage_numbers_max_drawn": 14,
+  "ended": false,
+  "focus_log": [],
+  "frames": 11089,
+  "frames_with_2plus_messages": 357,
+  "max_simultaneous_messages": 2,
+  "max_wall_minus_sim_s": 0.13,
+  "overlaps": {},
+  "pauses": 0,
+  "peak": {
+    "damage_texts": 2,
+    "projectiles": 0,
+    "sim_t": 159.533333333352,
+    "units": 31,
+    "wall_s": 159.427
+  },
+  "sim_t_end": 185.12,
+  "tag": "ko_2x_crowd",
+  "timeline_cols": [
+    "wall",
+    "sim_t",
+    "units",
+    "projectiles",
+    "damage_texts",
+    "messages",
+    "overlaps"
+  ],
+  "wall_s": 185.02,
+  "won": false
+}

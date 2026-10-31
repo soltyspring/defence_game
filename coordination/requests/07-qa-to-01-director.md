@@ -68,3 +68,12 @@ Static write-up, no new runs (08 quiet window). Evidence: docs/verification/BALA
 > 일반 플레이어(전략을 깊게 쓰지 않는 사람)가 강화를 조금만 했을 때, 5라운드와 10라운드를 처음 몇 번 시도 안에 깰 수 있어야 하나요?
 > A) 대부분 첫 시도에 깬다(쉬움) · B) 2~3번 시도하고 강화를 사면 깬다(권장 후보: 현재 '강화가 중요' 설계와 맞음) · C) 숙련 플레이어만 깬다(어려움)
 If 01 answers it from design instead (D24-style default), please record the number so 07 can turn it into a pass/fail check.
+
+## Update 2026-10-31 19:35 — D27 cross-check and D28 as pass/fail (HEAD fca9346)
+probe_balance.gd now has `--d28` (summary per D28 row). Run per round with a 200 s cap; details docs/verification/BALANCE_CROSSCHECK.md (last section).
+- **D28: 5 of 9 executed rows FAIL** — casual LOW r02 0/10, r03 6/10, r04 0/10, r05 0/10 (low2r also 0/10), r06 1/10. PASS: r01 9/10, r07–r09 10/10. r10 low2r NOT_RUN (cap).
+- D27 changed this: before D27 casual won r01–r04 and r09; the enemy_scaling raise for r02–r05 removed that.
+- Competent vs your D27 table: r05 LOW **8/10, worst base 0.00** (yours 10/10); r05 none **0/10** (yours 4/10); r02 LOW has one full loss.
+- Your bimodality challenge: r04 LOW worst 0.99 and an r02 loss; not strictly bimodal with my noise.
+- QA-J1: identity part now PASS (village/nest, sky 17 % at r01); enemy-visibility target still missing (0 enemies on screen t = 7–22 s, 1–4 at 27–32 s).
+- QA-B018 still open (`upgrade.supply_regen` = 보급 증가 / Supply Boost).
