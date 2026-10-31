@@ -106,6 +106,8 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - 06's check_store_graphics.py: store icon all PASS; adaptive safe circle PASS (after shrinking the blob 1 px), logo 46.5 x 51 dp PASS, monochrome PRESENT; feature graphic not seen by their script (it reads docs/services/store_assets/).
 - A26 apron emblem 6x3. Real-game capture DISPLAY2 EXIT_0 (docs/art/evidence/ingame_v0122/). PCK 12/12.
 - Requests: 02 A14 (preset keys), 06 A4.
+- Commit 3d1b2e8 [Design]: PUSHED origin/main (verified with git branch -r --contains at 19:00). 07 A9 request after the push.
+- tools/art/adaptive_icon.py is superseded (refuses to run); its old previews were deleted.
 
 ## Exact next steps on resume
 1. After 02 sets the preset keys and 06 rebuilds: check the APK icon layers with 06.
