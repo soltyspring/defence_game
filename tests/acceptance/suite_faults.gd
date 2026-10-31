@@ -63,6 +63,39 @@ func run(q, tree) -> void:
 		if res[k] < 3: tp01_ok = false
 	q.check("TP-01", "kill during save (after tmp write / after bak rename / torn tmp) never resets progress", tp01_ok,
 		"unlocked after reload per kill point: %s (committed state = 3, older = 2, fresh = 1)" % res, res)
+	# TP-01H: same kill points driven by 02's real Save._fault hook (debug builds), incl. before_final_rename
+	var probe0 = SaveS.new()
+	var has_hook: bool = "_fault" in probe0 and "fault_fired" in probe0
+	probe0.free()
+	if not has_hook or not OS.is_debug_build():
+		q.record("TP-01H", Q.NOT_TESTED, "kill points via Save._fault hook", "hook absent or release build")
+	else:
+		var hres := {}
+		for point in SaveS.FAULT_POINTS:
+			var h = _mk("tp01h_" + str(point))
+			_good(h, 2, 10); _good(h, 3, 20)
+			h.progress.unlocked_round = 4
+			h._fault = str(point)
+			var ret: bool = h.save_progress()
+			var hr = _mk("tp01h_" + str(point), false)
+			hr.load_progress()
+			hres[point] = {"fired": h.fault_fired, "save_ret": ret, "unlocked": int(hr.progress.unlocked_round), "source": str(hr.get("recovery_source"))}
+		var hok := true
+		for k in hres:
+			if hres[k].fired != k or hres[k].save_ret or hres[k].unlocked < 3: hok = false
+		q.check("TP-01H", "Save._fault at every FAULT_POINT: fault fires, save returns false, reload keeps committed or newer progress", hok, str(hres), hres)
+		# TP-02H: SV-1 double fault through the hook: corrupt main -> recover -> kill at after_bak_rename
+		var g = _mk("tp02h")
+		_good(g, 2, 10); _good(g, 3, 20)
+		Q.write_text(g.path, "{ corrupted main")
+		var g2 = _mk("tp02h", false)
+		g2.load_progress()
+		g2._fault = "after_bak_rename"
+		g2.save_progress()
+		var g3 = _mk("tp02h", false)
+		g3.load_progress()
+		q.check("TP-02H", "SV-1 via hook: corrupt main, recover, kill after bak rename -> progress kept", int(g3.progress.unlocked_round) >= 2,
+			"unlocked=%d recovered=%s source=%s fired=%s" % [g3.progress.unlocked_round, g3.recovered, g3.get("recovery_source"), g2.fault_fired])
 	# TP-02 corrupt main -> recover from .bak -> save: backup rotation must keep a valid copy
 	var a = _mk("tp02")
 	_good(a, 2, 10)
