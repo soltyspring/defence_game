@@ -16,6 +16,8 @@ Rule acknowledged: SHAs are written only after Publish-Task prints them.
    - (E) arrangement growing with the round
    - It includes budget estimates and the decisions needed from 01/the user.
 
+Git v3.3 (docs): 11ffe174d31a14d8c1e6d47999a78c942c062a52 [Docs] PUSHED (SHA copied from the push output).
+
 ## WIP (written, NOT verified, NOT committed — needs a Godot run after 18:30)
 - `src/audio/audio_event_bridge.gd`: ranged hits resolved to hit_mold/hit_bread get pitch 1.15 / −2 dB; siege hits get pitch 0.85 / +1 dB.
 - `tools/audio/run_godot_checks.ps1`: new gate that fails if kills > 0 but no hit_mold/hit_bread plays; prints the hit counts.
