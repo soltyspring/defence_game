@@ -9,6 +9,7 @@ Updated: 2026-10-31 ~23:36 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
 ## v0.29 (~23:36 KST): resume after quota stop and after the 23:08 blue screen
+- **Pushed: 36e2a9e94a39de16e083c5ed9059a49df881e17c** (origin/main, 23:37 KST). The SHA record itself is a separate [Docs] commit.
 - Quota stop at 20:27 (97.05%); the user logged in again (0/10000). Checkpoint branch `checkpoint/quota-20261031-202729/10-research-systems` = empty commit 30ecd09 on ae6f9af. Nothing lost.
 - Blue screen 23:08–23:09 (0x50). My 30-min watch (started 23:00:21) died at 23:09:33. My changed files were checked after the reboot: 0 NUL, intact, valid UTF-8.
 - **New machine rule:** every Godot / import / export / Gradle / emulator run, and anything over 1 minute, goes through `& .\coordination\heavy_run.ps1 -Label '10-<task>' -Script { … }`, one at a time PC-wide. Never bypass it or start runs in parallel. While waiting, do docs and static work.

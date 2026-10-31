@@ -10,4 +10,4 @@ Status: v0.29 DONE (resumed at 23:00; blue screen at 23:08–23:09; resumed agai
 - F2/X1: waiting (save.gd 7f2886c).
 - My Godot drivers now use a private APPDATA. Future Godot runs go only through coordination/heavy_run.ps1, one at a time.
 User decisions: Q1 = A; Q2 = 보류; Q3 = "빵집 기사단: 곰팡이 디펜스"; Q4 = home name "빵집 기사단"; Q5 unanswered (D28 is a default only).
-Pushed: … ffc4c27, ae6f9af. v0.29: next commit.
+Pushed: … ae6f9af, v0.29 36e2a9e94a39de16e083c5ed9059a49df881e17c.
