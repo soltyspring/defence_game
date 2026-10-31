@@ -55,6 +55,7 @@ var _verifying := {}       # key -> {"purchase", "elapsed", "origin"}
 var _restore := {}         # active restore
 var _ack_inflight := {}    # key -> true while acknowledge/consume is outstanding (memory only)
 var diagnostics := {"duplicate_updates": 0, "stray": 0, "unknown_product": 0, "ack_failed": 0,
+	"invalid_quantity": 0, "quantity_mismatch": 0,
 	"ack_elsewhere": 0, "unknown_state": 0, "contract_violation": 0}
 
 func _init(p_provider, p_verifier, p_store, p_clock, p_network, config: Dictionary = {}) -> void:
@@ -264,6 +265,8 @@ func _handle_purchase(p: Dictionary, origin: String) -> void:
 		match str(entry.get("state", "")):
 			"granted":
 				diagnostics.duplicate_updates += 1
+				if entry.has("quantity") and int(entry.quantity) != purchase_quantity(p):
+					diagnostics.quantity_mismatch = int(diagnostics.get("quantity_mismatch", 0)) + 1   # never regrant
 				_ensure_entitlement(pid, key)
 				if str(catalog[pid].get("type", "")) == TYPE_CONSUMABLE:
 					_ack(pid, token)            # still owned => not consumed yet: consume
@@ -342,6 +345,8 @@ func _grant(p: Dictionary, key: String) -> String:
 	var prior = _ledger().get(key)
 	if prior is Dictionary and str(prior.get("state", "")) == "granted":
 		diagnostics.duplicate_updates += 1
+		if prior.has("quantity") and int(prior.quantity) != purchase_quantity(p):
+			diagnostics.quantity_mismatch = int(diagnostics.get("quantity_mismatch", 0)) + 1   # never regrant
 		_ensure_entitlement(pid, key)
 		if str(item.get("type", "")) == TYPE_CONSUMABLE:
 			_ack(pid, str(p.token))
@@ -349,9 +354,16 @@ func _grant(p: Dictionary, key: String) -> String:
 			_ack_if_needed(pid, p)
 		return Result.OK
 	if str(item.get("type", "")) == TYPE_CONSUMABLE:
-		var g: Dictionary = item.get("grant", {}).duplicate(true)
+		# Multi-quantity (Play: one token, quantity N, one consume covers all N units).
+		var q := purchase_quantity(p)
+		var max_q := maxi(1, int(item.get("max_quantity", 1)))
+		if q < 1 or q > max_q:
+			# Fail closed: no ledger, no grant, no consume -> Play refunds after the ack window.
+			diagnostics.invalid_quantity = int(diagnostics.get("invalid_quantity", 0)) + 1
+			return Result.GRANT_FAILED
+		var g := scaled_grant(item.get("grant", {}), q)
 		# Ledger-first: any save during the sink (even one it triggers) carries both.
-		_ledger()[key] = {"product_id": pid, "state": "granted", "acknowledged": false}
+		_ledger()[key] = {"product_id": pid, "state": "granted", "acknowledged": false, "quantity": q}
 		var epoch0: int = store.save_epoch()
 		var ok := grant_sink.is_valid() and bool(grant_sink.call(pid, g, key))
 		var e1: int = store.save_epoch()
@@ -365,7 +377,7 @@ func _grant(p: Dictionary, key: String) -> String:
 				# grant. Never regrant it and never consume it: Play refunds an unconsumed
 				# purchase after the acknowledgement window, so the player is not charged for
 				# nothing and cannot receive it twice.
-				_ledger()[key] = {"product_id": pid, "state": "grant_unknown", "acknowledged": false}
+				_ledger()[key] = {"product_id": pid, "state": "grant_unknown", "acknowledged": false, "quantity": q}
 				_violation("iap_sink_saved_then_failed" if sink_saved else "iap_failed_epoch_unknown")
 				if not store.commit():
 					_violation("iap_repair_commit_failed")
@@ -381,6 +393,34 @@ func _grant(p: Dictionary, key: String) -> String:
 		persisted = store.commit()
 		_ack_if_needed(pid, p)
 	return Result.OK
+
+## Purchase quantity from the store dictionary. Missing -> 1 (single-quantity purchase).
+## Invalid (non-integral, non-numeric, < 1) -> 0 so the caller fails closed.
+static func purchase_quantity(p: Dictionary) -> int:
+	if not p.has("quantity"):
+		return 1
+	var v = p.get("quantity")
+	if v is int:
+		return v
+	if v is float and is_finite(v) and v == floorf(v):
+		return int(v)
+	return 0
+
+## Catalog grant multiplied by quantity. Numeric values scale; other values are copied.
+## The result also carries "quantity" so the sink and logs can see it.
+static func scaled_grant(grant: Variant, q: int) -> Dictionary:
+	var out := {}
+	if grant is Dictionary:
+		for k in grant:
+			var v = grant[k]
+			if v is int:
+				out[k] = v * q
+			elif v is float:
+				out[k] = v * float(q)
+			else:
+				out[k] = v
+	out["quantity"] = q
+	return out
 
 func _violation(kind: String) -> void:
 	diagnostics.contract_violation = int(diagnostics.get("contract_violation", 0)) + 1

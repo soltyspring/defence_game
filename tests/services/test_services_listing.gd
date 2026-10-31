@@ -393,7 +393,7 @@ func test_billing_docs() -> bool:
 			risks += 1
 			check(c[4].strip_edges() != "" and c[5].strip_edges() != "", "risk '%s' has mitigation and residual" % c[1].strip_edges().left(30))
 	check(risks >= 6, "no-server doc lists risks (%d)" % risks)
-	for m in ["R7", "R8", "R9"]:
+	for m in ["R7", "R9"]:   # R8 (quantity) fixed in M10
 		var line_ok := false
 		for line in ns.split("\n"):
 			if line.begins_with("| %s |" % m):

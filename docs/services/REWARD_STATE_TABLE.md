@@ -36,6 +36,7 @@ Legend
 | P4 | Pending payment cancelled (silent or notified) | nothing | none | test_services_m3:billing_transitions | — |
 | P5 | Purchase acknowledged on another device, restore | entitlement, acknowledged | once, no re-ack | test_services_m3:billing_transitions | — |
 | P6 | Real-money purchase with no trusted verifier | nothing | none (never fake-verified) | test_services:purchase_verification | — |
+| P7 | Consumable bought with quantity N (Play multi-quantity), incl. duplicate updates, crash before save, sink saves then fails | grant×N, 1 ledger entry (quantity N), 1 consume; q > max_quantity or invalid → nothing | once (×N) / none | test_services_m10 (all groups; crash cases on the autoload Save) | — |
 
 ## Disabled mode (must hold in every shipped build until the user approves monetization)
 | ID | Check | Expected | Isolated evidence | Game binding |

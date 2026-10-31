@@ -22,6 +22,9 @@ var _pending := {}       # product_id -> purchase dict
 var _queue: Array = []
 var _order_seq := 0
 var acks := 0
+## Quantity put on the next purchases the mock creates (Play multi-quantity). Raw value is passed
+## through unchanged so tests can inject invalid quantities.
+var purchase_quantity: Variant = 1
 var consumes := 0
 var launches := 0
 
@@ -38,7 +41,7 @@ func _make(product_id: String, state: String) -> Dictionary:
 	_order_seq += 1
 	var order := "MOCK.%04d" % _order_seq
 	return {"product_id": product_id, "token": mock_token(product_id, order), "order_id": order,
-		"state": state, "acknowledged": false, "environment": "mock",
+		"state": state, "acknowledged": false, "environment": "mock", "quantity": purchase_quantity,
 		"signed_data": "", "signature": ""}
 
 func launch_purchase(product_id: String) -> void:

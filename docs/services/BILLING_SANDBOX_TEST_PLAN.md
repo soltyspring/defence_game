@@ -22,7 +22,7 @@ Content was rephrased for compliance with licensing restrictions.
 | S3 | **[USER]** | Create the app in Play Console with package `com.soltyspring.lanedefence` (export_presets.cfg) — **the first upload fixes the package name** | App exists |
 | S4 | **[USER]** | Add license testers: Settings → License testing → email list (own Gmail accounts that will run tests) | List saved |
 | S5 | **[USER]** | Create the internal testing track and add the same accounts as internal testers; share the opt-in link; each tester opts in | Testers see the app in Play |
-| S6 | **[USER]** + 01 | Create and publish the one-time products whose IDs match `data/meta.json` `iap_catalog.products`; keep **multi-quantity off** (BILLING_PLUGIN_CANDIDATES.md §3 gap) | Products listed as active |
+| S6 | **[USER]** + 01 | Create and publish the one-time products whose IDs match `data/meta.json` `iap_catalog.products`; enable multi-quantity only for consumables whose `max_quantity` in data matches the Console limit (default 1 = off) | Products listed as active |
 | S7 | **[04]** | Enable Gradle build, install the chosen plugin, add BILLING permission if needed, build a signed AAB with a version code higher than the last upload | AAB builds; merged manifest has `com.android.vending.BILLING` and `com.google.android.play.billingclient.version` |
 | S8 | **[06]** | Write `play_billing_provider.gd`, set services mode for this test build (a test-only config; production mode is still unimplemented today), keep the mock verifier unreachable | Services diagnostics show `adapters.billing = production` on the test build |
 | S9 | **[USER]** | Upload the AAB to the internal track and roll out | Testers receive the update |
@@ -49,6 +49,7 @@ Each case: run on a real phone, record order ID (redacted), screenshot of the Pl
 | T13 | Chargeback | "Test card, approves then charges back" | next reconcile `restore_finished.revoked=1` once Play stops reporting ownership; PendingRefundReview notification needs a server (not available) | Chargeback notice | B6 |
 | T14 | Offline | Airplane mode, open shop, try buy and restore | `offline` (or SDK error mapped to `offline`), no crash, no grant, entitlements kept | — | — |
 | T15 | Play Store blocked/unavailable | Device where the system blocks the Play Store (e.g. OEM kids mode), or Play Store disabled | `unsupported`/`error`, no crash; Billing 9.0.0 release notes say the blocked case now reports BILLING_UNAVAILABLE | — | B1 note |
+| T17 | Multi-quantity consumable | Enable multi-quantity for one consumable (Console limit = data `max_quantity`); buy quantity 3 | `consumable_granted` once with `quantity=3` and grant×3; one consume; ledger quantity 3 | One order, quantity 3 | P7, R8 |
 | T16 | Disabled build regression | Install the normal (disabled) release build | `purchase()` / `restore()` / `reconcile()` → `disabled`; diagnostics `live.real_billing=false` | — | D1–D6 |
 Pass rule: every case passes on at least 2 phones (one Android 13+, one older supported version), evidence attached by 07. A failed case blocks enabling purchases.
 

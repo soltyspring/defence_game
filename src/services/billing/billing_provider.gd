@@ -8,7 +8,10 @@ extends RefCounted
 ##   {"product_id": String, "token": String, "order_id": String,
 ##    "state": "purchased" | "pending", "acknowledged": bool,
 ##    "environment": "mock" | "production",
-##    "signed_data": String, "signature": String}   # raw store payload for server verification
+##    "signed_data": String, "signature": String,   # raw store payload for server verification
+##    "quantity": int}   # Play multi-quantity; missing = 1. Consumables grant grant×quantity once
+##                       # per token; one consume covers all units. q > catalog max_quantity
+##                       # (default 1) fails closed (not granted, not consumed).
 ##
 ## Codes for purchase_updated / owned_queried: ok | cancelled | offline | error |
 ##   already_owned | unknown_id (item unavailable)

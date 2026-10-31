@@ -33,6 +33,7 @@ static func from_meta(meta: Dictionary) -> Dictionary:
 		if t != "non_consumable" and t != "consumable":
 			continue   # subscriptions are out of scope until 01 asks for them
 		iap.catalog[str(p.id)] = {"type": t, "entitlement": str(p.get("entitlement", "")),
+			"max_quantity": maxi(1, int(p.get("max_quantity", 1))),
 			"grant": p.get("grant", {}) if p.get("grant") is Dictionary else {}}
 	if iap.catalog.is_empty():
 		iap.enabled = false

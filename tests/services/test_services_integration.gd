@@ -40,7 +40,7 @@ const TABLE := {
 	"R1": "row_r1", "R2": "row_r2", "R3": "row_r3", "R4": "death:kill_before_commit",
 	"R5": "death:kill_after_commit", "R6": "row_r6", "R7": "death:sink_saves_then_kill",
 	"R8": "row_r8", "R9": "row_r9", "R10": "", "R11": "", "R12": "", "R13": "", "R14": "row_r14",
-	"R15": "row_r15", "R16": "", "P1": "row_p1", "P2": "", "P3": "", "P4": "", "P5": "", "P6": "",
+	"R15": "row_r15", "R16": "", "P1": "row_p1", "P2": "", "P3": "", "P4": "", "P5": "", "P6": "", "P7": "",
 	"D1": "disabled", "D2": "disabled", "D3": "disabled", "D4": "disabled", "D5": "disabled", "D6": "disabled",
 }
 

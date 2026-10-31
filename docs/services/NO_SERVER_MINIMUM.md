@@ -24,7 +24,7 @@ All must hold. If one fails, keep purchases off or add a server.
 | R5 | Restore button; offline restore never revokes | purchase_service.gd; test_services `purchase_restore` |
 | R6 | Non-consumable revoked when a successful query no longer lists it (refund) | test_services `purchase_restore` |
 | R7 | **Missing:** a `client_side_verifier.gd` adapter that answers `ok` only for state PURCHASED + package name match + product in catalog (+ optional signature check, §3). Must be labelled `kind() = "client_side"` and diagnostics `trusted_verifier=false` | not written (needs U6 = C) |
-| R8 | **Missing:** quantity handling or multi-quantity kept off in Play Console | BILLING_PLUGIN_CANDIDATES.md §3 |
+| R8 | Quantity handled: grant × quantity once per token, one consume, ledger records quantity; over `max_quantity` / invalid fails closed (mock level) | purchase_service.gd; test_services_m10 |
 | R9 | **Missing:** user-facing text: purchase received message (B8), "purchases are tied to your Google account; restore via Restore", "coin balances are stored on this device only" | 04 / 01 |
 
 ## 3. Optional on-device signature check

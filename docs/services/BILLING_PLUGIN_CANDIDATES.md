@@ -26,7 +26,7 @@ Repository facts from the GitHub API (2026-10-31): P-A last push 2026-09-25, not
 Both map onto `src/services/billing/billing_provider.gd` signals (`purchase_updated`, `owned_queried`, `acknowledged`, `consumed`). A real adapter (`play_billing_provider.gd`, not written) must:
 - start the connection, then call the owned-purchases query on connect and on app resume (our `reconcile()` already asks for this);
 - map purchase state PURCHASED/PENDING/other to `purchased`/`pending`/`unspecified` (other states are never granted, tested in test_services_m3 `billing_transitions`);
-- pass `quantity` through — **gap:** `purchase_service.gd` grants a consumable once per token and ignores quantity. Until that is handled, multi-quantity must stay disabled for every product in Play Console (Play docs: multi-quantity is opt-in per product, https://developer.android.com/google/play/billing/integrate);
+- pass `quantity` through. **Fixed 2026-10-31 (M10, mock level):** `purchase_service.gd` grants catalog grant × quantity once per token, records the quantity in the ledger and consumes once; quantities above the product's `max_quantity` (data/meta.json, default 1) or invalid values are not granted and not consumed (tests/services/test_services_m10.gd). Enable multi-quantity in Play Console only for products whose `max_quantity` matches the Console limit (Play docs: multi-quantity is opt-in per product, https://developer.android.com/google/play/billing/integrate);
 - set `environment: "production"` so the mock verifier can never approve it.
 
 ## 4. Recommendation (06, not a decision)
