@@ -71,6 +71,13 @@ State at checkpoint: work stopped at a safe point. The owned working tree is CLE
 - **a6369ba:** logo from `ui_title_<locale>` (03 11ceacb removed `ui_title`, so HEAD showed the text title from 17:36 to 17:44). Menu holds only that page, released in battle. DISPLAY2 ko/en 1×/2× + notch: logo drawn, refs 1 → 0, integration 48/48 ×4 (build/qa/title_v011_0f3dfc8).
 - First wave_cleared ≈45 s stays an 01 decision (D16 upper edge).
 - Not done: 03's chrome colour proposal (all screens, contrast tests), after 08's 18:00–18:30 quiet window (no Godot/editor/emulator by 04 in that window).
+## 18:05 work during 08's quiet window (no Godot run 18:00–18:30; static checks with Python only)
+- 03 A11 edge markers: src/ui/threat_marker.gd (pure `compute()` rules + drawing with vector stand-ins until 03 draws `icon_nest`/`icon_enemy_near`), HudLayout `threat_right/left` rects + validate(), HUD wiring (hidden until 02 publishes `snapshot.threat`, R16), mock engine fake `threat`, tests/ui `test_threat_marker`. Static Python port of the layout over the same 3000 configurations: 0 problems (build/qa/tmp/threat_layout_sim.py). Marker rects: 640 → right (592,222), 640+notch → (558,222), 800 → (752,222), 800×450+notch → (718,312); all 44×34.
+- 03 A10 colours in ui_style.gd (C_BG/C_PANEL/C_PANEL_LIGHT/C_DISABLED, alphas kept), TouchButton default fill = C_PANEL_LIGHT; tests/ui `test_chrome_palette` pins 03's ratios (re-computed: 14.65/12.45/9.45/7.22/5.49/5.76).
+- R15 check: 02 4b5926d set package/name + name_localized (config/name kept = desktop user:// unchanged). `check_launcher_label.ps1` config → OK; local APKs are old → WAITING until a rebuild. Release preset is on 02's open list.
+- Everything above was NOT run in Godot at 18:05; it waits for 18:30 (gate + DISPLAY2 captures).
+- **18:35 31164c8 (after the window):** gate UI 3387/0 (+33 checks: threat rules, layout at 640/640+notch/800/800×450+notch, HUD wiring, change-only redraw, palette ratios), integration 48/0. Enemy icon = existing `icon_skull` (no new 03 icon needed); nest = 03's `icon_nest`. DISPLAY2: real engine ko/en 640+notch/1280+notch/1600+notch 48/48 ×4 with the bakery colours; mock preview frames show the nest marker (29m), enemy ahead (50m) and enemy behind (left, 28m). build/qa/chrome_threat_fca9346/.
+- Still open: markers in the real game need 02 R16 (`snapshot.threat`); APK label re-check needs a rebuild (config already OK); release preset (02).
 ## Unfinished / open (not done, do not claim)
 1. Theme-A labels: waiting for 01 to commit data/text. Then: run test_ui (typography gate) + worst-layout ko/en visible captures.
 2. 2.5× (non-integer) pixel text irregular (57–68% odd runs): waiting for 02 `scale_mode="integer"` (04 R9).

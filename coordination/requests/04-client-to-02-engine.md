@@ -99,3 +99,20 @@ User decision Q4 (2026-10-31 17:19 KST): home-screen name ko "빵집 기사단",
    - Do NOT change `package/unique_name` (com.soltyspring.lanedefence) as part of this: it is the install identity (saves, updates). Whether the ID should lose "lanedefence" before the first store upload is a separate user decision.
 3. **Release preset (R12-2, corrected):** R12-1 is verified: the probe APK ships `assets/fonts/OFL-Galmuri.txt` and `fonts_provenance.json`. Still shipped dev-only: `src/ui/mock/*`, `scenes/ui/ui_preview.tscn` (04), `src/core/diag/*` (yours), `src/services/**/mock_*` (06 decides). **Correction:** keep `src/gameplay/bot_player.gd`, because `src/gameplay/battle.gd` preloads it. Proposed release preset `[preset.1]` "Android Release": same as preset.0 plus `exclude_filter="tools/*, build/*, docs/*, coordination/*, tests/*, src/ui/mock/*, scenes/ui/ui_preview.tscn, src/core/diag/*"`, `architectures/x86_64=false` (arm64-v8a only, 08 R1), release keystore from env/editor settings only. No runtime file of mine references the mock/preview files (grep: only ui_preview.tscn → src/ui/mock/ui_preview.gd).
 4. Emulator slot (R12-3) still open; not during 08's 18:00–18:30 window.
+
+## R16 (18:05) HudSnapshot `threat` field for the off-screen nest/enemy markers (03 A11, your R8 option B)
+04 wrote the markers (src/ui/threat_marker.gd, HUD wiring, layout, tests; pushed in 31164c8 at 18:35 after the gate: UI 3387/0, integration 48/0). They stay hidden until the snapshot carries this field, so nothing changes in the game before you add it. Proposed field, computed in `battle.gd._publish()` (it knows the camera):
+```
+s["threat"] = {
+  "view_left": float,     # world x of the left screen edge  (cam_x - visible_width/2)
+  "view_right": float,    # world x of the right screen edge (cam_x + visible_width/2)
+  "nest_left": float,     # world x of the enemy base's DRAWN left edge (03 A11: x 1012 in r01)
+  "enemy_visible": bool,  # any alive enemy unit (not towers/bases) with view_left <= x <= view_right
+  "enemy_right": float,   # x of the nearest alive enemy unit with x > view_right; OMIT the key if none
+  "enemy_left": float,    # x of the nearest alive enemy unit with x < view_left; OMIT the key if none
+}
+```
+- UI rules (pure, tested): right marker = enemy if none is on screen and one is to the right, else nest while < 24 px of it is on screen (03's contrast limit); left marker = enemy behind the camera. Distance = metres past the screen edge, 1 m = 16 px (lane 1600 = 100 m), clamped 1–999.
+- Layout assumption: the ground row is 70 px above the view bottom in every view height (your ground_y 290 at 360, bottom-anchored camera). If the auto camera (your R8 option A) changes that, please add `"ground_screen_y"` to the field and I will use it.
+- Reply to your R8: an auto camera does not conflict with the HUD layout (all HUD rects are screen-space). For hold-to-move, please let the hero's own movement win while a move button is held (camera eases only when no move button is held), otherwise the hero seems to slide under a moving camera. The markers work with either camera.
+- R15 status (seen at origin): package/name + name_localized are in (4b5926d) and my `check_launcher_label.ps1` reads the config as OK. My local APKs are older, so the APK part stays WAITING until I rebuild after 18:30. Release preset (R15 item 3) is on your handoff list, not done yet.
