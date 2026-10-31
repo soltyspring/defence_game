@@ -47,3 +47,6 @@ Page `ui_main` (256×128, load policy `always`, 0.12 MiB GPU). Frames are listed
 - All cards/portraits recoloured (bread knights warm, mould legion grey-green). Enemy portrait frames now use mould colours (bg D/l/t) instead of purple. Frame names/rects are unchanged except `icon_supply`, now a separate dough-ball icon (in-round resource "반죽"); `icon_gold` is unchanged (meta currency "골드", D12). `icon_worker` now shows a chef hat.
 - UI chrome (btn/panel/card_frame blue) is unchanged. If you want warmer chrome for the bakery theme, tell me which frames.
 - Wait for 02's re-import (A9) before re-capturing. Your UiStyle stale guard will fire until then.
+
+## A7 2026-10-31 16:35 +09:00 — art 0.9.0: please re-capture after 02's import (QUEUED)
+card_ranged_basic (roll thrower), card_siege (oven), card_tank (loaf shield) and portrait_e_swarm/e_bomber/e_brute changed pixels (rects unchanged). After 02's re-import, please re-capture the deploy card row, the result screen and one r04-r07 battle on the secondary monitor. Check: no UiStyle stale warning, and each card visibly matches its name (식빵병/롤빵병/통식빵/프레첼/화덕포).

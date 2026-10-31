@@ -1,5 +1,5 @@
 # ART_DIRECTION.md — visual identity and asset contract (owner: 03-art)
-Art version 0.8.0 · 2026-10-31 · Status: **theme DECIDED by the user (Q1 = A "빵집 기사단 vs 곰팡이 군단", 2026-10-31)**. Art 0.8.0 applies it as a palette-level retheme (tools/art/theme.py). Silhouettes, frame sizes, pivots, hit/spawn frames and frame names are unchanged. A bread-specific detail pass (crust scoring, loaf-shaped helmets) is still open.
+Art version 0.9.0 · 2026-10-31 · Status: **theme DECIDED by the user (Q1 = A "빵집 기사단 vs 곰팡이 군단", 2026-10-31)**. Art 0.8.0 applies it as a palette-level retheme (tools/art/theme.py). Silhouettes, frame sizes, pivots, hit/spawn frames and frame names are unchanged. A bread-specific detail pass (crust scoring, loaf-shaped helmets) is still open.
 
 ## 1. How the art is made (provenance)
 - Tool inventory on this machine: Python 3.11.9, Pillow 11.2.1, numpy 2.2.4. There are **no** image-generation, Aseprite or ImageMagick tools. Godot 4.7.2 is in tools/engine (owned by 02).
@@ -78,3 +78,4 @@ Layers (back to front) with view_y and parallax: `sky` 16×360 (repeat every 16 
 - New palette entries (appended, older indices unchanged): `D` mould_deep 1e2b30, `l` mould_grey 4b605d, `t` mould_sage 84a08c, `z` spore_white dce8df.
 - Bases: player keep = bakery (dough-brick walls, jam-red roof and banners). Enemy fort = mouldy palisade (grey wood, teal-mould roof). Prop: flour store. Biome front grass = wheat stalks. Spit = spore glob. Siege rock = hard-baked loaf. icon_supply = dough ball (in-round resource "반죽"); icon_worker = chef hat.
 - Separation is measured, not assumed: `python tools/art/cvd_check.py` (Machado 2009 protan/deutan/tritan). Results are in ART_AUDIT A25.
+- **Name-matching redraws (0.9.0, tools/art/chars_retheme.py):** 초파리 떼 = hovering flies; 부푼 효모 = mould puffball; 썩은 멧돼지 = boar; 화덕포 = oven cannon; 롤빵병 = roll thrower (`arrow` = thrown roll); 통식빵 = loaf-slice shield. Frame contracts are unchanged. Rationale and priorities: ART_AUDIT round 6.

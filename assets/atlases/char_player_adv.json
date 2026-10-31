@@ -17,9 +17,9 @@
  "repeat": false,
  "gpu_format": "RGBA8 (lossless, no VRAM compression)",
  "gpu_bytes": 524288,
- "disk_bytes": 5398,
- "unique_regions": 33,
- "occupancy": 0.4,
+ "disk_bytes": 5461,
+ "unique_regions": 31,
+ "occupancy": 0.371,
  "frames": {
   "fast/idle/0": {
    "x": 247,
@@ -322,7 +322,7 @@
    ]
   },
   "siege/attack/0": {
-   "x": 107,
+   "x": 3,
    "y": 47,
    "w": 48,
    "h": 40,
@@ -343,7 +343,7 @@
   },
   "siege/attack/2": {
    "x": 55,
-   "y": 179,
+   "y": 91,
    "w": 48,
    "h": 40,
    "pivot": [
@@ -373,7 +373,7 @@
   },
   "siege/attack/5": {
    "x": 107,
-   "y": 91,
+   "y": 47,
    "w": 48,
    "h": 40,
    "pivot": [
@@ -403,7 +403,7 @@
   },
   "siege/death/0": {
    "x": 3,
-   "y": 47,
+   "y": 3,
    "w": 48,
    "h": 40,
    "pivot": [
@@ -453,7 +453,7 @@
   },
   "siege/die/0": {
    "x": 3,
-   "y": 47,
+   "y": 3,
    "w": 48,
    "h": 40,
    "pivot": [

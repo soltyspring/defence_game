@@ -67,3 +67,25 @@ Impact scope of this revision: pixels changed in char_player, char_enemy, char_p
 D14 acceptance frames (mixed crowd, Godot 2× capture, normal / protan / deutan): docs/art/evidence/cvd/crowd_r05_r10_normal_protan_deutan_2x.png. Allies are yellow and light, enemies blue-grey and dark in both CVD views.
 Readability regression (same scenes as round 4, Godot renders on the secondary monitor, docs/art/evidence/readability/theme/): silhouette min meadow r01 79.2 → 82.3, r10 66.3 → 66.9, dark r10 59.1 → 60.6. Crowd, fx and projectile values are unchanged. The remaining fails are the same as round 4 (A21 dark arrow, A22 e_brute dark 58.4, A23 crowd).
 Geometry: in all 10 pages sizes, frame names, rects, pivots, anim frames and hit/spawn events are unchanged, except **one** rect: `icon_supply` was an alias of `icon_gold` (shared rect) and is now its own dough-ball frame, so it got a new rect. A stale import shows the gold coin there until 02 re-imports.
+
+## Round 6 (2026-10-31 16:30) — do the drawings match 01's names (14b01e2)?
+Criterion (from the review): at 1x, could a player pick the unit from its name alone? This is judged by 03 from the contact sheets and the 1x battle mock. **No player test was done.** Priority = how strongly the old silhouette contradicted the name × how often the unit appears.
+
+| Pri | Unit (ko / en) | Old drawing | Contradiction | Action (art 0.9.0) |
+|---|---|---|---|---|
+| 1 | e_swarm 초파리 떼 / Fruit Flies | ground beetle | walks, single body, no wings | **Redrawn**: 3 hovering flies, red eyes, spore-white wings, wing flap, dive attack |
+| 2 | e_bomber 부푼 효모 / Yeast Puff | goblin carrying a keg | humanoid, no "puff" | **Redrawn**: swollen mould puffball, glowing orange pores (hazard accent), swells then bursts at hit frame 1 |
+| 3 | e_brute 썩은 멧돼지 / Rot Boar | club-wielding troll | humanoid, not an animal | **Redrawn**: mouldy boar (snout, tusks, bristle ridge, teal mould patches), trot gait, gore at hit 3 |
+| 4 | siege 화덕포 / Oven Cannon | catapult | wrong machine | **Redrawn**: wheeled dough-brick oven with fire mouth and mortar barrel; muzzle exactly at projectile_spawn (37,1); recoil + smoke at hit 3 |
+| 5 | ranged_basic 롤빵병 / Roll Thrower | bow archer | bow, not throwing | **Redrawn** on the same rig: throws a held bread roll, bread basket on the back; `arrow` projectile id drawn as a thrown roll |
+| 6 | tank 통식빵 / Loaf Shield | tower shield | shape not bread | Shield redrawn as a loaf slice with hot-cross |
+| 7 | fast 프레첼 / Twist (Pretzel Rider) | pony lancer | no pretzel cue | **Open** (A28): add a pretzel knot shield or pennant |
+| 8 | melee_basic 식빵병 / Toast | crust-helmet spearman | helmet not toast-shaped | **Open** (A28): toast-slice helmet |
+| — | worker 제빵사, hero 기사단장, e_grunt 곰팡이 졸개, e_spitter 포자 뱉개, boss_warlord 곰팡이 장군, boss_overlord 부패 대군주 | — | consistent enough with the name at 1x | unchanged |
+
+Contract check against HEAD (all 10 pages): page sizes, frame names, frame w/h, pivots, anim frame lists, fps, loop, hit_frame, events and points are **unchanged (0 changes)**. 15 frame rects moved inside 3 pages (char_enemy 3, char_player_adv 5, char_enemy_adv 7), all inside the redrawn sets, because pixel de-duplication changed. GPU is unchanged (9.25 MiB all pages).
+Same attacks re-run on this build:
+- `cvd_check.py` (docs/art/evidence/cvd/cvd_v09.json): closest pair dE76 protan 16.37, deutan 18.98, tritan 18.28, normal 19.28 (07 line 2.3: PASS). Mass confusable <= 4.4 %. Luminance step +11.3..+16.6 L* (PASS). A first yeast-puff draft dropped protan dL* to 9.9; its body was darkened to fix this, then its rim was lightened so the dark-background silhouette still passes.
+- Readability (Godot renders on the secondary monitor; Godot output equals the metric composite, diff <= 1), docs/art/evidence/readability/names/: silhouette min meadow 63.0..82.3, dark 59.1..64.6 (only e_brute dark 59.1 < 60, as before). Roll projectile on meadow 45 -> 95 % separated.
+| A27 | Crowd: the new boar is a quadruped (32 px long vs the 23 px troll) and covers its neighbours more; e_spitter next to it 1.7 % visible in the r05 test scene (was 36.5); flies 14-26 % (were 18-33 on the ground) | metrics_names.json | P2 | 02 (A23 draw order) / 03 | Boar shortened 38 -> 32 px; flies raised above infantry shoulders; baked fly shadows removed | Partly mitigated, OPEN with A23 |
+| A28 | fast / melee_basic still lack a bread cue | contact sheets | P3 | 03 | pretzel shield, toast helmet | Open |

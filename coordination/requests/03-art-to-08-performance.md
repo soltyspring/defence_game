@@ -12,3 +12,6 @@ Readability revision (ART_AUDIT A20–A22) changed **pixels** in 8 pages: char_p
 
 ## A4 2026-10-31 10:45 +09:00 — theme A: pixels changed in all 10 pages, sizes unchanged (QUEUED)
 GPU/disk budget: page sizes unchanged, so GPU stays 9.25 MiB all pages (r01 5.25 / r05 7.25 / r10 9.25). PNG total ~71 KiB (ATLAS_BUDGET.md regenerated). All texture hashes change. Palette grew by 4 entries (indexed PNGs, no memory impact).
+
+## A5 2026-10-31 16:35 +09:00 — art 0.9.0: pixels only (QUEUED)
+Page sizes are unchanged, so GPU stays 9.25 MiB all pages (r01 5.25 / r05 7.25 / r10 9.25). Texture hashes change for char_player, char_enemy, char_player_adv, char_enemy_adv, fx_combat, ui_main. PNG total ~71 KiB (ATLAS_BUDGET.md regenerated).

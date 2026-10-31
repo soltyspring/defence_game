@@ -1,5 +1,5 @@
 # 03-art handoff
-Updated: 2026-10-31 10:50 +09:00 · Resumed after the user-ordered checkpoint (09:18). Q1 = A **DECIDED by the user** (빵집 기사단 vs 곰팡이 군단). Art version 0.8.0.
+Updated: 2026-10-31 16:40 +09:00 · Q1 = A DECIDED (빵집 기사단 vs 곰팡이 군단). Names fixed by 01 (14b01e2). Art version 0.9.0.
 
 ## Session
 - Kiro CLI session ID: not visible from inside the session, so I cannot record it. Codex should read it from coordination/.runtime/quota/sessions.json / the launcher.
@@ -41,6 +41,14 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - Commit 2b350c4 [Design] theme A retheme + A17: PUSHED origin/main (verified with git branch -r --contains).
 - Notified 01 (A4, naming proposals), 02 (A9 re-import all pages), 04 (A6), 07 (A1 new file), 08 (A4).
 - Open: A26 bread detail pass (palette-only retheme so far); main-tree recapture after the 02 re-import; A21/A22 dark residuals; A23 (02).
+
+## Milestone 8 (this session): name-matching redraws (art 0.9.0)
+- tools/art/chars_retheme.py, wired via build.py apply_name_redraws(): e_swarm = fruit flies, e_bomber = yeast puff, e_brute = rot boar, siege = oven cannon, ranged_basic = roll thrower (+ arrow = thrown roll), tank = loaf-slice shield. Priorities and rationale: ART_AUDIT round 6 (03 judgement, no player test).
+- Contract vs HEAD: 0 changes to sizes/names/w-h/pivots/frame lists/fps/hit/events/points; 15 rects moved inside the redrawn sets (de-dup); GPU unchanged.
+- Validation on the final build: validate.py --determinism PASS (10 WARNs = main-tree cache stale; 02 A10); exported PCK 10/10; Godot readability renders (secondary monitor, Godot output equals the composite) metrics in docs/art/evidence/readability/names/; CVD protan/deutan/tritan 16.4/19.0/18.3 dE, luminance step >= 11.3 L*.
+- Fixed during review: yeast puff too light (protan dL* 9.9) -> darkened, then rim lightened (dark silhouette passes); fly ground dots failed the dark silhouette -> removed; boar shortened 38 -> 32 px; roll projectile lightened (meadow 45 -> 95 %).
+- Still open: A27 crowd occlusion by the boar (e_spitter 1.7 % in the test scene) -> 02 A23; A28 fast/melee bread cues; e_brute dark 59.1 %; main-tree re-import + in-game recapture (02 then 04/07).
+- build.py now also retries text/json writes on Errno 22 (the Z: share).
 
 ## Exact next steps on resume
 1. Read coordinator-to-03-art.md, DECISIONS.md (Q1 first: re-theme takes priority), and incoming *-to-03-art.md.

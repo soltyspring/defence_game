@@ -17,9 +17,9 @@
  "repeat": false,
  "gpu_format": "RGBA8 (lossless, no VRAM compression)",
  "gpu_bytes": 524288,
- "disk_bytes": 5071,
- "unique_regions": 53,
- "occupancy": 0.391,
+ "disk_bytes": 5001,
+ "unique_regions": 55,
+ "occupancy": 0.402,
  "frames": {
   "e_grunt/idle/0": {
    "x": 39,
@@ -612,8 +612,8 @@
    ]
   },
   "e_swarm/walk/1": {
-   "x": 255,
-   "y": 3,
+   "x": 219,
+   "y": 59,
    "w": 32,
    "h": 24,
    "pivot": [
@@ -622,8 +622,8 @@
    ]
   },
   "e_swarm/walk/2": {
-   "x": 183,
-   "y": 219,
+   "x": 327,
+   "y": 3,
    "w": 32,
    "h": 24,
    "pivot": [
@@ -682,8 +682,8 @@
    ]
   },
   "e_swarm/hit/1": {
-   "x": 183,
-   "y": 219,
+   "x": 363,
+   "y": 3,
    "w": 32,
    "h": 24,
    "pivot": [

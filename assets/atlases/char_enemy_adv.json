@@ -17,9 +17,9 @@
  "repeat": false,
  "gpu_format": "RGBA8 (lossless, no VRAM compression)",
  "gpu_bytes": 524288,
- "disk_bytes": 5079,
- "unique_regions": 40,
- "occupancy": 0.527,
+ "disk_bytes": 4743,
+ "unique_regions": 36,
+ "occupancy": 0.467,
  "frames": {
   "e_brute/idle/0": {
    "x": 55,
@@ -42,8 +42,8 @@
    ]
   },
   "e_brute/idle/2": {
-   "x": 211,
-   "y": 159,
+   "x": 3,
+   "y": 55,
    "w": 48,
    "h": 48,
    "pivot": [
@@ -52,8 +52,8 @@
    ]
   },
   "e_brute/idle/3": {
-   "x": 3,
-   "y": 107,
+   "x": 55,
+   "y": 55,
    "w": 48,
    "h": 48,
    "pivot": [
@@ -183,7 +183,7 @@
   },
   "e_brute/hit/1": {
    "x": 107,
-   "y": 159,
+   "y": 55,
    "w": 48,
    "h": 48,
    "pivot": [
@@ -332,8 +332,8 @@
    ]
   },
   "e_bomber/walk/0": {
-   "x": 183,
-   "y": 211,
+   "x": 327,
+   "y": 55,
    "w": 32,
    "h": 32,
    "pivot": [
@@ -382,8 +382,8 @@
    ]
   },
   "e_bomber/walk/5": {
-   "x": 403,
-   "y": 39,
+   "x": 291,
+   "y": 55,
    "w": 32,
    "h": 32,
    "pivot": [
@@ -442,8 +442,8 @@
    ]
   },
   "e_bomber/death/0": {
-   "x": 439,
-   "y": 3,
+   "x": 183,
+   "y": 211,
    "w": 32,
    "h": 32,
    "pivot": [
@@ -502,8 +502,8 @@
    ]
   },
   "e_bomber/die/0": {
-   "x": 439,
-   "y": 3,
+   "x": 183,
+   "y": 211,
    "w": 32,
    "h": 32,
    "pivot": [

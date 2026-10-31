@@ -41,7 +41,24 @@ def _save_retry(self, fp, *a, **kw):
 
 Image.Image.save = _save_retry
 
+
+def _open_retry(path, mode="r", *a, **kw):
+    """Same Errno-22 retry for text writes (manifest/json) on the Z: share."""
+    import builtins
+    import time
+    for i in range(6):
+        try:
+            return builtins.open(path, mode, *a, **kw)
+        except OSError as e:
+            if getattr(e, "errno", None) != 22 or i == 5:
+                raise
+            time.sleep(0.25 * (i + 1))
+
+
+open = _open_retry  # noqa: A001  (module-level override used by write_* below)
+
 import atlas as atl  # noqa: E402
+atl.open = _open_retry  # retry json/lock writes in atlas.py too
 import bases  # noqa: E402
 import biome  # noqa: E402
 import chars_enemy  # noqa: E402
@@ -56,7 +73,7 @@ REL_ATLAS = "assets/atlases"
 PREV = os.path.join(ROOT, "docs", "art", "previews")
 # Layout locks: existing regions keep their page position across rebuilds (see atlas._pack).
 LOCK_DIR = os.path.join(HERE, "layout_lock")
-ART_VERSION = "0.8.0"
+ART_VERSION = "0.9.0"
 
 REQUIRED_CHAR_ANIMS = ("idle", "walk", "attack", "death")
 
@@ -85,7 +102,20 @@ def add_char(a: atl.Atlas, sid, body, fn, faction):
     return anims
 
 
+def apply_name_redraws():
+    """art 0.9.0: name-matching redraws (chars_retheme.py) replace entries in place, same contract."""
+    import chars_retheme, chars_r04
+    ov = chars_retheme.build_overrides()
+    for reg in (chars_player.ALL, chars_enemy.ALL, chars_r04.PLAYER, chars_r04.ENEMY):
+        for sid in list(reg):
+            if sid in ov:
+                reg[sid] = ov[sid]
+    chars_player.SHIELD = chars_retheme.LOAF_SHIELD
+    fx.SETS["arrow"] = (chars_retheme.proj_roll, 14, 5, (7, 2))
+
+
 def build():
+    apply_name_redraws()
     os.makedirs(ATLAS_DIR, exist_ok=True)
     write_palette_files(os.path.join(ROOT, "docs", "art", "palette"))
     pages = []

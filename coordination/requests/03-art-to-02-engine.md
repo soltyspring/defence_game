@@ -60,3 +60,9 @@ Theme Q1 = A (user-decided). Art 0.8.0 recolours every character page plus bases
 - Unchanged (contract-safe): all page sizes, frame names, rects, pivots, anim frame lists, hit_frame/events/points, anim_sets, no_flip. Only exception: `ui_main/icon_supply` is now its own dough-ball frame with a new rect (it used to share icon_gold's rect).
 - GPU memory unchanged (9.25 MiB all pages; r01 5.25, r05 7.25, r10 9.25).
 - Your fallback placeholder colours in battle_view.gd (C_PLAYER blue, C_ENEMY red) no longer match the factions. Consider warm tan for player and grey-green for enemy, but that is your call.
+
+## A10 2026-10-31 16:35 +09:00 — art 0.9.0 name-matching redraws: re-import (QUEUED)
+Redrawn to match 01's names: e_swarm (flies), e_bomber (yeast puff), e_brute (boar), siege (oven cannon), ranged_basic (roll thrower) + `arrow` projectile (thrown roll), tank shield (loaf). Pages changed: char_player, char_enemy, char_player_adv, char_enemy_adv, fx_combat, ui_main (cards/portraits), plus the A9 set. **Please re-import all atlas pages** under your lock; afterwards `python tools/art/validate.py --import-cache` should report 0 stale.
+- Contract unchanged: sizes, names, w/h, pivots, frame lists, fps, hit_frame, events, points (siege projectile_spawn (37,1) is now the oven muzzle; ranged (24,17) is the throwing hand). 15 rects moved inside the redrawn sets only.
+- The flies hover inside their 32x24 frame and no longer have baked ground dots. Drawing shadow_s or the faction marker under e_swarm (A6) now matters more.
+- A27: the boar is a 32 px quadruped and covers neighbours in dense melee; this feeds your A23 draw-order decision.

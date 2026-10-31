@@ -58,6 +58,9 @@ def mapping(faction: str, sid: str) -> dict:
 
 
 def apply(cv, faction: str, sid: str):
+    import chars_retheme
+    if sid in chars_retheme.NATIVE:      # drawn directly in the final theme palette
+        return cv
     m = mapping(faction, sid)
     if m:
         cv.recolor(m)
