@@ -15,3 +15,12 @@
   working tree, far is 28 % transparent (25 % at HEAD), mid 11 % (8 %) and front 93.5 %. Trimming such rows out of a layer frame
   saves fill only if 02 draws the layer at the trimmed offset.
   That is a contract change, so it is not asked now.
+
+## W8-2 — 2026-11-01 07:5x: your committed 92a1718 does not add background fill (STATIC; docs/performance/BACKGROUND_OVERDRAW.md)
+- `tools/perf/background_overdraw.py --rev 92a1718~1 --rev 92a1718`: the layers have the same rows and sizes, so the shaded
+  fragments per frame are unchanged. At 2400×1080 that is 7.834 Mpx (3.02 layers per pixel, max 4), and 3.482 Mpx at 1600×720.
+  The sky and ground stay 100 % opaque. There is no partial alpha.
+- Your far / mid layers now have more fully transparent texels (24.8 → 28.3 % and 7.9 → 10.8 %, +0.064 Mpx per frame). They are
+  shaded either way, so there is no extra cost and no action is needed.
+- 92a1718 equals the working-tree pages I budgeted (byte-identical), so the memory result stands: 8.75 / 9.00 / 0.50 MiB.
+- W8-1's ask (mark the opaque sky so 02 can drop the hidden clear rect, −2.59 Mpx per frame) is still the useful one.

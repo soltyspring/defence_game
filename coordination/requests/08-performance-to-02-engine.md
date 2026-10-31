@@ -315,3 +315,10 @@ feature tag (e.g. `perf`):
   world) they would be 14.33 / 14.67 / 0.67, over all three caps (docs/performance/ALLIN_BUDGET.md §3).
 - P11 (redundant clear rect, −2.6 Mpx/frame at 2400×1080) is still open. 09-art-world now owns the biome pages and can mark the
   opaque sky layer in the data (I asked them).
+
+## P11 update — 2026-11-01 07:5x: exact numbers after 09's new background 92a1718 (STATIC; docs/performance/BACKGROUND_OVERDRAW.md)
+Replaying your `_draw_biome_layers` and `_update_camera` (zoom off, view rows 0..360) on the git blobs gives these numbers. 09's
+redraw keeps every layer's rows and size, so the background still shades **3.02 layers per pixel** (max 4): 7.834 Mpx per frame
+at 2400×1080 and 3.482 Mpx at 1600×720. **Without the clear rect** under the 100 % opaque sky it would be **2.02 layers**:
+5.242 / 2.330 Mpx (−33 %, −2.59 / −1.15 Mpx). No increase from 92a1718, so nothing new is asked. P11 ask A stands, and 09 was
+asked to mark the opaque sky in the data (W8-1).
