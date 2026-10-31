@@ -31,6 +31,7 @@ var report := {"groups": {}}
 var release_preset := "WAITING"
 var apks_checked := 0
 var aapt2 := ""
+var launcher_status := "WAITING"
 
 func _initialize() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -42,12 +43,13 @@ func _initialize() -> void:
 	_group("backup_policy_doc", test_backup_doc)
 	_group("backup_privacy_consistency", test_consistency)
 	_group("godot_uid_tracked", test_uid_tracked)
+	_group("launcher_label", test_launcher_label)
 	report.passes = passes
 	report.failures = Array(failures)
 	report.release_preset = release_preset
 	report.apks_checked = apks_checked
 	report.aapt2 = aapt2 if aapt2 != "" else "not found"
-	print("[test_services_android] passes=%d failures=%d release_preset=%s apks_checked=%d aapt2=%s" % [passes, failures.size(), release_preset, apks_checked, "yes" if aapt2 != "" else "no"])
+	print("[test_services_android] passes=%d failures=%d release_preset=%s apks_checked=%d aapt2=%s launcher_label=%s" % [passes, failures.size(), release_preset, apks_checked, "yes" if aapt2 != "" else "no", launcher_status])
 	for g in report.groups:
 		print("  %-28s %s" % [g, report.groups[g]])
 	quit(0 if failures.is_empty() else 1)
@@ -346,4 +348,95 @@ func test_uid_tracked() -> bool:
 		if line.begins_with("?? ") and line.ends_with(".uid") and not line.contains("services/"):
 			others += 1
 	print("  untracked .uid outside 06 paths: %d (reported to owners, not committed by 06)" % others)
+	return true
+
+# ------------------------------------------------------------------ Q4 launcher label in the real APK
+
+## User decision Q4, 2026-10-31 17:19 KST (option A): home-screen name ko "빵집 기사단", en "Bakery Knights".
+const LAUNCHER_EXPECTED := {"ko": "빵집 기사단", "en": "Bakery Knights"}
+const LAUNCHER_OLD := "Lane Defence"
+
+## Labels from `aapt2 dump badging`: {"default": .., "<locale>": ..}.
+static func badging_labels(badging: String) -> Dictionary:
+	var out := {}
+	for m in RegEx.create_from_string("(?m)^application-label(?:-([A-Za-z0-9-]+))?:'([^']*)'").search_all(badging):
+		out[m.get_string(1) if m.get_string(1) != "" else "default"] = m.get_string(2)
+	return out
+
+## OK = ko and en labels match Q4; OLD = every label is still the pre-Q4 name (APK built before 02's
+## change: waiting, not a failure); MISMATCH = anything else; NONE = no label found.
+static func label_verdict(badging: String) -> String:
+	var l := badging_labels(badging)
+	if l.is_empty():
+		return "NONE"
+	var all_old := true
+	for k in l:
+		if l[k] != LAUNCHER_OLD:
+			all_old = false
+	if all_old:
+		return "OLD"
+	var ko: String = l.get("ko", l.get("default", ""))
+	var en: String = l.get("en", l.get("default", ""))
+	return "OK" if ko == LAUNCHER_EXPECTED.ko and en == LAUNCHER_EXPECTED.en else "MISMATCH"
+
+## `aapt2 dump badging` through a temp file: OS.execute's captured stdout does not keep UTF-8 on
+## Windows (probe 2026-10-31: Korean text lost), but a redirected file keeps the raw bytes.
+func badging_utf8(apk: String) -> String:
+	if aapt2 == "":
+		return ""
+	var tmp := OS.get_cache_dir().path_join("svc_badging_%d.txt" % OS.get_process_id())
+	var out: Array = []
+	var code := -1
+	if OS.get_name() == "Windows":
+		# Redirect inside a tiny batch file; passing a quoted redirect through `cmd /c` breaks quoting.
+		var bat := OS.get_cache_dir().path_join("svc_badging_%d.cmd" % OS.get_process_id())
+		var bf := FileAccess.open(bat, FileAccess.WRITE)
+		bf.store_string("@\"%~1\" dump badging \"%~2\" > \"%~3\" 2>nul\r\n")
+		bf.close()
+		code = OS.execute(bat, PackedStringArray([aapt2.replace("/", "\\"), apk.replace("/", "\\"), tmp.replace("/", "\\")]), out, true)
+		DirAccess.remove_absolute(bat)
+	else:
+		code = OS.execute("sh", PackedStringArray(["-c", "'%s' dump badging '%s' > '%s' 2>/dev/null" % [aapt2, apk, tmp]]), out, true)
+	var s := FileAccess.get_file_as_string(tmp) if FileAccess.file_exists(tmp) else ""
+	DirAccess.remove_absolute(tmp)
+	return s if code == 0 else ""
+
+func test_launcher_label() -> bool:
+	# The verdict logic, proven on synthetic aapt2 output (works without a rebuilt APK).
+	var b_old := "application-label:'Lane Defence'\napplication-label-ko:'Lane Defence'\napplication-label-en:'Lane Defence'\n"
+	var b_ok := "application-label:'Bakery Knights'\napplication-label-ko:'빵집 기사단'\napplication-label-en:'Bakery Knights'\n"
+	var b_ok_default_en := "application-label:'Bakery Knights'\napplication-label-ko:'빵집 기사단'\n"
+	var b_no_ko := "application-label:'Bakery Knights'\napplication-label-en:'Bakery Knights'\n"
+	var b_full := "application-label:'Bakery Knights: Mold Defense'\napplication-label-ko:'빵집 기사단: 곰팡이 디펜스'\n"
+	var b_typo := "application-label:'Bakery Knight'\napplication-label-ko:'빵집 기사단'\n"
+	var b_mixed := "application-label:'Lane Defence'\napplication-label-ko:'빵집 기사단'\n"
+	var cases := [[b_old, "OLD"], [b_ok, "OK"], [b_ok_default_en, "OK"], [b_no_ko, "MISMATCH"], [b_full, "MISMATCH"], [b_typo, "MISMATCH"], [b_mixed, "MISMATCH"], ["", "NONE"]]
+	for c in cases:
+		check(label_verdict(c[0]) == c[1], "label verdict self-test: %s -> %s (got %s)" % [c[0].replace("\n", " | ").left(60), c[1], label_verdict(c[0])])
+	# Export settings (02): still the old name = WAITING; anything else must be the Q4 name.
+	var android: Array = presets().filter(func(p): return p.platform == "Android")
+	var pkg_name := str(android[0].options.get("package/name", "")) if android.size() > 0 else ""
+	var preset_state := "WAITING"
+	if pkg_name != LAUNCHER_OLD:
+		preset_state = "CHANGED"
+		check(LAUNCHER_EXPECTED.values().has(pkg_name), "export package/name '%s' is a Q4 launcher name" % pkg_name)
+	var loc = ProjectSettings.get_setting("application/config/name_localized", {})
+	if loc is Dictionary and not loc.is_empty():
+		for lang in ["ko", "en"]:
+			check(str(loc.get(lang, "")) == LAUNCHER_EXPECTED[lang], "config/name_localized[%s] = '%s'" % [lang, LAUNCHER_EXPECTED[lang]])
+	# Built packages on this machine.
+	var verdicts := {}
+	if aapt2 == "":
+		print("  launcher_label: APK NOT_RUN (aapt2 missing); preset %s" % preset_state)
+	else:
+		for path in apk_files():
+			if not path.ends_with(".apk"):
+				continue
+			var v := label_verdict(badging_utf8(ProjectSettings.globalize_path(path)))
+			verdicts[path] = v
+			check(v == "OK" or v == "OLD", "%s launcher label is the Q4 name or the pre-Q4 build (%s)" % [path, v])
+	launcher_status = "VERIFIED" if verdicts.values().has("OK") else "WAITING"
+	if verdicts.values().has("MISMATCH") or verdicts.values().has("NONE"):
+		launcher_status = "FAIL"
+	print("  launcher_label: %s (preset %s, apks %s)" % [launcher_status, preset_state, str(verdicts)])
 	return true

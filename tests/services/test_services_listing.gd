@@ -11,6 +11,8 @@ const LIMITS := {"title": 30, "subtitle": 30, "short": 80, "full": 4000}
 ## Q3 working title, decided by the user 2026-10-31 16:19 KST (coordinator-to-06-services.md).
 ## Final store name only after the KIPRIS check (docs/services/KIPRIS_MANUAL_CHECK.md).
 const WORKING_TITLE := {"ko": "빵집 기사단: 곰팡이 디펜스", "en": "Bakery Knights: Mold Defense"}
+## Q4 launcher (home-screen) name, decided by the user 2026-10-31 17:19 KST (option A).
+const LAUNCHER := {"ko": "빵집 기사단", "en": "Bakery Knights"}
 const APPLE_NAME_MIN := 2
 
 ## Ranking, price/promotion and Play-program wording (Metadata policy examples) + superlatives.
@@ -806,6 +808,27 @@ func test_launcher_label() -> bool:
 	var uq := FileAccess.get_file_as_string("res://coordination/requests/USER_QUESTION.md")
 	if uq.contains("## Q4") and uq.substr(uq.find("## Q4")).contains("WAITING FOR USER ANSWER"):
 		check(s2b.contains("**06 does not change it**"), "§2b says the label is not changed while Q4 waits")
+	# Q4 (user 2026-10-31 17:19 KST): launcher name = the store title up to its ":".
+	check(s2b.contains("2026-10-31 17:19 KST") and s2b.contains("\"빵집 기사단\""), "§2b records the Q4 decision with time and original words")
+	var kip := FileAccess.get_file_as_string(KIPRIS)
+	var nlog := FileAccess.get_file_as_string(NAME_LOG)
+	for lang in ["ko", "en"]:
+		var ln := block(t, "launcher." + lang)
+		eq_text(ln, LAUNCHER[lang], "%s launcher block = Q4 decision" % lang)
+		var title: String = WORKING_TITLE[lang]
+		check(title.begins_with(ln + ":"), "%s store title starts with the launcher name + ':' ('%s' / '%s')" % [lang, ln, title])
+		check(title.get_slice(":", 0).strip_edges() == ln, "%s launcher name = store title before ':'" % lang)
+		check(ln.length() >= 2 and ln.length() <= LIMITS.title, "%s launcher name length sane (%d)" % [lang, ln.length()])
+		report.lengths["launcher." + lang] = ln.length()
+		var low := ln.to_lower()
+		for w in BANNED_BRANDS:
+			check(not low.contains(w), "%s launcher name has no brand '%s'" % [lang, w])
+		check(competitor_hit(lang, ln) == "", "%s launcher name has no Bread Defense wording" % lang)
+		check(kip.contains("| %s | %s | %s |" % ["T2" if lang == "ko" else "T11", ln, lang]), "KIPRIS term list (§3) has the launcher name '%s' alone" % ln)
+		check(kip.contains("| %s | %s |" % [ln.replace(" ", ""), lang]), "KIPRIS term list (§3) has '%s' without spaces" % ln.replace(" ", ""))
+		for src in NAME_SOURCES:
+			check(nlog.contains("| %s | %s |" % [ln, src]), "name log keeps the %s row for launcher name '%s'" % [src, ln])
+	check(FileAccess.get_file_as_string("res://docs/services/OPEN_DECISIONS.md").contains("| U10 | Launcher (home-screen) name. **DECIDED by user 2026-10-31 17:19 KST**"), "OPEN_DECISIONS U10 records Q4")
 	# Store title stays the working title whatever the launcher name becomes.
 	check(titles("ko") == [WORKING_TITLE.ko] and titles("en") == [WORKING_TITLE.en], "store title unchanged by Q4")
 	return true
