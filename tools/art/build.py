@@ -73,7 +73,7 @@ REL_ATLAS = "assets/atlases"
 PREV = os.path.join(ROOT, "docs", "art", "previews")
 # Layout locks: existing regions keep their page position across rebuilds (see atlas._pack).
 LOCK_DIR = os.path.join(HERE, "layout_lock")
-ART_VERSION = "0.12.0"
+ART_VERSION = "0.12.1"
 
 REQUIRED_CHAR_ANIMS = ("idle", "walk", "attack", "death")
 

@@ -73,3 +73,7 @@ Menu residency is at 08's 0.50 MiB cap (ui_main 0.25 + ui_title 0.25). Full tabl
 ## A11 2026-10-31 17:49 +09:00 — mould nest is redrawn; t = 10 s visibility needs an edge indicator (QUEUED)
 - base_enemy is now a mould nest (same frame contract). When its left 24-40 px are on screen it passes 03's lines (dL* 31-33 vs the village, dE76 >= 29 in all CVD simulations; docs/art/evidence/nest_x9/).
 - 09's X9 M3 asks for "nest or enemy indicator visible at t = 10 s". In r01 the nest's left edge is at x 1012 and a 640-px view only reaches it when cam_x >= 692, so at 10 s it is off screen. If you add a right-edge indicator (an arrow + the nest portrait or a small icon), 03 can draw a 16x16 icon_nest in ui_main on request. Your call. No real-game capture yet (08 quiet window).
+
+## A12 2026-10-31 18:03 +09:00 — icon_nest ready (optional) + ui_main pixels changed (QUEUED)
+- `icon_nest` (ui_main, 16x16, pivot centre) is available if you add the right-edge nest indicator (A11). ui_main size is unchanged (256x256).
+- card_melee_basic and card_hero_captain pixels changed (A26 bread detail); rects unchanged. Main-tree cache is stale until 02 re-imports. No real-game capture of this change yet (08 quiet window).

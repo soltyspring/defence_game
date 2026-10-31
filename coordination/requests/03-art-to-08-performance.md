@@ -39,3 +39,6 @@ Correction to A1: the dynamic font cache pages are LA8, 128 KiB per 256x256 page
 - Real residency from snapshot logs (texture_report): menu with the current client = ui_main 0.25 MiB (logo falls back to text until 04 A10); with 04's one-line change simulated = ui_main + ui_title_ko = **0.375 MiB**. With group `ui` (first build) app.gd preloaded both pages = 0.50 MiB, which is why I changed the group.
 - Your `asset_budget_check.py --worktree` PASS but reports menu 0.25 / worst battle 9.25 because budget_inventory.py counts group `ui` only. Suggest: menu = always pages + the largest `menu` page (one locale); battle +0.125 MiB unless 04 releases the title page on battle enter (04 A10). Locale switching in one session adds the other page (+0.125).
 - biome_meadow (now Wheatfield Village art), char_player, fx_combat, ui_main: pixels changed, sizes and rects unchanged.
+
+## A9 2026-10-31 18:03 +09:00 — art 0.12.1: pixels + one 16x16 frame, sizes unchanged (QUEUED)
+- bases (mould nest, e3c4621), char_player (A26) and ui_main (A26 cards + new `icon_nest`) changed pixels; every page size is unchanged. Your `asset_budget_check.py --worktree`: PASS, worst battle 9.25, all pages 9.50, menu 0.50 MiB. Your inventory now counts both per-locale title pages (conservative); a single-locale menu measured 0.375 MiB in the snapshot log (A8).

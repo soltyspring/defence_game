@@ -134,3 +134,15 @@ Same attacks re-run on this build:
 - **Not solved by art: t = 10 s.** r01 enemy base x = 1100 - 40 = 1060, frame left edge 1012. A 640-px view shows it only when cam_x >= 692 (800-px view: >= 612). The camera follows the hero, which is near the start at 10 s, so 09's M3 needs an edge indicator (04) or a camera change (02). Requests 04 A11 / 02 A13.
 - **Not verified:** real-game capture of the nest (deferred until after 18:30, no Godot run); the exported-PCK check ran at 17:42 on this build (12/12 pages, 15 loads, no raw PNG) and nothing in assets changed after it except docs; players.
 - A26 (bread detail for the two largest allies) not started in this change.
+
+## Round 11 (2026-10-31 18:03) — A26 bread detail (식빵병, 제빵 대장) + icon_nest (art 0.12.1)
+- **A26, the two largest allies on screen:** melee_basic 식빵 기사 gets crumb pores in the toast helmet and a toast-slice cuirass (cream crumb, tan pores, crust rim) instead of the gold tabard; hero_captain 제빵 대장 gets a loaf emblem on the apron and flour dust on the rolling pin. Pixels only: contract_diff vs HEAD shows no frame/anim change in char_player (0 moved rects).
+- **Python composite only** (readability.py scenes r01/r05/r10 x village/dark/bright; no Godot render because of 08's 18:00-18:30 quiet window). The 2x contact sheet is a nearest x2 of the same composite, so the 2x numbers equal the 1x numbers. docs/art/evidence/a26/a26_metrics.json.
+  | unit | silhouette min before -> after | closest enemy dE76 protan / deutan / tritan before -> after |
+  |---|---|---|
+  | melee_basic | 64.9 -> 64.9 % (dark variant) | 29.8 / 31.5 / 24.7 -> 26.1 / 28.3 / 24.0 (e_swarm) |
+  | hero_captain | 67.7 -> 67.7 % (bright variant) | 18.6 / 21.8 / 21.8 -> 17.6 / 20.9 / 21.5 (e_swarm) |
+  Silhouette lines (>= 60 %) still pass; the faction distance dropped by at most 3.7 dE and stays far above 07's line (2.3) and 03's line (10). Faction mass test unchanged (protan 16.37, dL* +12.7). All scene minima are identical to before.
+- **icon_nest** (16x16 frame, art 14x12) in ui_main for an optional right-edge indicator (04 A11): dark mould mound, a spore stalk, a cave mouth with a cyan eye, same shapes and keys as base_enemy. ui_main stays 256x256 (100 regions, occupancy 0.36), so GPU memory is unchanged.
+- 08 asset_budget_check --worktree (Python): PASS, worst battle 9.25 MiB, all pages 9.50, menu 0.50 MiB. 08's inventory now counts **both** per-locale title pages as menu pages (conservative); the measured single-locale menu is 0.375 MiB (round 9).
+- **Not verified:** Godot render/readability run, exported-PCK check and real-game capture for this change (deferred until after 18:30); players. Main-tree cache now stale for char_player, bases and ui_main (02).

@@ -1,5 +1,5 @@
 # 03-art handoff
-Updated: 2026-10-31 17:49 +09:00 (real time from Get-Date). Q1 = A DECIDED; Q3 working title 빵집 기사단: 곰팡이 디펜스 (store name pending KIPRIS); Q2 business model DEFERRED (no ad/purchase UI). Art version 0.12.0.
+Updated: 2026-10-31 18:04 +09:00 (real time from Get-Date). Q1 = A DECIDED; Q3 working title 빵집 기사단: 곰팡이 디펜스 (store name pending KIPRIS); Q2 business model DEFERRED (no ad/purchase UI). Art version 0.12.1.
 
 ## Session
 - Kiro CLI session ID: not visible from inside the session, so I cannot record it. Codex should read it from coordination/.runtime/quota/sessions.json / the launcher.
@@ -88,8 +88,13 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - A26 not started.
 - Commit e3c4621 [Design]: PUSHED origin/main (verified with git branch -r --contains at 17:50). Then 07 A6 and 09 A2 re-verify requests.
 
+## Milestone 13 (this session): A26 bread detail (식빵병, 제빵 대장) + icon_nest
+- chars_player.py SPEAR_HEAD/SPEAR_TORSO (toast helmet pores, toast-slice cuirass); chars_retheme.py BAKER_TORSO loaf emblem + rolling-pin flour dust; ui.py ICONS16["icon_nest"]. Contract: only `icon_nest` added (ui_main stays 256x256).
+- Python composite (no Godot, 08 quiet window): silhouette min melee 64.9 -> 64.9 %, hero 67.7 -> 67.7 %; closest enemy dE76 protan melee 29.8 -> 26.1, hero 18.6 -> 17.6. docs/art/evidence/a26/.
+- validate.py --determinism PASS (3 WARN: main-tree cache stale for char_player, bases, ui_main); 08 asset_budget_check --worktree PASS (menu 0.50 in 08's conservative model, battle 9.25).
+- NOT verified for this change: Godot readability render, exported-PCK check, real-game capture (after 18:30).
+
 ## Exact next steps on resume
-1. After 18:30: HEAD-snapshot capture of r01/r03 on the secondary monitor when the nest is on screen (e.g. r03 autoplay late, or after the hero walks right); check the left-edge read.
-2. A26 bread detail on the two largest allies on screen (tank 통식빵, siege 화덕포 or hero), same frame contract.
-3. If 04 wants it: icon_nest 16x16 for an edge indicator.
-4. Read incoming *-to-03-art.md (04 title_block line, 08 menu model).
+1. After 18:30: `pwsh tools/art/run_godot_pack_check.ps1`, `run_godot_readability.ps1 -Tag v0121`, and a HEAD-snapshot capture on the secondary monitor (nest on screen, toast knight + hero close up). Record results in ART_AUDIT round 11.
+2. A26 for the remaining allies (tank 통식빵, fast 프레첼, siege 화덕포 detail), same contract.
+3. Read incoming *-to-03-art.md (04 title_block line, edge indicator; 08 menu model).

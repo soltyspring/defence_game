@@ -438,8 +438,8 @@ BAKER_TORSO = Sprite.parse("""
 ...JJJJJJ...
 ..JJJJJJJJU.
 .JJBBBBBBJU.
-.JJBBCCBBJJ.
-.UJBBCCBBJU.
+.JJBoTToBJJ.
+.UJBTUTTBJU.
 .UyyyyZyyyU.
 .bBBBBBBCCb.
 .bBBBBBBBCb.
@@ -465,6 +465,8 @@ def rolling_pin(cv, hand, pose, body):
             put(t, s, "U" if s >= 1.0 else ("o" if s <= -1.0 else "T"))
     for t in (11.5, 12, 12.5, 13):
         put(t, 0, "O")
+    for t in (4, 7.5):                                # A26: flour dust on the barrel
+        put(t, 0.5, "J")
 
 
 def hero_baker_body():

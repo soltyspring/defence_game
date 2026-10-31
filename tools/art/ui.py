@@ -242,6 +242,21 @@ oUUUyUUUTo
 oUUUUUUTTo
 .ooooooOo.
 """)
+# art 0.12.1: mould nest for an optional right-edge indicator (04 A11); same shapes as base_enemy
+ICONS16["icon_nest"] = S("""
+.tz...........
+.ll...........
+.Dl.....t.....
+..D....lD.....
+..D..DDlDD....
+..DDDllllDD...
+.DDlltlllllD..
+DDllllltllllD.
+DKKKlllllllDD.
+DKQKDlltlllDD.
+DKKKDllllllDD.
+.DDDDDDDDDDD..
+""")
 # allied army icon: toast-helmet soldier in egg-wash gold (was steel + blue tabard)
 ICONS16["icon_army"] = S("""
 ..oo.oo..
