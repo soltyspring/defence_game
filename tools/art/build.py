@@ -79,10 +79,38 @@ REQUIRED_CHAR_ANIMS = ("idle", "walk", "attack", "death")
 
 
 RIM_LIGHT = os.environ.get("ART_RIM", "1") == "1"   # ART_AUDIT A22
+# QA-B024/B025 (07, 2026-11-01): battle_view fades a dying unit linearly over 0.7 s (alpha = dead_t / 0.7) and removes
+# it at 0.7 s, so a 0.62-1.0 s death showed only its first half. Every death now plays within DEATH_PLAY_S (fps raised
+# where needed; frames unchanged), so the fall lands while the unit is still opaque enough to read.
+DEATH_PLAY_S = float(os.environ.get("ART_DEATH_S", "0.5"))
+# The ordered-dither dissolve tail (levels 5-15 of 16 removed) on top of that fade removed the body twice; levels are
+# scaled by DISSOLVE_K while a character is drawn (only character sets: add_char), so the fall stays readable.
+DISSOLVE_K = float(os.environ.get("ART_DISSOLVE_K", "0.25"))
+
+
+def death_fps(fps, n):
+    import math
+    return max(fps, math.ceil(n / DEATH_PLAY_S - 1e-9))
+
+
+def _char_fn(fn):
+    """Run a character's anim function with the softened death dissolve."""
+    from pixel import Canvas
+    orig = Canvas.dissolve
+
+    def soft(self, level):
+        return orig(self, int(round(level * DISSOLVE_K)))
+    Canvas.dissolve = soft
+    try:
+        return fn()
+    finally:
+        Canvas.dissolve = orig
 
 
 def add_char(a: atl.Atlas, sid, body, fn, faction):
-    anims = fn()
+    anims = _char_fn(fn)
+    if "death" in anims:
+        anims["death"]["fps"] = death_fps(anims["death"]["fps"], len(anims["death"]["frames"]))
     import theme
     for an in anims.values():
         an["frames"] = [theme.apply(f.copy(), faction, sid) for f in an["frames"]]

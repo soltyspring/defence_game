@@ -17,9 +17,9 @@
  "repeat": false,
  "gpu_format": "RGBA8 (lossless, no VRAM compression)",
  "gpu_bytes": 2097152,
- "disk_bytes": 30955,
- "unique_regions": 235,
- "occupancy": 0.602,
+ "disk_bytes": 31648,
+ "unique_regions": 237,
+ "occupancy": 0.608,
  "frames": {
   "hero_captain/idle/0": {
    "x": 367,
@@ -1302,8 +1302,8 @@
    ]
   },
   "tank/walk/0": {
-   "x": 307,
-   "y": 399,
+   "x": 795,
+   "y": 467,
    "w": 32,
    "h": 32,
    "pivot": [
@@ -2962,8 +2962,8 @@
    ]
   },
   "e_brute/death/0": {
-   "x": 379,
-   "y": 455,
+   "x": 795,
+   "y": 415,
    "w": 48,
    "h": 48,
    "pivot": [
@@ -3022,8 +3022,8 @@
    ]
   },
   "e_brute/die/0": {
-   "x": 379,
-   "y": 455,
+   "x": 795,
+   "y": 415,
    "w": 48,
    "h": 48,
    "pivot": [
@@ -3404,7 +3404,7 @@
      "hero_captain/death/4",
      "hero_captain/death/5"
     ],
-    "fps": 8,
+    "fps": 12,
     "loop": false
    },
    "die": {
@@ -3416,7 +3416,7 @@
      "hero_captain/die/4",
      "hero_captain/die/5"
     ],
-    "fps": 8,
+    "fps": 12,
     "loop": false
    }
   },
@@ -3478,7 +3478,7 @@
      "worker/death/4",
      "worker/death/5"
     ],
-    "fps": 8,
+    "fps": 12,
     "loop": false
    },
    "die": {
@@ -3490,7 +3490,7 @@
      "worker/die/4",
      "worker/die/5"
     ],
-    "fps": 8,
+    "fps": 12,
     "loop": false
    }
   },
@@ -3549,7 +3549,7 @@
      "melee_basic/death/4",
      "melee_basic/death/5"
     ],
-    "fps": 8,
+    "fps": 12,
     "loop": false
    },
    "die": {
@@ -3561,7 +3561,7 @@
      "melee_basic/die/4",
      "melee_basic/die/5"
     ],
-    "fps": 8,
+    "fps": 12,
     "loop": false
    }
   },
@@ -3625,7 +3625,7 @@
      "ranged_basic/death/4",
      "ranged_basic/death/5"
     ],
-    "fps": 8,
+    "fps": 12,
     "loop": false
    },
    "die": {
@@ -3637,7 +3637,7 @@
      "ranged_basic/die/4",
      "ranged_basic/die/5"
     ],
-    "fps": 8,
+    "fps": 12,
     "loop": false
    }
   },
@@ -3694,7 +3694,7 @@
      "tank/death/4",
      "tank/death/5"
     ],
-    "fps": 8,
+    "fps": 12,
     "loop": false
    },
    "die": {
@@ -3706,7 +3706,7 @@
      "tank/die/4",
      "tank/die/5"
     ],
-    "fps": 8,
+    "fps": 12,
     "loop": false
    }
   },
@@ -3761,7 +3761,7 @@
      "fast/death/3",
      "fast/death/4"
     ],
-    "fps": 8,
+    "fps": 10,
     "loop": false
    },
    "die": {
@@ -3772,7 +3772,7 @@
      "fast/die/3",
      "fast/die/4"
     ],
-    "fps": 8,
+    "fps": 10,
     "loop": false
    }
   },
@@ -3833,7 +3833,7 @@
      "siege/death/3",
      "siege/death/4"
     ],
-    "fps": 8,
+    "fps": 10,
     "loop": false
    },
    "die": {
@@ -3844,7 +3844,7 @@
      "siege/die/3",
      "siege/die/4"
     ],
-    "fps": 8,
+    "fps": 10,
     "loop": false
    }
   },
@@ -3902,7 +3902,7 @@
      "e_grunt/death/4",
      "e_grunt/death/5"
     ],
-    "fps": 8,
+    "fps": 12,
     "loop": false
    },
    "die": {
@@ -3914,7 +3914,7 @@
      "e_grunt/die/4",
      "e_grunt/die/5"
     ],
-    "fps": 8,
+    "fps": 12,
     "loop": false
    }
   },
@@ -3978,7 +3978,7 @@
      "e_spitter/death/4",
      "e_spitter/death/5"
     ],
-    "fps": 8,
+    "fps": 12,
     "loop": false
    },
    "die": {
@@ -3990,7 +3990,7 @@
      "e_spitter/die/4",
      "e_spitter/die/5"
     ],
-    "fps": 8,
+    "fps": 12,
     "loop": false
    }
   },
@@ -4042,7 +4042,7 @@
      "e_swarm/death/3",
      "e_swarm/death/4"
     ],
-    "fps": 8,
+    "fps": 10,
     "loop": false
    },
    "die": {
@@ -4053,7 +4053,7 @@
      "e_swarm/die/3",
      "e_swarm/die/4"
     ],
-    "fps": 8,
+    "fps": 10,
     "loop": false
    }
   },
@@ -4112,7 +4112,7 @@
      "e_brute/death/4",
      "e_brute/death/5"
     ],
-    "fps": 7,
+    "fps": 12,
     "loop": false
    },
    "die": {
@@ -4124,7 +4124,7 @@
      "e_brute/die/4",
      "e_brute/die/5"
     ],
-    "fps": 7,
+    "fps": 12,
     "loop": false
    }
   },
@@ -4179,7 +4179,7 @@
      "e_bomber/death/4",
      "e_bomber/death/5"
     ],
-    "fps": 8,
+    "fps": 12,
     "loop": false
    },
    "die": {
@@ -4191,7 +4191,7 @@
      "e_bomber/die/4",
      "e_bomber/die/5"
     ],
-    "fps": 8,
+    "fps": 12,
     "loop": false
    }
   }

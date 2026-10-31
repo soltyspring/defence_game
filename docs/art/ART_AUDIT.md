@@ -284,3 +284,51 @@ Data: docs/art/evidence/char_quality/frames_before.json (atlas, shipped and D1FU
 | Q12 | memory | 08 asset_budget_check --tree, worst battle | <= 12 MiB, characters stay one page |
 | Q13 | contract | same anim names, frame counts, fps, loop, events as shipped; default build byte-identical; validate.py --determinism | PASS |
 Not measurable by these tools and not claimed: whether players read a unit as bread or mould, and how it looks on a real phone (no human test, no phone).
+
+## Round 19 (2026-11-01 07:50) — shipped walk/death fixes for 07 QA-B024 / QA-B025, `ink` palette key (06 R3 Ask A)
+Context: after the 03:55 blue screen. No Godot run was needed for this round. The numbers come from a Python model of 07's own rules: `char_quality.py anim07`.
+- **How the model works:**
+  - It takes the backgrounds from 07's baseline contact sheets (docs/verification/evidence/art-baseline-ad47eda/anim/, ko_1x).
+  - It places each unit by registering the shipped walk frame 0 on 07's captured walk frame 0. The registration error is 0 px for all 10 ids.
+  - It applies battle_view's fade to each death frame (alpha = (0.7 - t) / 0.7 at t = (i + 0.5) / fps, as capture_art_baseline.gd does).
+  - It measures with 07's `tools/qa/art_metrics.anim_metrics()`.
+- **Check of the model:** on the shipped atlas it reproduces every number of ART_BASELINE.md §5 for the A rules. Examples: e_brute walk 14.0 % / 0 px / death 21.5 % / 0.43 s (50 %); tank 1 px; fast 0.25 s (40 %).
+- **QA-B024, e_brute 썩은 멧돼지:**
+  - Walk: heavy trot with a 2 px body bob (1,2,0 per step), a head nod on contact, and the same leg swing. The wider swing I tried first pushed the r10 `dark` silhouette to 59.6 %, so I kept the old swing.
+  - Death: recoil → knees buckle → belly on the ground with the legs folded and the eye shut. The old legs-up flip kept almost the same outline (21.5 % change).
+- **QA-B024, tank 통식빵:** walk stride 3 (was 2), and the body dips 2 px on each contact (bob 2,1,0).
+- **QA-B025, death timing (build.py `add_char`, every character set incl. bosses):**
+  - Each death now plays within 0.5 s. fps = max(old, ceil(n / 0.5)): 6 frames at 12 fps, 5 at 10, 7 at 14, 8 at 16. Frame count, names, sizes and pivots are unchanged.
+  - The ordered-dither dissolve tail is scaled by 0.25 (levels 6/11/14 → 2/3/4 of 16). The 02 fade already removes the body, so the old dissolve removed it twice.
+  - What I tried and the result (all 10 ids):
+
+    | Variant | A6 / A6b result |
+    |---|---|
+    | fps only | worse: 0.20-0.33 s readable, because the dissolve frames came earlier |
+    | fps + dissolve x0.5 | 4 ids still under 0.4 s |
+    | fps + dissolve x0.25 (chosen) | every id passes |
+    | fps + no dissolve | also passes, but drops the visible dissolve |
+    | 02's fade changed to hold 0.3 s then fade 0.4 s, art unchanged | alone fixes only the brute |
+- **Result, 07's rules predicted (shipped before → after):**
+
+  | Rule | Before | After |
+  |---|---|---|
+  | A1 walk motion (≥ 2 px) | brute 0, tank 1 | brute 2, tank 2 (others unchanged) |
+  | A1c walk change (≥ 20 %) | brute 14.0 | brute 62.2 |
+  | A5 death change (≥ 40 %) | brute 21.5 | brute 56.8 (pose alone, no dissolve: 45.1) |
+  | A6 readable (≥ 0.4 s) | fast 0.25, melee / ranged / hero / spitter 0.38 | brute 0.42, all others 0.50 |
+  | A6b readable share (≥ 60 %) | 7 of 10 ids at 40-50 % | brute 83 %, all others 100 % |
+
+  These are model numbers, not 07's capture. 07's `art_compare.ps1` run is requested.
+- **Unchanged:** idle, attack, hit and cast frames, so card and portrait crops do not change. Frame names, sizes and pivots are the same. The default build changes only char_player, char_boss_warlord and char_boss_overlord. Every other page is byte-identical on a clean HEAD da2d2a6 copy.
+- **Checks on that copy:**
+  - validate.py --determinism PASS.
+  - 08 asset_budget_check --tree PASS, worst battle 8.75 MiB (unchanged).
+  - cvd_check unchanged: protan 16.37 / deutan 18.98 / tritan 18.28.
+  - readability composite (Python, no Godot render), silhouette min r01 85.5 / 61.0 / 71.4, r05 75.5 / 61.9 / 71.4, r10 85.5 / 62.5 / 71.4 (village / dark / bright). This equals HEAD.
+- **`ink`:** key `k` #07070c is appended after the mould ramp, so indices are unchanged. No character uses it.
+  - Appending a palette entry used to change every page file by 1 byte (the tRNS chunk length), which would have forced 02 to re-import all pages.
+  - Fix: `pixel.save_indexed_png` keeps the 53-entry tRNS and black palette entries for indices a page does not use. Entries after the tRNS are opaque by PNG rule.
+  - Proof: a clean HEAD copy with only the new pixel.py builds all 9 pages byte-identical to HEAD.
+- Evidence: docs/art/evidence/char_quality/qa_b024_b025_shipped_fix_x3.png (rows: brute walk, brute death, tank walk, 식빵병 death, 프레첼 death) and anim07_shipped_fix.json.
+- Not done: 07's capture of this commit. No human test, no phone. The hit animation is still never drawn by battle_view (QA-O006, 02).

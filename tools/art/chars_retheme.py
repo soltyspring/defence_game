@@ -178,19 +178,34 @@ def yeast_anims():
 # e_brute — 썩은 멧돼지: hunched mouldy boar, spore-white tusks, bristle ridge,
 # teal mould patches; trots, lowers head and gores on attack.
 # =============================================================================
-def boar_frame(phase=0, head_dy=0, lunge=0, gore=0, gait=True, lie=False):
+import os as _bob_os
+BOAR_TROT_BOB = tuple(int(v) for v in _bob_os.environ.get("ART_BOAR_BOB", "1,2,0,1,2,0").split(","))   # px down, walk frames 0-5
+
+
+def boar_frame(phase=0, head_dy=0, lunge=0, gore=0, gait=True, lie=False, trot=False, slump=0):
+    """trot (walk only, QA-B024): heavy trot with 2 px body bob, head nod and a wider leg swing.
+    slump (death only, QA-B024 A5): 1 = knees buckle, 2 = belly on the ground, legs folded, eye shut."""
     cv = Canvas(48, 48)
     g = 47
-    bx, by = 18 + lunge, g - 11
+    bob = BOAR_TROT_BOB[phase % 6] if trot else 0
+    bx, by = 18 + lunge, g - 11 + bob + (2, 7)[slump - 1] * (slump > 0)
+    head_dy += (1 if trot and phase % 3 == 0 else 0) + (0, 1, 5)[slump]
+    amp, lamp = 2, 1.5            # leg swing as before: wider swings put more dark leg edge on dark ground (readability)
     # compact boar (A27): 32 px long instead of 38, so it covers fewer neighbours in melee
     # legs (back pair darker), trot gait
     legs = [(-7, 0.0, "D"), (-3, 0.5, "l"), (5, 0.5, "D"), (9, 0.0, "l")]
     for (lx, ph, col) in legs:
+        if slump >= 2:
+            cv.hline(bx + lx - 1, bx + lx + 2, g, c("a"))         # folded legs: only the hooves show
+            continue
         t = 2 * math.pi * (phase / 6.0 + ph)
-        sw = round(2 * math.sin(t)) if gait else 0
-        lift = max(0, round(1.5 * math.cos(t))) if gait else 0
+        sw = round(amp * math.sin(t)) if gait else 0
+        lift = max(0, round(lamp * math.cos(t))) if gait else 0
         x0, y0 = bx + lx, by + 4
-        x1, y1 = x0 + sw, g - lift
+        if slump == 1:                                           # knees buckle: shorter, splayed legs
+            x1, y1 = x0 + (2 if lx > 0 else -2), g
+        else:
+            x1, y1 = x0 + sw, g - lift
         cv.thick_line(x0, y0, x1, y1 - 1, c(col), t=3)
         cv.hline(x1 - 1, x1 + 1, y1, c("a"))                   # hoof
     # body: big hunched barrel, higher at the shoulders
@@ -216,7 +231,10 @@ def boar_frame(phase=0, head_dy=0, lunge=0, gore=0, gait=True, lie=False):
     cv.rect(hx + 5, hy - 1, 5, 5, c("t"))                       # big snout
     cv.rect(hx + 9, hy, 2, 3, c("x"))                           # nostril disc
     cv.put(hx + 10, hy + 1, c("D"))
-    cv.put(hx + 1, hy - 2, c("K")); cv.put(hx + 2, hy - 2, c("E"))   # angry eye glint
+    if slump >= 2:
+        cv.hline(hx, hx + 2, hy - 2, c("K"))                       # eye shut
+    else:
+        cv.put(hx + 1, hy - 2, c("K")); cv.put(hx + 2, hy - 2, c("E"))   # angry eye glint
     cv.put(hx - 3, hy - 5, c("l")); cv.put(hx - 2, hy - 6, c("D"))   # ear
     # tusks, raised by gore
     tx, ty = hx + 7, hy + 4
@@ -232,7 +250,7 @@ def boar_frame(phase=0, head_dy=0, lunge=0, gore=0, gait=True, lie=False):
 def boar_anims():
     idle = [boar_frame(0, gait=False), boar_frame(0, head_dy=1, gait=False),
             boar_frame(0, head_dy=1, gait=False), boar_frame(0, gait=False)]
-    walk = [boar_frame(i) for i in range(6)]
+    walk = [boar_frame(i, trot=True) for i in range(6)]          # QA-B024: was a 0 px slide
     atk = [boar_frame(0, head_dy=-1, lunge=-1, gait=False), boar_frame(0, head_dy=3, lunge=-2, gait=False),
            boar_frame(1, head_dy=4, lunge=1), boar_frame(2, head_dy=0, lunge=4, gore=3),
            boar_frame(3, head_dy=1, lunge=2, gore=1)]
@@ -242,8 +260,10 @@ def boar_anims():
             cv.put(x + dx, 46 - abs(dx) // 2, c("x"))
     dust(atk[3], 40)
     hit = [boar_frame(0, head_dy=-2, lunge=-2, gait=False), boar_frame(0, head_dy=-1, lunge=-1, gait=False)]
-    down = boar_frame(0, lie=True)
-    death = [boar_frame(0, head_dy=-2, lunge=-2, gait=False), boar_frame(0, head_dy=4, gait=False), down] + _tail(down, (6, 11, 14))
+    # QA-B024 (A5): recoil -> knees buckle -> belly on the ground (the old legs-up flip kept the same outline, 21.5 %)
+    down = boar_frame(0, gait=False, slump=2)
+    death = [boar_frame(0, head_dy=-3, lunge=-3, gait=False), boar_frame(0, head_dy=2, gait=False, slump=1), down] \
+        + _tail(down, (6, 11, 14))
     return {
         "idle": dict(frames=idle, fps=4, loop=True),
         "walk": dict(frames=walk, fps=7, loop=True),

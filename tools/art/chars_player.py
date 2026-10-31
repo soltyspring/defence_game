@@ -426,9 +426,12 @@ def tank_anims():
         replace(TANK_BASE, hand_f=(4, 3), weapon_ang=10, lean=1, bob=1, extra={"shield_dx": 1}),
         replace(TANK_BASE, hand_f=(2, 3), weapon_ang=-60),
     ]
+    # QA-B024 (A1): heavier step, the body dips 2 px on each contact (bob 2,1,0) and the stride is 1 px longer
+    walk = walk_poses(TANK_BASE, 6, 3, 1, 0)
+    walk = [replace(p, bob=p.bob + (1, 1, 0, 1, 1, 0)[i]) for i, p in enumerate(walk)]
     return {
         "idle": dict(frames=std_idle(b, TANK_BASE, n=3), fps=3, loop=True),
-        "walk": dict(frames=frames_of(b, walk_poses(TANK_BASE, 6, 2, 1, 0)), fps=8, loop=True),
+        "walk": dict(frames=frames_of(b, walk), fps=8, loop=True),
         "attack": dict(frames=frames_of(b, atk), fps=9, loop=False, events={"hit": 2}),
         "hit": dict(frames=std_hit(b, TANK_BASE), fps=10, loop=False),
         "death": dict(frames=std_death(b, TANK_BASE), fps=8, loop=False),

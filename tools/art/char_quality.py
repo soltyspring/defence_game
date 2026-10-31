@@ -311,6 +311,141 @@ def sheet(out, items):
     print("sheet", out, img.size, "sets", len(sets))
 
 
+def anim07(out, items):
+    """07's animation rules (docs/verification/ART_BASELINE.md §5: A1 A1c A5 A6 A6b) predicted for an atlas build WITHOUT
+    Godot. Backgrounds come from 07's baseline contact sheets (anim_<uid>.png, row 0 column 0 = the real background
+    crop of the 393 dp ko_1x capture). Each unit is placed at the pivot point found by registering the shipped walk
+    frame 0 on the baseline's captured walk frame 0. Death frames get battle_view's fade
+    (alpha = (0.7 - t) / 0.7 at t = (i + 0.5) / fps, as capture_art_baseline.gd does). Frames are written in 07's
+    layers/anim layout, then 07's own tools/qa/art_metrics.anim_metrics() measures them, so the numbers use 07's code.
+    items: "<label>=<char_dir>"; the first item must be the shipped build (used for the registration)."""
+    import shutil
+    import tempfile
+    sys.path.insert(0, os.path.join(ROOT, "tools", "qa"))
+    import art_metrics as AM
+    base = os.path.join(ROOT, "docs", "verification", "evidence", "art-baseline-ad47eda")
+    rep0 = json.load(open(os.path.join(base, "ko_1x_art_report.json"), encoding="utf-8-sig"))["anim"]
+
+    def pages(d):
+        man = json.load(open(os.path.join(d, "manifest.json") if os.path.exists(os.path.join(d, "manifest.json"))
+                             else os.path.join(ROOT, "assets", "manifest.json"), encoding="utf-8"))
+        return man
+
+    def frame(d, cache, sid, an, i):
+        for pid in ("char_player", "char_boss_warlord", "char_boss_overlord"):
+            if pid not in cache:
+                jp = os.path.join(d, f"{pid}.json")
+                if not os.path.exists(jp):
+                    continue
+                cache[pid] = (json.load(open(jp, encoding="utf-8")), np.array(Image.open(os.path.join(d, f"{pid}.png")).convert("RGBA")))
+            j, p = cache[pid]
+            if sid in j["anims"] and an in j["anims"][sid]:
+                a = j["anims"][sid][an]
+                f = j["frames"][a["frames"][i]]
+                return p[f["y"]:f["y"] + f["h"], f["x"]:f["x"] + f["w"]], f, a
+        return None, None, None
+
+    def comp(bg, img, x0, y0, flip, alpha=1.0):
+        o = bg.astype(np.float64).copy()
+        im = img[:, ::-1] if flip else img
+        H, W = bg.shape[:2]
+        for yy in range(im.shape[0]):
+            Y = y0 + yy
+            if not 0 <= Y < H:
+                continue
+            for xx in range(im.shape[1]):
+                X = x0 + xx
+                if not 0 <= X < W or im[yy, xx, 3] == 0:
+                    continue
+                a = im[yy, xx, 3] / 255.0 * alpha
+                o[Y, X] = im[yy, xx, :3] * a + o[Y, X] * (1 - a)
+        return np.clip(np.rint(o), 0, 255).astype(np.uint8)
+
+    ship_dir = items[0].split("=", 1)[1]
+    sc = {}
+    anchor = {}
+    for uid, info in rep0.items():
+        sheet = np.asarray(Image.open(os.path.join(base, "anim", f"anim_{uid}.png")).convert("RGB"))[::2, ::2]
+        cw, ch = int(info["crop"][2]), int(info["crop"][3])
+        rows = [an for an in ("idle", "walk", "attack", "hitflash", "death") if an in info["anims"] or an == "hitflash"]
+        bg = sheet[0:ch, 0:cw]
+        wr = rows.index("walk")
+        cap0 = sheet[wr * ch:(wr + 1) * ch, cw:2 * cw]
+        img, f, _ = frame(ship_dir, sc, uid, "walk", 0)
+        flip = info["facing"] < 0
+        best = None
+        # search near the mask bbox, exact pixel check
+        m = np.any(cap0 != bg, axis=-1)
+        ys, xs = np.nonzero(m)
+        am = img[..., 3] > 0
+        am = am[:, ::-1] if flip else am
+        ay, ax = np.nonzero(am)
+        for dy in range(-3, 4):
+            for dx in range(-3, 4):
+                y0 = ys.min() - ay.min() + dy
+                x0 = xs.min() - ax.min() + dx
+                c = comp(bg, img, x0, y0, flip)
+                err = int(np.any(c != cap0, axis=-1).sum())
+                if best is None or err < best[0]:
+                    best = (err, x0, y0)
+        piv = f.get("pivot") or [0, 0]
+        anchor[uid] = (bg, best[1] + ((img.shape[1] - piv[0]) if flip else piv[0]), best[2] + piv[1], flip, best[0], info)
+    res = {}
+    for it in items:
+        label, d = it.split("=", 1)
+        fade = 0.7
+        if "|fade=" in d:                  # what-if for 02: alpha = (0.7 - t) / fade (hold at 1 for 0.7 - fade s)
+            d, fs = d.split("|fade=")
+            fade = float(fs)
+        cache = {}
+        clipped = {}
+        tmp = tempfile.mkdtemp(prefix="cq_anim07_")
+        ad = os.path.join(tmp, "layers", "anim")
+        os.makedirs(ad)
+        rep = {}
+        for uid, (bg, PX, PY, flip, err, info) in anchor.items():
+            Image.fromarray(bg).save(os.path.join(ad, f"ko_1x_{uid}_bg.png"))
+            anims = {}
+            for an in ("idle", "walk", "attack", "death"):
+                img, f, a = frame(d, cache, uid, an, 0)
+                if img is None:
+                    continue
+                n = len(a["frames"])
+                anims[an] = {"fps": float(a["fps"]), "frames": n, "loop": bool(a.get("loop", False))}
+                for i in range(n):
+                    img, f, _ = frame(d, cache, uid, an, i)
+                    piv = f.get("pivot") or [0, 0]
+                    x0 = PX - ((img.shape[1] - piv[0]) if flip else piv[0])
+                    y0 = PY - piv[1]
+                    ys_, xs_ = np.nonzero(img[..., 3])
+                    if len(ys_) and (x0 + (img.shape[1] - 1 - xs_.min() if flip else xs_.max()) >= bg.shape[1] or
+                                     x0 + (img.shape[1] - 1 - xs_.max() if flip else xs_.min()) < 0 or
+                                     y0 + ys_.min() < 0 or y0 + ys_.max() >= bg.shape[0]):
+                        clipped[uid] = clipped.get(uid, 0) + 1
+                    al = 1.0
+                    if an == "death":
+                        al = min(1.0, max(0.0, (0.7 - (i + 0.5) / a["fps"]) / fade))
+                    Image.fromarray(comp(bg, img, x0, y0, flip, al)).save(os.path.join(ad, f"ko_1x_{uid}_{an}_{i}.png"))
+            rep[uid] = dict(info, anims=anims, bars={})
+        m = AM.anim_metrics(tmp, "ko_1x", {"anim": rep}, 1.0)
+        shutil.rmtree(tmp, ignore_errors=True)
+        res[label] = {u: {k: v for k, v in r.items() if k in (
+            "walk_change_max_pct", "walk_bob_px", "walk_edge_travel_px", "death_pose_change_pct",
+            "death_readable_until_s", "death_readable_share_pct", "death_frames", "death_anim_s")} | {"reg_err_px": anchor[u][4],
+                                                                                                    "frames_clipped": clipped.get(u, 0)}
+            for u, r in m.items()}
+    with open(out, "w", encoding="utf-8", newline="\n") as fh:
+        json.dump(res, fh, indent=1)
+        fh.write("\n")
+    for label, r in res.items():
+        print("==", label)
+        for u, v in r.items():
+            mv = max(v.get("walk_bob_px") or 0, v.get("walk_edge_travel_px") or 0)
+            print(f"  {u:13s} walk chg {v.get('walk_change_max_pct')} move {mv} | death chg {v.get('death_pose_change_pct')} "
+                  f"readable {v.get('death_readable_until_s')} s ({v.get('death_readable_share_pct')} %) anim {v.get('death_anim_s')} s | reg {v['reg_err_px']}"
+                  + (f" CLIPPED {v['frames_clipped']} frames" if v["frames_clipped"] else ""))
+
+
 if __name__ == "__main__":
     sys.path.insert(0, HERE)
-    {"lineup": lineup, "frames": frames, "battle": battle, "sheet": sheet}[sys.argv[1]](sys.argv[2], sys.argv[3:])
+    {"lineup": lineup, "frames": frames, "battle": battle, "sheet": sheet, "anim07": anim07}[sys.argv[1]](sys.argv[2], sys.argv[3:])

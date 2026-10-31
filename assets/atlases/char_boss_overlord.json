@@ -17,9 +17,9 @@
  "repeat": false,
  "gpu_format": "RGBA8 (lossless, no VRAM compression)",
  "gpu_bytes": 2097152,
- "disk_bytes": 11481,
- "unique_regions": 32,
- "occupancy": 0.417,
+ "disk_bytes": 11642,
+ "unique_regions": 31,
+ "occupancy": 0.404,
  "frames": {
   "boss_overlord/idle/0": {
    "x": 279,
@@ -322,8 +322,8 @@
    ]
   },
   "boss_overlord/death/6": {
-   "x": 95,
-   "y": 339,
+   "x": 187,
+   "y": 255,
    "w": 88,
    "h": 80,
    "pivot": [
@@ -402,8 +402,8 @@
    ]
   },
   "boss_overlord/die/6": {
-   "x": 95,
-   "y": 339,
+   "x": 187,
+   "y": 255,
    "w": 88,
    "h": 80,
    "pivot": [
@@ -513,7 +513,7 @@
      "boss_overlord/death/6",
      "boss_overlord/death/7"
     ],
-    "fps": 7,
+    "fps": 16,
     "loop": false
    },
    "die": {
@@ -527,7 +527,7 @@
      "boss_overlord/die/6",
      "boss_overlord/die/7"
     ],
-    "fps": 7,
+    "fps": 16,
     "loop": false
    }
   }

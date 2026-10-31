@@ -17,7 +17,7 @@
  "repeat": false,
  "gpu_format": "RGBA8 (lossless, no VRAM compression)",
  "gpu_bytes": 1048576,
- "disk_bytes": 6586,
+ "disk_bytes": 6726,
  "unique_regions": 24,
  "occupancy": 0.375,
  "frames": {
@@ -400,7 +400,7 @@
      "boss_warlord/death/5",
      "boss_warlord/death/6"
     ],
-    "fps": 7,
+    "fps": 14,
     "loop": false
    },
    "die": {
@@ -413,7 +413,7 @@
      "boss_warlord/die/5",
      "boss_warlord/die/6"
     ],
-    "fps": 7,
+    "fps": 14,
     "loop": false
    }
   }

@@ -49,6 +49,9 @@ PALETTE_DEF = [
     # mould ramp (theme Q1=A "bakery vs mould", art 0.8.0). Appended so older indices stay stable.
     ("D", "mould_deep", "1e2b30"), ("l", "mould_grey", "4b605d"), ("t", "mould_sage", "84a08c"),
     ("z", "spore_white", "dce8df"),
+    # 06-art-ui R3 Ask A (2026-11-01): HUD chrome ink, the outline colour 04 already draws in code. Appended so older
+    # indices stay stable. Not used by characters (their outline stays K).
+    ("k", "ink", "07070c"),
 ]
 SHADOW_ALPHA = 96
 
@@ -348,14 +351,24 @@ def img_from_index(a: np.ndarray) -> Image.Image:
 
 def save_indexed_png(a: np.ndarray, path: str):
     """Save a palette-index array as an 8-bit indexed PNG with tRNS alpha.
-    Smaller on disk than RGBA; decodes to identical RGBA. Deterministic."""
+    Smaller on disk than RGBA; decodes to identical RGBA. Deterministic.
+    The tRNS chunk keeps the 53 entries it had before the `ink` key was appended (2026-11-01). Entries after it are
+    opaque, which is what PNG assumes for entries beyond tRNS, and the palette entries of indices a page does not
+    use are written as they were (black), so appending an opaque key leaves every page that does not use it
+    byte-identical (no re-import)."""
     img = Image.fromarray(a.astype(np.uint8), "P")
+    used = int(a.max()) + 1 if a.size else 1
     pal = []
     for i in range(256):
-        pal += list(RGBA[i, :3])
+        pal += list(RGBA[i, :3]) if (i < TRNS_LEN or i < used) else [0, 0, 0]
     img.putpalette(pal)
-    alpha = bytes(int(RGBA[i, 3]) for i in range(len(PALETTE_DEF)))
+    n = max(TRNS_LEN, used)
+    alpha = bytes(int(RGBA[i, 3]) for i in range(min(n, len(PALETTE_DEF))))
     img.save(path, optimize=True, transparency=alpha)
+
+
+TRNS_LEN = 53
+assert all(int(RGBA[i, 3]) == 255 for i in range(TRNS_LEN, len(PALETTE_DEF))), "appended palette keys must be opaque"
 
 
 def write_palette_files(out_dir):
