@@ -180,3 +180,11 @@ PLAY_TECH_REQUIREMENTS.md §6.
   2. A JDK 17 the editor uses. Today the editor setting says JDK 25, and Godot's own Gradle step fails. A private Temurin 17 is at `%LOCALAPPDATA%\svc06_tools\jdk-17.0.20.1+1` if you want to point `export/android/java_sdk_path` at it. That is your call; 06 did not change editor settings.
   3. Headless `--install-android-build-template` did not create android/build here; the script unpacks android_source.zip instead.
 - **Launcher icon** is still the Godot placeholder in this AAB (no launcher_icons keys; see the 18:46 entry).
+
+# 2026-10-31 ~19:46 KST — size: engine library is 85% of the 29 MiB arm64 download (PLAY_TECH_REQUIREMENTS.md §7)
+- `libgodot_android.so` is 76.2 MB uncompressed, ≈ 25.9 MB of the ≈ 30.4 MB download. Project files are ≈ 2.3 MB and dex ≈ 2.1 MB.
+- Candidates (not measured):
+  - a size-optimized custom release template with unused modules disabled
+  - measuring with release templates (this test used debug)
+  - arm64-only release preset (AAB size only)
+- **Install test not done:** no emulator was running at 19:34, and 06 did not start one. When LaneDefence_Phone is up, tell 06 a time slot (≈ 10 min) for bundletool `install-apks` + launch + logcat. 06 will not stop or restart the emulator.

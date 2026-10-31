@@ -107,3 +107,33 @@ Updated verdicts for §3:
 | bundletool | `%LOCALAPPDATA%\svc06_tools\bundletool-all-1.18.3.jar` | 1.18.3 (2025-12-15) | a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29 (GitHub release asset digest) | https://github.com/google/bundletool/releases/tag/1.18.3 |
 | Gradle 8.11.1 (downloaded by Godot's wrapper) | `%USERPROFILE%\.gradle\wrapper\dists\gradle-8.11.1-bin\` | 8.11.1 | not checked by 06 (wrapper handles it) | services.gradle.org |
 Removal: delete `%LOCALAPPDATA%\svc06_tools\` (334 MB; the JDK zip was already deleted after extraction), plus `%USERPROFILE%\.gradle\wrapper\dists\gradle-8.11.1-bin\` if unwanted. Nothing else was installed. The scratch copy `%TEMP%\svc06_aab_*` was deleted.
+
+## 7. End-to-end rerun of the committed script, install check, size breakdown (2026-10-31 19:34–19:45 KST, HEAD 84c18ab)
+**Rerun (one command, clean snapshot):** `try_debug_aab.ps1 -TimeoutSec 900 -JavaHome … -Bundletool …`.
+- Godot's own Gradle step reported **BUILD SUCCESSFUL in 1m 1s**, then copyAndRenameBinary, and produced `out/defence-debug.aab` directly. This happened even though the editor setting still says JDK 25 and the log shows "Updating JAVA_HOME … jdk-25.0.2".
+- Gradle printed "1 incompatible and 2 stopped Daemons could not be reused" and started a new daemon. Why it now succeeds on JDK 25 is **not understood**. Possibly the Gradle cache left by the 19:2x JDK 17 run. Treat it as unproven; the JDK 17 path stays the reliable one.
+- The Godot process again did not exit and was killed at 240 s, after the AAB was written.
+| Item | 19:31 run (53883db) | 19:39 rerun (84c18ab) |
+|---|---|---|
+| AAB size / SHA-256 | 59,198,558 B / 0F9D39B0… | 59,200,008 B / 61C0F2FB… (different commit; not expected to match) |
+| PAGE_ALIGNMENT_16K | yes | yes |
+| Download size arm64-v8a | 30,390,920–30,402,608 B | 30,392,252–30,403,934 B (SDK 24–27 / 28 / 29+ split) |
+| Download size x86_64 | 33,177,021–33,188,709 B | 33,178,353–33,190,035 B |
+| Default label in bundle resources | Bakery Knights | Bakery Knights (`dump resources string/godot_project_name_string`) |
+| ko label / target 36 / native-code via aapt2 on the universal APK | 빵집 기사단 / 36 / arm64+x86_64 | **not re-read**: the script's universal step had a PowerShell argument bug (`--output=(Join-Path …)` passed literally). Fixed after the run, not yet rerun |
+
+**Install / run check: NOT DONE.** No emulator or device was attached (`adb devices` empty at 19:34). Per instructions 06 did not start one. Still open: bundletool `install-apks`, launch, launcher label on the home screen, first screen reached, no crash, logcat error count.
+
+**Per-device download composition (arm64-v8a, SDK 29+: base-master + base-arm64_v8a + density + ko splits + install-time asset pack; deflate-6 estimate, close to bundletool's 30.40 MB):**
+| Part | Files | Uncompressed | Est. download | Share |
+|---|---|---|---|---|
+| Native libraries (`libgodot_android.so` 76.2 MB, `libc++_shared.so` 1.4 MB) | 2 | 77.6 MB | 25.9 MB | **85.2%** |
+| Godot project files (asset pack: fonts 1.0 MB, music 0.6 MB, scripts, atlases) | 331 | 2.6 MB | 2.3 MB | 7.5% |
+| Java/Kotlin `classes*.dex` (Godot Android library) | 3 | 6.1 MB | 2.1 MB | 6.9% |
+| Android resources | 64 | 0.09 MB | 0.05 MB | 0.2% |
+| Signatures, manifest | 53 | 0.12 MB | 0.05 MB | 0.2% |
+Largest single item: the engine library. Reduction candidates (requests to 02/08; none verified):
+1. A custom **release** export template built with unused engine modules disabled (Godot's "Optimizing a build for size" docs), e.g. no 3D, no unused modules.
+2. Release, not debug, templates. This test was a debug build; release templates are smaller but were not measured.
+3. Drop x86_64 from the release preset. Play serves per ABI, so it does not change phone downloads; it only shrinks the AAB.
+4. Smaller fonts (subset Galmuri to the used glyphs) and music bitrate (05/03), together about 1.6 MB uncompressed.

@@ -1,5 +1,14 @@
 # 06-services handoff
-Updated: 2026-10-31 ~19:35 KST (test AAB built with private JDK 17 + bundletool checks; AAB blocker before)
+Updated: 2026-10-31 ~19:47 KST (AAB rerun, size breakdown; install check pending an emulator; quota ~92%)
+## Next steps when resumed (newest first)
+1. Rerun `try_debug_aab.ps1` once more to confirm the fixed universal step writes `out/universal_badging.txt` (ko label, target 36, native-code). Delete %TEMP%\svc06_aab_* and stop Gradle 8.11.1 Java processes afterwards.
+2. When 02 announces LaneDefence_Phone is running, in an agreed time slot and without stopping qemu:
+   - `java -jar bundletool build-apks --connected-device --bundle=<aab> --output=x.apks --ks=<debug ks> …`
+   - `install-apks --apks=x.apks`
+   - `adb shell monkey -p com.soltyspring.lanedefence 1`
+   - record the launcher label, the first screen, any crash (`adb shell pidof`), and the `logcat -s godot` error count
+   - check that the window is on DISPLAY2
+3. Godot's own Gradle success on the JDK 25 setting is unexplained. Do not rely on it; keep passing -JavaHome.
 ## Test AAB with private JDK 17 (19:09–19:35)
 - **Command:**
   ```

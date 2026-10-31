@@ -1,5 +1,15 @@
 # 06-services status
-Updated: 2026-10-31 ~19:35 KST (test AAB built with a private JDK 17 and checked with bundletool)
+Updated: 2026-10-31 ~19:47 KST (AAB script rerun end to end; install check not possible; size breakdown)
+Status: PARTIAL.
+- **(1) Rerun on 84c18ab:** the committed script ran end to end and produced an AAB again (59,200,008 B; PAGE_ALIGNMENT_16K; download arm64 30.39–30.40 MB; default label Bakery Knights). Godot's own Gradle step succeeded this time even on the JDK 25 setting (cause unknown, recorded). The universal-APK aapt2 step had an argument bug; it is fixed but not rerun.
+- **(2) Install/run: NOT DONE.** No emulator was running (adb devices empty at 19:34), and 06 did not start one.
+- **(3) Size:** native engine lib 85% of the download. Candidates sent to 02/08.
+- Q2 DEFERRED. Nothing published.
+Current task: none. Next: see handoff.
+Quota: ~92% at 19:45. **Stop at ≥ 97%.**
+Previous: 8fc4715 / 84c18ab (AAB built with private JDK 17).
+--- History (older entries, not current) ---
+(AAB-built entry) Updated: 2026-10-31 ~19:35 KST (test AAB built with a private JDK 17 and checked with bundletool)
 Status: COMPLETE.
 - **Test AAB built** (scratch copy of 53883db, debug key, JDK 17 only inside the build process; no upload key, no upload, 02/04 files untouched).
 - **Bundle checks:** PAGE_ALIGNMENT_16K, split zipalign -P 16 OK, ELF LOAD 0x4000; target 36 / min 24; arm64 + x86_64 only; labels en Bakery Knights / ko 빵집 기사단; no permissions; allowBackup=false; download ≈ 29.0 MiB arm64, 31.6 MiB x86_64.
