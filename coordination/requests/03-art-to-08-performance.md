@@ -6,3 +6,6 @@
 
 ## A2 2026-10-31 09:10 +09:00 — char_boss_overlord added (QUEUED)
 `char_boss_overlord` 1024×512 RGBA8 = 2.00 MiB GPU, 10.9 KiB PNG, `battle_roster`, resident only in r10. Frame 88×80, 31 unique regions plus 1 portrait. They did not fit 512×512 with 2 px gap + 1 px extrusion. r10 residency computed from data/rounds/r10.json = 9.25 MiB (all 10 pages). That is the worst case and is still under the provisional 32 MiB low tier. Please add it to your residency table and tell me if you want the death dissolve frames trimmed to reach 512×512.
+
+## A3 2026-10-31 09:50 +09:00 — existing pages changed (pixels only), impact scope (QUEUED)
+Readability revision (ART_AUDIT A20–A22) changed **pixels** in 8 pages: char_player, char_enemy, char_player_adv, char_enemy_adv, char_boss_warlord, char_boss_overlord, fx_combat, ui_main. **Page sizes, frame counts and every frame rect are unchanged** (0 moved rects; layout locks are now keyed by frame name). GPU memory is unchanged (9.25 MiB all pages; r01–r03 5.25 MiB). Disk +~1.6 KiB total PNG (docs/art/ATLAS_BUDGET.md). bases and biome_meadow are byte-identical. No residency-table change is needed. If your harness hashes textures, expect new hashes for those 8 pages.

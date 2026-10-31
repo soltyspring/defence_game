@@ -37,6 +37,35 @@ def walk_poses(base: Pose, n=6, stride=3, lift=2, arm_swing=2, bob=True):
     return out
 
 
+def rim_light(cv: Canvas, steps=1):
+    """Readability rev (ART_AUDIT A22): lighten interior pixels touching the outline on the
+    TOP or LEFT side (consistent upper-left light), so dark-skinned bodies separate from dark
+    backgrounds. Outline itself unchanged."""
+    from pixel import lighter, OUTLINE
+    a = cv.a
+    solid = (a != 0) & (a != OUTLINE)
+    edge = np.zeros_like(solid)
+    up = np.zeros_like(solid); up[1:, :] = a[:-1, :] == OUTLINE
+    lf = np.zeros_like(solid); lf[:, 1:] = a[:, :-1] == OUTLINE
+    # only exterior outline: the outline pixel must itself touch transparency
+    ext = (a == OUTLINE)
+    tr = (a == 0)
+    near_tr = np.zeros_like(ext)
+    near_tr[1:, :] |= tr[:-1, :]; near_tr[:-1, :] |= tr[1:, :]; near_tr[:, 1:] |= tr[:, :-1]; near_tr[:, :-1] |= tr[:, 1:]
+    ext &= near_tr
+    up_ext = np.zeros_like(solid); up_ext[1:, :] = ext[:-1, :]
+    lf_ext = np.zeros_like(solid); lf_ext[:, 1:] = ext[:, :-1]
+    edge = solid & (up_ext | lf_ext)
+    ys, xs = np.nonzero(edge)
+    from pixel import RGBA
+    for y, x in zip(ys, xs):
+        v = int(a[y, x])
+        r, g, b = (int(t) for t in RGBA[v, :3])
+        lum = 0.2126 * r + 0.7152 * g + 0.0722 * b
+        a[y, x] = lighter(v, steps + (1 if lum < 50 else 0))   # very dark ramps get 2 steps
+    return cv
+
+
 def ground_fit(cv: Canvas, px: int):
     """Shift content so its lowest opaque row is H-1 and bbox centred on px."""
     ys, xs = np.nonzero(cv.a)

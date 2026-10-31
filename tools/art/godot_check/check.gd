@@ -25,6 +25,10 @@ func _ready() -> void:
 		add_child(load("res://ui_sheet.gd").new())
 		set_process(false)
 		return
+	if "--readability" in OS.get_cmdline_user_args():
+		add_child(load("res://readability.gd").new())
+		set_process(false)
+		return
 	var m: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/manifest.json"))
 	var pages := []
 	for a in m["atlases"]:

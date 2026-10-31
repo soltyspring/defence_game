@@ -4,134 +4,253 @@
 1024,
 512
 ],
-"regions": {
-"092c9c40dc06c848": [
+"keyed_by": "frame_name",
+"frames": {
+"boss_overlord/attack/0": [
+371,
 3,
-3
+88,
+80
 ],
-"0ae574c4878e575e": [
+"boss_overlord/attack/1": [
 3,
-87
+339,
+88,
+80
 ],
-"134b3c981d5e3427": [
+"boss_overlord/attack/2": [
+95,
+87,
+88,
+80
+],
+"boss_overlord/attack/3": [
+371,
+171,
+88,
+80
+],
+"boss_overlord/attack/4": [
+187,
+339,
+88,
+80
+],
+"boss_overlord/attack/5": [
+371,
+87,
+88,
+80
+],
+"boss_overlord/death/0": [
 3,
-171
+423,
+88,
+80
 ],
-"1592faafd6b2a49a": [
-3,
-255
-],
-"191f4612d781b747": [
-3,
-339
-],
-"1a4d3d5149f39985": [
-3,
-423
-],
-"1ef3626b11a3708f": [
-95,
-3
-],
-"25105f3a39200256": [
-95,
-87
-],
-"2bb7c0980cf11094": [
-95,
-171
-],
-"3307441729114d81": [
-95,
-255
-],
-"38bf95811d1d3cf4": [
-95,
-339
-],
-"3c061a8b4fa6d88c": [
-95,
-423
-],
-"4483b559c3b659d1": [
-187,
-3
-],
-"4eda901c24e298c0": [
-187,
-87
-],
-"591fefa03ccaf711": [
-187,
-171
-],
-"675f32217958247d": [
-187,
-255
-],
-"6f6762c2d426debc": [
-187,
-339
-],
-"79c074629fdb274f": [
-187,
-423
-],
-"7f4ea74ab6960e6c": [
+"boss_overlord/death/1": [
 279,
-3
+3,
+88,
+80
 ],
-"81c305a2822203c3": [
+"boss_overlord/death/2": [
+371,
+339,
+88,
+80
+],
+"boss_overlord/death/3": [
+187,
+3,
+88,
+80
+],
+"boss_overlord/death/4": [
+95,
+423,
+88,
+80
+],
+"boss_overlord/death/5": [
+187,
+255,
+88,
+80
+],
+"boss_overlord/death/6": [
+95,
+339,
+88,
+80
+],
+"boss_overlord/death/7": [
+371,
+255,
+88,
+80
+],
+"boss_overlord/die/0": [
+3,
+423,
+88,
+80
+],
+"boss_overlord/die/1": [
 279,
-87
+3,
+88,
+80
 ],
-"8cfd7629615e2661": [
+"boss_overlord/die/2": [
+371,
+339,
+88,
+80
+],
+"boss_overlord/die/3": [
+187,
+3,
+88,
+80
+],
+"boss_overlord/die/4": [
+95,
+423,
+88,
+80
+],
+"boss_overlord/die/5": [
+187,
+255,
+88,
+80
+],
+"boss_overlord/die/6": [
+95,
+339,
+88,
+80
+],
+"boss_overlord/die/7": [
+371,
+255,
+88,
+80
+],
+"boss_overlord/hit/0": [
+3,
+423,
+88,
+80
+],
+"boss_overlord/hit/1": [
 279,
-171
+339,
+88,
+80
 ],
-"9b1e28937d5646c6": [
+"boss_overlord/idle/0": [
 279,
-255
+423,
+88,
+80
 ],
-"9e9c8a85a18b8716": [
+"boss_overlord/idle/1": [
+95,
+171,
+88,
+80
+],
+"boss_overlord/idle/2": [
+187,
+171,
+88,
+80
+],
+"boss_overlord/idle/3": [
+3,
+255,
+88,
+80
+],
+"boss_overlord/summon/0": [
 279,
-339
+87,
+88,
+80
 ],
-"ba194b5bcadc9fbc": [
+"boss_overlord/summon/1": [
 463,
-87
+3,
+88,
+80
 ],
-"ccbaa4e159fe0908": [
+"boss_overlord/summon/2": [
 279,
-423
+171,
+88,
+80
 ],
-"cf9833e5d4ef0c48": [
+"boss_overlord/summon/3": [
 371,
-3
+423,
+88,
+80
 ],
-"d5af3b637e062b97": [
-371,
-87
+"boss_overlord/summon/4": [
+3,
+171,
+88,
+80
 ],
-"e12bfa68cb6d116f": [
-371,
-171
+"boss_overlord/summon/5": [
+3,
+3,
+88,
+80
 ],
-"e22fe36935ddcf77": [
-371,
-255
+"boss_overlord/walk/0": [
+95,
+3,
+88,
+80
 ],
-"e8d7eae75c525df8": [
-371,
-339
+"boss_overlord/walk/1": [
+187,
+423,
+88,
+80
 ],
-"efcaf6e22146f3c6": [
-371,
-423
+"boss_overlord/walk/2": [
+95,
+255,
+88,
+80
 ],
-"f71032783325b666": [
+"boss_overlord/walk/3": [
+279,
+255,
+88,
+80
+],
+"boss_overlord/walk/4": [
+3,
+87,
+88,
+80
+],
+"boss_overlord/walk/5": [
+187,
+87,
+88,
+80
+],
+"portrait_boss_overlord": [
 463,
-3
+87,
+24,
+24
 ]
 }
 }

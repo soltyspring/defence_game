@@ -38,13 +38,20 @@ REL_ATLAS = "assets/atlases"
 PREV = os.path.join(ROOT, "docs", "art", "previews")
 # Layout locks: existing regions keep their page position across rebuilds (see atlas._pack).
 LOCK_DIR = os.path.join(HERE, "layout_lock")
-ART_VERSION = "0.6.0"
+ART_VERSION = "0.7.0"
 
 REQUIRED_CHAR_ANIMS = ("idle", "walk", "attack", "death")
 
 
+RIM_LIGHT = os.environ.get("ART_RIM", "1") == "1"   # ART_AUDIT A22
+
+
 def add_char(a: atl.Atlas, sid, body, fn, faction):
     anims = fn()
+    if RIM_LIGHT:
+        from anim import rim_light
+        for an in anims.values():
+            an["frames"] = [rim_light(f.copy()) for f in an["frames"]]
     out = {}
     for name, an in anims.items():
         out[name] = dict(frames=[f.a for f in an["frames"]], fps=an["fps"], loop=an["loop"],

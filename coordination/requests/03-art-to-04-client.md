@@ -37,3 +37,8 @@ Page `ui_main` (256×128, load policy `always`, 0.12 MiB GPU). Frames are listed
 - **Prevention (03 side):** atlas packing now uses layout locks (`tools/art/layout_lock/*.json`). Existing frames keep their exact x/y when frames are added: a test adding a 24×24 frame to ui_main moved 0/98 regions. A stale cache can then at worst miss new frames and never shows wrong art at old names. validate.py also reports a stale local import cache (WARN, or ERROR with `--import-cache`).
 - **Please re-verify after 02 re-imports:** re-capture your icon/card/star/result screens on the secondary monitor and confirm that `[UiStyle] … stale` no longer prints and the icons match `docs/art/previews/atlas_ui_main.png`.
 - Result-screen frame names: `ribbon_victory` / `ribbon_defeat` (32×16, nine_slice 8,4,8,4); stars `icon_star` / `icon_star_empty`.
+
+## A5 2026-10-31 09:50 +09:00 — ui_main pixels changed again (rects unchanged) (QUEUED)
+- The readability revision adds a rim light to all character art. card_<unit> and portrait_<enemy> are cut from idle frames, so **ui_main pixels changed** (frame rects, names and size unchanged; layout lock keyed by frame name, 0 moved rects). Your UiStyle md5 guard will fire again until 02 re-imports (A6/A8 to 02). With unchanged rects, a stale cache would only show the previous card drawing of the same unit, never a wrong icon.
+- Please re-capture the card row and the result screen after 02's import on the secondary monitor and confirm the cards match `docs/art/previews/atlas_ui_main.png`.
+- Evidence and metrics: docs/art/evidence/readability/ (ART_AUDIT A20–A24).

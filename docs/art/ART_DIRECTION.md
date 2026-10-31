@@ -1,5 +1,5 @@
 # ART_DIRECTION.md — visual identity and asset contract (owner: 03-art)
-Art version 0.6.0 · 2026-10-31 · Status: **initial production pack, theme still PROVISIONAL** (Q1 pending in coordination/requests/USER_QUESTION.md). The default theme below is a reversible working assumption. The user has not approved it.
+Art version 0.7.0 · 2026-10-31 · Status: **initial production pack, theme still PROVISIONAL** (Q1 pending in coordination/requests/USER_QUESTION.md). The default theme below is a reversible working assumption. The user has not approved it.
 
 ## 1. How the art is made (provenance)
 - Tool inventory on this machine: Python 3.11.9, Pillow 11.2.1, numpy 2.2.4. There are **no** image-generation, Aseprite or ImageMagick tools. Godot 4.7.2 is in tools/engine (owned by 02).
@@ -8,6 +8,7 @@ Art version 0.6.0 · 2026-10-31 · Status: **initial production pack, theme stil
 - Licence: original work made for this project and owned by the project owner. It contains no third-party assets.
 
 ## 2. Visual identity (default theme: "Lantern Kingdom vs Bramble Horde")
+- **Rim light (0.7.0):** interior pixels touching the exterior outline on the top/left side are one ramp step lighter (two for very dark ramps). This is applied automatically in build.py (`ART_RIM=1`) to every character frame. It keeps silhouettes readable on dark backgrounds (ART_AUDIT A22).
 - **Style:** chibi pixel art, side view facing right, 1 px dark outline (`outline #1b1325`) on every character/prop. Light comes from the upper left. Each material has a 2–4 step ramp, and anti-aliasing is used only inside shapes.
 - **Faction colour coding (mobile readability):** the player side uses blue `#2f5fb3` / gold `#e5a826` / steel / warm skin. The enemy side uses green `#2f6d3a` skin with purple `#5b3488` cloth and crude wood. Hero = red plume and red cape (the only red on the player side) so it stands out in a crowd.
 - **Silhouette rule:** every unit class has a unique silhouette at 1× (spear line, bow arc, tower shield, pickaxe, club, hood + gourd, low beetle).

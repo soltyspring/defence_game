@@ -174,16 +174,43 @@ class Atlas:
         self.images[image_id] = e
 
     # -- build ---------------------------------------------------------------
+    def _names_by_key(self):
+        out = {}
+        for sid, e in self.sprites.items():
+            for an, a in e["anims"].items():
+                for n, k in enumerate(a["frame_keys"]):
+                    out.setdefault(k, []).append(f"{sid}/{an}/{n}")
+        for iid, e in self.images.items():
+            out.setdefault(e["key"], []).append(iid)
+        return out
+
     def pack(self, lock_dir=None):
+        """Layout lock is keyed by FRAME NAME (not pixel hash): a redrawn frame keeps its rect,
+        so a stale GPU import shows the old drawing of the SAME frame, never a different frame."""
         regions = list(self.unique.values())
         locked, lock_size = {}, None
         lock_path = os.path.join(lock_dir, f"{self.id}.json") if lock_dir else None
+        names = self._names_by_key()
+        self.dropped_locks = 0
         if lock_path and os.path.exists(lock_path):
             lk = json.load(open(lock_path, encoding="utf-8"))
             lock_size = tuple(lk["size"])
-            locked = {k: tuple(v) for k, v in lk["regions"].items() if k in self.unique}
-        self.dropped_locks = 0 if not lock_path or not os.path.exists(lock_path) else \
-            len(json.load(open(lock_path, encoding="utf-8"))["regions"]) - len(locked)
+            by_name = lk.get("frames")
+            if by_name is None:   # legacy hash-keyed lock: derive names from the committed page json
+                pj = os.path.join(os.path.dirname(lock_dir), "..", "..", "assets", "atlases", f"{self.id}.json")
+                by_name = {}
+                if os.path.exists(pj):
+                    by_name = {n: [f["x"], f["y"], f["w"], f["h"]]
+                               for n, f in json.load(open(pj, encoding="utf-8"))["frames"].items()}
+            taken = set()
+            for k, r in self.unique.items():
+                for n in names.get(k, []):
+                    rect = by_name.get(n)
+                    if rect and rect[2] == r.w and rect[3] == r.h and (rect[0], rect[1]) not in taken:
+                        locked[k] = (rect[0], rect[1])
+                        taken.add((rect[0], rect[1]))
+                        break
+            self.dropped_locks = len(self.unique) - len(locked)
         sizes = page_sizes(HARD_MAX_PAGE)
         if lock_size:   # never shrink below the locked page; grow only if needed
             sizes = [s for s in sizes if s[0] >= lock_size[0] and s[1] >= lock_size[1]]
@@ -206,8 +233,13 @@ class Atlas:
         if lock_path:
             os.makedirs(lock_dir, exist_ok=True)
             with open(lock_path, "w", encoding="utf-8", newline="\n") as f:
-                json.dump({"atlas": self.id, "size": list(self.size),
-                           "regions": {k: [r.x, r.y] for k, r in sorted(self.unique.items())}}, f, indent=0)
+                frames = {}
+                for k, ns in names.items():
+                    r = self.unique[k]
+                    for n in ns:
+                        frames[n] = [r.x, r.y, r.w, r.h]
+                json.dump({"atlas": self.id, "size": list(self.size), "keyed_by": "frame_name",
+                           "frames": dict(sorted(frames.items()))}, f, indent=0)
                 f.write("\n")
         return self.size
 

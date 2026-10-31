@@ -287,8 +287,8 @@ def log_club(cv, hand, pose, body):
     cv.put(round(hx + dx * 14), round(hy + dy * 14), c("T"))
 
 
-BRUTE_HEAD = BRUTE_HEAD.recolored({"F": "G", "G": "g", "g": "a"})
-BRUTE_TORSO = Sprite(np.insert(BRUTE_TORSO.a, [4, 5, 6], BRUTE_TORSO.a[[4, 5, 6]], axis=0)).recolored({"F": "G", "G": "g", "g": "a"})
+BRUTE_HEAD = BRUTE_HEAD.recolored({"F": "G", "G": "G", "g": "g"})
+BRUTE_TORSO = Sprite(np.insert(BRUTE_TORSO.a, [4, 5, 6], BRUTE_TORSO.a[[4, 5, 6]], axis=0)).recolored({"F": "G", "G": "G", "g": "g"})
 
 BRUTE = Body(
     W=48, H=48, px=21, head=BRUTE_HEAD, torso=BRUTE_TORSO, head_anchor=(1, 0),

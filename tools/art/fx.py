@@ -35,21 +35,23 @@ def star(cv, cx, cy, r, col, diag_col=None):
 
 
 # --- projectiles -------------------------------------------------------------
+# Readability rev (ART_AUDIT A21): shafts/bodies use light ramp values so the projectile
+# separates from the dark-green hills it usually crosses (old brown arrow: dL* 0.2-10).
 def proj_arrow():
     cv = _cv(14, 5)
-    cv.hline(2, 10, 2, c("o"))
-    cv.put(11, 2, c("N")); cv.put(12, 2, c("W")); cv.put(10, 1, c("M")); cv.put(10, 3, c("M"))
-    cv.put(1, 1, c("W")); cv.put(0, 1, c("J")); cv.put(1, 3, c("W")); cv.put(0, 3, c("J")); cv.put(2, 1, c("U"))
+    cv.hline(2, 10, 2, c("U"))
+    cv.put(11, 2, c("N")); cv.put(12, 2, c("W")); cv.put(10, 1, c("N")); cv.put(10, 3, c("N"))
+    cv.put(1, 1, c("W")); cv.put(0, 1, c("J")); cv.put(1, 3, c("W")); cv.put(0, 3, c("J")); cv.put(2, 1, c("W"))
     cv.outline(c("K"))
     return {"fly": dict(frames=[cv], fps=1, loop=True)}
 
 
 def proj_tower():
     cv = _cv(16, 5)
-    cv.hline(1, 12, 2, c("O"))
-    cv.hline(2, 11, 1, c("o"))
-    cv.put(13, 2, c("N")); cv.put(14, 2, c("W")); cv.put(12, 1, c("M")); cv.put(12, 3, c("M"))
-    cv.put(0, 1, c("C")); cv.put(0, 3, c("C")); cv.put(1, 1, c("B")); cv.put(1, 3, c("B"))
+    cv.hline(1, 12, 2, c("T"))
+    cv.hline(2, 11, 1, c("U"))
+    cv.put(13, 2, c("N")); cv.put(14, 2, c("W")); cv.put(12, 1, c("N")); cv.put(12, 3, c("N"))
+    cv.put(0, 1, c("c")); cv.put(0, 3, c("c")); cv.put(1, 1, c("C")); cv.put(1, 3, c("C"))
     cv.outline(c("K"))
     return {"fly": dict(frames=[cv], fps=1, loop=True)}
 
@@ -60,24 +62,24 @@ def proj_spit():
         cv = _cv(10, 8)
         rx = [3.2, 3.6, 3.0][i]
         ry = [2.6, 2.2, 2.8][i]
-        cv.ellipse(5, 4, rx, ry, c("G"))
-        cv.ellipse(5.5, 3.5, rx - 1, ry - 0.8, c("F"))
-        cv.put(6, 2, c("f"))
-        cv.put(1, 4 + (i % 2), c("F"))
-        cv.outline(c("g"))
+        cv.ellipse(5, 4, rx, ry, c("f"))
+        cv.ellipse(5.5, 3.5, rx - 1, ry - 0.8, c("Z"))
+        cv.put(6, 2, c("W"))
+        cv.put(1, 4 + (i % 2), c("Z"))
+        cv.outline(c("K"))
         frames.append(cv)
     return {"fly": dict(frames=frames, fps=10, loop=True)}
 
 
 def proj_boulder():
     base = Sprite.parse("""
-..aAAa..
-.aXXxAa.
-aXXxxXAa
-aAXXXXAa
-aAAXXAAa
-.aAAAAa.
-..aaaa..
+..XxxX..
+.XxxJxX.
+XxxJJxxX
+XXxxxxXX
+AXXxxXXA
+.AXXXXA.
+..AAAA..
 """)
     frames = []
     for k in range(4):
@@ -131,27 +133,29 @@ def hit_spit():
 
 
 def explosion():
+    """Readability rev (ART_AUDIT A20): hollow burst. Ring + rays, transparent core after
+    frame 0, so the hit target stays visible (opaque-disc version covered 100 %)."""
     frames = []
-    cols = [("W", "Z"), ("Z", "e"), ("e", "E"), ("E", "R"), ("A", "a"), ("A", "a"), ("a", "a")]
     for i in range(7):
         cv = _cv(40, 40)
-        r = [5, 10, 14, 16, 17, 18, 18][i]
-        outer, inner = cols[i]
-        if i < 4:
-            cv.ellipse(20, 22, r, r * 0.85, c(inner))
-            cv.ellipse(20, 21, r * 0.7, r * 0.6, c(outer))
-            if i < 2:
-                cv.ellipse(20, 21, r * 0.35, r * 0.3, c("W"))
+        cx, cy = 20, 22
+        if i == 0:
+            cv.ellipse(cx, cy, 4, 3.5, c("Z"))
+            cv.ellipse(cx, cy, 2, 1.8, c("W"))
+        elif i <= 3:
+            r = [0, 8, 12, 15][i]
+            ring(cv, cx, cy, r, 2, "e" if i < 3 else "E", ry_scale=0.85)
+            ring(cv, cx, cy, r - 2, 1, "Z" if i < 3 else "e", ry_scale=0.85)
+            for a in range(0, 360, 45):          # short rays outside the ring
+                for t in (1, 2):
+                    x = cx + round(math.cos(math.radians(a + 20 * i)) * (r + t))
+                    y = cy + round(math.sin(math.radians(a + 20 * i)) * (r + t) * 0.85)
+                    cv.put(x, y, c("Z" if t == 1 else "e"))
         else:
-            # smoke puffs dissolving
-            for (dx, dy) in [(-8, -4), (6, -6), (0, -10), (-4, 4), (8, 3)]:
-                cv.ellipse(20 + dx, 22 + dy - (i - 4) * 2, 5 - (i - 4), 4 - (i - 4) * 0.8, c(outer))
-            cv.dissolve((i - 4) * 5)
-        if 1 <= i <= 3:
-            for a in range(0, 360, 40):
-                x = 20 + round(math.cos(math.radians(a + 15 * i)) * (r + 2))
-                y = 22 + round(math.sin(math.radians(a + 15 * i)) * (r + 1) * 0.85)
-                cv.put(x, y, c("Z"))
+            # dithered smoke wisps on the rim only
+            for (dx, dy) in [(-12, -4), (11, -6), (0, -14), (-8, 8), (12, 6)]:
+                cv.ellipse(cx + dx, cy + dy - (i - 4) * 2, 3 - (i - 4) * 0.6, 2.5 - (i - 4) * 0.5, c("X"))
+            cv.dissolve(6 + (i - 4) * 4)
         frames.append(cv)
     return {"play": dict(frames=frames, fps=16, loop=False)}
 

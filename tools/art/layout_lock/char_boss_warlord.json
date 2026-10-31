@@ -4,102 +4,199 @@
 512,
 512
 ],
-"regions": {
-"07c407c0ddf343ac": [
-3,
-3
-],
-"11e9a4614fd8b2f0": [
+"keyed_by": "frame_name",
+"frames": {
+"boss_warlord/attack/0": [
 71,
-3
-],
-"191fdc8fec661a69": [
-139,
-3
-],
-"193962da2958faa8": [
 207,
-3
+64,
+64
 ],
-"2211ed729883880b": [
-275,
-3
-],
-"2455402cb7706b72": [
-343,
-3
-],
-"38a0a506c75a1612": [
-411,
-3
-],
-"5231632fc574fef8": [
+"boss_warlord/attack/1": [
 3,
-71
-],
-"5fa77b46553f53ff": [
-3,
-139
-],
-"68363c33b256f8a6": [
-3,
-207
-],
-"68f1109998cc42dc": [
-3,
-275
-],
-"7d60d1c8a22dd56f": [
-3,
-343
-],
-"7dee720be1ef9990": [
-3,
-411
-],
-"8ce14fc9a42a036b": [
-71,
-71
-],
-"9803fdf2349ae998": [
 139,
-71
+64,
+64
 ],
-"9a9cb990dfc4d41e": [
-207,
-71
-],
-"9e23d07f70b55e40": [
+"boss_warlord/attack/2": [
 275,
-71
+71,
+64,
+64
 ],
-"ab7bb40892af9132": [
-343,
-71
+"boss_warlord/attack/3": [
+71,
+275,
+64,
+64
 ],
-"ababfff638fb33ad": [
+"boss_warlord/attack/4": [
 411,
-71
-],
-"ba9532f6bbb73a1a": [
 71,
-139
+64,
+64
 ],
-"bb96886ffbf77b96": [
+"boss_warlord/attack/5": [
 71,
-207
+343,
+64,
+64
 ],
-"d364cdd9ad5597b0": [
+"boss_warlord/death/0": [
+343,
 71,
-275
+64,
+64
 ],
-"d64a2543a8a220d9": [
-71,
-343
+"boss_warlord/death/1": [
+3,
+207,
+64,
+64
 ],
-"d69042524ed9f9af": [
+"boss_warlord/death/2": [
 71,
-411
+71,
+64,
+64
+],
+"boss_warlord/death/3": [
+139,
+3,
+64,
+64
+],
+"boss_warlord/death/4": [
+3,
+343,
+64,
+64
+],
+"boss_warlord/death/5": [
+207,
+3,
+64,
+64
+],
+"boss_warlord/death/6": [
+139,
+71,
+64,
+64
+],
+"boss_warlord/die/0": [
+343,
+71,
+64,
+64
+],
+"boss_warlord/die/1": [
+3,
+207,
+64,
+64
+],
+"boss_warlord/die/2": [
+71,
+71,
+64,
+64
+],
+"boss_warlord/die/3": [
+139,
+3,
+64,
+64
+],
+"boss_warlord/die/4": [
+3,
+343,
+64,
+64
+],
+"boss_warlord/die/5": [
+207,
+3,
+64,
+64
+],
+"boss_warlord/die/6": [
+139,
+71,
+64,
+64
+],
+"boss_warlord/hit/0": [
+343,
+71,
+64,
+64
+],
+"boss_warlord/hit/1": [
+71,
+411,
+64,
+64
+],
+"boss_warlord/idle/0": [
+3,
+71,
+64,
+64
+],
+"boss_warlord/idle/1": [
+411,
+3,
+64,
+64
+],
+"boss_warlord/idle/2": [
+3,
+275,
+64,
+64
+],
+"boss_warlord/idle/3": [
+3,
+411,
+64,
+64
+],
+"boss_warlord/walk/0": [
+71,
+139,
+64,
+64
+],
+"boss_warlord/walk/1": [
+207,
+71,
+64,
+64
+],
+"boss_warlord/walk/2": [
+71,
+3,
+64,
+64
+],
+"boss_warlord/walk/3": [
+343,
+3,
+64,
+64
+],
+"boss_warlord/walk/4": [
+3,
+3,
+64,
+64
+],
+"boss_warlord/walk/5": [
+275,
+3,
+64,
+64
 ]
 }
 }

@@ -49,3 +49,8 @@ The main-tree `.godot/imported` cache is stale for `ui_main` (source_md5 224f322
 - Anims: idle/walk/attack(hit_frame 3)/**summon**/hit/death(+die). `summon.events.spawn = 3`. `summon.points.spawn_origin = [24, 79]` (frame space, unflipped; mirrored x = 88 − 24 for the left-facing enemy) is the hive mouth on the ground. Suggest playing `summon` when `_step_boss_summon` is 3/8 s (0.375 s) before the interval, and spawning the beetles at the spawn event. Your current immediate spawn also works visually, just not synced.
 - `portrait_boss_overlord` lives on `char_boss_overlord`, not ui_main, so ui_main is unchanged and needs no further re-import beyond A6.
 - r10 residency from data/rounds/r10.json roster: 10 pages = 9.25 MiB (all pages).
+
+## A8 2026-10-31 09:50 +09:00 — re-import + one layout proposal (QUEUED)
+- 8 pages changed pixels (rects unchanged): char_player, char_enemy, char_player_adv, char_enemy_adv, char_boss_warlord, char_boss_overlord, fx_combat, ui_main. Please include them in the A6 `--import`.
+- A23 (yours to decide): in 10v10+ melee the frontmost units are 0–9 % visible (docs/art/evidence/readability/after/metrics_after.json, crowd_min). Art can't fix this without shrinking units. Options: widen lane_y jitter (±4 → ±6 px), draw the frontmost living unit of each side last, or cap visual stacking at the contact point. Acceptance: same scenes, crowd_min ≥ 40 % (`pwsh tools/art/run_godot_readability.ps1`, metric in tools/art/readability.py).
+- `explosion` is now a hollow ring (A20). It needs no engine change; your `_draw_fx` atlas path already uses it.

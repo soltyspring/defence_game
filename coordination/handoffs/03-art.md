@@ -1,5 +1,5 @@
 # 03-art handoff
-Updated: 2026-10-31 09:15 +09:00 · Q1 still PENDING (checked DECISIONS.md at start of task).
+Updated: 2026-10-31 09:55 +09:00 · Q1 still PENDING. Art version 0.7.0.
 
 ## Status
 MILESTONE 3: r04–r07 roster art delivered and the white-line root cause handed to 02. Theme is still the reversible default (Q1 PENDING, not user-approved). Nothing here is release completion.
@@ -45,6 +45,13 @@ Outgoing: 03-art-to-02-engine A4 (white-line root cause), A5 (new pages); 03-art
 - Adversarial review: hierarchy measured (overlord 56×34 > warlord 45×24 > brute 32×23 > grunt 19×17). A16: the purple mass was within ΔE 9.7 of ally blue under deuteranopia sim; fixed for the overlord (bark/green; retest image docs/art/previews/boss_overlord_review_3x_after.png). A17: the same issue on existing enemies is OPEN and needs approval to touch existing pages (asked 01 A3). A19: summon has no data frame field (asked 01/02).
 - Commit 393ada2 [Design] boss_overlord + page + colour-vision fix: PUSHED origin/main (verified with `git branch -r --contains`). The commit diff touches only char_boss_overlord.png among the atlas PNGs.
 - Not done: in-game capture of the overlord (needs 02 --import + an r10 run).
+
+## Milestone 6 (this session): in-game readability r01/r05/r10
+- Tool: `pwsh tools/art/run_godot_readability.ps1 -Tag <tag>` (isolated fresh import; secondary monitor screen 1; Godot 640×360 1× + 1280×720 2× renders; the Godot 1× output equals the metric composite, max diff ≤ 1). Metrics in tools/art/readability.py, thresholds fixed before measuring (internal, unvalidated by players).
+- Before = HEAD art, after = this revision: docs/art/evidence/readability/{before,after}/ (metrics_*.json, godot_*_{1x,2x}.png, contact_*.png).
+- Fixed: A20 explosion covered its target 100 % → 18.1 %; A21 projectiles (arrow 38 → 100 % on meadow, rock 55 → 88 %); A22 rim light: meadow silhouette min 43 → 66–79 %, dark r01 49 → 62.5 %.
+- Still failing (recorded, not hidden): e_brute silhouette on the dark variant 58–59 % (< 60); arrow on the dark variant 38 %; spit 58–59 %; A23 crowd visibility 0–9 % at the front line (layout, 02 decision).
+- Scope: 8 pages changed pixels, with 0 moved rects in all 10 pages (layout locks re-keyed by frame name), sizes and GPU unchanged; bases/biome byte-identical. Notified 08 (A3), 04 (A5), 02 (A8: re-import + A23 options).
 
 ## Next tasks (03)
 1. (done) boss_overlord. Next: A17 recolour of existing enemy purple masses if 01 approves; in-game r10 capture after 02 import.
