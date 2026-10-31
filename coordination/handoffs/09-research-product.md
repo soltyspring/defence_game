@@ -1,9 +1,34 @@
 # 09-research-product handoff
-Updated: 2026-10-31 ~17:10 KST
+Updated: 2026-10-31 ~18:30 KST
 Session ID: sess_6ce8ebb1-4e45-454d-a561-e0bad09a8be5 · claude-opus-5.5 / trust-all
-Status: MILESTONE DONE (v14) — waiting for 01 (R09-01-13) and 07 (first-stage timing items)
+Status: MILESTONE DONE (v16): waiting for 01 (R09-01-15) and 02 (R09-02-6)
 
-## Latest (v14, 17:00–17:10 KST)
+## v16 (2026-10-31 18:05–18:30 KST): D27 verdict + competitor base damage
+Commit 620472c302ba9f07ca1d1e6b5dc01d826e11bd7d PUSHED (helper output; SHA copied after publish). It contains SUCCESS_ANALYSIS §35, the §34 corrections, R09-01-15 (plus the R09-01-14 correction) and R09-02-6.
+- Interrupted by a rate limit at 18:02 and resumed. The working tree was checked first. No work was duplicated; the temp notes in %TEMP%\r09\fs\obs.md were reused.
+- D27 = MODIFY: keep r05.
+  - Measure = round index. Minutes and attempts are [U].
+  - Battle Cats KR guide S2 order: Korea → Mongolia → China → Philippines → Japan (the first "2× harder" stage, 5th shown; skipped stages [U]).
+  - The stuck BC player had upgraded after each clear, so the block pass line belongs in D28 casual (currently failing, 0/10).
+  - BC shows a stage hint on defeat (CtyF0JF20Ls 0:48–0:53). Our result screen has no per-round hint. A 2-line r05 hint is proposed to 01/04.
+- Base damage (§35.4):
+  - BC: numeric x/max HP and smoke on each hit.
+  - k-LmII5inLA (no units deployed): 984→0 in about 13 s, 3% then 21%/s.
+  - 6mij7-xSrqU (late game): 192k → about 6k in about 26 s, 1.6% then 11%/s, held at about 3% and won.
+  - No visible cap or base push-back. The cannon is the recovery tool (CtyF0JF20Ls 1:06).
+  - Waggle (QOi2v7jyZFU, PLNIJnylJtw): a green bar per base; the player castle was never hit in about 10 min.
+  - Cat War 2: the enemy castle tints red. 몽글뭉치: none.
+  - [I] D29 B (25 HP/s on 1500) caps at 1.7%/s, below every observed rate. Our uncapped cascade (02 estimate, 2.6–6.7%/s) is in BC's range, so the gap may be the recovery tool.
+  - D29 acceptance 1 (0.60–0.90) has no competitor basis.
+- 02 R09-02-6 asks for:
+  - columns for time-to-destroy and peak %/s;
+  - a no-mechanic control F0, where the bot returns the hero to the base and casts skill_slam when ≥3 enemies are within 60 px of it.
+- Correction: Japan is NOT the chapter-1 end (in S2 the Moon is). §34.2, §34.4(2) and R09-01-14 are corrected. The "r10 = BC spike position" reading is withdrawn.
+- Not verified (needs Godot, owners after 18:30): the D29/F0 probe, minutes of play to reach our r05, and whether the base flash is visible at 1x.
+- Validation: git diff --check clean. Only 09 paths were changed (the coordinator-to-* untracked files and the 04 request edits in the tree are not 09's and were not touched). No Godot was run.
+- Temp files (not committed): %TEMP%\r09\fs\ sb_*.png, pg_*.png, crop_*.png, sb_meta3.json, obs.md, crop.py.
+
+## Older (v14, 17:00–17:10 KST)
 - 175ddc0d88c1cc890818b4f40606fc5352048e38 PUSHED: SUCCESS_ANALYSIS §33, first-stage timing from YouTube public storyboards.
   - Battle Cats KR st.1 (adRHiLSa2Os): (a) +3–4 s, (b) +18 s, (c) none seen, (d) ~68 s.
   - Cat War 2 st.1 (dzR0IMIFxvU): +8 s, +12–16 s, unreadable, ~62 s. A second video (2pZm2OXNEeU) runs >100 s.
@@ -87,7 +112,7 @@ Commit 9e0487d1011d407c42b91092fef4d55788502442 PUSHED (helper output; SHA copie
 ## v15 (2026-10-31 ~17:55 KST): growth motivation
 Commit c6d0e9eda74825c850b27ecf84f2dc3962d43178 PUSHED (helper output; SHA copied after publish): SUCCESS_ANALYSIS §34; R09-01-14, R09-10-2, R09-04-11.
 - Sources: 7 YouTube storyboards (S1–S7, dates/URLs/±step in §34.1) and Play KR descriptions for MadArcher, Battle Cats KR, Cat War 2, Waggle Squad (fetched 17:47). No images or raw captions committed.
-- Findings [O]: the growth screen appears right after the first clear (1:30–4:40 into play) in all 4 games and reopens after nearly every stage (Cat War 2 player skipped it for L8–10 and still won). No defeat in any beginner video (10–25 min). The KR Battle Cats guide flags the chapter-1 end as the first spike and solves it with levels + tactic + unit swap.
-- Reading [I]: r10-only need sits where Battle Cats' first spike sits; the gap is entry habit and small repeat rewards. Counter-explanations (monetization coupling, skilled YouTubers, old/EN versions, idle model of 아처키우기) are recorded.
+- Findings [O]: the growth screen appears right after the first clear (1:30–4:40 into play) in all 4 games and reopens after nearly every stage (Cat War 2 player skipped it for L8–10 and still won). No defeat in any beginner video (10–25 min). The KR Battle Cats guide flags the chapter-1 end as the first spike (corrected in v16: the spike is Japan, which is not the chapter end) and solves it with levels + tactic + unit swap.
+- Reading [I]: r10-only need sits where Battle Cats' first spike sits (withdrawn in v16); the gap is entry habit and small repeat rewards. Counter-explanations (monetization coupling, skilled YouTubers, old/EN versions, idle model of 아처키우기) are recorded.
 - Basis update: D25 (a262640) committed r01 lane 1100; §33.2 basis superseded. D26 max-out ≈14 LOW / 9 HIGH r10 replays.
 - Validation: diff --check clean; 09 paths only.
