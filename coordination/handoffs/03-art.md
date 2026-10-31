@@ -43,6 +43,7 @@ Outgoing: 03-art-to-02-engine A4 (white-line root cause), A5 (new pages); 03-art
 - Regression: SHA-256 of all 27 previous atlas files (9 pages × png/json/import) identical before vs after.
 - validate.py --determinism PASS (only expected WARNs: local .godot cache stale/unimported, A6 with 02). Exported PCK: 10/10 pages load, raw PNG absent, PCK 1,241,540 B. r10 residency from round data = 9.25 MiB.
 - Adversarial review: hierarchy measured (overlord 56×34 > warlord 45×24 > brute 32×23 > grunt 19×17). A16: the purple mass was within ΔE 9.7 of ally blue under deuteranopia sim; fixed for the overlord (bark/green; retest image docs/art/previews/boss_overlord_review_3x_after.png). A17: the same issue on existing enemies is OPEN and needs approval to touch existing pages (asked 01 A3). A19: summon has no data frame field (asked 01/02).
+- Commit 393ada2 [Design] boss_overlord + page + colour-vision fix: PUSHED origin/main (verified with `git branch -r --contains`). The commit diff touches only char_boss_overlord.png among the atlas PNGs.
 - Not done: in-game capture of the overlord (needs 02 --import + an r10 run).
 
 ## Next tasks (03)
