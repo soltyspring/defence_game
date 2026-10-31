@@ -1,7 +1,29 @@
 RULE (line 1, fixed after 3 violations: af491c2, 53883db, f5f42df batch): a commit SHA is written ONLY in a separate tool call made AFTER the Publish-Task call that printed `PUSHED <sha>` has returned; copy it from that output, check it with `git log origin/main`, and never record the SHA-record commit's own SHA in the file.
 # 05-audio handoff
-Updated: 2026-11-01 01:xx KST (v3.7 G2 recheck: was the G2 miss caused by the change?)
-Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all. Quota 15 %. Godot only via heavy_run.ps1 (lock waits 387 s); private APPDATA.
+Updated: 2026-11-01 03:1x KST (v3.8 repetition fatigue: criteria first, variants + vol jitter, re-judge)
+Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all. Quota 49 %. Godot only via heavy_run.ps1, now started DETACHED (`tools/audio/heavy_detached.ps1`, hidden window), because the agent tool's 30-min limit killed a waiting wrapper once (heavy_run.log NOTE 01:47). Lock waits are now 1133–1671 s. Private APPDATA.
+
+## v3.8 repetition fatigue (coordinator task). Details: docs/audio/REPETITION_CHECK.md, PHONE_SPEAKER_CHECK.md "v3.8 re-judge"
+1. Coordinator decision recorded in PHONE_SPEAKER_CHECK.md criteria: G2 is judged by the same-background A/B; real recordings are for anomaly detection only.
+2. Criteria R1–R4 written BEFORE measuring (REPETITION_CHECK.md). Recordings: r02/r06/r08 × seeds 11/23/37, 60 s each.
+   - Before (`rb`): 13 failing cue-recordings (shoot_spit R2/R4 in r08, death_enemy R3/R4, shoot_arrow R3/R4).
+3. Change:
+   - `rx` extra variants with stable seeds 70000+; older files are byte-identical. shoot_spit 3 files; death_enemy, shoot_arrow and gold_tick 2 files each.
+   - `vol_jitter` ±1 dB in `AudioManager.play()`.
+   - New `validate.py` rule: a variant's phone-band level must be within ±0.5 dB of the cue's first file.
+   - death_enemy_v2 was rebuilt twice: the first version was +5.4 masked points in the same-background A/B.
+   - SFX 43 → 48 = 08's cap (request file updated).
+4. After (`rd`, 9 recordings, final assets): R1–R4 0 failures. Integration, selftest and lifecycle 27/27 PASS.
+5. Re-judge:
+   - Same-background A/B over 9 battles: D1/D2/G1/G2 PASS (G2 max +1.9).
+   - Real recordings: D1/D2 PASS and G2 no anomaly. **G1 peak FAIL as written in 1 of 9**: r08 s23 hit −0.50 dBFS at a 5-cue onset cluster, 0 clipped. It was not reproduced by re-rendering the cluster, and the criterion was not edited. Open question for coordinator/01.
+Tools added: `tools/audio/repetition_check.py`, `tools/audio/heavy_detached.ps1`, `same_bg_ab.py --tag/--rounds` (per-file worst, vol jitter), `phone_check.py --history`, `run_godot_checks.ps1 -RecordRounds` (+ copies sandbox `.import` for new WAVs).
+Git: see the record line below (written only after PUSHED).
+Not verified: human listening (blind clips repeat_X/Y_r08_20s.mp3, LISTENING_CHECKLIST §7), real phone.
+Next:
+- G1 cluster-peak question to the coordinator/01.
+- Listening.
+- Still waiting on 02 A10, the 01 menu/music decision, and 04 C1/C5.
 
 ## v3.7 G2 recheck (review of 4d6f9bd/6737f36/e00aa88; criteria NOT changed). Details: PHONE_SPEAKER_CHECK.md "v3.7 G2 recheck"
 1. **Code**: the duck lowers only SFX voices with prio < duck_sfx_below (death_ally < 3, hit_base < 5). wave_cleared (prio 8) and hit_base_mold (prio 5) can never be ducked. Their files and manifest entries are identical between 131dcf2 and HEAD.

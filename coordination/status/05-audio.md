@@ -1,5 +1,7 @@
 # 05-audio status
-Updated: 2026-11-01 01:xx KST. Session sess_480b589a-e86a-47ff-bada-af6f34aa4635.
-Status: G2 recheck: code + same-background A/B show the v3.7 change does not raise other cues' masking by more than 1.8 points (G2 PASS in A/B); fresh real recordings: D1/D2/G1 PASS, G2 FAIL as written (identical-config replicates vary up to 7.2 points). No code/asset change.
+Updated: 2026-11-01 03:1x KST. Session sess_480b589a-e86a-47ff-bada-af6f34aa4635.
+Status: v3.8 repetition fatigue. Criteria R1–R4 were written first. Before: 13 failing cue-recordings out of r02/r06/r08 × 3 seeds. After the change (variants + ±1 dB vol jitter, SFX 48 = 08 cap): 0 failures.
+- Same-background A/B: D1/D2/G1/G2 PASS (G2 max +1.9).
+- Real recordings: D1/D2 PASS, G2 no anomaly. G1 peak FAIL as written in 1 of 9 (−0.50 dBFS at a 5-cue cluster, 0 clipped, not reproduced in the re-render); open question for the coordinator/01.
 Not verified: human listening, real phone.
-Git: b24412d [Test], e633790 [Docs] PUSHED (verified on origin).
+Git: pending; SHAs are written in a separate step after PUSHED.

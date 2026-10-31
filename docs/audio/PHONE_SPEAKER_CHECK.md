@@ -11,6 +11,11 @@ Added for danger signals (coordinator review of 131dcf2: an ally dying / our bas
 - G1 (guard): whole-mix integrated loudness within the before-range ±0.5 dB and sample peak ≤ −1.0 dBFS, 0 clipped samples, on each seed
 - G2 (guard): every other measured cue's masked % no more than 2 points worse than its before-maximum; no new fatigue or low-heavy flag
 - G3 (guard): the change must not be "only louder". Each cue's phone loudness rises by ≤ 1.5 dB; the gain must come from 1–4 kHz content/attack.
+**Coordinator decision (2026-11-01, after the G2 recheck of b24412d/e633790) — how G2 is judged from now on:**
+- G2 (and any "did this change make another cue worse" question) is judged with the **same-background A/B** (`tools/audio/same_bg_ab.py`): the BEFORE battles are re-rendered from their own cue logs with old vs new assets/rules. Max allowed worsening stays 2 points per cue. The v3.7 result is max +1.8 → **PASS**.
+- Real engine recordings (3 seeds) are used **only for anomaly detection**: the same config recorded twice differed by up to 7.2 points (death_enemy), so they cannot resolve a 2-point criterion. A real-recording value far outside the replicate spread (more than about 7 points) is a signal to investigate, not a verdict.
+- The numeric criteria themselves (D1, D2, G1, G2 thresholds) are unchanged.
+
 Note on noise: the same seed is not sample-identical between runs (commands go out on real-time frames). Seed 11 gave death_ally 14.3 % at 23:00 and 10.9 % at 23:3x with identical assets, so single values move by about ±3 points. That is why ranges over 3 seeds are used.
 
 ## 3-seed baseline (assets as of e4df6f6/131dcf2, recordings recording_base_s11/23/37, r02 60 s)
@@ -70,6 +75,27 @@ Hypothesis to rule out: the new duck lowered `wave_cleared` / `hit_base_mold` wh
    - The same metric between two recordings of the IDENTICAL config (after vs after2) moves by up to 7.2 points (death_enemy), and wave_cleared moves by up to 5.4.
    - So a single 3-seed set of real recordings cannot resolve a 2-point G2; the causal same-background A/B can. The criterion text is unchanged; real-recording G2 stays recorded as FAIL.
 Not verified: human listening (nobody has listened) and a real phone (all measurements are a 300 Hz high-pass + −6 dB proxy on desktop headless recordings).
+
+## v3.8 re-judge after the anti-repetition change (REPETITION_CHECK.md). Criteria and coordinator decision unchanged.
+Change under test: extra variants for shoot_spit (+2), death_enemy, shoot_arrow, gold_tick (+1 each) and `vol_jitter` ±1 dB on those 4 cues. The danger cues (death_ally, hit_base) and every other target cue are unchanged (same files, same manifest values), so G3 (danger-cue phone loudness ≤ +1.5 dB) is met by construction: 0 dB change.
+1. **Same-background A/B, the verdict for G2** (`python tools/audio/same_bg_ab.py --before=64a95c6 --tag=rb --rounds=r02,r06,r08 --seeds=11,23,37`; result `docs/audio/same_bg_ab_v38.json`).
+   - Backgrounds: the 9 BEFORE battles (r02/r06/r08 × seeds 11/23/37, tag `rb`), each re-rendered from its own cue log. A = assets of 64a95c6 with the v3.7 duck; B = current assets with the same duck, the new variants (cycled, never the same twice) and seeded vol_jitter.
+   - Render vs recorded SFX stem envelope correlation: 0.65–0.97.
+   - New in v3.8: a cue with several files is measured per file and the WORST file is reported (death_enemy: both files; hit_bread/hit_mold: 3 files each).
+   - D1 PASS: death_ally masked 0–7.5 %, hit_base 1.8–5.5 % (limit 8 % each). D2 PASS: p10 ≥ 2.0 dB (death_ally) and ≥ 2.1 dB (hit_base).
+   - G1 PASS: mix LUFS B − A between −0.03 and +0.03 dB; B peaks −4.47…−1.85 dBFS.
+   - **G2 PASS: the largest worsening of any cue is +1.9 points** (hit_bread and skill_barrage, one placement of 52–57). death_enemy +0.0: its worst file is still the original.
+   - The first death_enemy_v2 had failed this test: +5.4 points on r02 s11, worst file v2. It was rebuilt before the after-recordings (REPETITION_CHECK.md, "Rule added during the work").
+   - r02/r06/r08 contain no `hit_base` event (0 in all 18 recordings). The 2–4 danger events per battle are death_ally.
+2. **Real engine recordings, anomaly detection only** (after = tag `rd`, 9 recordings of the final assets; compared with the 9 `rb` recordings; `docs/audio/phone_check_v38.json`).
+   - D1/D2 also hold here: death_ally masked 0–3.8 % (before 0–7.1), hit_base 0–7.4 % (before 0–7.1), p10 ≥ 2.8 / 3.2 dB.
+   - after − before masked, per cue over the 9 pairs: means −1.9…+0.3 points; single pairs −8.0…+5.8 (hit_bread +5.8 once). That is inside the replicate spread (up to 7.2 points), so there is no anomaly.
+   - mix_report: integrated −21.9…−21.3 LUFS after vs −22.1…−21.5 before, inside the before-range ±0.5. 0 clipped samples in all 18. No fatigue flag. Buried 400 ms windows 16–33 after vs 23–47 before.
+   - **G1 peak FAIL as written in 1 of 9 real after-recordings**: r08 seed 23 reached −0.50 dBFS (the Master limiter ceiling). Two samples were above −1 dBFS, at one moment where 5 SFX started within 83 ms (deploy, hit_bread, explosion, death_enemy v2, death_ally). The SFX stem alone peaked at −0.60 dBFS there. The other 8 after-recordings: ≤ −1.79 dBFS. Before: ≤ −1.66 dBFS, at the same moment of the same seed.
+   - Attribution test: that cluster was re-rendered from its own cue log, with the logged variant, pitch and volume and the duck rule. New assets gave −3.67 dBFS, old assets −1.95, and new assets with death_enemy forced to the original file −3.66. So the render does not reproduce the −0.6, and nothing in it points at the new files.
+   - Peaks of 5 overlapping sounds depend on their phase alignment. The before-recordings alone already span −4.85…−1.66 dBFS. The same-background A/B shows no systematic peak rise (B − A between −0.67 and +0.56 dB, mean −0.12).
+   - The real-recording G1 miss stays recorded as FAIL. The criterion was not edited. Open question for the coordinator/01: is the −0.5 dB Master limiter (it caught it with 0 clipped samples) acceptable for rare 5-cue clusters, or should 05 add an onset-cluster limit?
+Not verified: human listening (nobody has listened; blind clips `previews/listen/repeat_X/Y_r08_20s.mp3`, LISTENING_CHECKLIST §7) and a real phone (the phone condition is a desktop proxy).
 <!-- generated below by tools/audio/phone_check.py -->
 
 Condition: 300 Hz 4th-order high-pass + the whole output −6 dB. Background = a real engine battle recording (`tools/audio/_render/recording_after_s11`: music stem at its recorded bus gain + all other SFX/UI). Each cue (manifest vol_db, own music duck) is placed at 1 s steps over that background; SNR = median over the cue's own loud 50 ms frames (within 15 dB of its peak frame) of K-weighted cue minus background, both after the phone filter. masked = SNR < 0 dB, at risk = < 3 dB. Too quiet = max momentary < -40 LUFS after filter and −6 dB (internal heuristic). Proxies only; nobody has listened on a phone.
