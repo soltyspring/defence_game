@@ -1,0 +1,160 @@
+{
+ "fetched_at_kst": "2026-10-31 16:38",
+ "apps": [
+  {
+   "query": "와글와글 군단 라인 디펜스",
+   "found": true,
+   "package": "net.ekgames.projectz",
+   "title": "와글와글 군단: 전략 픽셀 라인 디펜스",
+   "url": "https://play.google.com/store/apps/details?id=net.ekgames.projectz&hl=ko&gl=KR",
+   "first_line": "다채로운 픽셀 군단과 거대한 보스의 대결!",
+   "first3": [
+    [
+     1280,
+     720
+    ],
+    [
+     405,
+     720
+    ],
+    [
+     405,
+     720
+    ]
+   ]
+  },
+  {
+   "query": "몽글뭉치 라인 디펜스",
+   "found": true,
+   "package": "com.sillon.spiritfront",
+   "title": "몽글뭉치: 라인 디펜스",
+   "url": "https://play.google.com/store/apps/details?id=com.sillon.spiritfront&hl=ko&gl=KR",
+   "first_line": "어둠과 오염에 물든 땅, 빛을 든 영웅과 작고 동그란 '몽글이'들이 정화의 여정을 떠납니다.",
+   "first3": [
+    [
+     1280,
+     720
+    ],
+    [
+     1280,
+     720
+    ],
+    [
+     1280,
+     720
+    ]
+   ]
+  },
+  {
+   "query": "라인 히어로즈 디펜스",
+   "found": true,
+   "package": "com.LimensGames.WillYouSurvive",
+   "title": "라인 히어로즈 디펜스",
+   "url": "https://play.google.com/store/apps/details?id=com.LimensGames.WillYouSurvive&hl=ko&gl=KR",
+   "first_line": "당신은 소환사로서 영웅과 소환수를 이끌고 전장에 서야 합니다.",
+   "first3": [
+    [
+     405,
+     720
+    ],
+    [
+     405,
+     720
+    ],
+    [
+     405,
+     720
+    ]
+   ]
+  },
+  {
+   "query": "냥코 대전쟁",
+   "found": true,
+   "package": "jp.co.ponos.battlecatskr",
+   "title": "냥코 대전쟁",
+   "url": "https://play.google.com/store/apps/details?id=jp.co.ponos.battlecatskr&hl=ko&gl=KR",
+   "first_line": "★징글귀염 냥코군단이 전 세계 정복을 꿈꾼다!!★",
+   "first3": [
+    [
+     1280,
+     720
+    ],
+    [
+     405,
+     720
+    ],
+    [
+     961,
+     720
+    ]
+   ]
+  },
+  {
+   "query": "고양이전쟁2",
+   "found": true,
+   "package": "com.westriversw.CatWar2",
+   "title": "고양이전쟁2",
+   "url": "https://play.google.com/store/apps/details?id=com.westriversw.CatWar2&hl=ko&gl=KR",
+   "first_line": "귀여운 고양이와 악동 개의 대 전쟁 서사시...",
+   "first3": [
+    [
+     480,
+     320
+    ],
+    [
+     480,
+     320
+    ],
+    [
+     480,
+     320
+    ]
+   ]
+  },
+  {
+   "query": "Food Fight TD",
+   "found": true,
+   "package": "com.SokolGames.FoodFightTD",
+   "title": "Food Fight Tower Defense",
+   "url": "https://play.google.com/store/apps/details?id=com.SokolGames.FoodFightTD&hl=ko&gl=KR",
+   "first_line": "푸드 파이트 타워 디펜스는 음식이 반격하는 기발하고 화려한 전략 게임입니다! 강력한 음식 테마 타워를 배치하여 괴상한 음식 적들의 공격으로부터 주방을 지켜내세요. 곰팡이 핀 빵부터 거대한 아보카도까지, 매 공격마다 더욱 강해지고 더욱 맛있어집니다!",
+   "first3": [
+    [
+     1280,
+     590
+    ],
+    [
+     1280,
+     590
+    ],
+    [
+     1280,
+     590
+    ]
+   ]
+  },
+  {
+   "query": "빵어전",
+   "found": true,
+   "package": "com.eternaxcode.bbangeojeon",
+   "title": "빵어전",
+   "url": "https://play.google.com/store/apps/details?id=com.eternaxcode.bbangeojeon&hl=ko&gl=KR",
+   "first_line": "마지막 불씨가 꺼지기 전에, 따뜻한 빵으로 마을을 지켜 주세요.",
+   "first3": [
+    [
+     405,
+     720
+    ],
+    [
+     405,
+     720
+    ],
+    [
+     405,
+     720
+    ]
+   ]
+  }
+ ],
+ "_about": "09 store first-3 observation. Play KR listing pages (hl=ko, gl=KR). first3 = first 3 non-icon images in page order, saved locally only (third-party images NOT committed). first_line = start of the developer description."
+}

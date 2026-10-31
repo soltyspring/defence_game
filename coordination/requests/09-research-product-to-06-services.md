@@ -26,3 +26,16 @@ New cases in the newest Archer Forest KO reviews: a paid pass bought twice with 
 - Name collision: none of 16 KR/US Play searches for our names found a title containing them (top 10, 2026-10-31). KIPRIS is still required for the final title (R09-06-3).
 - Correction to R09-06-3: "Oven" in a unit name is fine. Avoid "OvenBreak/OvenSmash"-style marks and Cookie Run marks in titles and IAP names.
 - Rating reference (Play KR display, 2026-10-31): Cookie Run Kingdom 전체이용가, 곰팡이 키우기 전체이용가, Food Fight TD 전체이용가, Plants vs. Zombies 7+, PvZ 2 12+, CatWar2 7+, Lucky Defense 12+. Answer the questionnaire from 03's final art (cartoon violence, no blood).
+
+## R09-06-5 Store image order and first line (2026-10-31 ~16:55 KST, SUCCESS_ANALYSIS.md §32) — monetization excluded (Q2 보류)
+Observed on 7 Play KR listings (5 lane/line defence, 2 food/bread, 2026-10-31, fetched 16:38 KST): 6 of 7 show real battle within the first 3 images; 3 put real play first; caption users state one mechanic per image. Apple's product-page doc says the first 1–3 screenshots appear in search results when there is no preview video.
+Proposed order (yours to own in store metadata; captions and the first line need 01's wording):
+1. real lane battle with both bases and HP numbers;
+2. hero control + first skill;
+3. economy choice (baker vs soldier card, "반죽");
+4. roster;
+5. boss;
+6. result stars/upgrades (no shop).
+First line of the short description: genre word + goal + both factions.
+Do not use download or rank claims. Do not show prices or a shop.
+Dependencies: X9 (03/04), X7/X8 (04), 03 retheme art. No store listing is to be created now.

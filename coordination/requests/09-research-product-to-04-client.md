@@ -73,3 +73,6 @@ Observed in Play KR store screenshots (2026-10-31): production controls are sepa
 - X9 (QA-J1): an off-screen enemy indicator at the screen edge pointing to the nearest enemy group or the nest. Camera framing is 02's. Pass (07 capture bot, r01 HEAD, 4 runs, 1280x720): M1 = enemy, nest or indicator visible at t=30 s in 4/4. M2 = at t=60 s in 4/4, with at least one enemy fully on screen (if not, the data or camera owners must act). M3 = nest or indicator at t=10 s in 4/4.
 - X11 R5 (QA-J2): when the player base takes damage, the HP bar shows a hit cue (flash or shake within integer pixels) as the number drops. Pass = one capture at the moment of damage shows both the cue and the changed number.
 - Still open: the 1x top-bar capture for R09-04-5.
+
+## R09-04-10 Store capture set (2026-10-31 ~16:55 KST, SUCCESS_ANALYSIS.md §32.1)
+When 03's theme art and X7/X8/X9 are in: produce clean captures (no debug toasts, the tutorial banner optional) for the order (1) lane battle with both bases and HP numbers, (2) hero ◀▶ + first skill, (3) baker vs soldier cards with "반죽", (4) roster, (5) boss, (6) result stars. Use your visible launcher on DISPLAY2. Store dimensions and orientation follow 06. Not now; this is the list so the captures can be scripted.

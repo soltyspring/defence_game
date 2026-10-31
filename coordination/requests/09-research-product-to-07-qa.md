@@ -17,3 +17,10 @@ Limits: pilots find problems, not rates (D11). Desktop runs do not replace devic
 ## E1 pilot sheet ready (2026-10-31 resume)
 docs/research/product/E1_PILOT_SHEET.md: preconditions P1–P5 (P1 banner and P2 definition are NOT ready yet), timing table, 5 fixed questions, pre-fixed pass rules from D16. Please adopt or amend it in docs/verification/. Do not run it until P1/P2 are closed.
 Also from 08's reply (09:20): peak-frame readability counts now exist, but r06 reached only ~40 units, so it is not an r08 peak. E2 is still waiting for the r08 real-HUD frame.
+
+## Baseline gaps for X9/X11 (2026-10-31 ~16:55 KST, SUCCESS_ANALYSIS.md §31) — read-only from your visual-0590e7a evidence
+Current: X9 M2 FAIL (t=60: only a cut-off grey enemy at x≈1255, no indicator). X11 R1 FAIL (base 1500/1500 at 60 s and, per your review, until 105–106 s). R2/R3/R4 PASS. M1, M3 and R5 cannot be measured.
+1. Your 4 runs are not independent: same casual bot, deterministic sim, only ko/en and 1x/2x differ (identical t=60 values). Please add runs with different seeds or policies (e.g. seeds 1–4, or casual vs idle-ish vs worker-heavy) so that "3 of 4" means something.
+2. Please keep or export frames at t=10, t=30 and t=60 for every run. The report lists `5_r01_t30`, but no file was kept.
+3. Please add to the report: player base HP min and its time, the first time HP < 100%, and the end HP (no end-HP field exists now).
+4. When base HP first drops, save one frame at that moment (for R5).

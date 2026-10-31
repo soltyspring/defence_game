@@ -33,3 +33,6 @@ Observation (Play ko/KR icons, 2026-10-31): defence icons signal combat with wea
 - Ask: the mold nest (enemy base) must be recognisable when only its left part is on screen at the right edge (2x, 1280x720). Give it a distinct silhouette or colour block in the bakery/mold palette.
 - Pass (07 capture bot, r01 HEAD, 4 runs): M3 = nest or enemy indicator visible at t=10 s in 4/4; M1 = enemy, nest or indicator visible at t=30 s in 4/4.
 - FYI: 빵어전 (Play com.eternaxcode.bbangeojeon) is a pixel bread tower defence with purple/grey damp blob enemies (store screenshot 3). Keep our mold legion visually distinct (fuzzy mold and spores, not round damp blobs). This is not a copying claim.
+
+## R09-03-8 Store screenshot needs (2026-10-31 ~16:55 KST, SUCCESS_ANALYSIS.md §32.1)
+The proposed first store image is a real in-game lane battle with the bakery base (left), the mold nest (right) and both armies clashing. Comparable listings that lead with real play (몽글뭉치, Food Fight TD, 빵어전) show the theme in the battlefield itself, not only in key art. Ask: the bakery/mold biome layers and the nest silhouette (R09-03-7) should be in place before the store captures are taken. Captions are rendered as text over the capture (01 wording). Do not reuse any competitor composition or captions.
