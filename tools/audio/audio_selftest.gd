@@ -261,6 +261,37 @@ func _run() -> void:
 	A.advance(gg)
 	E.emit_signal("sfx", &"hit", {"kind": "melee", "target_side": "player", "x": 0.0})
 	_ok(int(A.stats.played) - g0 == 2, "hit after the shared gap must play")
+	# v3.7: danger-cue SFX duck: hit_base (duck_sfx -6, below prio 5) lowers playing + new lower-prio SFX
+	A.advance(5.0)
+	A.play(&"explosion")                       # prio 5 -> must NOT be ducked by hit_base (below 5 only)
+	A.play(&"shoot_arrow")                     # prio 1, already playing when the danger cue starts
+	A.advance(0.03)
+	A.cue_played.connect(grab)
+	_ok(A.play(&"hit_base"), "hit_base plays")
+	A.cue_played.disconnect(grab)
+	var vplaying: AudioStreamPlayer = null
+	for v in A._sfx:
+		if A._voice_busy(v) and A._v_cue.get(v, &"") == &"shoot_arrow": vplaying = v
+	_ok(vplaying != null and absf(float(A._v_duck.get(vplaying, 0.0)) + 6.0) < 0.01, "playing shoot_arrow ducked by -6 dB")
+	_ok(A.sfx_duck_active(), "SFX duck active while hit_base sounds")
+	A.cue_played.connect(grab)
+	A.advance(0.05)
+	_ok(A.play(&"hit_mold"), "hit_mold during duck plays")
+	A.cue_played.disconnect(grab)
+	var vm: AudioStreamPlayer = A._sfx[last.voice]
+	var expect := float(A.cues[&"hit_mold"].vol_db) - 6.0
+	_ok(absf(vm.volume_db - expect) < 0.01, "new hit_mold ducked: %.2f dB, expected %.2f" % [vm.volume_db, expect])
+	var dx := false
+	for v in A._sfx:
+		if A._voice_busy(v) and A._v_cue.get(v, &"") == &"explosion" and float(A._v_duck.get(v, 0.0)) < 0.0: dx = true
+	_ok(not dx, "explosion (prio 5) must not be ducked by hit_base (below 5)")
+	A.advance(1.0)
+	_ok(not A.sfx_duck_active(), "SFX duck released after the cue")
+	A.advance(5.0)
+	A.cue_played.connect(grab)
+	A.play(&"hit_mold")
+	A.cue_played.disconnect(grab)
+	_ok(absf(A._sfx[last.voice].volume_db - float(A.cues[&"hit_mold"].vol_db)) < 0.01, "hit_mold after the duck at full level")
 	if E.has_signal("upgrade_result"):
 		A.advance(5.0)
 		p0 = A.stats.played
