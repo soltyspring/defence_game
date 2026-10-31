@@ -256,3 +256,31 @@ Same attacks re-run on this build:
   | hero_captain (n 1) | 5.71 mm, vis 100.0 %, sil 96.4 %, dE 15.8 | 6.92 mm, vis 100.0 %, sil 94.7 %, dE 13.2 | 9.23 mm, vis 100.0 %, sil 84.5 %, dE 26.0 |
   Reading: silhouette is 83-97 % in every variant (line 60) and visibility does not drop. Colour distance to the other side goes up with the zoom for every unit on screen. With D1 alone it goes up for 4 units (통식빵, 롤빵병, 멧돼지, 졸개) and down for 3 (프레첼 21.2 -> 18.7, 초파리 15.8 -> 13.2, 제빵 대장 15.8 -> 13.2), all still above 03's line 10. The zoom moves 초파리 떼 off screen at t = 46 s (narrower view). Captures: docs/art/evidence/size_d1full/r06_t46_{now,d1_current,d1_zoom}.png, three_rows.png.
 - **Limits:** a desktop capture of the phone layout, **not a measurement on a phone**; mm values are 04's conversion, not measured with a ruler. **No human player test** of whether units read as bakery/mould or whether 6 mm is enough. The D1 faces are nearest-scaled.
+
+## Round 18 (2026-11-01 01:40) — character quality: why the units look poor, and pass criteria (written before any redraw)
+Task: bring D1 (32 px) to release quality behind ART_DRAFT32 only; the shipped default stays unchanged until 02 decides R17. Ownership changed at 01:05/01:08: biome, bases, fx are 09-art-world's; ui/branding/icons are 06-art-ui's. 03 keeps characters, animation, palette and the build contract.
+Tool: tools/art/char_quality.py (modes frames / lineup / battle / sheet). feature_pct = share of interior unit pixels that differ from both horizontal or both vertical neighbours (1 px details: eyes, seams, crust grain, spores; flat fills and 2 px blobs score 0). doubled_pct = share of rows + columns that repeat the previous one exactly. motion / change = changed mask pixels / union. IoU = same-side silhouette overlap, masks aligned at the bottom centre.
+07 J1: units cover only 5.0-6.9 % of the battle screen, so each unit has few pixels and every pixel must carry information.
+
+**Cause 1: D1FULL loses detail (nearest-scaled faces and torsos).** Real r06 capture (round 17, seed 4242, t = 46 s, 1x view pixels, units on screen), feature_pct now -> D1FULL: 통식빵 50.0 -> 32.0 (doubled 0 -> 10.0 %), 롤빵병 61.9 -> 33.8 (-> 4.2 %), 프레첼 49.5 -> 43.7, 멧돼지 35.4 -> 23.3 (-> 3.0 %), 졸개 56.8 -> 44.7, 제빵 대장 41.6 -> 29.8 (1.9 -> 3.0 %). Atlas idle frame 0: 제빵사 59.3 -> 31.2, 식빵병 75.7 -> 46.5, 롤빵병 59.9 -> 29.3, 통식빵 49.7 -> 31.1 (doubled 8.0 %), 초파리 떼 83.1 -> 17.2 (doubled 12.2 %, exact 2x), 부푼 효모 30.1 -> 17.1, 멧돼지 23.2 -> 12.0, 제빵 대장 40.0 -> 29.0. The unit is 1.5x taller but carries about half the detail per pixel: the eyes, visor slit and tabard are 2 px blocks, and big flat fills (멧돼지 23 % even today) have no material. Evidence: docs/art/evidence/char_quality/cause1_r06_now_vs_d1full_x3.png (cut from the real captures, x3 nearest).
+**Cause 2: units of one side share one silhouette.** Atlas walk frame 0 IoU (shipped): 제빵사~통식빵 0.76, 제빵사~식빵병 0.74, 롤빵병~통식빵 0.70, 식빵병~통식빵 0.63, 제빵사~롤빵병 0.57, 식빵병~롤빵병 0.56; enemies 뱉개~효모 0.67, 졸개~뱉개 0.61, 졸개~효모 0.61. The real r01 lineup capture (round 15 masks, HEAD 29d31be) gives the same picture: 롤빵병~통식빵 0.70, 식빵병~통식빵 0.63, 식빵병~롤빵병 0.56, 졸개~뱉개 0.60, while 제빵 대장 vs infantry is 0.32-0.40. Four ally infantry are the same round-head, same-width body with a different hand item; at 5-7 % of the screen the hand item is 2-4 px.
+**Cause 3: motion is too small to read at 1x.** Real r01 lineup (attack vs walk at the same place): motion 통식빵 24.4 %, 롤빵병 35.3 %, 졸개 35.5 %; attack reach 롤빵병 / 통식빵 / 뱉개 3 px, 졸개 1 px (식빵병 8, 대장 9). Atlas frames: walk bob is 1 px for 9 of 11 units and 0 for 멧돼지; walk mean change 통식빵 10.0 %, 멧돼지 4.3 %; attack change 프레첼 22.6 %, 통식빵 30.9 %; hit change 멧돼지 18.2 %, 통식빵 20.7 %. D1FULL only scales these (통식빵 walk 9.7 %, 멧돼지 5.0 %, hit 19.5-20.6 %).
+Data: docs/art/evidence/char_quality/frames_before.json (atlas, shipped and D1FULL), battle_r06_before.json, lineup_r01_before.json.
+
+**Pass criteria for the hand-polished D1 (draft key ART_DRAFT32=D1Q), fixed now, before the redraw:**
+| # | what | measure | pass |
+|---|---|---|---|
+| Q1 | detail | atlas idle frame 0 feature_pct, each of the 11 units | >= min(shipped 1x value, 45 %) |
+| Q2 | no doubled pixels | atlas idle frame 0 doubled_pct, each unit (초파리 떼 included) | <= 2.0 % |
+| Q3 | detail in the game | real r06 capture feature_pct, each unit on screen | >= min(shipped value, 40 %) and doubled <= 2.0 % |
+| Q4 | distinct silhouettes | atlas walk frame 0 IoU, every same-side pair of the 10 regular units | <= 0.60 (now max 0.76) |
+| Q5 | walk | walk mean change / bob (top of mask) | >= 15 % and >= 2 px, each unit |
+| Q6 | attack | attack front range / max change | >= 8 px (D1 scale) and >= 35 %, each unit |
+| Q7 | hit | idle frame 0 -> hit frames max change | >= 25 %, each unit with a hit anim |
+| Q8 | death | idle frame 0 -> first 3 death frames max change | >= 30 %, each unit |
+| Q9 | size hierarchy | atlas idle body height | infantry (제빵사 식빵병 롤빵병 통식빵 졸개 뱉개 효모) 27-31 px < 멧돼지 (>= infantry max + 4) < 제빵 대장 (>= 멧돼지 + 3, < 45) < 장군 45 < 대군주 56 |
+| Q10 | readability | readability.py silhouette, village + dark + bright | >= 60 % each unit |
+| Q11 | colour | cvd_check.py closest ally/enemy pair dE (normal + 3 CVD) | >= 10 |
+| Q12 | memory | 08 asset_budget_check --tree, worst battle | <= 12 MiB, characters stay one page |
+| Q13 | contract | same anim names, frame counts, fps, loop, events as shipped; default build byte-identical; validate.py --determinism | PASS |
+Not measurable by these tools and not claimed: whether players read a unit as bread or mould, and how it looks on a real phone (no human test, no phone).

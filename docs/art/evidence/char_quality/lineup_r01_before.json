@@ -1,0 +1,155 @@
+{
+ "base": {
+  "units": {
+   "ranged_basic#0": {
+    "set": "ranged_basic",
+    "side": 1,
+    "walk": {
+     "feature_pct": 62.0,
+     "interior_px": 142,
+     "doubled_pct": 0.0,
+     "colours": 12,
+     "body_px": 18
+    },
+    "attack": {
+     "feature_pct": 63.8,
+     "interior_px": 149,
+     "doubled_pct": 2.9,
+     "colours": 12,
+     "body_px": 19
+    },
+    "motion_pct": 35.3,
+    "reach_px": 3
+   },
+   "tank#1": {
+    "set": "tank",
+    "side": 1,
+    "walk": {
+     "feature_pct": 50.0,
+     "interior_px": 182,
+     "doubled_pct": 0.0,
+     "colours": 10,
+     "body_px": 19
+    },
+    "attack": {
+     "feature_pct": 50.0,
+     "interior_px": 210,
+     "doubled_pct": 0.0,
+     "colours": 11,
+     "body_px": 20
+    },
+    "motion_pct": 24.4,
+    "reach_px": 3
+   },
+   "melee_basic#2": {
+    "set": "melee_basic",
+    "side": 1,
+    "walk": {
+     "feature_pct": 76.8,
+     "interior_px": 138,
+     "doubled_pct": 0.0,
+     "colours": 12,
+     "body_px": 19
+    },
+    "attack": {
+     "feature_pct": 78.3,
+     "interior_px": 152,
+     "doubled_pct": 9.5,
+     "colours": 13,
+     "body_px": 20
+    },
+    "motion_pct": 47.6,
+    "reach_px": 8
+   },
+   "hero_captain#3": {
+    "set": "hero_captain",
+    "side": 1,
+    "walk": {
+     "feature_pct": 40.0,
+     "interior_px": 360,
+     "doubled_pct": 1.8,
+     "colours": 14,
+     "body_px": 34
+    },
+    "attack": {
+     "feature_pct": 37.9,
+     "interior_px": 420,
+     "doubled_pct": 0.0,
+     "colours": 14,
+     "body_px": 33
+    },
+    "motion_pct": 51.3,
+    "reach_px": 9
+   },
+   "melee_basic#4": {
+    "set": "melee_basic",
+    "side": 1,
+    "walk": {
+     "feature_pct": 76.8,
+     "interior_px": 138,
+     "doubled_pct": 0.0,
+     "colours": 12,
+     "body_px": 19
+    },
+    "attack": {
+     "feature_pct": 78.3,
+     "interior_px": 152,
+     "doubled_pct": 9.5,
+     "colours": 13,
+     "body_px": 20
+    },
+    "motion_pct": 47.6,
+    "reach_px": 8
+   },
+   "e_grunt#5": {
+    "set": "e_grunt",
+    "side": -1,
+    "walk": {
+     "feature_pct": 60.6,
+     "interior_px": 132,
+     "doubled_pct": 0.0,
+     "colours": 9,
+     "body_px": 18
+    },
+    "attack": {
+     "feature_pct": 62.4,
+     "interior_px": 149,
+     "doubled_pct": 0.0,
+     "colours": 10,
+     "body_px": 18
+    },
+    "motion_pct": 35.5,
+    "reach_px": 1
+   },
+   "e_spitter#6": {
+    "set": "e_spitter",
+    "side": -1,
+    "walk": {
+     "feature_pct": 67.7,
+     "interior_px": 130,
+     "doubled_pct": 0.0,
+     "colours": 10,
+     "body_px": 19
+    },
+    "attack": {
+     "feature_pct": 52.2,
+     "interior_px": 159,
+     "doubled_pct": 2.6,
+     "colours": 10,
+     "body_px": 19
+    },
+    "motion_pct": 48.8,
+    "reach_px": 3
+   }
+  },
+  "iou_same_side": {
+   "e_grunt~e_spitter": 0.6,
+   "hero_captain~melee_basic": 0.32,
+   "hero_captain~ranged_basic": 0.32,
+   "hero_captain~tank": 0.4,
+   "melee_basic~ranged_basic": 0.56,
+   "melee_basic~tank": 0.63,
+   "ranged_basic~tank": 0.7
+  }
+ }
+}
