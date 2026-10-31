@@ -1,4 +1,27 @@
 # 08-performance handoff
+## M19 — real-format check, blank-screen guard, new background overdraw (2026-11-01 07:43 – in progress)
+- Done and pushed (SHAs from `git ls-remote origin refs/heads/main` right after each push):
+  - `bde7b87d46904bc9adba8bcfd248be6bbdb19150`: (4) all-in budget re-run on committed 92a1718 (pages byte-identical to the WIP
+    budgeted before: 8.75/9.00/0.50, D1 10.75/11.00/0.50; +0.9 KiB PNG is 03's e8c6d96) and (5) 06 U8-2 (menu 0 MiB headroom while
+    the launcher icon and title are redrawn).
+  - `3190cfceec0e0c5d98c951d914047d80329ba8f8`: (3) `tools/perf/background_overdraw.py` + BACKGROUND_OVERDRAW.md. Old vs new
+    background are the same: 3.02 layers per pixel, 7.834 Mpx/frame at 2400×1080, 3.482 at 1600×720. P11 would make it 2.02 layers
+    (−2.59 / −1.15 Mpx). Sent to 09 (W8-2) and 02 (P11 update).
+  - `76333f04003be491e5c4a581031c19e746944276`: (2) blank-screen guards in device_session.ps1. Each scene scans the log for
+    GLES/shader errors and takes a screenshot (colours / luma spread); either one makes the scene INVALID, never judged. Tested on
+    10's REAL SwiftShader link-failure log and blank frame (fixtures/android_real). Also fixed the soak partial-window bias.
+    Self-test 41/41.
+- In progress: (1) heavy job `08-emu-formats` queued ONCE at 07:45:15 (`build/heavy/08-emu-formats-job.ps1`, log
+  `build/heavy/08-emu-formats-20261101-074513.log`). Own instance of LaneDefence_Phone on port 5596: -no-window -read-only
+  -gpu swiftshader_indirect. It captures real getprop / wm / meminfo / battery / thermalservice / SurfaceFlinger list and latency
+  ×5 / gfxinfo + framestats / top / am start / logcat / screencap into `build/perf/emu_formats_<stamp>/`, then `adb emu kill`
+  (own instance only). It waits up to 10 min and touches nothing if a foreign emulator is present.
+  `tests/performance/fixtures/android_real/replay_adb.ps1` (written, not yet used) replays those files for the parser test.
+- Next if interrupted: poll the log for `HEAVY_JOB_DONE`; copy the captured files to
+  `tests/performance/fixtures/android_real/emu_formats/` (+ serial.txt, package.txt, SOURCE.txt); add a replay case to
+  test_device_session.ps1 (facts, PSS, battery, thermal, SF frames, gfxinfo, GLES error → INVALID); fix any parser mismatch;
+  commit; record it as an EMULATOR format check, not a performance result. Do not queue the job a second time.
+
 ## M18 — one-shot phone kit and all-in static budget (2026-11-01 07:1x – 07:5x KST; no Godot, no emulator)
 - **Phone kit:** new `tools/perf/device_session.ps1`, `device_scenes.json` (r01, r08 `--perf-caps`, r10, each with zoom off and
   `--world-zoom-plus-one`; 18-min soak) and `device_criteria.json` (pass lines with sources; 4 marked ASSUMPTION). The script
