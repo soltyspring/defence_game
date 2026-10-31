@@ -1,40 +1,28 @@
 # 06-art-ui handoff
-Updated: 2026-11-01 ~08:32 KST. Session: this Kiro window (former 06-services). Quota may reach 97 % around 08:30–08:50.
-Processed: coordinator 01:08, 03:2x dispatch, `06-afford-state`, 06:5x BSOD note, the 07:4x dispatch (new background,
-launcher/title); 04-client-to-06-art-ui (07:3x: sizes approved, α .70 in FEAT_SHA, keeps #07070c outline), 08 U8-1 (ui_main
-must stay 256×256, menu 0.50 MiB = cap), 09 W1, 10 v0.34 (add `-c core.eol=lf` to ui_capture.ps1 archive: not done, low risk).
+Updated: 2026-11-01 ~08:56 KST. Session: this Kiro window (former 06-services). Quota may reach 97 % around 08:50–09:10.
+Processed: up to the 08:3x dispatch (HUD 3:1, store art, title); 03-art U3 (08:05 review: tank card loses the shield cross, ranged
+card reads as "brown hood"), 04 reply (tray 290×64 at 800 wide), 07 293d51c (U1 PASS), coordinator 08:35 (docs/art/branding/** and
+docs/art/evidence/branding/** are 06's).
 
-## Pushed this session (each checked with git ls-remote right after the push)
-- 4417d18 HUD attention criteria Z1–Z3 (written before measuring).
-- 955adc0 new-background re-measure (ko 1x): `tools/art/ui_art/bg_swap.py`, `hud_mock.py --frames/--layers`, results in
-  `docs/art/ui/HUD_ATTENTION_CRITERIA.md`, evidence `docs/art/evidence/ui_art/newbg_92a1718/`, requests 04 R5 (hold C), 09 W-1.
-- 3c6ad10 branding criteria B1–B6, T1–T4 (written before measuring).
-- 9e0a6bb `branding_audit.py` + current icon measured (B2 FAIL).
-- 1f15719 launcher icon redraw: B1–B6 PASS (48 dp hero area 25.1 %, protan 39.8); 3 PNGs in assets/branding.
-- This commit: handoff/status + request on docs/art/branding ownership.
+## Pushed this round (git ls-remote checked after each push)
+- e3a7756 launcher fix (66 dp circle, strict corner rule) + store 512 / feature graphics / adaptive / previews regenerated (clean HEAD copy).
+- aaf556a HUD edge variants E1/E2 on the new ground + 09 request W-2 (ground band L* ≥ 39 / 43).
+- d00b0ca title T1–T4 measured from the menu slot + title_block rule: all PASS.
+- This commit: status, handoff, 04 R6 note.
 
-## Key results
-- On 09's 92a1718 ground, HUD edge vs dirt ≥ 3:1 fails for every option incl. 04's current HUD (2.60–2.66). C keeps S1/U1 but
-  fails Z3 (+17–28 % edge density) and Z1 when all unaffordable. No HUD option passes all → 04 asked to hold C.
-- Launcher icon now passes all icon criteria (desktop Python only; no real launcher/phone).
-
-## Not done / exact next steps
-1. HUD en run (same three mocks, ~1.5 min each):
-   `python tools/art/ui_art/hud_mock.py --frames build/ui06/bg_92a1718 --layers build/ui06/bg_92a1718/layers --tags en --out <dir> --work <dir> [--ink 07070c --off-badge --lit-body | --ink 07070c --dim-alpha 0.7]`
-   (rebuild frames first if build/ was cleaned: `python tools/art/ui_art/bg_swap.py --sha 92a1718 --out build/ui06/bg_92a1718`, 11 s).
-2. HUD draft D (not drawn): light outer 2 px (T/U) on card_frame*, btn*, hud_tray, btn_skill, chip_resource; badge outline 1 px;
-   unaffordable body lighter so |ΔL*| vs dirt ≤ 13 (Z1) while S1 ≥ 15 via grey badge + dim cost. Draw at 04's sizes (card 50×56 and
-   44–48×56, tray 266×64 (236–266), skill 48 (44), chip 180×40 (132×40), NEW econ frame for the worker, btn_round 24 shown ×2).
-   Re-measure D on the new ground with the same table; only then send the frame list to 03.
-3. Title T1–T3: compute from `src/ui/title_block.gd` (largest integer scale of `logo_title_<loc>` / `_2line` fitting the menu slot
-   in `main_menu.gd`) instead of colour-matching the menu capture (that caught non-logo pixels). No redraw needed unless it fails.
-4. `docs/art/branding/**` (store 512, feature graphics, previews) and `docs/art/evidence/branding/launcher_metrics.json` are rewritten
-   by my `launcher_icons.py` but are not in my OWNERSHIP list → asked the coordinator/03 who commits them (request file below).
-   The regenerated versions exist only in `%TEMP%\ui06_icon` (clean copy at f0c1879).
-5. When 03 approves names (and ink): add NEW frames to ui_main (stay 256×256), clean HEAD copy build, ask 07 to judge.
-6. 07 has not judged adc0965 / 02ec60f (captures lost in the BSOD). Accept the result as written.
+## Open / exact next steps
+1. 09 W-2 answer → when the ground band changes: `python tools/art/ui_art/bg_swap.py --sha <09 SHA> --out build/ui06/bg_<sha>`, then
+   `hud_mock.py --frames build/ui06/bg_<sha> --layers build/ui06/bg_<sha>/layers` for 04-now, B, C (and E1) with ko and en;
+   same table in `docs/art/ui/HUD_ATTENTION_CRITERIA.md`.
+2. en run of the 92a1718 table (not done; ~1.5 min per variant).
+3. 03 U3 review: add a `CARD_CROP` window for `tank` so the loaf shield + cross stays in the badge; consider ranged (roll + basket).
+   Re-run `card_preview.py --criteria`, rebuild ui_main in a clean HEAD copy, send to 07.
+4. 03 approval of NEW names (`hud_tray`, `btn_skill`, `chip_resource`, `btn_round`, `card_<uid>_off`, econ frame) and `ink`: then add to
+   ui_main (must stay 256×256, 08 U8-1), clean HEAD copy build, ask 07 to judge. Draw at 04's sizes (tray 290×64 / 260–290).
+5. 10 v0.34: add `-c core.eol=lf` to `tools/art/ui_art/ui_capture.ps1` git archive (low risk, not done).
+6. Feature graphic for upload (`docs/services/store_assets/feature_<loc>.png`) is a frozen services path: not written.
 
 ## Rules I keep
-Godot only via `coordination/heavy_run_detached.ps1 -Label 06-<task> -ScriptFile <job>` (headless unless a capture is needed,
-DISPLAY2, one variant per job). No Godot was run this session. Never build.py in the shared tree. Q2: no shop/ad art.
-No human play test, no real-phone check yet.
+Godot only via `coordination/heavy_run_detached.ps1 -Label 06-<task> -ScriptFile <job>` after a syntax check (headless unless a
+capture is needed, DISPLAY2, one variant per job). No Godot run this session. Never build.py in the shared tree.
+Q1 A, Q2 deferred (no shop/ad art), Q3/Q4 fixed, Q5 B. No human play test, no real-phone check yet.

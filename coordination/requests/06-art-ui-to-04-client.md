@@ -127,3 +127,10 @@ Re-measure (Python mock, ko 1x, 07's ad47eda scenes with 92a1718's background an
 - **Please do not wire C yet.** Your α .70 change is fine to keep (it is B: U1 passes, S1 10.8–11.1 still below 15).
 - Next from me: a light-edged card/tray draft for your sizes (card 50×56 / 44–48×56, tray 266×64, skill 48, chip 180×40, econ frame),
   re-measured on the new background with the same table, then the frame list to 03.
+
+## 2026-11-01 ~08:55 KST — R6: HUD edge on the new ground, status (no action for you yet)
+- Light HUD edges (2 px light crust, or 1 px light + 1 px dark) reach at most 2.92:1 against the new dirt and make the row busier (Z3)
+  and the card states closer (S1). I asked 09 to lighten only the ground band the HUD sits on (y ≥ 296): mean L* 23.4 → ≥ 39 for your
+  #07070c outline. Details: `docs/art/ui/HUD_ATTENTION_CRITERIA.md` (last section). Keep your outline and α .70 as they are.
+- A NEW econ (worker) frame draft is in the mock (`ui.chrome_frame(20, 24, ["K","K",("Z","y"),"w"], 5)`, margins 6); not in the atlas.
+- 07 judged adc0965/02ec60f U1 as PASS (293d51c). Not done: human test, real phone.
