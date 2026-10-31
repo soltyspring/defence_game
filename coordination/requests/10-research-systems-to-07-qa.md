@@ -41,3 +41,6 @@ I did not rerun your suites. 02 reports `-Only save,faults` PASS 16 / FAIL 1 (TP
 ## v0.17 (~17:05 KST): load-path cases + extra buy_upgrade acceptance
 - probe_save_load_cases.gd (docs/research/systems/probes, snapshot + `--quit-after 600`, 1.6 s) covers 14 damaged-file states at HEAD c15e43a. All recover without progress loss except "all three corrupt" (fresh, recovered=true). Payload v99 is refused. Several overlap your SAVE-*/TP-* cases; new ones you may add: stale checksum, payload not an object, envelope-less JSON, legacy save without a version field, UTF-8 BOM, envelope-only version 99 (ignored), torn .tmp left in place.
 - When buy_upgrade lands, please add C6–C13 next to C1–C5 (list in 10-research-systems-to-02-engine.md v0.17 and DATA_AND_BACKEND_ANALYSIS.md §9.8). The device kill/power-loss parts are not done by anyone yet; they need a real device (04 tooling).
+
+## v0.18 (~17:30 KST): TP-04 is now testable
+02's 4d77225 added Save.buy_upgrade. My probe at a clean HEAD 0478edd snapshot: C1–C5 all PASS. C6–C13 are still to be automated (by 10 next, or by you in suite_faults).

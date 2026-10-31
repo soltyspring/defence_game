@@ -113,3 +113,12 @@ Your current order (flush/close → verify → rotate only a good main → renam
 - B. Coalesce back-to-back saves (record_result followed immediately by the PAUSED save).
 - C. (Not recommended now) a native fsync plugin (Android AtomicFile style).
 Power-loss outcome remains an inference until a device test: two saves inside the kernel writeback window could leave both main and .bak unwritten.
+
+## v0.18 addendum: buy_upgrade (4d77225) retest — C1–C5 PASS (clean full snapshot of HEAD 0478edd)
+Command: probe_upgrade_transaction.gd. Results:
+- C1: `ok` then `already_applied`, 440/L2.
+- C2 (after_tmp_write): `save_failed`, memory and disk 500/L1.
+- C3 (before_final_rename): reload 440/L2, a consistent pair.
+- C4: exact coins → ok 0/L2; one short → not_enough_coins 59/L1.
+- C5: max_level.
+Still open: R5 part D (level 9 kept, hp ×1.64, no content_version). C6–C13 are not automated yet; 10 will extend the probe next.

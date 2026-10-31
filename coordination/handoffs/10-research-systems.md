@@ -8,6 +8,9 @@ Updated: 2026-10-31 ~15:41 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
+## v0.18 addendum (~17:30 KST)
+- buy_upgrade landed (02 4d77225). probe_upgrade_transaction at a clean HEAD 0478edd snapshot: C1–C5 PASS. R5 part D still fails. Next: automate C6–C13 in the probe.
+
 ## v0.18 (~17:21 KST): engine durability verdict + competitor device-change policy
 - Exact engine: `--version` 4.7.2.stable.official.ed1daf0bf. The tag 4.7.2-stable resolves to commit ed1daf0bf001b61586d9930840f2f1394092c079 (GitHub API).
 - Q1 No sync before rename (flush=fflush L329–332, close=fclose, rename=::rename; 0 fsync hits). Q2 Android user:// = FileAccessUnix/DirAccessUnix (os_android.cpp L120/L133). Q3 flush yes (not durable), fsync no; save_and_swap is off and unused.

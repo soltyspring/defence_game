@@ -543,6 +543,15 @@ v0.9 기준선(9ca4a43) → HEAD 43b4692 이름 변화(ko / en, 대체값 = ko):
 | 관계없는 `set_setting("sfx")` 뒤 | 40 / L2 | **40 / L2** |
 - 호출자는 실패를 받았는데, 다음 아무 저장에서 구매가 확정된다(`phantom_purchase_persisted_later: true`). UI가 "저장 실패, 다시 시도"를 보여 주고 사용자가 다시 누르면 **두 번 차감**된다. `save_progress()`는 실패해도 `revision`만 되돌린다. `record_result`만 자기 필드를 롤백한다. 그래서 구매는 반드시 `record_result`처럼 자기 롤백을 갖는 전용 함수여야 한다.
 
+**(C) 실행 결과(v0.18 부록, 02의 4d77225 `Save.buy_upgrade` 도입 후, 깨끗한 전체 HEAD 0478edd0249a43e126e00fdc0ec172a6ea7d71b6 스냅샷):** API 발견(`Save.buy_upgrade`, `Events.cmd_buy_upgrade` 있음). **C1~C5 모두 PASS:**
+- C1: `ok` → `already_applied`, 440 / L2
+- C2: `save_failed`, 메모리·디스크 500 / L1
+- C3: 재로드 440 / L2(일치하는 짝). 반환 코드는 프로브가 기록하지 않았다. 구현은 `.tmp` 검증 후 실패 시 `save_uncertain`을 돌려준다(코드 읽기).
+- C4: 정확히 60은 `ok` 0 / L2, 59는 `not_enough_coins` 59 / L1
+- C5: `max_level`
+
+(B)의 직접 수정 위험 시연은 여전히 재현된다. 이것은 `buy_upgrade`를 거치지 않는 호출자에게만 해당한다. (D) R5는 여전히 실패다(레벨 9 유지, 배율 1.64, `content_version` 없음). C6~C13은 아직 자동화하지 않았다.
+
 **(C) 합격 기준(제안 계약 `Save.buy_upgrade(upgrade_id, to_level) -> code`)과 기준 자체의 검증:** 스냅샷의 save.gd에만 임시로 두 구현을 붙여 같은 시험을 돌렸다. 저장소에는 넣지 않았다. 하나는 참조 구현(검사 → 차감·레벨 → 저장 실패 시 롤백, 같은 `to_level` 재호출은 `already_applied`), 다른 하나는 단순 구현(검사·롤백 없음)이다.
 | 시험 | 기대값 | 참조 구현 | 단순 구현 |
 |---|---|---|---|
