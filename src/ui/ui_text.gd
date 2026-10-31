@@ -4,7 +4,7 @@ extends RefCounted
 ## UI keys use the `ui.` prefix; 01 is asked to copy them into data/text (coordination/requests/04-client-to-01-director.md).
 
 const FALLBACK_KO := {
-	"ui.title": "레인 디펜스",
+	"ui.title": "빵집 기사단: 곰팡이 디펜스",   # Q3 working title (same as data/text since 01 a262640)
 	"ui.subtitle": "기지를 지키고 적 기지를 부숴라",
 	"ui.play": "시작",
 	"ui.continue": "이어하기",
@@ -77,6 +77,7 @@ const FALLBACK_KO := {
 
 ## English UI fallbacks for keys not yet in data/text/en.json (01 asked to add them; data wins).
 const FALLBACK_EN := {
+	"ui.title": "Bakery Knights: Mold Defense",
 	"toast.counterattack": "Enemy counterattack!",
 	"banner.first_wave_cleared": "First wave broken!",
 	"ui.upgrades": "Upgrades",

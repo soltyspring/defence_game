@@ -958,7 +958,8 @@ func test_title_block() -> void:
 	for loc in ["ko", "en"]:
 		UiText.load_locale(loc)
 		var t: String = TB.title_text()
-		check(t != "레인 디펜스" and t != "Lane Defence", "[%s] stale provisional title replaced (%s)" % [loc, t])
+		var want: String = {"ko": "빵집 기사단: 곰팡이 디펜스", "en": "Bakery Knights: Mold Defense"}[loc]
+		check(t == want, "[%s] menu title is the Q3 working title from data/text (%s)" % [loc, t])
 		for cname in cases:
 			var slot: Rect2 = cases[cname]
 			var l: Dictionary = TB.compute(slot, loc, false)   # text fallback must fit too (logo may be absent)

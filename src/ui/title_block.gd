@@ -3,8 +3,11 @@ extends RefCounted
 ## User Q3 (16:19 KST): working title "빵집 기사단: 곰팡이 디펜스"; working English title "Bakery Knights:
 ## Mold Defense" (English counterpart of Q3, same as 06 store copy). Final store name only after a
 ## human KIPRIS check (classes 9/41), so this stays a WORKING title. Text comes from data/text `ui.title`
-## (01). The old provisional values ("레인 디펜스"/"Lane Defence") are treated as stale until 01 updates
-## the key (04→01 R7). Then the UI fallback below is used.
+## (01, already the working title in ko/en since a262640). The former stale-value override
+## ("레인 디펜스" → working title) was removed once the data carried the right value; a missing key now
+## falls back to UiText's FALLBACK_KO/FALLBACK_EN, which hold the same working title.
+## Q4 (17:19 KST): the Android home-screen label is the short "빵집 기사단"/"Bakery Knights" (02 export
+## settings); the in-game title stays the full working title.
 ## Layout rules (grid sizes only, never shrink arbitrarily):
 ##   1 line Bold 36 → else split after ":" into 2 lines (36 + 24) → else 2 lines at 24 → else ellipsis.
 ## Logo: ui_title atlas frames `logo_title_<locale>` / `logo_title_<locale>_2line`, integer scale ≥ 1,
@@ -13,19 +16,13 @@ extends RefCounted
 const UiStyle := preload("res://src/ui/ui_style.gd")
 const UiText := preload("res://src/ui/ui_text.gd")
 
-const STALE := ["레인 디펜스", "Lane Defence"]
 ## Test hook: render the text fallback even when the logo exists (07 QA-B015 needs a rendered text title).
 static var force_text := false
 static var last_mode := ""         # QA: what the menu actually drew
 static var last_lines: Array = []
-const WORKING_TITLE := {"ko": "빵집 기사단: 곰팡이 디펜스", "en": "Bakery Knights: Mold Defense"}
 
 static func title_text() -> String:
-	var t := UiText.t("ui.title")
-	if t in STALE or t == "ui.title":
-		var loc := "en" if UiText.t("ui.play") == "Play" else "ko"
-		return WORKING_TITLE[loc]
-	return t
+	return UiText.t("ui.title")
 
 ## Returns {"mode": "logo"|"text", "lines": [[text, size]], "tex": Texture2D, "rect": Rect2, "truncated": bool}
 static func compute(slot: Rect2, locale: String, allow_logo := true) -> Dictionary:
