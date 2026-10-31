@@ -65,6 +65,7 @@ func _run() -> void:
 	await test_redraw_and_bar_pattern()
 	await test_threat_marker()
 	test_chrome_palette()
+	test_safe_area_display()
 	for s in SECTIONS:
 		check(done.has(s), "section %s ran to completion (aborted by a script error otherwise)" % s)
 	print("[test_ui] passed=%d failed=%d" % [passes, failures.size()])
@@ -74,7 +75,7 @@ func _run() -> void:
 		print("  - " + f)
 	quit(1 if failures.size() > 0 else 0)
 
-const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard", "back_once", "wave_cleared", "upgrades", "title", "redraw_pattern", "threat_marker", "chrome"]
+const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard", "back_once", "wave_cleared", "upgrades", "title", "redraw_pattern", "threat_marker", "chrome", "safe_display"]
 var done := {}
 
 func test_compile_all(dir_path: String) -> void:
@@ -1136,3 +1137,29 @@ func test_chrome_palette() -> void:
 	check(tb.fill == UiStyle_.C_PANEL_LIGHT, "default button fill = C_PANEL_LIGHT (%s)" % tb.fill)
 	tb.free()
 	done["chrome"] = true
+
+# ---------------------------------------------------------------- lane occlusion: desktop work area is not a safe area
+
+func test_safe_area_display() -> void:
+	# Windows reports the monitor's work area (minus a 48 px taskbar) as the display safe area. Measured on
+	# DISPLAY2 in borderless fullscreen: window 1920x1080 at (−1920,174), sa (−1920,174, 1920x1032) → it became a
+	# 16 px bottom inset and the HUD row covered 11–13 px of lane units (lane_occlusion_probe, 13aade1 captures).
+	var vs := Vector2(640, 360)
+	var desk := SafeArea.from_display(vs, Vector2(1920, 1080), Vector2(-1920, 174), Rect2(-1920, 174, 1920, 1032), false)
+	check(desk == Rect2(Vector2.ZERO, vs), "desktop: taskbar work area is ignored → full view (%s)" % desk)
+	var phone := SafeArea.from_display(Vector2(800, 360), Vector2(2400, 1080), Vector2.ZERO, Rect2(102, 0, 2298, 1080), true)
+	check(phone == Rect2(34, 0, 766, 360), "mobile: 102 px left cutout at k=3 → 34 logical px inset (%s)" % phone)
+	var odd := SafeArea.from_display(Vector2(800, 360), Vector2(2400, 1080), Vector2.ZERO, Rect2(0, 0, 900, 1080), true)
+	check(odd == Rect2(0, 0, 800, 360), "mobile: implausible safe area (< 60 %% of the view) → full view (%s)" % odd)
+	# bottom HUD row vs the lane at the three phone shapes (1080x2400 at density 3.0 / 2.75 / 2.625 → k=3, view
+	# 800x360, 48 dp = 48 / 44 / 42 logical px) and the 2.5x window (1600x900 → integer k=2, view 800x450):
+	# lowest sprite bottom = ground row + lane_y max 6 + 1 px rounding; ground row = view.y − 70.
+	for c in [[Vector2(800, 360), 48.0], [Vector2(800, 360), 44.0], [Vector2(800, 360), 42.0], [Vector2(800, 450), 40.0]]:
+		var v: Vector2 = c[0]
+		var l: Dictionary = HudLayout.compute(v, Rect2(34, 0, v.x - 68, v.y), 5, 3, float(c[1]))
+		var top := 1e9
+		for r in [l.worker, l.move_left, l.move_right] + l.cards + l.skills:
+			top = minf(top, (r as Rect2).position.y)
+		var lane_bottom := v.y - HudLayout.GROUND_FROM_BOTTOM + 7.0
+		check(top >= lane_bottom, "HUD row top %.0f ≥ lowest unit sprite %.0f (view %s, target %.0f): 0 px covered" % [top, lane_bottom, v, c[1]])
+	done["safe_display"] = true
