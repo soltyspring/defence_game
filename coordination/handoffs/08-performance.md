@@ -23,6 +23,11 @@
   mark the opaque sky so 02 can drop the redundant clear rect), 04 R9 (re-layout check table: 9 rows with pass lines,
   today's values and the one-job command).
 - Not done / blocked: any phone number (needs 02 P10 + a phone); P11 clear-rect change (02); real vendor dumpsys formats.
+- Commit: `0beeed661bd5ecb87e04abcad9517752f14485a8` `[Test] 실기기 한 번에 끝내는 측정 도구(…)`, 16 files. Publish-Task.ps1
+  printed `PUSHED 0beeed6… origin/main` (3387df8..0beeed6). After the push, `git ls-remote origin refs/heads/main` returned exactly
+  this SHA; `git cat-file -t` = commit; `git branch -r --contains` = origin/main.
+- Next: when 02 delivers P10, a person connects one phone and queues `device_session.ps1` detached (then `-Soak` on wireless adb).
+  When 04 sends the re-layout SHAs, queue the R9 job (one window). When 09 commits the world pages, run `asset_budget_check --rev`.
 
 ## M17 — phone-resolution GPU fill (shipped / D1FULL / D1FULL + zoom 4/3) and R8 at scale 3 (2026-11-01 02:02 – 07:2x KST)
 - **Resume after the 03:55 blue screen (0x3B):** my job `08-phone-fill` had already finished (heavy_run.log START 03:34:29, END
