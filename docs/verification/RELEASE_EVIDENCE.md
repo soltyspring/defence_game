@@ -48,3 +48,5 @@ on-device test has been done by 07-qa.
 | Damage numbers | FAIL (P3) | M12 V4: QA-B012 reopened |
 | Casual difficulty target D28 | PASS (bots, DEFAULT target) | BALANCE_CROSSCHECK last section: all 11 rows PASS with the fixed probe (3e355a8; r04/r05 from d5f145a). Floors only; not human evidence; Q5 unanswered |
 | Graphics readability (screen level, 393 dp phone) | FAIL (baseline) | ART_BASELINE.md at ad47eda: fixed re-runnable set (27/27 identical on re-run). FAIL now: hero ΔL* (QA-B020), card icons (QA-B021), soldier size (QA-B022, provisional), unit/lane and boss contrast (QA-B023). PASS: effects on units 2.5 %, HUD on units 0 %. Not measurable by tools: "looks like bread/mould", appeal |
+| Animation reading (screen level) | FAIL (baseline) | ART_BASELINE §5: 10 unit ids. FAIL: e_brute does not walk (QA-B024), deaths fade before they play (QA-B025). PASS: attack vs walk, attack reach, hit flash. The atlas hit/cast animations are never drawn (QA-O006) |
+| Art commits judged | 1 | 700692d (06) VALID: UI changed as stated, cards unchanged, HUD +0.07 pp max (art_compare/700692d.md) |

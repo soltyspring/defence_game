@@ -1,4 +1,593 @@
 {
+  "anim": {
+    "boss_warlord": {
+      "anims": {
+        "attack": {
+          "fps": 9.0,
+          "frames": 6,
+          "loop": false
+        },
+        "death": {
+          "fps": 7.0,
+          "frames": 7,
+          "loop": false
+        },
+        "idle": {
+          "fps": 4.0,
+          "frames": 4,
+          "loop": true
+        },
+        "walk": {
+          "fps": 7.0,
+          "frames": 6,
+          "loop": true
+        }
+      },
+      "atlas_hit_frames": 2,
+      "bars": {
+        "attack_0": null,
+        "attack_1": null,
+        "attack_2": null,
+        "attack_3": null,
+        "attack_4": null,
+        "attack_5": null,
+        "death_0": null,
+        "death_1": null,
+        "death_2": null,
+        "death_3": null,
+        "death_4": null,
+        "death_5": null,
+        "death_6": null,
+        "hitflash_0": null,
+        "idle_0": null,
+        "idle_1": null,
+        "idle_2": null,
+        "idle_3": null,
+        "walk_0": null,
+        "walk_1": null,
+        "walk_2": null,
+        "walk_3": null,
+        "walk_4": null,
+        "walk_5": null
+      },
+      "boss": true,
+      "crop": [
+        624.0,
+        205.0,
+        112.0,
+        96.0
+      ],
+      "facing": -1,
+      "hero": false,
+      "scene": "6_r10_boss",
+      "side": "enemy"
+    },
+    "e_brute": {
+      "anims": {
+        "attack": {
+          "fps": 8.0,
+          "frames": 5,
+          "loop": false
+        },
+        "death": {
+          "fps": 7.0,
+          "frames": 6,
+          "loop": false
+        },
+        "idle": {
+          "fps": 4.0,
+          "frames": 4,
+          "loop": true
+        },
+        "walk": {
+          "fps": 7.0,
+          "frames": 6,
+          "loop": true
+        }
+      },
+      "atlas_hit_frames": 2,
+      "bars": {
+        "attack_0": null,
+        "attack_1": null,
+        "attack_2": null,
+        "attack_3": null,
+        "attack_4": null,
+        "death_0": null,
+        "death_1": null,
+        "death_2": null,
+        "death_3": null,
+        "death_4": null,
+        "death_5": null,
+        "hitflash_0": null,
+        "idle_0": null,
+        "idle_1": null,
+        "idle_2": null,
+        "idle_3": null,
+        "walk_0": null,
+        "walk_1": null,
+        "walk_2": null,
+        "walk_3": null,
+        "walk_4": null,
+        "walk_5": null
+      },
+      "boss": false,
+      "crop": [
+        453.0,
+        201.0,
+        112.0,
+        96.0
+      ],
+      "facing": -1,
+      "hero": false,
+      "scene": "4_r06_t46",
+      "side": "enemy"
+    },
+    "e_grunt": {
+      "anims": {
+        "attack": {
+          "fps": 10.0,
+          "frames": 4,
+          "loop": false
+        },
+        "death": {
+          "fps": 8.0,
+          "frames": 6,
+          "loop": false
+        },
+        "idle": {
+          "fps": 5.0,
+          "frames": 4,
+          "loop": true
+        },
+        "walk": {
+          "fps": 11.0,
+          "frames": 6,
+          "loop": true
+        }
+      },
+      "atlas_hit_frames": 2,
+      "bars": {
+        "attack_0": null,
+        "attack_1": null,
+        "attack_2": null,
+        "attack_3": null,
+        "death_0": null,
+        "death_1": null,
+        "death_2": null,
+        "death_3": null,
+        "death_4": null,
+        "death_5": null,
+        "hitflash_0": null,
+        "idle_0": null,
+        "idle_1": null,
+        "idle_2": null,
+        "idle_3": null,
+        "walk_0": null,
+        "walk_1": null,
+        "walk_2": null,
+        "walk_3": null,
+        "walk_4": null,
+        "walk_5": null
+      },
+      "boss": false,
+      "crop": [
+        449.0,
+        197.0,
+        112.0,
+        96.0
+      ],
+      "facing": -1,
+      "hero": false,
+      "scene": "4_r06_t46",
+      "side": "enemy"
+    },
+    "e_spitter": {
+      "anims": {
+        "attack": {
+          "fps": 10.0,
+          "frames": 4,
+          "loop": false
+        },
+        "death": {
+          "fps": 8.0,
+          "frames": 6,
+          "loop": false
+        },
+        "idle": {
+          "fps": 5.0,
+          "frames": 4,
+          "loop": true
+        },
+        "walk": {
+          "fps": 10.0,
+          "frames": 6,
+          "loop": true
+        }
+      },
+      "atlas_hit_frames": 2,
+      "bars": {
+        "attack_0": null,
+        "attack_1": null,
+        "attack_2": null,
+        "attack_3": null,
+        "death_0": null,
+        "death_1": null,
+        "death_2": null,
+        "death_3": null,
+        "death_4": null,
+        "death_5": null,
+        "hitflash_0": null,
+        "idle_0": null,
+        "idle_1": null,
+        "idle_2": null,
+        "idle_3": null,
+        "walk_0": null,
+        "walk_1": null,
+        "walk_2": null,
+        "walk_3": null,
+        "walk_4": null,
+        "walk_5": null
+      },
+      "boss": false,
+      "crop": [
+        619.0,
+        200.0,
+        112.0,
+        96.0
+      ],
+      "facing": -1,
+      "hero": false,
+      "scene": "5_r08_peak",
+      "side": "enemy"
+    },
+    "e_swarm": {
+      "anims": {
+        "attack": {
+          "fps": 10.0,
+          "frames": 3,
+          "loop": false
+        },
+        "death": {
+          "fps": 8.0,
+          "frames": 5,
+          "loop": false
+        },
+        "idle": {
+          "fps": 4.0,
+          "frames": 2,
+          "loop": true
+        },
+        "walk": {
+          "fps": 14.0,
+          "frames": 4,
+          "loop": true
+        }
+      },
+      "atlas_hit_frames": 2,
+      "bars": {
+        "attack_0": null,
+        "attack_1": null,
+        "attack_2": null,
+        "death_0": null,
+        "death_1": null,
+        "death_2": null,
+        "death_3": null,
+        "death_4": null,
+        "hitflash_0": null,
+        "idle_0": null,
+        "idle_1": null,
+        "walk_0": null,
+        "walk_1": null,
+        "walk_2": null,
+        "walk_3": null
+      },
+      "boss": false,
+      "crop": [
+        543.0,
+        204.0,
+        112.0,
+        96.0
+      ],
+      "facing": -1,
+      "hero": false,
+      "scene": "5_r08_peak",
+      "side": "enemy"
+    },
+    "fast": {
+      "anims": {
+        "attack": {
+          "fps": 10.0,
+          "frames": 4,
+          "loop": false
+        },
+        "death": {
+          "fps": 8.0,
+          "frames": 5,
+          "loop": false
+        },
+        "idle": {
+          "fps": 4.0,
+          "frames": 2,
+          "loop": true
+        },
+        "walk": {
+          "fps": 14.0,
+          "frames": 6,
+          "loop": true
+        }
+      },
+      "atlas_hit_frames": 2,
+      "bars": {
+        "attack_0": null,
+        "attack_1": null,
+        "attack_2": null,
+        "attack_3": null,
+        "death_0": null,
+        "death_1": null,
+        "death_2": null,
+        "death_3": null,
+        "death_4": null,
+        "hitflash_0": null,
+        "idle_0": null,
+        "idle_1": null,
+        "walk_0": null,
+        "walk_1": null,
+        "walk_2": null,
+        "walk_3": null,
+        "walk_4": null,
+        "walk_5": null
+      },
+      "boss": false,
+      "crop": [
+        178.0,
+        205.0,
+        112.0,
+        96.0
+      ],
+      "facing": 1,
+      "hero": false,
+      "scene": "4_r06_t46",
+      "side": "ally"
+    },
+    "hero_captain": {
+      "anims": {
+        "attack": {
+          "fps": 14.0,
+          "frames": 6,
+          "loop": false
+        },
+        "death": {
+          "fps": 8.0,
+          "frames": 6,
+          "loop": false
+        },
+        "idle": {
+          "fps": 5.0,
+          "frames": 4,
+          "loop": true
+        },
+        "walk": {
+          "fps": 10.0,
+          "frames": 6,
+          "loop": true
+        }
+      },
+      "atlas_hit_frames": 2,
+      "bars": {
+        "attack_0": null,
+        "attack_1": null,
+        "attack_2": null,
+        "attack_3": null,
+        "attack_4": null,
+        "attack_5": null,
+        "death_0": null,
+        "death_1": null,
+        "death_2": null,
+        "death_3": null,
+        "death_4": null,
+        "death_5": null,
+        "hitflash_0": null,
+        "idle_0": null,
+        "idle_1": null,
+        "idle_2": null,
+        "idle_3": null,
+        "walk_0": null,
+        "walk_1": null,
+        "walk_2": null,
+        "walk_3": null,
+        "walk_4": null,
+        "walk_5": null
+      },
+      "boss": false,
+      "crop": [
+        284.0,
+        204.0,
+        112.0,
+        96.0
+      ],
+      "facing": 1,
+      "hero": true,
+      "scene": "4_r06_t46",
+      "side": "ally"
+    },
+    "melee_basic": {
+      "anims": {
+        "attack": {
+          "fps": 12.0,
+          "frames": 5,
+          "loop": false
+        },
+        "death": {
+          "fps": 8.0,
+          "frames": 6,
+          "loop": false
+        },
+        "idle": {
+          "fps": 4.0,
+          "frames": 4,
+          "loop": true
+        },
+        "walk": {
+          "fps": 10.0,
+          "frames": 6,
+          "loop": true
+        }
+      },
+      "atlas_hit_frames": 2,
+      "bars": {
+        "attack_0": null,
+        "attack_1": null,
+        "attack_2": null,
+        "attack_3": null,
+        "attack_4": null,
+        "death_0": null,
+        "death_1": null,
+        "death_2": null,
+        "death_3": null,
+        "death_4": null,
+        "death_5": null,
+        "hitflash_0": null,
+        "idle_0": null,
+        "idle_1": null,
+        "idle_2": null,
+        "idle_3": null,
+        "walk_0": null,
+        "walk_1": null,
+        "walk_2": null,
+        "walk_3": null,
+        "walk_4": null,
+        "walk_5": null
+      },
+      "boss": false,
+      "crop": [
+        515.0,
+        206.0,
+        112.0,
+        96.0
+      ],
+      "facing": 1,
+      "hero": false,
+      "scene": "5_r08_peak",
+      "side": "ally"
+    },
+    "ranged_basic": {
+      "anims": {
+        "attack": {
+          "fps": 10.0,
+          "frames": 4,
+          "loop": false
+        },
+        "death": {
+          "fps": 8.0,
+          "frames": 6,
+          "loop": false
+        },
+        "idle": {
+          "fps": 4.0,
+          "frames": 4,
+          "loop": true
+        },
+        "walk": {
+          "fps": 10.0,
+          "frames": 6,
+          "loop": true
+        }
+      },
+      "atlas_hit_frames": 2,
+      "bars": {
+        "attack_0": null,
+        "attack_1": null,
+        "attack_2": null,
+        "attack_3": null,
+        "death_0": null,
+        "death_1": null,
+        "death_2": null,
+        "death_3": null,
+        "death_4": null,
+        "death_5": null,
+        "hitflash_0": null,
+        "idle_0": null,
+        "idle_1": null,
+        "idle_2": null,
+        "idle_3": null,
+        "walk_0": null,
+        "walk_1": null,
+        "walk_2": null,
+        "walk_3": null,
+        "walk_4": null,
+        "walk_5": null
+      },
+      "boss": false,
+      "crop": [
+        343.0,
+        200.0,
+        112.0,
+        96.0
+      ],
+      "facing": 1,
+      "hero": false,
+      "scene": "4_r06_t46",
+      "side": "ally"
+    },
+    "tank": {
+      "anims": {
+        "attack": {
+          "fps": 9.0,
+          "frames": 4,
+          "loop": false
+        },
+        "death": {
+          "fps": 8.0,
+          "frames": 6,
+          "loop": false
+        },
+        "idle": {
+          "fps": 3.0,
+          "frames": 3,
+          "loop": true
+        },
+        "walk": {
+          "fps": 8.0,
+          "frames": 6,
+          "loop": true
+        }
+      },
+      "atlas_hit_frames": 2,
+      "bars": {
+        "attack_0": null,
+        "attack_1": null,
+        "attack_2": null,
+        "attack_3": null,
+        "death_0": null,
+        "death_1": null,
+        "death_2": null,
+        "death_3": null,
+        "death_4": null,
+        "death_5": null,
+        "hitflash_0": null,
+        "idle_0": null,
+        "idle_1": null,
+        "idle_2": null,
+        "walk_0": null,
+        "walk_1": null,
+        "walk_2": null,
+        "walk_3": null,
+        "walk_4": null,
+        "walk_5": null
+      },
+      "boss": false,
+      "crop": [
+        315.0,
+        203.0,
+        112.0,
+        96.0
+      ],
+      "facing": 1,
+      "hero": false,
+      "scene": "4_r06_t46",
+      "side": "ally"
+    }
+  },
   "notes": [],
   "safe": [
     34.0,
@@ -1918,6 +2507,7 @@
       "won": true
     }
   },
+  "script_sha256": "3c092c462ddfdaa295309f14d056b8ad0724939397aafd805db7d61b103a4af4",
   "seed_call": 4242,
   "tag": "ko_1x",
   "view": [

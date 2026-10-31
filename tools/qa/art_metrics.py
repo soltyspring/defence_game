@@ -20,6 +20,15 @@ Per battle scene:
     cards_*            card icons on screen: min pairwise mean-colour dE (normal, deutan) and min pairwise shape
                        distance (16x16 L* pattern, mean |dL*|), with the pair
 Prints one JSON summary; writes the full result to --out (default <dir>/art_metrics.json). Owner: 07-qa.
+Animation (tags captured with --anim; per unit id, crops of the unit ALONE at its real position, 1x view px):
+    walk_change_max/mean_pct   pixels that change between consecutive walk frames / union of both silhouettes
+    walk_bob_px, walk_edge_travel_px   top-edge range and largest left/right edge travel over the cycle
+    attack_reach_px            how far the front edge moves forward (facing direction) vs walk frame 0
+    attack_distinct_pct        most distinct attack frame vs its CLOSEST walk frame (hitting vs walking)
+    hit_change_pct, hit_dE_mean   the hit reaction the game draws (flash on walk frame 0) vs walk frame 0
+    death_pose_change_pct, death_frames_readable, death_readable_until_s   silhouette change (XOR / union) of the death
+                               frames that still show >= 25 % of the body at mean |dL*| >= 10 against the background
+                               (fade included), how many such frames, and until when
 """
 import argparse
 import itertools
@@ -171,11 +180,15 @@ def scene_metrics(d, tag, scene, meta, k):
             feats.append({"text": c["text"], "disabled": c["disabled"], "lab": lab(crop).reshape(-1, 3).mean(axis=0),
                           "lab_d": lab(crop, "deutan").reshape(-1, 3).mean(axis=0), "pat": lab(pat)[..., 0]})
         best = {}
+        fails = []
         for i, j in itertools.combinations(range(len(feats)), 2):
             p, q = feats[i], feats[j]
-            for key, val in (("cards_min_dE_normal", float(np.linalg.norm(p["lab"] - q["lab"]))),
-                             ("cards_min_dE_deutan", float(np.linalg.norm(p["lab_d"] - q["lab_d"]))),
-                             ("cards_min_shape_dL", float(np.abs(p["pat"] - q["pat"]).mean()))):
+            dn = float(np.linalg.norm(p["lab"] - q["lab"]))
+            dd = float(np.linalg.norm(p["lab_d"] - q["lab_d"]))
+            sh = float(np.abs(p["pat"] - q["pat"]).mean())
+            if not ((dn >= 10.0 and dd >= 8.0) or sh >= 12.0):   # ART_BASELINE U1, per pair
+                fails.append(f'{p["text"]} / {q["text"]}')
+            for key, val in (("cards_min_dE_normal", dn), ("cards_min_dE_deutan", dd), ("cards_min_shape_dL", sh)):
                 if key not in best or val < best[key][0]:
                     best[key] = (val, f'{p["text"]} / {q["text"]}')
         for key, (val, pair) in best.items():
@@ -183,8 +196,122 @@ def scene_metrics(d, tag, scene, meta, k):
             out[key + "_pair"] = pair
         out["cards_disabled"] = [f["text"] for f in feats if f["disabled"]]
         out["cards_on_screen"] = len(feats)
+        out["cards_pairs_total"] = len(feats) * (len(feats) - 1) // 2
+        out["cards_pairs_failing_u1"] = len(fails)
+        out["cards_pairs_failing_u1_list"] = fails
     out["frame_mean"] = round(float(full.mean()), 1)
     out["frame_near_black_pct"] = pct(int((full.sum(axis=-1) < 30).sum()), screen)
+    return out
+
+
+def _anim_mask(fr, bg, bar, k):
+    m = diff(fr, bg)
+    if bar:
+        x0, y0, x1, y1 = rect_px(bar, k, 1.0, m.shape)
+        m[y0:y1, x0:x1] = False
+    return m
+
+
+def _bbox(m):
+    ys, xs = np.where(m)
+    if len(ys) == 0:
+        return None
+    return int(ys.min()), int(ys.max()), int(xs.min()), int(xs.max())
+
+
+def anim_metrics(d, tag, rep, k, sheet_dir=""):
+    """Per unit id: pose crops from capture_art_baseline.gd --anim (1x view px; all lengths in view px)."""
+    adir = os.path.join(d, "layers", "anim")
+    out = {}
+    for uid, info in rep.get("anim", {}).items():
+        bgp = os.path.join(adir, f"{tag}_{uid}_bg.png")
+        if not os.path.exists(bgp):
+            continue
+        bg = load(bgp)
+        fr, mk = {}, {}
+        for an, a in info["anims"].items():
+            fr[an] = [load(os.path.join(adir, f"{tag}_{uid}_{an}_{i}.png")) for i in range(a["frames"])]
+            mk[an] = [_anim_mask(f, bg, info["bars"].get(f"{an}_{i}"), k) for i, f in enumerate(fr[an])]
+        hp = os.path.join(adir, f"{tag}_{uid}_hitflash_0.png")
+        if os.path.exists(hp):
+            fr["hitflash"] = [load(hp)]
+            mk["hitflash"] = [_anim_mask(fr["hitflash"][0], bg, info["bars"].get("hitflash_0"), k)]
+
+        def change(a, ia, b, ib):
+            ma, mb = mk[a][ia], mk[b][ib]
+            u = ma | mb
+            ch = diff(fr[a][ia], fr[b][ib]) & u
+            den = u.sum()
+            return 100.0 * ch.sum() / den if den else 0.0
+
+        r = {"scene": info["scene"], "side": info["side"], "hero": info["hero"], "boss": info["boss"],
+             "atlas_hit_frames": info.get("atlas_hit_frames", 0), "hit_anim_drawn_by_game": False}
+        fac = info["facing"]
+
+        def front(m):
+            bb = _bbox(m)
+            return None if bb is None else (bb[3] if fac > 0 else -bb[2])
+        if "walk" in mk:
+            n = len(mk["walk"])
+            pairs = [(i, (i + 1) % n) for i in range(n if info["anims"]["walk"]["loop"] else n - 1)]
+            ch = [change("walk", i, "walk", j) for i, j in pairs]
+            tops = [b[0] for b in map(_bbox, mk["walk"]) if b]
+            lefts = [b[2] for b in map(_bbox, mk["walk"]) if b]
+            rights = [b[3] for b in map(_bbox, mk["walk"]) if b]
+            r["body_px"] = int(np.median([m.sum() for m in mk["walk"]]) / (k * k))
+            bb0 = _bbox(mk["walk"][0])
+            r["body_height_px"] = (bb0[1] - bb0[0] + 1) / k if bb0 else None
+            r["walk_change_max_pct"] = round(max(ch), 1)
+            r["walk_change_mean_pct"] = round(float(np.mean(ch)), 1)
+            r["walk_bob_px"] = (max(tops) - min(tops)) / k if tops else None
+            r["walk_edge_travel_px"] = max(max(lefts) - min(lefts), max(rights) - min(rights)) / k if lefts else None
+            r["walk_fps"] = info["anims"]["walk"]["fps"]
+            r["walk_frames"] = n
+        if "attack" in mk and "walk" in mk:
+            f0 = front(mk["walk"][0])
+            reach = [front(m) - f0 for m in mk["attack"] if front(m) is not None and f0 is not None]
+            r["attack_reach_px"] = max(reach) / k if reach else None
+            r["attack_vs_walk0_max_pct"] = round(max(change("attack", i, "walk", 0) for i in range(len(mk["attack"]))), 1)
+            # most distinct attack frame against its CLOSEST walk frame: can a player tell hitting from walking?
+            r["attack_distinct_pct"] = round(max(min(change("attack", i, "walk", j) for j in range(len(mk["walk"])))
+                                                 for i in range(len(mk["attack"]))), 1)
+            r["attack_frames"] = len(mk["attack"])
+            r["attack_s"] = round(len(mk["attack"]) / info["anims"]["attack"]["fps"], 2)
+        if "hitflash" in mk and "walk" in mk:
+            m0 = mk["walk"][0]
+            r["hit_change_pct"] = round(change("hitflash", 0, "walk", 0), 1)
+            if m0.any():
+                r["hit_dE_mean"] = round(float(np.linalg.norm(lab(fr["hitflash"][0])[m0] - lab(fr["walk"][0])[m0], axis=-1).mean()), 1)
+            r["hit_shown_s"] = 0.12
+        if "death" in mk and "walk" in mk:
+            alive = mk["walk"][0].sum()
+            Lb = lab(bg)[..., 0]
+            vis = []
+            for i, m in enumerate(mk["death"]):
+                dl = float(np.abs(lab(fr["death"][i])[..., 0][m] - Lb[m]).mean()) if m.any() else 0.0
+                vis.append(bool(m.sum() >= 0.25 * alive and dl >= 10.0))
+            fps = info["anims"]["death"]["fps"]
+            r["death_first_change_pct"] = round(change("death", 0, "walk", 0), 1)
+            # silhouette change of the frames the player can still see (colour fade excluded): does it fall / collapse?
+            m0 = mk["walk"][0]
+            xs = [100.0 * (m ^ m0).sum() / max(1, (m | m0).sum()) for i, m in enumerate(mk["death"]) if vis[i]]
+            r["death_pose_change_pct"] = round(max(xs), 1) if xs else 0.0
+            r["death_frames"] = len(mk["death"])
+            r["death_frames_readable"] = int(sum(vis))
+            r["death_readable_share_pct"] = round(100.0 * sum(vis) / len(vis), 1) if vis else 0.0
+            last = max([i for i, v in enumerate(vis) if v], default=-1)
+            r["death_readable_until_s"] = round((last + 1) / fps, 2) if last >= 0 else 0.0
+            r["death_anim_s"] = round(len(mk["death"]) / fps, 2)
+        out[uid] = r
+        if sheet_dir:
+            rows = []
+            for an in ("idle", "walk", "attack", "hitflash", "death"):
+                if an in fr:
+                    rows.append(np.concatenate([bg] + fr[an], axis=1))
+            w = max(x.shape[1] for x in rows)
+            rows = [np.pad(x, ((0, 0), (0, w - x.shape[1]), (0, 0)), constant_values=255) for x in rows]
+            Image.fromarray(np.concatenate(rows, axis=0)).resize((w * 2, sum(x.shape[0] for x in rows) * 2), Image.NEAREST) \
+                .save(os.path.join(sheet_dir, f"anim_{uid}.png"))
     return out
 
 
@@ -213,6 +340,7 @@ def main():
     ap.add_argument("--tags", default="ko_1x,ko_2x,en_1x,en_2x")
     ap.add_argument("--out", default="")
     ap.add_argument("--compare-dir", default="", help="second capture folder of the same tags: pixel-exact re-run check")
+    ap.add_argument("--sheets", default="", help="write one animation contact sheet per unit id here (x2 nearest)")
     a = ap.parse_args()
     if a.compare_dir:
         res = {t: compare_dirs(a.dir, a.compare_dir, t) for t in a.tags.split(",") if t}
@@ -240,6 +368,13 @@ def main():
             for key in ("prepass", "prepass_matches", "battle_seed", "budget", "bot"):
                 if key in meta:
                     res[tag]["scenes"][scene][key] = meta[key]
+        res[tag]["script_sha256"] = rep.get("script_sha256", "")
+        if rep.get("anim"):
+            sd = ""
+            if a.sheets:
+                sd = a.sheets
+                os.makedirs(sd, exist_ok=True)
+            res[tag]["anim"] = anim_metrics(a.dir, tag, rep, k, sd)
     out = a.out or os.path.join(a.dir, "art_metrics.json")
     # pixel integrity: a 2x frame must be the 1x frame scaled by exactly 2 (nearest), scene by scene
     for loc in ("ko", "en"):

@@ -34,6 +34,8 @@ const SETTLE_S := 3.0                   # real seconds after the last step: HUD 
 var out_dir := ""
 var tag := "run"
 var dry := false
+var anim := false                      # --anim: per-unit pose crops in scenes 4-6 (1x tag only; see _anim_pass)
+var anim_done := {}
 var app: Node
 var content: Node
 var atlas: Node
@@ -74,6 +76,7 @@ func _initialize() -> void:
 		if a.begins_with("--out="): out_dir = a.get_slice("=", 1)
 		elif a.begins_with("--tag="): tag = a.get_slice("=", 1)
 		elif a == "--dry": dry = true
+		elif a == "--anim": anim = true
 		elif a.begins_with("--locale="): load("res://src/ui/ui_text.gd").load_locale(a.get_slice("=", 1))
 		elif a.begins_with("--target="): SafeArea.override_target = float(a.get_slice("=", 1))
 		elif a.begins_with("--safe="):
@@ -123,6 +126,8 @@ func _run() -> void:
 	report.tag = tag
 	report.safe = [SafeArea.override_insets.x, SafeArea.override_insets.y, SafeArea.override_insets.z, SafeArea.override_insets.w]
 	report.seed_call = SEED
+	report.script_sha256 = FileAccess.get_file_as_string("res://tests/acceptance/capture_art_baseline.gd").sha256_text()
+	report.anim = {}
 	await create_timer(SETTLE_S).timeout
 	await _grab(out_dir.path_join("%s_1_menu.png" % tag))
 	report.scenes["1_menu"] = {"kind": "ui"}
@@ -290,6 +295,8 @@ func _capture_battle(scene: String, b: Node, budget: String, extra: Dictionary) 
 	var keep_r: float = sim.hero_respawn
 	sim.players.clear(); sim.enemies.clear(); sim.hero_respawn = 99.0
 	await _grab(base + "_bg.png")
+	if anim and scene in ["4_r06_t46", "5_r08_peak", "6_r10_boss"]:
+		await _anim_pass(b, scene, keep_p, keep_e, keep_r)
 	sim.players.append_array(keep_p); sim.enemies.append_array(keep_e); sim.hero_respawn = keep_r
 	for o in off_t: o.alive = true
 	for o in off_f: o.alive = true
@@ -298,6 +305,94 @@ func _capture_battle(scene: String, b: Node, budget: String, extra: Dictionary) 
 	if extra.has("prepass") and str(extra.prepass.get("mode", "")) == "peak":
 		meta["prepass_matches"] = int(meta.units_in_camera) == int(extra.prepass.count)
 	report.scenes[scene] = meta
+
+## Animation reading, same frozen state (called with the UI layer, damage numbers, effects and every unit hidden).
+## One instance per unit id (first one whose crop fits on screen), shown ALONE at its real position, then each pose the
+## game can draw: idle, walk, attack and death frames (t = (i + 0.5) / fps; death also fades as battle_view does with
+## dead_t = 0.7 - t) and the hit reaction the game shows (flash = 0.12 on walk frame 0; battle_view never draws the
+## atlas "hit" anim). Crops of 112x96 view px go to <out>/layers/anim/<tag>_<id>_<pose>_<i>.png plus <id>_bg.png.
+## HP bars are hidden for regular units (hp = hp_max); hero/boss bar rects are recorded per pose for masking.
+func _anim_pass(b: Node, scene: String, keep_p: Array, keep_e: Array, keep_r: float) -> void:
+	var sim = b.sim
+	var view: Node2D = b.view
+	var vs := root.get_visible_rect().size
+	var adir := out_dir.path_join("layers").path_join("anim")
+	DirAccess.make_dir_recursive_absolute(adir)
+	var cands: Array = []
+	cands.append_array(keep_p); cands.append_array(keep_e)
+	if keep_r <= 0.0: cands.append(sim.hero)
+	for u in cands:
+		if u.dying: continue
+		var uid := str(u.def.get("id", u.anim_set))
+		if anim_done.has(uid): continue
+		var ct: Transform2D = b.get_viewport().get_canvas_transform()
+		var sp: Vector2 = ct * Vector2(roundf(u.x), roundf(view.ground_y + u.lane_y))
+		var crop := Rect2(sp.x - 56.0, sp.y - 88.0, 112.0, 96.0)
+		if crop.position.x < 0.0 or crop.end.x > vs.x or crop.position.y < 0.0 or crop.end.y > vs.y: continue
+		anim_done[uid] = true
+		var saved := {"state": u.state, "anim_t": u.anim_t, "flash": u.flash, "dying": u.dying, "dead_t": u.dead_t, "hp": u.hp}
+		var flip: bool = (sim.hero_dir < 0) if u.is_hero else (u.side < 0)
+		var info := {"scene": scene, "side": "ally" if u.side == 1 else "enemy", "hero": u.is_hero, "boss": u.is_boss,
+			"facing": -1 if flip else 1, "crop": [crop.position.x, crop.position.y, crop.size.x, crop.size.y], "anims": {}, "bars": {}}
+		await _grab_region(adir.path_join("%s_%s_bg.png" % [tag, uid]), crop)
+		_show(sim, u, true)
+		if not u.is_hero and not u.is_boss: u.hp = u.hp_max
+		for an in ["idle", "walk", "attack", "death"]:
+			var rec = atlas.anim_rec(u.anim_set, an)
+			if rec == null: continue
+			var n: int = rec.rects.size()
+			info.anims[an] = {"frames": n, "fps": rec.fps, "loop": rec.loop}
+			for i in n:
+				u.flash = 0.0
+				u.anim_t = (i + 0.5) / float(rec.fps)
+				u.dying = an == "death"
+				u.dead_t = 0.7 - u.anim_t if an == "death" else 0.0
+				u.state = {"idle": SimS.S_IDLE, "walk": SimS.S_WALK, "attack": SimS.S_ATTACK, "death": SimS.S_DYING}[an]
+				info.bars["%s_%d" % [an, i]] = _bar_in_crop(u, rec, i, view, ct, crop)
+				await _grab_region(adir.path_join("%s_%s_%s_%d.png" % [tag, uid, an, i]), crop)
+		var wrec = atlas.anim_rec(u.anim_set, "walk")
+		if wrec != null:
+			u.dying = false; u.dead_t = 0.0; u.state = SimS.S_WALK
+			u.anim_t = 0.5 / float(wrec.fps)
+			u.flash = 0.12
+			info.bars["hitflash_0"] = _bar_in_crop(u, wrec, 0, view, ct, crop)
+			await _grab_region(adir.path_join("%s_%s_hitflash_0.png" % [tag, uid]), crop)
+		info["atlas_hit_frames"] = atlas.anim_rec(u.anim_set, "hit").rects.size() if atlas.anim_rec(u.anim_set, "hit") != null else 0
+		for k in saved: u.set(k, saved[k])
+		_show(sim, u, false)
+		report.anim[uid] = info
+
+func _show(sim, u, on: bool) -> void:
+	if u.is_hero:
+		sim.hero_respawn = 0.0 if on else 99.0
+	elif on:
+		if u.side == 1: sim.players.append(u)
+		else: sim.enemies.append(u)
+	else:
+		sim.players.erase(u)
+		sim.enemies.erase(u)
+
+## HP bar rect (outline) of u at frame i of rec, in crop pixels (view px), or null when battle_view would not draw it.
+func _bar_in_crop(u, rec, i: int, view: Node2D, ct: Transform2D, crop: Rect2):
+	if u.dying: return null
+	var w := 12.0 + 4.0 * float(u.def.get("size", 1.0))
+	if u.hp / u.hp_max >= 0.999 and w < 30.0: return null
+	var r: Rect2 = rec.rects[i]
+	var c := Vector2(roundf(u.x), roundf(view.ground_y + u.lane_y)) + Vector2(0, -r.size.y - 3.0)
+	var bar := Rect2(roundf(c.x - w * 0.5), roundf(c.y), roundf(w), 2.0).grow(1.0)
+	var p: Vector2 = ct * bar.position - crop.position
+	return [p.x, p.y, bar.size.x, bar.size.y]
+
+func _grab_region(path: String, crop: Rect2) -> void:
+	await _frames(2)
+	if dry or DisplayServer.get_name() == "headless":
+		return
+	await RenderingServer.frame_post_draw
+	var img := root.get_texture().get_image()
+	img.convert(Image.FORMAT_RGB8)
+	var k := float(img.get_width()) / root.get_visible_rect().size.x
+	var r := Rect2i(int(crop.position.x * k), int(crop.position.y * k), int(crop.size.x * k), int(crop.size.y * k))
+	img.get_region(r).save_png(path)
 
 func _meta(b: Node, budget: String) -> Dictionary:
 	var sim = b.sim

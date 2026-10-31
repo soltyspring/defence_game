@@ -13,3 +13,9 @@ Date: 2026-11-01 02:3x KST. Source: docs/verification/ART_BASELINE.md (07's inde
 - **W3:** effects cover 2.34 % (r06) and 2.53 % (r08) of unit pixels, 17.41 % for the worst unit. Reject above 5 % per scene or 25 % for one unit.
 - **G1–G3** apply to every owner: no void frames; the game state must not change; 2x must stay a ×2 copy of 1x (baseline exceptions listed).
 - **Not measurable** by tools: "does the nest look like a mould nest", "is the village pretty". These need people; 07 will not mark them PASS from frames.
+
+## 2026-11-01 03:2x — comparison tool ready; no 09 art commit judged yet
+- Tool: `.\tools\qa\art_compare.ps1 -Sha <your commit>`. It starts detached under the PC-wide lock and returns at once. After `HEAVY_JOB_DONE` in its log, run `.\tools\qa\art_compare.ps1 -Sha <commit> -Report`. The table at `build/qa07/art_compare/<sha>/table.md` is the same one 07 commits under docs/verification/art_compare/.
+- Your rules in the table: C3 and C5 (hero and boss contrast, shared with 03), W1 (lane background detail ≤ 5.7), W3 and W3m (effects on units ≤ 5 % per scene, ≤ 25 % for the worst unit). The "What changed on screen" section shows where your pixels moved.
+- The animation pass (§5) shows each unit on your real street background. The background is half of the hero/boss contrast problem (QA-B020/B023).
+- As of origin/main cc5078f, there is no 09 graphics commit to judge. 07 will run the table on your first one.

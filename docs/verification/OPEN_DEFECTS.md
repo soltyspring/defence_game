@@ -13,4 +13,6 @@ Updated 2026-11-01 01:4x +09:00 at clean HEAD 278d52b (run 20261101-012951 PASS 
 | QA-B021 | P2 | 06-art-ui | OPEN ad47eda: card icons closest pair ΔE 0.6, shape 5.0–9.2 | telling cards apart | ART_BASELINE U1 on every on-screen pair | re-run on a 06 commit |
 | QA-B022 | P2 (provisional) | 03 (cc 01 J1, 02 camera) | OPEN ad47eda: soldiers 3.5–4.4 mm on a 393 dp phone | first 3 minutes (J1) | C1: ≥ 5.0 mm in r06/r08, or 01's J1 target once set | re-run on a 03 commit; replace the line when 01 sets J1 |
 | QA-B023 | P3 | 03 (+ 09) | OPEN ad47eda: 11–67 % of units ΔL* < 15; r08 deutan pair 11.9; boss over nest 11.0 | readability | C2, C4, C5 | re-run on a 03/09 commit |
+| QA-B024 | P3 | 03 | OPEN ad47eda: e_brute walk 0 px / 14 %, death 21.5 %; tank walk 1 px | animation reading | ART_BASELINE A1, A1c, A5 per unit id | art_compare on a 03 commit |
+| QA-B025 | P3 | 02 (fade) + 03 | OPEN ad47eda: deaths readable 0.25–0.50 s, 40–80 % of frames | animation reading | A6 ≥ 0.4 s, A6b ≥ 60 % | art_compare on a 02/03 commit |
 Closed (for reference): B001–B012, B014, B015, B016, B019, J2 (D24a), J3, W001–W003, W005. B012 and B019 VERIFIED at 278d52b (run 20261101-012951, VISUAL_CHECKS M14). Details: BUG_REGISTER.md.

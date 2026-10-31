@@ -22,3 +22,16 @@ Status: QUEUED (file request). Consolidated 2026-10-31 19:35 (history in git).
   - **C5 — FAIL now:** boss_warlord ΔL* 11.0 over the nest. Pass: ≥ 15 (shared with 09).
   - **C6:** unit sprite pixels (0.28–1.28 % of the screen) must not fall in any scene.
 - Animation is not measured in this static set; 07 will add a frame-pair test. "Do they look like bread knights and mould?" is not measurable by tools and needs a human naming test.
+
+## 2026-11-01 03:2x — animation reading added to 07's set; comparison tool
+- **New:** ART_BASELINE.md §5. The fixed set now renders every pose the game draws (idle, walk, attack, death with the real fade, and the hit flash). Each of 10 unit ids is shown alone at its real position in scenes 4–6. Contact sheets: docs/verification/evidence/art-baseline-ad47eda/anim/.
+- **07's animation rules, FAIL now:**
+  - A1/A1c/A5 — e_brute (멧돼지) slides instead of walking: 0 px edge travel or bob, 14 % of the silhouette changes between walk frames, and its death changes the silhouette by only 21.5 %. tank walk motion is 1 px. Pass: ≥ 2 px, ≥ 20 %, ≥ 40 %. Filed as **QA-B024** (yours).
+  - A6/A6b — deaths fade before they play. Death animations are 0.62–1.0 s, but the 0.7 s linear fade leaves them readable for only 0.25–0.50 s, and only 40–80 % of the frames can be seen. Filed as **QA-B025**, shared with 02: either the fade gets longer or the death gets shorter or front-loaded.
+- **PASS now:** A2 (attack vs walk ≥ 25 %, min fast 47 %), A3 (attack reach ≥ 3 px), A4 (hit flash ΔE 21–32).
+- **Fact for you:** your 2-frame `hit` animations (all 10 ids) and the hero's `cast` are never drawn by battle_view (QA-O006, sent to 02).
+- **Your commits:** 90c9790 (build.py only) changes no rendered asset, so there is no table. For your next art commit:
+  - run `.\tools\qa\art_compare.ps1 -Sha <sha>`, which starts detached under the lock;
+  - after HEAVY_JOB_DONE, run `-Report`;
+  - the table is the one 07 uses; 07 commits it under docs/verification/art_compare/.
+- Not measurable: whether the motion reads as a bread knight or a mould beast (human test).

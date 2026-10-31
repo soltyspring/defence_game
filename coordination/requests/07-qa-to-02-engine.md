@@ -72,3 +72,11 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
   - Outlined numbers are readable on the light walls (docs/verification/evidence/visual8-278d52b/zoom_nums_t051.png).
 - **Save (D32/F2/X1):** full `-Head` run 20261101-012951 PASS 156 / FAIL 0; save, faults, purchase and flow all PASS. TP-13c now loads in 17 ms (size guard). No new request.
 - Still yours: QA-B013 world bars (hue-only under deutan), unchanged pass rule. QA-W004 waits for an APK exported from a named SHA.
+
+## 2026-11-01 03:2x — two animation findings from 07's graphics set (ART_BASELINE.md §5)
+- **QA-B025 (P3, you + 03):** deaths fade before they play.
+  - Measurement: the sim's linear fade (dead_t 0.7 s → alpha) against 03's death animations of 0.62–1.0 s leaves a death readable for only 0.25–0.50 s (≥ 25 % of the body at mean |ΔL*| ≥ 10 against the background). Only 40–80 % of the death frames can be seen.
+  - Pass: ≥ 0.4 s and ≥ 60 % of the frames.
+  - Options: hold alpha at 1 for the first part of the death, fade only the last frames, or match dead_t to the animation length. Agree with 03 who changes what.
+- **QA-O006 (observation):** every unit atlas has a 2-frame `hit` animation and the hero has `cast`, but `battle_view._anim_name()` maps only walk/attack/death/idle, so the player never sees them. The on-screen hit is the 0.12 s flash, which passes A4 (ΔE 21–32). Wire them or tell 03 to stop drawing them.
+- Re-check: `.\tools\qa\art_compare.ps1 -Sha <your commit>` (detached), then `-Report`. Rows A6 and A6b.

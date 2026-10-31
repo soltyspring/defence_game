@@ -25,11 +25,15 @@ Godot 4.7.2 on Windows builds `user://` from `%APPDATA%` and `application/config
 - The runner deletes every file larger than 1 MiB under the private APPDATA after the run and lists each one in `env.txt` (`pruned …`). Small files (test saves, reports, Godot logs) stay with the run folder as evidence.
 - `build/qa07/` is git-ignored and owned by 07. Run folders are kept. After pruning, a run's private folder holds only small files.
 
-## Leftovers in the REAL folder (decision needed before deleting)
+## Leftovers in the REAL folder (resolved)
 - Content: only 07's own `qa07\` subtree. 214 files, 996,211,578 bytes, newest 18:40:12. No file there is newer than the runner change.
 - Backup: 10's read-only copy `%LOCALAPPDATA%\defence_userdata_backup\20261031-191353\Lane Defence\qa07` has every one of the 214 files at the same size (checked 23:08 and 23:4x).
 - Tool: `tools/qa/clean_real_qa07.ps1`.
   - Default is a dry run, which only lists the files.
   - `-Apply` deletes only the `qa07\` subtree. It refuses if any file there changed in the last 10 minutes or lacks a same-size backup copy. It writes the deleted-file list to `build/qa07/clean_real_qa07_<ts>.txt`.
   - `save.json`, `save.json.bak` and the other folders are never touched.
-- Status: dry run done (214 files, 0 without backup, 0 recent). **Not applied.** Deleting files in the player folder is a change to the real user folder, so 07 waits for the user's yes before running `-Apply`.
+- Status: **RESOLVED 2026-11-01 02:20.** The user approved the deletion ("지워"). The coordinator ran `tools/qa/clean_real_qa07.ps1`, first as a dry run and then with `-Apply`. Result:
+  - 214 files (996,211,578 B) in the real `qa07\` subtree were deleted.
+  - save.json/.bak hashes are unchanged (614A1FAC…/E4263BE6…, re-checked by 07 at 02:2x).
+  - The deleted-file list is `build/qa07/clean_real_qa07_20261101-022023.txt` (214 lines).
+  - The real `qa07\` folder no longer exists. 10's backup copy is still the only copy of those old files.

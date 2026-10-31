@@ -1,0 +1,27 @@
+{
+ "ko_1x": {
+  "files": 27,
+  "identical": 27,
+  "differing": []
+ },
+ "en_1x": {
+  "files": 27,
+  "identical": 27,
+  "differing": []
+ },
+ "ko_2x": {
+  "files": 27,
+  "identical": 26,
+  "differing": [
+   {
+    "file": "ko_2x_6_r10_boss.png",
+    "diff_px": 184
+   }
+  ]
+ },
+ "en_2x": {
+  "files": 27,
+  "identical": 27,
+  "differing": []
+ }
+}

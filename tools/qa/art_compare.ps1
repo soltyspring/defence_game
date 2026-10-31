@@ -1,0 +1,83 @@
+# 07-qa: capture 07's fixed graphics set at ONE commit and compare it with the baseline (docs/verification/ART_BASELINE.md).
+# Owner: 07-qa. Anyone may run it (03, 06, 09, coordinator); the table is the same for everyone.
+#   Step 1 (heavy, detached; returns at once):   .\tools\qa\art_compare.ps1 -Sha <commit> [-Tags ko_1x,en_1x,ko_2x,en_2x]
+#           prints HEAVY_JOB_STARTED ... out=<log>; poll the log for '^HEAVY_JOB_DONE' in short calls.
+#   Step 2 (light, after HEAVY_JOB_DONE):        .\tools\qa\art_compare.ps1 -Sha <commit> -Report [-Tags ...]
+#           writes <out>\table.md and <out>\compare.json (rules, PASS/FAIL, BETTER/SAME/WORSE vs baseline, G1-G3 VOID).
+# The job (inside coordination/heavy_run_detached.ps1 -> heavy_run.ps1 lock):
+#   git archive <commit> -> %TEMP%\qa07_art_<short>; overlay 07's tests/acceptance/capture_art_baseline.gd(.uid) from this
+#   checkout; Godot --import with a private APPDATA (import guard: every .import target must exist, else retry, else stop);
+#   tests/acceptance/capture_art_baseline.gd through tools/build/visible_launch.ps1 (secondary monitor, isolated APPDATA)
+#   for each tag, 393 dp condition; ko_1x also with --anim.
+# Default out: build\qa07\art_compare\<short>. Default baseline: docs\verification\evidence\art-baseline-ad47eda.
+param([Parameter(Mandatory)][string]$Sha, [string[]]$Tags = @('ko_1x'), [switch]$Report, [string]$Out = '',
+      [string]$Baseline = '')
+$ErrorActionPreference = 'Stop'
+$Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+Set-Location $Root
+if ($Tags.Count -eq 1 -and $Tags[0] -match ',') { $Tags = $Tags[0].Split(',') }
+$full = (& git rev-parse --verify "$Sha^{commit}" 2>$null)
+if (-not $full) { Write-Host "unknown commit: $Sha"; exit 2 }
+$short = $full.Substring(0, 7)
+if (-not $Out) { $Out = Join-Path $Root "build\qa07\art_compare\$short" }
+if (-not $Baseline) { $Baseline = Join-Path $Root 'docs\verification\evidence\art-baseline-ad47eda' }
+$cap = Join-Path $Out 'cap'
+if ($Report) {
+    $py = 'python'
+    & $py (Join-Path $Root 'tools\qa\art_metrics.py') --dir $cap --tags ($Tags -join ',') --out (Join-Path $Out 'art_metrics.json') --sheets (Join-Path $Out 'anim_sheets') | Out-Null
+    if ($LASTEXITCODE -ne 0) { Write-Host 'art_metrics.py failed'; exit 1 }
+    & $py (Join-Path $Root 'tools\qa\art_compare.py') --new (Join-Path $Out 'art_metrics.json') --base (Join-Path $Baseline 'art_metrics.json') `
+        --sha $short --out-md (Join-Path $Out 'table.md') --out-json (Join-Path $Out 'compare.json') --new-dir $cap --base-dir $Baseline
+    exit $LASTEXITCODE
+}
+New-Item -ItemType Directory -Force $cap | Out-Null
+$job = Join-Path $Out 'job.ps1'
+$tagList = ($Tags | ForEach-Object { "'$_'" }) -join ','
+@"
+`$ErrorActionPreference = 'Continue'
+Set-Location '$Root'
+`$Godot = '$Root\tools\engine\Godot_v4.7.2-stable_win64_console.exe'
+`$snap = Join-Path `$env:TEMP 'qa07_art_$short'
+`$cap = '$cap'
+"art_compare job sha=$full out=$Out"
+if (Test-Path `$snap) { Remove-Item -Recurse -Force `$snap }
+New-Item -ItemType Directory -Force `$snap | Out-Null
+& git archive --format=zip -o "`$snap.zip" $full
+Expand-Archive "`$snap.zip" `$snap -Force; Remove-Item "`$snap.zip"
+Copy-Item '$Root\tests\acceptance\capture_art_baseline.gd' (Join-Path `$snap 'tests\acceptance') -Force
+if (Test-Path '$Root\tests\acceptance\capture_art_baseline.gd.uid') { Copy-Item '$Root\tests\acceptance\capture_art_baseline.gd.uid' (Join-Path `$snap 'tests\acceptance') -Force }
+"capture script sha256=" + (Get-FileHash '$Root\tests\acceptance\capture_art_baseline.gd' -Algorithm SHA256).Hash.ToLower()
+`$prevApp = `$env:APPDATA
+`$env:APPDATA = '$Out\import_appdata'
+New-Item -ItemType Directory -Force `$env:APPDATA | Out-Null
+& `$Godot --headless --path `$snap --import 2>&1 | Out-Null
+`$missing = @()
+for (`$pass = 1; `$pass -le 3; `$pass++) {
+    `$missing = @()
+    foreach (`$imp in Get-ChildItem `$snap -Recurse -Filter '*.import' -File | Where-Object { `$_.FullName -notmatch '\\\.godot\\' }) {
+        foreach (`$m in Select-String -Path `$imp.FullName -Pattern '^path(\.[a-z0-9_]+)?="res://(\.godot/imported/[^"]+)"') {
+            if (-not (Test-Path (Join-Path `$snap `$m.Matches[0].Groups[2].Value))) { `$missing += `$m.Matches[0].Groups[2].Value }
+        }
+    }
+    if (`$missing.Count -eq 0) { break }
+    "import incomplete (pass `$pass): `$(`$missing.Count) missing; re-importing"
+    & `$Godot --headless --path `$snap --import 2>&1 | Out-Null
+}
+`$env:APPDATA = `$prevApp
+"import_missing_after_guard=`$(`$missing.Count)"
+if (`$missing.Count -gt 0) { 'SNAPSHOT IMPORT INCOMPLETE: no capture'; exit 3 }
+`$dry = & '$Root\docs\research\systems\probes\isolated_godot.ps1' -TimeoutSec 300 -GodotArgs @('--headless', '--path', `$snap, '-s', 'res://tests/acceptance/capture_art_baseline.gd', '--', "--out=`$(`$cap.Replace('\','/'))/dry", '--tag=dry', '--dry', '--anim', '--locale=ko', '--safe=34,0,34,0', '--target=44')
+`$dry | Where-Object { `$_ -match '^\[art\]|SCRIPT ERROR|Parse Error|ISOLATED_GODOT' } | ForEach-Object { "dry: `$_" }
+if (-not (`$dry | Where-Object { `$_ -match '^\[art\] ' })) { 'DRY RUN FAILED: no [art] line; no visible capture'; exit 4 }
+foreach (`$t in @($tagList)) {
+    `$res = if (`$t -like '*_2x') { '1600x720' } else { '800x360' }
+    `$loc = `$t.Split('_')[0]
+    `$ua = @("--out=`$(`$cap.Replace('\','/'))", "--tag=`$t", "--locale=`$loc", '--safe=34,0,34,0', '--target=44')
+    if (`$t -eq 'ko_1x') { `$ua += '--anim' }
+    & '$Root\tools\build\visible_launch.ps1' -ProjectPath `$snap -Script res://tests/acceptance/capture_art_baseline.gd -Resolution `$res -TimeoutSec 420 -EvidenceDir `$cap -UserArgs `$ua
+    "visible `$t exit=`$LASTEXITCODE"
+}
+"art_compare capture done; next: .\tools\qa\art_compare.ps1 -Sha $short -Report -Tags $($Tags -join ',')"
+"@ | Set-Content -Path $job -Encoding utf8
+& (Join-Path $Root 'coordination\heavy_run_detached.ps1') -Label "07-art-compare-$short" -ScriptFile $job
+Write-Host "after HEAVY_JOB_DONE: .\tools\qa\art_compare.ps1 -Sha $short -Report -Tags $($Tags -join ',')"

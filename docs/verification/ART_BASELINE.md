@@ -24,6 +24,10 @@ This file is 07's yardstick for the three graphics owners: 03 (characters, anima
   - The camera is snapped to hero x + 60 every frame, with no shake.
   - Tutorials are marked done, and each capture waits 3 s so transient toasts expire.
 - **Re-run proof:** a second ko_1x run in the same lock is pixel-identical on **27/27 files**, main frames and layer frames (`rerun_compare.json`).
+- **Baseline re-made 2026-11-01 02:5x–03:05** with the animation pass (§5), at the same SHA, through `tools/qa/art_compare.ps1`. The capture script sha256 is 3c092c46… and is recorded in every report (gate G2).
+  - Against the first set, 107 of 108 files are pixel-identical (`remake_vs_first.json`).
+  - The one difference is `ko_2x_6_r10_boss.png`: 184 px in one 2x row at the top edge of a card. The HUD's card cooldown shade sits at a fractional height there and depends on real time. All battlefield layers are identical.
+  - The evidence folder now holds the re-made frames and metrics.
 - **Masks:** `tools/qa/art_metrics.py` takes exact pixel differences between frames of the same frozen state:
   - HUD: UI layer hidden.
   - TEXT: damage numbers hidden.
@@ -67,7 +71,7 @@ How to read the rules:
 |---|---|---|
 | G1 | "the screen is broken" | every frame has mean > 10 and near-black < 50 %, otherwise the run is void |
 | G2 | "it plays differently" | same `sim_t`, units in camera, ally/enemy counts and `prepass_matches: true` as the baseline for each scene. Any difference means the art change touched gameplay or the harness: void until explained |
-| G3 | "pixel art turned blurry" | 2x frames stay a ×2 copy of 1x except at most the baseline pixels above |
+| G3 | "pixel art turned blurry" | 2x frames stay a ×2 copy of 1x except at most the baseline pixels above + 64 1x px (the card-cooldown edge varies by up to 46 px between identical runs) |
 
 ### 03-art (characters, animation)
 | ID | Strongest rejection reason | Pass rule | Baseline |
@@ -92,22 +96,74 @@ How to read the rules:
 ### 06-art-ui (UI, cards, icons, logo)
 | ID | Strongest rejection reason | Pass rule | Baseline |
 |---|---|---|---|
-| U1 | "all cards look the same" | for every pair of card icons on screen: (mean-colour ΔE ≥ 10 normal and ≥ 8 deutan) or shape distance ≥ 12 | 0.6 / 5.0: **FAIL now** |
+| U1 | "all cards look the same" | for every pair of card icons on screen: (mean-colour ΔE ≥ 10 normal and ≥ 8 deutan) or shape distance ≥ 12 | 0.6 / 5.0; failing pairs 6/10 (r06), 1/10 (r08), 2/10 (r10): **FAIL now** |
 | U2 | "the HUD eats the battlefield" | HUD pixels % never more than baseline + 0.5 pp in any scene. A reduction target is 04/01's (layout), not 06's | 10.05–18.55 % |
 | U3 | "the HUD covers my units" | HUD-covered unit pixels stay 0 % | 0: PASS |
 | U4 | crisp UI | G3 | — |
 | — | logo, menu and result "look good" | **NOT MEASURABLE** (human). Measurable part: menu and result frames render (G1), and the title fits (VISUAL_CHECKS C14) | — |
 
-## 4. How owners compare (same set, no copies)
-1. Commit the change. 07 judges only committed SHAs.
-2. Inside the lock, refresh the snapshot of that commit, then capture one tag (ko_1x is enough while iterating; all four tags for a final claim):
+## 4. How owners compare (same set, same table for everyone)
+1. Commit the change and wait until it is on origin/main. 07 judges only committed SHAs.
+2. Start the capture. It runs detached under the PC-wide lock (`coordination/heavy_run_detached.ps1`) and returns at once:
 ```
-& .\coordination\heavy_run.ps1 -Label '<role>-art-baseline' -Script {
-  & .\tools\qa\run_acceptance.ps1 -Head -Only data
-  & .\tools\build\visible_launch.ps1 -ProjectPath $env:TEMP\qa07_head -Script res://tests/acceptance/capture_art_baseline.gd -Resolution 800x360 -TimeoutSec 300 -EvidenceDir <abs dir> -UserArgs '--out=<abs dir>','--tag=ko_1x','--locale=ko','--safe=34,0,34,0','--target=44'
-}
-python tools/qa/art_metrics.py --dir <abs dir> --tags ko_1x
+.\tools\qa\art_compare.ps1 -Sha <commit>                       # ko_1x (+ animation pass) while iterating
+.\tools\qa\art_compare.ps1 -Sha <commit> -Tags ko_1x,en_1x,ko_2x,en_2x   # final claim
 ```
-3. Compare `<dir>/art_metrics.json` scene by scene with `evidence/art-baseline-ad47eda/art_metrics.json`. A before/after claim that uses other frames or other conditions is not accepted by 07.
+   - The job makes a clean `git archive` of the commit with its own import (private APPDATA, import guard) and overlays 07's capture script.
+   - It runs a headless dry check, then captures each tag on the secondary monitor.
+   - Poll the printed log for `^HEAVY_JOB_DONE` in short calls.
+3. Make the table (light, no Godot):
+```
+.\tools\qa\art_compare.ps1 -Sha <commit> -Report -Tags <same tags>
+```
+   - This writes `build/qa07/art_compare/<sha>/table.md` and `compare.json`, plus `anim_sheets/` with one contact sheet per unit id.
+   - The table holds the gates (G1–G3; any FAIL = VOID), PASS/FAIL per rule, and BETTER/SAME/WORSE against the baseline per scene and per unit.
+   - 07 commits the table of every art commit it judges under `docs/verification/art_compare/<sha>.md`.
+4. A before/after claim built from other frames or other conditions is not accepted by 07.
 
-**Shared roots:** C3 (hero), C5 (boss) and W1/W2 depend on both 03 and 09. 07 rejects whichever change makes them worse. The rule passes only when the combined result passes.
+**Shared roots:** C3 (hero), C5 (boss) and W1 depend on both 03 and 09. 07 rejects whichever change makes them worse. The rule passes only when the combined result passes.
+
+## 5. Animation reading (added 2026-11-01, same SHA and frozen states)
+- **Method:** `capture_art_baseline.gd --anim`, ko_1x only (1x view px).
+  - In scenes 4–6, one instance per unit id is shown alone at its real position on the real background, with every other unit, the UI, damage numbers and effects hidden.
+  - Each pose the game can draw is rendered: idle, walk, attack and death frames, at t = (i + 0.5) / fps. Death also fades exactly as battle_view does: alpha = dead_t / 0.7 with dead_t = 0.7 − t.
+  - The hit reaction the game draws is also rendered: a 0.12 s red flash on walk frame 0.
+  - `art_metrics.py` masks each pose against the empty background. HP bars are hidden for troops, and hero/boss bar rects are masked.
+  - Contact sheets (×2): [evidence/art-baseline-ad47eda/anim/](evidence/art-baseline-ad47eda/anim/), with rows idle, walk, attack, hit flash, death.
+- **Coverage:** 10 unit ids. siege, e_bomber and boss_overlord were not on screen in scenes 4–6. The worker is drawn separately and is not a combat unit.
+- **Fact from code:** every one of the 10 ids has a 2-frame `hit` animation in its atlas, but `battle_view._anim_name()` only maps walk / attack / death / idle. The hit animation is never shown; the player sees only the flash (observation QA-O006, 02 wiring, 03 FYI). The hero's `cast` animation is unused the same way.
+
+| Unit | walk change (max consecutive, % of silhouette) | walk motion (largest edge travel or bob, px) | attack vs closest walk frame % | attack reach px | hit flash ΔE | death silhouette change % | death readable until s (share of frames) |
+|---|---|---|---|---|---|---|---|
+| melee_basic 식빵병 | 76.0 | 2 | 85.8 | 8 | 24.9 | 83.7 | 0.38 (50 %) |
+| ranged_basic | 69.2 | 2 | 77.4 | 3 | 25.1 | 80.6 | 0.38 (50 %) |
+| tank 통식빵 | 62.3 | **1** | 69.3 | 5 | 25.6 | 82.1 | 0.50 (67 %) |
+| fast | 66.3 | 2 | 47.1 | 5 | 30.8 | 78.8 | **0.25 (40 %)** |
+| hero_captain | 66.1 | 4 | 80.2 | 9 | 32.1 | 84.5 | 0.38 (50 %) |
+| e_grunt | 74.4 | 4 | 77.7 | 6 | 22.4 | 86.5 | 0.50 (67 %) |
+| e_spitter | 69.2 | 3 | 83.1 | 9 | 27.0 | 79.9 | 0.38 (50 %) |
+| e_swarm 초파리 떼 | 81.2 | 3 | 96.3 | 3 | 21.1 | 100 | 0.50 (80 %) |
+| e_brute 멧돼지 | **14.0** | **0** | 62.4 | 4 | 25.1 | **21.5** | 0.43 (50 %) |
+| boss_warlord | 58.4 | 2 | 76.4 | 18 | 25.2 | 85.0 | 0.43 (43 %) |
+
+07's animation rules (player side; lengths on the 393 dp phone, 1 view px = 0.17 mm, about 2 arcmin at 30 cm):
+| ID | Owner | Strongest rejection reason | Pass rule (each unit id) | Baseline |
+|---|---|---|---|---|
+| A1 | 03 | "that unit is sliding, not walking" | largest edge travel or bob over the walk cycle ≥ 2 px (0.35 mm, about 4 arcmin) | **FAIL now**: e_brute 0, tank 1 |
+| A1c | 03 | same, for the body as a whole | ≥ 20 % of the silhouette changes between two consecutive walk frames | **FAIL now**: e_brute 14 % |
+| A2 | 03 | "I can't tell who is hitting" | the most distinct attack frame differs from its closest walk frame by ≥ 25 % | PASS (min fast 47 %) |
+| A3 | 03 | "the attack does not reach" | front edge moves forward ≥ 3 px in the attack | PASS (min 3: ranged, swarm) |
+| A4 | 02+03 | "I can't see that it was hit" | hit reaction ΔE ≥ 15 over the body | PASS (21–32). It lasts only 0.12 s, and the drawn hit animation is unused (QA-O006) |
+| A5 | 03 | "it just vanishes, it doesn't die" | silhouette change ≥ 40 % within the death frames the player can still see | **FAIL now**: e_brute 21.5 % |
+| A6 | 02+03 | "it disappears before I see it die" | death stays readable ≥ 0.4 s (≥ 25 % of the body at mean \|ΔL*\| ≥ 10) | **FAIL now**: fast 0.25 s; melee, ranged, hero, spitter 0.38 s |
+| A6b | 02+03 | same, as wasted frames | ≥ 60 % of the death frames are still readable | **FAIL now** in 7 of 10 ids (40–50 %). Death animations are 0.62–1.0 s, but the linear 0.7 s fade (02) hides the second half |
+| — | — | "does it move like a bread knight / a mould beast, does it feel alive" | **NOT MEASURABLE** by tools (human test; never marked PASS from frames) | not run |
+
+These rules judge what the game draws on screen. 03's atlas Q5–Q8 measure the sprite sheets and stay 03's own evidence.
+
+## 6. Judged art commits (tables in [art_compare/](art_compare/))
+| SHA | Owner | Run | Result vs baseline |
+|---|---|---|---|
+| ad47eda | — | reference (baseline vs itself) | VALID, all SAME; FAIL rows are the baseline's own failures |
+| 700692d | 06-art-ui | ko/en × 1x/2x, VALID (G1–G3 OK) | UI changed where 06 said: menu logo (3.1 % ko / 4.1 % en of the frame), move buttons and skill plates (0.43–0.69 %). U1 unchanged (card badges are not built into ui_main yet). U2 HUD pixels +0.03–0.07 pp (PASS, but the trend is WORSE in r06/r08/r10). U3 0. No other owner's metric moved |
+| 90c9790 | 03 | not captured | tools/art/build.py only, no rendered asset changed (06 rebuilds ui_main next) |
