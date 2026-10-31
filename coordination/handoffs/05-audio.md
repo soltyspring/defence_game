@@ -42,7 +42,7 @@ assets/audio/**, src/audio/**, tools/audio/**, docs/audio/**, own status/handoff
 
 ## Git
 - Earlier: 67de63b, 067c594, ba38f2d, 5e21a23, c79add3, 10449ee, 2fae4a3, all PUSHED.
-- Checkpoint commit: see push output / status file. If the push fails, mark PUSH_PENDING.
+- Checkpoint: 6045b374f8d5d4b22ea91b0727e6123563b33275 "[Test] 영웅 사망·부활 소리 검증과 실전 믹스 60초 녹음·측정 보고서, 30초 미리듣기 추가" → PUSHED origin/main (10 files).
 
 ## Open requests
 02: A7 (`prepare_quit` on the quit path), A8 (engine RefCounted exit leak, not audio). 04: C1 sliders, C2 UI cues. Q1 theme pending (01).
