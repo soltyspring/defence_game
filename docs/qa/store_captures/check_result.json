@@ -342,7 +342,7 @@
    "asset": "docs/qa/store_captures/store_06_result_en.png",
    "rule": "04: not a black frame (locked PC / not presented)",
    "verdict": "PASS",
-   "detail": "3.1% dark samples"
+   "detail": "3.2% dark samples"
   },
   {
    "asset": "docs/qa/store_captures/store_06_result_ko.png",
@@ -372,7 +372,7 @@
    "asset": "docs/qa/store_captures/store_06_result_ko.png",
    "rule": "04: not a black frame (locked PC / not presented)",
    "verdict": "PASS",
-   "detail": "3.4% dark samples"
+   "detail": "3.5% dark samples"
   }
  ]
 }

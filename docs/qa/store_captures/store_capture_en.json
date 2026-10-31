@@ -3,48 +3,60 @@
     {
       "dark_pct": 0.0,
       "err": 0,
+      "hud_row_top": 300.0,
       "n": 1,
-      "path": "Z:/.solty/dev/appintoss/defence/build/qa/store_try3/store_01_battle_en.png",
+      "path": "Z:/.solty/dev/appintoss/defence/build/qa/store_45c05f0_v3/store_01_battle_en.png",
+      "safe": "[P: (0.0, 0.0), S: (640.0, 360.0)]",
       "scene": "battle",
       "t": 43.4333333333322
     },
     {
       "dark_pct": 0.0122549019607843,
       "err": 0,
+      "hud_row_top": 300.0,
       "n": 2,
-      "path": "Z:/.solty/dev/appintoss/defence/build/qa/store_try3/store_02_hero_skill_en.png",
+      "path": "Z:/.solty/dev/appintoss/defence/build/qa/store_45c05f0_v3/store_02_hero_skill_en.png",
+      "safe": "[P: (0.0, 0.0), S: (640.0, 360.0)]",
       "scene": "hero_skill",
-      "t": 46.9666666666653
+      "t": 46.9499999999986
     },
     {
       "dark_pct": 0.0,
       "err": 0,
+      "hud_row_top": 300.0,
       "n": 3,
-      "path": "Z:/.solty/dev/appintoss/defence/build/qa/store_try3/store_03_economy_en.png",
+      "path": "Z:/.solty/dev/appintoss/defence/build/qa/store_45c05f0_v3/store_03_economy_en.png",
+      "safe": "[P: (0.0, 0.0), S: (640.0, 360.0)]",
       "scene": "economy",
-      "t": 15.6333333333337
+      "t": 15.6833333333337
     },
     {
       "dark_pct": 0.0,
       "err": 0,
+      "hud_row_top": 300.0,
       "n": 4,
-      "path": "Z:/.solty/dev/appintoss/defence/build/qa/store_try3/store_04_roster_en.png",
+      "path": "Z:/.solty/dev/appintoss/defence/build/qa/store_45c05f0_v3/store_04_roster_en.png",
+      "safe": "[P: (0.0, 0.0), S: (640.0, 360.0)]",
       "scene": "roster",
-      "t": 9.7833333333334
+      "t": 46.6999999999986
     },
     {
       "dark_pct": 0.0,
       "err": 0,
+      "hud_row_top": 300.0,
       "n": 5,
-      "path": "Z:/.solty/dev/appintoss/defence/build/qa/store_try3/store_05_boss_en.png",
+      "path": "Z:/.solty/dev/appintoss/defence/build/qa/store_45c05f0_v3/store_05_boss_en.png",
+      "safe": "[P: (0.0, 0.0), S: (640.0, 360.0)]",
       "scene": "boss",
-      "t": 26.9166666666664
+      "t": 26.9333333333331
     },
     {
-      "dark_pct": 3.13725490196078,
+      "dark_pct": 3.22303921568627,
       "err": 0,
+      "hud_row_top": 300.0,
       "n": 6,
-      "path": "Z:/.solty/dev/appintoss/defence/build/qa/store_try3/store_06_result_en.png",
+      "path": "Z:/.solty/dev/appintoss/defence/build/qa/store_45c05f0_v3/store_06_result_en.png",
+      "safe": "[P: (0.0, 0.0), S: (640.0, 360.0)]",
       "scene": "result",
       "t": 43.8833333333321
     }

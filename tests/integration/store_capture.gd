@@ -78,7 +78,17 @@ func shot(n: int, scene: String) -> void:
 	var bt := -1.0
 	if is_instance_valid(app.battle) and app.battle.sim != null:
 		bt = float(app.battle.sim.t)
-	saved.append({"n": n, "scene": scene, "path": p, "err": err, "dark_pct": dark_pct, "t": bt})
+	var hud_top := -1.0
+	var safe := ""
+	var hud := _hud()
+	if hud != null and hud.visible and not hud.layout.is_empty():
+		hud_top = 1e9
+		for r in [hud.layout.worker, hud.layout.move_left, hud.layout.move_right] + hud.layout.cards + hud.layout.skills:
+			hud_top = minf(hud_top, (r as Rect2).position.y)
+		safe = str(hud.safe)
+		if hud_top < 297.0:   # lowest lane sprite bottom is y 297 in the 640x360 view (lane_occlusion_probe)
+			problems.append("%s: HUD row top %.0f covers the lane (safe %s)" % [scene, hud_top, safe])
+	saved.append({"n": n, "scene": scene, "path": p, "err": err, "dark_pct": dark_pct, "t": bt, "hud_row_top": hud_top, "safe": safe})
 	print("[store] %s err=%d %dx%d view=%s dark=%.1f%% round=%s t=%.1f" % [p, err, img.get_width(), img.get_height(), root.get_visible_rect().size, dark_pct, app.current_round, bt])
 
 func _start(round_id: String) -> Object:
@@ -149,6 +159,24 @@ static func _contact_x(sim: Object) -> float:
 				best = absf(e.x - p.x)
 				cx = (e.x + p.x) * 0.5
 	return cx
+
+## Allies (not the hero) within r px of the current contact point; 0 if there is no contact.
+static func _crowd(sim: Object, r: float) -> int:
+	var cx := _contact_x(sim)
+	if cx < 0.0:
+		return 0
+	var n := 0
+	for p in sim.players:
+		if p.alive and not p.dying and not p.is_hero and absf(p.x - cx) < r:
+			n += 1
+	return n
+
+## A scripted-wave enemy has just left the nest (right 15 % of the lane).
+static func _enemy_near_nest(sim: Object) -> bool:
+	for e in sim.enemies:
+		if e.alive and not e.dying and not e.is_boss and e.x > 0.85 * float(sim.L):
+			return true
+	return false
 
 static func _near(sim: Object, u: Object, d: float) -> bool:
 	if u == null or not u.alive:
@@ -251,10 +279,17 @@ func _run() -> void:
 	await _seconds(1.0)
 	await _quiet_hud()
 	await shot(3, "economy")
-	# 4) roster: r06 has all five soldier types (cards); the mixed column marches up the lane with the hero
+	# 4) roster: r06 has all five soldier types (cards); the mixed army meets the first wave in MID-LANE
+	# (Codex 13aade1 review). Deploy only when the first enemies spawn at the nest, so both sides walk
+	# ~40 px/s toward each other and meet near L/2; then centre the camera on the contact point.
 	sim = await _start("r06")
-	await _deploy(sim, ["tank", "melee_basic", "fast", "ranged_basic", "siege", "melee_basic", "ranged_basic", "fast"], 0.9)
-	await _ff_follow(sim, func(s): return _front_x(s) >= 560.0 or _front_contact(s), 150.0, 150.0)
+	await _ff(sim, func(s): return _enemy_near_nest(s), 90.0)
+	await _deploy(sim, ["tank", "melee_basic", "ranged_basic", "siege", "melee_basic", "ranged_basic", "tank", "fast"], 0.7)
+	await _ff_follow(sim, func(s): return _crowd(s, 120.0) >= 4, 150.0, 150.0)
+	await _hero_to(sim, maxf(200.0, _contact_x(sim) - 60.0))   # camera = hero + 60 → the fight at screen centre
+	print("[store] roster contact at x=%.0f of lane %.0f (%.0f %%), allies engaged=%d" % [_contact_x(sim), float(sim.L), 100.0 * _contact_x(sim) / float(sim.L), _crowd(sim, 120.0)])
+	if _crowd(sim, 120.0) < 3:
+		problems.append("roster: only %d allies engaged" % _crowd(sim, 120.0))
 	sim.gold = 0.55 * float(sim.gold_max)
 	await _seconds(0.3)
 	await _quiet_hud()

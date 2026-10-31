@@ -1,0 +1,471 @@
+{
+ "line_mm": 6.0,
+ "devices": [
+  {
+   "name": "360x800dp",
+   "px": [
+    2400,
+    1080
+   ],
+   "density": 3.0,
+   "k": 3,
+   "mm_per_view_px": 0.1588
+  },
+  {
+   "name": "393x873dp",
+   "px": [
+    2400,
+    1080
+   ],
+   "density": 2.75,
+   "k": 3,
+   "mm_per_view_px": 0.1732
+  },
+  {
+   "name": "412x915dp",
+   "px": [
+    2400,
+    1080
+   ],
+   "density": 2.625,
+   "k": 3,
+   "mm_per_view_px": 0.1814
+  }
+ ],
+ "units": [
+  {
+   "unit": "hero_captain",
+   "atlas": "char_player",
+   "frame_h": 48,
+   "body_px": 32,
+   "body_w_px": 22,
+   "view_pct": 8.9,
+   "devices": {
+    "360x800dp": {
+     "k": 3,
+     "physical_px": 96,
+     "mm": 5.08,
+     "readable": false,
+     "body_px_needed": 38
+    },
+    "393x873dp": {
+     "k": 3,
+     "physical_px": 96,
+     "mm": 5.54,
+     "readable": false,
+     "body_px_needed": 35
+    },
+    "412x915dp": {
+     "k": 3,
+     "physical_px": 96,
+     "mm": 5.81,
+     "readable": false,
+     "body_px_needed": 34
+    }
+   }
+  },
+  {
+   "unit": "worker",
+   "atlas": "char_player",
+   "frame_h": 32,
+   "body_px": 20,
+   "body_w_px": 16,
+   "view_pct": 5.6,
+   "devices": {
+    "360x800dp": {
+     "k": 3,
+     "physical_px": 60,
+     "mm": 3.17,
+     "readable": false,
+     "body_px_needed": 38
+    },
+    "393x873dp": {
+     "k": 3,
+     "physical_px": 60,
+     "mm": 3.46,
+     "readable": false,
+     "body_px_needed": 35
+    },
+    "412x915dp": {
+     "k": 3,
+     "physical_px": 60,
+     "mm": 3.63,
+     "readable": false,
+     "body_px_needed": 34
+    }
+   }
+  },
+  {
+   "unit": "melee_basic",
+   "atlas": "char_player",
+   "frame_h": 32,
+   "body_px": 21,
+   "body_w_px": 13,
+   "view_pct": 5.8,
+   "devices": {
+    "360x800dp": {
+     "k": 3,
+     "physical_px": 63,
+     "mm": 3.33,
+     "readable": false,
+     "body_px_needed": 38
+    },
+    "393x873dp": {
+     "k": 3,
+     "physical_px": 63,
+     "mm": 3.64,
+     "readable": false,
+     "body_px_needed": 35
+    },
+    "412x915dp": {
+     "k": 3,
+     "physical_px": 63,
+     "mm": 3.81,
+     "readable": false,
+     "body_px_needed": 34
+    }
+   }
+  },
+  {
+   "unit": "ranged_basic",
+   "atlas": "char_player",
+   "frame_h": 32,
+   "body_px": 19,
+   "body_w_px": 17,
+   "view_pct": 5.3,
+   "devices": {
+    "360x800dp": {
+     "k": 3,
+     "physical_px": 57,
+     "mm": 3.02,
+     "readable": false,
+     "body_px_needed": 38
+    },
+    "393x873dp": {
+     "k": 3,
+     "physical_px": 57,
+     "mm": 3.29,
+     "readable": false,
+     "body_px_needed": 35
+    },
+    "412x915dp": {
+     "k": 3,
+     "physical_px": 57,
+     "mm": 3.45,
+     "readable": false,
+     "body_px_needed": 34
+    }
+   }
+  },
+  {
+   "unit": "tank",
+   "atlas": "char_player",
+   "frame_h": 32,
+   "body_px": 20,
+   "body_w_px": 16,
+   "view_pct": 5.6,
+   "devices": {
+    "360x800dp": {
+     "k": 3,
+     "physical_px": 60,
+     "mm": 3.17,
+     "readable": false,
+     "body_px_needed": 38
+    },
+    "393x873dp": {
+     "k": 3,
+     "physical_px": 60,
+     "mm": 3.46,
+     "readable": false,
+     "body_px_needed": 35
+    },
+    "412x915dp": {
+     "k": 3,
+     "physical_px": 60,
+     "mm": 3.63,
+     "readable": false,
+     "body_px_needed": 34
+    }
+   }
+  },
+  {
+   "unit": "fast",
+   "atlas": "char_player_adv",
+   "frame_h": 32,
+   "body_px": 27,
+   "body_w_px": 32,
+   "view_pct": 7.5,
+   "devices": {
+    "360x800dp": {
+     "k": 3,
+     "physical_px": 81,
+     "mm": 4.29,
+     "readable": false,
+     "body_px_needed": 38
+    },
+    "393x873dp": {
+     "k": 3,
+     "physical_px": 81,
+     "mm": 4.68,
+     "readable": false,
+     "body_px_needed": 35
+    },
+    "412x915dp": {
+     "k": 3,
+     "physical_px": 81,
+     "mm": 4.9,
+     "readable": false,
+     "body_px_needed": 34
+    }
+   }
+  },
+  {
+   "unit": "siege",
+   "atlas": "char_player_adv",
+   "frame_h": 40,
+   "body_px": 40,
+   "body_w_px": 36,
+   "view_pct": 11.1,
+   "devices": {
+    "360x800dp": {
+     "k": 3,
+     "physical_px": 120,
+     "mm": 6.35,
+     "readable": true,
+     "body_px_needed": 38
+    },
+    "393x873dp": {
+     "k": 3,
+     "physical_px": 120,
+     "mm": 6.93,
+     "readable": true,
+     "body_px_needed": 35
+    },
+    "412x915dp": {
+     "k": 3,
+     "physical_px": 120,
+     "mm": 7.26,
+     "readable": true,
+     "body_px_needed": 34
+    }
+   }
+  },
+  {
+   "unit": "e_grunt",
+   "atlas": "char_enemy",
+   "frame_h": 32,
+   "body_px": 19,
+   "body_w_px": 17,
+   "view_pct": 5.3,
+   "devices": {
+    "360x800dp": {
+     "k": 3,
+     "physical_px": 57,
+     "mm": 3.02,
+     "readable": false,
+     "body_px_needed": 38
+    },
+    "393x873dp": {
+     "k": 3,
+     "physical_px": 57,
+     "mm": 3.29,
+     "readable": false,
+     "body_px_needed": 35
+    },
+    "412x915dp": {
+     "k": 3,
+     "physical_px": 57,
+     "mm": 3.45,
+     "readable": false,
+     "body_px_needed": 34
+    }
+   }
+  },
+  {
+   "unit": "e_spitter",
+   "atlas": "char_enemy",
+   "frame_h": 32,
+   "body_px": 19,
+   "body_w_px": 15,
+   "view_pct": 5.3,
+   "devices": {
+    "360x800dp": {
+     "k": 3,
+     "physical_px": 57,
+     "mm": 3.02,
+     "readable": false,
+     "body_px_needed": 38
+    },
+    "393x873dp": {
+     "k": 3,
+     "physical_px": 57,
+     "mm": 3.29,
+     "readable": false,
+     "body_px_needed": 35
+    },
+    "412x915dp": {
+     "k": 3,
+     "physical_px": 57,
+     "mm": 3.45,
+     "readable": false,
+     "body_px_needed": 34
+    }
+   }
+  },
+  {
+   "unit": "e_swarm",
+   "atlas": "char_enemy",
+   "frame_h": 24,
+   "body_px": 15,
+   "body_w_px": 25,
+   "view_pct": 4.2,
+   "devices": {
+    "360x800dp": {
+     "k": 3,
+     "physical_px": 45,
+     "mm": 2.38,
+     "readable": false,
+     "body_px_needed": 38
+    },
+    "393x873dp": {
+     "k": 3,
+     "physical_px": 45,
+     "mm": 2.6,
+     "readable": false,
+     "body_px_needed": 35
+    },
+    "412x915dp": {
+     "k": 3,
+     "physical_px": 45,
+     "mm": 2.72,
+     "readable": false,
+     "body_px_needed": 34
+    }
+   }
+  },
+  {
+   "unit": "e_brute",
+   "atlas": "char_enemy_adv",
+   "frame_h": 48,
+   "body_px": 24,
+   "body_w_px": 36,
+   "view_pct": 6.7,
+   "devices": {
+    "360x800dp": {
+     "k": 3,
+     "physical_px": 72,
+     "mm": 3.81,
+     "readable": false,
+     "body_px_needed": 38
+    },
+    "393x873dp": {
+     "k": 3,
+     "physical_px": 72,
+     "mm": 4.16,
+     "readable": false,
+     "body_px_needed": 35
+    },
+    "412x915dp": {
+     "k": 3,
+     "physical_px": 72,
+     "mm": 4.35,
+     "readable": false,
+     "body_px_needed": 34
+    }
+   }
+  },
+  {
+   "unit": "e_bomber",
+   "atlas": "char_enemy_adv",
+   "frame_h": 32,
+   "body_px": 20,
+   "body_w_px": 17,
+   "view_pct": 5.6,
+   "devices": {
+    "360x800dp": {
+     "k": 3,
+     "physical_px": 60,
+     "mm": 3.17,
+     "readable": false,
+     "body_px_needed": 38
+    },
+    "393x873dp": {
+     "k": 3,
+     "physical_px": 60,
+     "mm": 3.46,
+     "readable": false,
+     "body_px_needed": 35
+    },
+    "412x915dp": {
+     "k": 3,
+     "physical_px": 60,
+     "mm": 3.63,
+     "readable": false,
+     "body_px_needed": 34
+    }
+   }
+  },
+  {
+   "unit": "boss_warlord",
+   "atlas": "char_boss_warlord",
+   "frame_h": 64,
+   "body_px": 45,
+   "body_w_px": 24,
+   "view_pct": 12.5,
+   "devices": {
+    "360x800dp": {
+     "k": 3,
+     "physical_px": 135,
+     "mm": 7.14,
+     "readable": true,
+     "body_px_needed": 38
+    },
+    "393x873dp": {
+     "k": 3,
+     "physical_px": 135,
+     "mm": 7.79,
+     "readable": true,
+     "body_px_needed": 35
+    },
+    "412x915dp": {
+     "k": 3,
+     "physical_px": 135,
+     "mm": 8.16,
+     "readable": true,
+     "body_px_needed": 34
+    }
+   }
+  },
+  {
+   "unit": "boss_overlord",
+   "atlas": "char_boss_overlord",
+   "frame_h": 80,
+   "body_px": 56,
+   "body_w_px": 34,
+   "view_pct": 15.6,
+   "devices": {
+    "360x800dp": {
+     "k": 3,
+     "physical_px": 168,
+     "mm": 8.89,
+     "readable": true,
+     "body_px_needed": 38
+    },
+    "393x873dp": {
+     "k": 3,
+     "physical_px": 168,
+     "mm": 9.7,
+     "readable": true,
+     "body_px_needed": 35
+    },
+    "412x915dp": {
+     "k": 3,
+     "physical_px": 168,
+     "mm": 10.16,
+     "readable": true,
+     "body_px_needed": 34
+    }
+   }
+  }
+ ]
+}

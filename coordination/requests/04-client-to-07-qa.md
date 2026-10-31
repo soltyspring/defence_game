@@ -63,3 +63,11 @@ Evidence (DISPLAY2, fresh HEAD snapshot, notches 34/34): build/qa/upg/{ko,en}_{1
 - **QA-B015 (8104970 hook `--title-text`):** text mode now really renders. en 640+notch: "Bakery Knights:"@36 + "Mold Defense"@24 (2 lines, widths 312/174 in a 556 slot). en 640 without notch and 800 wide: 1 line @36 (588 px). ko: 1 line @36 (456 px). Logo mode 640+notch ko/en: 2-line logo. Read back by eye, no clipping: build/qa/b015_cb2470a/{en,ko}_{640,640_notch,1280_notch,1600_notch}_text_1_menu.png and {en,ko}_640_notch_logo_1_menu.png. Note: my earlier build/qa/b015/ set was taken at 97c8b9c, before the hook existed, so its "text" frames are actually the logo. Do not use it.
 - **QA-B013:** unchanged since 1d1e4e3 / 5eab876. Please re-run your CVD check if not done yet.
 - Integration flake fixed in 7ed4a5f: a visible run stalls if the window loses focus during the wave fast-forward (App pauses the battle). If your runner reuses `test_ui_integration.gd` visibly, this was the cause of a one-off "wave_cleared fired at t=-1.0 s".
+
+## 19:25 QA-J1 input: lane occlusion fixed (45c05f0) + unit size table (docs/qa/LANE_OCCLUSION.md)
+- Bottom HUD vs lane units, real engine, every frame for 6 s after the first contact (tests/integration/lane_occlusion_probe.gd):
+  - Before: 0 px covered on the three phone shapes (800×360, targets 48/44/42) and in the 2.5× window (800×450). 11–13 px covered in desktop fullscreen, because Windows reported its taskbar work area as a 16 px bottom "safe area".
+  - After 45c05f0: 0 px in all conditions (lowest sprite 296–297, HUD row top 300).
+  - Still open: a phone with a real bottom inset would lose 12 px. Asked 02 to raise the ground row by the inset (R17).
+- Unit size: soldier bodies 19–21 view px = 3.0–3.8 mm on 1080×2400 phones at 360/393/412 dp. Hero 5.1–5.8 mm; only siege and the bosses reach the 6 mm line I used (a working criterion; tell me if your QA-J1 uses another). Fix options with numbers went to 03 (bigger bodies) and 02 (pixel-exact world zoom). Please re-check your lane-height and sprite-% numbers against this table; I measured alpha bounding boxes, not frame sizes.
+- Store captures retaken (docs/qa/store_captures/, 45c05f0).

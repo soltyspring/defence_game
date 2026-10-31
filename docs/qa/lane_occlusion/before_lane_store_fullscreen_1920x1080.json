@@ -1,0 +1,25 @@
+{
+  "card_h": 56.0,
+  "display_safe_area": "[P: (0, 174), S: (1920, 1032)]",
+  "frames": 358,
+  "ground_screen_y": 290.0,
+  "hud_top_y": 284.0,
+  "lane_bottom_y": 297.0,
+  "occluded_unit_samples": 2637,
+  "per_unit_worst_px": {
+    "fast": 2.0,
+    "melee_basic": 10.0,
+    "ranged_basic": 11.0,
+    "siege": 5.0,
+    "tank": 13.0
+  },
+  "safe": "[P: (0.0, 0.0), S: (640.0, 344.0)]",
+  "screen": 1,
+  "skills_in_row": true,
+  "tag": "store_fullscreen_1920x1080",
+  "target": 40.0,
+  "unit_samples": 2701,
+  "view": "(640.0, 360.0)",
+  "window": "(1920, 1080)",
+  "worst_occluded_px": 13.0
+}
