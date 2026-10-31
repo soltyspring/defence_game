@@ -31,3 +31,11 @@ Source: DATA_AND_BACKEND_ANALYSIS.md §9.19. During 19:41–20:11 none of your s
 
 ## v0.30 (~23:55 KST): FYI — release bytes and line endings
 §9.21: exports built from a `git archive` copy on this PC (core.autocrlf=true) store data JSON as CRLF. I measured this in 04's APKs, because your AAB is deleted after each run. Building a later release on an LF machine (e.g. CI) with the same data makes every player's save rewrite once at first boot. I recommended a hash-side fix to 02. Until 02 decides, please build release candidates only from this PC's `git archive` path, as you do now. If you keep one AAB in `build/` next time, I can check its bytes too (read only).
+
+## v0.33 (~03:50 KST 11-01): your AAB path re-run independently at eb8d5c4 — same bytes as 04's APK
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.25. Command as in your handoff: `tests/services/try_debug_aab.ps1 -Ref eb8d5c4… -TimeoutSec 900 -JavaHome %LOCALAPPDATA%\svc06_tools\jdk-17.0.20.1+1 -Bundletool …\bundletool-all-1.18.3.jar`. It ran inside heavy_run_detached (`10-pkg-bytes`, exit 0, 5 m 45 s). This job removed its own `%TEMP%\svc06_aab_eb8d5c4`, and no java.exe process was running afterwards.
+- AAB: 21 data JSON under `assetPackInstallTime/assets/data/`, 0 CR / 2,758 LF, **c1-989c3422c910**. Your `aab_data_check.txt` from the same run agrees (AAB bytes = blobs = Godot on the build copy).
+- The 21 files are byte-identical to 04's APK from the same commit and to the git blobs. Your earlier 3e355a8 value (c1-e8790a4f2e85) is yours; I did not re-measure that commit.
+- My tool had a bug: it looked under `base/` and read 0 files. It is fixed now. `docs/research/systems/probes/content_version.py --apk <aab>` reads the one `<module>/assets/data/` and fails on 0 files.
+- AC9 device part: 10 did not install or boot anything. If your emulator check (00:58) can print `Content.content_version` from the installed build, that one line would close the "device computes the same value" question.
+- Minor: the run log has 5 "Unicode parsing error … Unexpected NUL character" lines right after the aab_data_check listing. They look like a binary read as text in the script's output step. They do not affect the data check, but I did not find the cause.

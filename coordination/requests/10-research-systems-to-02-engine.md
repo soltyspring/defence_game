@@ -319,3 +319,14 @@ Evidence: DATA_AND_BACKEND_ANALYSIS.md §9.24, docs/research/systems/evidence/sa
 - Not covered by my headless runs: `Events.content_migrated` is never emitted in a `-s` run (no menu), so the App → 04 menu → ack UI path is unverified. Only the persisted `migration_notice` and its ack were checked.
 - Part D (P3): same content_version with a hand-edited L9 still gives hp 2.20. It is only reachable by editing the file, so it is your call. I would accept leaving it, or clamping in `_migrate` if that is cheap.
 - To close AC1 I will rerun only AC1/AC4 (one short heavy_run) after your content.gd change.
+
+## v0.33 (~03:50 KST 11-01): release packages agree today; AC1 still open
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.25.
+- One pinned commit, eb8d5c4, was built both ways (heavy_run_detached, no install):
+  - 04 `build_android_debug.ps1` APK: 21 data files, 0 CR, **c1-989c3422c910**.
+  - 06 `try_debug_aab.ps1` AAB: the same 21 files, byte-identical, under `assetPackInstallTime/assets/data/`, **c1-989c3422c910**.
+  - Both equal the repo LF value. Verdict: the two release paths are the same.
+- **AC1 is still FAIL.** content.gd line 77 is unchanged up to 02ec60f. The packages agree only because both scripts pin the archive flags. A plain `git archive` on this PC still gives CRLF and c1-40bde75d24c2.
+  - Repro and pass criteria: as in v0.32 above.
+- I did not rerun AC1/AC4 because no content.gd change has landed. I will rerun only those two after your commit and repeat the package check with the new SHA.
+- FYI, no request: the AAB keeps project files in the install-time asset pack, not in `base/`. I have not checked on a device that Godot reads `res://data/` from it with the same bytes (AC9 device part, unverified).

@@ -1,0 +1,26 @@
+AAB data json files: 21 (committed: 21); files with CRLF: 0
+content_version from AAB bytes: c1-989c3422c910
+content_version from committed blobs (eb8d5c43c48500399956a41786a66ac102ba1b2a): c1-989c3422c910
+match: True
+assetPackInstallTime/assets/data/economy.json | 664 | crlf=0 lf=20
+assetPackInstallTime/assets/data/game_config.json | 1765 | crlf=0 lf=85
+assetPackInstallTime/assets/data/heroes/hero_captain.json | 643 | crlf=0 lf=33
+assetPackInstallTime/assets/data/meta.json | 4553 | crlf=0 lf=216
+assetPackInstallTime/assets/data/rounds/order.json | 154 | crlf=0 lf=15
+assetPackInstallTime/assets/data/rounds/r01.json | 3034 | crlf=0 lf=141
+assetPackInstallTime/assets/data/rounds/r02.json | 3556 | crlf=0 lf=169
+assetPackInstallTime/assets/data/rounds/r03.json | 3403 | crlf=0 lf=168
+assetPackInstallTime/assets/data/rounds/r04.json | 3309 | crlf=0 lf=162
+assetPackInstallTime/assets/data/rounds/r05.json | 3301 | crlf=0 lf=153
+assetPackInstallTime/assets/data/rounds/r06.json | 3421 | crlf=0 lf=174
+assetPackInstallTime/assets/data/rounds/r07.json | 3274 | crlf=0 lf=164
+assetPackInstallTime/assets/data/rounds/r08.json | 3346 | crlf=0 lf=170
+assetPackInstallTime/assets/data/rounds/r09.json | 3804 | crlf=0 lf=189
+assetPackInstallTime/assets/data/rounds/r10.json | 3750 | crlf=0 lf=182
+assetPackInstallTime/assets/data/skills/skill_barrage.json | 392 | crlf=0 lf=19
+assetPackInstallTime/assets/data/skills/skill_rally.json | 351 | crlf=0 lf=17
+assetPackInstallTime/assets/data/skills/skill_slam.json | 388 | crlf=0 lf=19
+assetPackInstallTime/assets/data/text/en.json | 6915 | crlf=0 lf=146
+assetPackInstallTime/assets/data/text/ko.json | 7925 | crlf=0 lf=146
+assetPackInstallTime/assets/data/units/units.json | 8239 | crlf=0 lf=370
+content_version from Godot on the build copy: c1-989c3422c910 (match blobs: True)

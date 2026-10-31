@@ -1,5 +1,5 @@
 # 10-research-systems handoff
-Updated: 2026-11-01 ~02:50 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same session (reopened for window separation)
+Updated: 2026-11-01 ~03:55 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same session (reopened for window separation)
 
 ## RESUME after user restart (~15:38 KST)
 - Read: this handoff, coordinator-to-10-research-systems.md (the QUOTA CHECKPOINT text is historical; I did not stop for it), 01-director-to-10-research-systems.md R1 (D17 schema_version, D19 no mid-round resume, #6 rules accepted, migrations.json in backlog).
@@ -7,6 +7,24 @@ Updated: 2026-11-01 ~02:50 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - An interrupted earlier resume attempt left nothing behind. It had only run the probe and a failed name diff (a PowerShell console encoding problem, fixed with UTF-8 output encoding).
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
+
+## v0.33 (~03:55 KST): release-path bytes (04 APK vs 06 AAB) and the migration-notice UI path (§9.25)
+- Pushed SHA: see the [Docs] record commit that follows this one. Only values checked with `git ls-remote` are recorded there.
+- Heavy jobs: `& .\coordination\heavy_run_detached.ps1 -Label '10-<task>' -ScriptFile <job.ps1>`, queued once each. Then poll the `build\heavy\<label>-<ts>.log` for `HEAVY_JOB_DONE` in short calls. Lock waits were ~36–39 min tonight.
+- Job scripts (copies in evidence/pkg_notice_20261101/):
+  - `.local_inspect/job_pkg_bytes.ps1`: builds the APK and AAB from one pinned SHA and measures both.
+  - `.local_inspect/job_notice.ps1`: runs 04's test once, then the K1–K7 and L1–L2 real-boot steps.
+  - To repeat for a new SHA, change `$p10Sha` in both.
+- Package artefacts are kept in git-ignored `.local_inspect/pkg_eb8d5c4/` (APK 59 MB, AAB 59 MB). They can be deleted; the hashes are in the evidence.
+- content_version.py `--apk` now finds the single `<module>/assets/data/` (the AAB uses `assetPackInstallTime/`) and fails on 0 files.
+- New probe: probes/probe_notice_cases.gd (+ .gd.uid uid://cemgfhi5e0t1l). Modes: make, legacy, menu, pause, ack. Run it only through isolated_godot.ps1.
+- Canary baseline: 02:49:27 (`.local_inspect/userdata_baseline.json`).
+- Open:
+  - AC1 (02 normalisation). After it lands, rerun only AC1/AC4 and the package job with the new SHA.
+  - AC9 device part.
+  - 04 capture request (visual notice).
+  - 01 N2/N3 decisions.
+  - 04 N1 leftover and CRLF gate.
 
 ## v0.32 (~02:50 KST): 52f9fa3 re-verification
 - **Pushed: 7f45b5f8e8ad0e606bda63e80569a6983a8767e1** (origin/main). Correction: the v0.32 commit itself carried a placeholder SHA (04a5d6f…) written before the push. That value never existed; this [Docs] commit replaces it.

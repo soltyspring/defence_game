@@ -41,13 +41,23 @@ def cv_bytes(entries):
 
 
 def apk_data(apk):
-    """Read assets/data/**/*.json from an APK (zip, read only) -> {"/x.json": bytes}."""
+    """Read the packed data/**/*.json from an APK (assets/data/...) or an AAB (<module>/assets/data/...), read only.
+    Godot's AAB export puts the project files in the install-time asset pack (assetPackInstallTime/assets/...),
+    not in base/ (10 v0.33, measured on the 06 try_debug_aab.ps1 output). Exactly one module may hold data/."""
+    import re
     import zipfile
     out = {}
     with zipfile.ZipFile(apk) as z:
-        for n in z.namelist():
-            if n.startswith("assets/data/") and n.endswith(".json"):
-                out[n[len("assets/data"):]] = z.read(n)
+        names = z.namelist()
+        mods = sorted({m.group(1) for m in (re.match(r"^((?:[^/]+/)?assets/data/)", n) for n in names) if m})
+        if len(mods) != 1:
+            raise SystemExit("expected exactly one assets/data/ location in %s, found %s" % (apk, mods))
+        prefix = mods[0]
+        for n in names:
+            if n.startswith(prefix) and n.endswith(".json"):
+                out[n[len(prefix) - 1:]] = z.read(n)
+    if not out:
+        raise SystemExit("no data/**/*.json found in %s" % apk)
     return out
 
 

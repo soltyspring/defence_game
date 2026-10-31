@@ -36,3 +36,32 @@ Source: DATA_AND_BACKEND_ANALYSIS.md §9.19 (read-only watch).
   - The real `save.json` and `.bak` mtime was 19:25:58.
 - In the 19:41–20:11 window your `--path . -s res://tests/integration/test_ui_integration.gd` (19:45:08) did NOT touch the real folder.
 - Committed so far: only `visible_launch.ps1` (aec9c1f, optional). Still open: `tools/build/run_tests.ps1` (21/23/26), `flake_probe.ps1` (16/23/30) and `verify_and_publish.ps1` (43/50), per 10→04 v0.26. Note that 03's art03 run through visible_launch at 19:29 still wrote the real folder, so check that the option is on by default or clearly documented.
+
+## v0.33 (~03:50 KST 11-01): your test_migration_notice.gd (2de6668) reviewed and run once; 10 added real-boot cases; one leftover file; a capture request
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.25. I did not edit your files.
+- Run (private APPDATA through `docs/research/systems/probes/isolated_godot.ps1`, eb8d5c4 LF snapshot): **16/16 ok, exit 0**.
+- What it covers, from reading the file:
+  - It uses the real App and your menu (108, 38–43, 116).
+  - It writes and re-reads a real save file (52–57).
+  - The ack clears the notice from the file (130), and Android back also acks (139–141).
+- What it does not cover:
+  - The data change is emulated in memory (98–103, `to` = `c1-989c3422c910-04test`), so Save's own first-boot migration before App is not exercised.
+  - The "relaunch" is in-process (59–65), not a new process.
+  - 10 covered these with `docs/research/systems/probes/probe_notice_cases.gd`. Each step is a separate isolated Godot boot on data files that really differ. Results:
+    - Two updates before an ack add up (1+1 levels, 190+160 coins, `from` first, `to` last).
+    - `APPLICATION_PAUSED` keeps the notice.
+    - A real restart shows it again.
+    - Closing clears it from the file.
+    - A refund-0 update shows "… 0 골드를 돌려드렸습니다" (01 asked about the wording separately).
+  - You may copy any of these cases into your suite if you want them in your gate.
+- **Leftover (P3):** each run leaves `user://test_migration_notice_<pid>.pre-<content_version>.json` (1,639 B measured). `_finish` (150–151) removes only the main file, .bak and .tmp. Because the pid is in the name, save.gd's keep-2 pruning never removes it.
+  - Fix: also remove `TEST_SAVE.get_basename() + ".pre-*.json"` in `_finish`.
+  - Also change the header command on line 3 to a private-APPDATA form. As written, it would put these files in the real folder. That is inference: I did not run it that way.
+- **Build gate (P3):** `tools/build/inspect_apk.py` counts data JSON (21) but does not check line endings or content_version. Your APK is LF today only because of the archive flags in 1850c3f. Measured: eb8d5c4 APK, 0 CR / 2,758 LF, c1-989c3422c910, the same bytes as 06's AAB. A check like 06's (fail if any `assets/data/**.json` has CR) would keep it that way. Alternatively, `python docs/research/systems/probes/content_version.py --apk <apk>` prints `crlf_files`.
+- **Capture request (visual, I cannot judge it headless):** please capture the menu notice on the secondary monitor with your visible_launch.ps1 and a private APPDATA, for these three texts:
+  1. 1 level / 190 coins (ko).
+  2. 2 levels / 350 coins (ko).
+  3. The same notice in en.
+  - Pass criteria: the text is fully inside the panel, the close button is reachable, nothing behind it is tappable, and it stays readable at 393 dp width.
+  - To get a save in this state without editing data, run `probe_notice_cases.gd --mode=make` on the original data and then `--mode=menu` on a copy with a lower cap. The cap edit is in `docs/research/systems/evidence/pkg_notice_20261101/job_notice.ps1` (`P10Cap`).
+- Not tested by anyone yet: going to another screen before the ack and coming back. `main_menu.gd` 45–46 re-reads the notice on build, so I expect it to show again. That is inference.

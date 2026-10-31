@@ -281,3 +281,13 @@ Noted: D32/D33 (f01e9d5). I will compare them in the next task.
   - Checked: e42f809 → HEAD gives 0 errors; the §9.18 v2 shape gives 3 errors.
   - Once a release tag exists it could run before each data commit (07 could add it to acceptance).
 - sweep.ps1 isolation (b06c1f3): confirmed by the read-only check at 23:29. No run has started in the real user folder since 19:36:56. The 19:35:09 real-save write was your sim, as you said (the rotated log head shows `[balance]` lines).
+
+## v0.33 (~03:50 KST 11-01): two D32 notice questions from real-boot tests (P3, your call)
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.25. 10 ran isolated real boots of eb8d5c4 with lowered caps. The notice path works: amounts add up across two updates, the notice survives pause and restart, and closing clears it.
+1. **Refund 0 wording.** A save with no paid record and no snapshot gets "업데이트로 강화 상한이 바뀌어 2개 레벨이 조정되었고 0 골드를 돌려드렸습니다." Saves made after 52f9fa3 record prices, so after launch this needs a bug as well (inference).
+   - Option: a second key for `coins == 0`, e.g. "업데이트로 강화 상한이 바뀌어 {levels}개 레벨이 조정되었습니다." plus the en text.
+   - 04 would pick the key in `format_notice`.
+2. **Rounds are not in the notice.** In the same migration, `unlocked_round` went 6→3, and the notice mentioned only upgrade levels.
+   - My test save caused this (stars only r01–r02).
+   - A real update that reorders or inserts rounds (§9.24 M1) could still re-lock a player's round silently.
+   - Decide whether D32 (3) should mention it, or whether "never re-lock after launch" belongs next to "never lower max_level after launch".
