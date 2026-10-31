@@ -17,7 +17,7 @@
 - Next steps (exact): (1) Whenever 03/05 commit assets: `python tools/perf/asset_budget_check.py --range 37b9a93..HEAD` and add a row to
   RETHEME_BUDGET §5. On FAIL, notify the owner with the report's file line. (2) When 04 posts APKs:
   `--apk-before <a> --apk-after <b>`. (3) When C11 is granted: the command in the M3 section below.
-- Commit: see "M4 commit" line below (filled after the helper).
+- M4 commit: `9cbae838bb8486f5e7df239cd84fc0ee4d58b3f0` [Test] (7 owned files). Helper printed `PUSHED 9cbae83... origin/main` (bfcce0e..9cbae83), and `git branch -r --contains` shows origin/main.
 ## M3 — resumed 2026-10-31 15:35 (user restart), updated 15:55 +09:00
 - Recovery check: owned paths showed no diff between HEAD and `checkpoint/quota-20261031-092323/08-performance` (86c00f7), and the owned
   working tree was clean, so no work was lost. The HISTORICAL QUOTA CHECKPOINT text was ignored as instructed. Session ID: not exposed.
