@@ -145,3 +145,17 @@ Same 2 bots, seeds 1–10, budgets none/LOW, isolated, one run per variant under
 | (e) extra: boss speed 18→30 | 10/10 | 10/10 | 7/10 / 9/10 | 350 / 322 | 265 | no |
 Reading: splash and knockback are what make r05 a block. Halving either one lets the no-upgrade bots win (b: 6/10 and 10/10; c: 9/10 and 10/10). They do not set the length: the boss dies at ~260–320 s and LOW medians stay 322–397 s in every variant (D37 showed the same for boss HP). A faster boss (e) also removes the block (none 7/10, 9/10). No variant meets all three criteria.
 Cause (D38): r05's length is set by the round structure (boss spawn at 95 s, then the wave at 150 s, the HP triggers and the push to the enemy base), not by boss combat values. The block and the length pull against each other through the same boss values.
+## Update 2026-11-01 (10) — r05 structure experiment: pass criteria fixed BEFORE the runs
+time_3 stays 260 (D38's par change is NOT adopted: about 6 minutes for one round conflicts with the 2–5 min session pillar). Bot sims are not human playtests.
+Pass criteria (all must hold; 10 seeds, 02 bots competent skill 2 and casual skill 1, budgets none/LOW, isolated runs):
+1. LOW median win time ≤ 325 s (1.25 × 260) for BOTH bots.
+2. Casual LOW ≥ 7/10 wins.
+3. none (no upgrades) 0/10 wins for BOTH bots (the block stays).
+4. Not too easy for the competent bot at LOW (reported, threshold): median end base ≤ 0.80, and median time after the boss dies ≥ 30 s. If the boss dies and the round ends almost at once with a full base, the boss is no longer the fight.
+5. Losses before the boss dies (reported): the share of LOW losses that happen while the boss is still alive. Lower means the block is the boss itself, not the adds.
+Variants (data only, one Godot run each, queued in one detached job):
+- s1: boss wave 95 → 60 s (the old 60 s wave moves to 95 s).
+- s2: the 150 s wave is reduced from brute 2 + spitter 3 to brute 1 + spitter 2.
+- s3: the 40% HP trigger (brute 2 + swarm 6) is removed.
+- s4: s1 + s2.
+Engine-only variants (requested from 02, not run): cancel the remaining waves/triggers when the boss dies; damage the enemy base when the boss dies.
