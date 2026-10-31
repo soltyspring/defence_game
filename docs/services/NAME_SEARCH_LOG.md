@@ -1,7 +1,11 @@
 # Title name search log (owner: 06-services)
-Version: 1. Searched **2026-10-31 09:15–09:25 KST** by 06-services. This is a preliminary web search, **not a trademark clearance**. A qualified person must run the KIPRIS and Play searches by hand before a title is chosen (OPEN_DECISIONS.md U9).
+Version: 2. Searched **2026-10-31 09:15–09:25 KST** by 06-services. This is a preliminary web search, **not a trademark clearance**.
 
-Machine-checked by `tests/services/test_services_listing.gd` group `name_search_log`: every title candidate in STORE_LISTING_DRAFT.md §2 has one row per source below, each with a date and a status from the fixed set.
+Update 2026-10-31 (Q3): the user chose the working title "빵집 기사단: 곰팡이 디펜스" / "Bakery Knights: Mold Defense" at 16:19 KST. The other four rows below are kept as history. The final store name waits for the KIPRIS class 9 and 41 search by a person: procedure, terms and empty record form in **docs/services/KIPRIS_MANUAL_CHECK.md**. Until that record is filled, the KIPRIS rows stay `NOT_CHECKED` (the lint enforces this).
+
+09's later store search (docs/research/product/SUCCESS_ANALYSIS.md §28) found the similar bread-themed game "Bread Defense / 빵어전" (ETERNAXCODE). It does not share our name; the wording overlap and how the store text avoids it are in STORE_LISTING_DRAFT.md §7.
+
+Machine-checked by `tests/services/test_services_listing.gd` group `name_search_log`: the working title in STORE_LISTING_DRAFT.md §2 has one row per source below, each with a date and a status from the fixed set.
 
 Status values: `NO_EXACT_MATCH_FOUND` (the method used showed no app or mark with the same name; does not prove none exists), `SIMILAR_FOUND` (related names or concepts found, listed), `NOT_CHECKED` (the source could not be searched by 06).
 
@@ -40,7 +44,7 @@ Status values: `NO_EXACT_MATCH_FOUND` (the method used showed no app or mark wit
 CookieRun: Kingdom (Devsisters, com.devsisters.ck) is a large Korean game whose characters are baked goods fighting a "dark legion". Our names do not use "Cookie" or "CookieRun", but players may compare the themes. 09-research-product may want to check the identity risk; 06 makes no legal judgement.
 
 ## 4. What the user (or a professional) still needs to do
-1. KIPRIS 상표 검색 by hand: terms 빵집기사단, 빵집 기사단, 베이커리나이츠, Bakery Knights; Nice class 9 (game software) and 41 (online game services); also similar-sound terms.
-2. Google Play search in the Play app (live results) for each candidate in ko and en.
+1. KIPRIS 상표 검색 by hand for the working title, classes 9 and 41: follow docs/services/KIPRIS_MANUAL_CHECK.md (15 terms incl. similar-sound forms, status values, record form).
+2. Google Play search in the Play app (live results) for the working title in ko and en.
 3. If the English title is used abroad: USPTO / EUIPO / WIPO Global Brand Database.
-4. Record the results here with date and searcher.
+4. Record the KIPRIS results in KIPRIS_MANUAL_CHECK.md §5–§6 with date and searcher; 06 then updates the KIPRIS rows here.

@@ -12,7 +12,7 @@ Version: 1 (2026-10-31). 06 does not ask the user. 01 asks these **one at a time
 | U6 | Purchases only: product list (01's Q4) and purchase verification approach — (A) keep purchases off until a server exists, (B) own verification server with hosting cost, (C) client-side check only, labelled tamperable, low-value items only; minimum bar and risks for C: NO_SERVER_MINIMUM.md; sandbox test steps: BILLING_SANDBOX_TEST_PLAN.md | B4–B6 need a server; without one nothing can be verified or revoked reliably | U1 has no purchases |
 | U7 | Remote analytics at launch: none / own minimal endpoint / vendor SDK (routed in M3) | Data safety (V1), consent | — |
 | U8 | Legal review of the Korean 개인정보 처리방침 and refund notice: who does it? | V5 could not be verified by tool; amendments reported effective 2026-09-11 | — |
-| U9 | Store title: pick one candidate (STORE_LISTING_DRAFT.md §2: 빵집 기사단 / 빵집 기사단: 곰팡이 디펜스 / 빵집 기사단 대 곰팡이 군단; en: Bakery Knights / Bakery Knights: Mold Defense / Bakery Knights vs Mold Legion) after a trademark/name search | Store listing; privacy policy {{APP_NAME}} | — (independent of U1–U8; theme A decided 2026-10-31 09:03) |
+| U9 | Store title. **Working title DECIDED by user 2026-10-31 16:19 KST:** 빵집 기사단: 곰팡이 디펜스 / Bakery Knights: Mold Defense. Final store name only after a person runs the KIPRIS class 9 and 41 search (docs/services/KIPRIS_MANUAL_CHECK.md, NOT DONE) | Store listing; privacy policy {{APP_NAME}} | — (independent of U1–U8; theme A decided 2026-10-31 09:03) |
 
 Recommendation from 06 (not a decision): U1 first; for U6 option A until a server is budgeted; for U7 "none".
 

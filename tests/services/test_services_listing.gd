@@ -7,7 +7,11 @@ extends SceneTree
 
 const LISTING := "res://docs/services/STORE_LISTING_DRAFT.md"
 const POLICY := "res://docs/services/PRIVACY_POLICY_DRAFT.md"
-const LIMITS := {"title": 30, "short": 80, "full": 4000}
+const LIMITS := {"title": 30, "subtitle": 30, "short": 80, "full": 4000}
+## Q3 working title, decided by the user 2026-10-31 16:19 KST (coordinator-to-06-services.md).
+## Final store name only after the KIPRIS check (docs/services/KIPRIS_MANUAL_CHECK.md).
+const WORKING_TITLE := {"ko": "빵집 기사단: 곰팡이 디펜스", "en": "Bakery Knights: Mold Defense"}
+const APPLE_NAME_MIN := 2
 
 ## Ranking, price/promotion and Play-program wording (Metadata policy examples) + superlatives.
 const BANNED_EN := ["#1", "best", "top", "popular", "award", "free", "% off", "discount", "sale",
@@ -15,7 +19,13 @@ const BANNED_EN := ["#1", "best", "top", "popular", "award", "free", "% off", "d
 const BANNED_KO := ["1위", "최고", "인기", "무료", "할인", "에디터", "추천", "신규", "수상", "베스트", "역대급", "구글 플레이"]
 ## Third-party marks (09 R09-06-3): Devsisters' Cookie Run family and real bakery brands must not
 ## appear in titles, IAP names or store text.
-const BANNED_BRANDS := ["쿠키", "쿠키런", "cookie", "cookierun", "devsisters", "데브시스터즈", "파리바게뜨", "paris baguette", "뚜레쥬르", "tous les jours", "성심당"]
+const BANNED_BRANDS := ["쿠키", "쿠키런", "cookie", "cookierun", "devsisters", "데브시스터즈", "파리바게뜨", "paris baguette", "뚜레쥬르", "tous les jours", "성심당",
+	"빵어전", "bread defense", "eternaxcode"]
+## Signature wording of the similar game "Bread Defense / 빵어전" (ETERNAXCODE; 09 SUCCESS_ANALYSIS §28,
+## store pages checked 2026-10-31). Store text must not borrow it (STORE_LISTING_DRAFT.md §7).
+## ko: substring match. en: word-start match (catches plurals), multi-word phrases by substring.
+const COMPETITOR_KO := ["빵어전", "반죽", "화덕", "온기", "빵 카드", "눅눅이", "축축", "홀씨", "불씨", "빵전사", "대련", "따뜻한 빵", "타워디펜스", "타워 디펜스", "제빵사", "도감"]
+const COMPETITOR_EN := ["bread defense", "dough", "hearth", "warmth", "bread card", "moistie", "damp trail", "spore cloud", "ember", "bread warrior", "duel", "warm bread", "tower defense", "tower defence", "assistant"]
 const STOP_EN := ["the", "and", "a", "an", "to", "of", "for", "your", "you", "or", "with", "from", "each", "any", "such", "as", "by", "in", "on", "no", "every", "then", "into", "after", "use", "up", "per"]
 
 var failures: PackedStringArray = []
@@ -26,6 +36,7 @@ var report := {"groups": {}, "lengths": {}}
 func _initialize() -> void:
 	_group("listing_fields", test_listing_fields)
 	_group("listing_wording", test_listing_wording)
+	_group("listing_competitor_overlap", test_competitor_overlap)
 	_group("listing_claim_markers", test_listing_markers)
 	_group("privacy_policy_template", test_policy)
 	_group("name_search_log", test_name_search_log)
@@ -35,6 +46,7 @@ func _initialize() -> void:
 	_group("legal_and_options_docs", test_legal_options)
 	_group("privacy_site", test_privacy_site)
 	_group("families_and_rating_q2", test_families_rating)
+	_group("kipris_manual_check", test_kipris_manual)
 	report.passes = passes
 	report.failures = Array(failures)
 	var f := FileAccess.open("user://services_listing_report.json", FileAccess.WRITE)
@@ -95,10 +107,19 @@ func test_listing_fields() -> bool:
 		return true
 	for lang in ["ko", "en"]:
 		var ts := titles(lang)
-		check(ts.size() >= 2, "%s: at least 2 title candidates (%d)" % [lang, ts.size()])
+		# One working title per language, equal to the user's Q3 answer (Play title = App Store name).
+		check(ts == [WORKING_TITLE[lang]], "%s: title block holds only the Q3 working title '%s' (%s)" % [lang, WORKING_TITLE[lang], str(ts)])
 		for t in ts:
-			report.lengths["title." + lang + ":" + t] = t.length()
-			check(t.length() <= LIMITS.title, "%s title '%s' ≤ 30 chars (%d)" % [lang, t, t.length()])
+			report.lengths["title." + lang] = t.length()
+			check(t.length() <= LIMITS.title, "%s title '%s' ≤ 30 chars, Play title and App Store name (%d)" % [lang, t, t.length()])
+			check(t.length() >= APPLE_NAME_MIN, "%s title ≥ 2 chars (App Store name minimum)" % lang)
+			check(t == t.strip_edges() and not t.contains("  "), "%s title has no stray spaces" % lang)
+		var sub := store_text(block(listing(), "subtitle." + lang))
+		report.lengths["subtitle." + lang] = sub.length()
+		check(sub.length() > 0, "%s App Store subtitle present" % lang)
+		check(sub.length() <= LIMITS.subtitle, "%s App Store subtitle ≤ 30 chars (%d)" % [lang, sub.length()])
+		check(not sub.contains("\n"), "%s subtitle is one line" % lang)
+		check(ts.is_empty() or (sub != ts[0] and not ts[0].contains(sub)), "%s subtitle does not repeat the title" % lang)
 		for field in ["short", "full"]:
 			var s := store_text(block(listing(), field + "." + lang))
 			report.lengths[field + "." + lang] = s.length()
@@ -117,9 +138,31 @@ static func has_emoji(s: String) -> bool:
 
 func all_store_fields(lang: String) -> Array:
 	var out: Array = titles(lang)
+	out.append(store_text(block(listing(), "subtitle." + lang)))
 	out.append(store_text(block(listing(), "short." + lang)))
 	out.append(store_text(block(listing(), "full." + lang)))
 	return out
+
+## No store field borrows the similar game's name or signature wording (STORE_LISTING_DRAFT.md §7).
+func test_competitor_overlap() -> bool:
+	for lang in ["ko", "en"]:
+		var fields := all_store_fields(lang)
+		check(fields.size() == 4, "%s: title, subtitle, short and full all checked (%d)" % [lang, fields.size()])
+		for s in fields:
+			var low: String = s.to_lower()
+			for w in COMPETITOR_KO:
+				check(not s.contains(w), "%s: no Bread Defense wording '%s' in '%s'" % [lang, w, s.left(40)])
+			for w in COMPETITOR_EN:
+				var hit := low.contains(w) if w.contains(" ") else RegEx.create_from_string("\\b" + w).search(low) != null
+				check(not hit, "%s: no Bread Defense wording '%s' in '%s'" % [lang, w, s.left(40)])
+	# The §7 table documents every blocked phrase, so 01 sees the same list the lint uses.
+	var t := listing()
+	var s7 := t.substr(t.find("## 7."))
+	for w in COMPETITOR_KO + COMPETITOR_EN:
+		if w in ["tower defence", "타워 디펜스"]:
+			continue
+		check(s7.contains(w), "§7 table lists blocked phrase '%s'" % w)
+	return true
 
 func test_listing_wording() -> bool:
 	var re_word := RegEx.create_from_string("[A-Za-z][A-Za-z']*")
@@ -266,7 +309,7 @@ func test_name_search_log() -> bool:
 		check(not rows.has(key), "name log: one row for %s" % key)
 		rows[key] = {"date": c[3].strip_edges(), "status": c[4].strip_edges(), "result": c[5].strip_edges()}
 	var candidates: Array = titles("ko") + titles("en")
-	check(candidates.size() == 6, "name log: 6 title candidates in the listing (%d)" % candidates.size())
+	check(candidates == [WORKING_TITLE.ko, WORKING_TITLE.en], "name log: listing carries the Q3 working title (%s)" % str(candidates))
 	for t in candidates:
 		for src in NAME_SOURCES:
 			var k: String = t + "|" + src
@@ -536,4 +579,112 @@ func test_families_rating() -> bool:
 	check(not DirAccess.dir_exists_absolute("res://addons"), "no addons/ (no ad or billing plugin)")
 	var od := FileAccess.get_file_as_string("res://docs/services/OPEN_DECISIONS.md")
 	check(od.contains("DEFERRED by user 2026-10-31 16:09 KST"), "U1 marked deferred by user")
+	return true
+
+# ------------------------------------------------------------------ Q3: working title, KIPRIS manual check
+
+const KIPRIS := "res://docs/services/KIPRIS_MANUAL_CHECK.md"
+const KIPRIS_CLASSES := ["9", "41"]
+const KIPRIS_RESULTS := ["NOT_DONE", "NO_HIT", "HITS_RECORDED"]
+const KIPRIS_STATUS := ["출원", "공고", "등록", "거절", "소멸", "포기", "취하", "무효"]
+
+static func section(t: String, start: String, end: String) -> String:
+	var a := t.find(start)
+	if a < 0:
+		return ""
+	var b := t.find(end, a)
+	return t.substr(a, (b - a) if b > a else -1)
+
+## The checklist covers both classes for every term, both title languages, and the status
+## values; results can only be entered with a date and a searcher; nothing can claim a KIPRIS
+## result elsewhere while the record is empty.
+func test_kipris_manual() -> bool:
+	if not check(FileAccess.file_exists(KIPRIS), "KIPRIS_MANUAL_CHECK.md exists"):
+		return true
+	var t := FileAccess.get_file_as_string(KIPRIS)
+	check(t.contains("not a legal opinion"), "KIPRIS doc says it is not a legal opinion")
+	check(t.contains("https://www.kipris.or.kr"), "KIPRIS doc names the site")
+	check(t.contains("**[USER]**"), "KIPRIS search marked as a user/person step")
+	for cls in ["class 9", "class 41"]:
+		check(t.contains(cls), "KIPRIS doc covers %s" % cls)
+	var s4 := section(t, "## 4.", "## 5.")
+	for st in KIPRIS_STATUS:
+		check(s4.contains("| %s |" % st), "status value '%s' explained" % st)
+	# §3 terms
+	var terms := {}
+	for line in section(t, "## 3.", "## 4.").split("\n"):
+		var c := line.split("|")
+		if c.size() >= 5 and RegEx.create_from_string("^T\\d+$").search(c[1].strip_edges()) != null:
+			terms[c[1].strip_edges()] = c[2].strip_edges()
+	check(terms.size() >= 10, "at least 10 search terms (%d)" % terms.size())
+	var term_texts: Array = terms.values()
+	# Both working titles (punctuation removed) and their main parts are searched.
+	for lang in ["ko", "en"]:
+		var title: String = WORKING_TITLE[lang]
+		var full := title.replace(":", "")
+		check(term_texts.has(full), "full %s title searched as '%s'" % [lang, full])
+		for part in title.split(":"):
+			check(term_texts.has(part.strip_edges()), "%s title part '%s' searched" % [lang, part.strip_edges()])
+			check(term_texts.has(part.strip_edges().replace(" ", "")), "%s title part without spaces '%s' searched" % [lang, part.strip_edges().replace(" ", "")])
+	# §5 summary: one row per term × class, results only with date and searcher.
+	var rows := {}
+	var not_done := 0
+	var hits_ids: Array = []
+	for line in section(t, "## 5.", "## 6.").split("\n"):
+		var c := line.split("|")
+		if c.size() < 9 or RegEx.create_from_string("^T\\d+$").search(c[1].strip_edges()) == null:
+			continue
+		var id := c[1].strip_edges()
+		var cls := c[3].strip_edges()
+		var res := c[4].strip_edges()
+		var key := id + "|" + cls
+		check(not rows.has(key), "one summary row for %s" % key)
+		rows[key] = true
+		check(terms.get(id, "") == c[2].strip_edges(), "summary %s term matches §3" % key)
+		check(KIPRIS_CLASSES.has(cls), "summary %s class is 9 or 41" % key)
+		check(KIPRIS_RESULTS.has(res), "summary %s result '%s' from fixed set" % [key, res])
+		if res == "NOT_DONE":
+			not_done += 1
+			check(c[5].strip_edges() == "" and c[6].strip_edges() == "" and c[7].strip_edges() == "", "summary %s NOT_DONE has no date/searcher/records" % key)
+		else:
+			check(RegEx.create_from_string("^20\\d\\d-\\d\\d-\\d\\d$").search(c[5].strip_edges()) != null, "summary %s result has a date" % key)
+			check(c[6].strip_edges() != "", "summary %s result names the searcher" % key)
+			if res == "HITS_RECORDED":
+				check(c[7].strip_edges().contains("R"), "summary %s points to §6 records" % key)
+				hits_ids.append(id)
+	for id in terms:
+		for cls in KIPRIS_CLASSES:
+			check(rows.has(id + "|" + cls), "summary row for %s class %s" % [id, cls])
+	# §6 records: filled rows need date, searcher, term, class, status from §4.
+	var filled := {}
+	for line in section(t, "## 6.", "## 7.").split("\n"):
+		var c := line.split("|")
+		if c.size() < 14 or RegEx.create_from_string("^R\\d+$").search(c[1].strip_edges()) == null:
+			continue
+		var empty := true
+		for i in range(2, 13):
+			if c[i].strip_edges() != "":
+				empty = false
+		if empty:
+			continue
+		var rid := c[1].strip_edges()
+		check(RegEx.create_from_string("^20\\d\\d-\\d\\d-\\d\\d$").search(c[2].strip_edges()) != null, "record %s has a date" % rid)
+		check(c[3].strip_edges() != "", "record %s names the searcher" % rid)
+		check(terms.has(c[4].strip_edges()) and KIPRIS_CLASSES.has(c[5].strip_edges()), "record %s names a §3 term and class" % rid)
+		check(KIPRIS_STATUS.has(c[10].strip_edges()) or c[12].strip_edges() == "모름", "record %s status from §4 (or similarity 모름)" % rid)
+		check(["동일", "유사", "비유사", "모름"].has(c[12].strip_edges()), "record %s similarity from fixed set" % rid)
+		filled[c[4].strip_edges()] = true
+	for id in hits_ids:
+		check(filled.has(id), "HITS_RECORDED term %s has a §6 record" % id)
+	report["kipris_not_done"] = not_done
+	print("  kipris rows NOT_DONE: %d of %d" % [not_done, rows.size()])
+	# No fabricated result: while anything is NOT_DONE, the doc and the name log say so.
+	if not_done > 0:
+		check(t.contains("**NOT DONE."), "KIPRIS doc headline says NOT DONE while rows are open")
+		for line in FileAccess.get_file_as_string(NAME_LOG).split("\n"):
+			var c := line.split("|")
+			if c.size() >= 7 and c[2].strip_edges() == "KIPRIS" and WORKING_TITLE.values().has(c[1].strip_edges()):
+				check(c[4].strip_edges() == "NOT_CHECKED", "name log KIPRIS row for '%s' stays NOT_CHECKED" % c[1].strip_edges())
+		check(listing().contains("**KIPRIS class 9/41 search: NOT DONE**"), "listing states the KIPRIS search is not done")
+	check(FileAccess.get_file_as_string(NAME_LOG).contains("KIPRIS_MANUAL_CHECK.md"), "name log points to the manual check")
 	return true
