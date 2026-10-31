@@ -15,3 +15,6 @@ GPU/disk budget: page sizes unchanged, so GPU stays 9.25 MiB all pages (r01 5.25
 
 ## A5 2026-10-31 16:35 +09:00 — art 0.9.0: pixels only (QUEUED)
 Page sizes are unchanged, so GPU stays 9.25 MiB all pages (r01 5.25 / r05 7.25 / r10 9.25). Texture hashes change for char_player, char_enemy, char_player_adv, char_enemy_adv, fx_combat, ui_main. PNG total ~71 KiB (ATLAS_BUDGET.md regenerated).
+
+## A6 2026-10-31 16:38 +09:00 — new page ui_title (menu) (QUEUED)
+`ui_title` 512x128 RGBA8 = 0.25 MiB, load_policy `menu`, so menu residency is 0.50 MiB (= your cap; `asset_budget_check.py --worktree` PASS). Battle pages are unchanged (all battle pages 9.25 MiB; your check reports 9.50 because it counts ui_title). App icons are in docs/ (not runtime).

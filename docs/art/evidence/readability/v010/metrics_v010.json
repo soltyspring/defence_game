@@ -1,0 +1,729 @@
+{
+ "thresholds": {
+  "silhouette": 60.0,
+  "crowd": 40.0,
+  "fx_cover": 35.0,
+  "projectile": 20.0,
+  "projectile_px_sep": 60.0
+ },
+ "scenes": {
+  "r01/meadow": {
+   "allies": 12,
+   "enemies": 11,
+   "godot_vs_composite": {
+    "max_channel_diff": 0,
+    "px_diff_gt2": 0
+   },
+   "silhouette_min": 81.2,
+   "silhouette_fail": [],
+   "crowd_min": 9.0,
+   "crowd_fail": [
+    [
+     "melee_basic",
+     300,
+     24.9
+    ],
+    [
+     "e_grunt",
+     312,
+     9.0
+    ],
+    [
+     "e_grunt",
+     329,
+     33.9
+    ],
+    [
+     "e_grunt",
+     362,
+     35.3
+    ]
+   ],
+   "fx": [
+    {
+     "kind": "hit_spark",
+     "x": 312,
+     "target": "e_grunt",
+     "cover_pct": 18.5
+    },
+    {
+     "kind": "hit_spark",
+     "x": 330,
+     "target": "e_grunt",
+     "cover_pct": 10.9
+    },
+    {
+     "kind": "hit_spark",
+     "x": 300,
+     "target": "melee_basic",
+     "cover_pct": 5.1
+    }
+   ],
+   "fx_fail": [],
+   "proj": [],
+   "proj_fail": []
+  },
+  "r01/dark": {
+   "allies": 12,
+   "enemies": 11,
+   "godot_vs_composite": {
+    "max_channel_diff": 1,
+    "px_diff_gt2": 0
+   },
+   "silhouette_min": 63.5,
+   "silhouette_fail": [],
+   "crowd_min": 9.0,
+   "crowd_fail": [
+    [
+     "melee_basic",
+     300,
+     24.9
+    ],
+    [
+     "e_grunt",
+     312,
+     9.0
+    ],
+    [
+     "e_grunt",
+     329,
+     33.9
+    ],
+    [
+     "e_grunt",
+     362,
+     35.3
+    ]
+   ],
+   "fx": [
+    {
+     "kind": "hit_spark",
+     "x": 312,
+     "target": "e_grunt",
+     "cover_pct": 18.5
+    },
+    {
+     "kind": "hit_spark",
+     "x": 330,
+     "target": "e_grunt",
+     "cover_pct": 10.9
+    },
+    {
+     "kind": "hit_spark",
+     "x": 300,
+     "target": "melee_basic",
+     "cover_pct": 5.1
+    }
+   ],
+   "fx_fail": [],
+   "proj": [],
+   "proj_fail": []
+  },
+  "r01/bright": {
+   "allies": 12,
+   "enemies": 11,
+   "godot_vs_composite": {
+    "max_channel_diff": 1,
+    "px_diff_gt2": 0
+   },
+   "silhouette_min": 96.6,
+   "silhouette_fail": [],
+   "crowd_min": 9.0,
+   "crowd_fail": [
+    [
+     "melee_basic",
+     300,
+     24.9
+    ],
+    [
+     "e_grunt",
+     312,
+     9.0
+    ],
+    [
+     "e_grunt",
+     329,
+     33.9
+    ],
+    [
+     "e_grunt",
+     362,
+     35.3
+    ]
+   ],
+   "fx": [
+    {
+     "kind": "hit_spark",
+     "x": 312,
+     "target": "e_grunt",
+     "cover_pct": 18.5
+    },
+    {
+     "kind": "hit_spark",
+     "x": 330,
+     "target": "e_grunt",
+     "cover_pct": 10.9
+    },
+    {
+     "kind": "hit_spark",
+     "x": 300,
+     "target": "melee_basic",
+     "cover_pct": 5.1
+    }
+   ],
+   "fx_fail": [],
+   "proj": [],
+   "proj_fail": []
+  },
+  "r05/meadow": {
+   "allies": 13,
+   "enemies": 12,
+   "godot_vs_composite": {
+    "max_channel_diff": 0,
+    "px_diff_gt2": 0
+   },
+   "silhouette_min": 63.0,
+   "silhouette_fail": [],
+   "crowd_min": 1.7,
+   "crowd_fail": [
+    [
+     "melee_basic",
+     300,
+     28.2
+    ],
+    [
+     "e_spitter",
+     340,
+     1.7
+    ],
+    [
+     "e_swarm",
+     321,
+     14.0
+    ],
+    [
+     "melee_basic",
+     260,
+     31.3
+    ],
+    [
+     "e_swarm",
+     386,
+     25.7
+    ],
+    [
+     "e_grunt",
+     312,
+     22.2
+    ],
+    [
+     "e_grunt",
+     405,
+     2.0
+    ]
+   ],
+   "fx": [
+    {
+     "kind": "hit_spark",
+     "x": 312,
+     "target": "e_grunt",
+     "cover_pct": 14.9
+    },
+    {
+     "kind": "hit_spark",
+     "x": 325,
+     "target": "e_swarm",
+     "cover_pct": 12.6
+    },
+    {
+     "kind": "hit_spark",
+     "x": 300,
+     "target": "melee_basic",
+     "cover_pct": 13.9
+    }
+   ],
+   "fx_fail": [],
+   "proj": [
+    {
+     "kind": "arrow",
+     "dL": 17.6,
+     "px_sep": 95.0
+    },
+    {
+     "kind": "arrow",
+     "dL": 28.9,
+     "px_sep": 75.0
+    },
+    {
+     "kind": "spit",
+     "dL": 34.2,
+     "px_sep": 58.0
+    }
+   ],
+   "proj_fail": [
+    [
+     "spit",
+     58.0
+    ]
+   ]
+  },
+  "r05/dark": {
+   "allies": 13,
+   "enemies": 12,
+   "godot_vs_composite": {
+    "max_channel_diff": 1,
+    "px_diff_gt2": 0
+   },
+   "silhouette_min": 61.0,
+   "silhouette_fail": [],
+   "crowd_min": 1.7,
+   "crowd_fail": [
+    [
+     "melee_basic",
+     300,
+     28.2
+    ],
+    [
+     "e_spitter",
+     340,
+     1.7
+    ],
+    [
+     "e_swarm",
+     321,
+     14.0
+    ],
+    [
+     "melee_basic",
+     260,
+     31.3
+    ],
+    [
+     "e_swarm",
+     386,
+     25.7
+    ],
+    [
+     "e_grunt",
+     312,
+     22.2
+    ],
+    [
+     "e_grunt",
+     405,
+     2.0
+    ]
+   ],
+   "fx": [
+    {
+     "kind": "hit_spark",
+     "x": 312,
+     "target": "e_grunt",
+     "cover_pct": 14.9
+    },
+    {
+     "kind": "hit_spark",
+     "x": 325,
+     "target": "e_swarm",
+     "cover_pct": 12.6
+    },
+    {
+     "kind": "hit_spark",
+     "x": 300,
+     "target": "melee_basic",
+     "cover_pct": 13.9
+    }
+   ],
+   "fx_fail": [],
+   "proj": [
+    {
+     "kind": "arrow",
+     "dL": 45.6,
+     "px_sep": 75.0
+    },
+    {
+     "kind": "arrow",
+     "dL": 50.0,
+     "px_sep": 75.0
+    },
+    {
+     "kind": "spit",
+     "dL": 50.5,
+     "px_sep": 58.0
+    }
+   ],
+   "proj_fail": [
+    [
+     "spit",
+     58.0
+    ]
+   ]
+  },
+  "r05/bright": {
+   "allies": 13,
+   "enemies": 12,
+   "godot_vs_composite": {
+    "max_channel_diff": 1,
+    "px_diff_gt2": 0
+   },
+   "silhouette_min": 96.0,
+   "silhouette_fail": [],
+   "crowd_min": 1.7,
+   "crowd_fail": [
+    [
+     "melee_basic",
+     300,
+     28.2
+    ],
+    [
+     "e_spitter",
+     340,
+     1.7
+    ],
+    [
+     "e_swarm",
+     321,
+     14.0
+    ],
+    [
+     "melee_basic",
+     260,
+     31.3
+    ],
+    [
+     "e_swarm",
+     386,
+     25.7
+    ],
+    [
+     "e_grunt",
+     312,
+     22.2
+    ],
+    [
+     "e_grunt",
+     405,
+     2.0
+    ]
+   ],
+   "fx": [
+    {
+     "kind": "hit_spark",
+     "x": 312,
+     "target": "e_grunt",
+     "cover_pct": 14.9
+    },
+    {
+     "kind": "hit_spark",
+     "x": 325,
+     "target": "e_swarm",
+     "cover_pct": 12.6
+    },
+    {
+     "kind": "hit_spark",
+     "x": 300,
+     "target": "melee_basic",
+     "cover_pct": 13.9
+    }
+   ],
+   "fx_fail": [],
+   "proj": [
+    {
+     "kind": "arrow",
+     "dL": 9.6,
+     "px_sep": 45.0
+    },
+    {
+     "kind": "arrow",
+     "dL": 4.4,
+     "px_sep": 45.0
+    },
+    {
+     "kind": "spit",
+     "dL": 3.4,
+     "px_sep": 100.0
+    }
+   ],
+   "proj_fail": [
+    [
+     "arrow",
+     45.0
+    ],
+    [
+     "arrow",
+     45.0
+    ]
+   ]
+  },
+  "r10/meadow": {
+   "allies": 13,
+   "enemies": 14,
+   "godot_vs_composite": {
+    "max_channel_diff": 0,
+    "px_diff_gt2": 0
+   },
+   "silhouette_min": 66.9,
+   "silhouette_fail": [],
+   "crowd_min": 4.6,
+   "crowd_fail": [
+    [
+     "ranged_basic",
+     186,
+     19.2
+    ],
+    [
+     "e_swarm",
+     406,
+     18.9
+    ],
+    [
+     "e_bomber",
+     312,
+     4.6
+    ],
+    [
+     "e_swarm",
+     387,
+     11.9
+    ],
+    [
+     "e_swarm",
+     331,
+     8.4
+    ],
+    [
+     "tank",
+     300,
+     26.0
+    ]
+   ],
+   "fx": [
+    {
+     "kind": "explosion",
+     "x": 318,
+     "target": "e_grunt",
+     "cover_pct": 18.1
+    },
+    {
+     "kind": "hit_spark",
+     "x": 330,
+     "target": "e_swarm",
+     "cover_pct": 7.7
+    },
+    {
+     "kind": "hit_spark",
+     "x": 300,
+     "target": "tank",
+     "cover_pct": 12.6
+    }
+   ],
+   "fx_fail": [],
+   "proj": [
+    {
+     "kind": "rock",
+     "dL": 0.7,
+     "px_sep": 60.6
+    },
+    {
+     "kind": "arrow",
+     "dL": 20.1,
+     "px_sep": 95.0
+    },
+    {
+     "kind": "spit",
+     "dL": 30.8,
+     "px_sep": 59.2
+    }
+   ],
+   "proj_fail": [
+    [
+     "spit",
+     59.2
+    ]
+   ]
+  },
+  "r10/dark": {
+   "allies": 13,
+   "enemies": 14,
+   "godot_vs_composite": {
+    "max_channel_diff": 1,
+    "px_diff_gt2": 0
+   },
+   "silhouette_min": 59.1,
+   "silhouette_fail": [
+    [
+     "e_brute",
+     59.1
+    ]
+   ],
+   "crowd_min": 4.6,
+   "crowd_fail": [
+    [
+     "ranged_basic",
+     186,
+     19.2
+    ],
+    [
+     "e_swarm",
+     406,
+     18.9
+    ],
+    [
+     "e_bomber",
+     312,
+     4.6
+    ],
+    [
+     "e_swarm",
+     387,
+     11.9
+    ],
+    [
+     "e_swarm",
+     331,
+     8.4
+    ],
+    [
+     "tank",
+     300,
+     26.0
+    ]
+   ],
+   "fx": [
+    {
+     "kind": "explosion",
+     "x": 318,
+     "target": "e_grunt",
+     "cover_pct": 18.1
+    },
+    {
+     "kind": "hit_spark",
+     "x": 330,
+     "target": "e_swarm",
+     "cover_pct": 7.7
+    },
+    {
+     "kind": "hit_spark",
+     "x": 300,
+     "target": "tank",
+     "cover_pct": 12.6
+    }
+   ],
+   "fx_fail": [],
+   "proj": [
+    {
+     "kind": "rock",
+     "dL": 28.0,
+     "px_sep": 66.7
+    },
+    {
+     "kind": "arrow",
+     "dL": 46.6,
+     "px_sep": 75.0
+    },
+    {
+     "kind": "spit",
+     "dL": 49.7,
+     "px_sep": 59.2
+    }
+   ],
+   "proj_fail": [
+    [
+     "spit",
+     59.2
+    ]
+   ]
+  },
+  "r10/bright": {
+   "allies": 13,
+   "enemies": 14,
+   "godot_vs_composite": {
+    "max_channel_diff": 1,
+    "px_diff_gt2": 0
+   },
+   "silhouette_min": 96.6,
+   "silhouette_fail": [],
+   "crowd_min": 4.6,
+   "crowd_fail": [
+    [
+     "ranged_basic",
+     186,
+     19.2
+    ],
+    [
+     "e_swarm",
+     406,
+     18.9
+    ],
+    [
+     "e_bomber",
+     312,
+     4.6
+    ],
+    [
+     "e_swarm",
+     387,
+     11.9
+    ],
+    [
+     "e_swarm",
+     331,
+     8.4
+    ],
+    [
+     "tank",
+     300,
+     26.0
+    ]
+   ],
+   "fx": [
+    {
+     "kind": "explosion",
+     "x": 318,
+     "target": "e_grunt",
+     "cover_pct": 18.1
+    },
+    {
+     "kind": "hit_spark",
+     "x": 330,
+     "target": "e_swarm",
+     "cover_pct": 7.7
+    },
+    {
+     "kind": "hit_spark",
+     "x": 300,
+     "target": "tank",
+     "cover_pct": 12.6
+    }
+   ],
+   "fx_fail": [],
+   "proj": [
+    {
+     "kind": "rock",
+     "dL": 27.4,
+     "px_sep": 50.0
+    },
+    {
+     "kind": "arrow",
+     "dL": 8.5,
+     "px_sep": 45.0
+    },
+    {
+     "kind": "spit",
+     "dL": 4.4,
+     "px_sep": 100.0
+    }
+   ],
+   "proj_fail": [
+    [
+     "rock",
+     50.0
+    ],
+    [
+     "arrow",
+     45.0
+    ]
+   ]
+  }
+ }
+}

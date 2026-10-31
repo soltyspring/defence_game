@@ -90,6 +90,12 @@ def pony(cv: Canvas, bx, by, phase, gallop=True, rear=0):
     cv.rect(bx - 4, by - 4 - round(rear * 0.4), 8, 4, c("B"))
     cv.hline(bx - 4, bx + 3, by - 1 - round(rear * 0.4), c("Y"))
     cv.vline(bx - 4, by - 4 - round(rear * 0.4), by - 1 - round(rear * 0.4), c("b"))
+    # A28: pretzel knot on the flank -> "프레첼 돌격병" (crust ring, salt flecks)
+    px0, py0 = bx - 4, by - 1 - round(rear * 0.4)
+    for (dx, dy) in [(1, 0), (2, 0), (4, 0), (5, 0), (0, 1), (3, 1), (6, 1), (0, 2), (2, 2), (4, 2), (6, 2),
+                     (1, 3), (5, 3), (2, 4), (3, 4), (4, 4)]:
+        cv.put(px0 + dx, py0 + dy, c("O"))
+    cv.put(px0 + 1, py0 + 1, c("W")); cv.put(px0 + 5, py0 + 2, c("W"))
 
 
 def lance(cv: Canvas, hx, hy, ang, flag_phase=0):

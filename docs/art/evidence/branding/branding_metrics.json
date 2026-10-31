@@ -1,0 +1,138 @@
+{
+ "logos": [
+  {
+   "scale": 1,
+   "name": "logo_title_ko",
+   "w": 304,
+   "h": 30,
+   "fits_360": true,
+   "device_w": 304,
+   "pixel_exact_maxdiff": 0
+  },
+  {
+   "scale": 1,
+   "name": "logo_title_en",
+   "w": 203,
+   "h": 21,
+   "fits_360": true,
+   "device_w": 203,
+   "pixel_exact_maxdiff": 0
+  },
+  {
+   "scale": 1,
+   "name": "logo_title_ko_2line",
+   "w": 158,
+   "h": 58,
+   "fits_360": true,
+   "device_w": 158,
+   "pixel_exact_maxdiff": 0
+  },
+  {
+   "scale": 1,
+   "name": "logo_title_en_2line",
+   "w": 202,
+   "h": 62,
+   "fits_360": true,
+   "device_w": 202,
+   "pixel_exact_maxdiff": 0
+  },
+  {
+   "scale": 2,
+   "name": "logo_title_ko",
+   "w": 304,
+   "h": 30,
+   "fits_360": true,
+   "device_w": 608,
+   "pixel_exact_maxdiff": 0
+  },
+  {
+   "scale": 2,
+   "name": "logo_title_en",
+   "w": 203,
+   "h": 21,
+   "fits_360": true,
+   "device_w": 406,
+   "pixel_exact_maxdiff": 0
+  },
+  {
+   "scale": 2,
+   "name": "logo_title_ko_2line",
+   "w": 158,
+   "h": 58,
+   "fits_360": true,
+   "device_w": 316,
+   "pixel_exact_maxdiff": 0
+  },
+  {
+   "scale": 2,
+   "name": "logo_title_en_2line",
+   "w": 202,
+   "h": 62,
+   "fits_360": true,
+   "device_w": 404,
+   "pixel_exact_maxdiff": 0
+  },
+  {
+   "scale": 3,
+   "name": "logo_title_ko",
+   "w": 304,
+   "h": 30,
+   "fits_360": true,
+   "device_w": 912,
+   "pixel_exact_maxdiff": 0
+  },
+  {
+   "scale": 3,
+   "name": "logo_title_en",
+   "w": 203,
+   "h": 21,
+   "fits_360": true,
+   "device_w": 609,
+   "pixel_exact_maxdiff": 0
+  },
+  {
+   "scale": 3,
+   "name": "logo_title_ko_2line",
+   "w": 158,
+   "h": 58,
+   "fits_360": true,
+   "device_w": 474,
+   "pixel_exact_maxdiff": 0
+  },
+  {
+   "scale": 3,
+   "name": "logo_title_en_2line",
+   "w": 202,
+   "h": 62,
+   "fits_360": true,
+   "device_w": 606,
+   "pixel_exact_maxdiff": 0
+  }
+ ],
+ "icon": {
+  "hero_bbox_h_pct": 60.4,
+  "dL_hero_vs_bg": 47.3,
+  "dL_mould_vs_bg": 31.3,
+  "outside_safe_zone_px": 23,
+  "outside_safe_zone_px_excl_outline": 0,
+  "godot_import": [
+   [
+    48,
+    true,
+    48
+   ],
+   [
+    96,
+    true,
+    96
+   ],
+   [
+    192,
+    true,
+    192
+   ]
+  ]
+ },
+ "window_screen": 1,
+ "primary_screen": 0
+}

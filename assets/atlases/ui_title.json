@@ -1,0 +1,71 @@
+{
+ "schema": "defence.atlas/1",
+ "atlas": "ui_title",
+ "image": "ui_title.png",
+ "image_res": "res://assets/atlases/ui_title.png",
+ "size": [
+  512,
+  128
+ ],
+ "padding": 2,
+ "extrude": 1,
+ "group": "ui",
+ "load_policy": "menu",
+ "note": "Working-title logos (Q3 16:19 KST). Acquire on main menu/splash, release on battle enter.",
+ "filter": "nearest",
+ "mipmaps": false,
+ "repeat": false,
+ "gpu_format": "RGBA8 (lossless, no VRAM compression)",
+ "gpu_bytes": 262144,
+ "disk_bytes": 5357,
+ "unique_regions": 4,
+ "occupancy": 0.535,
+ "frames": {
+  "logo_title_ko": {
+   "x": 3,
+   "y": 69,
+   "w": 304,
+   "h": 30,
+   "pivot": [
+    152,
+    15
+   ],
+   "working_title": true
+  },
+  "logo_title_ko_2line": {
+   "x": 209,
+   "y": 3,
+   "w": 158,
+   "h": 58,
+   "pivot": [
+    79,
+    29
+   ],
+   "working_title": true
+  },
+  "logo_title_en": {
+   "x": 3,
+   "y": 103,
+   "w": 203,
+   "h": 21,
+   "pivot": [
+    101,
+    10
+   ],
+   "working_title": true
+  },
+  "logo_title_en_2line": {
+   "x": 3,
+   "y": 3,
+   "w": 202,
+   "h": 62,
+   "pivot": [
+    101,
+    31
+   ],
+   "working_title": true
+  }
+ },
+ "anims": {},
+ "anim_sets_meta": {}
+}

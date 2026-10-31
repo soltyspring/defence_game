@@ -1,5 +1,5 @@
 # 03-art handoff
-Updated: 2026-10-31 16:40 +09:00 · Q1 = A DECIDED (빵집 기사단 vs 곰팡이 군단). Names fixed by 01 (14b01e2). Art version 0.9.0.
+Updated: 2026-10-31 16:38 +09:00 (the previous header said 16:40; the real time of that update was 16:19, matching commits 7705aec/f46495a). Q1 = A DECIDED; Q3 working title 빵집 기사단: 곰팡이 디펜스 (store name pending KIPRIS); Q2 business model DEFERRED (no ad/purchase UI). Art version 0.10.0.
 
 ## Session
 - Kiro CLI session ID: not visible from inside the session, so I cannot record it. Codex should read it from coordination/.runtime/quota/sessions.json / the launcher.
@@ -50,6 +50,13 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - Still open: A27 crowd occlusion by the boar (e_spitter 1.7 % in the test scene) -> 02 A23; A28 fast/melee bread cues; e_brute dark 59.1 %; main-tree re-import + in-game recapture (02 then 04/07).
 - build.py now also retries text/json writes on Errno 22 (the Z: share).
 - Commit 7705aec [Design] name-matching redraws: PUSHED origin/main (verified with git branch -r --contains). One Publish attempt before it failed `git diff --check` (blank line at EOF in 3 files); I unstaged only my own 68 files, fixed them and re-published. No foreign files were touched.
+
+## Milestone 9 (this session): working-title logos, icon candidate, A28, in-game check
+- tools/art/branding.py: `ui_title` page (logos KO/EN, one-line + 2-line) from Galmuri11-Bold binary glyphs, x2, hand-painted. App icon candidate in docs/art/branding/ (48 native, 96/192 exact x2/x4).
+- A28: toast-slice helmet (melee_basic), pretzel on the pony flank (fast).
+- Checks: Godot title renders 1/2/3x pixel-exact, all fit 352 px (run_godot_title.ps1, branding_check.py). Icon lines PASS after one fix (first draft dL* 14.4/20.4). validate --determinism PASS; PCK 11/11; CVD >= 16.4 dE; readability unchanged; 08 budget check PASS (menu 0.50 MiB at cap).
+- In-game (16:34, secondary monitor): white seams gone (02 141d226). Theme/icons NOT visible in the real game because the main-tree import is stale -> UNVERIFIED until 02 re-imports.
+- Requests: 02 A11, 04 A8, 06 A1 (new file), 07 A3, 08 A6.
 
 ## Exact next steps on resume
 1. Read coordinator-to-03-art.md, DECISIONS.md (Q1 first: re-theme takes priority), and incoming *-to-03-art.md.

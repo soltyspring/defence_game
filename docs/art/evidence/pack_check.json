@@ -130,6 +130,16 @@
       "size_ok": true
     },
     {
+      "frames": 4,
+      "id": "ui_title",
+      "loaded": true,
+      "size": [
+        512,
+        128
+      ],
+      "size_ok": true
+    },
+    {
       "frames": 5,
       "id": "biome_meadow",
       "loaded": true,
@@ -142,5 +152,5 @@
   ],
   "raw_png_present": false,
   "remap_present": true,
-  "pck_bytes": 1244920
+  "pck_bytes": 1255352
 }

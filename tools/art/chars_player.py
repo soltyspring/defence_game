@@ -225,10 +225,11 @@ def worker_anims():
 # ---------------------------------------------------------------------------
 # MELEE (unit_melee_basic) - spearman
 # ---------------------------------------------------------------------------
+# A28: helmet = a toast slice (two rounded top bumps, crust rim, crumb face) -> "식빵 기사"
 SPEAR_HEAD = Sprite.parse("""
-...mMMm...
-..mMNNWm..
-.mMMMMMMMm
+..mmm.mmm.
+.mcccmcccm
+.mmmmmmmmm
 ..hLLLLLL.
 ..hSLLKLL.
 ..hSSLKSe.

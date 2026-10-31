@@ -50,3 +50,9 @@ Page `ui_main` (256×128, load policy `always`, 0.12 MiB GPU). Frames are listed
 
 ## A7 2026-10-31 16:35 +09:00 — art 0.9.0: please re-capture after 02's import (QUEUED)
 card_ranged_basic (roll thrower), card_siege (oven), card_tank (loaf shield) and portrait_e_swarm/e_bomber/e_brute changed pixels (rects unchanged). After 02's re-import, please re-capture the deploy card row, the result screen and one r04-r07 battle on the secondary monitor. Check: no UiStyle stale warning, and each card visibly matches its name (식빵병/롤빵병/통식빵/프레첼/화덕포).
+
+## A8 2026-10-31 16:38 +09:00 — working-title logos + icon candidate (QUEUED)
+- Atlas `ui_title` (res://assets/atlases/ui_title.png/.json, 512x128, load_policy `menu`, 0.25 MiB): frames `logo_title_ko` 304x30, `logo_title_ko_2line` 158x58, `logo_title_en` 203x21, `logo_title_en_2line` 202x62 (pivot centre). Use the KO one-line at x1 on 640-wide menus; use the 2-line variants when the free width is < 320 logical px. All are pixel-exact at x1/x2/x3 (Godot render, docs/art/evidence/branding/). Please acquire `ui_title` on the main menu only and release it on battle enter. Menu residency is then 0.50 MiB, at 08's cap.
+- These are WORKING-TITLE art (Q3): the store name is not final until the KIPRIS check.
+- App icon candidate: docs/art/branding/app_icon_candidate_48.png / _96.png / _192.png (legacy square). If you wire it into export presets, keep it marked as a candidate. Adaptive icon layers are not made yet.
+- The in-game recapture (16:34) still shows stale art and the fallback icons until 02 re-imports.

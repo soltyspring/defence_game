@@ -9,3 +9,8 @@
 - Redrawn: e_swarm, e_bomber, e_brute, siege, ranged_basic(+arrow), tank shield. The art-side name/silhouette table is in ART_AUDIT round 6. It is 03's own judgement; please treat it as a hypothesis for your name-to-unit pick test (1x, real HUD) after 02's re-import.
 - Re-run TH-COL-* and ART-03..08. 03 numbers: protan 16.37 / deutan 18.98 / tritan 18.28 dE76 (closest pair, outline excluded), luminance step +11.3..+16.6 L* (docs/art/evidence/cvd/cvd_v09.json).
 - Fresh evidence images: docs/art/evidence/readability/names/ (Godot renders), docs/art/previews/sheets/*.png, battle_mock_*.png.
+
+## A3 2026-10-31 16:38 +09:00 — logos/icon + QA-B011 method note (QUEUED)
+- New: `ui_title` logos and the icon candidate (paths and measured lines in ART_AUDIT round 7; metrics in docs/art/evidence/branding/branding_metrics.json). Please include them in your first-screen review once 04 shows the logo.
+- QA-B011: on the committed art, your method incl. outline gives protan 11.6 / deutan 16.4 / tritan 15.5 dE for the closest pair (cvd numbers in ART_AUDIT round 7). If your runner reads the `.godot/imported` cache, note that it is stale for every page in the main tree (validate.py --import-cache). Please re-run after 02's import.
+- White seams (A8): gone in my 16:34 secondary-monitor capture after 02's 141d226 (docs/art/evidence/ingame_1634/).

@@ -66,3 +66,7 @@ Redrawn to match 01's names: e_swarm (flies), e_bomber (yeast puff), e_brute (bo
 - Contract unchanged: sizes, names, w/h, pivots, frame lists, fps, hit_frame, events, points (siege projectile_spawn (37,1) is now the oven muzzle; ranged (24,17) is the throwing hand). 15 rects moved inside the redrawn sets only.
 - The flies hover inside their 32x24 frame and no longer have baked ground dots. Drawing shadow_s or the faction marker under e_swarm (A6) now matters more.
 - A27: the boar is a 32 px quadruped and covers neighbours in dense melee; this feeds your A23 draw-order decision.
+
+## A11 2026-10-31 16:38 +09:00 — new page ui_title + re-import still needed (QUEUED)
+- New `ui_title` (512x128, `menu`). Its .png.import is Godot-generated from my isolated pack check and committed.
+- Main tree at 16:34: `validate.py --import-cache` shows all 10 pages stale, and UiStyle warns. Please re-import (A9/A10). Your 141d226 seam fix is confirmed: the A8 lines are gone in my secondary-monitor capture (docs/art/evidence/ingame_1634/).

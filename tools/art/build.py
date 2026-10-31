@@ -73,7 +73,7 @@ REL_ATLAS = "assets/atlases"
 PREV = os.path.join(ROOT, "docs", "art", "previews")
 # Layout locks: existing regions keep their page position across rebuilds (see atlas._pack).
 LOCK_DIR = os.path.join(HERE, "layout_lock")
-ART_VERSION = "0.9.0"
+ART_VERSION = "0.10.0"
 
 REQUIRED_CHAR_ANIMS = ("idle", "walk", "attack", "death")
 
@@ -228,6 +228,14 @@ def build():
         up.add_image("portrait_" + eid, ui.portrait(fr, **theme.ENEMY_PORTRAIT).a)
     pages.append(up)
 
+    # --- title logos (menu only; working title Q3, final store name pending KIPRIS) ---------
+    import branding
+    tp = atl.Atlas("ui_title", "ui", "menu",
+                   "Working-title logos (Q3 16:19 KST). Acquire on main menu/splash, release on battle enter.")
+    for k, cv in branding.logos().items():
+        tp.add_image(k, cv.a, pivot=(cv.w // 2, cv.h // 2), meta={"working_title": True})
+    pages.append(tp)
+
     # --- biome ---------------------------------------------------------------
     bm = atl.Atlas("biome_meadow", "biome", "per_round",
                    "Meadow parallax layers (640 px seamless period). Acquire for rounds with biome=meadow.")
@@ -315,6 +323,7 @@ def write_manifest(pages, docs, layer_meta):
         },
         "load_groups": {
             "always": [p.id for p in pages if p.load_policy == "always"],
+            "menu": [p.id for p in pages if p.load_policy == "menu"],
             "battle": [p.id for p in pages if p.load_policy in ("battle", "battle_roster")],
             "per_biome": {"biome_01": ["biome_meadow"], "meadow": ["biome_meadow"]},
         },
