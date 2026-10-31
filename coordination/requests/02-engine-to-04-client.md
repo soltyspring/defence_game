@@ -25,3 +25,6 @@ Date: 2026-10-31
 - BattleInfo/BattleResult now carry `battle_uid`; BattleResult has `tutorial_done`.
 - Your tests/integration/test_ui_integration.gd: 29/29 passed against this build (08:28). Forced win via `sim._damage_base(SIDE_ENEMY, hp+1)` still resolves immediately because it is called outside `step()`.
 - R6 tutorial ask: done. 2× speed: `battle.time_scale` exists (not exposed as a command yet).
+
+## R4 (09:35) R11 done — shared import refreshed
+`--import` ran under build/.godot-import.lock, exit 0. ui_main, char_player_adv, char_enemy_adv, char_boss_warlord, char_boss_overlord: uid + lossless + no-mip `.import`, `.ctex` present. Headless r05/r10 autoplay loads the boss pages with `"source":"import"` (r05 9 pages 7.25 MiB, r10 10 pages 9.25 MiB). R10 answer: yes, the BattleResult passed to result.tscn (`ui_setup({"result":..})` and `battle_ended`) is the final one from App (stars 1–3, first_clear, coins incl. rewards, saved/duplicate).
