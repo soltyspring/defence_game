@@ -1,5 +1,28 @@
 # 01-director handoff
-## TYPOGRAPHY TASK 2026-10-31 (coordinator 08:12 correction)
+## CHECKPOINT 2026-10-31 (user ordered full checkpoint/stop)
+Session ID: not visible in-session. Account: p01034979433@gmail.com (kiro-cli whoami earlier). Model claude-opus-5.5. Accepted effort unverified. No Godot processes of mine are running (checked; none at all).
+User decisions: NONE. Q1 (theme) is still unanswered and is the only open question. All D1–D19 are DEFAULT.
+
+### Done in this task (decision requests from coordinator)
+- D14 03 A17 enemy purple recolour APPROVED (art-only); D15 summon_frame=3 added to boss_overlord; D16 G1 = "first wave broken" banner (candidate 1), candidate 3 as support, candidate 2 deferred; D17 schema_version:1 in all data files; D18 enemy_ai disabled in r01–r10 + r01/r02 late pressure waves; D19 resume policy (a) and entitlement rules. Replies sent: 01-director-to-02 R4, -03 R2, -09 R1, -10 R1.
+- Also fixed a regression: toast.counterattack (new 04/02 key) added to ko/en; keys are 117/117, l10n ALL_OK=True.
+- New docs/design/BALANCE_DIAGNOSIS.md (F1–F7, open items).
+
+### Validation (actual)
+docs/design/balance/verify_files_2026-10-31.json (engine, real data files): content_warnings [], passive player loses ALL rounds by base destruction (r01 258.1 s, r02 258.3 s, r03–r10 103–154 s). Competent bot: r01–r03 3/3 W, r04–r10 0/3 L. Casual bot: r01–r03 W, r04+ L. Seeds identical (deterministic with AI off). In my verify script the exit code was mis-set (it read `warnings` after free); this is fixed in the committed script, but the run was not repeated after the fix. The results JSON is unaffected.
+
+### Git
+- 67bf9ca [Fix] English label shortening + credits/star keys → PUSHED
+- cbfb0a8 [Feat] 랜덤 적 AI 비활성화와 r01·r02 방치 패배 보장, 스키마 버전·소환 프레임 반영 (21 data/balance files) → PUSHED origin/main
+- Checkpoint commit with DECISIONS.md, the 4 reply files and this handoff: see the line appended at the end.
+
+### Unfinished / next steps
+1. r04–r10 still lose for the bot. Do NOT retune yet: wait for 02's paired runs (R4: upgrades LOW vs none, scaling data/0.5/1.0, workers 3/5/max, cause-of-base-death breakdown) and the bot worker-stall fix. Then retune enemy_scaling first, plus specific causes for r05/r07/r10, and rerun verify_files + confirm configs.
+2. Await the 04/07 rendered retest of Troop/Siege (01→04 R4, 01→07 R2).
+3. Await 03's recolour frames (D14) and 07's check.
+4. Then Q1 → Q2 sequence.
+
+## Previous: TYPOGRAPHY TASK 2026-10-31 (coordinator 08:12 correction)
 - Read: coordinator typography correction (acknowledged), 04-client-to-01 typography note, build/qa/typography_report.json (worst row: card@640x360_notch_both, max_w 36.67 px).
 - Done: en "Footman"→"Troop", "Catapult"→"Siege", tut_siege_unit adjusted (D13 DEFAULT). Added ui.credits and ui.font_credit (ko/en). Copied 04's 5 new ui.star_* fallbacks, which my coverage check had flagged as MISSING (regression from 04 commit 183e4a6).
 - Validation: Pillow widths with assets/fonts (calibrated: 12 px matches 04 exactly; 10 px does NOT match, 42 vs 37). Siege 36.0@12 fits with 0.67 px margin; Troop 38.0@12 relies on 04's 10 px step-down. fontTools: Galmuri9 lacks © and Hangul. l10n check keys 116/116, placeholders and coverage ALL_OK=True.

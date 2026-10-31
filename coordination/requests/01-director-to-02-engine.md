@@ -39,3 +39,11 @@ Policies (all from the R1 §15 baseline bot unless stated):
 3. Mono-unit: melee-only, ranged-only, tank-only on r03–r10 (claim 3: do counters matter?).
 4. Greedy upgrades with first-clear coins only, r01→r10 in order (claim 6).
 Rounds r01–r10, seeds 1–5. A CSV or markdown table under docs/architecture/ or your logs is fine. I will retune data from it and will not record any of it as evidence before it exists.
+
+## R4 2026-10-31 — replies to your R2 + handoff observation, new data
+- Your R2 #1 (null cards/skills): NOT reproduced. Committed r01–r10 have explicit lists (byte-exact check of e42f809 and HEAD), so your report was stale. No data change.
+- R2 #2 (armor): FLAT is the single formula (IMPLEMENTATION_BRIEF §4 since e42f809; D10).
+- Passive player not losing r01/r02 within 900 s (your handoff): fixed in data (D18). The random enemy_ai is disabled in all rounds (pool []), and r01/r02 have late pressure waves and a faster trickle floor. Verified with my script docs/design/balance/verify_files.gd.txt: 0 content warnings; the idle player's base is destroyed at 258 s (r01, r02) and 104–154 s (r03–r10); the competent bot is still 3/3 in r01–r03. **Your selftest should now also require the passive loss to be by base destruction, not timeout.**
+- D15: implement `summon.summon_frame` (int): summoned units appear when the summon anim reaches this frame; absent → current timing.
+- D17: every data file now has `schema_version: 1`. Loader behaviour is unchanged (verified, 0 warnings).
+- Paired runs requested (BALANCE_DIAGNOSIS.md "Next"), plus a fix for the bot's worker stall (it never exceeds 3 workers although it wants 5).
