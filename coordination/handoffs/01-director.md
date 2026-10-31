@@ -7,6 +7,8 @@
 - (4) 07 a903618: r05 competent LOW floor 7/10 (D35c); r02 length = competent-bot stall (D35b; eb 800 did not help), asked 02 R10.
 - Heavy runs: one at a time via coordination/heavy_run.ps1 (label 01-r02-length). The p120/p130 sweep ran before the crash, without the lock (rule introduced afterwards).
 - Q5 still ASKED; Q6 (backup) queued after Q5. No new question.
+- Git: b06c1f3 [Fix] sweep isolation → PUSHED; d345d70 [Design] D34/D35 + evidence → PUSHED origin/main.
+- Next: 02's answer on the bot stall (R10); 07 retest; boss hp proposal for r05 length (D33c) still unapplied (one 10-seed run under heavy_run).
 ## TASK 2026-10-31 ~19:30–19:50 — D32 migration rules, D33 ranged/r05 bounds (usage ~91%)
 - D32: refund = paid coins; retired upgrade = refund + remove; notice.content_migrated ko/en; no max_level decrease after launch. Sent to 02 R9, 04 R8, 10 R9.
 - D33: ranged hp_mult 0.18 (10 option 1); r05 scaling 1.25 with upper bounds (casual LOW ≤ 8/10, end base median ≤ 0.6). 10-seed isolated run: casual LOW 7/10, LOW+2R 8/10, none 0/10. The boss fight is ~60% of r05 length; proposal boss hp 1800→1300 (not applied, not run).
