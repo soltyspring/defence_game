@@ -14,7 +14,7 @@
   closable).
 - Next: H3 re-measure after 02 changes it (`ab_retest -RequireQuiet` needs another quiet slot); per-category draw-call breakdown; asset gate
   on new commits; still no phone.
-- M13 commit: recorded later, only after `git show` verification.
+- M13 commit: `056a55dbd71c4be26f8d644af3f12973230e5518` [Test], 18:25:01. Verified with `git show --stat` (13 files incl. perf_frame_probe.gd, perf_bench.gd, budget_inventory.py), and `git branch -r --contains` shows origin/main. M12 commit: `5357ca3eee7627d31bdc9443766a8c2e3a4565ed` (17:35:04, verified the same way).
 ## M12 — pre-C11 prep and static re-check (2026-10-31 17:35 +09:00)
 - Coordinator decision: **C11 = 18:00–18:30 KST** (other roles: no new Godot/editor/emulator starts). Correction received: the AU3
   import defect is fixed on origin/main. Verified: 43 `.wav` = 43 `.wav.import` (cc5dbb8, 05). AU3 marked RESOLVED, 07 Q8-2 updated.
