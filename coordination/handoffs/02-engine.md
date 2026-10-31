@@ -26,4 +26,8 @@ Theme decided: A "빵집 기사단 vs 곰팡이 군단" (data IDs unchanged). Us
 6. 04 R12-2 release preset excludes, R12-3 emulator install slot; 08 P1/P4/P5; 07 QA-R1 hooks; 03 A3 shadows/markers/prop_mine.
 
 ## Processes
-No Godot process of mine is running (all runs were `--quit-after`). The headless emulator `emulator-5580` (LaneDefence_Phone) started by 02 was shut down with `adb emu kill` at this checkpoint.
+No Godot process of mine is running (all runs were `--quit-after`). The emulator `emulator-5580` (LaneDefence_Phone) was already stopped: at this checkpoint `adb emu kill` got "connection refused" on port 5580 and no qemu process exists.
+
+## Commit/push state
+- Checkpoint commit 141d22637626bf9d51069fbb621f6e3fb4251bdb [Fix] 화면 채움 정수 픽셀 배율과 배경 이음매 흰 세로줄 수정, OFL 라이선스 포함 - PUSHED origin/main.
+- Uncommitted 02 work in the tree: none besides this SHA note (next steps 1-6 are not started).
