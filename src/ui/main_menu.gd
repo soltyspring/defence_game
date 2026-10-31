@@ -7,6 +7,7 @@ var btn_settings: Control
 var btn_upgrades: Control
 const TitleBlock := preload("res://src/ui/title_block.gd")
 var title_slot := Rect2()   # QA
+var title_page := ""        # atlas page held for the logo (released when the menu leaves the tree)
 var settings_panel: Control
 var quit_layer: Control
 var quit_buttons: Array = []
@@ -81,6 +82,10 @@ func _on_select() -> void:
 func _on_settings() -> void:
 	settings_panel.open(bus, progress().get("settings", {}), view, safe, target)
 
+func _exit_tree() -> void:
+	title_page = TitleBlock.hold_page(title_page, "")    # release: battle does not keep the logo page
+	super._exit_tree()
+
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST and is_inside_tree() and quit_layer != null:
 		if settings_panel.visible or modal_open() or not claim_back():
@@ -123,7 +128,9 @@ func _draw() -> void:
 	var slot_top := safe.position.y + 28
 	var slot_bottom := btn_play.position.y - 22    # leave room for the subtitle line
 	title_slot = Rect2(safe.position.x + 8, slot_top, safe.size.x - 16, maxf(40.0, slot_bottom - slot_top))
-	var bottom := TitleBlock.draw(self, title_slot, "en" if UiText.t("ui.play") == "Play" else "ko")
+	var loc := "en" if UiText.t("ui.play") == "Play" else "ko"
+	title_page = TitleBlock.hold_page(title_page, loc)   # only this locale's logo page (03 A10); switches with language
+	var bottom := TitleBlock.draw(self, title_slot, loc)
 	var sub: Array = UiStyle.fit_text(UiText.t("ui.subtitle"), safe.size.x - 16, UiStyle.FONT_M)
 	UiStyle.draw_text_centered(self, sub[0], Vector2(safe.get_center().x, minf(bottom + 10, btn_play.position.y - 10)), UiStyle.FONT_M, UiStyle.C_TEXT)
 	var p := progress()

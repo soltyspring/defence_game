@@ -149,6 +149,16 @@ func _run() -> void:
 	for ln in TB.last_lines:
 		tline.append("%s@%d w=%.0f" % [ln[0], ln[1], load("res://src/ui/ui_style.gd").text_width(ln[0], ln[1], &"bold")])
 	check(menu.title_slot.size.x > 0 and (TB.last_mode == "logo" or TB.last_lines.size() >= 1), "menu title drawn: mode=%s slot_w=%.0f lines=%s" % [TB.last_mode, menu.title_slot.size.x, tline])
+	# 03 A10 (11ceacb): one logo page per locale; the menu holds only the current one, released in battle.
+	var ui_loc := "en" if load("res://src/ui/ui_text.gd").t("ui.play") == "Play" else "ko"
+	var other_page := "ui_title_%s" % ("ko" if ui_loc == "en" else "en")
+	var atlas_n: Node = root.get_node_or_null("Atlas")
+	var title_page: String = menu.title_page
+	if atlas_n != null and atlas_n.pages.has("ui_title_%s" % ui_loc):
+		check(title_page == "ui_title_%s" % ui_loc and int(atlas_n.pages[title_page].refs) >= 1 and bool(atlas_n.pages[title_page].loaded), "menu holds its locale's title page (%s refs=%s)" % [title_page, atlas_n.pages.get(title_page, {}).get("refs")])
+		check(not (atlas_n.pages.has(other_page) and bool(atlas_n.pages[other_page].loaded)), "other locale's title page not loaded (%s)" % other_page)
+		if not TB.force_text:
+			check(TB.last_mode == "logo", "menu draws the %s logo (mode=%s)" % [ui_loc, TB.last_mode])
 	await shot("1_menu")
 	tap(menu.btn_select)
 	await _frames(3)
@@ -211,6 +221,8 @@ func _run() -> void:
 	var hud := assert_screen(&"hud")
 	if hud == null:
 		_finish(); return
+	if atlas_n != null and title_page != "":
+		check(not bool(atlas_n.pages[title_page].loaded) and int(atlas_n.pages[title_page].refs) == 0, "title page released in battle (%s refs=%d)" % [title_page, int(atlas_n.pages[title_page].refs)])
 	check(app.screen == &"battle" and app.battle != null, "battle running after tile tap")
 	check(hud.card_buttons.size() >= 1, "HUD built %d real cards" % hud.card_buttons.size())
 	check(HudOk(hud), "HUD layout valid on real mount: %s" % [hud.layout.get("overflow", "?")])

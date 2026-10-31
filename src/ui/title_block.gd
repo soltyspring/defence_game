@@ -10,8 +10,8 @@ extends RefCounted
 ## settings); the in-game title stays the full working title.
 ## Layout rules (grid sizes only, never shrink arbitrarily):
 ##   1 line Bold 36 → else split after ":" into 2 lines (36 + 24) → else 2 lines at 24 → else ellipsis.
-## Logo: ui_title atlas frames `logo_title_<locale>` / `logo_title_<locale>_2line`, integer scale ≥ 1,
-## whichever is larger while fitting the slot. Text is used if the atlas or frame is missing.
+## Logo: ui_title_<locale> atlas frames `logo_title_<locale>` / `logo_title_<locale>_2line` (03 11ceacb),
+## integer scale ≥ 1, whichever is larger while fitting the slot. Text is used if the atlas or frame is missing.
 
 const UiStyle := preload("res://src/ui/ui_style.gd")
 const UiText := preload("res://src/ui/ui_text.gd")
@@ -24,13 +24,33 @@ static var last_lines: Array = []
 static func title_text() -> String:
 	return UiText.t("ui.title")
 
+## 03 A10 (11ceacb, option B): one logo page per locale; the menu holds only the current locale's page.
+static func page_id(locale: String) -> String:
+	return "ui_title_%s" % locale
+
+## Refcounted hold of the locale's title page (03: group "title", freed at refcount 0). Returns the page
+## now held ("" if none). Call with locale "" to release.
+static func hold_page(held: String, locale: String) -> String:
+	var want := page_id(locale) if locale != "" else ""
+	if want == held:
+		return held
+	var atlas := UiStyle._atlas_node()
+	if atlas == null or not atlas.has_method("acquire"):
+		return ""
+	if held != "":
+		atlas.release(held)
+	if want != "" and not bool(atlas.acquire(want)):
+		atlas.release(want)      # unknown page or failed load: do not leak a ref; text fallback is used
+		return ""
+	return want
+
 ## Returns {"mode": "logo"|"text", "lines": [[text, size]], "tex": Texture2D, "rect": Rect2, "truncated": bool}
 static func compute(slot: Rect2, locale: String, allow_logo := true) -> Dictionary:
 	# --- logo first
 	var best: Dictionary = {}
 	var frames: Array = ["logo_title_%s" % locale, "logo_title_%s_2line" % locale] if allow_logo else []
 	for fr in frames:
-		var tex: Texture2D = UiStyle.icon_texture({"atlas": "ui_title", "frame": fr})
+		var tex: Texture2D = UiStyle.icon_texture({"atlas": page_id(locale), "frame": fr})
 		if tex == null:
 			continue
 		var s := tex.get_size()
