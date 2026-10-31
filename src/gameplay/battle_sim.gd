@@ -145,6 +145,8 @@ var _wave_announced := 0
 var _wave_pending: Array[int] = []    # per scripted wave: units still to spawn
 var _wave_alive: Array[int] = []      # per scripted wave: spawned units not yet dead
 var _wave_cleared: Array[bool] = []
+var pressure_times: Array[float] = []   # `pressure: true` waves (01 D18/D21): not counted, one cue on the first
+var _pressure_announced := false
 var ai_gold := 0.0
 var ai_think := 2.0
 var trickle: Dictionary = {}
@@ -215,6 +217,8 @@ func setup(p_content, round_id: String, seed_value: int = 1, p_upgrades: Diction
 	spawn_queue.clear()
 	wave_times.clear()
 	wave_boss.clear()
+	pressure_times.clear()
+	_pressure_announced = false
 	_wave_pending.clear()
 	_wave_alive.clear()
 	_wave_cleared.clear()
@@ -222,6 +226,7 @@ func setup(p_content, round_id: String, seed_value: int = 1, p_upgrades: Diction
 		var at := float(w.get("at", 0))
 		if bool(w.get("pressure", false)):
 			_queue_spawns(w.get("spawns", []), at, 0)   # pressure waves spawn but are not counted/announced
+			pressure_times.append(at)
 			continue
 		wave_times.append(at)
 		wave_boss.append(bool(w.get("boss", false)))
@@ -448,6 +453,10 @@ func _step_wave_announce() -> void:
 	while _wave_announced < wave_times.size() and wave_times[_wave_announced] <= t:
 		events.append(["wave", {"index": _wave_announced + 1, "boss": wave_boss[_wave_announced]}])
 		_wave_announced += 1
+	# QA-B017 / 01 D21 note: the existing counterattack toast, once, when the FIRST pressure wave arrives
+	if not _pressure_announced and not pressure_times.is_empty() and pressure_times.min() <= t:
+		_pressure_announced = true
+		events.append(["counterattack", {"pressure": true}])
 
 func _step_spawns() -> void:
 	while not spawn_queue.is_empty() and spawn_queue[0].at <= t:

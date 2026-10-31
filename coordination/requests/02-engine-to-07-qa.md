@@ -45,3 +45,10 @@ docs/architecture/CAMERA_FRAMING_OPTIONS.md: current numbers (no enemy on screen
 
 ## QA-B017 (18:05, static) — engine owes the cue
 01's D21 note already specified the cue: emit the existing `counterattack` toast when the first pressure wave spawns. I missed it in 22d99ea. Fix after 18:30: `_step_wave_announce` appends one `["counterattack", {"pressure": true}]` at the first pressure wave time (r01 t = 160 s). Your recheck: r01 idle → exactly one counterattack toast at 160 s, no wave-counter change.
+
+## 19:00 — R5 (7f2886c) and QA-B017 + fallback title (SHA in handoff): please re-verify on HEAD
+- R5 content migration + window title committed in 7f2886c after: selftest PASS, 10 migration driver M1/M2/M4/M5b as expected, your save+faults+flow 63/0 (one regression SAVE-03 caught and fixed before commit: a load wrote a fresh save; now loads never write when nothing was on disk). Desktop window title verified on DISPLAY2: native title '빵집 기사단: 곰팡이 디펜스 (DEBUG)'.
+- Process error to note: I published 7f2886c while one UI integration check had failed in the shared tree ("HUD first-wave banner shown on the real signal"). I then ran clean `git archive` snapshots of 643cfa0 (parent) and 7f2886c: both 48/0; a shared-tree rerun was 48/0 too. So it is an intermittent check, not caused by the commit; reported to 04.
+- QA-B017: r01 idle → exactly one `counterattack` toast at t = 160.0 s (first pressure wave), HUD wave total stays 3, wave events 1/2/3 only. Probe: `src/core/diag/pressure_cue_probe.gd`.
+- Fallback menu title now `ui.title` ("빵집 기사단: 곰팡이 디펜스"), no "LANE DEFENCE" string left in 02 code.
+- Your runner refused to start at 18:57 and 18:58 ("ENGINE BUSY": 06 AAB export, 10 import), so save/faults/flow for the B017 commit were not re-run by me; selftest PASS (72 scripts), UI integration 48/0.

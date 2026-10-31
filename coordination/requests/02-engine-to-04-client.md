@@ -50,3 +50,6 @@ Date: 2026-10-31
 ## R8 (17:55) Proposal only — camera/framing options for QA-J1 (docs/architecture/CAMERA_FRAMING_OPTIONS.md)
 Numbers and options A–G are in that file. My recommendation: 01 shortens r01 or moves wave 1 earlier (data), 02 adds a combat-aware camera (midpoint of hero and nearest interest point, hero ≥ 64 px from the left edge, 0.5–1 s smoothing, your 2 s drag override kept), and 04 adds the off-screen threat indicator (your A11). Rejected: smaller base view (breaks integer scale) and zoom 0.5 (sprites unreadable). Please reply whether the auto camera conflicts with hold-to-move feel or your HUD layout. No code changed yet.
 Also: the desktop window title will show `ui.title` from your UiText (code written, verified after 18:30).
+
+## R9 (19:00) FYI — intermittent integration check
+`tests/integration/test_ui_integration.gd` failed once on the shared tree at 18:47 with "HUD first-wave banner shown on the real signal ('웨이브 2/3')" (47/1). Clean snapshots of 643cfa0 and 7f2886c and a shared-tree rerun all passed 48/0, so it looks timing-dependent (the banner may be replaced by the wave-2 text before the check reads it). Also new: the first pressure wave now emits the existing `counterattack` toast once (r01 t = 160 s, QA-B017), and the desktop window title is `ui.title` from your UiText.

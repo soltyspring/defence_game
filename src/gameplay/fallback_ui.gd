@@ -48,11 +48,20 @@ static func _label(text: String, size := 12, color := Color.WHITE) -> Label:
 	l.add_theme_constant_override("outline_size", 3)
 	return l
 
+## Same title source as the window title (App._apply_window_title): 04 UiText `ui.title` in the current locale.
+static func _title() -> String:
+	if ResourceLoader.exists("res://src/ui/ui_text.gd"):
+		var ut = load("res://src/ui/ui_text.gd")
+		if ut and ut.has_method("t"):
+			var s := str(ut.t("ui.title", ""))
+			if s != "": return s
+	return "Bakery Knights"
+
 static func _menu(root: Control) -> void:
 	_panel_bg(root, 1.0)
 	var vb := _center_box(root)
-	vb.add_child(_label("LANE DEFENCE", 28, Color("f2d16b")))
-	vb.add_child(_label("(working title — engine fallback menu)", 8, Color(0.7, 0.7, 0.8)))
+	vb.add_child(_label(_title(), 28, Color("f2d16b")))
+	vb.add_child(_label("(engine fallback menu)", 8, Color(0.7, 0.7, 0.8)))
 	var coins := int(Save.progress.get("coins", 0))
 	vb.add_child(_label("Coins: %d" % coins, 10))
 	vb.add_child(_btn("Play", func(): Events.cmd_open_screen.emit(&"round_select"), Vector2(160, 40)))
