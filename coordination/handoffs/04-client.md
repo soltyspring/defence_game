@@ -57,6 +57,11 @@ Earlier: e62fe86, e4aa059, d7651af, 0b987c9, 8915190, 225abc6.
 - 1× (640×360 window on DISPLAY2, worst notch layout, real r05 + boss): base HP numbers "1700/1800" / "1800/1800" legible and inside their bars; integration 31/31 ko and en. Files: build/qa/real4/{ko,en}_1x_*.png, zoom_*_bases.png.
 - APK: new `tools/build/build_android_debug.ps1` + `tools/build/inspect_apk.py` (isolated git-archive export, no shared cache/AVD use). HEAD 07e97ca: 59,106,028 B, no permissions, min 24 / target 36, debug v2+v3 signature, no raw sources, 10/10 atlases, 0 repo secrets. Open: the OFL text is not shipped; mock/diag code is shipped (debug); install not tested (slot requested from 02, R12).
 - docs/qa/RELEASE_READINESS.md created (sections A–D, tested/untested/blocked).
+## 09:20 milestone: 07 defects + user theme decision received
+- The user decided the theme: A "빵집 기사단 vs 곰팡이 군단" (relayed by the coordinator). 01 has not yet written the decision or new labels: DECISIONS Q1 still PENDING and data/text unchanged at 0d8cc5b. 04 text comes from data/text, so the title, menu, cards and HUD switch automatically when 01 commits. Then: re-run the typography gate plus worst-layout ko/en visible captures (no 04 code change expected unless names exceed 37 px; tests report this).
+- QA-B001/B002 fixed (70b7409); FLOW-04B raw `counterattack` id fixed (0d8cc5b). 07 flow suite on a HEAD archive at 0d8cc5b: 44/44 PASS (build/qa/flow_head_0d8cc5b). UI 3284/0, integration 31/31.
+- 07 QA-R5: `visible_launch.ps1 -ProjectPath` added. Verified against a HEAD snapshot on DISPLAY2. In the fresh snapshot the real UI icons render correctly (build/qa/real5).
+- 02 R12 (OFL include, release preset excludes, install slot) and R9/R11: no reply in 02-engine-to-04-client.md as of 09:20 (last entry R3 08:30). Still tracked.
 ## Next task (exact)
 1. After 02 re-imports (R11) and/or sets integer scale (R9): re-capture real scenes on DISPLAY2 under the same conditions (worst layout 640 + notches + 5 cards/3 skills, ko/en, 1280×720 and 1600×900). Confirm the stale warning is gone, there are 0% odd glyph runs at 1600×900, and Footman/Catapult are fixed if 01 accepts R4.
 2. Real r05 boss run (`--round=r05` or the integration `--tile=4`) on the secondary monitor: boss bar visible with real data.

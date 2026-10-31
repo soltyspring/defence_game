@@ -1,5 +1,5 @@
 # Release readiness checklist — 04-client scope (Android pipeline, signing, privacy, UI/mobile QA)
-Updated: 2026-10-31 09:10 +09:00. TESTED = run with the evidence named here; UNTESTED = not run; BLOCKED = cannot run without the named dependency.
+Updated: 2026-10-31 09:20 +09:00. TESTED = run with the evidence named here; UNTESTED = not run; BLOCKED = cannot run without the named dependency.
 This is NOT a release-ready claim. First playable is an internal milestone. Store publication and paid accounts are user actions.
 
 ## A. Build artefact (debug APK from HEAD 07e97ca)
@@ -31,7 +31,9 @@ Command: `.\tools\build\build_android_debug.ps1`. It exports from a `git archive
 | B5 | Pixel-regular text at 1× and 2× | TESTED | 1× capture build/qa/real4/{ko,en}_1x_*.png; 2× 0–5% odd runs |
 | B6 | Pixel-regular text at 2.5× (non-integer devices, e.g. 1600×900) | **FAIL (open)** | 57–68% odd runs; needs integer scale_mode (02 R9) |
 | B7 | Base HP numbers, star met/unmet by shape, boss bar, tutorial hint, skill-name tip, credits | TESTED (desktop) | build/qa/real3, real4 |
-| B8 | UI atlas icons correct in the dev tree | **FAIL (open, dev tree only)** | the shared `.godot` import is stale, so vector fallbacks are used. In the isolated APK export the import is fresh (ui_main .ctex is from the current PNG), but it is not visually confirmed on Android (A13) |
+| B8 | UI atlas icons correct | TESTED in a fresh HEAD snapshot (desktop); dev tree still stale | build/qa/real5/headsnap_ko_3d_skilltip.png (own import): unit portraits + skill icons correct. The shared dev tree still needs 02 --import (vector fallbacks there). Android not checked (A13) |
+| B11 | Android back acts once per press; no HUD pause menu under the result | TESTED (07 flow suite on HEAD archive) | 0d8cc5b: FLOW-23/23B/13B PASS, flow 44/44 |
+| B12 | No raw engine ids in toasts | TESTED | FLOW-04B PASS at 0d8cc5b; unknown keys are suppressed and logged |
 | B9 | Multi-touch / back / lifecycle pause | TESTED (synthetic events) | tests/ui; not on a device |
 | B10 | Real finger use on a phone | BLOCKED | device |
 
