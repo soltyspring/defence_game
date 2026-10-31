@@ -23,6 +23,16 @@ Content was rephrased for compliance with licensing restrictions.
 | Save data | progress stays in app-private storage (`user://save.json`) | INTERFACES.md §3 |
 Caveat: the debug APK is not the release AAB. The release bundle's merged manifest must be re-checked with the same command before submission (04). Android vitals / crash data that Google Play collects at the OS level is Google's, not the app's.
 
+## 2a. Confirmation against 04's APK check (2026-10-31)
+| Check | 04 result (docs/qa/RELEASE_READINESS.md) | 06 re-check | Agree |
+|---|---|---|---|
+| Permissions | A7 TESTED: `aapt2 dump permissions` → none | `aapt2 dump permissions build/qa/apk_head/defence-debug.apk` → package line only, no `uses-permission` | Yes |
+| INTERNET | A7: no INTERNET | none in APK; export_presets.cfg:65 `permissions/internet=false` at HEAD 8ad912f | Yes |
+| Data leaving the device | C1 TESTED (static): no INTERNET, no SDKs → nothing leaves the device | Android's INTERNET permission is what allows opening network sockets (https://developer.android.com/reference/android/Manifest.permission#INTERNET), so without it the app cannot send data itself | Yes |
+| Build identity | debug APK from isolated HEAD copy 07e97ca, 59,106,028 B, minSdk 24 / target 36 | same file, SHA-256 `09AF2E47989F147970B00E27DD4D9D3843EBD13060744B5119EFC19F5C70A6DE`; native libs arm64-v8a + x86_64; uses-feature faketouch only | Yes |
+| Changes since 07e97ca that could add permissions or data flows | — | `git diff 07e97ca HEAD -- export_presets.cfg addons android project.godot`: include_filter now also packs `assets/fonts/*.txt, *.json`; project.godot adds the `Services` autoload (disabled mode, no network code). No plugin, no permission, no `addons/` | No change to the answer |
+**Decision for the disabled build: "No data collected or shared" is CONFIRMED** for the build above and for HEAD 8ad912f by static analysis. Conditions that void it: any `permissions/*=true`, any plugin in `addons/` or an Android plugin AAR, services mode other than `disabled`, or remote analytics. Before submission, 04 must re-run the same aapt2 commands on the **release AAB** (a debug APK is not what Play receives) and record the hash here. A privacy-policy link that opens the browser (Godot `OS.shell_open`) is expected not to add permissions; 04 confirms with aapt2 after adding it.
+Side finding (04 A6): `assets/fonts/OFL-Galmuri.txt` is not inside this APK (only `fonts_provenance.json` is); 02's include_filter fix came later (141d226) and needs a new APK to verify. Not a Data safety issue, but a licence one (IN_APP_LEGAL_DISPLAY.md).
 ## 3. Draft answers (disabled mode)
 | Form section | Draft answer | Note |
 |---|---|---|

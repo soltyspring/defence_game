@@ -32,6 +32,7 @@ func _initialize() -> void:
 	_group("content_rating_draft", test_content_rating)
 	_group("data_safety_draft", test_data_safety)
 	_group("billing_docs", test_billing_docs)
+	_group("legal_and_options_docs", test_legal_options)
 	report.passes = passes
 	report.failures = Array(failures)
 	var f := FileAccess.open("user://services_listing_report.json", FileAccess.WRITE)
@@ -403,4 +404,51 @@ func test_billing_docs() -> bool:
 	var d: Dictionary = load("res://src/services/services_factory.gd").create({})
 	check(d.verifier.kind() == "unavailable", "default verifier is still 'unavailable' (no client-side verifier shipped)")
 	check(not FileAccess.file_exists("res://src/services/billing/client_side_verifier.gd"), "no client-side verifier without user decision U6")
+	return true
+
+# ------------------------------------------------------------------ M11: legal display, Q2 options, Data safety confirmation
+
+const LEGAL := "res://docs/services/IN_APP_LEGAL_DISPLAY.md"
+const OPTIONS := "res://docs/services/MONETIZATION_OPTIONS_WORK.md"
+
+func test_legal_options() -> bool:
+	for p in [LEGAL, OPTIONS, SAFETY]:
+		if not check(FileAccess.file_exists(p), "%s exists" % p):
+			return true
+	# Legal display: L1–L4 each with a source; the OFL text it relies on exists in the repo and
+	# really carries the copyright line the acceptance check expects.
+	var lt := FileAccess.get_file_as_string(LEGAL)
+	for id in ["L1", "L2", "L3", "L4"]:
+		var found := false
+		for line in lt.split("\n"):
+			if line.begins_with("| %s |" % id):
+				found = true
+				var c := line.split("|")
+				check(c.size() >= 5 and c[3].strip_edges() != "", "legal %s has a source" % id)
+		check(found, "legal requirement %s present" % id)
+	var ofl := FileAccess.get_file_as_string("res://assets/fonts/OFL-Galmuri.txt") if FileAccess.file_exists("res://assets/fonts/OFL-Galmuri.txt") else ""
+	check(ofl.begins_with("Copyright (c) 2019"), "OFL file starts with the Galmuri copyright line")
+	check(ofl.contains("SIL Open Font License, Version 1.1"), "OFL file names OFL 1.1")
+	check(Engine.get_license_text().contains("Permission is hereby granted"), "Engine.get_license_text() returns the MIT text (licences view source)")
+	check(Engine.get_copyright_info().size() > 0, "Engine.get_copyright_info() non-empty")
+	check(lt.contains("**proposal for 04**"), "legal display marked as proposal (06 does not edit UI)")
+	# Q2 options: every comparison row has a non-empty cell for A, B and C.
+	var ot := FileAccess.get_file_as_string(OPTIONS)
+	var s1 := ot.substr(ot.find("## 1."), ot.find("## 2.") - ot.find("## 1."))
+	var rows := 0
+	for line in s1.split("\n"):
+		var c := line.split("|")
+		if c.size() >= 6 and not line.begins_with("| Item") and not line.begins_with("|---"):
+			rows += 1
+			for i in [2, 3, 4]:
+				check(c[i].strip_edges() != "", "options row '%s' has a value for %s" % [c[1].strip_edges(), ["", "", "A", "B", "C"][i]])
+	check(rows >= 10, "options comparison rows (%d)" % rows)
+	var s2 := ot.substr(ot.find("## 2."), ot.find("## 3.") - ot.find("## 2."))
+	check(Array(s2.split("\n")).filter(func(l): return l.begins_with("| ") and not l.begins_with("| Test area") and not l.begins_with("|---")).size() >= 5, "test scope rows per option")
+	check(ot.contains("not a decision"), "options doc marked not a decision")
+	# Data safety confirmation ties to a concrete APK hash and the 04 check IDs.
+	var st := FileAccess.get_file_as_string(SAFETY)
+	check(RegEx.create_from_string("SHA-256 `[0-9A-F]{64}`").search(st) != null, "Data safety confirmation records the APK SHA-256")
+	check(st.contains("A7 TESTED") and st.contains("C1 TESTED"), "Data safety confirmation cites 04 A7 and C1")
+	check(st.contains("release AAB"), "confirmation requires release AAB re-check")
 	return true
