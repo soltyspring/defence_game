@@ -116,6 +116,7 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - tools/art/import_audit.py: clean HEAD 12/12 PASS; main tree stale only for the redrawn frames (02 A15).
 - Labels: 0 truncations in the worst layout (en 1x/2x, ko 2x); Footman/Catapult are gone from data (04 A13, 02 A15 FYI).
 - Validation: validate.py --determinism PASS; PCK 12/12 + 3 fonts; launcher_icons.py byte-identical rerun.
+- Commit b113085 [Design]: PUSHED origin/main (verified with git branch -r --contains at 19:24). 07 A10 request after the push.
 
 ## Exact next steps on resume
 1. After 02 re-imports: python tools/art/import_audit.py . (expect PASS in the main tree).
