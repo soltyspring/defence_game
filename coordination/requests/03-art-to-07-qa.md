@@ -61,3 +61,6 @@
 
 ## A12 2026-10-31 23:57 +09:00 — cc: character pages merged (art 0.13.0) (QUEUED)
 Pixels unchanged (331 frames identical), only page ids: all regular units are on char_player now. If any of your runners name char_enemy / char_player_adv / char_enemy_adv directly, they need the manifest anim_sets lookup instead. Real r03 capture: docs/art/evidence/merge_0130/.
+
+## A13 2026-11-01 00:46 +09:00 — cc: unit-size decision material (QUEUED)
+ART_AUDIT round 17: full D1 roster (draft) measured in 04's r06 condition. D1 + 4/3 zoom puts every regular unit at 6.2-9.5 mm (04's conversion). Not a phone measurement, no player test.

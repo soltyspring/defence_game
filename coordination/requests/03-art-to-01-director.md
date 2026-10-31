@@ -25,3 +25,6 @@ D14 is done for art (ART_AUDIT A25: protan/deutan closest-pair dE 27.8/33.4, lum
 
 ## A5 2026-10-31 17:36 +09:00 — 제빵 대장, flour icon, Wheatfield Village landed (QUEUED)
 - hero_captain is now 제빵 대장 (chef hat + rolling pin, WORLD.md), same frame contract. skill_slam icon = rolling pin. icon_supply = flour sack (R4 / D25). biome_01 = 밀밭 빵집 마을 (fields, windmills, bakery street). Evidence: docs/art/evidence/ingame_v011/ (real game, HEAD snapshot). These are 03's judgement, not a player test.
+
+## A6 2026-11-01 00:46 +09:00 — FYI: unit size needs art + zoom; the zoom shortens enemy warning time (QUEUED)
+03 recommended to 02 (A19) the 32 px roster plus a world zoom of (k+1)/k: the only combination that puts every regular unit over 04's 6 mm line. 04 measured the zoom reducing the time an enemy is visible before it engages from 6.0 to 3.9 s in r06. That is a difficulty effect (Q5 is still unanswered). No player test has been done.

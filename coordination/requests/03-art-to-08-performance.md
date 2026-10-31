@@ -48,3 +48,6 @@ Correction to A1: the dynamic font cache pages are LA8, 128 KiB per 256x256 page
 - Please re-measure draw calls with tools/perf/drawcall_run.ps1 (03 did not measure them).
 - **Your files that name the removed pages:** tests/performance/test_asset_budget_check.py case 2 enlarges assets/atlases/char_enemy.png (that file no longer exists; char_player.png or fx_combat.png would do), and tests/performance/drawcall_view.gd CHAR_PAGES / "merge2". 03 did not edit them.
 - If the 32 px roster (03 round 15) is adopted, this page needs 1024x1024 (4.0 MiB, worst battle about 10.75 MiB).
+
+## A11 2026-11-01 00:46 +09:00 — memory of the D1 (32 px) roster, draft only (QUEUED)
+Your asset_budget_check --tree on a snapshot with the D1 draft: PASS, worst battle 10.75 MiB, all pages 11.00 MiB, menu 0.50, PNG 100.3 KiB (char_player 1024x1024). Nothing shipped; 02 decides (A19).

@@ -1,5 +1,5 @@
 # 03-art handoff
-Updated: 2026-10-31 23:57 +09:00 (real time from Get-Date). Q1 = A, Q2 deferred, Q3 working title 빵집 기사단: 곰팡이 디펜스, Q4 home-screen name 빵집 기사단 (all DECIDED); Q5 difficulty unanswered (D28 is only a default). Art version 0.13.0.
+Updated: 2026-11-01 00:46 +09:00 (real time from Get-Date). Q1 = A, Q2 deferred, Q3 working title 빵집 기사단: 곰팡이 디펜스, Q4 home-screen name 빵집 기사단 (all DECIDED); Q5 difficulty unanswered (D28 is only a default). Art version 0.13.0.
 
 ## Session
 - Kiro CLI session ID: not visible from inside the session, so I cannot record it. Codex should read it from coordination/.runtime/quota/sessions.json / the launcher.
@@ -139,7 +139,14 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - Requests: 08 A10 (re-measure draw calls; their tests name char_enemy), 02 A18, 07 A12.
 - Commit 253f2b6 [Design]: PUSHED origin/main (verified with git branch -r --contains at 23:57).
 
+## Milestone 20: unit-size decision material (draft only)
+- D1 chosen over D2 (round 15 numbers). Full D1 roster behind ART_DRAFT32=D1FULL (tools/art/chars_big.py ScaledCanvas replay + hand-authored 식빵병/졸개); default build unchanged.
+- Memory: char_player 1024x1024, worst battle 10.75 MiB (08 --tree PASS).
+- Real r06 captures (04's condition) with tools/art/godot_check/size_cam.gd + tools/art/size_compare_metrics.py: under 6 mm now 11/12, zoom only 9/12, D1 only 9/12, D1 + 4/3 0/12. ART_AUDIT round 17, docs/art/evidence/size_d1full/.
+- heavy_run blocks: first failed (size_cam.gd parse error, no capture), second OK (waited 248 s).
+- Requests: 02 A19 (recommendation + transition), 01 A6, 04 A16, 07 A13, 08 A11.
+
 ## Exact next steps on resume
-1. After 02 re-imports: python tools/art/import_audit.py . (expect PASS).
-2. After 02 decides R17 (zoom): ship D1 or D2 (+ brute/hero sizes) or drop the drafts; the merged page then needs 1024x1024.
+1. If 02 accepts A19: step 2 of the transition (D1 default, polish faces, cards, re-pack, checks).
+2. After 02 re-imports: python tools/art/import_audit.py . (expect PASS).
 3. After 02 A14 + 06 APK rebuild: check the APK launcher layers with 06.

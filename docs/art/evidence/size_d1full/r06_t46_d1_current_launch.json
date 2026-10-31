@@ -1,0 +1,79 @@
+{
+  "time": "2026-11-01T00:39:38.8801575+09:00",
+  "monitors": [
+    {
+      "Device": "\\\\.\\DISPLAY1",
+      "Primary": true,
+      "Bounds": [
+        0,
+        0,
+        2560,
+        1440
+      ],
+      "Work": [
+        0,
+        0,
+        2560,
+        1392
+      ],
+      "Dpi": 96,
+      "Scale": 1.0
+    },
+    {
+      "Device": "\\\\.\\DISPLAY2",
+      "Primary": false,
+      "Bounds": [
+        -1920,
+        174,
+        0,
+        1254
+      ],
+      "Work": [
+        -1920,
+        174,
+        0,
+        1206
+      ],
+      "Dpi": 96,
+      "Scale": 1.0
+    }
+  ],
+  "chosen": "\\\\.\\DISPLAY2",
+  "window": {
+    "hwnd": 133444,
+    "pid": 16524,
+    "first_seen": {
+      "rect": [
+        -1768,
+        299,
+        -152,
+        1058
+      ],
+      "on_secondary": true
+    },
+    "rect": [
+      -1760,
+      330,
+      -144,
+      1089
+    ],
+    "on_secondary": true,
+    "requested": [
+      -1760,
+      330,
+      1600,
+      720
+    ],
+    "screen_index": 1,
+    "topmost": true
+  },
+  "result": "EXIT_0",
+  "project": "C:\\Users\\aghose\\AppData\\Local\\Temp\\art03_size",
+  "isolated_appdata": "C:\\Users\\aghose\\AppData\\Local\\Temp\\art03_iso_size\\appdata",
+  "log": "Z:\\.solty\\dev\\appintoss\\defence\\build\\qa\\art03_size\\d1_current\\godot_20261101_003938.log",
+  "isolation_proof": {
+    "isolated": false,
+    "own_logs": 0,
+    "real_new_logs_any_process": 0
+  }
+}

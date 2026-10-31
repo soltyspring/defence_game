@@ -1,0 +1,1054 @@
+{
+ "evidence_class": "STATIC",
+ "generated": "2026-11-01T00:44:48+09:00",
+ "base_label": "37b9a93",
+ "target_label": "art03_size",
+ "target_source": "directory C:\\Users\\aghose\\AppData\\Local\\Temp\\art03_size",
+ "apk_before": null,
+ "apk_after": null,
+ "verdict": "PASS",
+ "fails": [],
+ "rows": [
+  {
+   "metric": "atlas_worst_battle_gpu",
+   "base": 9699328,
+   "target": 11272192,
+   "cap": 12582912,
+   "result": "PASS",
+   "owner": "03-art"
+  },
+  {
+   "metric": "atlas_menu_gpu",
+   "base": 262144,
+   "target": 524288,
+   "cap": 524288.0,
+   "result": "PASS",
+   "owner": "03-art"
+  },
+  {
+   "metric": "atlas_all_pages_gpu",
+   "base": 9699328,
+   "target": 11534336,
+   "cap": 14680064,
+   "result": "PASS",
+   "owner": "03-art"
+  },
+  {
+   "metric": "atlas_page_max_side_px",
+   "base": 1024,
+   "target": 1024,
+   "cap": 1024,
+   "result": "PASS",
+   "owner": "03-art"
+  },
+  {
+   "metric": "atlas_png_disk",
+   "base": 74040,
+   "target": 102733,
+   "cap": 1048576,
+   "result": "PASS",
+   "owner": "03-art"
+  },
+  {
+   "metric": "sfx_pcm_resident",
+   "base": 792254,
+   "target": 980560,
+   "cap": 2097152,
+   "result": "PASS",
+   "owner": "05-audio"
+  },
+  {
+   "metric": "sfx_count",
+   "base": 29,
+   "target": 43,
+   "cap": 48,
+   "result": "PASS",
+   "owner": "05-audio"
+  },
+  {
+   "metric": "sfx_longest_s",
+   "base": 3.0,
+   "target": 3.0,
+   "cap": 3.5,
+   "result": "PASS",
+   "owner": "05-audio"
+  },
+  {
+   "metric": "music_tracks",
+   "base": 2,
+   "target": 2,
+   "cap": 4,
+   "result": "PASS",
+   "owner": "05-audio"
+  },
+  {
+   "metric": "music_stream_disk",
+   "base": 554858,
+   "target": 585553,
+   "cap": 1572864.0,
+   "result": "PASS",
+   "owner": "05-audio"
+  },
+  {
+   "metric": "audio_disk_total",
+   "base": 1348388,
+   "target": 1568005,
+   "cap": 3145728,
+   "result": "PASS",
+   "owner": "05-audio"
+  },
+  {
+   "metric": "music_decoded_if_not_streamed",
+   "base": 8064000,
+   "target": 8064000,
+   "cap": null,
+   "result": "info",
+   "owner": "05-audio"
+  }
+ ],
+ "files": [
+  {
+   "type": "atlas",
+   "id": "bases",
+   "status": "changed",
+   "base": {
+    "size": [
+     512,
+     512
+    ],
+    "disk": 10303,
+    "gpu": 1048576
+   },
+   "target": {
+    "size": [
+     512,
+     512
+    ],
+    "disk": 10835,
+    "gpu": 1048576,
+    "compress_mode": 0,
+    "mipmaps": false
+   },
+   "size_changed": false,
+   "over_side_cap": false,
+   "no_import_file": false
+  },
+  {
+   "type": "atlas",
+   "id": "biome_meadow",
+   "status": "changed",
+   "base": {
+    "size": [
+     1024,
+     512
+    ],
+    "disk": 7416,
+    "gpu": 2097152
+   },
+   "target": {
+    "size": [
+     1024,
+     512
+    ],
+    "disk": 12346,
+    "gpu": 2097152,
+    "compress_mode": 0,
+    "mipmaps": false
+   },
+   "size_changed": false,
+   "over_side_cap": false,
+   "no_import_file": false
+  },
+  {
+   "type": "atlas",
+   "id": "char_boss_overlord",
+   "status": "changed",
+   "base": {
+    "size": [
+     1024,
+     512
+    ],
+    "disk": 11568,
+    "gpu": 2097152
+   },
+   "target": {
+    "size": [
+     1024,
+     512
+    ],
+    "disk": 11481,
+    "gpu": 2097152,
+    "compress_mode": 0,
+    "mipmaps": false
+   },
+   "size_changed": false,
+   "over_side_cap": false,
+   "no_import_file": false
+  },
+  {
+   "type": "atlas",
+   "id": "char_boss_warlord",
+   "status": "changed",
+   "base": {
+    "size": [
+     512,
+     512
+    ],
+    "disk": 6682,
+    "gpu": 1048576
+   },
+   "target": {
+    "size": [
+     512,
+     512
+    ],
+    "disk": 6586,
+    "gpu": 1048576,
+    "compress_mode": 0,
+    "mipmaps": false
+   },
+   "size_changed": false,
+   "over_side_cap": false,
+   "no_import_file": false
+  },
+  {
+   "type": "atlas",
+   "id": "char_enemy",
+   "status": "removed",
+   "base": {
+    "size": [
+     512,
+     256
+    ],
+    "disk": 5207,
+    "gpu": 524288
+   },
+   "target": {
+    "size": [
+     null,
+     null
+    ],
+    "disk": null,
+    "gpu": null,
+    "compress_mode": null,
+    "mipmaps": null
+   },
+   "size_changed": true,
+   "over_side_cap": false,
+   "no_import_file": false
+  },
+  {
+   "type": "atlas",
+   "id": "char_enemy_adv",
+   "status": "removed",
+   "base": {
+    "size": [
+     512,
+     256
+    ],
+    "disk": 5165,
+    "gpu": 524288
+   },
+   "target": {
+    "size": [
+     null,
+     null
+    ],
+    "disk": null,
+    "gpu": null,
+    "compress_mode": null,
+    "mipmaps": null
+   },
+   "size_changed": true,
+   "over_side_cap": false,
+   "no_import_file": false
+  },
+  {
+   "type": "atlas",
+   "id": "char_player",
+   "status": "changed",
+   "base": {
+    "size": [
+     512,
+     512
+    ],
+    "disk": 12226,
+    "gpu": 1048576
+   },
+   "target": {
+    "size": [
+     1024,
+     1024
+    ],
+    "disk": 45651,
+    "gpu": 4194304,
+    "compress_mode": 0,
+    "mipmaps": false
+   },
+   "size_changed": true,
+   "over_side_cap": false,
+   "no_import_file": false
+  },
+  {
+   "type": "atlas",
+   "id": "char_player_adv",
+   "status": "removed",
+   "base": {
+    "size": [
+     512,
+     256
+    ],
+    "disk": 5482,
+    "gpu": 524288
+   },
+   "target": {
+    "size": [
+     null,
+     null
+    ],
+    "disk": null,
+    "gpu": null,
+    "compress_mode": null,
+    "mipmaps": null
+   },
+   "size_changed": true,
+   "over_side_cap": false,
+   "no_import_file": false
+  },
+  {
+   "type": "atlas",
+   "id": "fx_combat",
+   "status": "changed",
+   "base": {
+    "size": [
+     512,
+     256
+    ],
+    "disk": 4441,
+    "gpu": 524288
+   },
+   "target": {
+    "size": [
+     512,
+     256
+    ],
+    "disk": 4454,
+    "gpu": 524288,
+    "compress_mode": 0,
+    "mipmaps": false
+   },
+   "size_changed": false,
+   "over_side_cap": false,
+   "no_import_file": false
+  },
+  {
+   "type": "atlas",
+   "id": "ui_main",
+   "status": "changed",
+   "base": {
+    "size": [
+     256,
+     256
+    ],
+    "disk": 5550,
+    "gpu": 262144
+   },
+   "target": {
+    "size": [
+     256,
+     256
+    ],
+    "disk": 5543,
+    "gpu": 262144,
+    "compress_mode": 0,
+    "mipmaps": false
+   },
+   "size_changed": false,
+   "over_side_cap": false,
+   "no_import_file": false
+  },
+  {
+   "type": "atlas",
+   "id": "ui_title_en",
+   "status": "added",
+   "base": {
+    "size": [
+     null,
+     null
+    ],
+    "disk": null,
+    "gpu": null
+   },
+   "target": {
+    "size": [
+     256,
+     128
+    ],
+    "disk": 3321,
+    "gpu": 131072,
+    "compress_mode": 0,
+    "mipmaps": false
+   },
+   "size_changed": true,
+   "over_side_cap": false,
+   "no_import_file": false
+  },
+  {
+   "type": "atlas",
+   "id": "ui_title_ko",
+   "status": "added",
+   "base": {
+    "size": [
+     null,
+     null
+    ],
+    "disk": null,
+    "gpu": null
+   },
+   "target": {
+    "size": [
+     512,
+     64
+    ],
+    "disk": 2516,
+    "gpu": 131072,
+    "compress_mode": 0,
+    "mipmaps": false
+   },
+   "size_changed": true,
+   "over_side_cap": false,
+   "no_import_file": false
+  },
+  {
+   "type": "ogg",
+   "id": "assets/audio/music/music_battle.ogg",
+   "status": "changed",
+   "base": {
+    "disk": 347602,
+    "pcm_bytes": null,
+    "decoded_pcm_bytes": 4838400,
+    "seconds": 27.429,
+    "rate": 44100,
+    "channels": 2
+   },
+   "target": {
+    "disk": 372621,
+    "pcm_bytes": null,
+    "decoded_pcm_bytes": 4838400,
+    "seconds": 27.429,
+    "rate": 44100,
+    "channels": 2
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "ogg",
+   "id": "assets/audio/music/music_menu.ogg",
+   "status": "changed",
+   "base": {
+    "disk": 207256,
+    "pcm_bytes": null,
+    "decoded_pcm_bytes": 3225600,
+    "seconds": 18.286,
+    "rate": 44100,
+    "channels": 2
+   },
+   "target": {
+    "disk": 212932,
+    "pcm_bytes": null,
+    "decoded_pcm_bytes": 3225600,
+    "seconds": 18.286,
+    "rate": 44100,
+    "channels": 2
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/boss_incoming.wav",
+   "status": "changed",
+   "base": {
+    "disk": 79424,
+    "pcm_bytes": 79380,
+    "decoded_pcm_bytes": null,
+    "seconds": 1.8,
+    "rate": 22050,
+    "channels": 1
+   },
+   "target": {
+    "disk": 88244,
+    "pcm_bytes": 88200,
+    "decoded_pcm_bytes": null,
+    "seconds": 2.0,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/death_ally.wav",
+   "status": "changed",
+   "base": {
+    "disk": 9746,
+    "pcm_bytes": 9702,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.22,
+    "rate": 22050,
+    "channels": 1
+   },
+   "target": {
+    "disk": 15038,
+    "pcm_bytes": 14994,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.34,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/death_enemy.wav",
+   "status": "changed",
+   "base": {
+    "disk": 9746,
+    "pcm_bytes": 9702,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.22,
+    "rate": 22050,
+    "channels": 1
+   },
+   "target": {
+    "disk": 18566,
+    "pcm_bytes": 18522,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.42,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/deploy.wav",
+   "status": "changed",
+   "base": {
+    "disk": 11510,
+    "pcm_bytes": 11466,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.26,
+    "rate": 22050,
+    "channels": 1
+   },
+   "target": {
+    "disk": 18566,
+    "pcm_bytes": 18522,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.42,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/hit_base.wav",
+   "status": "changed",
+   "base": {
+    "disk": 16802,
+    "pcm_bytes": 16758,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.38,
+    "rate": 22050,
+    "channels": 1
+   },
+   "target": {
+    "disk": 15038,
+    "pcm_bytes": 14994,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.34,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/hit_base_mold.wav",
+   "status": "added",
+   "base": {
+    "disk": null,
+    "pcm_bytes": null,
+    "decoded_pcm_bytes": null,
+    "seconds": null,
+    "rate": null,
+    "channels": null
+   },
+   "target": {
+    "disk": 15478,
+    "pcm_bytes": 15434,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.35,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/hit_bread_1.wav",
+   "status": "added",
+   "base": {
+    "disk": null,
+    "pcm_bytes": null,
+    "decoded_pcm_bytes": null,
+    "seconds": null,
+    "rate": null,
+    "channels": null
+   },
+   "target": {
+    "disk": 2690,
+    "pcm_bytes": 2646,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.06,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/hit_bread_2.wav",
+   "status": "added",
+   "base": {
+    "disk": null,
+    "pcm_bytes": null,
+    "decoded_pcm_bytes": null,
+    "seconds": null,
+    "rate": null,
+    "channels": null
+   },
+   "target": {
+    "disk": 2690,
+    "pcm_bytes": 2646,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.06,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/hit_bread_3.wav",
+   "status": "added",
+   "base": {
+    "disk": null,
+    "pcm_bytes": null,
+    "decoded_pcm_bytes": null,
+    "seconds": null,
+    "rate": null,
+    "channels": null
+   },
+   "target": {
+    "disk": 2690,
+    "pcm_bytes": 2646,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.06,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/hit_melee_4.wav",
+   "status": "added",
+   "base": {
+    "disk": null,
+    "pcm_bytes": null,
+    "decoded_pcm_bytes": null,
+    "seconds": null,
+    "rate": null,
+    "channels": null
+   },
+   "target": {
+    "disk": 4454,
+    "pcm_bytes": 4410,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.1,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/hit_melee_5.wav",
+   "status": "added",
+   "base": {
+    "disk": null,
+    "pcm_bytes": null,
+    "decoded_pcm_bytes": null,
+    "seconds": null,
+    "rate": null,
+    "channels": null
+   },
+   "target": {
+    "disk": 4454,
+    "pcm_bytes": 4410,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.1,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/hit_mold_1.wav",
+   "status": "added",
+   "base": {
+    "disk": null,
+    "pcm_bytes": null,
+    "decoded_pcm_bytes": null,
+    "seconds": null,
+    "rate": null,
+    "channels": null
+   },
+   "target": {
+    "disk": 4454,
+    "pcm_bytes": 4410,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.1,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/hit_mold_2.wav",
+   "status": "added",
+   "base": {
+    "disk": null,
+    "pcm_bytes": null,
+    "decoded_pcm_bytes": null,
+    "seconds": null,
+    "rate": null,
+    "channels": null
+   },
+   "target": {
+    "disk": 4454,
+    "pcm_bytes": 4410,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.1,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/hit_mold_3.wav",
+   "status": "added",
+   "base": {
+    "disk": null,
+    "pcm_bytes": null,
+    "decoded_pcm_bytes": null,
+    "seconds": null,
+    "rate": null,
+    "channels": null
+   },
+   "target": {
+    "disk": 4454,
+    "pcm_bytes": 4410,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.1,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/shoot_spit.wav",
+   "status": "changed",
+   "base": {
+    "disk": 5776,
+    "pcm_bytes": 5732,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.13,
+    "rate": 22050,
+    "channels": 1
+   },
+   "target": {
+    "disk": 7982,
+    "pcm_bytes": 7938,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.18,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/skill_rally.wav",
+   "status": "changed",
+   "base": {
+    "disk": 37528,
+    "pcm_bytes": 37484,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.85,
+    "rate": 22050,
+    "channels": 1
+   },
+   "target": {
+    "disk": 39734,
+    "pcm_bytes": 39690,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.9,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/ui_confirm.wav",
+   "status": "changed",
+   "base": {
+    "disk": 8864,
+    "pcm_bytes": 8820,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.2,
+    "rate": 22050,
+    "channels": 1
+   },
+   "target": {
+    "disk": 14156,
+    "pcm_bytes": 14112,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.32,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/ui_upgrade_max.wav",
+   "status": "added",
+   "base": {
+    "disk": null,
+    "pcm_bytes": null,
+    "decoded_pcm_bytes": null,
+    "seconds": null,
+    "rate": null,
+    "channels": null
+   },
+   "target": {
+    "disk": 17684,
+    "pcm_bytes": 17640,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.4,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/ui_upgrade_no_coins.wav",
+   "status": "added",
+   "base": {
+    "disk": null,
+    "pcm_bytes": null,
+    "decoded_pcm_bytes": null,
+    "seconds": null,
+    "rate": null,
+    "channels": null
+   },
+   "target": {
+    "disk": 11068,
+    "pcm_bytes": 11024,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.25,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/ui_upgrade_ok.wav",
+   "status": "added",
+   "base": {
+    "disk": null,
+    "pcm_bytes": null,
+    "decoded_pcm_bytes": null,
+    "seconds": null,
+    "rate": null,
+    "channels": null
+   },
+   "target": {
+    "disk": 24300,
+    "pcm_bytes": 24256,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.55,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/ui_upgrade_save_failed.wav",
+   "status": "added",
+   "base": {
+    "disk": null,
+    "pcm_bytes": null,
+    "decoded_pcm_bytes": null,
+    "seconds": null,
+    "rate": null,
+    "channels": null
+   },
+   "target": {
+    "disk": 15478,
+    "pcm_bytes": 15434,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.35,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/wave_cleared.wav",
+   "status": "added",
+   "base": {
+    "disk": null,
+    "pcm_bytes": null,
+    "decoded_pcm_bytes": null,
+    "seconds": null,
+    "rate": null,
+    "channels": null
+   },
+   "target": {
+    "disk": 30914,
+    "pcm_bytes": 30870,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.7,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/wave_incoming.wav",
+   "status": "changed",
+   "base": {
+    "disk": 39734,
+    "pcm_bytes": 39690,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.9,
+    "rate": 22050,
+    "channels": 1
+   },
+   "target": {
+    "disk": 44144,
+    "pcm_bytes": 44100,
+    "decoded_pcm_bytes": null,
+    "seconds": 1.0,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  },
+  {
+   "type": "wav",
+   "id": "assets/audio/sfx/worker_buy.wav",
+   "status": "changed",
+   "base": {
+    "disk": 18566,
+    "pcm_bytes": 18522,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.42,
+    "rate": 22050,
+    "channels": 1
+   },
+   "target": {
+    "disk": 19888,
+    "pcm_bytes": 19844,
+    "decoded_pcm_bytes": null,
+    "seconds": 0.45,
+    "rate": 22050,
+    "channels": 1
+   },
+   "over_length_cap": false
+  }
+ ],
+ "rounds": {
+  "r01": {
+   "base": 5505024,
+   "target": 8126464
+  },
+  "r02": {
+   "base": 5505024,
+   "target": 8126464
+  },
+  "r03": {
+   "base": 5505024,
+   "target": 8126464
+  },
+  "r04": {
+   "base": 6553600,
+   "target": 8126464
+  },
+  "r05": {
+   "base": 7602176,
+   "target": 9175040
+  },
+  "r06": {
+   "base": 6553600,
+   "target": 8126464
+  },
+  "r07": {
+   "base": 6553600,
+   "target": 8126464
+  },
+  "r08": {
+   "base": 6553600,
+   "target": 8126464
+  },
+  "r09": {
+   "base": 6553600,
+   "target": 8126464
+  },
+  "r10": {
+   "base": 9699328,
+   "target": 11272192
+  }
+ },
+ "missing_art_target": [],
+ "missing_pngs_target": [],
+ "caps": {
+  "atlas_worst_battle_gpu": 12582912,
+  "atlas_menu_gpu": 524288.0,
+  "atlas_all_pages_gpu": 14680064,
+  "atlas_page_max_side_px": 1024,
+  "atlas_png_disk": 1048576,
+  "sfx_pcm_resident": 2097152,
+  "sfx_count": 48,
+  "sfx_longest_s": 3.5,
+  "music_tracks": 4,
+  "music_stream_disk": 1572864.0,
+  "audio_disk_total": 3145728,
+  "apk_total": 62914560,
+  "apk_content_growth": 2097152
+ }
+}

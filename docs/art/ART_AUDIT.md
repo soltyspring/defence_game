@@ -221,3 +221,38 @@ Same attacks re-run on this build:
 - **Memory (08's asset_budget_check --worktree, PASS):** worst battle 9.25 -> **8.75 MiB**, all pages 9.50 -> 9.00 MiB, PNG 86.0 KiB. Rounds with only the basic roster hold 2.0 MiB of characters instead of 1.5 (r03 real log: 5.75 MiB resident, char_player + bases + fx_combat + ui_main + biome_meadow, all source import).
 - **Checks:** validate.py --determinism PASS; colour vision unchanged (protan 16.37 / deutan 18.98 / tritan 18.28); readability composite unchanged (silhouette min 61.0 dark, 85.5 village). Exported PCK (heavy_run lock): 9/9 pages size_ok, 12 loads (9 pages + 3 fonts), raw PNG absent, 1,268,992 B. Clean HEAD 3e355a8 snapshot + this page, import through isolated_godot.ps1: import_audit 9/9 PASS (char_player 1024x512, 331 frames, 0 mismatches). Real game r03 --autoplay at 30/45 s on DISPLAY2 (visible_launch -IsolateAppData, EXIT_0): hero, 식빵병, 졸개 and 포자 뱉개 drawn from the merged page, no pause frame (docs/art/evidence/merge_0130/). No new file in the real user folders.
 - **Not measured by 03:** the draw-call drop (08's drawcall_run.ps1). If the 32 px roster (round 15) is adopted, this page needs 1024x1024 (packer dry run).
+
+## Round 17 (2026-11-01 00:46) — decision material for unit size: full D1 roster, memory, real r06 captures (draft, not shipped)
+- **(1) Choice: D1** (proportional), not D2 (chunky), from round 15: D1 is taller (식빵병 31 vs 29 px, 졸개 28 vs 27 px), has more colour distance to the other side (식빵병 39.6-42.7 vs 38.5-41.7; 졸개 30.6-31.6 vs 27.3-29.3, D2's mite is below today's 28.7), keeps the current design (no redesign of 12 units), and both drafts had the same silhouette (94.9 / 95.2 %). D2's stronger bread/mould head shape is a design change that needs a player test first.
+- **(2) D1 roster, all frames, behind ART_DRAFT32=D1FULL only** (tools/art/chars_big.py; the default build and the shipped atlases are unchanged: rebuild + git shows no asset change, validate.py --determinism PASS). 식빵병 / 졸개 use the hand-authored D1 bodies; the other units are re-rendered by replaying their own drawing code on a ScaledCanvas (shapes, limbs, weapons and the 1 px outline drawn at the new resolution; ASCII faces/torsos nearest-scaled, so their pixel widths alternate: draft quality, to be hand-polished if adopted). Scales: infantry and enemies 1.5x, 초파리 떼 2x (04 asked >= 30 px), 프레첼 1.25x, 썩은 멧돼지 1.5x, 제빵 대장 1.2x, 화덕포 and bosses unchanged. Size hierarchy kept: infantry 27-31 px < 멧돼지 36 px (long body) < 제빵 대장 41 px < 장군 45 px < 대군주 56 px.
+  Body height (alpha bbox, idle/walk) and mm at 0.173 mm per view px (04's 393 dp conversion), 6 mm and over in bold:
+  | unit | body px now -> D1 | now | now + 4/3 zoom | D1 | D1 + 4/3 zoom | doubled rows+cols in D1 |
+  |---|---|---|---|---|---|---|
+  | worker 제빵사 | 20 -> 29 px | 3.46 | 4.61 | 5.02 | **6.69** | 4.9 % |
+  | melee_basic 식빵병 | 21 -> 31 px | 3.63 | 4.84 | 5.36 | **7.15** | 1.3 % |
+  | ranged_basic 롤빵병 | 19 -> 27 px | 3.29 | 4.38 | 4.67 | **6.23** | 4.3 % |
+  | tank 통식빵 | 20 -> 29 px | 3.46 | 4.61 | 5.02 | **6.69** | 9.2 % |
+  | fast 프레첼 | 27 -> 34 px | 4.67 | **6.23** | 5.88 | **7.84** | 0.0 % |
+  | siege 화덕포 | 40 -> 40 px | **6.92** | **9.23** | **6.92** | **9.23** | 1.4 % |
+  | hero_captain 제빵 대장 | 34 -> 41 px | 5.88 | **7.84** | **7.09** | **9.46** | 4.8 % |
+  | e_grunt 곰팡이 졸개 | 19 -> 28 px | 3.29 | 4.38 | 4.84 | **6.46** | 0.8 % |
+  | e_swarm 초파리 떼 | 15 -> 28 px | 2.59 | 3.46 | 4.84 | **6.46** | 12.7 % |
+  | e_spitter 포자 뱉개 | 19 -> 27 px | 3.29 | 4.38 | 4.67 | **6.23** | 3.3 % |
+  | e_bomber 부푼 효모 | 20 -> 28 px | 3.46 | 4.61 | 4.84 | **6.46** | 4.0 % |
+  | e_brute 썩은 멧돼지 | 24 -> 36 px | 4.15 | 5.54 | **6.23** | **8.3** | 4.0 % |
+  | boss_warlord 곰팡이 장군 | 45 -> 45 px | **7.78** | **10.38** | **7.78** | **10.38** | 9.5 % |
+  | boss_overlord 부패 대군주 | 56 -> 56 px | **9.69** | **12.92** | **9.69** | **12.92** | 8.8 % |
+  Regular units (bosses excluded) under 6 mm: now 11 of 12, zoom only 9, D1 only 9, **D1 + 4/3 zoom 0**. Neither change alone is enough; together every regular unit is 6.2-9.5 mm. (초파리 떼's doubled share is an exact 2x, not uneven widths.)
+- **(3) Memory:** the D1 roster packs into char_player 1024x1024 (235 regions, occupancy 0.60). 08's asset_budget_check --tree on a snapshot with the draft: PASS, worst battle **10.75 MiB** (shipped 8.75, cap 12), all pages 11.00 MiB (cap 14), menu 0.50 MiB, PNG 100.3 KiB.
+- **(4) Real game, 04's r06 condition** (seed 4242, same 17 scripted deploys, camera hero + 60, t = 46 s, 800x360 view of a 393x873 dp phone, window 1600x720, safe 34/0/34/0, target 44): tools/art/godot_check/size_cam.gd is a copy of 04's tests/integration/zoom_preview.gd that also dumps every drawn unit and a background frame at t = 46 s. One heavy_run block (lock waited 248 s): clean HEAD 4882771 snapshot, isolated imports (isolated_godot.ps1), visible_launch -IsolateAppData on DISPLAY2, 3 runs EXIT_0 at t = 46.02 s with 17 units each; no new file in the real user folders. (A first block failed: a GDScript type-inference parse error in size_cam.gd, fixed; its runs produced no capture.) tools/art/size_compare_metrics.py rebuilds every unit mask from the imported atlas frame, registers it to the capture (global offset -1/-1 px at 1x zoom, 0/-1 at 4/3; 96-97 % of mask pixels differ from the background capture) and measures visible share (occlusion in draw order), silhouette (dL* >= 15 at the visible perimeter vs the background frame) and min dE76 to the other side (4 simulations). Only the units on screen at t = 46 s are in this table:
+  | unit (instances) | now | D1 | D1 + 4/3 zoom |
+  |---|---|---|---|
+  | tank (n 1) | 3.46 mm, vis 100.0 %, sil 91.9 %, dE 14.6 | 5.02 mm, vis 100.0 %, sil 94.3 %, dE 19.6 | 6.69 mm, vis 100.0 %, sil 94.8 %, dE 29.3 |
+  | ranged_basic (n 2) | 3.29 mm, vis 100.0 %, sil 93.7 %, dE 13.4 | 4.67 mm, vis 100.0 %, sil 93.7 %, dE 17.6 | 6.23 mm, vis 100.0 %, sil 96.6 %, dE 32.5 |
+  | fast (n 1) | 4.67 mm, vis 100.0 %, sil 87.4 %, dE 21.2 | 5.88 mm, vis 100.0 %, sil 89.9 %, dE 18.7 | 7.84 mm, vis 100.0 %, sil 97.0 %, dE 38.7 |
+  | e_brute (n 2) | 4.15 mm, vis 84.5 %, sil 91.8 %, dE 24.0 | 6.23 mm, vis 85.3 %, sil 87.2 %, dE 25.0 | 8.3 mm, vis 85.3 %, sil 92.0 %, dE 26.0 |
+  | e_grunt (n 3) | 3.29 mm, vis 68.1 %, sil 88.1 %, dE 13.4, 1 hidden | 4.84 mm, vis 63.0 %, sil 90.8 %, dE 28.0, 1 hidden | 6.46 mm, vis 63.0 %, sil 96.9 %, dE 28.7, 1 hidden |
+  | e_swarm (n 1) | 2.59 mm, vis 100.0 %, sil 82.7 %, dE 15.8 | 4.84 mm, vis 100.0 %, sil 86.8 %, dE 13.2 | off screen |
+  | hero_captain (n 1) | 5.71 mm, vis 100.0 %, sil 96.4 %, dE 15.8 | 6.92 mm, vis 100.0 %, sil 94.7 %, dE 13.2 | 9.23 mm, vis 100.0 %, sil 84.5 %, dE 26.0 |
+  Reading: silhouette is 83-97 % in every variant (line 60) and visibility does not drop. Colour distance to the other side goes up with the zoom for every unit on screen. With D1 alone it goes up for 4 units (통식빵, 롤빵병, 멧돼지, 졸개) and down for 3 (프레첼 21.2 -> 18.7, 초파리 15.8 -> 13.2, 제빵 대장 15.8 -> 13.2), all still above 03's line 10. The zoom moves 초파리 떼 off screen at t = 46 s (narrower view). Captures: docs/art/evidence/size_d1full/r06_t46_{now,d1_current,d1_zoom}.png, three_rows.png.
+- **Limits:** a desktop capture of the phone layout, **not a measurement on a phone**; mm values are 04's conversion, not measured with a ruler. **No human player test** of whether units read as bakery/mould or whether 6 mm is enough. The D1 faces are nearest-scaled.

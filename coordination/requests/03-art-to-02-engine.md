@@ -111,3 +111,16 @@ Real game on DISPLAY2, isolated user://, options patched in a temp snapshot only
 ## A18 2026-10-31 23:57 +09:00 — character pages merged (08 A9); re-import needed for char_player (QUEUED)
 - assets/atlases/char_player.png is now 1024x512 and holds all regular characters; char_player_adv, char_enemy, char_enemy_adv (png, json, .import) are removed. manifest.anim_sets points the 12 sets at char_player; your Atlas resolves pages from it, and flip_check.gd's `acquire("char_player")` still works. Verified in a clean HEAD snapshot with an isolated import: import_audit 9/9 PASS, exported PCK 9/9, r03 real battle draws every unit (ART_AUDIT round 16).
 - The main-tree cache for char_player (and bases, ui_main) is stale; after your `--import` (under heavy_run) the three removed pages' cached .ctex files are orphans in .godot/imported (harmless).
+
+## A19 2026-11-01 00:46 +09:00 — unit size: recommendation and how to ship it (decision is yours, R17) (QUEUED)
+**Recommendation: D1 roster + world zoom (k+1)/k together.** Evidence: ART_AUDIT round 17, docs/art/evidence/size_d1full/.
+- Regular units under 04's 6 mm working line (393 dp phone, 0.173 mm per view px): now 11 of 12; zoom 4/3 only 9; D1 art only 9; **D1 + 4/3: 0** (6.2-9.5 mm). In 04's r06 frame (seed 4242, t = 46 s) silhouette 83-97 % in every variant, visibility unchanged, colour distance to the other side up with the zoom.
+- Cost: worst battle 8.75 -> 10.75 MiB (cap 12; char_player becomes 1024x1024); 04 measured the zoom cutting the time an enemy is visible before it engages from 6.0 to 3.9 s (mean) in r06 — that is a difficulty question for 01 (Q5 is unanswered).
+- Zoom value: use (k+1)/k rather than a fixed 4/3, so one art pixel is always k+1 device pixels (4/3 at k = 3, 3/2 at k = 2). A fixed 4/3 at k = 2 gives 2.67 px per art pixel (uneven columns, 04's note and 03 round 14).
+**Transition (proposed order):**
+1. 02: implement the zoom behind a project setting / feature flag (default off), ground anchored as in 04's CamFix (ground 70 px above the view bottom), and check the camera framing at 780x360 and 800x360.
+2. 03: make D1 the default build (remove the ART_DRAFT32 gate), hand-polish the nearest-scaled faces of the 10 re-rendered units, re-check the card/portrait crops (cards are cut from the idle frame), re-pack char_player 1024x1024, run validate --determinism, PCK, import audit in a snapshot and the same r06 capture; one commit with the art and manifest only (frame sizes and pivots change; anim names, frame counts, fps and events do not).
+3. 08: asset_budget_check --rev on that commit; 02: main-tree re-import under heavy_run; then switch the zoom flag on in the same release.
+4. 07: name-to-unit and lane readability checks on the result; 01: confirm the warning-time change.
+- Gameplay data (units.json size/contact) is not touched by the art change; whether hit boxes should grow is 01's call.
+- **Not done:** any phone measurement, any human player test.

@@ -1,0 +1,338 @@
+{
+ "worker": {
+  "now": {
+   "frame": [
+    32,
+    32
+   ],
+   "body_px": 20,
+   "doubled_pct": 3.3
+  },
+  "d1full": {
+   "frame": [
+    48,
+    48
+   ],
+   "body_px": 29,
+   "doubled_pct": 4.9
+  },
+  "mm": {
+   "now": 3.46,
+   "now_zoom43": 4.61,
+   "d1": 5.02,
+   "d1_zoom43": 6.69
+  }
+ },
+ "melee_basic": {
+  "now": {
+   "frame": [
+    32,
+    32
+   ],
+   "body_px": 21,
+   "doubled_pct": 0.0
+  },
+  "d1full": {
+   "frame": [
+    48,
+    48
+   ],
+   "body_px": 31,
+   "doubled_pct": 1.3
+  },
+  "mm": {
+   "now": 3.63,
+   "now_zoom43": 4.84,
+   "d1": 5.36,
+   "d1_zoom43": 7.15
+  }
+ },
+ "ranged_basic": {
+  "now": {
+   "frame": [
+    32,
+    32
+   ],
+   "body_px": 19,
+   "doubled_pct": 0.0
+  },
+  "d1full": {
+   "frame": [
+    48,
+    48
+   ],
+   "body_px": 27,
+   "doubled_pct": 4.3
+  },
+  "mm": {
+   "now": 3.29,
+   "now_zoom43": 4.38,
+   "d1": 4.67,
+   "d1_zoom43": 6.23
+  }
+ },
+ "tank": {
+  "now": {
+   "frame": [
+    32,
+    32
+   ],
+   "body_px": 20,
+   "doubled_pct": 0.0
+  },
+  "d1full": {
+   "frame": [
+    48,
+    48
+   ],
+   "body_px": 29,
+   "doubled_pct": 9.2
+  },
+  "mm": {
+   "now": 3.46,
+   "now_zoom43": 4.61,
+   "d1": 5.02,
+   "d1_zoom43": 6.69
+  }
+ },
+ "fast": {
+  "now": {
+   "frame": [
+    40,
+    32
+   ],
+   "body_px": 27,
+   "doubled_pct": 0.4
+  },
+  "d1full": {
+   "frame": [
+    50,
+    40
+   ],
+   "body_px": 34,
+   "doubled_pct": 0.0
+  },
+  "mm": {
+   "now": 4.67,
+   "now_zoom43": 6.23,
+   "d1": 5.88,
+   "d1_zoom43": 7.84
+  }
+ },
+ "siege": {
+  "now": {
+   "frame": [
+    48,
+    40
+   ],
+   "body_px": 40,
+   "doubled_pct": 1.4
+  },
+  "d1full": {
+   "frame": [
+    48,
+    40
+   ],
+   "body_px": 40,
+   "doubled_pct": 1.4
+  },
+  "mm": {
+   "now": 6.92,
+   "now_zoom43": 9.23,
+   "d1": 6.92,
+   "d1_zoom43": 9.23
+  }
+ },
+ "hero_captain": {
+  "now": {
+   "frame": [
+    48,
+    48
+   ],
+   "body_px": 34,
+   "doubled_pct": 1.8
+  },
+  "d1full": {
+   "frame": [
+    58,
+    58
+   ],
+   "body_px": 41,
+   "doubled_pct": 4.8
+  },
+  "mm": {
+   "now": 5.88,
+   "now_zoom43": 7.84,
+   "d1": 7.09,
+   "d1_zoom43": 9.46
+  }
+ },
+ "e_grunt": {
+  "now": {
+   "frame": [
+    32,
+    32
+   ],
+   "body_px": 19,
+   "doubled_pct": 0.0
+  },
+  "d1full": {
+   "frame": [
+    48,
+    48
+   ],
+   "body_px": 28,
+   "doubled_pct": 0.8
+  },
+  "mm": {
+   "now": 3.29,
+   "now_zoom43": 4.38,
+   "d1": 4.84,
+   "d1_zoom43": 6.46
+  }
+ },
+ "e_swarm": {
+  "now": {
+   "frame": [
+    32,
+    24
+   ],
+   "body_px": 15,
+   "doubled_pct": 0.0
+  },
+  "d1full": {
+   "frame": [
+    64,
+    48
+   ],
+   "body_px": 28,
+   "doubled_pct": 12.7
+  },
+  "mm": {
+   "now": 2.59,
+   "now_zoom43": 3.46,
+   "d1": 4.84,
+   "d1_zoom43": 6.46
+  }
+ },
+ "e_spitter": {
+  "now": {
+   "frame": [
+    32,
+    32
+   ],
+   "body_px": 19,
+   "doubled_pct": 0.0
+  },
+  "d1full": {
+   "frame": [
+    48,
+    48
+   ],
+   "body_px": 27,
+   "doubled_pct": 3.3
+  },
+  "mm": {
+   "now": 3.29,
+   "now_zoom43": 4.38,
+   "d1": 4.67,
+   "d1_zoom43": 6.23
+  }
+ },
+ "e_bomber": {
+  "now": {
+   "frame": [
+    32,
+    32
+   ],
+   "body_px": 20,
+   "doubled_pct": 0.0
+  },
+  "d1full": {
+   "frame": [
+    48,
+    48
+   ],
+   "body_px": 28,
+   "doubled_pct": 4.0
+  },
+  "mm": {
+   "now": 3.46,
+   "now_zoom43": 4.61,
+   "d1": 4.84,
+   "d1_zoom43": 6.46
+  }
+ },
+ "e_brute": {
+  "now": {
+   "frame": [
+    48,
+    48
+   ],
+   "body_px": 24,
+   "doubled_pct": 0.7
+  },
+  "d1full": {
+   "frame": [
+    72,
+    72
+   ],
+   "body_px": 36,
+   "doubled_pct": 4.0
+  },
+  "mm": {
+   "now": 4.15,
+   "now_zoom43": 5.54,
+   "d1": 6.23,
+   "d1_zoom43": 8.3
+  }
+ },
+ "boss_warlord": {
+  "now": {
+   "frame": [
+    64,
+    64
+   ],
+   "body_px": 45,
+   "doubled_pct": 9.5
+  },
+  "d1full": {
+   "frame": [
+    64,
+    64
+   ],
+   "body_px": 45,
+   "doubled_pct": 9.5
+  },
+  "mm": {
+   "now": 7.78,
+   "now_zoom43": 10.38,
+   "d1": 7.78,
+   "d1_zoom43": 10.38
+  }
+ },
+ "boss_overlord": {
+  "now": {
+   "frame": [
+    88,
+    80
+   ],
+   "body_px": 56,
+   "doubled_pct": 8.8
+  },
+  "d1full": {
+   "frame": [
+    88,
+    80
+   ],
+   "body_px": 56,
+   "doubled_pct": 8.8
+  },
+  "mm": {
+   "now": 9.69,
+   "now_zoom43": 12.92,
+   "d1": 9.69,
+   "d1_zoom43": 12.92
+  }
+ }
+}

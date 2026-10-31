@@ -256,10 +256,187 @@ def s15(fn, body):
     return _B(48, 48, int(body.px * 1.5)), out
 
 
+# =============================================================================
+# D1FULL (03 round 17): every regular unit at the D1 scale, plus brute / hero / siege resized for the
+# size hierarchy. melee_basic and e_grunt use the hand-authored D1 bodies above; the other units are
+# re-rendered by replaying their own drawing code on a ScaledCanvas: shapes (ellipses), limbs, weapons
+# and lines are drawn at the new resolution, the 1 px outline is drawn at the new resolution, and ASCII
+# parts (faces, torsos, small sprites) are nearest-scaled (draft quality: their pixel widths alternate).
+# =============================================================================
+import math as _m
+from pixel import Canvas as _RealCanvas
+
+# scale per unit (measured body heights in ART_AUDIT round 17): infantry ~1.5x (27-31 px); swarm 2x
+# (04 asked >= 30 px; integer scale); pony rider 1.25x (already 27 px); brute 1.5x so it stays clearly larger
+# than infantry; hero 1.2x (41 px: above infantry, below the warlord's 45); siege unchanged (40 px).
+K_SCALE = {"worker": 1.5, "ranged_basic": 1.5, "tank": 1.5, "fast": 1.25,
+           "e_spitter": 1.5, "e_swarm": 2.0, "e_bomber": 1.5, "e_brute": 1.5, "hero_captain": 1.2}
+_K = [1.0]
+
+
+class ScaledCanvas:
+    """Source-space drawing API (same as pixel.Canvas) rendered into a real canvas k times larger."""
+
+    def __init__(self, w, h, k=None, real=None):
+        self.k = k if k is not None else _K[0]
+        self.w, self.h = w, h                       # SOURCE size: drawing code reads cv.w / cv.h
+        self.R = real if real is not None else _RealCanvas(round(w * self.k), round(h * self.k))
+
+    a = property(lambda s: s.R.a, lambda s, v: setattr(s.R, "a", v))
+
+    def _f(self, v):
+        return int(_m.floor(v * self.k + 1e-9))
+
+    def copy(self):
+        return ScaledCanvas(self.w, self.h, self.k, self.R.copy())
+
+    def put(self, x, y, col):
+        x0, y0 = self._f(x), self._f(y)
+        self.R.rect(x0, y0, max(1, self._f(x + 1) - x0), max(1, self._f(y + 1) - y0), col)
+
+    def get(self, x, y):
+        return self.R.get(self._f(x + 0.5), self._f(y + 0.5))
+
+    def rect(self, x, y, w, h, col):
+        x0, y0 = self._f(x), self._f(y)
+        self.R.rect(x0, y0, self._f(x + w) - x0, self._f(y + h) - y0, col)
+
+    def hline(self, x0, x1, y, col):
+        self.rect(min(x0, x1), y, abs(x1 - x0) + 1, 1, col)
+
+    def vline(self, x, y0, y1, col):
+        self.rect(x, min(y0, y1), 1, abs(y1 - y0) + 1, col)
+
+    def _p(self, v):
+        return v * self.k + self.k / 2 - 0.5
+
+    def line(self, x0, y0, x1, y1, col):
+        self.R.thick_line(self._p(x0), self._p(y0), self._p(x1), self._p(y1), col, t=max(1, round(self.k)))
+
+    def thick_line(self, x0, y0, x1, y1, col, t=2, shade=None):
+        self.R.thick_line(self._p(x0), self._p(y0), self._p(x1), self._p(y1), col, t=max(1, round(t * self.k)), shade=shade)
+
+    def ellipse(self, cx, cy, rx, ry, col, fill=True):
+        self.R.ellipse(cx * self.k, cy * self.k, rx * self.k, ry * self.k, col, fill)
+
+    def stamp(self, art, x, y, flip=False, only_onto=False, recolor=None):
+        g = art.a[:, ::-1] if flip else art.a
+        for j in range(g.shape[0]):
+            for i in range(g.shape[1]):
+                v = int(g[j, i])
+                if v == 0:
+                    continue
+                if recolor:
+                    v = recolor.get(v, v)
+                if only_onto:
+                    x0, y0 = self._f(x + i), self._f(y + j)
+                    blk = self.R.a[y0:self._f(y + j + 1), x0:self._f(x + i + 1)]
+                    blk[blk != 0] = v
+                else:
+                    self.put(x + i, y + j, v)
+
+    def blit(self, other, x, y):
+        from pixel import Sprite
+        self.stamp(Sprite(other.a), x, y)
+
+    def outline(self, col=None, diagonal=False, skip=(None,)):
+        if col is None:
+            self.R.outline(diagonal=diagonal)
+        else:
+            self.R.outline(col, diagonal=diagonal)
+        return self
+
+    def flip_h(self):
+        self.R.flip_h()
+        return self
+
+    def shift(self, dx, dy):
+        self.R.shift(round(dx * self.k), round(dy * self.k))
+        return self
+
+    def rot90_about(self, px, py, k=1):
+        self.R.rot90_about(self._f(px), self._f(py + 1) - 1, k)
+        return self
+
+    def dissolve(self, level):
+        self.R.dissolve(level)
+        return self
+
+    def recolor(self, mapping):
+        self.R.recolor(mapping)
+        return self
+
+    def to_image(self):
+        return self.R.to_image()
+
+
+def _ground_fit(cv, px):
+    import numpy as np
+    a = cv.a
+    ys, xs = np.nonzero(a)
+    if len(ys) == 0:
+        return cv
+    if isinstance(cv, ScaledCanvas):
+        H, pxr = a.shape[0], cv._f(px)
+        dy = (H - 1) - ys.max()
+        dx = pxr - (xs.min() + xs.max()) // 2
+        cv.R.shift(int(dx), int(dy))
+        return cv
+    return _ORIG_GF(cv, px)
+
+
+import anim as _anim
+_ORIG_GF = _anim.ground_fit
+
+
+def _scaled_fn(fn, k):
+    def run():
+        import rig, anim, chars_player, chars_enemy, chars_r04, chars_retheme
+        mods = (rig, anim, chars_player, chars_enemy, chars_r04, chars_retheme)
+        saved = [(md, md.__dict__.get("Canvas"), md.__dict__.get("ground_fit")) for md in mods]
+        _K[0] = k
+        try:
+            for md in mods:
+                if "Canvas" in md.__dict__:
+                    md.Canvas = lambda w, h: ScaledCanvas(w, h, k)
+                if "ground_fit" in md.__dict__:
+                    md.ground_fit = _ground_fit
+            anims = fn()
+        finally:
+            for md, cvs, gf in saved:
+                if cvs is not None:
+                    md.Canvas = cvs
+                if gf is not None:
+                    md.ground_fit = gf
+            _K[0] = 1.0
+        for an in anims.values():
+            if an.get("points"):
+                an["points"] = {n: [int(_m.floor(v[0] * k)), int(_m.floor(v[1] * k))] for n, v in an["points"].items()}
+        return anims
+    return run
+
+
+def apply_full():
+    import chars_player as P
+    import chars_enemy as E
+    import chars_r04 as R4
+    apply("D1")
+    for reg in (P.ALL, E.ALL, R4.PLAYER, R4.ENEMY):
+        for sid in list(reg):
+            k = K_SCALE.get(sid)
+            if not k:
+                continue
+            body, fn = reg[sid]
+            sb = _B(round(body.W * k), round(body.H * k), int(_m.floor(body.px * k)))
+            reg[sid] = (sb, _scaled_fn(fn, k))
+
+
 def apply(draft):
     """Swap melee_basic and e_grunt in the registries for a draft build."""
     import chars_player as P
     import chars_enemy as E
+    if draft == "D1FULL":
+        return apply_full()
     if draft in ("D1", "D2"):
         kb, ka = knight_anims(draft)
         mb, ma = mite_anims(draft)
