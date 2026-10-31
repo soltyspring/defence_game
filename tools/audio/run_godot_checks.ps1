@@ -14,6 +14,14 @@ $root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 $godot = Join-Path $root 'tools\engine\Godot_v4.7.2-stable_win64_console.exe'
 if (-not (Test-Path $godot)) { Write-Error "Godot console not found: $godot"; exit 2 }
 $sb = Join-Path ([IO.Path]::GetTempPath()) 'defence_audio_sandbox'
+# Double isolation (10 isolated_godot.ps1 method): Godot builds user:// from the APPDATA environment variable, so
+# every Godot child of this script gets a PRIVATE APPDATA. Together with config/custom_user_dir_name below, user://
+# can never resolve to the real player folder (%APPDATA%\Godot\app_userdata\Lane Defence).
+$realAppData = $env:APPDATA
+$realSave = Join-Path $realAppData 'Godot\app_userdata\Lane Defence\save.json'
+$realSaveHash0 = if (Test-Path $realSave) { (Get-FileHash $realSave).Hash } else { '' }
+$env:APPDATA = Join-Path ([IO.Path]::GetTempPath()) 'defence_audio_appdata'
+New-Item -ItemType Directory -Force $env:APPDATA | Out-Null
 $userDir = Join-Path $env:APPDATA 'defence_audio_sandbox'
 # Clean sandbox + its user dir. Files can be briefly held (antivirus/indexer, a previous run still exiting):
 # retry, and refuse to run on a dirty sandbox instead of silently mixing old and new files.
@@ -211,5 +219,9 @@ if ($Lifecycle) {
     } else { $fail++; "  ^ lifecycle $m produced no report (exit $($r.code))" }
   }
   Set-Content $pf $origProj -NoNewline -Encoding utf8
-}"GODOT AUDIO CHECKS " + $(if ($fail -eq 0) { 'PASS' } else { "FAIL ($fail)" })
+}$isoProof = Test-Path (Join-Path $userDir 'logs')
+$realSaveHash1 = if (Test-Path $realSave) { (Get-FileHash $realSave).Hash } else { '' }
+"isolation: private APPDATA=$($env:APPDATA) user_dir_logs_present=$isoProof real_save_changed_during_run=$($realSaveHash0 -ne $realSaveHash1) (other workers may write it; this script never points Godot at it)"
+$env:APPDATA = $realAppData
+"GODOT AUDIO CHECKS " + $(if ($fail -eq 0) { 'PASS' } else { "FAIL ($fail)" })
 exit $fail

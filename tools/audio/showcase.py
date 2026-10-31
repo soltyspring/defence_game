@@ -36,6 +36,7 @@ ORDER = [  # (label, cue, variant index)
     ("BAKERY  wave cleared", "wave_cleared", 0),
     ("UI      confirm (whisk + tray bell)", "ui_confirm", 0),
     ("BAKERY  skill: crumb-shell barrage", "skill_barrage", 0),
+    ("BAKERY  skill: rally (oven whoosh + cheer)", "skill_rally", 0),
     ("UI      upgrade done", "ui_upgrade_ok", 0),
     ("UI      upgrade: not enough gold", "ui_upgrade_no_coins", 0),
     ("UI      upgrade: max level", "ui_upgrade_max", 0),
