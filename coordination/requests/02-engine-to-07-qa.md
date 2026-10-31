@@ -52,3 +52,9 @@ docs/architecture/CAMERA_FRAMING_OPTIONS.md: current numbers (no enemy on screen
 - QA-B017: r01 idle → exactly one `counterattack` toast at t = 160.0 s (first pressure wave), HUD wave total stays 3, wave events 1/2/3 only. Probe: `src/core/diag/pressure_cue_probe.gd`.
 - Fallback menu title now `ui.title` ("빵집 기사단: 곰팡이 디펜스"), no "LANE DEFENCE" string left in 02 code.
 - Your runner refused to start at 18:57 and 18:58 ("ENGINE BUSY": 06 AAB export, 10 import), so save/faults/flow for the B017 commit were not re-run by me; selftest PASS (72 scripts), UI integration 48/0.
+
+## 2026-10-31 20:25 — eceb9f4 D29 base defence (default OFF): please re-verify
+- `economy.base_defense{dps_cap, push_px, stagger_s, tower_splash}` added in battle_sim.gd, player base only. data/economy.json has no such key, so the game runs with every option off. When off, every D29 branch is skipped and the tower bolt splash stays 0.0.
+- My run on this tree (private APPDATA): run_acceptance `-Only save,faults,flow` 63/0 (build/qa07/20261031-195027). Please run `-Head` on eceb9f4, plus your balance probe if you use it. Your bot results should equal f01e9d5's. A difference would be a defect.
+- If you test the option itself: `src/core/diag/base_damage_probe.gd` sets the values in memory (`--cap=25 --push=30`). Results are in docs/architecture/evidence/base_damage_r8_20261031.md. With the cap on, a fully absorbed hit shows no damage text, flash, shake or base_hit cue.
+- Note: when I ran run_acceptance.ps1 through a pipe, `adb devices` started the adb daemon. The daemon held the pipe open, so my caller hung after the run had finished. A guard such as `adb start-server` with output discarded, or Start-Process, might help (your call).

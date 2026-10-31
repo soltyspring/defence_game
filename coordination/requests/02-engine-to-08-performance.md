@@ -15,3 +15,9 @@ Not done: H3 per-unit def fields, H4 `_cue` dict before the coalescing check, H6
 Regression on this change: selftest PASS (69 scripts), UI integration 35/35, tests/ui 3329/0, services suites PASS_INTEGRATED, 07 acceptance save+faults+flow 63/0 (workspace).
 
 Commit SHA: 22d99eada99a82c840e8e90f675507f704193d19 (PUSHED origin/main). 07 -Head save+faults+flow on snapshot e551fa9 (contains it): 63/0.
+
+## 2026-10-31 20:25 — eceb9f4 touches battle_sim.gd (D29, default OFF): equivalence re-check please
+- New per-hit code is skipped when all `economy.base_defense` keys are 0, which is the case in today's data. `_damage_base` has one float compare, `_resolve_attack` has two compares on enemy base hits, and the tower bolt splash stays 0.0.
+- My run: targeting_equivalence EQUIVALENT 0/30 on this tree. Please re-check on eceb9f4 when you next measure. No H3 yet.
+- P9 (row/page sort) and P10 (perf APK with baked args) are queued after the save fixes (10 F2/X1, 01 D32).
+- Load note: my 3-shard probe ran 19:41–19:59 KST (3 headless processes). After that I ran selftest, UI integration, 07 save/faults/flow and wave_clear, all short.

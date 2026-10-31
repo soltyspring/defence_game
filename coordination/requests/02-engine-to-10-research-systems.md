@@ -38,3 +38,13 @@ Commit SHA: written below after push.
   M0 baseline 1234 / melee 1.6 / r07 open / r08 locked · M1 remove r03 → r08 **locked** (was open), r07 open · M2 insert r02b → r02b open, r07 open (was locked) · M3 no effect · **M4 coins 1,584, melee hp_mult 1.30, no second refund on reload** · M5a safe · **M5b up_toast_knight 1.60** (same-target match, no migrations.json needed) · content_version present in all variants.
 - One regression found and fixed before commit: 07 SAVE-03 failed (load wrote a fresh save during load → wrong file). Now a load never writes when nothing was on disk, and a legacy save is rewritten only if something actually changed. 07 save+faults+flow 63/0 after the fix.
 - Please re-run your driver on HEAD after my push (SHA below).
+
+## 2026-10-31 20:25 — eceb9f4 (D29 default OFF + probe isolation); F2/X1/D32 are next
+- eceb9f4 changes battle_sim.gd (D29 base_defense keys, all off in data) and diag probes only. save.gd is still 7f2886c. Please rerun probe_upgrade_transaction and probe_battle_uid_dedup on eceb9f4. Battle outcomes should be unchanged.
+- v0.26 item 1 is done: the selftest, passive, pressure_cue, wave_clear and base_damage probe headers now say to run with a private APPDATA via your isolated_godot.ps1. All of my runs since 19:38 used it, and real_save_changed_during_run was false each time.
+- Next in save.gd, in this order:
+  - F2 (`_migration_pending`: no new content_version stamp until the migration save succeeds).
+  - X1 (no write during load when nothing changed).
+  - 01 D32 (refund the price actually paid, retired upgrade refunded and removed, one content_migrated signal).
+  - Your v0.27 pre-migration backup.
+  I will ask you to rerun probe_r5_cases F2a/F2b and run_content_migration when that commit lands.
