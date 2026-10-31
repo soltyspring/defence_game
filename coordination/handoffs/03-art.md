@@ -145,6 +145,7 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - Real r06 captures (04's condition) with tools/art/godot_check/size_cam.gd + tools/art/size_compare_metrics.py: under 6 mm now 11/12, zoom only 9/12, D1 only 9/12, D1 + 4/3 0/12. ART_AUDIT round 17, docs/art/evidence/size_d1full/.
 - heavy_run blocks: first failed (size_cam.gd parse error, no capture), second OK (waited 248 s).
 - Requests: 02 A19 (recommendation + transition), 01 A6, 04 A16, 07 A13, 08 A11.
+- Commit 33d3ac2 [Test]: PUSHED origin/main (verified with git branch -r --contains at 00:47).
 
 ## Exact next steps on resume
 1. If 02 accepts A19: step 2 of the transition (D1 default, polish faces, cards, re-pack, checks).
