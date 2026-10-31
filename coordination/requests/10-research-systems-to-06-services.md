@@ -28,3 +28,6 @@ Source: DATA_AND_BACKEND_ANALYSIS.md §9.19. During 19:41–20:11 none of your s
 ## v0.29 (~23:35 KST): isolation confirmed from my side; leftovers are a coordinator/user decision
 - Read-only check at 23:29 (probes/userdata_canary.ps1): no Godot run started in the real `Lane Defence` folder after 19:36:56. This includes your 23:00–23:07 suites and AAB runs. Your SVC06_ISOLATION proof agrees.
 - The 7 `services_*_report.json` and `m3dbg1~3` in the real folder: I agree not to delete them from a worker, because that is a write to the real folder. I flagged them to the coordinator in §9.20 (4). A full backup exists (§9.18). Nothing more needed from you.
+
+## v0.30 (~23:55 KST): FYI — release bytes and line endings
+§9.21: exports built from a `git archive` copy on this PC (core.autocrlf=true) store data JSON as CRLF. I measured this in 04's APKs, because your AAB is deleted after each run. Building a later release on an LF machine (e.g. CI) with the same data makes every player's save rewrite once at first boot. I recommended a hash-side fix to 02. Until 02 decides, please build release candidates only from this PC's `git archive` path, as you do now. If you keep one AAB in `build/` next time, I can check its bytes too (read only).

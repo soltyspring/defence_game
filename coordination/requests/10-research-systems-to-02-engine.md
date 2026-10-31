@@ -253,3 +253,26 @@ Concrete defenses (your files; I did not edit them):
   - Options: (a) strip `\r` before hashing, or hash canonical parsed JSON; (b) a build rule that releases are exported only from one line-ending mode. I prefer (a). Your call.
 - Real-folder canary: the real save.json is still dated 19:35:09 (content_version = d09d740 CRLF). No non-isolated boot of the current data has happened since 19:37. This check depends on X1 rewriting; keep that in mind when you remove X1.
 - F2/X1/D32/backup: save.gd is still 7f2886c. I will rerun probe_r5_cases F2a/F2b and the update scenario inside `heavy_run.ps1`, one at a time, when it lands.
+
+## v0.30 (~23:55 KST): line endings vs content_version — measured; recommendation: strip \r before hashing (your decision)
+Full evidence: DATA_AND_BACKEND_ANALYSIS.md §9.21. One heavy_run (`10-eol-update-scenario`), private APPDATA, HEAD 3e355a8 (content.gd/save.gd 7f2886c).
+1. Same commit, two checkouts. The engine values come from your real `_compute_content_version` (as reported by the booted Content autoload); the static re-implementation gives identical values.
+   - CRLF data: **c1-1a1d45c2fd91**.
+   - LF data: **c1-e8790a4f2e85**.
+2. Release bytes: both 04 APKs (`build/qa/apk_q4probe` 17:36 and `apk_head` 09:03) store data as `assets/data/**.json`, 21 files, all CRLF.
+   - The 17:36 APK's bytes hash to exactly a262640's CRLF value (c1-bfe92b11d6e3).
+   - So exports from this PC's `git archive` (core.autocrlf=true) carry CRLF.
+   - This PC's working tree data is LF today (`git ls-files --eol`), so dev runs (`--path .`) and exports already disagree.
+   - 06's AAB is deleted after each run, so I could not read it.
+3. Update reproduced (desktop, real boots): release N CRLF → N+1 LF with the same data.
+   - The first boot rewrites the save (rev 11→12), stamps the LF value and rotates `.bak` (= N state).
+   - Levels, coins and unlocks are unchanged, `migration_log` is empty and there is no toast.
+   - The second boot does not write. Going back to CRLF rewrites again (rev 13).
+   - Cause: X1 (save during load although nothing changed). Device not tested.
+4. Recommendation, one place: in `content.gd`, drop byte 13 from each file's bytes before `h.update`.
+   - Why not `.gitattributes eol=lf`: it only fixes git checkouts and archives. It does not cover PowerShell-written JSON (pwsh 7 `ConvertTo-Json` writes CRLF; tested), exports straight from a working tree, or another machine's settings.
+   - JSON cannot contain a raw CR inside strings, so meaning is unchanged.
+   - Do it before the first release: now it changes only dev saves once; after launch the change itself would trigger E2 for every player.
+   - Also fix X1, and tie the pre-migration backup and the `content_migrated` notice to actual level/coin changes, not to a version change alone.
+   - When you change the hash, tell me and I will update `probes/content_version.py` and `userdata_canary.ps1` to match.
+F2/X1: save.gd is still 7f2886c. The rerun is waiting.

@@ -1,5 +1,5 @@
 # 10-research-systems handoff
-Updated: 2026-10-31 ~23:36 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same session (reopened for window separation)
+Updated: 2026-10-31 ~23:56 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same session (reopened for window separation)
 
 ## RESUME after user restart (~15:38 KST)
 - Read: this handoff, coordinator-to-10-research-systems.md (the QUOTA CHECKPOINT text is historical; I did not stop for it), 01-director-to-10-research-systems.md R1 (D17 schema_version, D19 no mid-round resume, #6 rules accepted, migrations.json in backlog).
@@ -7,6 +7,12 @@ Updated: 2026-10-31 ~23:36 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - An interrupted earlier resume attempt left nothing behind. It had only run the probe and a failed name diff (a PowerShell console encoding problem, fixed with UTF-8 output encoding).
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
+
+## v0.30 (~23:56 KST): line endings vs content_version (§9.21)
+- Tools: probes/content_version.py now has `--dir <project>` and `--apk <file>` modes (it reports CR/LF counts, the packed value and the LF value). The scratch driver .local_inspect/run_eol_scenario.ps1 must be run only inside heavy_run.
+- **Lesson:** inside `heavy_run.ps1 -Script { }` never use `$log` or other generic names. heavy_run's own `$log` is visible there, and Tee-Object overwrote the shared heavy_run.log at 23:43 (reported to the coordinator). Use `$p10Out` and literal paths.
+- Next: when 02 changes the hash, update content_version.py and userdata_canary.ps1 to the same normalisation. When save.gd changes, run the F2/X1 reruns (v0.29 list).
+- Do not move or delete anything in the real user folder (coordinator: 06/07 quarantine their own leftovers).
 
 ## v0.29 (~23:36 KST): resume after quota stop and after the 23:08 blue screen
 - **Pushed: 36e2a9e94a39de16e083c5ed9059a49df881e17c** (origin/main, 23:37 KST). The SHA record itself is a separate [Docs] commit.
