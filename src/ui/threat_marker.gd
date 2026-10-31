@@ -73,20 +73,22 @@ func _draw() -> void:
 		return
 	redraws += 1
 	var r := Rect2(Vector2.ZERO, size)
-	draw_rect(r, UiStyle.C_TOAST_BG)
-	draw_rect(r, UiStyle.C_EDGE, false, 1.0)
 	var out_dir := 1.0 if side == &"right" else -1.0
 	# top row: icon on the inner side, arrow on the outer side (points off-screen)
 	var icon_c := Vector2(size.x * 0.5 - out_dir * 7.0, 11.0).round()
 	var arrow_c := Vector2(size.x * 0.5 + out_dir * 13.0, 11.0).round()
 	var tex: Texture2D = UiStyle.ui_icon(ICON.get(kind, ""))
-	if tex != null:
-		draw_texture_rect(tex, Rect2(icon_c - Vector2(8, 8), Vector2(16, 16)), false)
-	elif kind == "nest":
-		_draw_nest(icon_c)
-	else:
-		_draw_enemy(icon_c)
+	# 08 R8 pass order: shapes (plate, arrow, vector stand-in) → ui_main icon → text
+	draw_rect(r, UiStyle.C_TOAST_BG)
+	draw_rect(r, UiStyle.C_EDGE, false, 1.0)
 	UiStyle.draw_glyph(self, &"right" if side == &"right" else &"left", arrow_c, 5.0, UiStyle.C_HP_ENEMY if kind == "enemy" else UiStyle.C_TEXT)
+	if tex == null:
+		if kind == "nest":
+			_draw_nest(icon_c)
+		else:
+			_draw_enemy(icon_c)
+	else:
+		draw_texture_rect(tex, Rect2(icon_c - Vector2(8, 8), Vector2(16, 16)), false)
 	UiStyle.draw_text_centered(self, label(), Vector2(size.x * 0.5, 26.0), UiStyle.FONT_S, UiStyle.C_TEXT)
 
 ## Fallback nest: a mould dome with dark spots (03's nest silhouette is a mound).

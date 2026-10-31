@@ -37,10 +37,39 @@ func _build() -> void:
 	var s := autoload("Save")
 	if s != null and bool(s.get("recovered")):
 		_notice = UiText.t("ui.save_recovered")
+	notice_dialog = NoticeDialog.new()
+	notice_dialog.acknowledged.connect(_on_notice_ack)
+	add_child(notice_dialog)
+	# 02 52f9fa3: a pending content-migration notice stays in the save until acked; App also emits
+	# content_migrated right after mounting the menu. Read it here too, so the order of the two never matters.
+	if s != null and s.has_method("migration_notice"):
+		var n: Dictionary = s.migration_notice()
+		if not n.is_empty():
+			_on_content_migrated(n)
 	_refresh_labels()
 
 func _bus_links() -> Array:
-	return [[&"progress_changed", func(_p): _refresh_labels()]]
+	return [[&"progress_changed", func(_p): _refresh_labels()], [&"content_migrated", _on_content_migrated]]
+
+## 01 D32 / 02 52f9fa3: show `notice.content_migrated` once; the ack goes out when the player closes it, so a
+## player who quits first sees it again on the next launch (the engine keeps it in the save until then).
+const NoticeDialog := preload("res://src/ui/notice_dialog.gd")
+var notice_dialog: Control
+var migration_info := {}          # QA: last notice shown
+var migration_acks := 0           # QA: cmd_ack_content_migrated sent
+func _on_content_migrated(info: Dictionary) -> void:
+	if info.is_empty() or (notice_dialog.visible and info == migration_info):
+		return
+	migration_info = info.duplicate()
+	notice_dialog.text = NoticeDialog.format_notice(info)
+	if safe.size.x <= 0.0:
+		notice_dialog.visible = true      # read during _build: laid out by the first _layout()
+		return
+	notice_dialog.open(notice_dialog.text, view, safe, target)
+
+func _on_notice_ack() -> void:
+	migration_acks += 1
+	emit_cmd(&"cmd_ack_content_migrated", [])
 
 ## Round id to start with "play": first unlocked round without stars, else the last unlocked.
 func continue_round_id() -> String:
@@ -88,6 +117,10 @@ func _exit_tree() -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST and is_inside_tree() and quit_layer != null:
+		if notice_dialog != null and notice_dialog.visible:
+			if claim_back():
+				notice_dialog.close()   # back = seen (acked), never opens the quit dialog with the same press
+			return
 		if settings_panel.visible or modal_open() or not claim_back():
 			return   # panel handles it / press already used by the screen that navigated here
 		quit_layer.visible = not quit_layer.visible
@@ -110,6 +143,8 @@ func _layout() -> void:
 		place(quit_buttons[i], Rect2(cx - 124 + i * 128, safe.get_center().y, 120, bh))
 	if settings_panel.visible:
 		settings_panel.open(bus, settings_panel.settings, view, safe, target)
+	if notice_dialog != null and notice_dialog.visible:
+		notice_dialog.open(notice_dialog.text, view, safe, target)
 
 func _draw() -> void:
 	# Background placeholder until 03 ships menu art: sky gradient bands + pixel hills.

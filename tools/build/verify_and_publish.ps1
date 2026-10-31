@@ -52,7 +52,9 @@ for ($attempt = 1; $attempt -le 3 -and $miss.Count -gt 0; $attempt++) {
 }
 if ($miss.Count -gt 0) { Exit-IsolatedAppData $prevAppData; Write-Host "GATE FAILED: import incomplete ($($miss -join ', ')) — environment, not a test result."; exit 2 }
 $ok = $true
-foreach ($suite in @(@('ui', 'res://tests/ui/test_ui.gd', '\[test_ui\] passed=(\d+) failed=(\d+)'), @('integration', 'res://tests/integration/test_ui_integration.gd', '\[ui_integration\] passed=(\d+) failed=(\d+)'))) {
+$suites = @(@('ui', 'res://tests/ui/test_ui.gd', '\[test_ui\] passed=(\d+) failed=(\d+)'), @('integration', 'res://tests/integration/test_ui_integration.gd', '\[ui_integration\] passed=(\d+) failed=(\d+)'))
+if (Test-Path (Join-Path $snap 'tests\integration\test_migration_notice.gd')) { $suites += ,@('migration', 'res://tests/integration/test_migration_notice.gd', '\[migration_notice\] passed=(\d+) failed=(\d+)') }   # 01 D32 menu notice
+foreach ($suite in $suites) {
     $out = & $GodotConsole --headless --path $snap -s $suite[1] 2>&1 | Out-String
     $code = $LASTEXITCODE
     $logDir = Join-Path $Root 'build\qa\gate'; New-Item -ItemType Directory -Force $logDir | Out-Null

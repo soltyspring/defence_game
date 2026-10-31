@@ -71,6 +71,7 @@ func _run() -> void:
 	test_chrome_palette()
 	test_safe_area_display()
 	await test_readable_numbers()
+	await test_notice_and_passes()
 	for s in SECTIONS:
 		check(done.has(s), "section %s ran to completion (aborted by a script error otherwise)" % s)
 	print("[test_ui] passed=%d failed=%d" % [passes, failures.size()])
@@ -80,7 +81,7 @@ func _run() -> void:
 		print("  - " + f)
 	quit(1 if failures.size() > 0 else 0)
 
-const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard", "back_once", "wave_cleared", "upgrades", "title", "redraw_pattern", "threat_marker", "chrome", "safe_display", "readable_numbers"]
+const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard", "back_once", "wave_cleared", "upgrades", "title", "redraw_pattern", "threat_marker", "chrome", "safe_display", "readable_numbers", "notice_passes"]
 var done := {}
 
 func test_compile_all(dir_path: String) -> void:
@@ -1213,3 +1214,65 @@ func test_readable_numbers() -> void:
 	SafeArea.override_safe_rect = Rect2(0, 0, 640, 360)
 	await _frames()
 	done["readable_numbers"] = true
+
+# ---------------------------------------------------------------- 01 D32 menu notice + 08 R8 draw passes
+
+func test_notice_and_passes() -> void:
+	var ND := load("res://src/ui/notice_dialog.gd")
+	# the notice fits the narrowest menu (640 + notches, target 48) in ko and en without shrinking or ellipsis
+	for loc in ["ko", "en"]:
+		UiText.load_locale(loc)
+		var t: String = ND.format_notice({"levels": 12, "coins": 1234})
+		check(not t.contains("{") and t.contains("12") and t.contains("1234"), "[%s] notice text formatted: '%s'" % [loc, t])
+		var d: Control = ND.new()
+		root.add_child(d)
+		d.open(t, Vector2(640, 360), Rect2(34, 0, 572, 360), 48.0)
+		check(not d.truncated and d.lines.size() <= 3 and Rect2(34, 0, 572, 360).encloses(d.panel) and d.panel.encloses(Rect2(d.btn_close.position, d.btn_close.size)),
+			"[%s] notice fits 640+notch: %d lines, panel %s" % [loc, d.lines.size(), d.panel])
+		var acked := [0]
+		d.acknowledged.connect(func(): acked[0] += 1)
+		d.close()
+		d.close()
+		check(acked[0] == 1 and not d.visible, "[%s] close acknowledges exactly once" % loc)
+		d.free()
+	UiText.load_locale("ko")
+	# menu: bus content_migrated → dialog; close → cmd_ack_content_migrated on the bus
+	var sent := [0]
+	if bus.has_signal("cmd_ack_content_migrated"):
+		bus.cmd_ack_content_migrated.connect(func(): sent[0] += 1)
+	SafeArea.override_view_size = Vector2(640, 360)
+	SafeArea.override_safe_rect = Rect2(34, 0, 572, 360)
+	var m: Control = _mount("res://scenes/ui/main_menu.tscn", {"version": 1, "unlocked_round": 1, "stars": {}, "coins": 0, "settings": {}})
+	await _frames(2)
+	if bus.has_signal("content_migrated"):
+		bus.content_migrated.emit({"levels": 1, "coins": 190, "from": "a", "to": "b"})
+		await _frames()
+		check(m.notice_dialog.visible and m.notice_dialog.text.contains("190"), "menu shows the notice from the bus (%s)" % m.notice_dialog.text)
+		bus.content_migrated.emit({"levels": 1, "coins": 190, "from": "a", "to": "b"})
+		tap(m.notice_dialog.btn_close)
+		await _frames()
+		check(sent[0] == 1 and not m.notice_dialog.visible, "close sends one cmd_ack_content_migrated (%d), repeat signal did not stack" % sent[0])
+	else:
+		check(false, "bus has content_migrated (02 52f9fa3)")
+	m.queue_free()
+	await _frames()
+	# 08 R8: hud_top and buttons draw in fixed passes (shapes → icons → text per font/size → overlays)
+	var hud: Control = _mount("res://scenes/ui/hud.tscn")
+	bus.battle_started.emit(MockEngine.sample_info(5, 3))
+	await _frames()
+	bus.hud_snapshot.emit({"gold": 120, "gold_max": 999, "income": 6.0, "cards": [], "skills": [], "army": {"player": 12, "cap": 36},
+		"player_base": {"hp": 1800.0, "hp_max": 1800.0}, "enemy_base": {"hp": 2400.0, "hp_max": 2400.0}, "wave": {"index": 2, "total": 4, "next_in": 9.0},
+		"boss": {"alive": true, "hp": 500.0, "hp_max": 1000.0, "name_key": "enemy.boss_warlord.name"}})
+	await _frames(2)
+	check(hud.top.passes_drawn == 4 and hud.top.boss_drawn, "hud_top drawn in 4 passes (shapes, icons, ui 12, bold 12) with the boss bar (%d)" % hud.top.passes_drawn)
+	var cb: Control = hud.card_buttons[0]
+	cb.cooldown_ratio = 0.0
+	await _frames()
+	var p_idle: int = cb.passes_drawn
+	cb.cooldown_ratio = 0.5
+	await _frames()
+	check(p_idle == 3 and cb.passes_drawn == 4, "card button: 3 passes idle, +1 overlay pass on cooldown (%d / %d)" % [p_idle, cb.passes_drawn])
+	hud.queue_free()
+	SafeArea.override_safe_rect = Rect2(0, 0, 640, 360)
+	await _frames()
+	done["notice_passes"] = true

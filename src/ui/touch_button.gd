@@ -133,11 +133,16 @@ var wrap_lines := 1
 ## &"rect" (unit cards, default) or &"econ" (worker: octagon + dough band, 07 QA-J3)
 var shape: StringName = &"rect"
 
+## 08 R8: drawn in passes (shapes → icon → text → overlay shapes → overlay text) so a card costs ~3 draw calls
+## instead of 7–11 (every rect/texture/glyph-cache switch starts a new draw call). Positions and colours unchanged.
+var passes_drawn := 0              # QA
+
 func _draw() -> void:
 	var r := Rect2(Vector2.ZERO, size)
 	var f := fill if not disabled else UiStyle.C_DISABLED
 	if is_pressed:
 		f = f.darkened(0.25)
+	# ---- pass 1: shapes
 	if shape == &"econ":
 		UiStyle.draw_pixel_octagon(self, r, f, UiStyle.C_GOLD if not disabled else UiStyle.C_TEXT_DIM, is_pressed)
 	else:
@@ -157,6 +162,7 @@ func _draw() -> void:
 		icon_c = Vector2(size.x / 2, size.y / 2) + off
 	if not has_visual:
 		name_y = size.y / 2 - (6.0 if has_sub else 0.0)
+	# ---- pass 2: icon (ui_main page) or its vector stand-in
 	if icon:
 		# integer scale keeps pixel art crisp; never fractional
 		var avail := minf(size.x - 8, icon_bottom - 4.0) if (show_name or has_sub) else minf(size.x - 8, size.y - 8)
@@ -167,6 +173,7 @@ func _draw() -> void:
 		draw_texture_rect(icon, ir, false, Color(1, 1, 1, 0.45) if disabled else Color.WHITE)
 	elif glyph != &"":
 		UiStyle.draw_glyph(self, glyph, icon_c, minf(size.x, icon_bottom) * 0.22, tc)
+	# ---- pass 3: text (name + cost share Galmuri11 12 = one glyph cache)
 	if show_name:
 		if numeric_text:
 			# e.g. hero respawn countdown: big fixed-cell digits over the icon
@@ -188,15 +195,22 @@ func _draw() -> void:
 				UiStyle.draw_text_centered(self, lines[li], Vector2(size.x / 2, y0 + li * lh) + off, fl.size, tc, true, fl.kind)
 	if has_sub:
 		UiStyle.draw_number(self, sub_text, Vector2(size.x / 2, cost_y) + off, UiStyle.NUM_READ, UiStyle.C_GOLD if not disabled else UiStyle.C_TEXT_DIM, 0, UiStyle.NUM_READ_KIND)
+	passes_drawn = 3
+	# ---- pass 4: overlay shapes (must cover icon and name): cooldown shade, dim-reason strip
+	var reason := disabled and dim_reason != ""
+	var dr := Rect2(Vector2(2, size.y / 2 - 8), Vector2(size.x - 4, 16))
 	if cooldown_ratio > 0.0:
 		var inner := r.grow(-2)
 		var h := ceilf(inner.size.y * clampf(cooldown_ratio, 0, 1))
 		draw_rect(Rect2(inner.position, Vector2(inner.size.x, h)), Color(0, 0, 0, 0.55))
+	if reason:
+		draw_rect(dr, UiStyle.C_TOAST_BG)
+	if cooldown_ratio > 0.0 or reason:
+		passes_drawn += 1
+	# ---- pass 5: overlay text (stays readable on top of the shade)
 	if badge != "":
 		UiStyle.draw_number(self, badge, Vector2(size.x - 4, 9), UiStyle.NUM_READ, UiStyle.C_ACCENT, 1, UiStyle.NUM_READ_KIND)
-	if disabled and dim_reason != "":
-		var dr := Rect2(Vector2(2, size.y / 2 - 8), Vector2(size.x - 4, 16))
-		draw_rect(dr, UiStyle.C_TOAST_BG)
+	if reason:
 		UiStyle.draw_text_centered(self, UiStyle.fit_text(dim_reason, size.x - 6, UiStyle.FONT_S)[0], dr.get_center(), UiStyle.FONT_S, UiStyle.C_HP_ENEMY)
 	if overlay.is_valid():
 		overlay.call(self)

@@ -44,6 +44,7 @@ const FALLBACK_KO := {
 	"ui.quit": "종료",
 	"ui.cancel": "취소",
 	"ui.save_recovered": "저장 파일이 손상되어 백업에서 복구했습니다.",
+	"notice.content_migrated": "업데이트로 강화 상한이 바뀌어 {levels}개 레벨이 조정되었고 {coins} 골드를 돌려드렸습니다.",   # 01 D32 (data wins)
 	"ui.coins": "코인",
 	"ui.star_win": "승리",
 	"ui.star_base_hp": "기지 체력 %d%% 이상",
@@ -77,6 +78,7 @@ const FALLBACK_KO := {
 
 ## English UI fallbacks for keys not yet in data/text/en.json (01 asked to add them; data wins).
 const FALLBACK_EN := {
+	"notice.content_migrated": "An update changed upgrade limits: {levels} levels were adjusted and {coins} gold was refunded.",
 	"ui.title": "Bakery Knights: Mold Defense",
 	"toast.counterattack": "Enemy counterattack!",
 	"banner.first_wave_cleared": "First wave broken!",
