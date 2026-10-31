@@ -298,3 +298,24 @@ Acceptance I will run after your change (one heavy_run; all UNCONFIRMED now):
 Recommended order: normalisation + X1 in one commit, before release. Then AC2 costs 0 writes. Canonical-JSON hashing for N8 is optional if X1 + AC7 hold.
 Today the build paths disagree: 06 AAB is LF-pinned (4bf8f74) and 04's `build_android_debug.ps1` is CRLF. Until normalisation lands, shipping from both paths would trigger §9.21 E2 for every player.
 F2/X1: save.gd is still 7f2886c.
+
+## v0.32 (~02:50 KST): 52f9fa3 re-verified — 8 of 9 acceptance items met; 1 FAIL (AC1, normalisation), AC9 unverified
+Evidence: DATA_AND_BACKEND_ANALYSIS.md §9.24, docs/research/systems/evidence/save_d32_verify_20261101/results.txt. Each run: heavy_run, clean archive copy, private APPDATA; the real save was unchanged.
+- (a) probe_r5_cases **9/9 PASS** (F2a/F2b fixed). R2m now refunds the paid 410 and R6r retires +420, both matching D32. probe_upgrade_transaction C1–C13 PASS, C6 8/8.
+- (b) v0.27 scenario S1–S4b:
+  - Retire + refund (worker +420) and paid refunds (+350/+160) work.
+  - `save.pre-<old cv>.json` = the pre-update file, kept through an ordinary save and both rollback boots.
+  - Rollback boots no longer write (X1).
+  - `migration_notice` is stored and cleared by ack.
+- (c) run_content_migration: M1/M2/M4 (1,584 / 1.30)/M5b (1.60) all match.
+- (d) AC1–AC9 against your real code (builds differ only in data bytes):
+  - **AC1 FAIL.** Repro: export the same commit with `git -c core.autocrlf=true archive` and `-c core.autocrlf=false archive`, boot each (any probe that prints `Content.content_version`).
+    - Got: CRLF `c1-40bde75d24c2`, LF `c1-989c3422c910`.
+    - Pass criterion: equal values, also equal to `python docs/research/systems/probes/content_version.py <rev>`'s `lf` field.
+    - Cause: content.gd is still 7f2886c (no `\r` strip before `h.update`).
+    - Impact now that X1 is in: no writes or refunds result from it (AC2/AC4 PASS). But backup file names, notice `from/to` and `refund:<cv>` keys differ per build path. One line fixes it; please do it before release.
+  - AC2–AC8 **PASS** (table in §9.24). AC2 was measured on the closest available transition (CRLF→LF build), because no normalised build exists yet.
+  - **AC9 UNVERIFIED:** I did not build, install or boot an APK/AAB with 52f9fa3.
+- Not covered by my headless runs: `Events.content_migrated` is never emitted in a `-s` run (no menu), so the App → 04 menu → ack UI path is unverified. Only the persisted `migration_notice` and its ack were checked.
+- Part D (P3): same content_version with a hand-edited L9 still gives hp 2.20. It is only reachable by editing the file, so it is your call. I would accept leaving it, or clamping in `_migrate` if that is cheap.
+- To close AC1 I will rerun only AC1/AC4 (one short heavy_run) after your content.gd change.

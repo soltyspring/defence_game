@@ -8,15 +8,21 @@ extends SceneTree
 ##   --mode=inspect  report the state after boot; writes nothing
 ##   --mode=touch    one ordinary save (Save.set_setting), then report (shows the .bak rotation)
 ##   --mode=rebuy    buy melee/ranged back up to the make levels with the coins the player now has, then report
+##   --mode=ack      send Events.cmd_ack_content_migrated (the UI "notice shown" path), then report (v0.32)
+## v0.32 (52f9fa3 D32/F2/X1/backup): also reports upgrade_paid, migration_notice, Save.last_migration, every
+## save* file in the user dir (sha256[:12] + payload summary, incl. save.pre-<cv>.json backups) and any
+## Events.content_migrated emitted during the run.
 ## Output: "PROBE10_UPDATE <json>". Exit 0.
 
 const MAKE_LEVELS := {"up_melee_basic": 5, "up_ranged_basic": 4, "up_worker": 4}
 
 var toasts: Array = []
+var migrated_signals: Array = []
 
 func _initialize() -> void:
 	var ev = root.get_node_or_null("Events")
 	if ev: ev.toast.connect(func(k, a): toasts.append({"key": str(k), "args": a}))
+	if ev and ev.has_signal("content_migrated"): ev.content_migrated.connect(func(info): migrated_signals.append(info))
 	create_timer(60.0).timeout.connect(func(): print("PROBE10_UPDATE {\"watchdog\":true}"); quit(0))
 	_run.call_deferred()
 
@@ -32,7 +38,25 @@ func _payload(path: String) -> Dictionary:
 	var p = JSON.parse_string(str(env.payload))
 	if not (p is Dictionary): return {"unreadable": true}
 	return {"coins": int(p.get("coins", -1)), "upgrades": p.get("upgrades", {}), "content_version": str(p.get("content_version", "")),
-		"revision": int(p.get("revision", -1)), "migrations_applied": p.get("migrations_applied", [])}
+		"revision": int(p.get("revision", -1)), "migrations_applied": p.get("migrations_applied", []),
+		"upgrade_paid": p.get("upgrade_paid", null), "migration_notice": p.get("migration_notice", null)}
+
+func _files(dir: String) -> Array:
+	var out := []
+	var d := DirAccess.open(dir)
+	if d == null: return out
+	var names := Array(d.get_files())
+	names.sort()
+	for n in names:
+		if not str(n).begins_with("save"): continue
+		var p := dir.path_join(n)
+		var e := {"name": n, "sha12": FileAccess.get_sha256(p).substr(0, 12), "bytes": FileAccess.get_file_as_bytes(p).size()}
+		if str(n).ends_with(".json") and not str(n).contains(".corrupt"):
+			var pl := _payload(p)
+			e["rev"] = pl.get("revision", null); e["cv"] = pl.get("content_version", null); e["coins"] = pl.get("coins", null)
+			e["melee"] = (pl.get("upgrades", {}) as Dictionary).get("up_melee_basic", null) if pl.get("upgrades") is Dictionary else null
+		out.append(e)
+	return out
 
 func _state(save) -> Dictionary:
 	var ups := {}
@@ -64,12 +88,23 @@ func _run() -> void:
 		for id in ["up_melee_basic", "up_ranged_basic"]:
 			var cur := int(save.progress.upgrades.get(id, 1))
 			for lv in range(cur + 1, int(MAKE_LEVELS[id]) + 1): codes.append("%s L%d %s" % [id, lv, save.buy_upgrade(id, lv)])
+	elif mode == "ack":
+		var ev = root.get_node_or_null("Events")
+		if ev and ev.has_signal("cmd_ack_content_migrated"):
+			ev.cmd_ack_content_migrated.emit()
+			codes.append("ack_sent")
+		else:
+			codes.append("ack_signal_missing")
 	out["codes"] = codes
 	out["state"] = _state(save)
+	out["notice_api"] = save.call("migration_notice") if save.has_method("migration_notice") else "no_api"
+	out["last_migration"] = save.get("last_migration")
 	out["disk_main"] = _payload(str(save.path))
 	out["disk_bak"] = _payload(str(save.path) + ".bak")
+	out["files"] = _files(ProjectSettings.globalize_path(str(save.path)).get_base_dir())
 	await process_frame
 	await process_frame
 	out["toasts_seen_after_boot"] = toasts
+	out["content_migrated_signals"] = migrated_signals
 	print("PROBE10_UPDATE ", JSON.stringify(out))
 	quit(0)

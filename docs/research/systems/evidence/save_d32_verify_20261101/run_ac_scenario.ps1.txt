@@ -1,0 +1,62 @@
+# Scratch driver (git-ignored), v0.32: 10's acceptance AC1-AC9 (§9.22) against 02's real code (HEAD >= 52f9fa3).
+# No code patch: builds differ only in data/** bytes. Real boots via isolated_godot.ps1 (private APPDATA).
+# Run ONLY inside coordination/heavy_run.ps1. All variables prefixed p10.
+$ErrorActionPreference = 'Continue'
+$p10Root = (Resolve-Path "$PSScriptRoot\..\..\..\..").Path
+$p10Li = $PSScriptRoot
+$p10Wrap = Join-Path $p10Root 'docs\research\systems\probes\isolated_godot.ps1'
+$p10Cv = Join-Path $p10Root 'docs\research\systems\probes\content_version.py'
+$p10Iso = Join-Path $p10Li 'ac_iso'
+$p10U8 = New-Object Text.UTF8Encoding($false)
+$p10Real = Join-Path $env:APPDATA 'Godot\app_userdata\Lane Defence\save.json'
+$p10H0 = (Get-FileHash $p10Real).Hash.Substring(0, 16)
+Get-ChildItem $p10Li -Directory -Filter 'ac_*' | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+$p10A = Join-Path $p10Li 'ac_A_crlf'
+Push-Location $p10Root; $p10Sha = (git rev-parse HEAD).Trim(); New-Item -ItemType Directory $p10A | Out-Null
+git -c core.autocrlf=true archive --format=zip -o "$p10A.zip" HEAD; Pop-Location
+Expand-Archive "$p10A.zip" -DestinationPath $p10A; Remove-Item "$p10A.zip"
+Copy-Item (Join-Path $p10Root 'docs\research\systems\probes\probe_update_scenario.gd') "$p10A\docs\research\systems\probes\" -Force
+Push-Location $p10Root; $p10SaveSha = (git log -1 --format=%h HEAD -- src/core/save.gd); Pop-Location
+"snapshot $p10Sha save.gd=$p10SaveSha"
+$r = & $p10Wrap -GodotArgs @('--headless', '--path', $p10A, '--import', '--quit-after', '300') -WorkDir $p10Iso -Keep -TimeoutSec 300
+$r | Where-Object { $_ -like 'ISOLATED_GODOT*' }
+function P10Lf($dir) {
+  Remove-Item -Recurse -Force (Join-Path $dir 'data')
+  Push-Location $p10Root; git -c core.autocrlf=false archive --format=zip -o "$dir-d.zip" HEAD data; Pop-Location
+  Expand-Archive "$dir-d.zip" -DestinationPath $dir; Remove-Item "$dir-d.zip"
+}
+function P10Edit($dir, $rel, $old, $new) {
+  $p10f = Join-Path $dir $rel; $p10t = [IO.File]::ReadAllText($p10f)
+  if (-not $p10t.Contains($old)) { throw "edit target not found in $rel" }
+  [IO.File]::WriteAllText($p10f, $p10t.Replace($old, $new), $p10U8)
+}
+$p10C = Join-Path $p10Li 'ac_C_lf'; Copy-Item -Recurse $p10A $p10C; P10Lf $p10C
+$p10D = Join-Path $p10Li 'ac_D_lf_value'; Copy-Item -Recurse $p10C $p10D
+P10Edit $p10D 'data\rounds\r05.json' "`"hp`": 1.25,`n    `"atk`": 1.25" "`"hp`": 1.3,`n    `"atk`": 1.25"
+$p10E = Join-Path $p10Li 'ac_E_lf_cap'; Copy-Item -Recurse $p10D $p10E
+P10Edit $p10E 'data\meta.json' "`"id`": `"up_melee_basic`",`n      `"target`": `"unit:melee_basic`",`n      `"name_key`": `"upgrade.unit`",`n      `"max_level`": 5,`n      `"costs`": [`n        60,`n        100,`n        160,`n        190`n      ]" "`"id`": `"up_melee_basic`",`n      `"target`": `"unit:melee_basic`",`n      `"name_key`": `"upgrade.unit`",`n      `"max_level`": 3,`n      `"costs`": [`n        60,`n        100`n      ]"
+$p10F = Join-Path $p10Li 'ac_F_lf_reformat'; Copy-Item -Recurse $p10E $p10F
+python -c "import json,sys; p=sys.argv[1]; d=json.load(open(p,encoding='utf-8')); open(p,'w',encoding='utf-8',newline='\n').write(json.dumps(d,ensure_ascii=False,indent=1)+'\n')" (Join-Path $p10F 'data\meta.json')
+foreach ($p10x in $p10A, $p10C, $p10D, $p10E, $p10F) { "BYTES $(Split-Path $p10x -Leaf) " + (python $p10Cv --dir $p10x) }
+function P10Step($label, $proj, $mode) {
+  $r = & $p10Wrap -GodotArgs @('--headless', '--path', $proj, '-s', 'res://docs/research/systems/probes/probe_update_scenario.gd', '--quit-after', '600', '--', "--mode=$mode") -WorkDir $p10Iso -Keep -TimeoutSec 120
+  "STEP $label " + (($r | Where-Object { $_ -like 'PROBE10_UPDATE *' }) -replace '^PROBE10_UPDATE ', '')
+  ($r | Where-Object { $_ -like 'ISOLATED_GODOT*' })
+  $r | Where-Object { $_ -match 'SCRIPT ERROR|Parse Error|refund_unknown' }
+}
+P10Step 'S01_A_make' $p10A 'make'
+P10Step 'S02_C_lf_first_boot' $p10C 'inspect'
+P10Step 'S03_C_lf_next_boot' $p10C 'inspect'
+P10Step 'S04_A_crlf_again' $p10A 'inspect'
+P10Step 'S05_D_value_change' $p10D 'inspect'
+P10Step 'S06_E_cap_lowered' $p10E 'inspect'
+P10Step 'S07_E_next_boot' $p10E 'inspect'
+P10Step 'S08_E_ack_notice' $p10E 'ack'
+P10Step 'S09_F_reformat_only' $p10F 'inspect'
+P10Step 'S10_F_ordinary_save_1' $p10F 'touch'
+P10Step 'S11_F_ordinary_save_2' $p10F 'touch'
+P10Step 'S12_A_rollback' $p10A 'inspect'
+$p10H1 = (Get-FileHash $p10Real).Hash.Substring(0, 16)
+"REAL_SAVE before=$p10H0 after=$p10H1 unchanged=$($p10H0 -eq $p10H1)"
+Get-ChildItem $p10Li -Directory -Filter 'ac_*' | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+$global:LASTEXITCODE = 0

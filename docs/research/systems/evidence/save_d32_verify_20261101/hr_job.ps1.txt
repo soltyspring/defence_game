@@ -1,0 +1,20 @@
+# Scratch (git-ignored): run ONE heavy job of 10 inside coordination/heavy_run.ps1 as a DETACHED process, so the agent
+# tool's 30-minute call limit can never kill the lock wrapper while its Godot children keep running (01:47 incident).
+# Start with:  Start-Process pwsh -ArgumentList '-NoProfile','-File',<this>,'-Job','c'|'d','-Out',<file> -WindowStyle Hidden
+param([Parameter(Mandatory)][string]$Job, [Parameter(Mandatory)][string]$Out)
+$p10Root = (Resolve-Path "$PSScriptRoot\..\..\..\..").Path
+Set-Location $p10Root
+$p10Out = $Out
+$p10Status = "$Out.status"
+Set-Content -LiteralPath $p10Status -Value "waiting $(Get-Date -Format s)" -Encoding UTF8
+if ($Job -eq 'c') {
+  $p10Label = '10-v032-c-content-migration-retry'
+  $p10Drv = Join-Path $p10Root 'docs\research\systems\probes\run_content_migration.ps1'
+  $p10Block = { Set-Content -LiteralPath $p10Status -Value "running $(Get-Date -Format s)" -Encoding UTF8; & powershell -NoProfile -File $p10Drv *>&1 | ForEach-Object { "$_" } | Set-Content -LiteralPath $p10Out -Encoding UTF8; $global:LASTEXITCODE = 0 }.GetNewClosure()
+} elseif ($Job -eq 'd') {
+  $p10Label = '10-v032-d-ac1-ac9'
+  $p10Drv = Join-Path $p10Root 'docs\research\systems\.local_inspect\run_ac_scenario.ps1'
+  $p10Block = { Set-Content -LiteralPath $p10Status -Value "running $(Get-Date -Format s)" -Encoding UTF8; & $p10Drv *>&1 | ForEach-Object { "$_" } | Set-Content -LiteralPath $p10Out -Encoding UTF8; $global:LASTEXITCODE = 0 }.GetNewClosure()
+} else { Set-Content -LiteralPath $p10Status -Value "unknown job $Job" -Encoding UTF8; exit 2 }
+& (Join-Path $p10Root 'coordination\heavy_run.ps1') -Label $p10Label -Script $p10Block -WaitMinutes 120
+Set-Content -LiteralPath $p10Status -Value "done exit=$LASTEXITCODE $(Get-Date -Format s)" -Encoding UTF8

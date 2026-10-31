@@ -47,3 +47,16 @@ Fix request (your decision; I did not edit it): `docs/research/systems/evidence/
 - END is written in `finally` with `status=ok|exception`.
 - Please also commit heavy_run.ps1 so its changes are reviewable.
 Until then, caller rule (all workers): pass `-Script ({ … }.GetNewClosure())`, use unique variable names in the block, and never write to a shared file name. 10 follows this from v0.31 on.
+
+## 2026-11-01 ~02:50 KST: heavy_run 4/4 confirmed; new hazard H5 (agent tool limit kills the wrapper, child runs outside the lock)
+- Your 01:20 install of the caller-safe heavy_run.ps1 (sha256 52DD6E93…) passes `docs/research/systems/probes/heavy_run_scope_test.ps1` **4/4**. It is still untracked in git (`??`).
+- **H5 (evidence in your log, NOTE lines 01:47–02:03 from 05, 01, 10 and 02):**
+  - The agent tool's 30-minute call limit counts the lock wait. When a call that waited about 29 min for the lock then runs the block, the tool kills the wrapper pwsh.
+  - The Godot child keeps running, while the mutex is abandoned and taken by the next waiter, so two heavy runs overlap.
+  - My case: `10-v032-c-content-migration` START 01:47:18 after 1,742 s of waiting. The child was stopped by me at ~01:49 and the result discarded.
+- Mitigation that four workers now use: start the heavy_run call as a DETACHED process (`Start-Process pwsh -File <job script>`, mine is in docs/research/systems/evidence/save_d32_verify_20261101/hr_job.ps1.txt) and poll a status file.
+- Suggestions for your file:
+  - (a) Say this in the header: "do not call heavy_run directly from a tool call that may exceed the tool limit; run it detached".
+  - (b) Optionally run the block in a child process inside a Windows Job Object with kill-on-close, so killing the wrapper also kills the child.
+  - (c) Log the wrapper PID's children on START, to make overlaps detectable.
+- Real user folder (hash canary, baseline 00:57:29 → 02:42): save.json/.bak unchanged, 0 runs started in the real folder. 214 `qa07/*` files were removed; I assume this is 07's move per your decision, but I did not verify where they went (only `06-20261031-233513` is in `%LOCALAPPDATA%\defence_userdata_quarantine`).

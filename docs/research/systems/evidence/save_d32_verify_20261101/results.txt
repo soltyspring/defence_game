@@ -1,0 +1,63 @@
+# 10-research-systems v0.32: re-verification of 02 52f9fa3 (D32, F2, X1, pre-migration backup). Summaries only, no save contents. All runs: coordination/heavy_run.ps1 + isolated_godot.ps1 (private APPDATA); real save unchanged in every run.
+## (a) heavy_run 10-v032-a-r5-cases-transaction, snapshot 67fd962 (save.gd 52f9fa3)
+probe_r5_cases summary {"checked":9,"pass":9}
+  DL_legacy_above_max pass=True matches_D26=
+  DS_same_version_above_max pass= matches_D26=
+  E1_stamp_on_buy pass=True matches_D26=
+  E4j_junk_snapshot pass=True matches_D26=
+  E5_cap_refund_once pass=True matches_D26=
+  E6_fail_then_retry pass=True matches_D26=
+  E7_unknown_then_adopt pass=True matches_D26=
+  E8_read_only pass=True matches_D26=
+  F2a_ordinary_save_after_failed_migration pass=True matches_D26=
+  F2b_ordinary_save_after_unknown_migration pass=True matches_D26=
+  R2m_price_change_then_cap pass= matches_D26=True
+  R6r_retired_upgrade pass= matches_D26=True
+probe_upgrade_transaction C: C1_duplicate=True C2_write_failure=True C3_kill_before_final_rename=True C4_boundary=True C5_max_level=True
+probe_upgrade_transaction E: C10_ui_signal=True C11_double_tap=True C12_cross_rollback=True C13_pause_after_purchase=True C5b_locked=True C6_fault_points=True C7_read_only=True C8_after_recovery=True C9_never_negative=True
+part D (same content_version, hand-edited L9): {"expected_hp_mult_at_max":1.6,"level_after_load":9,"max_level":5,"save_has_content_version":true,"saved_level":9,"sim_hp_mult":2.2,"unknown_round_star_kept":true,"unknown_upgrade_kept":true}
+## (b) heavy_run 10-v032-b-update-scenario (v1 = HEAD 676b105, v2 = melee/ranged cap 3 + up_worker removed)
+  1_v1_make log=[] main_coins=750 ups={"up_melee_basic":5.0,"up_ranged_basic":4.0,"up_worker":4.0} notice=null files: save.json[0efc5b6cdb6f r11 m5 c750]
+  2_v2_first_boot log=[retire up_worker L4 +420;refund up_melee_basic L5->L3 +350;refund up_ranged_basic L4->L3 +160;backup save.pre-c1-40bde75d24c2.json] main_coins=1680 ups={"up_melee_basic":3.0,"up_ranged_basic":3.0} notice={"coins":930.0,"from":"c1-40bde75d24c2","levels":6.0,"to":"c1-18d35f919a60"} files: save.json[865d582f9751 r12 m3 c1680] save.pre-c1-40bde75d24c2.json[0efc5b6cdb6f r11 m5 c750]
+  3_v2_ordinary_save log=[] main_coins=1680 ups={"up_melee_basic":3.0,"up_ranged_basic":3.0} notice={"coins":930.0,"from":"c1-40bde75d24c2","levels":6.0,"to":"c1-18d35f919a60"} files: save.json[ae0ade24f778 r13 m3 c1680] save.pre-c1-40bde75d24c2.json[0efc5b6cdb6f r11 m5 c750]
+  4_v1_downgrade_after_save log=[] main_coins=1680 ups={"up_melee_basic":3.0,"up_ranged_basic":3.0} notice={"coins":930.0,"from":"c1-40bde75d24c2","levels":6.0,"to":"c1-18d35f919a60"} files: save.json[ae0ade24f778 r13 m3 c1680] save.pre-c1-40bde75d24c2.json[0efc5b6cdb6f r11 m5 c750]
+  5_v1_rebuy log=[] main_coins=1170 ups={"up_melee_basic":5.0,"up_ranged_basic":4.0} notice={"coins":930.0,"from":"c1-40bde75d24c2","levels":6.0,"to":"c1-18d35f919a60"} files: save.json[1b247d97cc48 r16 m5 c1170] save.pre-c1-40bde75d24c2.json[0efc5b6cdb6f r11 m5 c750]
+  4b_v1_downgrade_right_after_update log=[] main_coins=1680 ups={"up_melee_basic":3.0,"up_ranged_basic":3.0} notice={"coins":930.0,"from":"c1-40bde75d24c2","levels":6.0,"to":"c1-18d35f919a60"} files: save.json[865d582f9751 r12 m3 c1680] save.pre-c1-40bde75d24c2.json[0efc5b6cdb6f r11 m5 c750]
+## (c) heavy_run 10-v032-c-content-migration-retry (HEAD 1d359bc)
+  M0_make coins=1234 open=[r01,r02,r03,r04,r05,r06,r07] ups={"up_melee_basic":5,"up_ranged_basic":3,"up_tank":2} hp={"up_melee_basic":1.6,"up_ranged_basic":1.36,"up_tank":1.15} cv_in_save=True
+  M0_baseline coins=1234 open=[r01,r02,r03,r04,r05,r06,r07] ups={"up_melee_basic":5,"up_ranged_basic":3,"up_tank":2} hp={"up_melee_basic":1.6,"up_ranged_basic":1.36,"up_tank":1.15} cv_in_save=True
+  M1_remove_r03 coins=1234 open=[r01,r02,r04,r05,r06,r07] ups={"up_melee_basic":5,"up_ranged_basic":3,"up_tank":2} hp={"up_melee_basic":1.6,"up_ranged_basic":1.36,"up_tank":1.15} cv_in_save=True
+  M2_insert_r02b coins=1234 open=[r01,r02,r02b,r03,r04,r05,r06,r07] ups={"up_melee_basic":5,"up_ranged_basic":3,"up_tank":2} hp={"up_melee_basic":1.6,"up_ranged_basic":1.36,"up_tank":1.15} cv_in_save=True
+  M3_swap_r04_r05 coins=1234 open=[r01,r02,r03,r05,r04,r06,r07] ups={"up_melee_basic":5,"up_ranged_basic":3,"up_tank":2} hp={"up_melee_basic":1.6,"up_ranged_basic":1.36,"up_tank":1.15} cv_in_save=True
+  M4_melee_max_level_3 coins=1584 open=[r01,r02,r03,r04,r05,r06,r07] ups={"up_melee_basic":3,"up_ranged_basic":3,"up_tank":2} hp={"up_melee_basic":1.3,"up_ranged_basic":1.36,"up_tank":1.15} cv_in_save=True
+  M5a_unit_id_rename coins=1234 open=[r01,r02,r03,r04,r05,r06,r07] ups={"up_melee_basic":5,"up_ranged_basic":3,"up_tank":2} hp={"up_melee_basic":1.6,"up_ranged_basic":1.36,"up_tank":1.15} cv_in_save=True
+  M5b_upgrade_id_rename coins=1234 open=[r01,r02,r03,r04,r05,r06,r07] ups={"up_ranged_basic":3,"up_tank":2,"up_toast_knight":5} hp={"up_ranged_basic":1.36,"up_tank":1.15,"up_toast_knight":1.6} cv_in_save=True
+## (d) heavy_run 10-v032-d-ac1-ac9 (snapshot 5a46675, save.gd 52f9fa3)
+  ac_A_crlf cr=2758 lf=2758 raw=c1-40bde75d24c2 norm=c1-989c3422c910
+  ac_C_lf cr=0 lf=2758 raw=c1-989c3422c910 norm=c1-989c3422c910
+  ac_D_lf_value cr=0 lf=2758 raw=c1-dc5be06f314d norm=c1-dc5be06f314d
+  ac_E_lf_cap cr=0 lf=2756 raw=c1-754e6a16b123 norm=c1-754e6a16b123
+  ac_F_lf_reformat cr=0 lf=2756 raw=c1-26f19e8f9efd norm=c1-26f19e8f9efd
+  S01_A_make engine_cv=c1-40bde75d24c2 log=[] notice=null files: save.json[0efc5b6cdb6f r11 m5 c750]
+  S02_C_lf_first_boot engine_cv=c1-989c3422c910 log=[] notice=null files: save.json[0efc5b6cdb6f r11 m5 c750]
+  S03_C_lf_next_boot engine_cv=c1-989c3422c910 log=[] notice=null files: save.json[0efc5b6cdb6f r11 m5 c750]
+  S04_A_crlf_again engine_cv=c1-40bde75d24c2 log=[] notice=null files: save.json[0efc5b6cdb6f r11 m5 c750]
+  S05_D_value_change engine_cv=c1-dc5be06f314d log=[] notice=null files: save.json[0efc5b6cdb6f r11 m5 c750]
+  S06_E_cap_lowered engine_cv=c1-754e6a16b123 log=[refund up_melee_basic L5->L3 +350;backup save.pre-c1-40bde75d24c2.json] notice={"coins":350.0,"from":"c1-40bde75d24c2","levels":2.0,"to":"c1-754e6a16b123"} files: save.json[bf8a725a2040 r12 m3 c1100] save.pre-c1-40bde75d24c2.json[0efc5b6cdb6f r11 m5 c750]
+  S07_E_next_boot engine_cv=c1-754e6a16b123 log=[] notice={"coins":350.0,"from":"c1-40bde75d24c2","levels":2.0,"to":"c1-754e6a16b123"} files: save.json[bf8a725a2040 r12 m3 c1100] save.pre-c1-40bde75d24c2.json[0efc5b6cdb6f r11 m5 c750]
+  S08_E_ack_notice engine_cv=c1-754e6a16b123 log=[] notice=null files: save.json[5b3a5fb14a4c r13 m3 c1100] save.pre-c1-40bde75d24c2.json[0efc5b6cdb6f r11 m5 c750]
+  S09_F_reformat_only engine_cv=c1-26f19e8f9efd log=[] notice=null files: save.json[5b3a5fb14a4c r13 m3 c1100] save.pre-c1-40bde75d24c2.json[0efc5b6cdb6f r11 m5 c750]
+  S10_F_ordinary_save_1 engine_cv=c1-26f19e8f9efd log=[] notice=null files: save.json[ef9c0356718e r14 m3 c1100] save.pre-c1-40bde75d24c2.json[0efc5b6cdb6f r11 m5 c750]
+  S11_F_ordinary_save_2 engine_cv=c1-26f19e8f9efd log=[] notice=null files: save.json[38f765e67378 r15 m3 c1100] save.pre-c1-40bde75d24c2.json[0efc5b6cdb6f r11 m5 c750]
+  S12_A_rollback engine_cv=c1-40bde75d24c2 log=[] notice=null files: save.json[38f765e67378 r15 m3 c1100] save.pre-c1-40bde75d24c2.json[0efc5b6cdb6f r11 m5 c750]
+AC AC1 FAIL engine CRLF c1-40bde75d24c2 vs LF c1-989c3422c910 (normalisation needed for equality)
+AC AC2 PASS first boot of a build whose content_version differs only by line endings (no normalised build exists): main 0efc5b6cdb6f->0efc5b6cdb6f, log [], notice None
+AC AC3 PASS next boot main 0efc5b6cdb6f->0efc5b6cdb6f
+AC AC4 PASS CRLF->LF->CRLF builds: main 0efc5b6cdb6f/0efc5b6cdb6f/0efc5b6cdb6f rev 11/11
+AC AC5 PASS non-cap value change: main 0efc5b6cdb6f->0efc5b6cdb6f, log []
+AC AC6 PASS refund 350 (paid 350), next boot coins 1100, pre ['save.pre-c1-40bde75d24c2.json:0efc5b6cdb6f'] == S05 main 0efc5b6cdb6f, notice {'coins': 350.0, 'from': 'c1-40bde75d24c2', 'levels': 2.0, 'to': 'c1-754e6a16b123'}, after ack None
+AC AC7 PASS pre-backup across S06..S12 unchanged; reformat-only boot main 5b3a5fb14a4c->5b3a5fb14a4c log []
+AC AC8 PASS rollback build: main 38f765e67378->38f765e67378, melee L3.0 (no restore by design)
+AC AC9 UNVERIFIED APK/AAB with the engine change not built or installed by 10; device boot not run
+AC_INFO content_migrated signals per step [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] (headless -s runs mount no menu)
+AC_EVALUATE {"AC1": "FAIL", "AC2": "PASS", "AC3": "PASS", "AC4": "PASS", "AC5": "PASS", "AC6": "PASS", "AC7": "PASS", "AC8": "PASS", "AC9": "UNVERIFIED"}
