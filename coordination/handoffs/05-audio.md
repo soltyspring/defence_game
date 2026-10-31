@@ -1,6 +1,26 @@
 # 05-audio handoff
-Updated: 2026-10-31 ~17:5x (v3.1: wave_cleared, upgrade result cues, boss-round engine recordings, off-screen −5 dB)
+Updated: 2026-10-31 ~19:xx (v3.2: upgrade sounds from engine reply, earned r05 recordings, listening checklist)
 Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all.
+## v3.2 (Codex review of cc5dbb8/a4058f3/cb2470a/ee30b9d)
+Read: 04 97c8b9c (upgrade buttons live; the engine signals `cmd_buy_upgrade`/`upgrade_result`, codes include save_uncertain). Q2 still on hold: no purchase or ad sounds. 02 A9 `target_side`: still not in HEAD (waiting).
+1. **Upgrade sounds**: the bridge plays from the engine reply `Events.upgrade_result` (category `upgrade`). ok → ok cue; already_applied SILENT (double tap → one sound); not_enough_coins → no_coins; save_failed/save_uncertain/read_only → save_failed; locked/unknown/invalid/no_reply → ui_error. A direct `Events.sfx(&"upgrade_result")` from 04 switches the derived path off.
+   - Sandbox, real engine path: replies [ok, already_applied, not_enough_coins] → 2 cues, 0 duplicates.
+   - Selftest: double tap → 1 cue; direct + engine reply in the same frame → 1 cue.
+   - Request to 04 (C5 update): `max_level`/`unavailable` are set UI-locally and are silent until 04 emits the agreed key.
+2. **Earned r05 recordings** (02 competent bot via `--autoplay`, no upgrades, no injection):
+   - WIN at 396.5 s (`r05_bot`): boss cue 94.77 s, duck −8.0, stinger +1.7 dB over the battle, 0 clipped, whole-run buried 7.5 %, peak voices 6, 3 hero deaths.
+   - LOSS at 289.6 s (`r05_bot_v32`): stinger +4.6 dB, buried 7.8 %.
+   - The bot outcome is not deterministic between runs.
+   - Comparison with the injected endings is in BOSS_ROUND_REPORT.md. Stem decomposition: SFX are already silent during every stinger. The small contrast in the earned win comes from a louder final fight, not from masking.
+   - A battle-end SFX hush was implemented, measured as having no effect, and REMOVED. The loss run was recorded with that build, which does not matter because no SFX play in its stinger window.
+   - New previews: `earned_victory_ending_v31_30s.mp3`, `earned_defeat_ending_30s.mp3`.
+3. **docs/audio/LISTENING_CHECKLIST.md** (Korean): 3 previews × 5 yes/no questions, phone speaker + earphones, timestamps. Status: NOT DONE (nobody has listened).
+Harness: `--probe-passive` (record-only; the App autoplay bot plays); upgrade engine-path gate.
+Validation (final code): `validate.py --determinism` PASS. `run_godot_checks.ps1 -Integration -BattleSeconds 80` PASS:
+- selftest PASS with 0 leaks
+- deploy 14 = 14, skill 7 = 7, wave_cleared 1 = 1, upgrade 2 = 2, hero 1 = 1/1
+- 0 duplicates, audio-class exit leaks 0
+Not verified: human listening, Android device, screen capture (not needed; none taken).
 ## v3.1 (Codex review of f0646dd/e551fa9, tasks 1–4)
 Decisions read: Q3 working title "빵집 기사단: 곰팡이 디펜스" (user, 16:19; the final store name waits for a KIPRIS check). Q2 monetization ON HOLD: no purchase or ad-reward sounds were made.
 1. **wave_cleared**: new cue `wave_cleared` (two quick bells up a fifth + crust cheer, 0.7 s, prio 8, gap 1.0, duck −3). The bridge connects to `Events.wave_cleared` (02 22d99ea), category `milestone`.

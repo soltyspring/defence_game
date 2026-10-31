@@ -23,7 +23,11 @@ from mix_report import integrated_lufs, lufs_series, read, db  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 LISTEN = ROOT / "docs/audio/previews/listen"
-RUNS = [("r05_win_s7_a5", "boss_to_victory_30s.mp3"), ("r05_loss_s7", "boss_to_defeat_30s.mp3")]
+RUNS = [("r05_win_s7_a5", "boss_to_victory_30s.mp3"), ("r05_loss_s7", "boss_to_defeat_30s.mp3"),
+        ("r05_bot", "earned_victory_ending_v31_30s.mp3"), ("r05_bot_v32", "earned_defeat_ending_30s.mp3")]
+INJECTED = {"r05_win_s7_a5": True, "r05_loss_s7": True, "r05_bot": False, "r05_bot_v32": False}
+NOTE = {"r05_bot": "earned win", "r05_bot_v32": "earned loss"}
+
 # A/B for the off-screen attenuation decision (same probe seed 7, win injected at 115 s)
 AB = [("r05_win_s7_a9", 9.0), ("r05_win_s7_a5", 5.0)]
 
@@ -35,6 +39,7 @@ def main() -> int:
          "test injection at battle t = 115 s (`BattleSim._damage_base(...)` → real `_end` → App result → "
          "`Events.battle_ended` → bridge stinger), so the ending is engine-path but not earned by play. The boss warning "
          "and wave_cleared events were NOT injected.", ""]
+    COMP = []
     for tag, mp3 in RUNS:
         d = ROOT / f"tools/audio/_render/recording_{tag}"
         meta = json.loads((d / "rec_meta.json").read_text(encoding="utf-8"))
@@ -74,11 +79,19 @@ def main() -> int:
             c, e = int((t - 6.0) * sr), int((t - 1.0) * sr)
             st_db = round(db(float(np.sqrt(np.mean(master[a:b] ** 2)))) - db(float(np.sqrt(np.mean(master[c:e] ** 2)))), 1)
         LISTEN.mkdir(parents=True, exist_ok=True)
-        subprocess.run([shutil.which("ffmpeg"), "-hide_banner", "-loglevel", "error", "-y", "-ss", f"{a0:.3f}", "-t", f"{end_a - a0:.3f}",
+        if mp3: subprocess.run([shutil.which("ffmpeg"), "-hide_banner", "-loglevel", "error", "-y", "-ss", f"{a0:.3f}", "-t", f"{end_a - a0:.3f}",
                         "-i", str(d / "rec_master.wav"), "-af", f"afade=t=in:d=0.3,afade=t=out:st={end_a - a0 - 0.3:.3f}:d=0.3",
                         "-map_metadata", "-1", "-c:a", "libmp3lame", "-b:a", "192k", str(LISTEN / mp3)], check=True)
-        L += [f"## {tag} → `previews/listen/{mp3}` ({a0:.1f}–{end_a:.1f} s of the recording)",
-              f"- Result: {'win' if meta['results'] and meta['results'][0]['won'] else 'loss'} (injected at battle t {meta['end_injected'].get('at_battle_t')} s); "
+        how = (f"injected at battle t {meta['end_injected'].get('at_battle_t')} s" if INJECTED[tag]
+               else f"EARNED by 02's competent bot (App --autoplay, no upgrades), battle time {meta['results'][0]['time']:.1f} s")
+        _, fw = lufs_series(fx, sr, 0.4, 0.1); _, mw = lufs_series(music * (10 ** (gain_db / 20))[:, None], sr, 0.4, 0.1)
+        aw = fw > -45
+        won = bool(meta["results"] and meta["results"][0]["won"])
+        COMP.append((tag + (f" ({NOTE[tag]})" if tag in NOTE else ""), ("WIN, " if won else "LOSS, ") + how, boss[0] if boss else None, duck, sting, st_db, round(il, 1), round(db(pk), 2), clipped,
+                     f"{buried}/{int(act.sum())}", f"{np.sum(aw & (fw - mw <= 0)) / max(aw.sum(), 1):.1%}", rep["max_active_sfx"],
+                     rep["engine_truth"]["hero_deaths"], len(rep["same_frame_duplicates"]), round(n / sr, 1)))
+        L += [f"## {tag} → " + (f"`previews/listen/{mp3}`" if mp3 else "(no preview file)") + f" ({a0:.1f}–{end_a:.1f} s of the recording)",
+              f"- Result: {'win' if meta['results'] and meta['results'][0]['won'] else 'loss'} ({how}); "
               f"battle_ended at recording t {meta['battle_ended_at']:.2f} s.",
               f"- Engine-path cue log: boss_incoming at {boss} s, wave_cleared at {wc} s, stinger_win {stw}, stinger_defeat {std}.",
               f"- Music duck during the boss warning: {duck} dB vs the battle level ({base_gain:.2f} dB bus gain); manifest asks −8 dB.",
@@ -87,6 +100,32 @@ def main() -> int:
               f"SFX buried under music in {buried}/{int(act.sum())} active 400 ms windows.",
               f"- Voices: peak SFX {rep['max_active_sfx']}/12; same-frame duplicate cues {len(rep['same_frame_duplicates'])}.", ""]
         print(tag, "boss", boss, "sting", sting, "duck", duck, "st_db", st_db, "il", round(il, 1), "pk", round(db(pk), 2), "clip", clipped, "buried", buried, int(act.sum()))
+    # stinger contrast decomposition per run: what is sounding just before and during the stinger
+    L += ["## Why the earned win's stinger is only +1.7 dB over the battle (stem decomposition)", "",
+          "| Run | Battle 6–1 s before end: Master / SFX / Music dB RMS | Stinger +0.3–2.3 s: Master / SFX / Music dB RMS |", "|---|---|---|"]
+    for tag, _mp3 in RUNS:
+        d = ROOT / f"tools/audio/_render/recording_{tag}"
+        meta = json.loads((d / "rec_meta.json").read_text(encoding="utf-8"))
+        sr, _m = read(d / "rec_master.wav"); _, s_ = read(d / "rec_sfx.wav"); _, mu_ = read(d / "rec_music.wav")
+        n = min(len(_m), len(s_), len(mu_)); sc = (n / sr) / float(meta["seconds"])
+        g = np.array([[x[0], x[1]] for x in meta["music_gain"]])
+        mus = mu_[:n] * (10 ** (np.interp(np.arange(n) / sr, g[:, 0] * sc, g[:, 1]) / 20))[:, None]
+        t = float(meta["battle_ended_at"]) * sc
+        rr = lambda x, a, b: max(-99.0, round(db(float(np.sqrt(np.mean(x[int(a * sr):int(b * sr)] ** 2)))), 1))
+        L.append(f"| {tag} | {rr(_m, t - 6, t - 1)} / {rr(s_, t - 6, t - 1)} / {rr(mus, t - 6, t - 1)} | "
+                 f"{rr(_m, t + .3, t + 2.3)} / {rr(s_, t + .3, t + 2.3)} / {rr(mus, t + .3, t + 2.3)} |")
+    L += ["", "Finding: combat SFX are already SILENT while the stinger plays in every run (the sim stops at the result and "
+          "App waits 1.2 s before battle_ended, so combat tails finish). The stinger itself is about the same level in all "
+          "runs (≈ −20 to −21 dB RMS). The smaller contrast in the earned win comes from a louder, busier final fight "
+          "(SFX ≈ −23 dB vs −30 dB in the injected runs), not from masking. A battle-end SFX hush was tried and removed "
+          "because it changed nothing measurable (the r05_bot_v32 build still had it; its stinger window has no SFX either).", ""]
+    L += ["## Forced vs earned ending (same round r05)", "",
+          "| Run | Ending | Boss cue s | Duck dB | Stinger s | Stinger vs battle dB | 30 s LUFS | 30 s peak dBFS | Clipped | 30 s buried | Whole-run buried | Peak SFX voices | Hero deaths | Dups | Length s |",
+          "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+    for c in COMP:
+        L.append("| " + " | ".join(str(v) for v in c) + " |")
+    L += ["", "Reading: the earned runs are 2.5–3.4× longer and busier (more voices, hero deaths), so the whole-run buried share is the "
+          "fairer comparison; the 30 s window is the ending only.", ""]
     L += ["## Off-screen attenuation A/B (decision for v3.1)", "",
           "Same round, probe seed 7 (fixes App\u2019s randi() battle seed), same injected ending; only the maximum off-screen attenuation differs. "
           "The camera follows the hero, so the frontline is often off-screen; at −9 dB those fights sank under the music.", "",
@@ -105,7 +144,7 @@ def main() -> int:
                  f"{int(np.sum(pre & (f - mm <= 0)))}/{int(pre.sum())} | {rep['audio_snapshot']['attenuated_offscreen']} | {rep['engine_truth']['kills']} |")
     L += ["", "Decision: default `OFFSCREEN_MAX_ATTEN_DB` 9 → 5 dB (src/audio/audio_manager.gd). Off-screen fights stay a little quieter "
           "than on-screen ones but remain audible. Not judged by a listener.", ""]
-    L += ["## Limits", "- The ending was injected (see above). Earned wins/losses in r05 take longer than the bounded run.",
+    L += ["## Limits", "- Two endings were injected; r05_bot is an earned WIN (v3.1) and r05_bot_v32 an earned LOSS (v3.2). The bot outcome is not deterministic between runs (real-time frame timing).",
           "- Headless Dummy driver: no device output stage, speaker or OS mixer. Nobody has listened yet."]
     (ROOT / "docs/audio/BOSS_ROUND_REPORT.md").write_text("\n".join(L) + "\n", encoding="utf-8")
     return 0

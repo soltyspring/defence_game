@@ -18,6 +18,44 @@ Round r05 (scripted boss wave at t = 95 s), project Audio autoload + 02 `Events.
 - 30 s window: integrated -21.6 LUFS, sample peak -2.38 dBFS, full-scale samples 0; SFX buried under music in 44/215 active 400 ms windows.
 - Voices: peak SFX 5/12; same-frame duplicate cues 0.
 
+## r05_bot → `previews/listen/earned_victory_ending_v31_30s.mp3` (365.0–395.0 s of the recording)
+- Result: win (EARNED by 02's competent bot (App --autoplay, no upgrades), battle time 396.5 s); battle_ended at recording t 397.88 s.
+- Engine-path cue log: boss_incoming at [94.77] s, wave_cleared at [53.89, 79.28, 275.22, 312.08] s, stinger_win [397.88], stinger_defeat [].
+- Music duck during the boss warning: -8.0 dB vs the battle level (-3.88 dB bus gain); manifest asks −8 dB.
+- Stinger vs preceding battle mix (RMS, 2 s vs 5 s): +1.7 dB.
+- 30 s window: integrated -19.3 LUFS, sample peak -4.31 dBFS, full-scale samples 0; SFX buried under music in 2/247 active 400 ms windows.
+- Voices: peak SFX 6/12; same-frame duplicate cues 0.
+
+## r05_bot_v32 → `previews/listen/earned_defeat_ending_30s.mp3` (257.1–287.1 s of the recording)
+- Result: loss (EARNED by 02's competent bot (App --autoplay, no upgrades), battle time 289.6 s); battle_ended at recording t 290.82 s.
+- Engine-path cue log: boss_incoming at [94.68] s, wave_cleared at [53.95, 82.11, 281.1] s, stinger_win [], stinger_defeat [290.82].
+- Music duck during the boss warning: -8.0 dB vs the battle level (-3.88 dB bus gain); manifest asks −8 dB.
+- Stinger vs preceding battle mix (RMS, 2 s vs 5 s): +4.6 dB.
+- 30 s window: integrated -19.3 LUFS, sample peak -2.57 dBFS, full-scale samples 0; SFX buried under music in 16/228 active 400 ms windows.
+- Voices: peak SFX 6/12; same-frame duplicate cues 0.
+
+## Why the earned win's stinger is only +1.7 dB over the battle (stem decomposition)
+
+| Run | Battle 6–1 s before end: Master / SFX / Music dB RMS | Stinger +0.3–2.3 s: Master / SFX / Music dB RMS |
+|---|---|---|
+| r05_win_s7_a5 | -28.1 / -29.6 / -33.4 | -21.3 / -99.0 / -21.3 |
+| r05_loss_s7 | -28.7 / -30.5 / -33.4 | -20.0 / -99.0 / -20.0 |
+| r05_bot | -22.9 / -23.3 / -33.5 | -21.2 / -99.0 / -21.2 |
+| r05_bot_v32 | -24.7 / -25.2 / -33.7 | -20.2 / -99.0 / -20.2 |
+
+Finding: combat SFX are already SILENT while the stinger plays in every run (the sim stops at the result and App waits 1.2 s before battle_ended, so combat tails finish). The stinger itself is about the same level in all runs (≈ −20 to −21 dB RMS). The smaller contrast in the earned win comes from a louder, busier final fight (SFX ≈ −23 dB vs −30 dB in the injected runs), not from masking. A battle-end SFX hush was tried and removed because it changed nothing measurable (the r05_bot_v32 build still had it; its stinger window has no SFX either).
+
+## Forced vs earned ending (same round r05)
+
+| Run | Ending | Boss cue s | Duck dB | Stinger s | Stinger vs battle dB | 30 s LUFS | 30 s peak dBFS | Clipped | 30 s buried | Whole-run buried | Peak SFX voices | Hero deaths | Dups | Length s |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| r05_win_s7_a5 | WIN, injected at battle t 115.01 s | 95.31 | -8.0 | 115.85 | 6.8 | -21.4 | -4.5 | 0 | 39/214 | 7.4% | 4 | 0 | 0 | 116.5 |
+| r05_loss_s7 | LOSS, injected at battle t 115.01 s | 94.88 | -8.0 | 115.76 | 8.7 | -21.6 | -2.38 | 0 | 44/215 | 8.5% | 5 | 0 | 0 | 117.5 |
+| r05_bot (earned win) | WIN, EARNED by 02's competent bot (App --autoplay, no upgrades), battle time 396.5 s | 94.77 | -8.0 | 397.88 | 1.7 | -19.3 | -4.31 | 0 | 2/247 | 7.5% | 6 | 3 | 0 | 395.4 |
+| r05_bot_v32 (earned loss) | LOSS, EARNED by 02's competent bot (App --autoplay, no upgrades), battle time 289.6 s | 94.68 | -8.0 | 290.82 | 4.6 | -19.3 | -2.57 | 0 | 16/228 | 7.8% | 6 | 3 | 0 | 287.5 |
+
+Reading: the earned runs are 2.5–3.4× longer and busier (more voices, hero deaths), so the whole-run buried share is the fairer comparison; the 30 s window is the ending only.
+
 ## Off-screen attenuation A/B (decision for v3.1)
 
 Same round, probe seed 7 (fixes App’s randi() battle seed), same injected ending; only the maximum off-screen attenuation differs. The camera follows the hero, so the frontline is often off-screen; at −9 dB those fights sank under the music.
@@ -30,5 +68,5 @@ Same round, probe seed 7 (fixes App’s randi() battle seed), same injected endi
 Decision: default `OFFSCREEN_MAX_ATTEN_DB` 9 → 5 dB (src/audio/audio_manager.gd). Off-screen fights stay a little quieter than on-screen ones but remain audible. Not judged by a listener.
 
 ## Limits
-- The ending was injected (see above). Earned wins/losses in r05 take longer than the bounded run.
+- Two endings were injected; r05_bot is an earned WIN (v3.1) and r05_bot_v32 an earned LOSS (v3.2). The bot outcome is not deterministic between runs (real-time frame timing).
 - Headless Dummy driver: no device output stage, speaker or OS mixer. Nobody has listened yet.
