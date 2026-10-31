@@ -54,3 +54,33 @@ function Exit-SvcIsolation([switch]$Keep) {
   $script:SvcIso = $null
   return $proven
 }
+
+# Heavy-run rule (coordinator, after the 23:09 KST blue screen): Godot, Gradle/AAB/APK builds, emulator and
+# long measurements run one at a time PC-wide, only inside
+#   & .\coordination\heavy_run.ps1 -Label '06-<name>' -Script { pwsh -NoProfile -File tests/services/<runner>.ps1 }
+# Assert-SvcHeavyLock refuses to start unless the machine-wide lock is held by one of this process's
+# ancestors (the heavy_run.ps1 process that launched us). It never takes or releases the lock itself.
+function Assert-SvcHeavyLock {
+  $logPath = Join-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) 'coordination\.runtime\heavy_run.log'
+  $anc = @()
+  $cur = $PID
+  for ($i = 0; $i -lt 6 -and $cur; $i++) {
+    $p = Get-CimInstance Win32_Process -Filter "ProcessId=$cur" -ErrorAction SilentlyContinue
+    if (-not $p) { break }
+    $cur = [int]$p.ParentProcessId
+    $anc += $cur
+  }
+  $open = @{}
+  if (Test-Path $logPath) {
+    foreach ($line in Get-Content $logPath -Tail 400) {
+      if ($line -match ' START (\S+) pid=(\d+)') { $open[[int]$Matches[2]] = $Matches[1] }
+      elseif ($line -match ' END (\S+) pid=(\d+)') { $open.Remove([int]$Matches[2]) }
+    }
+  }
+  foreach ($a in $anc) {
+    if ($open.ContainsKey($a)) { Write-Host ("heavy_run lock held by ancestor pid {0} ({1})" -f $a, $open[$a]); return }
+  }
+  Write-Host 'REFUSED: run this only inside coordination\heavy_run.ps1 (one heavy run at a time PC-wide). Example:'
+  Write-Host "  & .\coordination\heavy_run.ps1 -Label '06-services-suites' -Script { pwsh -NoProfile -File tests/services/run_services_suites.ps1 }"
+  exit 4
+}

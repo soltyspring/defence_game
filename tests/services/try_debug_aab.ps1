@@ -10,6 +10,7 @@ $Root = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 Set-Location $Root
 $G = Join-Path $Root 'tools\engine\Godot_v4.7.2-stable_win64_console.exe'
 . (Join-Path $PSScriptRoot 'svc06_isolation.ps1')
+Assert-SvcHeavyLock
 Enter-SvcIsolation 'aab'   # private APPDATA for every Godot call (10 v0.26); Gradle/JDK do not use APPDATA
 $scriptStart = Get-Date
 $sha = (git rev-parse --short $Ref).Trim()

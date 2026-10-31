@@ -12,6 +12,7 @@ Set-Location $Root
 $G = Join-Path $Root 'tools\engine\Godot_v4.7.2-stable_win64_console.exe'
 if (-not (Test-Path $G)) { Write-Output "Godot console binary not found at $G"; exit 1 }
 . (Join-Path $PSScriptRoot 'svc06_isolation.ps1')
+Assert-SvcHeavyLock
 Enter-SvcIsolation 'head'   # private APPDATA for the import and every suite (10 v0.26); the snapshot keeps config/name
 $sha = (git rev-parse --short $Ref).Trim()
 $snap = Join-Path $env:TEMP "svc06_head_$sha"

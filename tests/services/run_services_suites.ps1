@@ -1,5 +1,7 @@
 # 06-services: run every service suite headless (for 02 / 07). Owner: 06-services.
-# Usage (workspace root):  pwsh -File tests/services/run_services_suites.ps1 [-SimulateIntegration]
+# Usage (workspace root), ONLY through the PC-wide heavy-run lock:
+#   & .\coordination\heavy_run.ps1 -Label '06-services-suites' -Script { pwsh -NoProfile -File tests/services/run_services_suites.ps1 }
+# Run directly, it refuses with exit 4 (Assert-SvcHeavyLock in svc06_isolation.ps1).
 # Exit: 0 = all pass and the game binding is integrated
 #       2 = all pass, integration BLOCKED (02 S1/S2 not done)  <- expected until 02 integrates
 #       1 = any failure
@@ -10,6 +12,7 @@ param([switch]$SimulateIntegration, [switch]$KeepIsolation)
 $ErrorActionPreference = 'Continue'   # Godot writes warnings to stderr; 'Stop' would abort the run
 Set-Location (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent)
 . (Join-Path $PSScriptRoot 'svc06_isolation.ps1')
+Assert-SvcHeavyLock
 $G = '.\tools\engine\Godot_v4.7.2-stable_win64_console.exe'
 if (-not (Test-Path $G)) { Write-Output "Godot console binary not found at $G"; exit 1 }
 $suites = @('test_services', 'test_services_m2', 'test_services_m3', 'test_services_listing', 'test_services_m8', 'test_services_m10', 'test_services_android', 'test_services_upgrade', 'test_services_integration')
