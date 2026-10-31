@@ -7,7 +7,7 @@
 #   pwsh tools/audio/run_godot_checks.ps1 -Integration  # + simulated 02 request A1 (Audio autoload, exact line),
 #                                                       #   02 global selftest, leak attribution, bounded real battle
 # Exit code 0 = all pass. Integration report: tools/audio/_render/integration/*.json (git-ignored via .gdignore dir)
-param([switch]$Integration, [int]$BattleSeconds = 95, [switch]$Record, [int]$RecordSeconds = 60, [switch]$EngineSelftest, [string]$RecordRound = 'r02', [switch]$RecordUntilEnd, [string]$InjectEnd = '', [int]$InjectAt = -1, [string]$RecordTag = '', [switch]$SkipIntegrationBattle, [string]$ProbeArgs = '')
+param([switch]$Integration, [int]$BattleSeconds = 95, [switch]$Record, [int]$RecordSeconds = 60, [switch]$EngineSelftest, [string]$RecordRound = 'r02', [switch]$RecordUntilEnd, [string]$InjectEnd = '', [int]$InjectAt = -1, [string]$RecordTag = '', [switch]$SkipIntegrationBattle, [string]$ProbeArgs = '', [switch]$Lifecycle)
 if ($Record) { $Integration = $true }
 $ErrorActionPreference = 'Continue'   # Godot writes diagnostics to stderr; judge by exit codes
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
@@ -52,7 +52,7 @@ if ($Integration) {
 }
 Set-Content (Join-Path $sb 'project.godot') $proj -NoNewline -Encoding utf8
 New-Item -ItemType Directory -Path (Join-Path $sb 'tools\audio') -Force | Out-Null
-foreach ($f in @('audio_selftest.gd', 'integration_probe.gd', 'leak_probe.gd')) { Copy-Item (Join-Path $root "tools\audio\$f") (Join-Path $sb 'tools\audio') }
+foreach ($f in @('audio_selftest.gd', 'integration_probe.gd', 'leak_probe.gd', 'lifecycle_probe.gd')) { Copy-Item (Join-Path $root "tools\audio\$f") (Join-Path $sb 'tools\audio') }
 Get-ChildItem $sb -Recurse -Filter '*.import' | Remove-Item -Force
 "sandbox=$sb userdir=$userDir integration=$Integration"
 "autoloads: " + ((Get-Content (Join-Path $sb 'project.godot') | Select-String '^\w+="\*res://') -join ' | ')
@@ -81,7 +81,7 @@ function Run([string]$label, [string[]]$a, [int]$timeoutSec = 180) {
 }
 $r = Run 'import' @('--headless', '--path', $sb, '--import') 300
 "import exit=$($r.code)"
-foreach ($s in @('res://src/audio/audio_manager.gd', 'res://src/audio/audio_event_bridge.gd', 'res://tools/audio/audio_selftest.gd', 'res://tools/audio/integration_probe.gd', 'res://tools/audio/leak_probe.gd')) {
+foreach ($s in @('res://src/audio/audio_manager.gd', 'res://src/audio/audio_event_bridge.gd', 'res://tools/audio/audio_selftest.gd', 'res://tools/audio/integration_probe.gd', 'res://tools/audio/leak_probe.gd', 'res://tools/audio/lifecycle_probe.gd')) {
   $r = Run ('parse_' + [IO.Path]::GetFileNameWithoutExtension($s)) @('--headless', '--path', $sb, '--check-only', '--script', $s)
   if ($r.code -ne 0) { $fail++; "PARSE FAIL $s"; $r.out | Select-Object -Last 10 } else { "PARSE OK $s" }
 }
@@ -186,5 +186,30 @@ if ($Record) {
   "record exit=$($r.code) files_copied=$n -> $recOut"
   if ($n -lt 5) { $fail++; "  ^ recording missing" }
 }
-"GODOT AUDIO CHECKS " + $(if ($fail -eq 0) { 'PASS' } else { "FAIL ($fail)" })
+if ($Lifecycle) {
+  # Release-facing behaviour: app background/return, pause screen, settings persistence across restart, zero output.
+  # Runs with LifecycleProbe INSTEAD of AudioProbe (they would fight over the battle), same sandbox user dir, so the
+  # settings_read run is a real second process reading the save that settings_write left behind.
+  $pf = Join-Path $sb 'project.godot'
+  $origProj = Get-Content $pf -Raw
+  $lcProj = $origProj -replace '(?m)^AudioProbe=.*\r?\n?', ''
+  $lcProj = $lcProj -replace '(?m)^(App="\*res://src/core/app\.gd")\r?$', "`$1`nLifecycleProbe=""*res://tools/audio/lifecycle_probe.gd"""
+  Set-Content $pf $lcProj -NoNewline -Encoding utf8
+  foreach ($m in @('lifecycle', 'settings_write', 'settings_read')) {
+    $la = @('--headless', '--path', $sb, '--')
+    if ($m -eq 'lifecycle') { $la += '--round=r02' }
+    $la += "--lc-mode=$m"
+    $r = Run "lc_$m" $la 120
+    $rf = Join-Path $userDir "audio_lifecycle_$m.json"
+    if ($r.timeout) { $fail++; "  ^ lifecycle $m TIMED OUT" }
+    if (Test-Path $rf) {
+      Copy-Item $rf $outDir -Force
+      $lj = Get-Content $rf -Raw | ConvertFrom-Json
+      $bad = @($lj.checks.PSObject.Properties | Where-Object { -not $_.Value } | ForEach-Object { $_.Name })
+      "lifecycle ${m}: pass=$($lj.pass) checks=$(@($lj.checks.PSObject.Properties).Count) failed=[$($bad -join ',')] values=$($lj.values | ConvertTo-Json -Compress -Depth 4)"
+      if (-not $lj.pass) { $fail++ }
+    } else { $fail++; "  ^ lifecycle $m produced no report (exit $($r.code))" }
+  }
+  Set-Content $pf $origProj -NoNewline -Encoding utf8
+}"GODOT AUDIO CHECKS " + $(if ($fail -eq 0) { 'PASS' } else { "FAIL ($fail)" })
 exit $fail
