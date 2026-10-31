@@ -4,7 +4,11 @@
 - Job 1 01-move-block (07:34–08:00, exit 0, committed bot 780c30a): r05 A passes length; r06/r07 variants give no block. Early-nest: r02/r03/r04/r06 nests fall before the last scripted wave; no round blocks a no-upgrade bot any more.
 - **Found a bot-version confound:** D38/D40 compared an old-bot baseline with fixed-bot variants; their causal claims are withdrawn (DECISIONS correction row, Update 13).
 - Job 2 01-move-block2 queued 08:03 (log build/heavy/01-move-block2-20261101-080341.log): committed-bot baseline LOW/LOW+2R r01–r10, r06 1.8, r07 2.0/2.4, nest ×1.4. Results pending; no data change yet.
-## TASK 2026-11-01 — r05 structure experiment (coordination/prompts/01-r05-structure.txt)
+- CHECKPOINT 08:55 (usage 93%, stopping before 97%): job 2 is still queued in the lock (no START yet). It runs by itself, detached. Do NOT queue it again. When `Select-String build\heavy\01-move-block2-20261101-080341.log -Pattern '^HEAVY_JOB_DONE'` shows exit=0:
+  1. Copy build\heavy\base\sweep_data.json → docs/design/balance/baseline_fixedbot_low.json; build\heavy\sweep_mv2_*.json → docs/design/balance/.
+  2. Evaluate the criteria in Update 12 (r05 A already passes length; block round r06 1.8 or r07 2.0/2.4: none 0/10 both bots, casual LOW ≥ 7/10, LOW median ≤ 1.25 × par); early-nest fix nest140: none bots must not win before the last scripted wave (early_nest_table.py).
+  3. If a full combination passes: apply r05 A + the block variant (+ nest140 if it passes) to data/, queue ONE full r01–r10 sweep (none/LOW/LOW+2R, 2 bots), compare with the baseline file, then commit and ask 07 to rerun acceptance. Otherwise write D41 (closest option + missing numbers) with no data change.
+- Commits so far in this task (ls-remote verified): 8bc03e2 (criteria), 52cf31a (confound correction + job 1 evidence). No data change yet.## TASK 2026-11-01 — r05 structure experiment (coordination/prompts/01-r05-structure.txt)
 - Pass criteria were pre-registered in 3d44666 (BALANCE_DIAGNOSIS Update 10). 02 R12 (boss-death hooks, request only) and the 04 R10 threat-marker condition were also in 3d44666.
 - Blue screen 03:55: my job 01-r05-structure (queued 03:18:44) never got the lock. heavy_run.log has no 01-r05-structure START/END, so there is no partial result to discard. Working tree clean, no empty or NUL files, data JSON ok.
 - 06:53 requeued ONCE (detached): build/heavy/01-r05-structure-20261101-065321.log; variants s1 boss 60 s, s2 smaller 150 s wave, s3 no 40% trigger, s4 s1+s2; 10 seeds × 2 bots × none/LOW, headless, isolated.
