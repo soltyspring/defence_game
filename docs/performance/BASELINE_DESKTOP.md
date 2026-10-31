@@ -165,7 +165,7 @@ P1 cost at caps is **not re-measured**. Cause of the lower unit count not yet in
 R09-08-1 readability counts in that run: max simultaneous damage popups 16/24, fx 8/48, projectiles 1/64, 0 frames at any cap.
 These do not cover a dense late-wave scene yet.
 
-### 7.4 Stress refill fix (08 bug) and cap-reach check (2026-10-31 17:0x, FUNCTIONAL CHECK ONLY — not a performance result)
+### 7.4 Stress refill fix (08 bug) and cap-reach check (2026-10-31 16:10, FUNCTIONAL CHECK ONLY — not a performance result)
 Cause of the ~40-unit stress scene (§7.3): `perf_frame_probe.gd _stress()` refilled enemies only from `round_def.enemy_ai.pool`, which D18
 emptied in r01–r10. Fixed: enemies now come from `Content.round_enemy_roster(round_def)` (bosses excluded; fallbacks: ai pool, then all
 non-boss enemies), up to 4 per frame. The probe now writes `stress_reach` (max living per side, frames at each cap, first time both at
@@ -180,3 +180,19 @@ New open item: in this run the battle sim did not step. The battle-loop time p50
 projectiles and damage texts stayed at 0 for 16 s, so the armies never met. The cause is not determined: either the sim is paused or not
 stepping in this mode. A suspect is the working tree's uncommitted 02 changes, but this is unverified. The next stress run (C11) will use a
 `git archive` snapshot of HEAD and record sim.t/paused/ended at the end before any draw-cost number is taken.
+
+### 7.5 "Sim did not step" (§7.4): diagnosed (2026-10-31 16:17, FUNCTIONAL CHECK ONLY — no performance judgement)
+Instrumentation: the frame probe now writes `sim_trace` from frame 1 (including warm-up): steps = sim.t advance / step, frames with
+sim paused / ended / SceneTree paused / running-without-advance, state transitions with probe time, every `cmd_set_paused` and
+`battle_paused` emission with its call stack, and the final sim state. It prints `[frame_probe] sim_trace verdict=STEPPING|NOT_STEPPING ...`.
+Run: exactly one windowed run, identical arguments to §7.4 (r06, `--autoplay --perf-stress`, 4 + 12 s, `--screen 1` on `\\.\DISPLAY2`,
+rect verified, exit 0), but on a **clean `git archive` snapshot of HEAD b9b0297** (`build/perf/simstall_b9b0297`, project files +
+the probe + a copy of the `.godot` import cache, no working-tree WIP). Foreign Godot processes: 3 at start, 7 during (contended).
+Result: **verdict STEPPING**. 946 steps in 947 frames (≈ 960 expected for 16 s at 60 Hz, max 4 steps in one frame), 0 paused / ended /
+tree-paused frames, 3 frames without advance (normal accumulator jitter), 0 pause signals. Final sim t = 15.77 s. Battle loop p50 0.67 ms.
+The armies met: up to 22 damage texts and 11 fx at once. Both sides stayed at 36/36 in 721/721 measured frames.
+Conclusion: **not a probe defect and not a defect of the committed game.** The §7.4 stall (battle-loop p50 0.013 ms, no combat for 16 s)
+happened with the same probe, round and arguments on the **shared working tree**, which at 16:10–16:18 held uncommitted changes in
+src/gameplay/battle_sim.gd, battle.gd, battle_view.gd, src/core/{atlas,content,events}.gd, src/ui/* and src/audio/audio_event_bridge.gd.
+So the stall comes from uncommitted WIP (owner most likely 02, not proven). It is reported to 02 and 07 with the repro command, to be
+checked before those changes are committed. The §7.4 sentence "the battle sim did not step" applies to that working tree only.

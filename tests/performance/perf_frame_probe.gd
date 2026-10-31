@@ -74,6 +74,10 @@ func _boot() -> void:
 	_vp_rid = root.get_viewport_rid()
 	RenderingServer.viewport_set_measure_render_time(_vp_rid, true)
 	start = _mon()
+	var ev := root.get_node_or_null("Events")
+	if ev:
+		if ev.has_signal("cmd_set_paused"): ev.cmd_set_paused.connect(_on_pause_signal.bind("cmd_set_paused"))
+		if ev.has_signal("battle_paused"): ev.battle_paused.connect(_on_pause_signal.bind("battle_paused"))
 	_started = true
 
 func _mon() -> Dictionary:
@@ -96,6 +100,8 @@ func _process(delta: float) -> bool:
 	if uncapped and _frames == 30:
 		Engine.max_fps = 0
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+	if app:
+		_sim_track(app)   # from frame 1 (incl. warm-up): a stall may start before measuring
 	if stress and app and app.battle and app.battle.sim:
 		_stress(app.battle.sim)
 	if ab_view and app:
@@ -223,6 +229,66 @@ func _readability(sim, fm: float) -> void:
 		readability.peak_frame = {"sum": load_sum, "counts": n, "frame_ms": snappedf(fm, 0.001), "t": snappedf(_t, 0.01),
 			"units": sim.players.size() + sim.enemies.size()}
 
+## Sim-state trace (why would the battle not step?). Counted on every measured frame:
+##   steps = sim.t advance / SIM_STEP; frames where the sim is paused / ended / the SceneTree is paused / the sim is running but did
+##   not advance; transitions of paused/ended/screen/time_scale with probe time; who emitted pause commands (call stack, debug build).
+var sim_trace := {"frames": 0, "steps_total": 0, "steps_per_frame_max": 0, "frames_paused": 0, "frames_ended": 0, "frames_tree_paused": 0,
+	"frames_running_no_advance": 0, "frames_no_battle": 0, "transitions": [], "pause_signals": [], "final": {}}
+var _prev_state := {}
+var _prev_sim_t := -1.0
+var _prev_sim = null
+
+func _on_pause_signal(p, which: String) -> void:
+	if sim_trace.pause_signals.size() >= 12: return
+	var st := []
+	for f in get_stack(): st.append("%s:%d %s" % [str(f.source).get_file(), int(f.line), str(f.function)])
+	sim_trace.pause_signals.append({"signal": which, "value": p, "probe_t": snappedf(_t, 0.01), "stack": st})
+
+func _sim_track(app) -> void:
+	sim_trace.frames += 1
+	var b = app.battle
+	if b == null or b.sim == null:
+		sim_trace.frames_no_battle += 1
+		_note("battle", "present", "absent")
+		return
+	var s = b.sim
+	if s != _prev_sim:
+		_prev_sim = s
+		_prev_sim_t = s.t
+		_note("battle", "sim", "new sim t=%.2f" % s.t)
+	var adv: float = s.t - _prev_sim_t
+	_prev_sim_t = s.t
+	var steps := int(roundf(adv / (1.0 / 60.0)))
+	sim_trace.steps_total += maxi(0, steps)
+	sim_trace.steps_per_frame_max = maxi(sim_trace.steps_per_frame_max, steps)
+	if s.paused: sim_trace.frames_paused += 1
+	if s.ended: sim_trace.frames_ended += 1
+	if paused: sim_trace.frames_tree_paused += 1
+	if not s.paused and not s.ended and not paused and steps <= 0: sim_trace.frames_running_no_advance += 1
+	_note("sim", "paused", str(s.paused))
+	_note("sim", "ended", str(s.ended))
+	_note("tree", "paused", str(paused))
+	_note("app", "screen", str(app.screen))
+	_note("battle", "time_scale", str(b.get("time_scale")))
+
+func _note(scope: String, key: String, val: String) -> void:
+	var k := scope + "." + key
+	if _prev_state.get(k, "") != val:
+		if sim_trace.transitions.size() < 60:
+			sim_trace.transitions.append({"probe_t": snappedf(_t, 0.01), "what": k, "from": str(_prev_state.get(k, "-")), "to": val})
+		_prev_state[k] = val
+
+func _sim_final(app) -> void:
+	var b = app.battle if app else null
+	if b and b.sim:
+		var s = b.sim
+		sim_trace.final = {"sim_t": snappedf(s.t, 0.01), "paused": s.paused, "ended": s.ended, "won": s.won,
+			"time_scale": b.get("time_scale"), "acc": b.get("_acc"), "players": s.players.size(), "enemies": s.enemies.size(),
+			"autoplay_bot": b.get("autoplay_bot") != null, "tree_paused": paused, "probe_t": snappedf(_t, 0.01)}
+	var expect := int(roundf((_t) * 60.0))
+	sim_trace.verdict = "STEPPING" if sim_trace.steps_total > 0 and sim_trace.frames_running_no_advance < sim_trace.frames / 2 else "NOT_STEPPING"
+	sim_trace.steps_expected_at_60hz_approx = expect
+
 static func _dist(a: PackedFloat32Array) -> Dictionary:
 	if a.is_empty(): return {"n": 0}
 	var s := a.duplicate()
@@ -241,6 +307,7 @@ static func _idist(a: PackedInt32Array) -> Dictionary:
 
 func _finish(app) -> void:
 	_done = true
+	_sim_final(app)
 	var v := Engine.get_version_info()
 	var atlas := root.get_node_or_null("Atlas")
 	var rep := {
@@ -261,6 +328,7 @@ func _finish(app) -> void:
 		"frames_over_ms": over_budget_frames,
 		"readability_load": readability,
 		"stress_reach": stress_reach if stress else {},
+		"sim_trace": sim_trace,
 		"ab": {"target": ab_target, "frame_ms_shown": _dist(frame_visible), "frame_ms_hidden": _dist(frame_hidden),
 			"process_worst_per_s_shown": _dist(proc_visible), "process_worst_per_s_hidden": _dist(proc_hidden),
 			"note": "difference = CPU cost of the target (view = battle_view._draw, 02; ui = HUD/menus, 04 or 02 fallback)"} if ab_view else {},
@@ -280,6 +348,9 @@ func _finish(app) -> void:
 	print("[frame_probe] frames=%d frame_p95=%.2fms gpu_p95=%.2fms draw_calls_p95=%s units_max=%d tex=%.2fMiB -> %s" % [
 		frame_ms.size(), rep.frame_ms.get("p95", 0.0), rep.render_gpu_ms.get("p95", 0.0), str(rep.draw_calls.get("p95", 0)),
 		peak.units, peak.tex_mem / 1048576.0, out_path])
+	print("[frame_probe] sim_trace verdict=%s steps=%d (~%d expected) paused_frames=%d ended_frames=%d tree_paused_frames=%d running_no_advance=%d/%d pause_signals=%d final=%s" % [
+		sim_trace.verdict, sim_trace.steps_total, sim_trace.steps_expected_at_60hz_approx, sim_trace.frames_paused, sim_trace.frames_ended,
+		sim_trace.frames_tree_paused, sim_trace.frames_running_no_advance, sim_trace.frames, sim_trace.pause_signals.size(), JSON.stringify(sim_trace.final)])
 	if stress:
 		print("[frame_probe] stress_reach ally_max=%d/%d enemy_max=%d/%d frames_both_at_cap=%d/%d first_both_at_cap_t=%.2f source=%s" % [
 			stress_reach.ally_max, int(stress_reach.caps.get("ally", -1)), stress_reach.enemy_max, int(stress_reach.caps.get("enemy", -1)),

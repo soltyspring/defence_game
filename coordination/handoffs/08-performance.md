@@ -1,5 +1,22 @@
 # 08-performance handoff
-## M6 — 08 stress-refill bug fixed (2026-10-31 17:0x +09:00)
+## M7 — "sim did not step" diagnosed (2026-10-31 16:18 +09:00)
+- User decision received: **Q2 monetization = hold** ("수익모델은 보류", 16:09 KST). Ads and billing stay disabled; there is no
+  monetization UI. Effect on 08: no ad/billing SDK in APK/memory budgets; nothing to measure there.
+- Coordinator review: 2620274/19665cb accepted. Asked to find out whether the stall is a probe defect or a game defect.
+- Done: `perf_frame_probe.gd` now writes `sim_trace` (steps per frame from sim.t, paused/ended/tree-paused/no-advance frame counts,
+  transitions with time, pause signal emitters with call stacks, final state, verdict STEPPING/NOT_STEPPING).
+- One windowed run on a **clean git-archive snapshot of HEAD b9b0297** (same arguments as the 16:10 run) → **STEPPING**: 946 steps in
+  16 s, 0 paused/ended frames, 0 pause signals, combat reached (22 texts, 11 fx), 36/36 held. Contended (3 foreign Godot processes at
+  start, 7 during); functional only.
+- Conclusion: the stall is not a probe defect and not in committed HEAD. It appears only on the shared working tree with uncommitted WIP
+  (02 battle_sim/battle/battle_view/core; also 04 ui and 05 audio bridge files modified). Sent to 02 (P8, repro command + acceptance)
+  and 07 (Q8-1, new file 08-performance-to-07-qa.md).
+- Also corrected: my earlier "16:1x / 16:4x / 17:0x" labels were estimates. They are replaced by the real commit times (15:54, 16:04,
+  16:10/16:12) in all 08 files.
+- Next steps (exact): (1) When 02 commits the WIP: snapshot that commit and re-run the probe; require verdict STEPPING. (2) In C11: the M3
+  A/B command, then the H1/H2 frame baselines from a HEAD snapshot. (3) Run the asset gate on every 03/05 asset commit.
+- M7 commit: recorded only after `git show` verification (see below).
+## M6 — 08 stress-refill bug fixed (2026-10-31 16:12 +09:00)
 - Coordinator review: 7e166dc/ab00170 accepted. **New rule: verify every commit right after publishing with `git show --stat <sha>`
   and `git branch -r --contains <sha>` before writing its SHA anywhere** (9d989ed had recorded a non-existent SHA).
 - Fix: `tests/performance/perf_frame_probe.gd _stress()` refills enemies from `Content.round_enemy_roster(round_def)` (bosses
@@ -15,7 +32,7 @@
   Godot run. (2) In C11: the M3 A/B command, then the frame probe stress run from a HEAD snapshot for the H1/H2 baselines. (3) Run the
   asset gate on every 03/05 asset commit.
 - M6 commit: `2620274e575eab77fe1889af9098a1eda6e824e3` [Fix]. Verified with `git show --stat` (5 files: handoff, status, BASELINE_DESKTOP, CODE_REVIEW_HOTPATH, perf_frame_probe.gd), and `git branch -r --contains` shows origin/main. Helper printed `PUSHED 2620274... origin/main` (7b812a2..2620274).
-## M5 — static hot-path code review (2026-10-31 16:4x +09:00, no Godot used)
+## M5 — static hot-path code review (2026-10-31 16:04 +09:00, no Godot used)
 - Coordinator review: 9cbae83/3d07db5 accepted. C11 is still closed (01/02/03/04/05/07 working), so this milestone is Godot-free only.
 - Done: `docs/performance/CODE_REVIEW_HOTPATH.md`. Committed HEAD 0590e7a was exported with `git show`. The doc covers per-frame
   allocations, caps vs D7 vs pools, and full scans, ranked H1–H13 with line numbers and a measurement method each. **24/24 cited line
@@ -31,7 +48,7 @@
   allowed. (2) In C11: the M3 A/B command, then `run_perf.ps1 -Frame` for H1/H2 baselines (draw calls, view A/B). (3) Re-run the asset
   gate on every 03/05 asset commit. (4) Re-measure each P7 item after 02 commits it (A/B `-RequireQuiet` / frame probe).
 - M5 commit: `7e166dcaf1dac5fe9b8f80d8185d4a80dc2b3ae4` [Docs] (5 files: CODE_REVIEW_HOTPATH, RETHEME_BUDGET, requests to 01/02, status). Helper printed `PUSHED 7e166dc... origin/main` (528d065..7e166dc), and `git branch -r --contains 7e166dc` shows origin/main. The handoff M5 section went in with `9d989ed`. **Correction:** 9d989ed contained a wrong SHA (6e5e5d9, which does not exist), fixed by this commit.
-## M4 — static per-commit asset budget gate (2026-10-31 16:1x +09:00)
+## M4 — static per-commit asset budget gate (2026-10-31 15:54 +09:00)
 - Coordinator review 16:0x: c58c59e/480f815 accepted. C11 quiet window is NOT open yet, because 02/03/04/05/07 are working; the coordinator
   will open it later. Until then, do Godot-free work only. This milestone used **no Godot**.
 - Done (verified): `tools/perf/asset_budget_check.py`. It compares the base commit (37b9a93) with a commit / `--worktree` / `--range` /

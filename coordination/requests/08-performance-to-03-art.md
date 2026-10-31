@@ -35,7 +35,7 @@ Caps for the redraw: worst battle ≤ 12 MiB, all pages ≤ 14 MiB, menus ≤ 0.
 unchanged. Tell me before adding a page or changing a size. Self-check: `python tools/perf/retheme_compare.py --strict` → `RETHEME caps=PASS`.
 Thanks for A1–A3: boss pages are in the residency table (r05 7.25 MiB, r10 9.25 MiB). No trimming of the overlord dissolve frames needed.
 
-## A5 — 2026-10-31 16:1x: theme A redraw (2b350c4) checked against the caps: PASS
+## A5 — 2026-10-31 15:54: theme A redraw (2b350c4) checked against the caps: PASS
 `python tools/perf/asset_budget_check.py --range 37b9a93..HEAD` (STATIC, git trees, your committed files only) → PASS for every commit.
 Your 2b350c4: 10 pages, **0 page size changes**, GPU identical (worst battle r10 9.25 MiB, all pages 9.25 MiB, menu 0.25 MiB), PNG 72.3 →
 71.5 KiB, all pages lossless (compress/mode 0), no mipmaps. Caps unchanged: worst battle ≤ 12 MiB, all ≤ 14 MiB, menu ≤ 0.5 MiB, side ≤ 1024 px,

@@ -13,7 +13,7 @@ Implication: until answered, every phone budget in docs/performance/BUDGETS.md s
 Rounds 6–9 hit the enemy cap often (refused enemy spawns per 3 bot runs: r06 146, r08 137, r09 234). At the caps the sim + draw cost
 is the main frame-time risk (BASELINE_DESKTOP.md §2–3). No data change requested now; 02 is asked to make the cap case cheaper first.
 
-## 2026-10-31 16:4x — D7 entity caps differ from what runs (FYI, no user question needed)
+## 2026-10-31 16:04 — D7 entity caps differ from what runs (FYI, no user question needed)
 D7 (DEFAULT) says 30 ally / 40 enemy / 64 projectiles. The game actually runs **36 ally / 36 enemy / 64 projectiles / 48 fx / 24 damage
 texts**: your data/game_config.json caps, clamped by the engine ceilings in src/core/perf.gd (40/side). See
 docs/performance/CODE_REVIEW_HOTPATH.md §1. I asked 02 to keep one source of truth. Please update D7 to the data values, or tell 02 if

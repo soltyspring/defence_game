@@ -97,7 +97,7 @@ quiet window (08-performance-to-coordinator.md C11) and will re-run `ab_retest.p
 monitor) on HEAD vs the linear blob d4d7c13. P2 acceptance is therefore **not judged** yet. The P2b tie-break finding is deterministic and
 stays valid: please still align the tie-break (check: `targeting_equivalence.gd` → EQUIVALENT).
 
-## P7 — 2026-10-31 16:4x: hot-path code review (static, no Godot run). Full table: docs/performance/CODE_REVIEW_HOTPATH.md
+## P7 — 2026-10-31 16:04: hot-path code review (static, no Godot run). Full table: docs/performance/CODE_REVIEW_HOTPATH.md
 Reviewed committed HEAD 0590e7a (battle_sim e9dfaa4, battle_view/battle 141d226, atlas fdd4d86). Line numbers refer to those versions. Ranked
 by expected cost at caps on low-end phones. These are estimates, not measured on a phone, and the earlier A/B timings are invalid. I will
 measure each item in the quiet window C11 with the method named.
@@ -126,3 +126,21 @@ measure each item in the quiet window C11 with the method named.
 Lower priority: H9 `battle.gd:143-149` per-frame alive counts (keep counters in the sim); H10 linear free-slot scans; H11 `army_count`
 in `snapshot()` per card (1026); H13 `Color(str(layer.clear_color))` per frame (battle_view 116).
 Already fine: `_sorted_into` reuses arrays; event buffer swap (P3); towers scan only on cooldown.
+
+## P8 — 2026-10-31 16:18: battle sim does not step in the shared WORKING TREE (uncommitted WIP); committed HEAD is fine
+Evidence (functional checks, contended, not performance numbers; docs/performance/BASELINE_DESKTOP.md §7.4–7.5):
+- 16:10, shared working tree: r06 autoplay + stress. Sim did not advance for 16 s (battle loop p50 0.013 ms, 0 fx/projectiles/texts,
+  armies never met).
+- 16:17, clean `git archive` snapshot of HEAD b9b0297, same probe and arguments: **STEPPING** (946 steps in 16 s, 0 paused/ended frames,
+  0 pause signals, combat reached).
+- So the stall is introduced by uncommitted changes in the working tree. At that time these files were modified: src/gameplay/battle_sim.gd,
+  battle.gd, battle_view.gd, src/core/atlas.gd, content.gd, events.gd (yours), plus src/ui/* and src/audio/audio_event_bridge.gd.
+Repro (before you commit; windowed on the secondary monitor, ~20 s, no import):
+```
+$G = ".\tools\engine\Godot_v4.7.2-stable_win64_console.exe"
+& $G --screen 1 --resolution 1280x720 --path . -s res://tests/performance/perf_frame_probe.gd -- --autoplay --round=r06 --perf-seconds=12 --perf-warmup=4 --perf-stress --perf-out=$PWD\build\perf\sim_trace.json
+```
+Look for `[frame_probe] sim_trace verdict=STEPPING`. On `NOT_STEPPING`, `sim_trace.transitions`, `pause_signals` (with call stacks) and
+`final` in the JSON show whether the sim is paused, ended or simply not advancing. It may also be a combination with 04's or 05's WIP.
+Without the stress cheat it may not reproduce; please also try plain `--autoplay`.
+Acceptance: verdict STEPPING on your next commit (I will re-run on a clean snapshot of that commit).

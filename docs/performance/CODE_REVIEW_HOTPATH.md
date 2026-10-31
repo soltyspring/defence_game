@@ -1,5 +1,5 @@
 # CODE_REVIEW_HOTPATH.md — per-frame allocations, entity caps and full scans in the battle loop (owner: 08-performance)
-Updated: 2026-10-31 16:4x +09:00. Method: **static code review only (no Godot run)**, because the coordinator has not opened the quiet
+Updated: 2026-10-31 16:04 +09:00. Method: **static code review only (no Godot run)**, because the coordinator has not opened the quiet
 window C11 yet. Reviewed the committed files at HEAD 0590e7a (exported with `git show HEAD:<file>`, so other workers' WIP is excluded):
 `src/gameplay/battle_sim.gd` (last change e9dfaa4), `src/gameplay/battle_view.gd` and `src/gameplay/battle.gd` (141d226),
 `src/core/atlas.gd` (fdd4d86), `src/core/perf.gd` (1eb4637), `data/game_config.json`. Line numbers refer to those committed versions.
@@ -53,7 +53,7 @@ duplicates (fdd4d86); `battle.gd` swaps the event buffer (P3); towers scan foes 
 ## 3. Measurement plan (in the quiet window C11, same seeds, contamination monitor on)
 1. Baseline at HEAD: `perf_bench.gd` (sections) and `run_perf.ps1 -Frame` (stress A/B view, draw calls, readability counts). The stress
    refill must be fixed first. Root cause found in this review: D18 set `enemy_ai.pool = []` in r01–r10, and `perf_frame_probe.gd _stress()`
-   only refilled enemies from that pool, which explains the drop to ~40 units. **Fixed 17:0x** (BASELINE §7.4: 36/36 reached in a functional check). In that run the sim did not step (open item).
+   only refilled enemies from that pool, which explains the drop to ~40 units. **Fixed 16:10** (BASELINE §7.4: 36/36 reached in a functional check). In that run the sim did not step (open item).
 2. After each 02 change: `ab_retest.ps1 -RequireQuiet` for sim items (H3, H4, H7, H8, H10, H11) and the frame probe for view items
    (H1, H2, H5, H6, H9, H13). Accept only VALID_QUIET runs.
 3. Device: none attached. The H1/H2 effects are expected to be larger on Mali-G52/Adreno 610 class GPUs and little cores.

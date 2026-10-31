@@ -12,7 +12,7 @@ Caps for the replacement set:
 Self-check: `python tools/perf/retheme_compare.py --strict` → `RETHEME caps=PASS` (reads assets/audio/** WAV headers).
 Seen at 15:4x in the shared working tree (your WIP, not committed): hit_melee_4/5 added (31 SFX), still well inside the caps.
 
-## AU2 — 2026-10-31 16:1x: per-commit audio gate, current status PASS
+## AU2 — 2026-10-31 15:54: per-commit audio gate, current status PASS
 New gate `python tools/perf/asset_budget_check.py` (STATIC; reads git trees, so only committed files count; exit 1 on any cap breach).
 - Committed (HEAD bfcce0e, incl. your ccf3033): 31 SFX, 0.76 MiB decoded PCM, longest 3.0 s; 2 OGG 0.54 MiB; audio 1.29→1.30 MiB → PASS.
 - Your working tree (WIP, preview with `--worktree`): 38 SFX, 0.83 MiB PCM, 2 OGG 0.55 MiB, audio 1.38 MiB → PASS.

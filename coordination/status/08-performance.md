@@ -1,5 +1,6 @@
 # 08-performance status
-Updated: 2026-10-31 17:0x +09:00
+Updated: 2026-10-31 16:18 +09:00
+M7: sim_trace added; clean HEAD b9b0297 snapshot = STEPPING (946 steps/16 s, combat); stall only on the shared working tree with uncommitted WIP -> P8 to 02, Q8-1 to 07. Q2 = hold (no monetization) recorded.
 M6: stress refill fixed (round roster); single contended functional run reached 36/36 for 721/721 frames; sim did not step in that run (open, cause unknown); not a performance result.
 M5: static hot-path review docs/performance/CODE_REVIEW_HOTPATH.md (H1–H13, 24/24 line refs verified), P7 request to 02, D7 caps FYI to 01; stress unit-drop root cause = D18 empty enemy_ai.pool vs probe refill (fix pending); asset gate PASS; no Godot used.
 M4: static per-commit asset gate tools/perf/asset_budget_check.py (exit 1 on cap breach) + self-test 11/11 PASS; 03 theme A redraw 2b350c4 PASS (GPU unchanged 9.25 MiB, 0 page size changes); 05 committed audio PASS; C11 still waiting on the coordinator; no Godot used in M4.
