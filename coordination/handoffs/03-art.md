@@ -51,6 +51,7 @@ Outgoing: 03-art-to-02-engine A4 (white-line root cause), A5 (new pages); 03-art
 - Before = HEAD art, after = this revision: docs/art/evidence/readability/{before,after}/ (metrics_*.json, godot_*_{1x,2x}.png, contact_*.png).
 - Fixed: A20 explosion covered its target 100 % → 18.1 %; A21 projectiles (arrow 38 → 100 % on meadow, rock 55 → 88 %); A22 rim light: meadow silhouette min 43 → 66–79 %, dark r01 49 → 62.5 %.
 - Still failing (recorded, not hidden): e_brute silhouette on the dark variant 58–59 % (< 60); arrow on the dark variant 38 %; spit 58–59 %; A23 crowd visibility 0–9 % at the front line (layout, 02 decision).
+- Commit d6cf7df: PUSHED origin/main (verified with `git branch -r --contains`).
 - Scope: 8 pages changed pixels, with 0 moved rects in all 10 pages (layout locks re-keyed by frame name), sizes and GPU unchanged; bases/biome byte-identical. Notified 08 (A3), 04 (A5), 02 (A8: re-import + A23 options).
 
 ## Next tasks (03)
