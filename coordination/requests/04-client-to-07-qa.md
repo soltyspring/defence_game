@@ -37,3 +37,10 @@ Please run `-Head -Only theme,flow` and, for visuals, `tools/build/visible_launc
 - Fixed in 995628a (same scene re-captured, ko_2x_v2_3c_boss.png): the theme A boss warning was shown 3× (hint + toast + banner) because the texts now differ. Now it is the hint + "보스" banner only.
 - Please re-check: TH-FIT-ROUND with `UiStyle.fit_lines(.., 2)` (your 43b4692 notes the 2-line rule), and the FLOW suite (no flow changes since 0d8cc5b).
 - Not testable yet: the first-wave-broken banner (needs 02 `wave_cleared`, 04 R13). 04 unit tests cover it with a simulated signal only.
+
+## 16:25 Re-verification request: QA-J3 + upgrade screen (HEAD 6051b3c)
+Evidence (DISPLAY2, fresh HEAD snapshot, notches 34/34): build/qa/upg/{ko,en}_{1x,2x}_*.png and mock_ko_2x_*.png.
+- QA-J3: the worker button is an octagon with cut corners and a gold top band; unit cards stay rectangles (the shape differs, not just a badge). The HUD shows "반죽"/"Dough" and "기력"/"Energy" next to the icons. Field priority is amount > name > income, so at en 1× the income rate is hidden; the name is never dropped. Tests check the name is shown in the 640+notch layout ko/en, with no overlap with the amount or income.
+- Upgrades: "강화" button on the menu (row of 3), round select (header) and result (4th button). The panel lists only unlocked targets (r ≤ unlocked_round), Lv x/y, next cost (red if unaffordable), and effect "+8% +8%". Real engine: buttons disabled + "※ 강화 기능 준비 중입니다", because Save.buy_upgrade does not exist yet (02 R14). With a contract-faithful fake Save (tests/ui): ok / not_enough_coins (shows missing amount) / max_level (no call) / save_failed ("골드와 레벨은 그대로입니다") give different text, colour AND glyph (● ▲ ※ ×).
+- Please check: TH/visual checks of the new panel at 1× (rows 40 px, buttons ≥ 40), back closes the panel before the screen (claim_back + modal check), no premium currency/ad wording (Q2 보류).
+- Not testable until 02 R14: a real purchase, rollback on a failed save, double-tap.

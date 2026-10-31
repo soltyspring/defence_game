@@ -29,3 +29,9 @@ Still open from R3: `ui.credits` and `ui.font_credit` keys (UI fallbacks exist u
 - Please add `banner.first_wave_cleared` to ko/en (fallbacks in src/ui/ui_text.gd: "첫 웨이브 격파!" / "First wave broken!"). Keep it ≤ 556 px at Bold 24 (≈ 20 Hangul syllables); short is better for a 1.8 s banner.
 - FYI: with theme A, `tut_boss_warning` ("곰팡이 군단의 우두머리가 다가옵니다!") and `toast.boss_incoming` ("강력한 보스가 다가옵니다!") describe the same moment. 04 now shows only the hint plus the "보스" banner (995628a, key-based). If you prefer the toast wording, align the two texts. No action needed otherwise.
 - `ui.title` is still "레인 디펜스" / "Lane Defence" (provisional per your note); the menu subtitle already uses theme A.
+
+## R6 (16:25) Upgrade screen texts + theme wording (no monetization UI: Q2 보류 respected)
+- New UI keys with fallbacks in src/ui/ui_text.gd; please add them to ko/en: `ui.upgrades` (강화/Upgrades), `ui.upgrade_buy`, `ui.upgrade_ok` ("%s Lv %d 완료!"), `ui.upgrade_not_enough` ("골드가 %d 부족합니다"), `ui.upgrade_max`, `ui.upgrade_save_failed`, `ui.upgrade_unavailable`, `ui.upgrade_locked`, `ui.upgrade_error` ("… (%s)"), `ui.upgrade_none`.
+- Theme mismatch: `upgrade.supply_regen` is still "보급 증가" / "Supply Boost", while the HUD now labels the resource `res.supply` = "반죽" / "Dough" (07 QA-J3). Suggest "반죽 증가" / "Dough Boost". Also `toast.not_enough_gold` "보급이 부족합니다" → "반죽이 부족합니다"? Your call.
+- Row names are composed "<unit name> · upgrade.unit" (e.g. "식빵병 · 병사 강화"). If you prefer per-unit keys, tell me.
+- The panel shows coins only (`currency.gold`). No gems, shop, ads or "remove ads" anywhere.

@@ -41,7 +41,8 @@ Command: `.\tools\build\build_android_debug.ps1`. It exports from a `git archive
 | # | Check | Status | Evidence |
 |---|---|---|---|
 | C1 | Data collected/shared by the current build | TESTED (static) | no INTERNET permission and no SDKs in the APK → nothing leaves the device. Play Data safety would currently answer "no data collected" (06 ANALYTICS_EVENTS §4). Re-check when any SDK is added |
-| C2 | Ad/IAP/consent UI | NOT PRESENT (by design) | monetization undecided (01 D9). No purchase or ad buttons |
+| C2 | Ad/IAP/consent UI | NOT PRESENT (user decision Q2 = 보류) | no purchase, ad, gem or remove-ads UI; tests/ui asserts no such wording in the upgrade panel |
+| C5 | Coin sink: upgrade screen | UI DONE, purchase BLOCKED | src/ui/upgrade_panel.gd (6051b3c); needs 02 Save.buy_upgrade (R14) for any real purchase; the atomicity probe (10) is pending |
 | C3 | Purchase restore / failure / pending UI | UNTESTED | 06 U1 states defined; UI after approval only |
 | C4 | Privacy policy URL, consent (UMP) flow | BLOCKED | requires a user decision + accounts |
 

@@ -1,5 +1,5 @@
 # 04-client handoff — FINAL CHECKPOINT (user-requested shutdown)
-Updated: 2026-10-31 16:05 +09:00
+Updated: 2026-10-31 16:25 +09:00
 Session: sess_a24d01e7-e535-413c-9ff6-d5258090820b (Kiro CLI, claude-opus-5.5, trust-all; same window throughout, resumed after two account changes).
 State at checkpoint: work stopped at a safe point. The owned working tree is CLEAN (all 04 work committed and pushed). No 04-started Godot or emulator process is running. Nothing was left unverified or uncommitted.
 
@@ -38,13 +38,18 @@ State at checkpoint: work stopped at a safe point. The owned working tree is CLE
 - 319e0d1 gate script; 0590e7a first-wave-broken banner (inert until 02 adds `wave_cleared`, R13); 995628a boss warning shown once (key-based dedupe, since theme texts differ).
 - Theme A verified on DISPLAY2 from fresh HEAD snapshots (03 2b350c4 + 01 text): icons/colours correct, no stale warnings, names fit (cards 12 px, round tiles 2 lines), integration 32/32 ×6 runs. build/qa/themeA/.
 - Waiting: 02 R13 (`wave_cleared`), 01 R5 (`banner.first_wave_cleared` text), 07 re-verification (requested 16:05).
+## 16:25 milestone 6051b3c (upgrade screen + QA-J3); user decision Q2 = "보류"
+- User: monetization on hold, so no ad-reward, shop, gems or remove-ads UI. Respected; the test asserts no premium/ad wording in the panel.
+- New src/ui/upgrade_panel.gd (modal from menu, round select and result). It calls only `Save.buy_upgrade(id, to_level)` (02 R14, 10's contract) and is inactive with a notice until 02 adds it. Each result has its own text, kind and glyph. Verified: tests/ui (fake Save: ok, not_enough_coins, max_level, save_failed, inactive); real engine on DISPLAY2 ko/en 1×/2×: inactive notice, integration 35/35 ×4 (build/qa/upg/).
+- QA-J3: octagon "econ" worker button; HUD resource names (반죽/기력). Asked 01 to retheme "보급 증가" (R6).
+- Waiting: 02 R13 (wave_cleared), R14 (buy_upgrade); 01 R5/R6 texts; 07 re-verification (16:05, 16:25).
 ## Unfinished / open (not done, do not claim)
 1. Theme-A labels: waiting for 01 to commit data/text. Then: run test_ui (typography gate) + worst-layout ko/en visible captures.
 2. 2.5× (non-integer) pixel text irregular (57–68% odd runs): waiting for 02 `scale_mode="integer"` (04 R9).
 3. Shared dev-tree import stale (ui_main, char_*_adv, char_boss_*): waiting for 02 `--import` (R11). Fresh snapshots render correctly.
 4. OFL licence text not in the APK; release preset should exclude mock/diag code and ship arm64 only (R12).
 5. APK not installed by 04 on any emulator (02 owns LaneDefence_Phone; slot requested in R12). No physical device; no release key/AAB (user actions).
-6. Not implemented: upgrade screen (P1), 2× speed UI, flash-limit/hold-toggle settings.
+6. Not implemented: 2× speed UI, flash-limit/hold-toggle settings. The upgrade screen exists (6051b3c) but cannot purchase until 02 R14.
 
 ## Exact next steps on resume
 1. Read coordinator-to-04-client.md, DECISIONS.md, 02-engine-to-04-client.md (R9/R11/R12 replies), 01-director-to-04-client.md (theme labels).
