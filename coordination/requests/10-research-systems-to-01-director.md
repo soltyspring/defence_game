@@ -65,3 +65,27 @@ Requested: confirm or adjust the intent checkpoints, and decide whether the L5 t
 
 ## v0.13 (~16:10 KST): one data rule needed for R5
 When a rebalance lowers an upgrade's max_level, RELEASE_DESIGN_REVIEW §3 says "clamp and refund". The refund amount for the removed levels is undefined once their costs are gone from meta.json. Options: (a) keep a `retired_costs` list per upgrade in data/migrations.json, (b) refund a fixed per-level amount, or (c) refund nothing but cap the level. 02 needs one of these before implementing content_version migration (details in DATA_AND_BACKEND_ANALYSIS.md §9.4 D). This is your decision; no user question needed.
+
+## v0.14 upgrade effect curve (~16:25 KST, clean HEAD ea16a8e, D22/D23 data, Q2 = 보류 by the user)
+Probe: docs/research/systems/probes/probe_upgrade_effect.gd. It uses the real BattleSim setup/deploy/_spawn_enemy/income code and the `_damage` formula, and does not simulate a battle over time.
+Run: `tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://docs/research/systems/probes/probe_upgrade_effect.gd --quit-after 600`
+No win rate, play time or retention is estimated. Tables are in DATA_AND_BACKEND_ANALYSIS.md §9.5.
+
+Perceptible vs excessive (summary). "Perceptible" here means hits-to-kill changes by ≥1, which is my ASSUMPTION; real feel needs a playtest.
+| Track | Perceptible from | Weak or no effect | Excess risk |
+|---|---|---|---|
+| melee/ranged/tank/fast hp+atk (+8%/L) | vs bosses/brute every level; vs grunt/swarm every 2–3 levels (e.g. melee vs r01 grunt 9→8 at L2, →7 at L4) | ranged and fast vs swarm change only at L5 | L5 (+32%) exceeds r10 enemy scaling (+27.5%); early replays at L5 are +30% ahead of r03 |
+| siege atk | only vs brute/bosses (r10 brute 9→8→7 at L2/L3) | **zero vs grunt/swarm/bomber at every level** (already 1–2 hits) | low |
+| hero hp+atk (+10%/L) | vs bosses/brute every level | vs r01 grunt changes only at L5; vs swarm never | L5 +40% |
+| base hp (+10%/L) | only in rounds where the base gets hit | 0 where the base is untouched (QA-J2 r01: 1500/1500) | low |
+| supply regen (+0.5/s, cap +25) | +50% at 0 workers | +12.5% at 8 workers (flat bonus) | low |
+| worker income (+0.25/s per worker) | beats the supply track at the same tier once you have ≥2 workers | small at 1 worker | low |
+| energy regen (3.0→4.6/s) | Slam spam and mixed casting | **none for Rally-only or Barrage-only casting**: they are cooldown-bound at L1 already (60/20 = 3.0/s, 80/30 = 2.67/s) | low |
+
+Points for your decision (I edit no data):
+(a) the siege atk track does nothing vs small enemies;
+(b) the energy track's text/expectation for single-skill users;
+(c) supply vs worker tracks are substitutes, and worker wins at ≥2 workers;
+(d) the LOW path is +0.5–6 %p ahead of enemy scaling in r03–r07 and 2–6.5 %p behind in r08–r10, so your sim A4 should focus on r08–r10;
+(e) QA-J2: the first r01 play is always at L1 (0 coins), so upgrades cannot explain or fix r01's lack of risk; that is a wave/base-data question.
+L5 mastery (D22): L5 is the first level where some hit counts change (ranged/fast vs swarm, hero vs r01 grunt, melee vs r10 spitter), so the tier has a measurable effect, not only +8%p.

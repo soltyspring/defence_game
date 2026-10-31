@@ -8,6 +8,13 @@ Updated: 2026-10-31 ~15:41 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
+## v0.14 (~16:26 KST): upgrade effect curve
+- User decision recorded: Q2 monetization = 보류 ("수익모델은 보류"). The economy is reviewed as clearable without monetization.
+- New probe docs/research/systems/probes/probe_upgrade_effect.gd (real BattleSim setup/deploy/_spawn_enemy/income + `_damage` formula), run at a clean HEAD ea16a8e snapshot without autoloads, exit 0.
+- Findings: unit L5 +32%, hero/base +40%. siege atk has 0 effect vs small enemies. Energy regen gives no extra casts for Rally/Barrage alone. Supply (flat) vs worker (per worker) tracks: worker wins at ≥2 workers. The LOW path is slightly ahead of enemy scaling in r03–r07 and slightly behind in r08–r10. L5 creates hit-count breakpoints vs some common enemies. The first r01 play is always at L1, so QA-J2 is a data question.
+- 01 request sent with the summary table. Doc §9.5.
+- Standby: Save.buy_upgrade not at HEAD; rerun probe_upgrade_transaction when it lands.
+
 ## v0.13 (~16:12 KST): R3 upgrade transaction + R5 content_version
 - New probe docs/research/systems/probes/probe_upgrade_transaction.gd, run in a clean full HEAD ab00170 snapshot (renamed project, `--import`, Save redirected to user://probe10).
 - A: no purchase API, so the purchase itself cannot be tested.
