@@ -177,7 +177,7 @@ def main() -> int:
               f"{h['faction_loo_accuracy_full']:.0%}, phone {h['faction_loo_accuracy_phone']:.0%}; centroid separation / spread "
               f"{h['faction_separation_phone']} (> 1 = groups apart); envelope graininess bread {h['grain_bread_phone']} vs mold "
               f"{h['grain_mold_phone']}.", ""]
-    REPORT.write_text("\n".join(L) + "\n", encoding="utf-8")
+    REPORT.write_text("\n".join(L).rstrip("\n") + "\n", encoding="utf-8")   # no blank line at EOF (git diff --check)
     for r in rows:
         print(f"{r['cue']:15s} snr_med {r['snr_median']:6.1f} p10 {r['snr_p10']:6.1f} masked {r['masked_pct']:5.1f}% risk {r['risk_pct']:5.1f}% phoneLUFS {r['abs_lufs_phone']}")
     print("faction LOO full", acc_full, "phone", acc_ph, "sep", round(sep, 2))
