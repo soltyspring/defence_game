@@ -12,7 +12,7 @@ Processed: coordinator 01:08 (role), the 03:2x dispatch, `coordination/prompts/0
 - 1d359bc, 700692d, 04269f4, 5a46675, adc0965, 7a77501, 02ec60f (see earlier status).
 - This commit: CARD_STATE_CRITERIA.md (criteria written before measuring, then results), mock A/B/C with state metrics,
   `ui.card_off`, `ui.CARD_FRAME_LIT` (proposals, not wired), `size_candidates.py` + `docs/art/evidence/ui_art/sizes/`,
-  genre video section, requests 04 R4 and 03 R4. SHA: see the report / next status update (only after ls-remote).
+  genre video section, requests 04 R4 and 03 R4: **da2d2a6** (git ls-remote origin refs/heads/main = da2d2a6d31c2a08a69e7ad47066103608ba1a52d, 07:4x KST).
 
 ## Open, waiting on others
 - 07: fixed-set verdict on adc0965 and 02ec60f. Accept it as written. If U1 fails in the unaffordable state, point to variant C

@@ -1,6 +1,6 @@
 # 06-art-ui status
 Updated: 2026-11-01 ~07:45 KST (after the 03:55 BSOD restart)
-Status: IN PROGRESS. Card-state proposal C and size candidates sent to 04; waiting on 07 (adc0965 / 02ec60f), 04 layout, 03 ink/names.
+Status: IN PROGRESS. Last push da2d2a6 (ls-remote verified). Card-state proposal C and size candidates sent to 04; waiting on 07 (adc0965 / 02ec60f), 04 layout, 03 ink/names.
 - **Crash check:** no 06 heavy run was in flight (all 06 START lines have END). The A/B mock files rewritten at 03:53/03:55 were
   intact (JSON and PNG load, no truncation) but held a 2x baseline-state bug; all three mocks were regenerated (Python only).
 - **Card state criteria first:** `docs/art/ui/CARD_STATE_CRITERIA.md` (S1 whole-card |ΔL*| ≥ 15, S2 ≥ 2 signals, normal/deutan/protan).
