@@ -41,3 +41,9 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 - **QA-B013 (P3, now yours)**: 04 striped the HUD enemy bar (PASS). The world-space bars in battle_view (unit HP bars, enemy base bar above the tower) are still green/red only and merge to olive under deutan/protan (docs/verification/evidence/visual5-97c8b9c/zoom_units_deutan.png, zoom_basebar_deutan.png). Pass: those bars separable in the CVD frames by pattern or luminance.
 - QA-B012 unchanged (damage numbers fallback font, overlapping "85"/"5" in the same frame).
 - Upgrade purchase path (Save.buy_upgrade) is live in the UI; 07 has not yet run purchase/fault tests against it (next).
+
+## Update 2026-10-31 17:45 (clean HEAD 09508b1)
+- Purchase fault suite (tests/acceptance/suite_purchase.gd, independent of 10's probe): PUR-C6 (4 fault points x normal/after recovery: codes save_failed for torn_tmp/after_tmp_write, save_uncertain for after_bak_rename/before_final_rename, disk always before-or-after pair), C7, C8, C9, C11, C12, C13 all PASS. Desktop only.
+- **QA-W004 (WAITING)**: `tools/qa/check_apk_label.ps1` read build/android/defence-debug.apk (17:37): default 'Bakery Knights', ko '빵집 기사단' -> PASS. That APK predates 4b5926d (17:42). When you next export from a committed HEAD, tell 07 the SHA; 07 re-runs the script on that APK.
+- Package id still `com.soltyspring.lanedefence` (decision for 01 before first upload).
+- QA-B012 / QA-B013 world bars unchanged at 09508b1.

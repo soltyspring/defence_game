@@ -22,9 +22,11 @@ Runs named `head-<sha>` / made with `run_acceptance.ps1 -Head` test a clean `git
 | QA-B014 | P3 | 01 | VERIFIED 97c8b9c for the 10 keys (c15e43a); new key split to QA-B016 | DATA-13/14 | 10 ui.upgrade* keys missing in data/text ko+en (renders only via 04 fallback) |
 | QA-B015 | P2 (pre-check) | 04 (cc 01) | VERIFIED 97c8b9c (2-line title logo fits at 34+34 notch, 1x/2x, ko/en) | VISUAL C7 | Q3 EN title 'Bakery Knights: Mold Defense' 588 px > 572 px notch safe width at menu title font |
 | QA-J3 | P2 | 04 | VERIFIED 68866e9 (C5) | VISUAL C5 | Worker vs soldier card + resource names |
-| QA-B016 | P3 | 01 (cc 04) | OPEN | DATA-13/14 | ui.upgrade_save_uncertain used in upgrade_panel.gd, missing in data/text ko+en |
+| QA-B016 | P3 | 01 (cc 04) | VERIFIED 09508b1 (DATA-13/14 PASS) | DATA-13/14 | ui.upgrade_save_uncertain used in upgrade_panel.gd, missing in data/text ko+en |
 | QA-B017 | P3 | 01 (cc 04) | OPEN (code reading, I) | wave HUD | Pressure waves (D18/D21) are excluded from the wave counter by contract, so after 'wave 3/3' more enemies arrive with no announcement or timer |
 | QA-J2 | P2 | 01 | CLOSED by D24(a) (rule PASS 97c8b9c) | probe_r01_risk | r01 is a tutorial; idle loses <=300 s, active players win |
+| QA-B018 | P3 | 01 | OPEN | VISUAL C15 | upgrade.supply_regen still '보급 증가' / 'Supply Boost' after the resource rename to 밀가루 / Flour |
+| QA-W004 | — | 02/04 | WAITING | C16 | Re-read APK label on an APK exported from a committed HEAD (current debug APK predates 4b5926d) |
 | QA-W001 | — | 01 | RESOLVED 2884231 (D18, cbfb0a8; R1/R2-LOSS PASS) | R1-LOSS, R2-LOSS | Workspace run 20261031-074155 only: with 01's uncommitted round edits (enemy_ai disabled), an idle player in r01/r02 no longer loses (base 1310/1500, 1365/1500 at the 900 s limit). Committed HEAD 462991a passes R1/R2-LOSS. Blocks commit of that data change unless intended |
 | QA-W002 | — | 02 | RESOLVED 2026-10-31 (e9dfaa4) | FLOW-03 | Uncommitted `_cue()` call broke battle.gd compile in workspace run 20261031-080624. 02 committed the audio cue integration in e9dfaa4; battles start at HEAD and in workspace; AUD-02 PASS |
 | QA-W003 | P2 at HEAD | 01 (cc 04) | RESOLVED (ui.star_* committed) | DATA-13/14 | Committed result.gd (183e4a6) uses `ui.star_win/star_base_hp/star_base_hp_any/star_time/star_time_any`; the text exists only in 01's uncommitted ko/en edits, so HEAD shows raw ids |

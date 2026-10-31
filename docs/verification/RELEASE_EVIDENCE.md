@@ -1,6 +1,6 @@
 # Release evidence matrix (owner: 07-qa)
-Latest full run: **HEAD 97c8b9c** (`-Head` clean snapshot with import guard, run 20261031-171211; Godot 4.7.2 headless, Windows desktop). Triage: [FAILURE_TRIAGE.md](FAILURE_TRIAGE.md). Visual: [VISUAL_CHECKS.md](VISUAL_CHECKS.md). Balance: [BALANCE_CROSSCHECK.md](BALANCE_CROSSCHECK.md).
-Counts: PASS 143 · FAIL 2 (DATA-13/14, QA-B016) · NOT_IMPLEMENTED 0 · NOT_TESTED 2 · BLOCKED 0; services suites exit 0. Summary: [runs/head-97c8b9c.md](runs/head-97c8b9c.md).
+Latest full run: **HEAD 09508b1** (`-Head`, import guard 0 missing, run 20261031-173017; Godot 4.7.2 headless, Windows desktop). Triage: [FAILURE_TRIAGE.md](FAILURE_TRIAGE.md). Visual: [VISUAL_CHECKS.md](VISUAL_CHECKS.md). Balance: [BALANCE_CROSSCHECK.md](BALANCE_CROSSCHECK.md).
+Counts: PASS 152 · FAIL 0 · NOT_IMPLEMENTED 0 · NOT_TESTED 2 · BLOCKED 0 (incl. purchase suite PUR-C6..C13); services suites exit 0. Summary: [runs/head-09508b1.md](runs/head-09508b1.md). 0 automated FAILs is not release readiness.
 
 **Scope warning:** desktop headless acceptance only. This is NOT Android release certification.
 `adb devices` at run time listed `emulator-5580` (an emulator, not a phone); no APK install or
@@ -38,5 +38,8 @@ on-device test has been done by 07-qa.
 | Rendered round-select text ko/en 1x/2x | PASS | VISUAL_CHECKS C1 (secondary monitor, HEAD 0590e7a); HUD/other screens reviewed visually only, no tofu seen; CVD full-frame review still open |
 | 06 services suites in regression | PASS | test_services + test_services_m2 exit 0 in runner (run 20261031-080846); mock adapters only |
 | Upgrade screen (coins only, Q2 보류) | PASS | VISUAL C6/C12: active with in-game coins, 0 monetization words |
-| Working title Q3 | PASS (menu logo) | VISUAL C11: 2-line logo fits at notch, ko/en 1x/2x; config/name and ui.title still "Lane Defence" |
+| Working title Q3 | PASS | VISUAL C11/C14: logo and forced text title fit at 34+34 notch, ko/en, 1x/2x |
 | First 3 minutes (J1/J2) | J1 OPEN, J2 CLOSED | J1: objects 5-7 % of view, 0 enemies on screen early (FIRST_3MIN_REVIEW); J2: D24(a) rule PASS (BALANCE_CROSSCHECK) |
+| Upgrade purchase fault tolerance | PASS | PUR-C6..C13 (4 fault points x normal/after recovery, read-only, recovery, balance edges, double tap, interleaving, pause) at 09508b1; desktop only |
+| Launcher label Q4 (APK) | PASS (pre-commit APK) | C16: ko '빵집 기사단', en 'Bakery Knights'; re-read on a HEAD-built APK is WAITING (QA-W004) |
+| Resource wording | FAIL (P3) | C15: QA-B018 'Supply Boost' |

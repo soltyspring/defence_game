@@ -88,3 +88,22 @@ The earlier attempt at 16ea2c2 (run 20261031-165935) is **void**: its snapshot i
 - `purchase_available()` is now true (02's `Save.buy_upgrade` landed): buttons enabled, no "coming soon" notice. Currency is in-game coins only; 0 monetization words on menu, upgrade panel and HUD in all 4 configs (Q2 보류 respected).
 
 ### C13 r08 crowd at 97c8b9c — 120 s real time, no pause (`focus_log` empty), 0 message overlaps, peak 29 units.
+
+## M10 run — clean origin/main HEAD 09508b1 (includes 01 a262640, 04 8104970, 02 4b5926d), 17:30–17:36
+Import guard 0 missing, 0 failed loads. Lock-screen guard: mean brightness of every capture sampled; none below 8/255 (no black frames, PC was not locked). All windows on `\\.\DISPLAY2`, EXIT_0 (`evidence/visual6-09508b1/launch_*.json`).
+
+### C14 `ui.title` text fallback (forced) and logo, 34+34 notch — PASS
+- `--force-text-title` sets 04's `TitleBlock.force_text` (8104970); `title_block.last_mode == "text"` confirmed.
+- en: "Bakery Knights:" 36 px bold **312 px** + "Mold Defense" 24 px **174 px**, both ≤ 572 px safe width, 1× and 2× (`en_{1x,2x}_notch_text_1_menu.png`).
+- ko: "빵집 기사단: 곰팡이 디펜스" one line, 36 px bold **456 px** ≤ 572 px, 1× and 2×.
+- Without forcing, the logo is drawn (`*_notch_logo_1_menu.png`); both fit. `ui.title` now holds the Q3 working title in ko/en (a262640).
+
+### C15 Resource term "밀가루 / Flour" consistency — FAIL (one string)
+- HUD resource label: **밀가루 / Flour** (`ko_1x_notch_text_3_r01_hud_t02.png`); data: `res.supply`, `unit.worker.desc`, `tut_buy_worker`, `toast.not_enough_gold` all use 밀가루 / flour.
+- Upgrade screen row 5 still reads **"보급 증가" / "Supply Boost"** (`upgrade.supply_regen`, `*_notch_text_2_upgrades.png`), the old resource word. → **QA-B018 (P3, 01)**.
+- Observation: at 1× with notch the HUD top-left drops the "+x/s" income rate (shown at 2×/full width); appears to be 04's width fallback, not filed.
+- Monetization words: 0 on menu, upgrade panel, HUD in all 6 configs (Q2 보류).
+
+## C16 APK launcher label (Q4) — PASS on the existing debug APK
+`tools/qa/check_apk_label.ps1` (aapt2 `dump badging`, build-tools 36.1.0) on `build/android/defence-debug.apk` (59 290 830 bytes, modified 17:37:43): default **"Bakery Knights"**, `ko` **"빵집 기사단"**, all other 87 locales "Bakery Knights"; exit 0 (`evidence/apk-label/defence-debug_20261031-1737.txt`).
+Limits: the APK was built by 02 from its working tree at 17:37, before the label commit 4b5926d (17:42); 07 did not export from HEAD (avoids import/export collisions with 02/04). This is a file read, not a launcher on a phone. Package id is still `com.soltyspring.lanedefence` (cannot change after first store upload; flagged to 01/02).

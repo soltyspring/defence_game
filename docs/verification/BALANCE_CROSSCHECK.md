@@ -19,3 +19,14 @@ Reproduce: `Godot_console --headless --path <HEAD snapshot> -s res://tests/accep
 
 ## r01 rule D24(a) (QA-J2) — PASS
 `probe_r01_risk.gd --seeds=20` at 97c8b9c: competent 20/20 W, late start at 45 s 20/20 W (median 138 s), casual 20/20 W, idle 0/20 W with **20/20 losses by base destruction, the latest at 258.1 s** (≤ 300 s). Base damage for active play is 0 %, which D24(a) allows. J2 is closed as a design decision; the risk-ramp question moves to r05 (reading 3).
+
+## Re-run after a262640 (D25), HEAD 09508b1 snapshot, 17:38
+Same probe, same seeds. `git diff a262640 09508b1` touches only battle_sim.gd (02) in sim/data.
+| Round | Budget | 07 competent (10) | 01 D25 competent (5) | 07 casual (10) |
+|---|---|---|---|---|
+| r05 | LOW | 10/10 · 259 s · worst 0.57 | 5/5 · 267 s · 0.40 | **0/10** |
+| r05 | none | 10/10 · 363 s · worst **0.03** | 5/5 · 263 s · 1.00 | 0/10 |
+| r09 | LOW | 10/10 · 184 s · 1.00 | 5/5 · 226 s · 1.00 | 10/10 · 0.51 |
+| r10 | LOW | 10/10 · 445 s · 0.92 | 5/5 · 464 s · 0.69 (d25_r10) | **0/10** |
+| r10 | none | 1/10 | 1/5 | 0/10 |
+Result: unchanged by D25 for r05/r09; r10 median 436 -> 445 s. **Casual still loses r05 and r10 0/10 at LOW.** The r05 'none' disagreement (0.03 vs 1.00) remains. Note 01's own D25 r10 HIGH worst base 0.18 (lower than LOW 0.69), a non-monotonic budget effect 07 did not test.

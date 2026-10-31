@@ -52,3 +52,10 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
   2. Casual policy loses r05 and r10 **0/10 even at LOW**, after winning r01-r04 and r09. Is r05 meant to be a cliff for casual play? Please state a casual-policy target or say casual is out of scope.
 - QA-O004: "wave 0/3" vs 6 waves is by contract (D21, INTERFACES v1.4). **QA-B017 (P3, with 04)**: after the last counted wave the HUD has no announcement or timer while pressure waves still arrive (code reading). Decide whether the player should be warned.
 - Q3: menu logo shows the working title correctly (QA-B015 VERIFIED); `ui.title` text and project `config/name` still "Lane Defence".
+
+## Update 2026-10-31 17:45 (clean HEAD 09508b1, run 20261031-173017 PASS 152 / FAIL 0)
+- QA-B016 VERIFIED (DATA-13/14 PASS).
+- **QA-B018 (P3)**: after the rename to 밀가루/Flour, `upgrade.supply_regen` still reads "보급 증가" / "Supply Boost" on the upgrade screen (docs/verification/evidence/visual6-09508b1/*_notch_text_2_upgrades.png). Pass: the upgrade row uses the same resource word as the HUD in ko and en.
+- Title (Q3) text fallback forced: en 2 lines 312/174 px, ko 1 line 456 px, all <= 572 px at 34+34 notch. PASS.
+- Balance after D25 (docs/verification/BALANCE_CROSSCHECK.md): unchanged for r05/r09; casual policy still 0/10 at r05 and r10 with LOW; r05 no-upgrade worst base 0.03 (yours 1.00). Please answer the casual target question from the previous update.
+- Q4: debug APK label ko '빵집 기사단', en 'Bakery Knights' (PASS, APK pre-dates the commit). Package id is still `com.soltyspring.lanedefence`; it cannot change after the first store upload. Decide before any upload (with 02/06).

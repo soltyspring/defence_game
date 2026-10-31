@@ -7,12 +7,8 @@ Updated 2026-10-31 09:18 +09:00. Scope: desktop headless Godot 4.7.2 on Windows.
 | **HEAD** | `.\tools\qa\run_acceptance.ps1 -Head` | clean `git archive` of committed HEAD in `%TEMP%\qa07_head` (own import, current tests overlaid) → **committed defect** |
 | **Workspace** | `.\tools\qa\run_acceptance.ps1` | shared tree with every worker's uncommitted WIP → only here = **work-tree contamination** |
 
-## Current: HEAD 97c8b9c, run 20261031-171211 (import guard: 0 missing)
-PASS 143 · FAIL 2 · NOT_TESTED 2 (AUD-03, PLAT-03) · BLOCKED 0; services suites exit 0.
-| Check | Bug | Owner | Cause | Reproduce | Pass criterion |
-|---|---|---|---|---|---|
-| DATA-13, DATA-14 | QA-B016 P3 | 01 (cc 04) | ui.upgrade_save_uncertain used in upgrade_panel.gd, not in data/text ko+en | -Head -Only data | both PASS |
-Void run: 20261031-165935 at 16ea2c2 (snapshot import incomplete, 116 failed loads).
+## Current: HEAD 09508b1, run 20261031-173017 (import guard 0 missing)
+PASS 152 · FAIL 0 · NOT_TESTED 2 (AUD-03, PLAT-03) · BLOCKED 0; services exit 0. Open non-automated findings: QA-B012, QA-B013 (world bars), QA-B017, QA-B018, QA-J1 (see BUG_REGISTER).
 
 ## Verified fixed (same check IDs, HEAD condition)
 | Bug | Fix commit | Verified at | Checks |
@@ -30,6 +26,8 @@ Void run: 20261031-165935 at 16ea2c2 (snapshot import incomplete, 116 failed loa
 | QA-B010 round name clipping | 5a2099d (04: 2-line tiles) | abe2303 | TH-FIT-ROUND-KO/EN (check mirrors `wrap_lines=2` via `UiStyle.fit_lines`; 3 KO and 7 EN names wrap; 2-line vertical fit not rendered by 07) |
 
 | QA-B011 CVD colour proxy | 7705aec (03) | 3b2d830 | TH-COL-NORMAL/PROTAN/DEUTAN/TRITAN |
+
+| QA-B016 ui.upgrade_save_uncertain text | 01 | 09508b1 | DATA-13/14 |
 
 ## Work-tree contamination
 | Warning | Owner | Status |

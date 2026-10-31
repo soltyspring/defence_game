@@ -1,0 +1,148 @@
+{
+  "insets": [
+    34.0,
+    0.0,
+    34.0,
+    0.0
+  ],
+  "j1": [
+    {
+      "enemies_on_screen": 0,
+      "lane_band_pct": 16.1,
+      "object_area_pct": 5.0,
+      "objects_on_screen": 2,
+      "sim_t": 7.0
+    },
+    {
+      "enemies_on_screen": 0,
+      "lane_band_pct": 16.1,
+      "object_area_pct": 5.0,
+      "objects_on_screen": 2,
+      "sim_t": 12.0
+    },
+    {
+      "enemies_on_screen": 0,
+      "lane_band_pct": 16.1,
+      "object_area_pct": 5.0,
+      "objects_on_screen": 2,
+      "sim_t": 17.0
+    },
+    {
+      "enemies_on_screen": 1,
+      "lane_band_pct": 16.1,
+      "object_area_pct": 6.0,
+      "objects_on_screen": 4,
+      "sim_t": 22.0
+    },
+    {
+      "enemies_on_screen": 4,
+      "lane_band_pct": 16.1,
+      "object_area_pct": 7.7,
+      "objects_on_screen": 8,
+      "sim_t": 27.0
+    },
+    {
+      "enemies_on_screen": 4,
+      "lane_band_pct": 16.1,
+      "object_area_pct": 7.9,
+      "objects_on_screen": 10,
+      "sim_t": 32.0
+    }
+  ],
+  "j3": {
+    "hud_texts": [],
+    "res_energy": "Energy",
+    "res_supply": "Flour",
+    "soldier": {
+      "fill": "(0.22, 0.25, 0.33, 0.95)",
+      "shape": "rect",
+      "size": [
+        50.0,
+        56.0
+      ],
+      "sub": "30",
+      "text": "Toast"
+    },
+    "tut_buy_worker": "Hire bakers to gather flour faster.",
+    "worker": {
+      "fill": "(0.3, 0.26, 0.16, 0.95)",
+      "shape": "econ",
+      "size": [
+        50.0,
+        56.0
+      ],
+      "sub": "40",
+      "text": "Baker"
+    }
+  },
+  "money_hud": [],
+  "money_menu": [],
+  "terms": {
+    "hud": [],
+    "res_supply": "Flour",
+    "upgrades": []
+  },
+  "title": {
+    "drawn": "Bakery Knights: Mold Defense",
+    "fits": false,
+    "projected_en_w": 588.0,
+    "projected_ko_w": 456.0,
+    "q3_present": true,
+    "safe_w": 572.0,
+    "width": 588.0
+  },
+  "title_block": {
+    "force_text": true,
+    "lines": [
+      {
+        "fits": true,
+        "size": 36,
+        "text": "Bakery Knights:",
+        "width": 312.0
+      },
+      {
+        "fits": true,
+        "size": 24,
+        "text": "Mold Defense",
+        "width": 174.0
+      }
+    ],
+    "mode": "text",
+    "text": "Bakery Knights: Mold Defense"
+  },
+  "upgrade": {
+    "all_disabled": false,
+    "buttons": [
+      {
+        "disabled": false,
+        "text": "Upgrade",
+        "truncated": false
+      },
+      {
+        "disabled": false,
+        "text": "Upgrade",
+        "truncated": false
+      },
+      {
+        "disabled": false,
+        "text": "Upgrade",
+        "truncated": false
+      },
+      {
+        "disabled": false,
+        "text": "Upgrade",
+        "truncated": false
+      },
+      {
+        "disabled": false,
+        "text": "Upgrade",
+        "truncated": false
+      }
+    ],
+    "buttons_outside_safe": 0,
+    "money_words": [],
+    "purchase_available": true,
+    "status_text": ""
+  },
+  "view": "(640.0, 360.0)"
+}

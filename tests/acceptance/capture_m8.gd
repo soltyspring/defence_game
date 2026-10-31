@@ -30,6 +30,7 @@ func _initialize() -> void:
 		if a.begins_with("--shot-dir="): shot_dir = a.get_slice("=", 1)
 		elif a.begins_with("--tag="): tag = a.get_slice("=", 1)
 		elif a.begins_with("--locale="): UiText.load_locale(a.get_slice("=", 1))
+		elif a == "--force-text-title" and ResourceLoader.exists("res://src/ui/title_block.gd"): load("res://src/ui/title_block.gd").force_text = true
 		elif a.begins_with("--insets="):
 			var p := a.get_slice("=", 1).split(",")
 			insets = Vector4(float(p[0]), float(p[1]), float(p[2]), float(p[3]))
@@ -91,6 +92,14 @@ func _money(n: Node) -> Array:
 			if hit: hits.append({"text": t, "word": w})
 	return hits
 
+const TERMS := ["밀가루", "반죽", "보급", "Flour", "Dough", "Supply"]
+func _terms(n: Node) -> Array:
+	var out := []
+	for t in _texts(n):
+		for w in TERMS:
+			if str(t).find(w) >= 0: out.append({"term": w, "text": t})
+	return out
+
 func _find(n: Node, suffix: String) -> Node:
 	for c in _walk(n, []):
 		if c.get_script() and str(c.get_script().resource_path).ends_with(suffix): return c
@@ -117,6 +126,15 @@ func _run() -> void:
 		"q3_present": cur.find("Bakery Knights") >= 0 or cur.find("빵집 기사단") >= 0,
 		"projected_en_w": UiStyle.text_width(Q3_TITLE_EN, UiStyle.FONT_XL, &"bold"), "projected_ko_w": UiStyle.text_width(Q3_TITLE_KO, UiStyle.FONT_XL, &"bold")}
 	rep.title.fits = rep.title.width <= sw
+	if ResourceLoader.exists("res://src/ui/title_block.gd"):
+		var TB = load("res://src/ui/title_block.gd")
+		var lines := []
+		for ln in TB.last_lines:
+			var txt := str(ln[0]) if ln is Array else str(ln)
+			var sz := int(ln[1]) if ln is Array and ln.size() > 1 else UiStyle.FONT_XL
+			lines.append({"text": txt, "size": sz, "width": UiStyle.text_width(txt, sz, &"bold"), "fits": UiStyle.text_width(txt, sz, &"bold") <= sw})
+		rep.title_block = {"mode": str(TB.last_mode), "force_text": bool(TB.force_text), "lines": lines, "text": TB.title_text()}
+	rep.terms = {}
 	rep.money_menu = _money(app.ui_layer)
 	# ---- upgrade panel
 	var menu := _find(app.ui_layer, "ui/main_menu.gd")
@@ -134,6 +152,7 @@ func _run() -> void:
 		rep.upgrade = {"purchase_available": up.purchase_available() if up.has_method("purchase_available") else null,
 			"status_text": str(up.get("status_text")), "buttons": btns, "all_disabled": btns.all(func(x): return x.disabled),
 			"buttons_outside_safe": outside, "money_words": _money(up)}
+		rep.terms["upgrades"] = _terms(up)
 		if up.has_method("close"): up.close()
 		else: up.hide()
 		await _frames(3)
@@ -153,6 +172,8 @@ func _run() -> void:
 			"res_supply": UiText.t("res.supply"), "res_energy": UiText.t("res.energy"),
 			"tut_buy_worker": UiText.t("tut_buy_worker")}
 		rep.money_hud = _money(hud)
+		rep.terms["hud"] = _terms(hud)
+		rep.terms["res_supply"] = UiText.t("res.supply")
 	# ---- J1: casual bot at normal speed (driven per rendered frame with the real frame delta)
 	var sim = app.battle.sim if app.battle else null
 	rep.j1 = []
