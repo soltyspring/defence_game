@@ -21,6 +21,8 @@ func _run(sim, bot, seed_v: int, start_delay: float) -> Dictionary:
 	var prev: float = float(sim.player_base.hp)
 	var since_act := 0.0
 	var boss_in := -1.0
+	var hit_src := {}          # D36: base damage split by source ("wave<N>" scripted wave, "other" = trickle/trigger/pressure)
+	var first_hit_who := []    # enemy ids + wave tag near the base at the first base hit
 	var boss_out := -1.0
 	while not sim.ended and sim.t < 900.0:
 		if bot != null:
@@ -36,7 +38,17 @@ func _run(sim, bot, seed_v: int, start_delay: float) -> Dictionary:
 		var hp: float = float(sim.player_base.hp)
 		if hp < prev:
 			base_dmg += prev - hp
-			if first_hit < 0.0: first_hit = sim.t
+			var near := []
+			for e in sim.enemies:
+				if not e.dying and absf(e.x - float(sim.player_base.x)) <= float(e.def.range) + 40.0:
+					near.append(e)
+			for e in near:
+				var key: String = ("wave%d" % e.wave_tag) if e.wave_tag > 0 else "other"
+				hit_src[key] = float(hit_src.get(key, 0.0)) + (prev - hp) / float(near.size())
+			if first_hit < 0.0:
+				first_hit = sim.t
+				for e in near: first_hit_who.append("%s@%s" % [str(e.def.id), ("w%d" % e.wave_tag) if e.wave_tag > 0 else "other"])
+				first_hit_who.append("enemy_base=%.2f" % (float(sim.enemy_base.hp) / float(sim.enemy_base.hp_max)))
 		prev = hp
 		var boss_alive := false
 		for e in sim.enemies:
@@ -49,7 +61,7 @@ func _run(sim, bot, seed_v: int, start_delay: float) -> Dictionary:
 		if ev_seen > 4000:
 			sim.events.clear(); ev_seen = 0
 	return {"won": sim.won, "t": snappedf(sim.t, 0.1), "pbase": snappedf(float(sim.player_base.hp) / float(sim.player_base.hp_max), 0.01),
-		"base_dmg": snappedf(base_dmg, 1.0), "first_base_hit_t": snappedf(first_hit, 0.1), "wave1_cleared_t": snappedf(w1_clear, 0.1), "boss_spawn_t": snappedf(boss_in, 0.1), "boss_dead_t": snappedf(boss_out, 0.1), "stars": int(sim.result().stars) if sim.won else 0}
+		"base_dmg": snappedf(base_dmg, 1.0), "first_base_hit_t": snappedf(first_hit, 0.1), "wave1_cleared_t": snappedf(w1_clear, 0.1), "boss_spawn_t": snappedf(boss_in, 0.1), "boss_dead_t": snappedf(boss_out, 0.1), "hit_src": hit_src, "first_hit_who": first_hit_who, "stars": int(sim.result().stars) if sim.won else 0}
 
 func _initialize() -> void:
 	var a := OS.get_cmdline_user_args()

@@ -112,3 +112,25 @@ End base per seed, LOW budget (band 0.6–0.9 hits / 5):
 | p130 (+0.2) | 0.22,0.00,0.94,1,0.57 (0) | 1,1,1,0.47,0.71 (1) | 1,0,1,0.21,0 (0) | r04 casual LOW 3/5 W |
 Conclusion: raising pressure jumps from "untouched" to "heavy damage or loss" without a stable band. The target is withdrawn (D35a). 02's mechanic options did not produce it either (D34).
 r02 length: enemy base 800 → competent median 216 s (max 362), casual 115 s. The competent bot stalls in some seeds; the cause is in the bot, not the round.
+## Update 2026-10-31 (8) — cliff cause and local candidates (D36), r05 boss hp (D37)
+All runs: isolated sweep.ps1 under heavy_run.ps1, one candidate per run, 02 bots (competent skill 2, casual skill 1), seeds 1–5, LOW budget. Attribution: base damage split by the wave tag of the enemies within range+40 px of the base ("other" = trickle/trigger/pressure).
+Cause (p130 data, 12 base-hit cases): first base hit at 222–372 s; damage 67% other, 24% wave 4, 9% wave 3; r02 hits are all grunts from the pressure waves/trickle; r03/r04 are spitter piles plus the r04 brute.
+| data | round | competent LOW: seeds end<1.00 / wins | competent end base per seed | competent t median | casual LOW wins | casual worst end | idle loss (s) |
+|---|---|---|---|---|---|---|---|
+| D30 current | r02 | 0/5 · 5/5 W | 1.00,1.00,1.00,1.00,1.00 | 171 | 5/5 | 1.00 | 277 |
+| D30 current | r03 | 0/5 · 5/5 W | 1.00,1.00,1.00,1.00,1.00 | 212 | 5/5 | 0.48 | 221 |
+| D30 current | r04 | 0/5 · 5/5 W | 1.00,1.00,1.00,1.00,1.00 | 221 | 5/5 | 1.00 | 181 |
+| global +0.1 (p120) | r02 | 2/5 · 5/5 W | 0.89,0.53,1.00,1.00,1.00 | 367 | 5/5 | 1.00 | 256 |
+| global +0.1 (p120) | r03 | 1/5 · 5/5 W | 1.00,1.00,0.22,1.00,1.00 | 238 | 5/5 | 1.00 | 202 |
+| global +0.1 (p120) | r04 | 1/5 · 5/5 W | 1.00,1.00,1.00,1.00,0.60 | 211 | 5/5 | 0.19 | 179 |
+| global +0.2 (p130) | r02 | 4/5 · 4/5 W | 0.22,0.00,0.94,1.00,0.57 | 368 | 5/5 | 0.05 | 252 |
+| global +0.2 (p130) | r03 | 2/5 · 5/5 W | 1.00,1.00,1.00,0.47,0.71 | 218 | 5/5 | 1.00 | 206 |
+| global +0.2 (p130) | r04 | 3/5 · 3/5 W | 1.00,0.00,1.00,0.21,0.00 | 269 | 3/5 | 0.00 | 175 |
+| C1 local wave 165 s | r02 | 1/5 · 5/5 W | 1.00,1.00,0.73,1.00,1.00 | 273 | 5/5 | 1.00 | 246 |
+| C1 local wave 165 s | r03 | 1/5 · 5/5 W | 1.00,1.00,0.75,1.00,1.00 | 258 | 5/5 | 1.00 | 212 |
+| C1 local wave 165 s | r04 | 3/5 · 5/5 W | 0.78,0.63,0.70,1.00,1.00 | 430 | 5/5 | 1.00 | 181 |
+| C2 C1 + late softening | r02 | 0/5 · 5/5 W | 1.00,1.00,1.00,1.00,1.00 | 161 | 5/5 | 1.00 | 277 |
+| C2 C1 + late softening | r03 | 0/5 · 5/5 W | 1.00,1.00,1.00,1.00,1.00 | 239 | 5/5 | 0.64 | 214 |
+| C2 C1 + late softening | r04 | 0/5 · 5/5 W | 1.00,1.00,1.00,1.00,1.00 | 235 | 5/5 | 1.00 | 184 |
+Reading: damage exists only in rounds that last past ~220 s. C1 turns some long rounds into partial damage without losses (milder cliff than global scaling), but lengthens them. C2's late softening removes the damage, which confirms that the late phase is the source.
+r05 boss hp 1300 (10 seeds): kill time 202/184 s (was 217/202), medians 356/344 s; not enough (D37).

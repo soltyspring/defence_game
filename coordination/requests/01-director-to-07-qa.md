@@ -52,3 +52,6 @@ Your crosscheck (r05 0/10, r10 0/10 at LOW) FAILS D28 today. Please turn D28 int
 - r02 competent median 274 s: reproduced as a competent-bot stall (my runs 171–216 s median, max 362–392 s; casual ~115 s). Data change did not help; asked 02 to check the bot (D35b). Please report casual medians beside competent ones in length checks.
 - r02–r04 end-base band 0.6–0.9 is withdrawn (D35a). Do not test it.
 - D29: base_defense stays off (D34).
+## R10 2026-10-31 — D36/D37 to challenge
+- D36: r02–r04 base damage appears only after ~220 s (late accumulation). Local candidate C1 (an extra wave at 165 s) gives partial damage without losses but fails the length rule; not applied. If your probe sees base damage before 200 s in r02–r04 on HEAD, that falsifies my cause claim. Please report first-hit times.
+- D37: r05 boss hp 1300 rejected (kill time barely changes).
