@@ -5,6 +5,8 @@
 #   FAKE_ADB_STATE = directory for call counters and "pushed" files (created by the test)
 #   FAKE_ADB_ZOOM_SUPPORTED = 1 -> the fake game honours --world-zoom-plus-one (zoom 4/3 at scale 3); otherwise it reports zoom=1
 #   FAKE_ADB_USB   = 1 -> dumpsys battery says USB powered
+#   FAKE_ADB_SCREEN = PNG returned by screencap/pull (default: the real non-blank emulator menu in fixtures/android_real/good_screen)
+#   FAKE_ADB_LOGCAT_EXTRA = text file appended to every logcat dump (e.g. 10's real SwiftShader shader-link failure)
 # Fixed samples: screen 1080x2400 (canvas scale 3), MemTotal 3794000 kB (low tier), frame intervals 9 x 16.667 ms + 1 x 33.333 ms
 # repeating (p50 16.667, p95 33.333, janky share 0.1), TOTAL PSS 185432 kB, Graphics 41000 kB, CPU 45 %, battery temperature
 # 30.0 C + 0.5 C per dumpsys battery call in a scene, level 100 - (call / 4), current -350000 uA, thermal status 1, cold start
@@ -37,6 +39,11 @@ if ($a.Count -ge 1 -and $a[0] -eq 'devices') {
 if ($a.Count -ge 2 -and $a[0] -eq '-s') { $a = $a[2..($a.Count - 1)] }
 $verb = $a[0]
 if ($verb -eq 'install') { "Performing Streamed Install"; "Success"; return }
+if ($verb -eq 'pull') {
+    $src = if ($env:FAKE_ADB_SCREEN) { $env:FAKE_ADB_SCREEN } else { Join-Path $PSScriptRoot '..\android_real\good_screen\screen_menu_emu08_20261031.png' }
+    if (Test-Path (Join-Path $state 'screencap_taken')) { Copy-Item -LiteralPath $src -Destination $a[2] -Force; "$($a[1]): 1 file pulled" } else { "adb: error: failed to stat remote object '$($a[1])': No such file or directory" }
+    return
+}
 if ($verb -eq 'push') { Copy-Item -LiteralPath $a[1] -Destination (Join-Path $state 'pushed_args.txt') -Force; "$($a[1]): 1 file pushed, 0 skipped."; return }
 if ($verb -eq 'logcat') {
     if ($a -contains '-c') { Reset 'logcat'; Reset 'battery'; return }
@@ -51,6 +58,7 @@ if ($verb -eq 'logcat') {
         $gpu = 4.0 + ($i % 3)   # 4, 5, 6
         "11-01 09:00:{0:d2}.000  4321  4350 I godot   : [perf08] t={1} fps=54.5 frame_ms=18.3 dc=58 gpu_ms={2:0.0} rcpu_ms=1.2 tex_mib=12.5 scale=3 zoom={3} units=73" -f ($i % 60), ($i + 1), $gpu, $z
     }
+    if ($env:FAKE_ADB_LOGCAT_EXTRA) { Get-Content -LiteralPath $env:FAKE_ADB_LOGCAT_EXTRA }
     return
 }
 if ($verb -ne 'shell') { "fake adb: unsupported '$($a -join ' ')'"; return }
@@ -65,6 +73,8 @@ switch -Regex ($cmd) {
         "[ro.kernel.qemu]: [$q]"; "[ro.build.fingerprint]: [FakeMaker/fake1080/fake1080:13/FAKE/1:user/release-keys]"
         break
     }
+    '^screencap -p /sdcard/perf08_screen.png$' { Set-Content (Join-Path $state 'screencap_taken') '1'; break }
+    '^rm /sdcard/perf08_screen.png$' { Remove-Item (Join-Path $state 'screencap_taken') -ErrorAction SilentlyContinue; break }
     '^wm size$' { "Physical size: 1080x2400"; break }
     '^wm density$' { "Physical density: 420"; break }
     '^cat /proc/meminfo$' { "MemTotal:        3794000 kB"; "MemFree:          812000 kB"; break }

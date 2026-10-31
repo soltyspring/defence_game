@@ -1,0 +1,1 @@
+Copied 2026-11-01 by 08 from 10-research-systems' evidence docs/research/systems/evidence/emu_ac9_20261101 (commit of 10's v0.34 job): real logcat and screencaps of the debug APK eb8d5c4 on 02's LaneDefence_Phone AVD with -gpu swiftshader_indirect (EMULATOR; SceneShaderGLES3 link failure). Format and failure samples only, not performance evidence.

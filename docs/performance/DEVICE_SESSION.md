@@ -40,6 +40,17 @@ No Godot or emulator was run for this preparation.
   -d and the game log.
 - Frame metrics: p50/p95/p99 of the present intervals, janky share (interval > 1.5 × refresh period), mean fps and coverage.
   The game lines give draw calls, GPU and render-CPU ms, texture MiB, canvas scale, zoom and units.
+- **Blank-screen guards** (2026-11-01): frame counts alone can pass on a blank screen. 10's emulator run showed that Godot keeps
+  presenting frames after `SceneShaderGLES3: Program linking failed` / `Fragment shader active uniforms exceed
+  GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)`. Each scene therefore (a) scans the game log for shader compile/link failures and GL/EGL
+  errors (`GLES_SHADER_ERROR`; the normal "Failed to load cached shader, recompiling." warning is ignored), and (b) takes one
+  screenshot after settle (`screencap` + `pull`) and counts colours and luma spread on a 1/8 grid. `BLANK_SCREEN` means ≤ 2
+  colours or luma std < 2; `NO_SCREENCAP` means the screenshot is missing. Any of the three makes the scene INVALID, so it is
+  never judged. Calibration on real emulator frames: the blank SwiftShader frame has 1 colour / std 0, the menu 15–19 colours /
+  std 34–35. 10's first-launch frame after the link failure still showed the menu (64 colours), so only the log check catches
+  that case.
+- Soak windows: only windows covering at least half the window length are compared. A trailing partial window has edge-biased
+  fps; the self-test caught this (ratio 1.039 on a constant pattern).
 - The soak is one scene for 18 min with 10 s samples. 2-min windows report fps and p95; the soak judges the last window against
   the first, the temperature rise, the thermal status maximum and the battery drop per 30 min (only when not powered).
 
@@ -70,7 +81,7 @@ Not in the criteria yet, but recorded: CPU %, current (mA, vendor sign conventio
 PASS / FAIL / NOT_MEASURED / NOT_APPLICABLE per criterion. One phone decides one tier only; the release decision needs the
 minimum device matrix in ANDROID_PROFILING.md §11.
 
-## 4. Self-test without a phone (2026-11-01 07:34, `tests/performance/test_device_session.ps1`): 36/36 PASS
+## 4. Self-test without a phone (2026-11-01 07:52, `tests/performance/test_device_session.ps1`): 41/41 PASS
 - Stops with exit 2 and no output folder for 0 devices, 2 devices and an unauthorised device; refuses the emulator and the
   release package; stops when the APK is missing.
 - With the fake phone (1080×2400, MemTotal 3.79 GB → low tier, scale 3) the summary reproduces the fixed samples: p50 16.667
@@ -81,6 +92,10 @@ minimum device matrix in ANDROID_PROFILING.md §11.
 - A zoom-on scene is INVALID (ZOOM_NOT_APPLIED) while the fake game has no zoom flag, and valid when it has one.
 - Soak (4 nominal minutes, 4-s windows for the test): ≥ 2 windows, fps and p95 ratios ≈ 1. The temperature rise follows
   0.5 °C per sample. Battery drain is judged on battery and NOT_MEASURED on USB power.
+- Blank-screen guards with REAL emulator samples (`tests/performance/fixtures/android_real/`, copied from 10's evidence and 08's
+  2026-10-31 capture): 10's shader-link log → INVALID `GLES_SHADER_ERROR` (10 matching lines) even though its screenshot is not blank;
+  10's blank frame → INVALID `BLANK_SCREEN` although 547 frames were presented; the real menu frame → valid. An INVALID scene
+  leaves the battle criteria NOT_MEASURED.
 - The real adb with no phone attached: `NOT_ONE_DEVICE: 0`, exit 2.
 - Not tested: a real phone, real dumpsys formats of other vendors (the parsers follow AOSP output and the emulator run of
   2026-10-31 for SurfaceFlinger), wireless adb, a real perf APK.

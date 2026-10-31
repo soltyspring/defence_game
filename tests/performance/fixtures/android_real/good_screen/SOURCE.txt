@@ -1,0 +1,1 @@
+Real screencap of the game menu on 02's LaneDefence_Phone AVD (-gpu host), taken by 08 on 2026-10-31 19:23 (docs/performance/ANDROID_PROFILING.md §12). EMULATOR; used only as a non-blank screen sample.

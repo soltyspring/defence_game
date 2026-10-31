@@ -179,6 +179,43 @@ if ($Soak) {
 }
 if ($plan.Count -eq 0) { Write-Host "NO_SCENES: -Only $($Only -join ',') matched nothing in $ScenesFile"; exit 1 }
 
+# ---------------------------------------------------------------- blank-screen guards (a frame count alone can PASS on a blank screen)
+# 1) logcat: shader compile / link failures and GL errors (real sample: 10's emulator run, Godot 4.7.2 + SwiftShader:
+#    "ERROR: SceneShaderGLES3: Program linking failed:" / "Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)").
+#    "WARNING: Failed to load cached shader, recompiling." is a normal cache miss and is ignored.
+$GlesErrorPattern = '(?i)(ShaderGLES3: (Program linking|Vertex shader compilation|Fragment shader compilation|Shader compilation) failed|shader (compilation|compile|link|linking) failed|uniforms exceed GL_MAX_\w+|GL ERROR|GL_INVALID_(ENUM|VALUE|OPERATION|FRAMEBUFFER_OPERATION)|GL_OUT_OF_MEMORY|EGL_BAD_\w+|eglCreate\w+ failed|Vulkan.*failed|Couldn''t create.*(context|surface))'
+function Gles-Errors([string]$log) {
+    return @($log -split "`r?`n" | Where-Object { $_ -match $GlesErrorPattern -and $_ -notmatch 'Failed to load cached shader' })
+}
+# 2) one screenshot per scene: unique colours and luma spread on a 1/8 grid. Blank = <= 2 colours or luma std < 2.
+#    Calibration (real emulator frames): blank SwiftShader frame 1 colour / std 0; the pixel-art menu 19 colours / std 34.
+function Screen-Stats([string]$png) {
+    Add-Type -AssemblyName System.Drawing
+    $bmp = [System.Drawing.Bitmap]::new($png)
+    try {
+        $rect = [System.Drawing.Rectangle]::new(0, 0, $bmp.Width, $bmp.Height)
+        $bd = $bmp.LockBits($rect, [System.Drawing.Imaging.ImageLockMode]::ReadOnly, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+        $bytes = New-Object byte[] ($bd.Stride * $bmp.Height)
+        [System.Runtime.InteropServices.Marshal]::Copy($bd.Scan0, $bytes, 0, $bytes.Length)
+        $bmp.UnlockBits($bd)
+        $set = New-Object 'System.Collections.Generic.HashSet[int]'
+        $n = 0; $sum = 0.0; $sq = 0.0
+        for ($y = 0; $y -lt $bmp.Height; $y += 8) {
+            $row = $y * $bd.Stride
+            for ($x = 0; $x -lt $bmp.Width; $x += 8) {
+                $i = $row + 4 * $x
+                $b = $bytes[$i]; $g = $bytes[$i + 1]; $r = $bytes[$i + 2]
+                [void]$set.Add(($r -shl 16) -bor ($g -shl 8) -bor $b)
+                $l = 0.299 * $r + 0.587 * $g + 0.114 * $b
+                $n++; $sum += $l; $sq += $l * $l
+            }
+        }
+        $mean = $sum / $n
+        return [ordered]@{ width = $bmp.Width; height = $bmp.Height; unique_colors = $set.Count; luma_mean = [math]::Round($mean, 1)
+            luma_std = [math]::Round([math]::Sqrt([math]::Max(0, $sq / $n - $mean * $mean)), 2) }
+    } finally { $bmp.Dispose() }
+}
+
 function Find-Layer {
     $list = (Sh 'dumpsys SurfaceFlinger --list') -split "`r?`n" | Where-Object { $_ -match 'SurfaceView' -and $_ -match [regex]::Escape($Package) -and $_ -notmatch 'Background' } |
         Sort-Object { if ($_ -match '\(BLAST\)') { 0 } else { 1 } } | Select-Object -First 1
@@ -220,6 +257,14 @@ function Run-Scene($sc) {
     # settle, then measure
     $t1 = Get-Date
     while ((NowS $t1) -lt $settle) { Nap 1 }
+    # one screenshot after settle (shell screencap + pull: binary-safe for real adb and for the fake)
+    $shot = Join-Path $dir 'screen.png'
+    $null = Sh 'screencap -p /sdcard/perf08_screen.png'
+    $null = A @('-s', $script:Serial, 'pull', '/sdcard/perf08_screen.png', $shot)
+    $null = Sh 'rm /sdcard/perf08_screen.png'
+    $r.screen = $null
+    if (Test-Path -LiteralPath $shot) { try { $r.screen = Screen-Stats $shot } catch { $r.screen = [ordered]@{ error = "$_" } } }
+    $r.blank_screen = $(if ($r.screen -and $r.screen.Contains('unique_colors')) { $r.screen.unique_colors -le 2 -or $r.screen.luma_std -lt 2 } else { $null })
     $null = Sh "dumpsys gfxinfo $Package reset"
     $layer = ''; $refreshNs = 0
     $presents = New-Object 'System.Collections.Generic.SortedSet[long]'
@@ -319,10 +364,17 @@ function Run-Scene($sc) {
     }
     $r.zoom_applied = $(if ($r.game_zoom -ne $null -and $sc.zoom -ne $null) { [math]::Abs([double]$r.game_zoom - [double]$sc.zoom) -lt 0.01 } else { $null })
     $r.valid = [bool]$r.args_applied -and ($r.zoom_applied -ne $false) -and $r.frames -gt 0
+    $ge = Gles-Errors $lgAll
+    $r.gles_errors = $ge.Count
+    $r.gles_error_first = $(if ($ge.Count) { ($ge[0] -replace '^.*?: ', '').Trim() } else { '' })
     $reasons = @()
     if (-not $r.args_applied) { $reasons += 'ARGS_NOT_APPLIED' }
     if ($r.zoom_applied -eq $false) { $reasons += 'ZOOM_NOT_APPLIED' }
     if ($r.frames -le 0) { $reasons += 'NO_FRAMES' }
+    if ($ge.Count -gt 0) { $reasons += 'GLES_SHADER_ERROR' }
+    if ($r.blank_screen -eq $true) { $reasons += 'BLANK_SCREEN' }
+    if ($r.blank_screen -eq $null) { $reasons += 'NO_SCREENCAP' }
+    $r.valid = $r.valid -and $ge.Count -eq 0 -and $r.blank_screen -eq $false
     $r.invalid_reason = $reasons -join ','
     # ---- soak windows (device present-time based)
     if ($sc.soak -and $ts.Count -gt 2 -and $sc.window -gt 0) {
@@ -333,12 +385,15 @@ function Run-Scene($sc) {
             $gt2 = @($g.Group); if ($gt2.Count -lt 3) { continue }
             $giv = New-Object System.Collections.Generic.List[double]
             for ($i = 1; $i -lt $gt2.Count; $i++) { $d = ($gt2[$i] - $gt2[$i - 1]) / 1e6; if ($d -gt 0 -and $d -lt 1000) { $giv.Add($d) } }
-            $wins += [ordered]@{ window = [int]$g.Name; frames = $giv.Count; p95_ms = (Pct $giv 0.95); fps = [math]::Round(($gt2.Count - 1) / (($gt2[-1] - $gt2[0]) / 1e9), 2) }
+            $wins += [ordered]@{ window = [int]$g.Name; frames = $giv.Count; p95_ms = (Pct $giv 0.95); fps = [math]::Round(($gt2.Count - 1) / (($gt2[-1] - $gt2[0]) / 1e9), 2)
+                span_s = [math]::Round(($gt2[-1] - $gt2[0]) / 1e9, 2) }
         }
         $r.soak_windows = $wins
-        if ($wins.Count -ge 2) {
-            $r.soak_fps_last_over_first = [math]::Round($wins[-1].fps / $wins[0].fps, 3)
-            $r.soak_p95_last_over_first = [math]::Round($wins[-1].p95_ms / $wins[0].p95_ms, 3)
+        # compare only full windows: a trailing partial window (< half the window length) has edge-biased fps / p95
+        $full = @($wins | Where-Object { $_.span_s -ge 0.5 * $sc.window })
+        if ($full.Count -ge 2) {
+            $r.soak_fps_last_over_first = [math]::Round($full[-1].fps / $full[0].fps, 3)
+            $r.soak_p95_last_over_first = [math]::Round($full[-1].p95_ms / $full[0].p95_ms, 3)
         }
     }
     Write-Host ("[scene] {0,-22} valid={1} {2} frames={3} p95={4} ms janky={5} fps={6} pss_max={7} MB dc_p95={8} gpu_p95={9} temp {10}->{11} C" -f $r.id, $r.valid, $r.invalid_reason, $r.frames, $r.frame_interval_p95_ms, $r.janky_share, $r.fps_mean, $r.pss_max_mb, $r.game_dc_p95, $r.game_gpu_ms_p95, $r.battery_temp_start_c, $r.battery_temp_end_c)

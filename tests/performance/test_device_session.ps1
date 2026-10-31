@@ -92,6 +92,19 @@ $v = @{}; foreach ($c in $r.summary.criteria) { $v[$c.id] = $c }
 $k = $r.summary.scenes | Where-Object { $_.soak }
 Check 'usb_power_battery_not_measured' ($v.battery_drain.result -eq 'NOT_MEASURED' -and $k.battery_note -match 'NOT_MEASURED') "$($v.battery_drain.result)"
 
+# ---- blank-screen guards with REAL emulator samples (fixtures/android_real; EMULATOR format samples, not performance)
+$real = Join-Path $PSScriptRoot 'fixtures\android_real'
+$r = Run 'one' @('-Only', 'r08_caps_zoom_off') @{ FAKE_ADB_LOGCAT_EXTRA = (Join-Path $real 'shader_fail_10\logcat_godot_D0_first_launch.txt'); FAKE_ADB_SCREEN = (Join-Path $real 'shader_fail_10\screen_D0_first_launch.png') }
+$x = $r.summary.scenes | Where-Object { $_.id -eq 'r08_caps_zoom_off' }
+$v = @{}; foreach ($c in $r.summary.criteria) { $v[$c.id] = $c }
+Check 'shader_link_failure_invalid' ($x.valid -eq $false -and $x.invalid_reason -match 'GLES_SHADER_ERROR' -and $x.gles_errors -ge 2 -and $x.gles_error_first -match 'Program linking failed|uniforms exceed') "reason=$($x.invalid_reason) errors=$($x.gles_errors) first='$($x.gles_error_first)'"
+Check 'shader_failure_screen_not_blank' ($x.blank_screen -eq $false -and $x.screen.unique_colors -gt 2) "colours=$($x.screen.unique_colors) std=$($x.screen.luma_std) (10's D0 frame shows the menu; only the log catches it)"
+Check 'invalid_scene_not_judged' ($v.frame_p95_low.result -eq 'NOT_MEASURED' -and $v.janky_share.result -eq 'NOT_MEASURED') "frame_p95_low=$($v.frame_p95_low.result)"
+$r = Run 'one' @('-Only', 'r08_caps_zoom_off') @{ FAKE_ADB_SCREEN = (Join-Path $real 'shader_fail_10\screen_E1_update_boot_blank.png') }
+$x = $r.summary.scenes | Where-Object { $_.id -eq 'r08_caps_zoom_off' }
+Check 'blank_screen_invalid' ($x.valid -eq $false -and $x.invalid_reason -match 'BLANK_SCREEN' -and $x.screen.unique_colors -le 2 -and $x.frames -gt 0) "reason=$($x.invalid_reason) colours=$($x.screen.unique_colors) std=$($x.screen.luma_std) frames=$($x.frames)"
+Check 'good_screen_stats' ($off.screen.unique_colors -gt 2 -and $off.screen.luma_std -ge 2 -and $off.blank_screen -eq $false) "colours=$($off.screen.unique_colors) std=$($off.screen.luma_std)"
+
 # ---- real adb path without a phone (no fake): must also stop with exit 2 when nothing is attached
 Write-Host "[device_selftest] $(if ($bad -eq 0) { 'ALL PASS' } else { "$bad FAILED" })"
 Remove-Item env:FAKE_ADB_MODE, env:FAKE_ADB_STATE -ErrorAction SilentlyContinue
