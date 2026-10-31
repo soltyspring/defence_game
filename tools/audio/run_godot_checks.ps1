@@ -145,6 +145,12 @@ if ($Integration) {
     $wce = [int]$ij.wave_cleared_events; $wcc = [int]$cc.wave_cleared
     "wave_cleared: events=$wce cues=$wcc indices=$(@($ij.wave_cleared_index) -join ',')"
     if ($wcc -ne $wce) { $fail++; "  ^ wave_cleared cue count != wave_cleared events (missing or duplicated)" }
+    $ur = @($ij.upgrade_replies)
+    $uc = [int]$cc.ui_upgrade_ok + [int]$cc.ui_upgrade_no_coins + [int]$cc.ui_upgrade_max + [int]$cc.ui_upgrade_save_failed
+    $expect = @($ur | Where-Object { $_ -ne 'already_applied' -and $_ -ne '' }).Count
+    "upgrade: engine replies=[$($ur -join ',')] upgrade cues=$uc (ok=$([int]$cc.ui_upgrade_ok) no_coins=$([int]$cc.ui_upgrade_no_coins)) expected=$expect"
+    if ($ur.Count -lt 3) { $fail++; "  ^ upgrade engine path not exercised (replies $($ur.Count))" }
+    elseif ($uc -ne $expect) { $fail++; "  ^ upgrade cue count != non-silent engine replies (missing or duplicated)" }
     $hd = [int]$ij.engine_truth.hero_deaths
     "hero: engine deaths=$hd (injected=$($ij.hero_death_injected)) hero_death cues=$([int]$cc.hero_death) hero_respawn cues=$([int]$cc.hero_respawn)"
     if ($hd -lt 1) { $fail++; "  ^ no hero death happened; hero cues unverified" }

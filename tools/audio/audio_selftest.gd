@@ -212,6 +212,18 @@ func _run() -> void:
 	for code in ["ok", "not_enough_coins", "max_level", "save_failed"]:
 		ufiles[str(A.cues[up[code]].files[0])] = true
 	_ok(ufiles.size() == 4, "upgrade result cues must be 4 different files")
+	_ok(br.resolve(&"upgrade_result", {"code": "already_applied"}) == &"", "already_applied must be silent")
+	_ok(br.resolve(&"upgrade_result", {"code": "save_uncertain"}) == &"ui_upgrade_save_failed", "save_uncertain -> save_failed cue")
+	if E.has_signal("upgrade_result"):
+		A.advance(5.0)
+		var u0 := int(A.stats.played)
+		E.upgrade_result.emit({"id": "up_melee_basic", "to_level": 2, "code": "ok"})
+		E.upgrade_result.emit({"id": "up_melee_basic", "to_level": 2, "code": "already_applied"})   # double tap
+		_ok(int(A.stats.played) - u0 == 1, "upgrade ok + already_applied -> exactly 1 cue (got %d)" % (int(A.stats.played) - u0))
+		A.advance(5.0)
+		u0 = int(A.stats.played)
+		E.upgrade_result.emit({"id": "up_melee_basic", "to_level": 3, "code": "not_enough_coins"})
+		_ok(int(A.stats.played) - u0 == 1, "not_enough_coins -> 1 cue")
 	# v3.1: wave_cleared -> exactly one cue per event, a same-frame duplicate emit plays nothing
 	if E.has_signal("wave_cleared"):
 		A.advance(5.0)
@@ -223,6 +235,12 @@ func _run() -> void:
 	p0 = A.stats.played
 	E.emit_signal("sfx", &"skill", {"skill": "skill_slam"})
 	_ok(A.stats.played == p0 + 1 and not br.derived.command, "direct skill plays and disables optimistic command cues")
+	if E.has_signal("upgrade_result"):
+		A.advance(5.0)
+		p0 = A.stats.played
+		E.emit_signal("sfx", &"upgrade_result", {"code": "ok"})          # 04 direct path (C5)
+		E.upgrade_result.emit({"id": "up_tank", "to_level": 2, "code": "ok"})   # engine reply in the same frame
+		_ok(A.stats.played == p0 + 1 and not br.derived.upgrade, "direct upgrade_result disables derived: 1 cue, not 2 (got %d)" % (A.stats.played - p0))
 	E.battle_ended.emit({"won": true})
 	_ok(A.current_music() == &"", "music stops on battle end")
 	# --- cost of play() (CPU proxy; desktop only)

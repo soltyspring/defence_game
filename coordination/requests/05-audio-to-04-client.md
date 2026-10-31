@@ -29,3 +29,13 @@ Listen: `docs/audio/previews/listen/theme_showcase.mp3` 19.5–23.4 s.
 
 ## C6 (info) First-wave banner and sound
 05 now plays `wave_cleared` on every `Events.wave_cleared`. Your banner (0590e7a) shows only for wave 1 and emits no sound, so there is no double playback (sandbox: events 1 = cues 1, 0 same-frame duplicates). If you ever add a banner sound, emit `Events.sfx(&"wave_cleared", {})` instead of a new cue; the bridge then stops its own derived cue.
+
+## C5 update (2026-10-31, after 04 97c8b9c enabled the upgrade buttons)
+05 now plays the upgrade result sounds from the ENGINE reply `Events.upgrade_result` (02 v1.5), so purchases that reach the engine are covered without any 04 change:
+ok → `ui_upgrade_ok`; not_enough_coins → `ui_upgrade_no_coins`; save_failed / save_uncertain / read_only → `ui_upgrade_save_failed`; already_applied → SILENT (double tap: one success sound only); locked / unknown_id / invalid_level / no_reply → `ui_error`. Sandbox check: engine replies [ok, already_applied, not_enough_coins] → 2 cues, 0 duplicates.
+Gap that needs 04: `upgrade_panel.gd` sets `max_level` and `unavailable` LOCALLY (lines ~226/229) without calling the engine, so those taps are silent today. Agreed key (proposal, please confirm or rename): call this once inside `_set_status(code, u)`:
+```gdscript
+var ev := get_node_or_null("/root/Events")
+if ev and ev.has_signal("sfx"): ev.sfx.emit(&"upgrade_result", {"code": code})
+```
+As soon as the first direct `upgrade_result` cue arrives, the bridge switches its engine-derived path off (category `upgrade`), so there is never a double sound (selftest: direct + engine reply in the same frame → 1 cue).

@@ -814,9 +814,11 @@ SKILL_KIND_CUE = {"aoe_damage": "skill_slam", "rally": "skill_rally", "meteor": 
                   "heal_allies": "skill_heal", "summon": "skill_cast"}
 PROJECTILE_CUE = {"arrow": "shoot_arrow", "rock": "shoot_rock", "spit": "shoot_spit"}
 # 04 upgrade_panel result codes -> cue (semantic Events.sfx &"upgrade_result" {"code": code}); key name requested from 04 (C5)
-UPGRADE_RESULT_CUE = {"ok": "ui_upgrade_ok", "already_applied": "ui_upgrade_ok", "not_enough_coins": "ui_upgrade_no_coins",
-                      "max_level": "ui_upgrade_max", "save_failed": "ui_upgrade_save_failed", "read_only": "ui_upgrade_save_failed",
-                      "locked": "ui_error", "unknown_id": "ui_error", "unavailable": "ui_error"}
+# "" = intentionally silent (already_applied = repeated tap of a finished purchase; the first tap already sounded)
+UPGRADE_RESULT_CUE = {"ok": "ui_upgrade_ok", "already_applied": "", "not_enough_coins": "ui_upgrade_no_coins",
+                      "max_level": "ui_upgrade_max", "save_failed": "ui_upgrade_save_failed", "save_uncertain": "ui_upgrade_save_failed",
+                      "read_only": "ui_upgrade_save_failed", "locked": "ui_error", "unknown_id": "ui_error", "invalid_level": "ui_error",
+                      "unavailable": "ui_error", "no_reply": "ui_error"}
 
 # ----------------------------------------------------------------------------------------------
 # Music: tiny pattern sequencer rendering seamless loops (all note tails wrap to the loop start)

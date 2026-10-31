@@ -20,11 +20,12 @@ const CATEGORIES := {
 	"hero": [&"hero_death", &"hero_respawn"],
 	"alert": [&"wave_incoming", &"boss_incoming"],
 	"milestone": [&"wave_cleared"],
+	"upgrade": [&"ui_upgrade_ok", &"ui_upgrade_no_coins", &"ui_upgrade_max", &"ui_upgrade_save_failed"],
 }
 
 var audio: Node
 var ev: Node
-var derived := {"ui": true, "command": true, "death": true, "base": true, "gold": true, "hero": true, "alert": true, "milestone": true}
+var derived := {"ui": true, "command": true, "death": true, "base": true, "gold": true, "hero": true, "alert": true, "milestone": true, "upgrade": true}
 var screen: StringName = &""
 var in_battle := false
 var _pending: Array = []      # [cue, category]
@@ -53,7 +54,8 @@ func setup(p_audio: Node, p_events: Node) -> void:
 	_c(&"cmd_open_screen", func(s): _ui(&"ui_back" if StringName(s) == &"menu" else &"ui_tap"))
 	_c(&"cmd_set_paused", func(_p): _ui(&"ui_tap"))
 	_c(&"cmd_set_setting", _on_setting)
-	_c(&"wave_cleared", _on_wave_cleared)   # 02 v1.4 (22d99ea): once per scripted wave, never after a loss
+	_c(&"wave_cleared", _on_wave_cleared)
+	_c(&"upgrade_result", _on_upgrade_result)   # 02 v1.5 engine answer to cmd_buy_upgrade (04 97c8b9c)   # 02 v1.4 (22d99ea): once per scripted wave, never after a loss
 	_c(&"sfx", _on_direct)   # requested from 02 (AUDIO_CONTRACT §3.1); absent signal is fine
 
 func _c(sig: StringName, f: Callable) -> void:
@@ -94,11 +96,12 @@ func resolve(cue: StringName, params: Dictionary) -> StringName:
 		&"upgrade_result":
 			# 04 upgrade_panel result code -> cue (manifest upgrade_result_cue); key name proposed to 04 (C5)
 			var m: Dictionary = audio.get("upgrade_result_cue") if audio.get("upgrade_result_cue") is Dictionary else {}
-			return StringName(m.get(str(params.get("code", "")), "ui_error"))
+			return StringName(m.get(str(params.get("code", "")), "ui_error"))   # "" = intentionally silent
 	return cue
 
 func _on_direct(cue: StringName, params: Dictionary) -> void:
 	var c := resolve(cue, params)
+	if c == &"": return
 	for cat in CATEGORIES:
 		if derived[cat] and CATEGORIES[cat].has(c):
 			derived[cat] = false
@@ -177,6 +180,16 @@ func _on_battle_ended(result: Dictionary) -> void:
 ## the "milestone" category make a later direct Events.sfx(&"wave_cleared") from 04 replace this, not double it.
 func _on_wave_cleared(_info: Dictionary) -> void:
 	if derived.milestone and in_battle: audio.play(&"wave_cleared")
+
+## Upgrade purchase result from the engine (Events.upgrade_result, synchronous reply to cmd_buy_upgrade).
+## One cue per reply; already_applied (a repeated tap of a finished purchase) is silent so a double tap
+## never plays the success sound twice. If 04 later emits Events.sfx(&"upgrade_result", {code}) itself
+## (needed for UI-local results such as max_level, which never reach the engine), the "upgrade"
+## category switches this derived path off.
+func _on_upgrade_result(r: Dictionary) -> void:
+	if not derived.upgrade: return
+	var c := resolve(&"upgrade_result", r)
+	if c != &"": audio.play(c)
 
 func _on_battle_paused(p: bool) -> void:
 	audio.set_battle_paused(p)

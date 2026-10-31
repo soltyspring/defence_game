@@ -48,6 +48,8 @@ var _ended_rec_ts := -1.0
 var _inject_end := ""
 var _inject_at := -1.0
 var _inject_done := false
+var _upgrade_done := false
+var _passive := false   # --probe-passive: record only; the player is App's --autoplay bot (02 bot_player, competent)
 
 var rep := {
 	"cue_counts": {}, "same_frame_duplicates": [], "commands": {"deploy": 0, "deploy_unaffordable": 0, "worker": 0, "skill": 0},
@@ -74,6 +76,7 @@ func _ready() -> void:
 	E.battle_ended.connect(_on_battle_ended)
 	E.hud_snapshot.connect(_on_hud)
 	if E.has_signal("wave_cleared"): E.wave_cleared.connect(_on_wave_cleared)
+	if E.has_signal("upgrade_result"): E.upgrade_result.connect(_on_upgrade_result)
 	# sandbox save only (custom user dir): unlock r01-r03 so cmd_retry of the --round battle and
 	# cmd_start_round work like for a player who reached them
 	var save := get_node_or_null("/root/Save")
@@ -85,6 +88,7 @@ func _ready() -> void:
 		if a == "--record-until-end": _record_until_end = true
 		if a.begins_with("--inject-end="): _inject_end = a.get_slice("=", 1)
 		if a.begins_with("--inject-at="): _inject_at = float(a.get_slice("=", 1))
+		if a == "--probe-passive": _passive = true
 		if a.begins_with("--probe-seed="):
 			seed(int(a.get_slice("=", 1)))   # App uses randi() for the battle seed outside autoplay: fix it for A/B runs
 			rep.probe_seed = int(a.get_slice("=", 1))
@@ -102,6 +106,29 @@ func _on_screen(s: StringName, _p: Dictionary) -> void:
 func _on_wave_cleared(info: Dictionary) -> void:
 	rep.wave_cleared_events = int(rep.get("wave_cleared_events", 0)) + 1
 	rep.wave_cleared_index = rep.get("wave_cleared_index", []) + [int(info.get("index", 0))]
+
+func _on_upgrade_result(r: Dictionary) -> void:
+	var c := str(r.get("code", ""))
+	rep.upgrade_replies = rep.get("upgrade_replies", []) + [c]
+
+## Real engine upgrade path (sandbox save only): double tap of an affordable level (ok + already_applied in
+## the same frame), then an unaffordable next level (not_enough_coins). 02 App handles cmd_buy_upgrade
+## synchronously and answers with Events.upgrade_result; the audio bridge plays from that reply.
+func _upgrade_check() -> void:
+	_upgrade_done = true
+	var save := get_node_or_null("/root/Save")
+	if save == null or not E.has_signal("cmd_buy_upgrade"):
+		rep.upgrade_check = "skipped (no Save/cmd_buy_upgrade)"
+		return
+	var id := "up_melee_basic"
+	var cur := int(save.upgrade_level(id)) if save.has_method("upgrade_level") else 0
+	save.progress.coins = 100000
+	E.cmd_buy_upgrade.emit(id, cur + 1)
+	E.cmd_buy_upgrade.emit(id, cur + 1)        # same-frame repeat = double tap
+	A.advance(0.0)
+	save.progress.coins = 0
+	get_tree().create_timer(0.6, true, false, true).timeout.connect(func(): E.cmd_buy_upgrade.emit(id, cur + 2))
+	rep.upgrade_check = {"id": id, "from_level": cur}
 
 func _on_battle_ended(r: Dictionary) -> void:
 	if _rec_state == "recording" and _ended_rec_ts < 0.0:
@@ -190,6 +217,7 @@ func _process(delta: float) -> void:
 	rep.max_music_playing = maxi(rep.max_music_playing, _music_playing())
 	if rep.music_timeline.is_empty() or rep.music_timeline[-1].m != snap.music:
 		rep.music_timeline.append({"t": snappedf(t, 0.1), "m": snap.music})
+	if not _upgrade_done and t >= 1.0 and not _record_mode: _upgrade_check()
 	match _phase:
 		"battle1":
 			if in_battle: _drive()
@@ -219,7 +247,9 @@ func _process(delta: float) -> void:
 				_drive()
 				_maybe_inject_hero_death()
 		"record":
-			if in_battle:
+			if in_battle and _passive:
+				bt += delta
+			elif in_battle:
 				_drive()
 				if _inject_end != "" and not _inject_done and _inject_at >= 0.0 and bt >= _inject_at and _sim != null:
 					_inject_done = true

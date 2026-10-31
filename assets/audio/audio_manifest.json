@@ -1251,13 +1251,16 @@
  },
  "upgrade_result_cue": {
   "ok": "ui_upgrade_ok",
-  "already_applied": "ui_upgrade_ok",
+  "already_applied": "",
   "not_enough_coins": "ui_upgrade_no_coins",
   "max_level": "ui_upgrade_max",
   "save_failed": "ui_upgrade_save_failed",
+  "save_uncertain": "ui_upgrade_save_failed",
   "read_only": "ui_upgrade_save_failed",
   "locked": "ui_error",
   "unknown_id": "ui_error",
-  "unavailable": "ui_error"
+  "invalid_level": "ui_error",
+  "unavailable": "ui_error",
+  "no_reply": "ui_error"
  }
 }
