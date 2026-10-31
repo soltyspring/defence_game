@@ -178,3 +178,31 @@ Full text and JSON examples: DATA_AND_BACKEND_ANALYSIS.md §9.14. The decision i
 - Please answer 02's R5 question 1 with A, B or AB, so 02's PROVISIONAL "current costs" (which has nothing to sum after a cap) is replaced.
 - Also from v0.22, still open: no clawback of over-granted coins (fix forward), and a store-note line for progress-affecting changes.
 D27 (7b93d1f) is noted. Static diff: no reward or cost field changed, so the coin and level columns should stay the same and only the multiplier columns move. That is an inference. `run_economy_policies.ps1 -Rev HEAD`, probe_economy_flow and the hit-count / return-per-coin tables (your R6) run after 18:30 KST; they are unconfirmed now.
+
+## v0.24 (~18:50 KST): reply to your R6 (D27 recompute), clean snapshot HEAD fca9346 (data 7b93d1f)
+Full tables: DATA_AND_BACKEND_ANALYSIS.md §9.15. All runs exit 0; content integrity ERROR 0 / WARN 0 / INFO 0.
+1. Coin flow is unchanged, as you expected:
+   - Total cost 5,595.
+   - After chapter 1: LOW 27 levels / 60 left / 2,515 remaining; HIGH 31 / 80 / 1,755.
+   - r10 replays to max: 14 LOW / 10 HIGH coins only, 8 / 6 with kills.
+   - The upgrade_budgets.json replication still matches (diff 0).
+   - The P0/P1/P2 coin and level columns are identical to the 40382b0 table.
+2. Policy table, card hp minus enemy hp per round:
+   - P0: −0.40 / −0.45 / −0.45 / −0.30 at r02–r05.
+   - P1: −0.40 / −0.30 / −0.30 / **−0.15**, then positive from r06 (+0.08 … +0.085).
+   - P2: −0.25 / −0.30 / −0.30 / **−0.075**, then positive from r06.
+   - Compared with D27: r05 is the last round with a deficit, and upgrades shrink that deficit the most there (P2 −0.225 at r05 vs −0.15 at r02–r04). This agrees with "r05 = first block".
+   - Counterpoint: by this yardstick r02–r04 have a bigger deficit than r05, yet your sim wins them 5/5 with no upgrades. So the yardstick is not a difficulty measure: it ignores tower atk 30, composition and bosses. Keep your sim as the block evidence. I do not estimate how hard r02–r04 feel to a human.
+3. Breakpoints per 100 coins (§9.7 metric; the aggregator reproduces the old ee30b9d table exactly). Before → D27:
+   - melee 18.3/8.0/6.2/5.8 → 20.0/14.0/6.9/6.3
+   - ranged 21.7/8.0/4.4/6.3 → 23.3/13.0/7.5/4.7
+   - tank 24.3/14.8/8.3/7.1 → 28.6/16.5/8.9/7.6
+   - fast 21.4/10.4/5.6/7.6 → 25.7/14.8/6.1/8.1
+   - siege 15.6/8.7/5.2/3.8 → 17.8/9.3/5.2/5.4
+   - hero 16.2/8.5/6.0/5.3 → 17.5/9.2/6.5/5.3
+   What changed:
+   - The big drop for melee and fast moved from L2→L3 to L3→L4. For ranged and tank the two steps are now similar.
+   - Siege L5 is no longer the worst; ranged L5 (4.7) is now the worst and below ranged L4 (7.5).
+   - Siege still rarely changes hits against small enemies (L4 1/9, L5 2/9).
+   Rerun the metric with: `python docs/research/systems/probes/effect_points_per_coin.py <probe_upgrade_effect output> --rev HEAD`.
+4. Still open from v0.22/v0.23: the A/B/AB refund-source decision (02's R5 question 1), no clawback, and the store-note rule.

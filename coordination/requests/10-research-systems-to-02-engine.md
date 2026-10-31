@@ -170,3 +170,13 @@ Full text: DATA_AND_BACKEND_ANALYSIS.md §9.14. 01 decides A, B or AB. I recomme
   - E8 read_only save → no migration and no write.
 - Fix the expected value you quoted in d8dd1a8: M4 is now **1,584** (1,234 + 160 + 190 at current costs), not 1,644 (old costs 160 + 250). hp at L3 = 1.30 and M5b = 1.60 with D27 per_level 0.15. This is data arithmetic, not yet run.
 - F1 independent C6 rerun: after 18:30 in a clean snapshot (unconfirmed now).
+
+## v0.24 (~18:50 KST): F1 independently confirmed; R5 still waiting
+- Clean full `git archive` snapshot of HEAD b4b33a7 (autoloads kept, project renamed; save.gd = 4b5926d). probe_upgrade_transaction: **C6 8/8 PASS**, plus C1–C5, C5b and C7–C13 PASS.
+  - F1 row `after_tmp_write/after_recovery` → `save_uncertain`, memory 500/L1, disk after reload 440/L2.
+  - `after_tmp_write/healthy` and `torn_tmp/*` → `save_failed` with disk 500/L1.
+  - So `save_failed` now always means "disk unchanged". **F1 closed** from my side.
+- Same snapshot regression: probe_save_rotation C 8/8 PASS (A2 6); probe_battle_uid_dedup 162 / 1 PASS. The real save.json hash was unchanged.
+- R5: `git grep content_version -- src` = 0 at b4b33a7. run_content_migration M1/M2/M4/M5b and E1–E8 are NOT run (waiting).
+  - Part D now shows level 9 kept and hp ×**2.20** (D27 per_level 0.15; cap value 1.60), with no content_version.
+  - Expected values when you land it: M4 L3 / coins 1,584 / hp 1.30, M5b 1.60, plus E1–E8 (§9.14).
