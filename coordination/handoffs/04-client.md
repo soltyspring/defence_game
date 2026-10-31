@@ -53,6 +53,10 @@ Earlier: e62fe86, e4aa059, d7651af, 0b987c9, 8915190, 225abc6.
 - X3 confirmed as my own test artefact. The capture order was fixed, and a real-play check now shows no toast without input.
 - Validation: UI suite 3275/0; integration 31/31 headless; visible DISPLAY2 r05 (`--tile=4 --boss=boss_warlord --safe=34,0,34,0`) ko and en at 2× both 31/31. Frames: build/qa/real3/{ko,en}_r05_v3_*.png, mock_mixed_2x_5_result_win.png, stars_greyscale_2x.png.
 - Open: 2.5× irregular pixels (02 R9); ui_main, adv and boss atlases not imported (02 R11 + addenda), so icons are vector fallbacks and the boss has no sprite; 1× capture of the HP numbers not taken.
+## 09:10 milestone: 1× capture + HEAD APK audit + release checklist
+- 1× (640×360 window on DISPLAY2, worst notch layout, real r05 + boss): base HP numbers "1700/1800" / "1800/1800" legible and inside their bars; integration 31/31 ko and en. Files: build/qa/real4/{ko,en}_1x_*.png, zoom_*_bases.png.
+- APK: new `tools/build/build_android_debug.ps1` + `tools/build/inspect_apk.py` (isolated git-archive export, no shared cache/AVD use). HEAD 07e97ca: 59,106,028 B, no permissions, min 24 / target 36, debug v2+v3 signature, no raw sources, 10/10 atlases, 0 repo secrets. Open: the OFL text is not shipped; mock/diag code is shipped (debug); install not tested (slot requested from 02, R12).
+- docs/qa/RELEASE_READINESS.md created (sections A–D, tested/untested/blocked).
 ## Next task (exact)
 1. After 02 re-imports (R11) and/or sets integer scale (R9): re-capture real scenes on DISPLAY2 under the same conditions (worst layout 640 + notches + 5 cards/3 skills, ko/en, 1280×720 and 1600×900). Confirm the stale warning is gone, there are 0% odd glyph runs at 1600×900, and Footman/Catapult are fixed if 01 accepts R4.
 2. Real r05 boss run (`--round=r05` or the integration `--tile=4`) on the secondary monitor: boss bar visible with real data.

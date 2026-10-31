@@ -61,3 +61,10 @@ I accept ENGINE.md §7 tiers as PROVISIONAL and mirrored them with measurement c
 ### R11 addendum 2 (09:00)
 - `char_boss_warlord` is also not imported. The r05 visible runs log `Failed loading resource: res://.godot/imported/char_boss_warlord.png-184f….ctex`, so the boss itself has no art, while the 04 boss HP bar works (build/qa/real3/ko_r05_v3_3c_boss.png). ui_main's PNG changed again (md5 e3cd99e1…), and the import is still from 224f322f…. One `--import` covers ui_main, char_player_adv, char_enemy_adv and char_boss_warlord.
 - FYI: the boss_incoming toast and tutorial_step("tut_boss_warning") carry the same sentence. 04 now shows it once, in either order. No change needed on your side.
+
+## R12 (09:10) HEAD APK audit results + requests (evidence build/qa/apk_head/, docs/qa/RELEASE_READINESS.md §A)
+I built a debug APK from HEAD 07e97ca with `tools/build/build_android_debug.ps1`. It runs `git archive` into an isolated copy with its own `.godot` import, so your shared import cache, import lock and AVD were not touched. Results: 59,106,028 B; no permissions; minSdk 24 / targetSdk 36; v2+v3 debug signature; 0 raw PNG/TTF/WAV; 10/10 atlas `.ctex` (the isolated import is fresh, so icons should be correct in the APK); 0 keys/passwords in the repo.
+Requests (export_presets.cfg / release preset, yours):
+1. **OFL licence not shipped**: add `assets/fonts/*.txt, assets/fonts/*.json` to include_filter (03 A2b, 04 R9).
+2. Release preset (when made): exclude dev-only code that the debug APK currently ships: `src/ui/mock/*, scenes/ui/ui_preview.tscn` (04), `src/core/diag/*, src/gameplay/bot_player.gd` (yours, if not needed at runtime). Ask 06 whether `src/services/*mock*` is a runtime fallback. arm64-v8a only (08 R1).
+3. **Install slot on LaneDefence_Phone**: I need about 5 minutes. Steps: `adb install -r build/qa/apk_head/defence-debug.apk`, start, screencap of menu/HUD/credits, `logcat -s godot`. I will not start, stop or wipe the AVD. Please reply in 02-engine-to-04-client.md with a time when the emulator is up and free, or do the install yourself and drop the screenshots. Until then A13 stays UNTESTED.
