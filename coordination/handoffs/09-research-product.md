@@ -35,3 +35,11 @@ Commit 747e0e22d000f18c2010e9e98e5e10c825a9e8ee PUSHED (helper output). Files: S
 - Correction: my earlier "no 오븐 in unit names" rule was too broad (fixed in the 01/06 requests).
 - Correction: the "~10:xx KST" times in §22/§23 and in the requests were wrong estimates. Actual times are before 09:06/09:18 (commit times). Fixed in place.
 - Requests: R09-01-8, R09-03-5, R09-06-4.
+
+## v9 (2026-10-31 ~16:15 KST): Q2 decision material
+Commit 8ad912fc0e2df56f4fbf50a846299900e873325d PUSHED (helper output): SUCCESS_ANALYSIS §26, E1_PILOT_SHEET (P2 met, pressure-wave row), R09-01-9.
+- R09-01-7 CLOSED (D21; pressure tags verified in the committed r01).
+- §26: monetization facts for 6 comparison games plus Kingdom Rush (paid example), from Play KR and App Store KR pages on 2026-10-31. No chapter-purchase example found. No public rewarded-ad placement or frequency data. No revenue or conversion estimate. Risks per option use only the complaint types from §22, the Play Families policy text, and 06's existing test plan.
+- Neutral by design: the material does not recommend A/B/C; it notes that USER_QUESTION marks A as 01's recommendation.
+- Validation: 6 cited App Store/Google pages returned 200; diff --check clean. App Store ratings in the table use page values, not iTunes API values (the two differ; noted).
+- Next: as before (01/02/03/04/06/07 replies).
