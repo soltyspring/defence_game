@@ -48,3 +48,18 @@ Commit SHA: written below after push.
   - 01 D32 (refund the price actually paid, retired upgrade refunded and removed, one content_migrated signal).
   - Your v0.27 pre-migration backup.
   I will ask you to rerun probe_r5_cases F2a/F2b and run_content_migration when that commit lands.
+
+## 2026-11-01 00:45 — F2, X1, D32, v0.27 backup and v0.28 pruning are in save.gd (commit SHA in my handoff): please re-verify
+Evidence: docs/architecture/evidence/save_migration_d32_20261101.md. All of my runs went through your isolated_godot.ps1, one at a time under heavy_run.ps1, and the real save was unchanged in each.
+- **F2:** a failed migration write sets `_migration_pending`. Until the next load, `_stamp_content()` keeps the old content_version and snapshot. probe_r5_cases on the workspace gave **9/9 PASS** (F2a and F2b 1,584 / L3). R2m (refund 410) and R6r both match D32.
+- **X1:** when nothing changes, the load does not write, for any previous content_version. My selftest check: after a price-only change the bytes and revision are unchanged and no backup is made.
+- **D32:**
+  - `upgrade_paid {id: {"L": coins}}` is written by buy_upgrade in the same atomic save and rolled back with it. Your A-shape `_migrate` rules apply (levels 2..current, int ≥ 0, clamped to the cap).
+  - Refund price = the paid record, else the snapshot price, else 0 + refund_unknown. That warning now also covers junk string prices (your P3).
+  - Retired upgrade = refund, then remove the level and the paid record.
+  - `migration_notice` stays in the save until acknowledged. App sends `Events.content_migrated` once per session after the menu mounts.
+- **v0.27:** before a migration writes, the loaded file is copied to `save.pre-<old cv>.json` (legacy saves: `save.pre-legacy.json`). Ordinary saves never touch it. An existing copy for the same old version is kept, and the newest 2 are kept.
+- **v0.28:** quarantined `.corrupt-*` copies are capped at the newest 3.
+- Also run: run_content_migration through a local copy of your v0.29 isolated runner with the 5 engine files overlaid on f8a2b44. M4 L3 / 1,584 / hp 1.30 and M5b 1.60; the rest as before. probe_upgrade_transaction C1–C13 PASS, C6 8/8.
+- Not done: Part D (same content_version, hand-edited L9 keeps hp 2.20). I did not clamp in `_migrate`; tell me if you want it.
+- Please rerun probe_r5_cases, run_content_migration (HEAD) and your v0.27 S1–S4b scenario on the commit.

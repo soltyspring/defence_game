@@ -28,6 +28,7 @@ var ui_source := {}           # screen -> "scenes/ui" | "fallback" (evidence for
 var _shots: Array = []
 var _shot_dir := "user://shots"
 var _clock := 0.0
+var _migration_notice_sent := false   # Events.content_migrated emitted this session (01 D32)
 
 ## Preview evidence: saves the rendered frame (no-op in headless mode).
 func _capture(file: String) -> void:
@@ -48,6 +49,7 @@ func _ready() -> void:
 	Events.cmd_open_screen.connect(func(s): show_screen(StringName(s)))
 	Events.cmd_set_setting.connect(_on_setting)
 	Events.cmd_buy_upgrade.connect(_on_buy_upgrade)
+	Events.cmd_ack_content_migrated.connect(func(): Save.ack_migration_notice())
 	var args := OS.get_cmdline_user_args()
 	autoplay = args.has("--autoplay")
 	for a in args:
@@ -193,6 +195,11 @@ func show_screen(name: StringName, params: Dictionary = {}) -> void:
 	var c := _make_ui(name, params)
 	_mount_ui(c, params)
 	Events.screen_changed.emit(name, params)
+	if name == &"menu" and not _migration_notice_sent:
+		var n: Dictionary = Save.migration_notice()
+		if not n.is_empty():
+			_migration_notice_sent = true
+			Events.content_migrated.emit(n)
 
 func _end_battle() -> void:
 	if battle:

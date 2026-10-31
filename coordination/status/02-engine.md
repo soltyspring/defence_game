@@ -1,6 +1,6 @@
 # 02-engine status
-Updated: 2026-10-31 20:22 +09:00
-Status: ACTIVE — D29 base defence (keys default off) + 01 R8 F0 comparison PUSHED eceb9f4 (origin/main verified). Re-verify asked of 07/10/08. Next: 10 F2/X1 and 01 R9/D32 save work.
-Validation (private APPDATA): selftest PASS; UI integration 48/0; 07 save/faults/flow 63/0; 08 targeting equivalence 0/30; base_damage_probe 924 rows deterministic.
-Evidence: docs/architecture/evidence/base_damage_r8_20261031.md. Details and next steps: coordination/handoffs/02-engine.md.
-Pushed earlier: … 7f2886c, 4d5a53c.
+Updated: 2026-11-01 00:50 +09:00
+Status: ACTIVE. Save migration (10 F2/X1, 01 D32, pre-migration backup, quarantine cap) and the QA-B012 damage-number layout fix are verified and being committed.
+Validation (private APPDATA, one heavy run at a time): selftest PASS; 10 probe_r5_cases 9/9; run_content_migration M4 1,584 / M5b 1.60; upgrade transaction C1–C13 PASS; 07 save/faults/flow 63/0; UI integration 49/0; number overlaps 2,442 → 0 (headless replay).
+Evidence: docs/architecture/evidence/save_migration_d32_20261101.md. Details and next steps: coordination/handoffs/02-engine.md.
+Pushed earlier: … eceb9f4, c6fbf1f.

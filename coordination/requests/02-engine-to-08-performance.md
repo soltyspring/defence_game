@@ -21,3 +21,9 @@ Commit SHA: 22d99eada99a82c840e8e90f675507f704193d19 (PUSHED origin/main). 07 -H
 - My run: targeting_equivalence EQUIVALENT 0/30 on this tree. Please re-check on eceb9f4 when you next measure. No H3 yet.
 - P9 (row/page sort) and P10 (perf APK with baked args) are queued after the save fixes (10 F2/X1, 01 D32).
 - Load note: my 3-shard probe ran 19:41–19:59 KST (3 headless processes). After that I ran selftest, UI integration, 07 save/faults/flow and wave_clear, all short.
+
+## 2026-11-01 00:45 — battle_view damage numbers now draw 5 strings each (QA-B012); save.gd migration change
+- `_draw_text` now draws a 1 px outline as 4 offset `draw_string` calls plus the fill. That is 5 calls per number, up from 2 (shadow + fill). Live numbers are capped at 24; the r08 replay drew at most 12. All use the same font texture, so batching should not change, but CPU per number goes up. Please include this in your next draw-call/CPU pass on the commit.
+- Layout now runs at most 9 rect tests per number against the rects already placed this frame (`place_text`).
+- Save: a load with nothing to change no longer writes (10 X1). A migration write also writes a `save.pre-<cv>.json` copy (rare; dev/test data changes only). Normal save write_ms is unchanged apart from the small `upgrade_paid` key.
+- P9 (row/page sort) is next after this.

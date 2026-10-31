@@ -30,6 +30,7 @@ func _initialize() -> void:
 	_check_tutorial(content)
 	_check_waves_and_pools(content)
 	_check_buy_upgrade(content)
+	_check_content_migration(content)
 	_check_save()
 	_check_save_faults()
 	content.free()
@@ -55,6 +56,7 @@ func _initialize() -> void:
 	print("waves_and_pools ", JSON.stringify(report.get("waves_and_pools", {})))
 	print("buy_upgrade ", JSON.stringify(report.get("buy_upgrade", {})))
 	print("base_defense ", JSON.stringify(report.get("base_defense", {})))
+	print("content_migration ", JSON.stringify(report.get("content_migration", {})))
 	print("scripts ok %d/%d, scenes %d, foreign errors %s" % [report.scripts_ok, report.scripts_total, report.scenes_total, str(report.foreign_script_errors)])
 	for b in balance_flags: print("BALANCE: ", b)
 	print("report: ", ProjectSettings.globalize_path("user://selftest_report.json"))
@@ -656,4 +658,145 @@ func _check_buy_upgrade(content) -> void:
 		if out.locked[1] != "locked": fails.append("locked")
 	report.buy_upgrade = out
 	for f in fails: _fail("buy_upgrade %s: %s" % [f, str(out)])
+	s.free()
+
+static func _up_def(meta: Dictionary, id: String) -> Dictionary:
+	for u in meta.get("upgrades", []):
+		if u is Dictionary and str(u.get("id", "")) == id: return u
+	return {}
+
+## Emulates a data change in memory: price of L4 + l4_extra, max_level cut (costs trimmed), one upgrade retired.
+static func _mig_data(content, orig_meta: Dictionary, cv: String, up: String, l4_extra: int, max_l: int, retire: String) -> void:
+	content.meta = orig_meta.duplicate(true)
+	content.content_version = cv
+	var u := _up_def(content.meta, up)
+	if l4_extra != 0: u.costs[2] = int(u.costs[2]) + l4_extra
+	if max_l > 0:
+		u.max_level = max_l
+		u.costs = (u.costs as Array).slice(0, max_l - 1)
+	if retire != "":
+		var keep := []
+		for x in content.meta.upgrades:
+			if str(x.id) != retire: keep.append(x)
+		content.meta.upgrades = keep
+
+static func _mig_restore(s, bytes: PackedByteArray) -> void:
+	for suf in [".bak", ".tmp"]:
+		if FileAccess.file_exists(s.path + suf): DirAccess.remove_absolute(s.path + suf)
+	var f := FileAccess.open(s.path, FileAccess.WRITE)
+	f.store_buffer(bytes)
+	f.close()
+
+static func _count_files(dir: String, prefix: String) -> int:
+	var n := 0
+	for f in DirAccess.get_files_at(dir):
+		if f.begins_with(prefix): n += 1
+	return n
+
+## 10 F2 / X1 and 01 D32 content migration on a private save. Data changes are emulated in memory on `content`
+## (meta + content_version) and restored at the end.
+func _check_content_migration(content) -> void:
+	var orig_meta: Dictionary = content.meta.duplicate(true)
+	var orig_cv: String = content.content_version
+	var up := "up_melee_basic"
+	var wk := "up_worker"
+	var out := {}
+	var fails := []
+	var dir := "user://selftest_faults"
+	DirAccess.make_dir_recursive_absolute(dir)
+	for f in DirAccess.get_files_at(dir):
+		if f.begins_with("mig."): DirAccess.remove_absolute(dir.path_join(f))
+	var s = SaveS.new()
+	s.path = dir + "/mig.json"
+	root.add_child(s)
+	s.content_ref = content
+	s.load_progress()
+	var costs: Array = _up_def(orig_meta, up).get("costs", [])
+	var wcosts: Array = _up_def(orig_meta, wk).get("costs", [])
+	if costs.size() < 3 or wcosts.size() < 2 or int(_up_def(orig_meta, wk).get("max_level", 1)) < 3:
+		_fail("content migration check needs %s with >= 4 levels and %s with >= 3" % [up, wk])
+		s.free()
+		return
+	# purchases record the price paid (D32 (1))
+	s.progress.coins = 5000
+	s.progress.unlocked_round = 3
+	s.progress.stars = {"r01": 3, "r02": 2}
+	s.save_progress()
+	var codes := []
+	for L in [2, 3, 4]: codes.append(s.buy_upgrade(up, L))
+	for L in [2, 3]: codes.append(s.buy_upgrade(wk, L))
+	var paid: Dictionary = s.progress.upgrade_paid.get(up, {})
+	out.paid = {"codes": codes, "record": paid.duplicate()}
+	if codes != ["ok", "ok", "ok", "ok", "ok"] or int(paid.get("2", -1)) != int(costs[0]) or int(paid.get("4", -1)) != int(costs[2]): fails.append("paid_record")
+	var coins0 := int(s.progress.coins)
+	var a_bytes := FileAccess.get_file_as_bytes(s.path)
+	# X1: price change only (nothing to migrate) -> the load writes nothing
+	var cv_b := orig_cv + "-b"
+	_mig_data(content, orig_meta, cv_b, up, 77, 0, "")
+	var rev0 := int(s.progress.revision)
+	s.load_progress()
+	var pre_a: String = s.path.get_basename() + ".pre-" + orig_cv.validate_filename() + ".json"
+	out.X1 = {"bytes_same": FileAccess.get_file_as_bytes(s.path) == a_bytes, "revision": int(s.progress.revision), "backup": FileAccess.file_exists(pre_a)}
+	if not out.X1.bytes_same or int(s.progress.revision) != rev0 or out.X1.backup: fails.append("X1")
+	s.save_progress()   # ordinary save under B: snapshot has the new L4 price, upgrade_paid keeps the real one
+	var b_bytes := FileAccess.get_file_as_bytes(s.path)
+	# D32 (1): cap 4 -> 3 refunds the PAID price of L4, once; notice + pre-migration backup
+	var expect := coins0 + int(costs[2])
+	_mig_data(content, orig_meta, orig_cv + "-c", up, 77, 3, "")
+	s.load_progress()
+	var pre_b: String = s.path.get_basename() + ".pre-" + cv_b.validate_filename() + ".json"
+	var n1: Dictionary = s.migration_notice()
+	out.cap = {"coins": int(s.progress.coins), "expect": expect, "level": s.upgrade_level(up), "paid": s.progress.upgrade_paid.get(up, {}).duplicate(),
+		"notice": n1, "backup_is_pre_state": FileAccess.file_exists(pre_b) and FileAccess.get_file_as_bytes(pre_b) == b_bytes, "log": s.migration_log.duplicate()}
+	s.load_progress()
+	out.cap["coins_after_reload"] = int(s.progress.coins)
+	if int(out.cap.coins) != expect or out.cap.level != 3 or out.cap.paid.has("4") or int(n1.get("levels", -1)) != 1 or int(n1.get("coins", -1)) != int(costs[2]) \
+		or not out.cap.backup_is_pre_state or out.cap.coins_after_reload != expect: fails.append("cap_refund_paid")
+	# F2a: migration save fails, an ordinary save follows in the same session, then a relaunch
+	_mig_restore(s, b_bytes)
+	s._fault = "after_tmp_write"
+	s.load_progress()
+	var pending: bool = s._migration_pending
+	s._fault = ""
+	var f2a_save: bool = s.save_progress()
+	s.load_progress()
+	out.F2a = {"pending": pending, "ordinary_save": f2a_save, "coins": int(s.progress.coins), "level": s.upgrade_level(up)}
+	if not pending or not f2a_save or int(s.progress.coins) != expect or s.upgrade_level(up) != 3: fails.append("F2a")
+	# F2b: outcome unknown (verified .tmp, main rotated away), ordinary save, relaunch
+	_mig_restore(s, b_bytes)
+	s._fault = "before_final_rename"
+	s.load_progress()
+	s._fault = ""
+	var f2b_save: bool = s.save_progress()
+	s.load_progress()
+	out.F2b = {"ordinary_save": f2b_save, "coins": int(s.progress.coins), "level": s.upgrade_level(up)}
+	if not f2b_save or int(s.progress.coins) != expect or s.upgrade_level(up) != 3: fails.append("F2b")
+	# D32 (2): retired upgrade is refunded at the paid prices and removed; the unseen notice adds up
+	_mig_data(content, orig_meta, orig_cv + "-d", up, 77, 3, wk)
+	s.load_progress()
+	var exp_d := expect + int(wcosts[0]) + int(wcosts[1])
+	var n2: Dictionary = s.migration_notice()
+	out.retire = {"coins": int(s.progress.coins), "expect": exp_d, "has_level": s.progress.upgrades.has(wk), "has_paid": s.progress.upgrade_paid.has(wk), "notice": n2}
+	if int(s.progress.coins) != exp_d or out.retire.has_level or out.retire.has_paid or int(n2.get("levels", -1)) != 3 \
+		or int(n2.get("coins", -1)) != int(costs[2]) + int(wcosts[0]) + int(wcosts[1]): fails.append("retire")
+	# notice acknowledged -> gone after a relaunch; pre-migration backups bounded
+	s.ack_migration_notice()
+	s.load_progress()
+	out.ack_cleared = s.migration_notice().is_empty()
+	out.pre_backups = _count_files(dir, "mig.pre-")
+	if not out.ack_cleared: fails.append("ack")
+	if out.pre_backups < 1 or out.pre_backups > SaveS.PRE_BACKUPS_KEEP: fails.append("pre_backups")
+	# 10 v0.28: quarantined copies are bounded
+	for i in 5:
+		var f := FileAccess.open(s.path, FileAccess.WRITE)
+		f.store_string("{ corrupt %d" % i)
+		f.close()
+		s.load_progress()
+		s.save_progress()
+	out.corrupt_kept = _count_files(dir, "mig.json.corrupt-")
+	if out.corrupt_kept != SaveS.CORRUPT_KEEP: fails.append("corrupt_prune")
+	content.meta = orig_meta
+	content.content_version = orig_cv
+	report.content_migration = out
+	for f in fails: _fail("content_migration %s: %s" % [f, str(out)])
 	s.free()

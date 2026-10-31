@@ -64,6 +64,16 @@ static func _menu(root: Control) -> void:
 	vb.add_child(_label("(engine fallback menu)", 8, Color(0.7, 0.7, 0.8)))
 	var coins := int(Save.progress.get("coins", 0))
 	vb.add_child(_label("Coins: %d" % coins, 10))
+	var mn: Dictionary = Save.migration_notice()   # 01 D32 (3): shown once, then acknowledged
+	if not mn.is_empty():
+		var txt := "Update: %d upgrade levels adjusted, %d gold refunded." % [int(mn.levels), int(mn.coins)]
+		if ResourceLoader.exists("res://src/ui/ui_text.gd"):
+			var ut = load("res://src/ui/ui_text.gd")
+			if ut and ut.has_method("t"):
+				var s := str(ut.t("notice.content_migrated", ""))
+				if s != "" and s != "notice.content_migrated": txt = s.format({"levels": int(mn.levels), "coins": int(mn.coins)})
+		vb.add_child(_label(txt, 9, Color("f2d16b")))
+		Events.cmd_ack_content_migrated.emit()
 	vb.add_child(_btn("Play", func(): Events.cmd_open_screen.emit(&"round_select"), Vector2(160, 40)))
 	var unlocked := int(Save.progress.unlocked_round)
 	var cont_idx := mini(unlocked, Content.round_order.size()) - 1

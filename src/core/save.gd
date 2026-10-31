@@ -2,7 +2,8 @@ extends Node
 ## Progress persistence. Contract: INTERFACES.md §3. Owner: 02-engine.
 ##
 ## Files: <path> (main), <path>.bak (previous good main), <path>.tmp (write staging),
-##        <path>.corrupt-<unix>[-n] (quarantined unreadable mains, never loaded, never rotated into .bak).
+##        <path>.corrupt-<unix>[-n] (quarantined unreadable mains, never loaded, never rotated into .bak; newest 3 kept),
+##        <base>.pre-<content_version>.json (copy of the save before a content migration wrote it; newest 2 kept).
 ## Write order (save_progress): write+flush tmp -> verify tmp -> [main known good] remove .bak, rename main -> .bak
 ##   | [main unreadable] quarantine main -> rename tmp -> main.
 ## Load order (load_progress): valid main -> else valid tmp (only exists past verify, so it is the newest state)
@@ -17,6 +18,8 @@ extends Node
 const VERSION := 1
 const MAX_BYTES := 2 * 1024 * 1024        # PROVISIONAL size guard (08 owns the final limit)
 const APPLIED_KEEP := 32
+const CORRUPT_KEEP := 3                   # quarantined .corrupt-* copies kept per save file (newest)
+const PRE_BACKUPS_KEEP := 2               # pre-migration backups <base>.pre-<content_version>.json kept (newest)
 const FAULT_POINTS := ["after_tmp_write", "after_bak_rename", "before_final_rename", "torn_tmp"]
 const COINS_CAP_DEFAULT := 9999999        # data/meta.json currencies.gold.max
 
@@ -36,13 +39,15 @@ func _ready() -> void:
 
 static func fresh() -> Dictionary:
 	return {"version": VERSION, "revision": 0, "unlocked_round": 1, "stars": {}, "best_time": {}, "coins": 0,
-		"clears": 0, "tutorial_done": [], "upgrades": {}, "applied_battles": [],
+		"clears": 0, "tutorial_done": [], "upgrades": {}, "upgrade_paid": {}, "applied_battles": [],
 		"settings": {"fps_cap": 60, "sfx": 1.0, "music": 0.8, "show_damage": true, "screen_shake": true}}
 
 # ---------------------------------------------------------------- load
 func load_progress() -> void:
 	recovered = false
 	migration_log = []
+	last_migration = {}
+	_migration_pending = false
 	recovery_source = "main"
 	read_only = false
 	quarantined.clear()
@@ -82,6 +87,20 @@ func _quarantine(file: String) -> void:
 	var dir := DirAccess.open(file.get_base_dir())
 	if dir and dir.rename(file.get_file(), dst.get_file()) == OK:
 		quarantined.append(dst)
+		# 10 v0.28 (P3): bound the space used by quarantined copies (07 TP-13 left 19 x 50 MiB)
+		_prune(file.get_base_dir(), file.get_file() + ".corrupt-", "", CORRUPT_KEEP, dst.get_file())
+
+## Delete all but the newest `keep` files in dir_path whose names start with prefix and end with suffix.
+## `protect` (the file just written) is always kept and counts as the newest; the rest are ordered by modified time,
+## then by name (both quarantine and backup names grow over time).
+func _prune(dir_path: String, prefix: String, suffix: String, keep: int, protect: String) -> void:
+	var files := []
+	for fn in DirAccess.get_files_at(dir_path):
+		if fn != protect and fn.begins_with(prefix) and fn.ends_with(suffix):
+			files.append([FileAccess.get_modified_time(dir_path.path_join(fn)), fn])
+	files.sort_custom(func(a, b): return a[0] > b[0] or (a[0] == b[0] and a[1] > b[1]))
+	for i in range(maxi(0, keep - 1), files.size()):
+		DirAccess.remove_absolute(dir_path.path_join(files[i][1]))
 
 func _read(file: String) -> Variant:
 	if not FileAccess.file_exists(file):
@@ -154,6 +173,35 @@ func _migrate(p: Dictionary, _from_version: int) -> Dictionary:
 		if v is int or v is float:
 			ups[str(k)] = clampi(int(v), 1, 99)
 	p.upgrades = ups
+	# upgrade_paid {id: {"<level reached>": coins paid}} (10 v0.21 A, 01 D32): keys 2..current level, values ints >= 0
+	var paid := {}
+	for id in p.upgrade_paid:
+		var rec = p.upgrade_paid[id]
+		if not (rec is Dictionary): continue
+		var lvl := int(ups.get(str(id), 1))
+		var clean := {}
+		for k in rec:
+			var ks := str(k)
+			var v = rec[k]
+			if not ks.is_valid_int() or not (v is int or v is float) or float(v) < 0.0: continue
+			var L := ks.to_int()
+			if L >= 2 and L <= mini(99, lvl):
+				clean[str(L)] = mini(int(v), coins_cap)
+		if not clean.is_empty(): paid[str(id)] = clean
+	p.upgrade_paid = paid
+	if p.has("migrations_applied"):
+		var ma: Array = []
+		if p.migrations_applied is Array:
+			for k in p.migrations_applied:
+				if k is String and not ma.has(k): ma.append(k)
+		p.migrations_applied = ma
+	if p.has("migration_notice"):
+		var n = p.migration_notice
+		if n is Dictionary and (n.get("levels") is int or n.get("levels") is float) and (n.get("coins") is int or n.get("coins") is float):
+			p.migration_notice = {"levels": maxi(0, int(n.levels)), "coins": clampi(int(n.coins), 0, coins_cap),
+				"from": str(n.get("from", "")), "to": str(n.get("to", ""))}
+		else:
+			p.erase("migration_notice")
 	var td: Array = []
 	for k in p.tutorial_done:
 		if k is String and not td.has(k): td.append(k)
@@ -310,19 +358,27 @@ func record_result(result: Dictionary, round_index_in_order: int) -> bool:
 func is_unlocked(order_index: int) -> bool:
 	return order_index + 1 <= int(progress.unlocked_round)
 
-# ---------------------------------------------------------------- content migration (10 R5, PROVISIONAL rules)
+# ---------------------------------------------------------------- content migration (10 R5; rules 01 D32)
 ## Every successful save records `content_version` and a small `content_snapshot` of the data it was made with
-## (upgrade id -> {target, costs, max_level}, round order). When a later build loads it with different data:
+## (upgrade id -> {target, costs, max_level}, round order); every purchase records the price paid in `upgrade_paid`.
+## When a later build loads the save with different data (content_version differs), in ONE atomic save:
 ##  1. upgrade renames: data/migrations.json `upgrade_renames {old: new}` (01); otherwise an id that disappeared is
 ##     matched to a NEW id with the same `target` (PROVISIONAL heuristic). Higher level wins on collision.
-##  2. round renames: migrations.json `round_renames {old: new}` for stars/best_time (higher stars, lower time).
-##  3. clamp levels to the current max_level and refund the removed levels at the prices recorded in the snapshot
-##     (what the player paid), once per (content_version, id); no recorded price -> refund 0 + warning
-##     "content/refund_unknown". PROVISIONAL until 01 decides the refund rule.
-##  4. unlocks by round id: order[i] is open iff i == 0, or it has stars, or order[i-1] has stars; unlocked_round =
+##  2. retired upgrades (id no longer in meta.json and not renamed): refund every level, then remove the id (D32 (2)).
+##  3. clamp levels to the current max_level and refund the removed levels (D32 (1)).
+##     Price of level L = `upgrade_paid[id][L]` (actually paid), else the snapshot price (what the save was last made
+##     with), else 0 + warning "content/refund_unknown". Once per (content_version, id) via `migrations_applied`.
+##     Coins are clamped to the currency cap once.
+##  4. round renames: migrations.json `round_renames {old: new}` for stars/best_time (higher stars, lower time).
+##  5. unlocks by round id: order[i] is open iff i == 0, or it has stars, or order[i-1] has stars; unlocked_round =
 ##     length of the open prefix. Only when the save HAS a previous content_version (legacy/test saves without one
 ##     are never re-locked).
-##  Unknown upgrade/round ids are kept. Everything is applied in ONE save; on a failed write memory is restored.
+##  Unknown round ids are kept. If meta.json has no upgrades (missing/broken data), upgrades are not touched.
+##  Nothing to change -> NO write during the load (10 X1); the next ordinary save stamps the new version.
+##  Before the write, the loaded file is copied to <base>.pre-<old content_version>.json (10 v0.27; never rotated).
+##  On a failed write memory is restored and `_migration_pending` keeps ordinary saves from stamping the new version
+##  on the un-migrated data (10 F2), so the next load retries. Levels removed / coins refunded are kept in
+##  `migration_notice` (persisted) until the UI acknowledges it (Events.content_migrated, D32 (3)).
 const MIGRATION_KEYS_KEEP := 64
 
 func _content_snapshot(c) -> Dictionary:
@@ -333,6 +389,8 @@ func _content_snapshot(c) -> Dictionary:
 	return {"version": str(c.content_version), "upgrades": ups, "order": Array(c.round_order)}
 
 func _stamp_content() -> void:
+	if _migration_pending:
+		return   # F2 (10 v0.25): keep the OLD version + snapshot on un-migrated data so the next load migrates again
 	var c := _content()
 	if c == null or str(c.get("content_version")) == "":
 		return
@@ -353,37 +411,85 @@ func _apply_content_migration() -> void:
 		return   # nothing was on disk: never create a save file during a load (07 SAVE-03)
 	var changed := false
 	var before := progress.duplicate(true)
-	var snap: Dictionary = progress.get("content_snapshot", {}) if progress.get("content_snapshot") is Dictionary else {}
-	var snap_ups: Dictionary = snap.get("upgrades", {}) if snap.get("upgrades") is Dictionary else {}
-	var keys: Array = progress.get("migrations_applied", []) if progress.get("migrations_applied") is Array else []
+	var snap: Dictionary = progress.get("content_snapshot") if progress.get("content_snapshot") is Dictionary else {}
+	var snap_ups: Dictionary = snap.get("upgrades") if snap.get("upgrades") is Dictionary else {}
+	var keys: Array = progress.get("migrations_applied") if progress.get("migrations_applied") is Array else []
+	if not (progress.get("upgrade_paid") is Dictionary):
+		progress["upgrade_paid"] = {}
+	var paid_all: Dictionary = progress.upgrade_paid
 	var log := []
+	var levels_removed := 0
+	var refunded := 0
 	var meta_ups := {}
 	for u in c.meta.get("upgrades", []):
 		if u is Dictionary and u.has("id"): meta_ups[str(u.id)] = u
 	var ups: Dictionary = progress.upgrades
-	# 1. upgrade renames
-	var renames: Dictionary = {}
-	var mig_up = c.migrations.get("upgrade_renames", {})
-	if mig_up is Dictionary:
-		for k in mig_up: renames[str(k)] = str(mig_up[k])
-	for old_id in ups.keys():
-		if meta_ups.has(old_id) or renames.has(old_id): continue
-		var tgt := str(snap_ups.get(old_id, {}).get("target", ""))
-		if tgt == "": continue
-		for nid in meta_ups:
-			if str(meta_ups[nid].get("target", "")) == tgt and not snap_ups.has(nid) and not ups.has(nid):
-				renames[old_id] = nid
-				log.append("upgrade_rename_by_target %s->%s" % [old_id, nid])
-				break
-	for old_id in renames:
-		var nid: String = renames[old_id]
-		if ups.has(old_id) and old_id != nid:
+	if meta_ups.is_empty():
+		if not ups.is_empty(): log.append("meta has no upgrades: upgrades left untouched")
+	else:
+		# 1. upgrade renames
+		var renames: Dictionary = {}
+		var mig_up = c.migrations.get("upgrade_renames", {})
+		if mig_up is Dictionary:
+			for k in mig_up: renames[str(k)] = str(mig_up[k])
+		for old_id in ups.keys():
+			if meta_ups.has(old_id) or renames.has(old_id): continue
+			var tgt := str(snap_ups.get(old_id, {}).get("target", "")) if snap_ups.get(old_id) is Dictionary else ""
+			if tgt == "": continue
+			for nid in meta_ups:
+				if str(meta_ups[nid].get("target", "")) == tgt and not snap_ups.has(nid) and not ups.has(nid):
+					renames[old_id] = nid
+					log.append("upgrade_rename_by_target %s->%s" % [old_id, nid])
+					break
+		for old_id in renames:
+			var nid: String = renames[old_id]
+			if ups.has(old_id) and old_id != nid:
+				changed = true
+				var old_wins := int(ups[old_id]) >= int(ups.get(nid, 1))
+				ups[nid] = maxi(int(ups.get(nid, 1)), int(ups[old_id]))
+				ups.erase(old_id)
+				if paid_all.has(old_id):
+					if old_wins: paid_all[nid] = paid_all[old_id]
+					paid_all.erase(old_id)
+				if snap_ups.has(old_id) and not snap_ups.has(nid): snap_ups[nid] = snap_ups[old_id]
+				keys.append("mig:%s:%s:%s" % [cur_cv, old_id, nid])
+		# 2. retired upgrades: refund every level, then remove (01 D32 (2))
+		for id in ups.keys():
+			if meta_ups.has(id): continue
 			changed = true
-			ups[nid] = maxi(int(ups.get(nid, 1)), int(ups[old_id]))
-			ups.erase(old_id)
-			if snap_ups.has(old_id) and not snap_ups.has(nid): snap_ups[nid] = snap_ups[old_id]
-			keys.append("mig:%s:%s:%s" % [cur_cv, old_id, nid])
-	# 2. round renames
+			var lvl := int(ups[id])
+			var refund := 0
+			var rkey := "retire:%s:%s" % [cur_cv, id]
+			if not keys.has(rkey):
+				refund = _refund_levels(id, 1, lvl, paid_all, snap_ups, log)
+				keys.append(rkey)
+			refunded += refund
+			levels_removed += maxi(0, lvl - 1)
+			ups.erase(id)
+			paid_all.erase(id)
+			log.append("retire %s L%d +%d" % [id, lvl, refund])
+		# 3. clamp to max_level + refund the removed levels (01 D32 (1))
+		for id in ups.keys():
+			var max_l := maxi(1, int(meta_ups[id].get("max_level", 1)))
+			var lvl := int(ups[id])
+			if lvl <= max_l: continue
+			changed = true
+			var refund := 0
+			var rkey := "refund:%s:%s" % [cur_cv, id]
+			if not keys.has(rkey):
+				refund = _refund_levels(id, max_l, lvl, paid_all, snap_ups, log)
+				keys.append(rkey)
+			refunded += refund
+			levels_removed += lvl - max_l
+			ups[id] = max_l
+			var rec = paid_all.get(id)
+			if rec is Dictionary:
+				for L in range(max_l + 1, lvl + 1): rec.erase(str(L))
+				if rec.is_empty(): paid_all.erase(id)
+			log.append("refund %s L%d->L%d +%d" % [id, lvl, max_l, refund])
+		if refunded > 0:
+			progress.coins = clampi(int(progress.coins) + refunded, 0, _coins_cap())
+	# 4. round renames
 	var mig_r = c.migrations.get("round_renames", {})
 	if mig_r is Dictionary:
 		for old_r in mig_r:
@@ -396,29 +502,7 @@ func _apply_content_migration() -> void:
 			if progress.best_time.has(old_r):
 				progress.best_time[nr] = minf(float(progress.best_time.get(nr, 1e9)), float(progress.best_time[old_r]))
 				progress.best_time.erase(old_r)
-	# 3. clamp + refund at recorded prices
-	for id in ups.keys():
-		if not meta_ups.has(id): continue   # unknown id: kept untouched
-		var max_l := int(meta_ups[id].get("max_level", 1))
-		var lvl := int(ups[id])
-		if lvl <= max_l: continue
-		changed = true
-		var rkey := "refund:%s:%s" % [cur_cv, id]
-		if not keys.has(rkey):
-			var paid: Array = snap_ups.get(id, {}).get("costs", [])
-			var refund := 0
-			var known := true
-			for L in range(max_l + 1, lvl + 1):
-				if L - 2 >= 0 and L - 2 < paid.size(): refund += int(paid[L - 2])
-				else: known = false
-			if not known:
-				push_warning("[Save] content/refund_unknown %s L%d->L%d (no recorded price)" % [id, lvl, max_l])
-				log.append("refund_unknown " + id)
-			progress.coins = int(progress.coins) + refund
-			keys.append(rkey)
-			log.append("refund %s L%d->L%d +%d" % [id, lvl, max_l, refund])
-		ups[id] = max_l
-	# 4. id-based unlocks (only when the data the save was made with is known)
+	# 5. id-based unlocks (only when the data the save was made with is known)
 	if prev_cv != "":
 		var order: Array = c.round_order
 		var open := 0
@@ -427,20 +511,101 @@ func _apply_content_migration() -> void:
 			var ok: bool = i == 0 or progress.stars.has(rid) or progress.stars.has(str(order[i - 1]))
 			if not ok: break
 			open = i + 1
-		if open != int(progress.unlocked_round):
-			log.append("unlocked_round %d->%d" % [int(progress.unlocked_round), open])
+		if maxi(1, open) != int(progress.unlocked_round):
+			log.append("unlocked_round %d->%d" % [int(progress.unlocked_round), maxi(1, open)])
 			changed = true
 		progress.unlocked_round = maxi(1, open)
-	if prev_cv == "" and not changed:
-		return   # legacy save, nothing to fix: no write during load; the next normal save stamps the version
-	progress["migrations_applied"] = keys.slice(maxi(0, keys.size() - MIGRATION_KEYS_KEEP))
 	migration_log = log
-	if not save_progress():   # stamps the new content_version + snapshot
+	if not changed:
+		return   # X1 (10 v0.26): nothing to fix -> no write during load; the next ordinary save stamps the version
+	if levels_removed > 0 or refunded > 0:
+		var n := {"levels": levels_removed, "coins": refunded, "from": prev_cv, "to": cur_cv}
+		var old_n = progress.get("migration_notice")
+		if old_n is Dictionary:   # an earlier notice the player has not seen yet: add up
+			n["levels"] = levels_removed + int(old_n.get("levels", 0))
+			n["coins"] = refunded + int(old_n.get("coins", 0))
+			n["from"] = str(old_n.get("from", prev_cv))
+		progress["migration_notice"] = n
+	progress["migrations_applied"] = keys.slice(maxi(0, keys.size() - MIGRATION_KEYS_KEEP))
+	var backup := _pre_migration_backup(prev_cv, before)
+	if backup != "":
+		migration_log.append("backup " + backup.get_file())
+	if save_progress():   # stamps the new content_version + snapshot
+		last_migration = {"from": prev_cv, "to": cur_cv, "levels": levels_removed, "coins": refunded, "backup": backup}
+	else:
 		progress = before
+		_migration_pending = true
 		migration_log.append("save_failed: migration will retry on next load")
+
+## Coins for levels from_l+1..to_l of `id` (01 D32: price actually paid, else the snapshot price, else 0 + warning).
+func _refund_levels(id: String, from_l: int, to_l: int, paid_all: Dictionary, snap_ups: Dictionary, log: Array) -> int:
+	var coins := 0
+	var unknown := []
+	var rec = paid_all.get(id)
+	var s = snap_ups.get(id)
+	var costs: Array = s.costs if s is Dictionary and s.get("costs") is Array else []
+	for L in range(from_l + 1, to_l + 1):
+		var v = rec.get(str(L)) if rec is Dictionary else null
+		if not (v is int or v is float):
+			v = costs[L - 2] if L - 2 >= 0 and L - 2 < costs.size() else null
+		if (v is int or v is float) and float(v) >= 0.0:
+			coins += int(v)
+		else:
+			unknown.append(L)
+	if not unknown.is_empty():
+		push_warning("[Save] content/refund_unknown %s levels %s (no recorded price)" % [id, str(unknown)])
+		log.append("refund_unknown %s %s" % [id, str(unknown)])
+	return coins
+
+## 10 v0.27: copy the file this load came from to <base>.pre-<old content_version>.json before a migration writes.
+## Ordinary saves never touch it. An existing backup for the same old version is kept (it holds the earlier state,
+## e.g. after an update -> rollback -> update cycle). Keeps the newest PRE_BACKUPS_KEEP. Returns the path or "".
+func _pre_migration_backup(prev_cv: String, state: Dictionary) -> String:
+	var tag := (prev_cv if prev_cv != "" else "legacy").validate_filename()
+	var dst := "%s.pre-%s.json" % [path.get_basename(), tag]
+	if FileAccess.file_exists(dst):
+		return dst
+	var src := path if recovery_source == "main" else "%s.%s" % [path, recovery_source]
+	var bytes := FileAccess.get_file_as_bytes(src) if FileAccess.file_exists(src) else PackedByteArray()
+	if bytes.is_empty():   # source vanished: write the loaded state in the normal envelope instead
+		var payload_txt := JSON.stringify(state, "", true)
+		bytes = JSON.stringify({"version": VERSION, "checksum": payload_txt.sha256_text(), "payload": payload_txt}, "", true).to_utf8_buffer()
+	var f := FileAccess.open(dst, FileAccess.WRITE)
+	if f == null:
+		push_warning("[Save] pre-migration backup failed: %s (%d)" % [dst, FileAccess.get_open_error()])
+		return ""
+	f.store_buffer(bytes)
+	f.close()
+	_prune(path.get_base_dir(), path.get_basename().get_file() + ".pre-", ".json", PRE_BACKUPS_KEEP, dst.get_file())
+	return dst
+
+func _coins_cap() -> int:
+	var c := _content()
+	if c:
+		for cur in c.meta.get("currencies", []):
+			if cur is Dictionary and str(cur.get("id", "")) == "gold" and cur.has("max"):
+				return int(cur.max)
+	return COINS_CAP_DEFAULT
 
 ## What the last content migration did (for QA/probes); empty when nothing ran.
 var migration_log: Array = []
+## Last successful content migration this session: {"from", "to", "levels", "coins", "backup"} or {}.
+var last_migration: Dictionary = {}
+## True after a migration write failed this session (10 F2): ordinary saves keep the old content_version.
+var _migration_pending := false
+
+## 01 D32 (3) menu notice after a content migration that removed levels or refunded coins. Persisted in the save
+## until the UI acknowledges it. {"levels": int, "coins": int, "from": String, "to": String} or {}.
+func migration_notice() -> Dictionary:
+	var n = progress.get("migration_notice")
+	return (n as Dictionary).duplicate() if n is Dictionary else {}
+
+## The UI showed the notice: drop it and save (if that write fails, the notice may show again next launch).
+func ack_migration_notice() -> void:
+	if read_only or not progress.has("migration_notice"):
+		return
+	progress.erase("migration_notice")
+	save_progress()
 
 # ---------------------------------------------------------------- meta upgrades (10 R3 contract)
 ## Result codes of buy_upgrade().
@@ -513,13 +678,25 @@ func buy_upgrade(upgrade_id: String, to_level: int) -> String:
 	if coins < cost: return UPG_COINS
 	var ups: Dictionary = progress.upgrades
 	var had_key := ups.has(upgrade_id)
+	if not (progress.get("upgrade_paid") is Dictionary):
+		progress["upgrade_paid"] = {}
+	var paid_all: Dictionary = progress.upgrade_paid
+	var had_rec := paid_all.has(upgrade_id)
+	var rec: Dictionary = paid_all.get(upgrade_id, {})
+	var lkey := str(to_level)
+	var prev_paid = rec.get(lkey)
 	progress.coins = coins - cost
 	ups[upgrade_id] = to_level
+	rec[lkey] = cost             # 01 D32: the price actually paid, written in the same atomic save
+	paid_all[upgrade_id] = rec
 	if save_progress():
 		return UPG_OK
 	progress.coins = coins
 	if had_key: ups[upgrade_id] = cur
 	else: ups.erase(upgrade_id)
+	if prev_paid != null: rec[lkey] = prev_paid
+	else: rec.erase(lkey)
+	if not had_rec: paid_all.erase(upgrade_id)
 	return UPG_SAVE_UNCERTAIN if last_failure_uncertain else UPG_SAVE_FAILED
 
 func set_setting(key: String, value: Variant) -> void:

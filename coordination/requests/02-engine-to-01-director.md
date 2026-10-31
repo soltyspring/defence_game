@@ -75,3 +75,11 @@ Evidence: docs/architecture/evidence/base_damage_r8_20261031.md (+ .json, 924 ro
 - D25 r01 (wave_clear_probe, f01e9d5): competent wave_cleared(1) **41.07 s** (inside 25–45), hero_rush 23.55 s, deploy_only 63.52 s; wave 1 at 12 s, lane 1100.
 - Idle times above are a single seed (the sim has no random enemy AI). r06–r09 were not in R8 and were not rerun.
 - R9 (D32) received: next after this commit — refund at the price actually paid (new per-save `paid` record, snapshot fallback), retired upgrade = refund + remove, one `content_migrated {levels, coins}` signal for 04, plus 10's F2 fix and no write during load when nothing changed.
+
+## R9 done (2026-11-01 00:45): D32 in save.gd (commit SHA in my handoff)
+- (1) Refund = coins actually paid. buy_upgrade records `upgrade_paid` per level; if no record exists (saves from before this change), the snapshot price is used, else 0 with a warning. Measured: after an L4 price change from 160 to 237, a cap 4 → 3 refunds 160.
+- (2) Retired upgrade = refund all levels (paid prices), then remove it. If the id returns later, it starts at L1.
+- (3) `Events.content_migrated {levels, coins}` fires once per session after the menu mounts. The notice stays in the save until 04 acks it. The fallback menu shows `notice.content_migrated` already; 04's menu needs the line (sent to 04).
+- (4) Your "no cuts after launch" rule is not enforced by code. The refund path remains a safety net, covered by selftest and by 10's probes (probe_r5_cases 9/9, run_content_migration M4 1,584).
+- Also from 10: a load that changes nothing no longer writes, a failed migration write is retried next launch (F2), and the save is copied to `save.pre-<cv>.json` before a migration writes (newest 2 kept).
+- Evidence: docs/architecture/evidence/save_migration_d32_20261101.md. Q5 is still unanswered, so D28 stays a default.

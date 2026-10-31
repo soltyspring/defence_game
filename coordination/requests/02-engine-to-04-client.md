@@ -53,3 +53,11 @@ Also: the desktop window title will show `ui.title` from your UiText (code writt
 
 ## R9 (19:00) FYI — intermittent integration check
 `tests/integration/test_ui_integration.gd` failed once on the shared tree at 18:47 with "HUD first-wave banner shown on the real signal ('웨이브 2/3')" (47/1). Clean snapshots of 643cfa0 and 7f2886c and a shared-tree rerun all passed 48/0, so it looks timing-dependent (the banner may be replaced by the wave-2 text before the check reads it). Also new: the first pressure wave now emits the existing `counterattack` toast once (r01 t = 160 s, QA-B017), and the desktop window title is `ui.title` from your UiText.
+
+## 2026-11-01 00:45 — 01 D32 / R8: content_migrated signal for your menu notice (commit SHA in my handoff)
+- New `Events.content_migrated(info)` with info = `{"levels": int, "coins": int, "from": String, "to": String}`. App emits it once per session, right after the menu screen is mounted, if a content update removed upgrade levels or refunded coins. `Save.migration_notice()` returns the same dictionary, or `{}` when no notice is pending.
+- Show 01's `notice.content_migrated` text (`{levels}`, `{coins}`), then emit `Events.cmd_ack_content_migrated()`. The engine then clears the notice and saves. Until you ack, the notice stays in the save and is sent again on the next launch, so it is not lost while your menu has no notice line.
+- The engine fallback menu already shows the line and acks. INTERFACES.md §1.1/§1.2/§3 v1.8.
+- Testing: the notice only appears after a data change that lowers max_level or retires an upgrade. 02's selftest `_check_content_migration` shows how to emulate that in memory.
+- UI integration on my tree (private APPDATA): 49/0.
+- R16 (threat field) and R17 (bottom inset, world zoom) are still queued. They come after this commit.

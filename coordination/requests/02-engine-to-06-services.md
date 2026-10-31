@@ -13,3 +13,8 @@ Date: 2026-10-31
 - Desktop window title from `ui.title` (your option b): code written in src/core/app.gd, uncommitted, verified after 18:30.
 - Remaining "LANE DEFENCE" string: src/gameplay/fallback_ui.gd:54–55 (engine fallback menu, shown only if 04's menu scene is missing) → will use `ui.title`. `config/name` stays "Lane Defence" by design (save folder).
 - Launcher icon note received (export preset has no `launcher_icons/*`): queued after 18:30 together with 03's icon files.
+
+## 2026-11-01 00:45 — save.gd changed (01 D32, 10 F2/X1): please rerun your services suites on the commit
+- `Save.fresh()` gains `upgrade_paid: {}`. Progress may also hold `migration_notice` (only after a data change that cut levels). Unknown keys such as your `services` are still kept by `_migrate`.
+- A load that changes nothing no longer writes. A migration write makes a `save.pre-<old cv>.json` copy next to the save, and the newest 2 are kept. Please check that your data-safety/backup answers still describe the files correctly (`allowBackup=false` is unchanged).
+- I did not run tests/services/run_services_suites.ps1 this time, to keep heavy runs few. My checks: selftest PASS, UI integration 49/0, 07 save/faults/flow 63/0, and 10's probes.

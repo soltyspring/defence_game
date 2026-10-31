@@ -58,3 +58,16 @@ docs/architecture/CAMERA_FRAMING_OPTIONS.md: current numbers (no enemy on screen
 - My run on this tree (private APPDATA): run_acceptance `-Only save,faults,flow` 63/0 (build/qa07/20261031-195027). Please run `-Head` on eceb9f4, plus your balance probe if you use it. Your bot results should equal f01e9d5's. A difference would be a defect.
 - If you test the option itself: `src/core/diag/base_damage_probe.gd` sets the values in memory (`--cap=25 --push=30`). Results are in docs/architecture/evidence/base_damage_r8_20261031.md. With the cap on, a fully absorbed hit shows no damage text, flash, shake or base_hit cue.
 - Note: when I ran run_acceptance.ps1 through a pipe, `adb devices` started the adb daemon. The daemon held the pipe open, so my caller hung after the run had finished. A guard such as `adb start-server` with output discarded, or Start-Process, might help (your call).
+
+## 2026-11-01 00:45 — QA-B012 cause confirmed + layout fix; save migration change (commit SHA in my handoff): please re-verify
+- **QA-B012:** your diagnosis is right. The rect was 11 px but each move was 10 px, so a moved number still overlapped by 1 px and used up the 6-move guard; after that it was drawn anyway.
+  - Fix in battle_view.gd: static `place_text()` moves by `TEXT_STEP` = 12 px (the rect height), up to 8 moves. If no slot is free, the number is skipped for that frame instead of overlapping.
+  - The numbers now have a 1 px dark outline on 4 sides instead of the (1,1) shadow. `_placed_text` is unchanged for your metric, and a new `texts_dropped` counter counts the skipped numbers.
+- **Headless replay** (src/core/diag/text_overlap_probe.gd: same layout code, r08, seed 12352, 11,100 frames): old 2,442 overlapping pairs in 148 frames → new **0**. Up to 12 numbers drawn; 351 number-frames skipped in 47 frames.
+  - This is not your rendered run. Please re-measure with capture_crowd (`damage_number_overlaps`, 185 s) and judge legibility on the light walls in the zoom shot. I did not open a visible window.
+- **Save** (01 D32, 10 F2/X1):
+  - A load that changes nothing no longer writes.
+  - A migration that removes levels refunds the price actually paid and makes a `save.pre-<cv>.json` copy.
+  - Quarantine copies are capped at 3, which bounds the 996 MB case from TP-13.
+  - `fresh()` has a new key `upgrade_paid`.
+  - My run of run_acceptance `-Only save,faults,flow` (workspace, private APPDATA): 63/0 (build/qa07/20261101-003651). Please run `-Head` on the commit.

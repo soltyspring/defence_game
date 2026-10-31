@@ -18,6 +18,11 @@ signal sfx(cue: StringName, params: Dictionary)
 ## `pressure: true` waves never count). info = {"index": int (same numbering as HudSnapshot.wave.index), "t": float}.
 ## Emitted once per wave, never after the battle ended.
 signal wave_cleared(info: Dictionary)
+## 01 D32 (3): a content update removed upgrade levels and/or refunded coins. info = Save.migration_notice() =
+## {"levels": int, "coins": int, "from": String, "to": String}; text key `notice.content_migrated` ({levels}, {coins}).
+## App emits it once per session, right after the menu screen is mounted, while a notice is pending. The notice stays
+## in the save until the UI sends cmd_ack_content_migrated (so it is not lost if no screen shows it yet).
+signal content_migrated(info: Dictionary)
 
 # ---- UI -> Engine ----
 signal cmd_start_round(round_id: String)
@@ -34,3 +39,5 @@ signal cmd_set_setting(key: String, value: Variant)
 signal cmd_buy_upgrade(upgrade_id: String, to_level: int)
 ## {"id", "to_level", "code" (Save.UPG_* codes), "coins", "level"} — coins/level are the values after the call.
 signal upgrade_result(result: Dictionary)
+## The UI has shown the content_migrated notice: the engine clears it from the save.
+signal cmd_ack_content_migrated()

@@ -429,20 +429,36 @@ func _draw_text(tx) -> void:
 		var h: float = rec.rects[0].size.y if rec != null else 24.0
 		by = ground_y - h - 12.0 - tx.rise
 	var p := Vector2(roundf(tx.x - w * 0.5), roundf(by))
-	# vertical stagger: never overlap a number already drawn this frame
-	var r := Rect2(p.x - 1.0, p.y - NUM_PX, w + 2.0, NUM_PX + 1.0)
-	var guard := 0
-	while guard < 6 and _overlaps_placed(r):
-		r.position.y -= NUM_PX
-		guard += 1
-	_placed_text.append(r)
-	p.y = r.position.y + NUM_PX
-	draw_string(_num_font, p + Vector2(1, 1), tx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, NUM_PX, Color(0, 0, 0, a))
+	# vertical stagger (QA-B012): the rect covers the glyphs plus the 1 px outline and is exactly TEXT_STEP high, so a
+	# moved number never keeps a 1 px overlap (the old 10 px step under an 11 px rect used up the guard after ~3).
+	var slot := place_text(Rect2(p.x - 1.0, p.y - NUM_PX - 1.0, w + 2.0, TEXT_STEP), _placed_text, TEXT_STEP, TEXT_MAX_STEPS)
+	if slot.size == Vector2.ZERO:
+		texts_dropped += 1   # no free slot within TEXT_MAX_STEPS: skip this number for this frame instead of overlapping
+		return
+	_placed_text.append(slot)
+	p.y = slot.position.y + NUM_PX + 1.0
+	# 1 px dark outline (4 neighbours) for light backgrounds such as the village walls (07 visual7 zoom_nums)
+	var oc := Color(C_OUTLINE, a)
+	for o in TEXT_OUTLINE:
+		draw_string(_num_font, p + o, tx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, NUM_PX, oc)
 	draw_string(_num_font, p, tx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, NUM_PX, c)
 
-var _placed_text: Array[Rect2] = []
+var _placed_text: Array[Rect2] = []   # rects of the damage numbers drawn this frame (07 capture_crowd reads it)
+var texts_dropped := 0                 # numbers skipped for lack of a free slot (QA evidence)
+const TEXT_STEP := NUM_PX + 2          # 1 px outline above + NUM_PX glyph cell + 1 px outline below
+const TEXT_MAX_STEPS := 8
+const TEXT_OUTLINE: Array[Vector2] = [Vector2(-1, 0), Vector2(1, 0), Vector2(0, -1), Vector2(0, 1)]
 
-func _overlaps_placed(r: Rect2) -> bool:
-	for q in _placed_text:
-		if q.intersects(r): return true
-	return false
+## Pure layout for damage numbers (QA-B012): move r up in `step` px until it intersects no rect in `placed`.
+## Returns that rect, or an empty Rect2 if none is free within max_steps moves. Used by _draw_text and probes.
+static func place_text(r: Rect2, placed: Array[Rect2], step: float, max_steps: int) -> Rect2:
+	for i in max_steps + 1:
+		var free := true
+		for q in placed:
+			if q.intersects(r):
+				free = false
+				break
+		if free:
+			return r
+		r.position.y -= step
+	return Rect2()
