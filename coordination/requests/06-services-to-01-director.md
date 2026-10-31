@@ -44,3 +44,24 @@ docs/services/MONETIZATION_OPTIONS_WORK.md compares A (rewarded ads + remove-ads
 - U3 later (one question at a time): privacy policy hosting. Ready-to-fill page docs/services/privacy_site/index.html (disabled-mode text). Hosting choices H1 separate public repo / H2 gh-pages branch / H3 /docs folder (not recommended) / H4 other host (not researched), steps P1–P9 with [USER] actions: docs/services/PRIVACY_POLICY_HOSTING.md. Values needed from the user: developer name, contact email, privacy contact, effective date; plus U4 for the children statement.
 - U4 later: target audience options T1 (13+ only), T2 (all ages incl. children → Families policy), T3 (children only) with consequences now and if ads are added later: docs/services/FAMILIES_ASSESSMENT.md. Aligned with 09 §25.3 (cannot judge whether cute bread art counts as child-targeting; no child/parent evidence).
 - Content rating draft re-checked for Q2 deferred: ads, purchases, user interaction, location, unrestricted internet all "No" (CONTENT_RATING_DRAFT.md §2a).
+
+# Update Q3 (2026-10-31) — QUEUED: working title in the listing, Bread Defense overlap, KIPRIS
+Q3 acknowledged (user 16:19 KST, working title; final after KIPRIS). Not a user question from 06.
+- **Listing:** docs/services/STORE_LISTING_DRAFT.md now holds only the working title: ko "빵집 기사단: 곰팡이 디펜스" (15 chars), en "Bakery Knights: Mold Defense" (28 chars). It also has App Store subtitles (ko 21, en 28; only if iOS) and new short descriptions (ko 44, en 73). The lint checks title ≤ 30 (and ≥ 2 for the App Store), subtitle ≤ 30, short ≤ 80, ads/purchase lines with the change marker, brands, and the Bread Defense phrases.
+- **Title in the game:** data/text `ui.title` is still "레인 디펜스". Play wants the listing to match the app, so please set ko/en `ui.title` to the working title when you record Q3 (the 30-char limit is not an issue; 04 may want a shorter launcher label).
+- **KIPRIS:** the person doing the check follows docs/services/KIPRIS_MANUAL_CHECK.md (16 terms × classes 9 and 41, status values, record form). All 32 rows are NOT_DONE. Please put "who runs KIPRIS, and when" into your one-at-a-time sequence when it fits; 06 has no result and will not invent one.
+
+## Bread Defense / 빵어전 overlap (facts, from its Play and App Store KR pages and 09 §28)
+Their signature words: 반죽/Dough (path pieces), 빵 카드, 온기/Warmth, 화덕/hearth, 눅눅이/Moisties, 축축 자국, 홀씨 구름/spore clouds, 제빵사·조수 (Bakers, Assistants), 빵전사, 화덕 대련 (duels), 도감, and the tagline about defending the village with warm bread before the last ember fades. Subtitle "온기를 굽는 타워디펜스".
+- Store text: 06 removed 반죽, 꼬마 제빵사 and "dough income" and describes them by role (일꾼, 수입). The lint now blocks the list in STORE_LISTING_DRAFT.md §7.
+- **In-game names (your call, 06 does not edit data/text):** our own text uses three of their words: `res.supply` 반죽/Dough, `unit.worker.name` 제빵사, `unit.siege.name` 화덕포 (ko 화덕), plus `round.r01.name` "첫 번째 반죽". Screenshots will show them. Options: (a) keep them (they are common bakery words; low legal risk, some "looks the same" risk in screenshots); (b) rename the resource, e.g. 밀가루/Flour, and the siege unit, e.g. 오븐포/Oven Cannon (en is already "Oven"). If you rename, tell 06 so the §5 evidence and §7 note follow.
+
+## Differentiation wording candidates for the store text (for your review; none used beyond the draft)
+| # | ko | en | What it stresses |
+|---|---|---|---|
+| D1 | 한 줄 전장을 밀고 나가 곰팡이 기지를 무너뜨리세요 | Push down one lane and break the mold base | attack to win (they defend a path) |
+| D2 | 직접 움직이는 영웅, 제빵 대장 | A hero you steer: the Head Baker | hero control (they place cards) |
+| D3 | 일꾼을 늘릴까, 병사를 보낼까, 아껴 둘까 | More workers, more troops, or save up? | income decisions |
+| D4 | 곰팡이 장군과 부패 대군주를 쓰러뜨리세요 | Defeat the Mold General and the Rot Overlord | named bosses from your text |
+| D5 | 인터넷 없이 10개 라운드 | Ten rounds, no connection needed | offline, finite campaign |
+Avoid "타워디펜스/tower defense" in any of them: our game is a lane battle, and the phrase is their subtitle's genre label. The draft currently uses D1–D3 in the short/full text and the subtitle "한 줄 전장, 빵 병사 대 곰팡이 군단" / "Lane battles: bread vs. mold".

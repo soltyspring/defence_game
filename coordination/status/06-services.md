@@ -1,9 +1,10 @@
 # 06-services status
-Updated: 2026-10-31 (M12)
-Status: M12 COMPLETE (privacy page ready to fill + hosting steps; rating re-check; Families assessment). Q2 DEFERRED by user (16:09). Gate PASS (exit 0, binding=game). Nothing live; disabled mode; no monetization UI.
+Updated: 2026-10-31 (Q3 follow-up)
+Status: Q3 FOLLOW-UP COMPLETE. Working title (user 16:19 KST) in the store listing; Bread Defense wording blocked by lint; KIPRIS class 9/41 manual procedure ready, **search NOT DONE** (person needed). Q2 DEFERRED (16:09). Gate PASS (exit 0, binding=game). Nothing live; disabled mode; no monetization UI.
 Current task: none. Next: see handoff.
-Validation: `pwsh -File tests/services/run_services_suites.ps1` → test_services 502/0, m2 130/0, m3 161/0, integration exit=2 BLOCKED_NOT_INTEGRATED (71 passes, 0 failures, blockers I1–I4); OVERALL exit=2. Simulated integration run exit=2 with I2 PASS_SIMULATED, I3/I4 PASS. 4 gate mutations each caught (exit 1), files restored.
-Commits: 7fe59f926674961e1e7c872294ca6044009e04d0 (gate code/tests/contract docs) PUSHED origin/main; diff vs origin empty. Docs/requests/handoff: 47c187bd2e39947a0584b893878dc3cb91e778eb PUSHED origin/main.
+Validation (latest): `pwsh -File tests/services/run_services_suites.ps1` → 502/0, m2 130/0, m3 161/0, listing 1482/0 (competitor_overlap 279, kipris_manual_check 222), m8 26/0, m10 81/0, integration PASS_INTEGRATED 156/0 binding=game; OVERALL exit=0. 16 listing mutations each caught (exit 1), files restored.
+Q3: f0d80e0a27692cdb891ff5b56f5ea67afd3dc334 PUSHED (listing, KIPRIS_MANUAL_CHECK, NAME_SEARCH_LOG, OPEN_DECISIONS U9, lint).
+Older M4 line (kept): commits 7fe59f9 / 47c187b; integration then exit=2 BLOCKED (resolved in M8).
 Dependencies: 02 S1 (blocking), S3 when 01 enables placements; 01 Q2–Q5 + retention; 07 runs the gate.
 M5: 56cd600e628f3acb092ba461c58b6ae80635db4e PUSHED; runner OVERALL exit=2 (integration 146/0, blockers I1–I4). Open gap: rewarded late-callback drop vs AdMob policy (DD1 → 01).
 M6: 3afb2592fd3f051fdc9cf990ea07e3f279c1b715 PUSHED; runner OVERALL exit=2 (listing 615/0).
@@ -14,3 +15,4 @@ M9: 82108f86b612c1dbc5bae725be58a72cfea90d42 PUSHED; runner OVERALL exit=0 (list
 M10: 710384033c8cf518f83b5ea6afd81776ba0a898b PUSHED; runner OVERALL exit=0 (m10 81/0).
 M11: e5099bdd7b911bd703ae9866b125c28173fde197 PUSHED; runner OVERALL exit=0 (listing 1024/0).
 M12: 98e757b15ce2e30dba6b2426715dd58115af22bb PUSHED; runner OVERALL exit=0 (listing 1087/0).
+Q3: f0d80e0a27692cdb891ff5b56f5ea67afd3dc334 PUSHED; runner OVERALL exit=0 (listing 1482/0). Quota 40.2% at start.
