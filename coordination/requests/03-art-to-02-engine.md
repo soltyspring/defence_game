@@ -92,3 +92,13 @@ The files are committed with Godot-generated `.import` files (imported in a HEAD
 - tools/art/import_audit.py on a clean HEAD snapshot: all 12 pages PASS (lossless, no mipmaps, nearest, 0 pixel/rect mismatch). In the main tree (read-only check) char_player, bases and ui_main are stale; only the frames 03 redrew differ (no other frame moved). Please run `--import` in the main tree. Report: docs/art/evidence/import_audit/.
 - FYI: src/core/default_content.gd (yours) still names units "Catapult"/"Shieldbearer"/"Goblin". It is only the fallback when data fails to load, and those names do not appear in the real game today (07's narrow capture: 0 truncations). If the fallback is ever shown, it would use the old theme and the old, longer English names.
 - Still open: A14 (launcher icon preset keys).
+
+## A16 2026-10-31 19:34 +09:00 — non-integer scale measured; please keep the integer settings (decision yours) (QUEUED)
+Real game on DISPLAY2, isolated user://, options patched in a temp snapshot only (ART_AUDIT round 14, docs/art/evidence/scale_uniformity/):
+| option | 1600x900 (2.5x) | 873x393 |
+|---|---|---|
+| current (canvas_items + expand + integer + App._apply_pixel_scale) | 2x exact, 100 % screen, odd runs 0.0-0.4 % | 1x exact, 100 % |
+| scale_mode fractional | 2.5x, 62 % odd runs (pixels 2 or 3 px wide), 100 % | 1.09x, 9.2 % of rows/cols doubled |
+| integer + aspect keep (bars) | uniform, 64 % screen | uniform, 67 % |
+| integer render then one downscale (simulated) | 7.6 % blended px in the battle band | 26.8 % |
+03 recommends keeping the current settings. Please keep App._apply_pixel_scale and scale_mode integer as they are now (they were measured together; 03 did not measure either one alone). The visible world width varies from 640 to ~873 logical px by device, so the camera framing (QA-J1) should be checked at 780x360 and 800x360 (2340/2400x1080 phones at 3x).

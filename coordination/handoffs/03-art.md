@@ -1,5 +1,5 @@
 # 03-art handoff
-Updated: 2026-10-31 19:23 +09:00 (real time from Get-Date). Q1 = A DECIDED; Q3 working title 빵집 기사단: 곰팡이 디펜스 (store name pending KIPRIS); Q2 business model DEFERRED (no ad/purchase UI). Art version 0.12.3.
+Updated: 2026-10-31 19:34 +09:00 (real time from Get-Date). Q1 = A DECIDED; Q3 working title 빵집 기사단: 곰팡이 디펜스 (store name pending KIPRIS); Q2 business model DEFERRED (no ad/purchase UI). Art version 0.12.3.
 
 ## Session
 - Kiro CLI session ID: not visible from inside the session, so I cannot record it. Codex should read it from coordination/.runtime/quota/sessions.json / the launcher.
@@ -118,7 +118,12 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - Validation: validate.py --determinism PASS; PCK 12/12 + 3 fonts; launcher_icons.py byte-identical rerun.
 - Commit b113085 [Design]: PUSHED origin/main (verified with git branch -r --contains at 19:24). 07 A10 request after the push.
 
+## Milestone 17 (this session): non-integer scale measurement
+- tools/art/scale_uniformity.py, tools/art/scale_option_patch.py (snapshot-only). Captures + metrics in docs/art/evidence/scale_uniformity/.
+- Result: current integer settings uniform (odd runs <= 0.6 %, only HP-bar fill widths); fractional 2.5x 62 % odd runs; letterbox 64-67 % screen; one downscale 7.6-26.8 % blended px. Recommendation: keep current (02 A16, 04 A14).
+- Human "reads as bakery" test: still not done (no players).
+
 ## Exact next steps on resume
-1. After 02 re-imports: python tools/art/import_audit.py . (expect PASS in the main tree).
-2. After 02 A14 + 06 APK rebuild: check the APK launcher layers with 06.
-3. A26 for fast / siege if 07's name test still fails them.
+1. After 02 re-imports: python tools/art/import_audit.py . (expect PASS).
+2. After 02 A14 + 06 APK rebuild: check the launcher layers in the APK with 06.
+3. Read incoming *-to-03-art.md.

@@ -1,0 +1,73 @@
+{
+  "time": "2026-10-31T19:30:54.3678460+09:00",
+  "monitors": [
+    {
+      "Device": "\\\\.\\DISPLAY1",
+      "Primary": true,
+      "Bounds": [
+        0,
+        0,
+        2560,
+        1440
+      ],
+      "Work": [
+        0,
+        0,
+        2560,
+        1392
+      ],
+      "Dpi": 96,
+      "Scale": 1.0
+    },
+    {
+      "Device": "\\\\.\\DISPLAY2",
+      "Primary": false,
+      "Bounds": [
+        -1920,
+        174,
+        0,
+        1254
+      ],
+      "Work": [
+        -1920,
+        174,
+        0,
+        1206
+      ],
+      "Dpi": 96,
+      "Scale": 1.0
+    }
+  ],
+  "chosen": "\\\\.\\DISPLAY2",
+  "window": {
+    "hwnd": 6882948,
+    "pid": 46000,
+    "first_seen": {
+      "rect": [
+        -1768,
+        209,
+        -152,
+        1148
+      ],
+      "on_secondary": true
+    },
+    "rect": [
+      -1760,
+      240,
+      -144,
+      1179
+    ],
+    "on_secondary": true,
+    "requested": [
+      -1760,
+      240,
+      1600,
+      900
+    ],
+    "screen_index": 1,
+    "topmost": true
+  },
+  "result": "EXIT_0",
+  "project": "C:\\Users\\aghose\\AppData\\Local\\Temp\\art03_imp",
+  "log": "Z:\\.solty\\dev\\appintoss\\defence\\build\\qa\\art03_scale\\O2_fractional_1600x900\\godot_20261031_193054.log"
+}
