@@ -68,3 +68,8 @@ Observed in Play KR store screenshots (2026-10-31): production controls are sepa
 - X7: A/B captures of the HUD: (1) current; (2) worker card detached to the far left of the card row, with a different frame colour and an income label ("+1.5/s") instead of only a cost. 07 asks 5 people "which button grows your dough?" for 3 s. Pass = variant ≥4/5 and not worse than current.
 - X8: show the word 반죽/Dough next to the supply readout (or as an icon label). Pass = visible in ko+en 1x captures with no TH-FIT overflow.
 - X9: an off-screen enemy indicator (camera framing is 02's). Pass = enemy or indicator visible in r01 HEAD captures at t=30 s and t=60 s (07 QA-J1 criterion).
+
+## R09-04-9 X9 + X11 HUD parts, measurable (2026-10-31 ~16:40 KST, SUCCESS_ANALYSIS.md §30)
+- X9 (QA-J1): an off-screen enemy indicator at the screen edge pointing to the nearest enemy group or the nest. Camera framing is 02's. Pass (07 capture bot, r01 HEAD, 4 runs, 1280x720): M1 = enemy, nest or indicator visible at t=30 s in 4/4. M2 = at t=60 s in 4/4, with at least one enemy fully on screen (if not, the data or camera owners must act). M3 = nest or indicator at t=10 s in 4/4.
+- X11 R5 (QA-J2): when the player base takes damage, the HP bar shows a hit cue (flash or shake within integer pixels) as the number drops. Pass = one capture at the moment of damage shows both the cue and the changed number.
+- Still open: the 1x top-bar capture for R09-04-5.

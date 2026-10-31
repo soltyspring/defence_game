@@ -28,3 +28,8 @@ Observation (Play ko/KR icons, 2026-10-31): defence icons signal combat with wea
 ## R09-03-6 Battle-band share (QA-J1) — competitor basis + X10 (2026-10-31 ~16:30 KST, §27)
 - Eyeballed share of screen height where units/enemies act (Play KR store screenshots, 2026-10-31): Archer Forest ~37%, Random Dice ~65%, 궁수키우기 RPG ~68%, PvZ ~ the whole game view, CatWar2 ~45%. Ours: units ~8%, sky/mountains ~75% (07). Different camera genres, so this is correlation only.
 - X10: render the same r01 moment twice, (1) current and (2) with the sky reduced and a bakery/mold foreground or midground so the lane sits higher and the mold nest is visible at the right edge. 07 shows each to 5 people for 3 s and asks "who is winning?". Pass = ≥4/5 correct on the variant. Any camera change itself belongs to 02 (via 04); this asks only for the art layers.
+
+## R09-03-7 X9 nest visibility (QA-J1), measurable (2026-10-31 ~16:40 KST, SUCCESS_ANALYSIS.md §30.2)
+- Ask: the mold nest (enemy base) must be recognisable when only its left part is on screen at the right edge (2x, 1280x720). Give it a distinct silhouette or colour block in the bakery/mold palette.
+- Pass (07 capture bot, r01 HEAD, 4 runs): M3 = nest or enemy indicator visible at t=10 s in 4/4; M1 = enemy, nest or indicator visible at t=30 s in 4/4.
+- FYI: 빵어전 (Play com.eternaxcode.bbangeojeon) is a pixel bread tower defence with purple/grey damp blob enemies (store screenshot 3). Keep our mold legion visually distinct (fuzzy mold and spores, not round damp blobs). This is not a copying claim.
