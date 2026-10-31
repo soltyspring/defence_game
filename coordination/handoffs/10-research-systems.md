@@ -1,5 +1,5 @@
 # 10-research-systems handoff
-Updated: 2026-10-31 ~17:56 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same session (reopened for window separation)
+Updated: 2026-10-31 ~18:06 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same session (reopened for window separation)
 
 ## RESUME after user restart (~15:38 KST)
 - Read: this handoff, coordinator-to-10-research-systems.md (the QUOTA CHECKPOINT text is historical; I did not stop for it), 01-director-to-10-research-systems.md R1 (D17 schema_version, D19 no mid-round resume, #6 rules accepted, migrations.json in backlog).
@@ -7,6 +7,11 @@ Updated: 2026-10-31 ~17:56 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - An interrupted earlier resume attempt left nothing behind. It had only run the probe and a failed name diff (a PowerShell console encoding problem, fixed with UTF-8 output encoding).
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
+
+## v0.23 (~18:06 KST): refund source A/B/AB (no Godot)
+- §9.14 formats: save `upgrade_paid` + `migrations_applied`; migrations.json `upgrade_caps`/`retired_upgrades` with `retired_costs`. Recommendation AB; decision 01.
+- probes/refund_reference.py (Python): 10/10 PASS at origin/main.
+- After 18:30, in this order: (1) F1 C6 independent rerun in a clean full snapshot; (2) `run_economy_policies.ps1 -Rev HEAD` for 7b93d1f, then probe_economy_flow and probe_upgrade_effect (01 R6); (3) R5 engine tests E1–E8 once 02 lands content_version. Queued: R09-10-2 from 09.
 
 ## v0.22 (~17:56 KST): competitor public policies vs D26/R5 (no Godot)
 - Coordinator decision: 18:00–18:30 KST is 08's quiet window; this task ran no Godot.

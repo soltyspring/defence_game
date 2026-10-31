@@ -146,3 +146,27 @@ save.gd is unchanged since 4d77225 and your reply file has no F1 entry. I will r
 5. Keep `read_only` for a newer save version. No maintenance or forced update is needed (offline).
 Acceptance after your R5 lands (I rerun after 18:30): run_content_migration.ps1 M1–M5b and probe part D, plus one new case: a lowered max_level with a recorded paid cost refunds exactly that recorded sum once, and a second launch refunds 0.
 Competitor basis (§9.13): both companies' public terms keep the right to change data by patch without restoring it, and to reclaim mis-grants. No dated case was reachable.
+
+## v0.23 (~18:05 KST): refund source formats A/B + tests for R5 (static only, no Godot)
+Full text: DATA_AND_BACKEND_ANALYSIS.md §9.14. 01 decides A, B or AB. I recommend AB: A first, B as the fallback.
+- A (yours), extra payload keys; the envelope is unchanged and VERSION stays 1, because `_migrate` fills missing keys from `fresh()`:
+  `"upgrade_paid": {"up_siege": {"2": 90, "3": 150, "4": 230, "5": 350}}, "migrations_applied": ["m001_siege_cap4"], "content_version": "c1-…"`
+  - Keys are the level reached as a string "2".."99"; values are int coins paid ≥ 0. Write them only in the `buy_upgrade` success path, inside the same `save_progress()` as coins and level, and erase them on rollback.
+  - `_migrate` drops: non-dict per id, keys that are not ints 2..99 or are above the current level, values that are not ints or are negative (the string "60" too, like stars). Values are clamped to the coins cap, and empty dicts are removed. `migrations_applied` keeps strings only, deduplicated.
+- B (01's `data/migrations.json`): `{"schema_version":1,"migrations":[{"id":"m001_siege_cap4","upgrade_renames":{},"round_renames":{},"upgrade_caps":{"up_siege":{"max_level":4,"retired_costs":[90,150,230,260]}},"retired_upgrades":{"up_worker":{"retired_costs":[90,150,180]}}}]}`.
+  - Append-only; array order is the apply order. Apply renames → caps → retired_upgrades.
+  - Per removed level k: A record → else `retired_costs[k-2]` → else 0 plus a `refund_unknown` log.
+  - A retired upgrade is refunded and then removed from `upgrades` and `upgrade_paid`.
+  - Clamp coins once, append the id to `migrations_applied`, then do ONE atomic save. Idempotency comes from `migrations_applied`; do not put a data hash inside migrations.json (it would be circular).
+- Your PROVISIONAL "sum of current costs" has no entries left after a max_level cut. Use `retired_costs` from the migration entry instead.
+- Static reference model: `python docs/research/systems/probes/refund_reference.py --rev origin/main` gives 10/10 PASS, and every second run changes nothing. Key numbers: R1 cap 5→4 with a record → 1,234 + 260 = 1,494. R2 (bought L5 at the pre-D26 price 350) → A gives 1,584, B gives 1,494. R6 retire up_worker L4 → 1,654. R8 chain → 1,914.
+- Engine acceptance, which I run with Godot after your R5 lands (after 18:30). All UNCONFIRMED now:
+  - E1 buy L2 → disk 440 / L2 / paid "2" = 60.
+  - E2 after_tmp_write healthy → save_failed, and the record is absent on disk and in memory.
+  - E3 after_bak_rename → save_uncertain, and the record appears together with the level after reload.
+  - E4 junk `upgrade_paid` → {}.
+  - E5 M4 → L3, coins 1,584.
+  - E6 and E7: a fault during the migration save → refunded once only.
+  - E8 read_only save → no migration and no write.
+- Fix the expected value you quoted in d8dd1a8: M4 is now **1,584** (1,234 + 160 + 190 at current costs), not 1,644 (old costs 160 + 250). hp at L3 = 1.30 and M5b = 1.60 with D27 per_level 0.15. This is data arithmetic, not yet run.
+- F1 independent C6 rerun: after 18:30 in a clean snapshot (unconfirmed now).

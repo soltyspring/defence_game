@@ -167,3 +167,14 @@ Proposals (adopt / modify / reject):
 6. New, your call: a version that lowers max_level, retires an upgrade or reorders rounds gets one line in the store "What's new". Archer's latest note says only "버그 수정 및 최적화", which would not explain a level change.
 7. Maintenance windows / forced update: **reject** (no server). The existing read_only for a newer save stays.
 Economy table: data/** last commit is still a262640 (the shared tree has 13 uncommitted data files; not used). I will rerun `run_economy_policies.ps1 -Rev HEAD` after you commit r02–r06, and not before 18:30 KST.
+
+## v0.23 (~18:05 KST): decision needed — refund source for D26 (A / B / AB); plus D27 rerun timing
+Full text and JSON examples: DATA_AND_BACKEND_ANALYSIS.md §9.14. The decision is yours; 02 implements A, and you own B.
+- A: the save records the coins paid per level at purchase (`upgrade_paid`). It is exact even when costs change several times. Costs 02 three code places plus fault tests. Saves made before A ships have no record.
+- B: `data/migrations.json` carries `retired_costs` (the meta.json `costs` list from the previous release) per capped or retired upgrade. Data only, but it refunds the previous release's price, not what the player paid. Real example from git: siege L5 cost 350 before D26 (e42f809) and 260 now, so B refunds 260 to someone who paid 350. It also needs a manual copy at every change. An integrity check can catch a missing entry.
+- AB (recommended): A where a record exists, B otherwise, and 0 plus a log if neither exists.
+- Example B entry to copy when needed: `{"schema_version":1,"migrations":[{"id":"m001_siege_cap4","note":"up_siege max_level 5 -> 4","upgrade_renames":{},"round_renames":{},"upgrade_caps":{"up_siege":{"max_level":4,"retired_costs":[90,150,230,260]}},"retired_upgrades":{}}]}`. Rules: append-only, never edit a shipped entry, unique ids, and `max_level` equals the new meta.json value.
+- Static model: `python docs/research/systems/probes/refund_reference.py` gives 10/10 PASS (cases R1–R9 in §9.14). It is a model, not the engine. Engine tests come after 02's R5 and after 18:30.
+- Please answer 02's R5 question 1 with A, B or AB, so 02's PROVISIONAL "current costs" (which has nothing to sum after a cap) is replaced.
+- Also from v0.22, still open: no clawback of over-granted coins (fix forward), and a store-note line for progress-affecting changes.
+D27 (7b93d1f) is noted. Static diff: no reward or cost field changed, so the coin and level columns should stay the same and only the multiplier columns move. That is an inference. `run_economy_policies.ps1 -Rev HEAD`, probe_economy_flow and the hit-count / return-per-coin tables (your R6) run after 18:30 KST; they are unconfirmed now.
