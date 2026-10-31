@@ -307,13 +307,21 @@ func _run() -> void:
 		var fired := []
 		events.wave_cleared.connect(func(info): fired.append(info))
 		var guard := 0
+		var focus_pauses := 0
 		while fired.is_empty() and sim.t < 120.0 and not sim.ended and guard < 400:
+			# Visible runs: App pauses the battle on APPLICATION_FOCUS_OUT (another window took focus), and
+			# sim.step() is a no-op while paused. That stalled this loop once (guard ran out at t=36.7 s).
+			if sim.paused:
+				focus_pauses += 1
+				app.battle.set_paused(false)
 			for k in 30:                      # fast-forward the REAL sim, 0.5 s per frame
 				sim.step(1.0 / 60.0)
 			guard += 1
 			await process_frame
 		await _frames(2)
-		check(not fired.is_empty() and int(fired[0].index) == 1, "real wave_cleared(index 1) fired at t=%.1f s (%s)" % [float(fired[0].t) if not fired.is_empty() else -1.0, fired])
+		if focus_pauses > 0:
+			print("  note sim was paused %d time(s) during fast-forward (focus loss); resumed" % focus_pauses)
+		check(not fired.is_empty() and int(fired[0].index) == 1, "real wave_cleared(index 1) fired at t=%.1f s (%s; loop stopped at sim.t=%.1f ended=%s guard=%d)" % [float(fired[0].t) if not fired.is_empty() else -1.0, fired, sim.t, sim.ended, guard])
 		check(hud.wave_cleared_shown and hud.banner_label.text == hud.UiText.t("banner.first_wave_cleared"), "HUD first-wave banner shown on the real signal ('%s')" % hud.banner_label.text)
 		await shot("3e_wave_cleared")
 		check(fired.size() == 1, "wave_cleared fired once so far (%d)" % fired.size())
