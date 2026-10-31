@@ -248,6 +248,19 @@ func _run() -> void:
 		_ok(last.cue == &"hit_mold" and absf(ps - case[1]) <= case[1] * 0.081 + 0.001,
 			"%s hit on mold: cue %s pitch %.3f, expected %.2f +-8%%" % [case[0], last.cue, ps, case[1]])
 	A.cue_played.disconnect(grab)
+	# v3.4: shared "hit" group gap (manifest groups.hit.min_gap): two faction hits closer than the gap -> one sound
+	var gg := float(A.group_gap.get("hit", 0.0))
+	_ok(gg > 0.0, "hit group gap missing from manifest")
+	A.advance(5.0)
+	var g0 := int(A.stats.played)
+	var dg0 := int(A.stats.dropped_group)
+	E.emit_signal("sfx", &"hit", {"kind": "melee", "target_side": "enemy", "x": 0.0})
+	A.advance(gg * 0.5)
+	E.emit_signal("sfx", &"hit", {"kind": "melee", "target_side": "player", "x": 0.0})
+	_ok(int(A.stats.played) - g0 == 1 and int(A.stats.dropped_group) - dg0 == 1, "hit_bread inside the shared gap must be dropped (played %d)" % (int(A.stats.played) - g0))
+	A.advance(gg)
+	E.emit_signal("sfx", &"hit", {"kind": "melee", "target_side": "player", "x": 0.0})
+	_ok(int(A.stats.played) - g0 == 2, "hit after the shared gap must play")
 	if E.has_signal("upgrade_result"):
 		A.advance(5.0)
 		p0 = A.stats.played

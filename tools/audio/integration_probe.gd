@@ -77,6 +77,7 @@ func _ready() -> void:
 	E.hud_snapshot.connect(_on_hud)
 	if E.has_signal("wave_cleared"): E.wave_cleared.connect(_on_wave_cleared)
 	if E.has_signal("upgrade_result"): E.upgrade_result.connect(_on_upgrade_result)
+	if E.has_signal("sfx"): E.sfx.connect(_on_engine_sfx)
 	# sandbox save only (custom user dir): unlock r01-r03 so cmd_retry of the --round battle and
 	# cmd_start_round work like for a player who reached them
 	var save := get_node_or_null("/root/Save")
@@ -92,6 +93,9 @@ func _ready() -> void:
 		if a.begins_with("--probe-seed="):
 			seed(int(a.get_slice("=", 1)))   # App uses randi() for the battle seed outside autoplay: fix it for A/B runs
 			rep.probe_seed = int(a.get_slice("=", 1))
+		if a.begins_with("--hit-group-gap=") and A != null:
+			A.group_gap["hit"] = float(a.get_slice("=", 1))   # A/B of the shared hit rate limit (0 = off)
+			rep.hit_group_gap = A.group_gap["hit"]
 		if a.begins_with("--offscreen-db=") and A != null:
 			A.offscreen_max_atten_db = float(a.get_slice("=", 1))
 			rep.offscreen_db = A.offscreen_max_atten_db
@@ -106,6 +110,14 @@ func _on_screen(s: StringName, _p: Dictionary) -> void:
 func _on_wave_cleared(info: Dictionary) -> void:
 	rep.wave_cleared_events = int(rep.get("wave_cleared_events", 0)) + 1
 	rep.wave_cleared_index = rep.get("wave_cleared_index", []) + [int(info.get("index", 0))]
+
+## Engine-side truth for hit density: every semantic hit cue 02 emits (before any audio rate limiting).
+func _on_engine_sfx(cue: StringName, params: Dictionary) -> void:
+	if cue != &"hit": return
+	var k := "hit_events_" + str(params.get("target_side", "none"))
+	rep[k] = int(rep.get(k, 0)) + 1
+	if _rec_state == "recording":
+		rep[k + "_rec"] = int(rep.get(k + "_rec", 0)) + 1
 
 func _on_upgrade_result(r: Dictionary) -> void:
 	var c := str(r.get("code", ""))

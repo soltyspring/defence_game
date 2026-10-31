@@ -33,8 +33,10 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
-REC = ROOT / "tools/audio/_render/recording"
+_ARGS = {a.split("=", 1)[0]: a.split("=", 1)[1] for a in sys.argv[1:] if a.startswith("--") and "=" in a}
+REC = ROOT / _ARGS.get("--rec", "tools/audio/_render/recording")
 LISTEN = ROOT / "docs/audio/previews/listen"
+NO_PUBLISH = "--no-publish" in sys.argv   # A/B analysis: do not overwrite MIX_REPORT/previews/history
 MAN = json.loads((ROOT / "assets/audio/audio_manifest.json").read_text(encoding="utf-8"))
 
 # Internal heuristics (NOT external standards; labelled as such in the report)
@@ -197,6 +199,15 @@ def main() -> int:
         names = [cn for t0, cn in zip(cue_a, cue_n) if a <= t0 < a + 30]
         sc = (len(set(names)), len(names))
         if sc > best_score: best_w, best_score = float(a), sc
+    summary_early = None
+    if NO_PUBLISH:
+        print(json.dumps({"integrated_lufs": round(il, 1), "peak_dbfs": round(db(pk), 2), "clipped": clipped,
+                          "active": int(active.sum()), "buried": int(buried.sum()), "at_risk": int(risk.sum()),
+                          "buried_hp300": int(buried_hp.sum()), "seconds_audio": round(dur, 2), "seconds_wall": round(wall, 2),
+                          "cue_counts": {k: len(v) for k, v in by_cue.items()},
+                          "top_repeat": {r["cue"]: {"per_min": round(r["per_min"], 1), "max_1s": r["max_1s"], "gaps_lt_150ms": r["ioi_lt_150ms"]} for r in rep_rows[:3]},
+                          "fatigue": [r["cue"] for r in fatigue], "best_window": best_w}))
+        return 0
     LISTEN.mkdir(parents=True, exist_ok=True)
     (LISTEN / ".gdignore").write_text("", encoding="utf-8")
     shutil.copyfile(REC / "rec_master.wav", LISTEN / "battle_mix_60s.wav")
