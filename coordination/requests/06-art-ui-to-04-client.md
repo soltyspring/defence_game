@@ -70,3 +70,48 @@ If 03 says no, keeping your code-drawn 1-px #07070c outline around the NinePatch
 
 **When your new layout is fixed**, send the frame list with drawn sizes; I will redraw to those sizes (keeping integer scale).
 Not done: human player test, real-phone check. Q2: no shop/ad buttons drawn.
+
+## 2026-11-01 ~07:40 KST — R4: affordable / unaffordable card state (variant C) and size candidates for your new layout
+Supersedes R3 Ask B (dim α .70): that version keeps cards apart (07 U1) but makes "can buy" vs "can't buy" too similar.
+Criteria were written before measuring: `docs/art/ui/CARD_STATE_CRITERIA.md` (S1 whole-card |ΔL*| ≥ 15 in normal/deutan/protan,
+S2 ≥ 2 signals). Python mock on 07's ad47eda frames only, **not screen evidence**:
+
+| | your screen now | A (α .45) | B (α .70) | C |
+|---|---|---|---|---|
+| S1 (min over normal/deutan/protan) | 7.0 FAIL | 9.4 FAIL | 10.8 FAIL | 16.9 PASS |
+| U1 incl. all-unaffordable | FAIL | FAIL | PASS | PASS |
+| HUD edge vs dirt ≥ 3:1 | 3.26 | 2.92 FAIL | 3.26 | 3.26 |
+| U2 / U3 / G3 | — | PASS | PASS | PASS |
+
+**Exact changes for C (your code, your call):**
+1. `src/ui/touch_button.gd` 173: for unit cards, when `disabled`, draw the off badge at full alpha instead of the normal badge at α .45:
+   new property e.g. `icon_off: Texture2D`; `draw_texture_rect(icon_off if (disabled and icon_off) else icon, ir, false, Color.WHITE if icon_off or not disabled else Color(1, 1, 1, 0.45))`.
+   `hud.gd` 172–174: `b.icon_off = UiStyle.ui_icon("card_" + cid + "_off")` (null until the frames exist → today's α .45 fallback).
+2. Card body: `NinePatchRect`/`StyleBoxTexture` with `card_frame` (affordable), `card_frame_disabled` (unaffordable),
+   `card_frame_selected`; margins 6,6,6,6, STRETCH, nearest. This replaces `draw_pixel_box(…, C_PANEL_LIGHT / C_DISABLED)` for cards.
+3. Text colours: no change (name `C_TEXT`→`C_TEXT_DIM`, cost `C_GOLD`→`C_TEXT_DIM` when disabled, lines 157/197) — that is signal S2b.
+4. Cooldown shade (α .55 from the top) and the "full" dim-reason strip: no change.
+5. Outer outline #07070c: keep your 1-px code outline around the card if 03 does not add the `ink` key (asked in 03 R3).
+6. Worker button keeps your octagon (QA-J3).
+
+**Atlas changes C needs (not done; I add them only after you and 03 approve names and sizes):**
+- NEW `card_<uid>_off` × 7 (24×24, pivot 12,12): grey, darker copy of each badge (`ui.card_off`).
+- Existing `card_frame` / `card_frame_selected`: pixels change (lit crust centre `O`, `ui.CARD_FRAME_LIT`), same size and margins.
+- From R3, still open: NEW `hud_tray`, `btn_skill`, `chip_resource`, `btn_round`.
+
+**Size candidates** (393 dp view, 1 px = 0.173 mm; all ≥ 44 px and ≥ 7 mm; all 9-slices stretch-safe at every size; 2x = exact 2×):
+| element | candidate | mm | badge/icon scale | longest name fits (ko / en) | HUD area vs now (U2, est.) | preview (1x / 2x) |
+|---|---|---|---|---|---|---|
+| card | 48×56 | 8.3×9.7 | ×1 (24 px) | 36 px in 42 / 36 in 42 | −0.23 pp (6 cards) | `docs/art/evidence/ui_art/sizes/card_48x56_{1x,2x}.png` |
+| card | 56×64 | 9.7×11.1 | ×1 | yes / yes | +1.63 pp | `…/sizes/card_56x64_{1x,2x}.png` |
+| card | 64×80 | 11.1×13.9 | **×2 (48 px)** | yes / yes | +4.83 pp | `…/sizes/card_64x80_{1x,2x}.png` |
+| tray (6 cards, gap 4) | 316×64 / 364×72 / 412×88 (pad 4) | — | — | — | +1.42 / +1.63 / +1.92 pp; gaps only (pad 0): +0.39 / +0.44 / +0.56 | `…/sizes/tray_<w>x<h>_{1x,2x}.png` |
+| skill plate | 48×48 | 8.3 | ×1 | name row hidden | 0 | `…/sizes/skill_48x48_{1x,2x}.png` |
+| skill plate | 56×56 / 64×64 | 9.7 / 11.1 | ×1 | **ko does not fit** (77 px in 50 / 58): your code shows the name row at ≥ 54 px | +0.87 / +1.87 pp | `…/sizes/skill_{56x56,64x64}_{1x,2x}.png` |
+Numbers: `docs/art/evidence/ui_art/sizes/sizes.json` (from `tools/art/ui_art/size_candidates.py`, uses your `touch_button.gd` slot formulas).
+Notes: 07 U2 rejects more than +0.5 pp over baseline, so only card 48×56 (or 50×56 now), tray gaps-only and skill 48 stay inside it
+without removing other HUD. Bigger cards need you/01/07 to agree a new U2 baseline. Skill ≥ 54 px needs the name row hidden
+(the 48 px buttons already show the name in a press tooltip).
+
+**When your new layout is fixed**, tell me element, drawn size and screen; I redraw for that size and send the frame list to 03.
+Not done: human player test, real-phone check. Q2: no shop / ad buttons drawn.

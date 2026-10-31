@@ -1,23 +1,27 @@
 # 06-art-ui handoff
-Updated: 2026-11-01 ~03:50 KST. Session: this Kiro window (former 06-services). Quota: not near 97% at last check.
-Processed: coordinator 01:08 (role) and the 03:2x dispatch (genre reference, chrome, mock, 04 wiring, R1 rebuild);
-03-art-to-06-art-ui U1 (03:15, R1 done, D1Q note), 07-qa-to-06-art-ui (03:19, 700692d verdict), 09-art-world W1 (manifest FYI).
+Updated: 2026-11-01 ~07:45 KST. Session: this Kiro window (former 06-services), reopened after the 03:55 BSOD.
+Processed: coordinator 01:08 (role), the 03:2x dispatch, `coordination/prompts/06-afford-state.txt`, the 06:5x BSOD resume note;
+03-art-to-06-art-ui U1 (03:15), 07-qa-to-06-art-ui (03:19), 09-art-world W1. No new replies since.
 
-## Done (SHAs pushed to origin/main)
-- 1d359bc audit + criteria; 700692d art (ui.card, skills, move, star, logo); 04269f4, 5a46675 notes/review requests.
-- adc0965 ui_main on R1 (cards built); 7a77501 request to 07 for U1 on adc0965.
-- This commit (see status/SHA in the report): genre reference, chrome 9-slices, chrome_preview.py, hud_mock.py, ui_contrast
-  state check at drawn size, mock A/B evidence, requests 03 R3 / 04 R3.
+## Crash recovery (06:5x)
+- heavy_run.log: every 06 START has an END (last: 06-ui-capture-narrow 02:56–02:57, ok). Nothing of mine was lost in the lock queue.
+- The 03:53 / 03:55 mock files (A, B) were intact but carried a bug (2x baseline state read with halved rects); regenerated A, B and
+  made C (pure Python, no Godot, no build.py in the shared tree).
 
-## How to rebuild my pages (shared tree holds other roles' WIP)
-Clean copy: `git archive HEAD tools/art assets/atlases assets/fonts assets/manifest.json docs/art data project.godot src scenes`
-into `%TEMP%\ui06_r1head`, overlay my changed `tools/art/ui.py` (and `ui_contrast.py`, `ui_art/*.py`), run build.py there, copy
-back only `ui_main`/`ui_title_*` png/json, `manifest.json`, `ATLAS_BUDGET.md`, `atlas_ui_*` previews. Never commit battle_mock_*.
-Note: I overwrote the shared-tree `assets/manifest.json` with the clean build (HEAD + ui_main row only); 09/03 regenerate theirs.
+## Done (SHAs checked with git ls-remote after each push)
+- 1d359bc, 700692d, 04269f4, 5a46675, adc0965, 7a77501, 02ec60f (see earlier status).
+- This commit: CARD_STATE_CRITERIA.md (criteria written before measuring, then results), mock A/B/C with state metrics,
+  `ui.card_off`, `ui.CARD_FRAME_LIT` (proposals, not wired), `size_candidates.py` + `docs/art/evidence/ui_art/sizes/`,
+  genre video section, requests 04 R4 and 03 R4. SHA: see the report / next status update (only after ls-remote).
 
-## Next
-1. 07's fixed-set result on adc0965 (U1). Accept it as written.
-2. 04's reply to R3 (frame names, drawn sizes, dim alpha). Then redraw to those sizes; add NEW names only after 03+04 agree.
-3. 03's reply on the `ink` key. If yes: switch chrome K -> ink, rebuild, re-run `hud_mock.py` (expect variant-B numbers).
-4. If D1Q ships: new card crop rule for 48 px figures.
-5. New Godot runs only via `coordination/heavy_run_detached.ps1 -Label 06-<task> -ScriptFile <job.ps1>`; poll HEAVY_JOB_DONE.
+## Open, waiting on others
+- 07: fixed-set verdict on adc0965 and 02ec60f. Accept it as written. If U1 fails in the unaffordable state, point to variant C
+  (needs 04 code + new `card_<uid>_off` frames) and ask for a rejudge after that lands.
+- 04: R3/R4 (which frames, which sizes, icon_off). Then draw to those sizes; add NEW names only after 03 + 04 approve.
+- 03: `ink` #07070c key; approval of `card_<uid>_off` and the other NEW names. If ink lands: switch chrome K -> ink, rebuild in a
+  clean HEAD copy, re-run `hud_mock.py` for variant C.
+
+## Rules I keep
+- Heavy / Godot runs only via `coordination/heavy_run_detached.ps1 -Label 06-<task> -ScriptFile <job.ps1>`; headless unless a
+  screen capture is required; one variant/resolution per job; poll HEAVY_JOB_DONE in short calls.
+- Never run build.py in the shared tree: clean `git archive HEAD` copy in %TEMP%, copy back only my pages.

@@ -434,6 +434,19 @@ def chrome_proposed():
     return {n: (chrome_frame(w, h, r, ch), (m, m, m, m)) for n, (w, h, m, r, ch) in CHROME_PROPOSED.items()}
 
 
+# ui-art 1.2 PROPOSAL (variant C, docs/art/ui/CARD_STATE_CRITERIA.md): affordable card body lit (light crust O centre,
+# like btn) so the unaffordable body (card_frame_disabled, K centre) is clearly darker. Same names, sizes, margins.
+# Not in ui_main until 04 picks the card size for its new layout.
+CARD_FRAME_LIT = {
+    "card_frame":          (20, 24, 6, ["K", "K", ("T", "h"), ("o", "w"), "O"], 2),
+    "card_frame_selected": (20, 24, 6, ["K", "K", ("Z", "Y"), "Y", "Y", ("T", "y"), "O"], 2),
+}
+
+
+def frames9_lit():
+    return {n: (chrome_frame(w, h, r, ch), (m, m, m, m)) for n, (w, h, m, r, ch) in CARD_FRAME_LIT.items()}
+
+
 def btn_round(size: int = 24) -> Canvas:
     """PROPOSED fixed-size round button (pause / speed): dark crust bun, so 04's white icon_pause / icon_speed_*
     keep >= 4.5:1. Not 9-slice (a circle cannot stretch)."""
@@ -621,6 +634,37 @@ def badge_mask(shape: str, n: int = 24) -> np.ndarray:
 def _erode(m: np.ndarray) -> np.ndarray:
     p = np.pad(m, 1, constant_values=False)
     return m & p[:-2, 1:-1] & p[2:, 1:-1] & p[1:-1, :-2] & p[1:-1, 2:]
+
+
+# --- PROPOSED "unaffordable" badge (ui-art 1.2, not in ui_main; names card_<uid>_off need 03/04 approval) ----------
+# Same silhouette and figure as card(); every colour replaced by the palette grey whose L* is nearest to 0.72 x its own
+# L*, drawn by 04 at alpha 1.0 instead of the normal badge at 0.45. Grey = "off" by colour, darker = "off" by
+# brightness, full alpha = the silhouette and its inner pattern stay readable (07 U1 shape distance).
+OFF_RAMP = "KaAXxW"
+OFF_L_SCALE = 0.72
+
+
+def _lstar(rgb) -> float:
+    c = np.asarray(rgb, float) / 255.0
+    c = np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
+    y = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+    return float(116 * np.cbrt(y) - 16 if y > 0.008856 else 903.3 * y)
+
+
+def card_off(uid: str, frame: np.ndarray, size: int = 24) -> Canvas:
+    import pixel as _px
+    cv = card(uid, frame, size)
+    ramp = [(c(k), _lstar(_px.RGBA[c(k)][:3])) for k in OFF_RAMP]
+    out = Canvas(size, size)
+    for idx in np.unique(cv.a):
+        if idx == 0:
+            continue
+        if idx == c("K"):
+            out.a[cv.a == idx] = idx
+            continue
+        target = _lstar(_px.RGBA[idx][:3]) * OFF_L_SCALE
+        out.a[cv.a == idx] = min(ramp, key=lambda r: abs(r[1] - target))[0]
+    return out
 
 
 def card(uid: str, frame: np.ndarray, size: int = 24) -> Canvas:

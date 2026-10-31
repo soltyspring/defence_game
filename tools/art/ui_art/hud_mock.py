@@ -111,15 +111,29 @@ def body_colour(region):
     return cols[cnt.argmax()]
 
 
-def copy_text(dst, src, x0, y0, w, h, bc, exclude=None, inset=3):
-    """Copy baseline pixels that are not the old body colour (text, digits, their outline) inside the inset rect."""
+C_GOLD = (255, 204, 64)        # ui_style.gd C_GOLD (1.0, 0.80, 0.25)
+C_TEXT = (245, 240, 224)       # C_TEXT (0.96, 0.94, 0.88)
+C_TEXT_DIM = (168, 173, 189)   # C_TEXT_DIM (0.66, 0.68, 0.74)
+OFF_BADGE = False              # --off-badge: unaffordable cards use card_<uid>_off at alpha 1 (variant C)
+CARD_RECTS = []                # filled by build_scene: per drawn unit card (for the state metrics)
+
+
+def copy_text(dst, src, x0, y0, w, h, bc, exclude=None, inset=3, dim=False):
+    """Copy baseline pixels that are not the old body colour (text, digits, their outline) inside the inset rect.
+    dim=True: the baseline card was affordable but the mock draws it unaffordable, so recolour the text the way
+    touch_button.gd does (name C_TEXT -> C_TEXT_DIM, cost C_GOLD -> C_TEXT_DIM)."""
     sub = src[y0 + inset:y0 + h - inset, x0 + inset:x0 + w - inset]
     m = np.any(np.abs(sub.astype(int) - bc.astype(int)) > 10, axis=-1)
     if exclude is not None:
         ex, ey, ew, eh = exclude
         m[max(0, ey - y0 - inset):max(0, ey - y0 - inset + eh), max(0, ex - x0 - inset):max(0, ex - x0 - inset + ew)] = False
     d = dst[y0 + inset:y0 + h - inset, x0 + inset:x0 + w - inset]
-    d[m] = sub[m]
+    src_px = sub.copy()
+    if dim:
+        for col in (C_GOLD, C_TEXT):
+            near = np.all(np.abs(src_px.astype(int) - np.array(col)) <= 24, axis=-1)
+            src_px[near] = C_TEXT_DIM
+    d[m] = src_px[m]
 
 
 def components(full, h):
@@ -184,8 +198,12 @@ def build_scene(full, h, meta, rnd_cards, old, new, all_dimmed=False, dim_alpha=
             cv, m = new["card_frame_disabled" if dis else "card_frame"]
             put(mock, ink(CH.nine_draw(rgba(cv), m, w, hh)), x, y)
             ix, iy = int(c["icon"][0]), int(c["icon"][1])
-            copy_text(mock, full, x, y, w, hh, bc, exclude=(ix, iy, 24, 24))
-            put(mock, new["card_" + uid], ix, iy, (dim_alpha if all_dimmed else 0.45) if dis else 1.0)
+            copy_text(mock, full, x, y, w, hh, bc, exclude=(ix, iy, 24, 24), dim=dis and not bool(c["disabled"]))
+            if dis and OFF_BADGE:
+                put(mock, new["card_" + uid + "_off"], ix, iy, 1.0)
+            else:
+                put(mock, new["card_" + uid], ix, iy, (dim_alpha if all_dimmed else 0.45) if dis else 1.0)
+            CARD_RECTS.append({"uid": uid, "x": x, "y": y, "w": w, "h": hh, "ix": ix, "iy": iy, "disabled": dis})
         elif k == "worker":
             hit = find(reg, old("card_worker"), bc)
             if hit and hit[0] < 8:
@@ -267,11 +285,67 @@ def verdict(res):
                 gb, ga = row["g3_1x_px_differing"]["before"], row["g3_1x_px_differing"]["after"]
                 if ga > gb and ga - gb > worst["g3_max_px"]:
                     worst["g3_max_px"] = ga - gb; where["g3_max_px"] = f"{loc}/{v}/{s} (+{ga - gb} over baseline)"
+    s1 = [v["pass"]["S1"] for loc in res.get("state", {}).values() for kv in loc.values() for v in kv["mock"].values()]
+    s2 = [v["pass"]["S2"] for loc in res.get("state", {}).values() for kv in loc.values() for v in kv["mock"].values()]
+    worst["state_S1_cards_failing"] = s1.count(False)
+    worst["state_S2_cards_failing"] = s2.count(False)
     ok = {"ground_min_wcag": bool(worst["ground_min_wcag"] >= 3.0), "u1_failing_pairs": bool(worst["u1_failing_pairs"] == 0),
           "u2_max_pp_increase": bool(worst["u2_max_pp_increase"] <= 0.5), "u3_max_pct": bool(worst["u3_max_pct"] == 0.0),
-          "g3_max_px": bool(worst["g3_max_px"] == 0)}
+          "g3_max_px": bool(worst["g3_max_px"] == 0),
+          "state_S1": bool(worst["state_S1_cards_failing"] == 0), "state_S2": bool(worst["state_S2_cards_failing"] == 0)}
     worst = {k: (float(v) if isinstance(v, (float, np.floating)) else int(v)) for k, v in worst.items()}
     return {"worst": worst, "where": where, "pass": ok, "all_pass": bool(all(ok.values()))}
+
+
+def state_metrics(en_img, en_r, dis_img, dis_r, k):
+    """Same card, affordable (en) vs unaffordable (dis). Rects in 1x logical px: dict x,y,w,h,ix,iy.
+    Returns per simulation: S1 whole-card |dL*|, S2a body-band |dL*|, S2b cost-digit dE76, S2c icon dE76."""
+    def crops(img, r):
+        x, y, w, h = (int(r[q] * k) for q in ("x", "y", "w", "h"))
+        ix, iy = int(r["ix"] * k), int(r["iy"] * k)
+        card = img[y:y + h, x:x + w]
+        icon = img[iy:iy + 24 * k, ix:ix + 24 * k]
+        return card, icon
+    ce, ie = crops(en_img, en_r)
+    cd, idd = crops(dis_img, dis_r)
+    H, W = ce.shape[:2]
+    yy, xx = np.mgrid[0:H, 0:W]
+    depth = np.minimum.reduce([xx, yy, W - 1 - xx, H - 1 - yy])
+    body = (depth >= 2 * k) & (depth <= 5 * k) & (yy < H - 30 * k)
+    band = (yy >= H - 15 * k) & (yy < H - 3 * k) & (xx >= 3 * k) & (xx < W - 3 * k)
+    out = {}
+    for sim in ("normal", "deutan", "protan"):
+        s = None if sim == "normal" else sim
+        Le, Ld = AM.lab(ce, s), AM.lab(cd, s)
+        r = {"S1_card_dL": round(float(abs(Le[..., 0].mean() - Ld[..., 0].mean())), 1),
+             "S2a_body_dL": round(float(abs(Le[body][:, 0].mean() - Ld[body][:, 0].mean())), 1)}
+        de = Le[band & (AM.lab(ce)[..., 0] > 50)]; dd = Ld[band & (AM.lab(cd)[..., 0] > 50)]
+        r["S2b_cost_dE"] = round(float(np.linalg.norm(de.mean(axis=0) - dd.mean(axis=0))), 1) if len(de) and len(dd) else None
+        r["S2c_icon_dE"] = round(float(np.linalg.norm(AM.lab(ie, s).reshape(-1, 3).mean(axis=0) - AM.lab(idd, s).reshape(-1, 3).mean(axis=0))), 1)
+        out[sim] = r
+    sims = out.values()
+    sig = {"S2a": all(v["S2a_body_dL"] >= 10 for v in sims), "S2b": all((v["S2b_cost_dE"] or 0) >= 20 for v in sims),
+           "S2c": all(v["S2c_icon_dE"] >= 15 for v in sims), "S2d": False}
+    out["pass"] = {"S1": all(v["S1_card_dL"] >= 15 for v in sims), "S2_signals": [k_ for k_, ok in sig.items() if ok]}
+    out["pass"]["S2"] = len(out["pass"]["S2_signals"]) >= 2
+    return out
+
+
+def baseline_state(loc, k):
+    """04's current screen: 통식빵 (tank) and 화덕포 (siege) affordable in r06, unaffordable in r08 (real ad47eda frames)."""
+    tag = f"{loc}_{k}x"
+    rep = json.load(open(os.path.join(E, f"{tag}_art_report.json"), encoding="utf-8"))
+    imgs = {s: img(os.path.join(E, f"{tag}_{s}.png")) for s in ("4_r06_t46", "5_r08_peak")}
+    out = {}
+    for uid, i in (("tank", 2), ("siege", 4)):
+        def rect(scene):
+            c = rep["scenes"][scene]["cards"][i]
+            b, ic = c["button"], c["icon"]
+            return {"x": b[0], "y": b[1], "w": b[2], "h": b[3], "ix": ic[0], "iy": ic[1]}, c["disabled"]   # logical px in both reports
+        (re_, de_), (rd_, dd_) = rect("4_r06_t46"), rect("5_r08_peak")
+        assert not de_ and dd_, (uid, de_, dd_)
+        out[uid] = state_metrics(imgs["4_r06_t46"], re_, imgs["5_r08_peak"], rd_, k)
+    return out
 
 
 def main():
@@ -281,18 +355,27 @@ def main():
     ap.add_argument("--tags", default="ko,en")
     ap.add_argument("--dim-alpha", type=float, default=0.45, help="badge alpha in the all_dimmed variant (04 draws .45 now)")
     ap.add_argument("--ink", default="", help="hex: draw chrome-frame K pixels in this colour (decision variant only)")
+    ap.add_argument("--off-badge", action="store_true", help="unaffordable cards: card_<uid>_off at alpha 1 (variant C)")
+    ap.add_argument("--lit-body", action="store_true", help="affordable card body = ui.CARD_FRAME_LIT (variant C)")
     a = ap.parse_args()
-    global INK
+    global INK, OFF_BADGE
+    OFF_BADGE = a.off_badge
     INK = tuple(int(a.ink[i:i + 2], 16) for i in (0, 2, 4)) if a.ink else None
     old = old_atlas()
     fr = CP.idle_frames()
     new = {k: v for k, v in ui.frames9().items()}
     new.update(ui.chrome_proposed())
+    if a.lit_body:
+        new.update(ui.frames9_lit())
     new.update({"card_" + u: rgba(ui.card(u, fr[u])) for u in A.CARDS})
+    new.update({"card_" + u + "_off": rgba(ui.card_off(u, fr[u])) for u in A.CARDS})
     new.update({"icon_skill_slam": rgba(ui.skill_slam()), "icon_skill_rally": rgba(ui.skill_rally()),
                 "icon_skill_barrage": rgba(ui.skill_barrage()),
                 "btn_move_right": rgba(ui.move_button(1)), "btn_move_left": rgba(ui.move_button(-1))})
-    res = {"note": "PROPOSAL MOCK on 07 baseline ad47eda frames; not screen evidence", "all_dimmed_alpha": a.dim_alpha, "tags": {}}
+    res = {"note": "PROPOSAL MOCK on 07 baseline ad47eda frames; not screen evidence", "all_dimmed_alpha": a.dim_alpha,
+           "ink": a.ink or "palette K", "off_badge": a.off_badge, "lit_body": a.lit_body,
+           "off_l_scale": ui.OFF_L_SCALE if a.off_badge else None, "tags": {}, "state": {}}
+    keep = {}
     for loc in a.tags.split(","):
         rep1 = json.load(open(os.path.join(E, f"{loc}_1x_art_report.json"), encoding="utf-8"))
         rep2 = json.load(open(os.path.join(E, f"{loc}_2x_art_report.json"), encoding="utf-8"))
@@ -305,11 +388,15 @@ def main():
                 f1 = img(os.path.join(E, f"{loc}_1x_{scene}.png"))
                 h1 = img(os.path.join(L, f"{loc}_1x_{scene}_h.png"))
                 f2 = img(os.path.join(E, f"{loc}_2x_{scene}.png"))
+                CARD_RECTS.clear()
                 mock1, rects, els, tray = build_scene(f1, h1, meta, rnd, old, new, variant == "all_dimmed", a.dim_alpha)
+                cards_drawn = [dict(r) for r in CARD_RECTS]
                 mock2 = f2.copy()
                 for (x, y, w, hh) in rects:
                     blk = np.repeat(np.repeat(mock1[y:y + hh, x:x + w], 2, axis=0), 2, axis=1)
                     mock2[2 * y:2 * (y + hh), 2 * x:2 * (x + w)] = blk
+                if scene == "4_r06_t46":
+                    keep[(loc, variant)] = (mock1, mock2, cards_drawn)
                 row = res["tags"].setdefault(f"{loc}", {}).setdefault(variant, {}).setdefault(scene, {})
                 for k, frame, mk in (("1x", f1, mock1), ("2x", f2, mock2)):
                     tag = f"{loc}_{k}"
@@ -344,6 +431,16 @@ def main():
     res["baseline_art_metrics_json"] = {t: {s: {q: v.get(q) for q in ("hud_px_pct", "hud_on_units_pct", "cards_min_dE_normal",
                                                                       "cards_min_dE_deutan", "cards_min_shape_dL", "cards_pairs_failing_u1")}
                                             for s, v in r.get("scenes", {}).items()} for t, r in am.items() if isinstance(r, dict) and "scenes" in r}
+    for loc in a.tags.split(","):
+        en1, en2, cen = keep[(loc, "as_captured")]
+        di1, di2, cdi = keep[(loc, "all_dimmed")]
+        st = res["state"].setdefault(loc, {})
+        for k, en, di in (("1x", en1, di1), ("2x", en2, di2)):
+            kk = 1 if k == "1x" else 2
+            st[k] = {"mock": {}, "baseline_04_now": baseline_state(loc, kk)}
+            for re_, rd_ in zip(cen, cdi):
+                assert re_["uid"] == rd_["uid"] and not re_["disabled"] and rd_["disabled"]
+                st[k]["mock"][re_["uid"]] = state_metrics(en, re_, di, rd_, kk)
     os.makedirs(a.out, exist_ok=True)
     res["verdict"] = verdict(res)
     json.dump(res, open(os.path.join(a.out, "mock_metrics.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)

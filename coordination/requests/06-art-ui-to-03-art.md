@@ -57,3 +57,10 @@ Please review the art, especially palette use and how the cards crop your idle f
 - **Ask B (ATLAS_CONTRACT, for 04 too):** proposed NEW `ui_main` names `hud_tray` (12×12, nine 4), `btn_skill` (16×16, nine 5),
   `chip_resource` (12×12, nine 5), `btn_round` (24×24, pivot 12,12). Not added yet; I add them only after you and 04 agree.
 - The existing 9-slices (`card_frame*`, `btn*`, `panel_dark`, `ribbon_*`) were redrawn with the same names, sizes and margins.
+
+## 2026-11-01 ~07:40 KST — R4: two more name/pixel changes proposed for ui_main (not done; need your and 04's OK)
+- NEW `card_<uid>_off` × 7 (24×24, pivot 12,12): the unaffordable badge (`ui.card_off`: same silhouette, palette greys
+  K a A X x W at ≈ 0.72 × L*). Reason: `docs/art/ui/CARD_STATE_CRITERIA.md` (variant C is the only mock passing all criteria).
+- Existing `card_frame` / `card_frame_selected`: centre `w` → `O` (lit crust), same size and margins (`ui.CARD_FRAME_LIT`).
+- Still open from R3: `ink` #07070c palette key; NEW `hud_tray`, `btn_skill`, `chip_resource`, `btn_round`.
+- Check: a clean HEAD copy (92a1718) built with my current `ui.py` gives a byte-identical `ui_main` (the proposals are not wired).

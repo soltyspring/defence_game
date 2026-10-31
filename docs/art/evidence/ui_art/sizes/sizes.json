@@ -1,0 +1,296 @@
+{
+ "mm_per_px": 0.1733,
+ "touch_min_px": 44,
+ "touch_min_mm": 7.0,
+ "card": {
+  "48x56": {
+   "hud_px_delta_pp_est_6cards": -0.23,
+   "mm": [
+    8.32,
+    9.7
+   ],
+   "touch_ok": true,
+   "nine_slice_margins": [
+    6,
+    6,
+    6,
+    6
+   ],
+   "stretch_safe": {
+    "card_frame_lit": true,
+    "card_frame_disabled": true,
+    "card_frame_selected_lit": true
+   },
+   "edge_vs_dirt": 4.06,
+   "icon_scale_k": 1,
+   "icon_px": 24,
+   "name_fit": {
+    "ko": {
+     "longest": "제빵사",
+     "px": 36,
+     "room": 42,
+     "one_line": true
+    },
+    "en": {
+     "longest": "Baker",
+     "px": 36,
+     "room": 42,
+     "one_line": true
+    }
+   },
+   "preview": [
+    "docs/art/evidence/ui_art/sizes/card_48x56_1x.png",
+    "docs/art/evidence/ui_art/sizes/card_48x56_2x.png"
+   ]
+  },
+  "56x64": {
+   "hud_px_delta_pp_est_6cards": 1.63,
+   "mm": [
+    9.7,
+    11.09
+   ],
+   "touch_ok": true,
+   "nine_slice_margins": [
+    6,
+    6,
+    6,
+    6
+   ],
+   "stretch_safe": {
+    "card_frame_lit": true,
+    "card_frame_disabled": true,
+    "card_frame_selected_lit": true
+   },
+   "edge_vs_dirt": 4.06,
+   "icon_scale_k": 1,
+   "icon_px": 24,
+   "name_fit": {
+    "ko": {
+     "longest": "제빵사",
+     "px": 36,
+     "room": 50,
+     "one_line": true
+    },
+    "en": {
+     "longest": "Baker",
+     "px": 36,
+     "room": 50,
+     "one_line": true
+    }
+   },
+   "preview": [
+    "docs/art/evidence/ui_art/sizes/card_56x64_1x.png",
+    "docs/art/evidence/ui_art/sizes/card_56x64_2x.png"
+   ]
+  },
+  "64x80": {
+   "hud_px_delta_pp_est_6cards": 4.83,
+   "mm": [
+    11.09,
+    13.86
+   ],
+   "touch_ok": true,
+   "nine_slice_margins": [
+    6,
+    6,
+    6,
+    6
+   ],
+   "stretch_safe": {
+    "card_frame_lit": true,
+    "card_frame_disabled": true,
+    "card_frame_selected_lit": true
+   },
+   "edge_vs_dirt": 4.06,
+   "icon_scale_k": 2,
+   "icon_px": 48,
+   "name_fit": {
+    "ko": {
+     "longest": "제빵사",
+     "px": 36,
+     "room": 58,
+     "one_line": true
+    },
+    "en": {
+     "longest": "Baker",
+     "px": 36,
+     "room": 58,
+     "one_line": true
+    }
+   },
+   "preview": [
+    "docs/art/evidence/ui_art/sizes/card_64x80_1x.png",
+    "docs/art/evidence/ui_art/sizes/card_64x80_2x.png"
+   ]
+  }
+ },
+ "tray": {
+  "316x64": {
+   "for_card": "48x56",
+   "cards": 6,
+   "gap": 4,
+   "pad": 4,
+   "hud_px_added_pp_est": {
+    "pad_4": 1.42,
+    "pad_0_gaps_only": 0.39
+   },
+   "stretch_safe": true,
+   "nine_slice_margins": [
+    4,
+    4,
+    4,
+    4
+   ],
+   "proposed_new_name": true,
+   "preview": [
+    "docs/art/evidence/ui_art/sizes/tray_316x64_1x.png",
+    "docs/art/evidence/ui_art/sizes/tray_316x64_2x.png"
+   ]
+  },
+  "364x72": {
+   "for_card": "56x64",
+   "cards": 6,
+   "gap": 4,
+   "pad": 4,
+   "hud_px_added_pp_est": {
+    "pad_4": 1.63,
+    "pad_0_gaps_only": 0.44
+   },
+   "stretch_safe": true,
+   "nine_slice_margins": [
+    4,
+    4,
+    4,
+    4
+   ],
+   "proposed_new_name": true,
+   "preview": [
+    "docs/art/evidence/ui_art/sizes/tray_364x72_1x.png",
+    "docs/art/evidence/ui_art/sizes/tray_364x72_2x.png"
+   ]
+  },
+  "412x88": {
+   "for_card": "64x80",
+   "cards": 6,
+   "gap": 4,
+   "pad": 4,
+   "hud_px_added_pp_est": {
+    "pad_4": 1.92,
+    "pad_0_gaps_only": 0.56
+   },
+   "stretch_safe": true,
+   "nine_slice_margins": [
+    4,
+    4,
+    4,
+    4
+   ],
+   "proposed_new_name": true,
+   "preview": [
+    "docs/art/evidence/ui_art/sizes/tray_412x88_1x.png",
+    "docs/art/evidence/ui_art/sizes/tray_412x88_2x.png"
+   ]
+  }
+ },
+ "skill": {
+  "48x48": {
+   "hud_px_delta_pp_est_3skills": 0.0,
+   "mm": [
+    8.32,
+    8.32
+   ],
+   "touch_ok": true,
+   "nine_slice_margins": [
+    5,
+    5,
+    5,
+    5
+   ],
+   "stretch_safe": true,
+   "edge_vs_dirt": 4.06,
+   "proposed_new_name": true,
+   "name_row_shown_by_touch_button": false,
+   "icon_scale_k": 1,
+   "name_fit": null,
+   "preview": [
+    "docs/art/evidence/ui_art/sizes/skill_48x48_1x.png",
+    "docs/art/evidence/ui_art/sizes/skill_48x48_2x.png"
+   ]
+  },
+  "56x56": {
+   "hud_px_delta_pp_est_3skills": 0.87,
+   "mm": [
+    9.7,
+    9.7
+   ],
+   "touch_ok": true,
+   "nine_slice_margins": [
+    5,
+    5,
+    5,
+    5
+   ],
+   "stretch_safe": true,
+   "edge_vs_dirt": 4.06,
+   "proposed_new_name": true,
+   "name_row_shown_by_touch_button": true,
+   "icon_scale_k": 1,
+   "name_fit": {
+    "ko": {
+     "longest": "밀대 내려찍기",
+     "px": 77,
+     "room": 50,
+     "one_line": false
+    },
+    "en": {
+     "longest": "Barrage",
+     "px": 50,
+     "room": 50,
+     "one_line": true
+    }
+   },
+   "preview": [
+    "docs/art/evidence/ui_art/sizes/skill_56x56_1x.png",
+    "docs/art/evidence/ui_art/sizes/skill_56x56_2x.png"
+   ]
+  },
+  "64x64": {
+   "hud_px_delta_pp_est_3skills": 1.87,
+   "mm": [
+    11.09,
+    11.09
+   ],
+   "touch_ok": true,
+   "nine_slice_margins": [
+    5,
+    5,
+    5,
+    5
+   ],
+   "stretch_safe": true,
+   "edge_vs_dirt": 4.06,
+   "proposed_new_name": true,
+   "name_row_shown_by_touch_button": true,
+   "icon_scale_k": 1,
+   "name_fit": {
+    "ko": {
+     "longest": "밀대 내려찍기",
+     "px": 77,
+     "room": 58,
+     "one_line": false
+    },
+    "en": {
+     "longest": "Barrage",
+     "px": 50,
+     "room": 58,
+     "one_line": true
+    }
+   },
+   "preview": [
+    "docs/art/evidence/ui_art/sizes/skill_64x64_1x.png",
+    "docs/art/evidence/ui_art/sizes/skill_64x64_2x.png"
+   ]
+  }
+ },
+ "note": "06 art preview, not a screen capture; text approximates ui_style.draw_text_centered"
+}

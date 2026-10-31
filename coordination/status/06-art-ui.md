@@ -1,15 +1,14 @@
 # 06-art-ui status
-Updated: 2026-11-01 ~03:50 KST
-Status: IN PROGRESS. Card badges built (adc0965, 07 judging); HUD chrome drawn and mocked; waiting on 04 wiring/layout and 03 palette.
-- **07 verdict on 700692d accepted:** VALID; logo, move buttons, skill plates changed; U1 unchanged FAIL; U2 +0.03–0.07 pp PASS
-  (trend worse); U3 0.
-- **adc0965:** ui_main rebuilt on 03's R1 (90c9790) from a clean HEAD copy; only the 7 card_* regions changed; ui_audit PASS.
-  Sent to 07 for the fixed set (U1).
-- **Genre reference:** `docs/art/ui/GENRE_HUD_REFERENCE.md` (Battle Cats, Cat War2, Stick War: Legacy, Grow Castle, Age of War 2;
-  official Play screenshots, accessed 02:50 KST, not stored; principles P1–P6 common to ≥ 3). Paladog: no official store page found.
-- **HUD chrome (ui-art 1.1):** existing 9-slices redrawn (same names/sizes/margins); proposed NEW `hud_tray`, `btn_skill`,
-  `chip_resource`, `btn_round` (not in the atlas). Stretch-safe 13/13. `ui_contrast` PASS. Budget PASS (menu 0.50 MiB).
-- **Mock on 07's frames (PROPOSAL MOCK, not screen evidence):** A (palette K, dim .45): HUD vs dirt min 2.92 FAIL, U1 dimmed
-  4–5 pairs FAIL, U2 +0.08 pp, U3 0, G3 0. B (outline #07070c, dim .70): all PASS. Needs 03 `ink` key and 04 dim alpha.
-- 06 captures: narrow r08 run done (8 runs incl. visual, all exit 0); label fit 0 truncated buttons before and after.
+Updated: 2026-11-01 ~07:45 KST (after the 03:55 BSOD restart)
+Status: IN PROGRESS. Card-state proposal C and size candidates sent to 04; waiting on 07 (adc0965 / 02ec60f), 04 layout, 03 ink/names.
+- **Crash check:** no 06 heavy run was in flight (all 06 START lines have END). The A/B mock files rewritten at 03:53/03:55 were
+  intact (JSON and PNG load, no truncation) but held a 2x baseline-state bug; all three mocks were regenerated (Python only).
+- **Card state criteria first:** `docs/art/ui/CARD_STATE_CRITERIA.md` (S1 whole-card |ΔL*| ≥ 15, S2 ≥ 2 signals, normal/deutan/protan).
+- **Mock A/B/C (PROPOSAL MOCK on 07 ad47eda frames, not screen evidence):** only C passes everything (S1 16.9–21.8, S2 three
+  signals, U1 0 pairs incl. all unaffordable, dirt 3.26, U2 +0.07 pp, U3 0, G3 0). B fails S1 (10.8–13.0); 04's screen now fails S1 (7.0–10.6).
+- **Genre video:** official store / channel videos (storyboard thumbnails, accessed 07:2x KST, not stored). Unaffordable = darker card
+  2/5, cooldown bar 1/5, result ribbon/stars 0/5 → none promoted to a principle.
+- **Size candidates:** card 48×56 / 56×64 / 64×80, tray (pad 4 or gaps only), skill 48/56/64; all ≥ 44 px / 7 mm, stretch-safe;
+  only 48×56, gaps-only tray and skill 48 stay within 07 U2. Previews `docs/art/evidence/ui_art/sizes/`.
+- Atlas unchanged (clean HEAD build with the new ui.py = byte-identical ui_main). New names wait for 03/04 approval.
 - Not done: human player test, real-phone check. Q2: no shop/ad art.
