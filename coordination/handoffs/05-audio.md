@@ -1,9 +1,23 @@
 RULE (line 1, fixed after 3 violations: af491c2, 53883db, f5f42df batch): a commit SHA is written ONLY in a separate tool call made AFTER the Publish-Task call that printed `PUSHED <sha>` has returned; copy it from that output, check it with `git log origin/main`, and never record the SHA-record commit's own SHA in the file.
 # 05-audio handoff
-Updated: 2026-11-01 00:xx KST (v3.7: danger cues death_ally / hit_base on phone speakers; resumed after the 23:08 blue screen)
-Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all.
-Heavy-run rule acknowledged: every Godot run goes through `& .\coordination\heavy_run.ps1 -Label '05-…' -Script {…}`, one at a time, never bypassed. The lock waits were 597 s and 754 s, which is normal. The private-APPDATA isolation was kept.
+Updated: 2026-11-01 01:xx KST (v3.7 G2 recheck: was the G2 miss caused by the change?)
+Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all. Quota 15 %. Godot only via heavy_run.ps1 (lock waits 387 s); private APPDATA.
 
+## v3.7 G2 recheck (review of 4d6f9bd/6737f36/e00aa88; criteria NOT changed). Details: PHONE_SPEAKER_CHECK.md "v3.7 G2 recheck"
+1. **Code**: the duck lowers only SFX voices with prio < duck_sfx_below (death_ally < 3, hit_base < 5). wave_cleared (prio 8) and hit_base_mold (prio 5) can never be ducked. Their files and manifest entries are identical between 131dcf2 and HEAD.
+2. **Same-background A/B** (new `tools/audio/same_bg_ab.py`; results `docs/audio/same_bg_ab.json`, `same_bg_ab_hit_base_every3s.json`). The 3 BEFORE battles are re-rendered from their own cue logs: A = old assets, no duck; B = new assets + duck.
+   - wave_cleared +1.8/0/0 points, hit_base_mold 0/0/0. The largest change of any other cue is +1.8 (one placement, next to the brighter new death_ally). Mix LUFS and peaks are identical.
+   - D1/D2/G1/G2 all PASS in the A/B, so per instruction no exclusion and no duck-depth change.
+   - hit_base never occurs in r02; a stress A/B with hit_base every 3 s shows the duck only lowers masking of other cues. The hypothesis is rejected.
+3. **Fresh 3-seed real recordings** (after2, same config):
+   - D1/D2/G1 PASS.
+   - **G2 FAIL as written** (hit_bread, death_enemy, wave_cleared, hit_base_mold up to +5.7 points).
+   - Two recordings of the identical config differ by up to 7.2 points, so real-recording G2 at 3 seeds is noise-dominated. It stays recorded as FAIL; the criterion was not edited.
+No code or asset change in this step (assets byte-identical to 4d6f9bd).
+Not verified: human listening, real phone.
+Next:
+- G2 open item: either more seeds per config (to bring the variance under 2 points), or accept the same-background A/B as the causal test. That is a decision for the coordinator/01; 05 has not changed the criterion.
+- Waiting on 02 A10, 01 menu/music decision, 04 C1/C5.
 ## Blue-screen recovery check (23:2x)
 - `git status`: only `tools/audio/run_godot_checks.ps1` was modified (the `-RecordSeeds` edit made just before the crash). Integrity: 19,311 bytes, no NUL, ends with a newline, parses without errors.
 - Integrity scan of all 148 tracked 05 files (zero size, NUL bytes, missing EOL, WAV tails of zeros): two flags, both harmless and identical to the committed HEAD:

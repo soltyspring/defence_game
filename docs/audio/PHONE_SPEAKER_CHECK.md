@@ -49,6 +49,27 @@ G2 other cues: **NOT met as written**.
 - So this reads as battle-to-battle variance (the after battles had waves at about 19 s and 44 s inside the window), not an effect of the change. That is an inference, not proven; it stays open.
 Not verified: human listening on a real phone (nobody has listened); Android device.
 
+## v3.7 G2 recheck (review of 4d6f9bd/6737f36/e00aa88): was the miss caused by the change? Criteria unchanged.
+Hypothesis to rule out: the new duck lowered `wave_cleared` / `hit_base_mold` when they overlapped a danger cue.
+1. **Code** (src/audio/audio_manager.gd, `play()` and `_start_sfx_duck`): only SFX-bus voices with prio < `duck_sfx_below` are lowered, and overlapping ducks use the larger `below`.
+   - death_ally ducks prio < 3; hit_base ducks prio < 5.
+   - `wave_cleared` is prio 8 and `hit_base_mold` prio 5, so **neither can be ducked**.
+   - Their files and manifest entries are byte-identical between 131dcf2 and HEAD; only `death_ally` and `hit_base` entries changed.
+2. **Same-background A/B** (`tools/audio/same_bg_ab.py`): each BEFORE battle (s11/s23/s37) is re-rendered from its own cue log twice: A = 131dcf2 assets, no duck; B = current assets + runtime duck rule. The timeline is identical, music is the real stem, and placements and SNR are computed as in phone_check.py.
+   - Render vs recorded SFX stem, 400 ms loudness envelope correlation: 0.70 / 0.92 / 0.96. No offscreen attenuation or pitch jitter in the render; the same simplification applies to A and B.
+   - Results: `wave_cleared` +1.8 / 0 / 0 points, `hit_base_mold` 0 / 0 / 0.
+   - The largest change of ANY other cue is **+1.8 points** (one placement of 55–56: wave_cleared, death_enemy and ui_error on s11). That placement is where the new, brighter death_ally sits in the background; it cannot be the duck, which only removes energy.
+   - Mix A vs B: −24.61 vs −24.62 / −24.82 vs −24.81 / −24.72 vs −24.72 LUFS, identical peaks.
+   - Danger cues in the same A/B: death_ally 14.5/12.5/12.5 → 1.8/0.0/3.6 % (p10 4.4/4.8/3.6 dB); hit_base 10.9/12.5/14.3 → 3.6/1.8/3.6 % (p10 4.8/4.0/2.5).
+   - **Same-background verdict: D1 PASS, D2 PASS, G1 PASS, G2 PASS (max +1.8 ≤ 2).** No exclusion and no duck-depth change was needed.
+   - r02 battles contain no `hit_base` (0 in all recordings), so the hit_base duck never fired there. Stress variant `--inject-hit-base-every=3` (23 danger events per battle, same in A and B): every other cue is equal or BETTER in B (wave_cleared −1.8/−3.5/−1.8, hit_base_mold −5.4/0/−1.8). This rejects the hypothesis for hit_base as well.
+3. **Fresh 3-seed engine recordings** of the unchanged current config (recording_after2_s11/23/37, heavy_run lock, private APPDATA):
+   - D1 PASS (death_ally 1.8/1.8/1.8 %, hit_base 3.6/1.8/1.8 %); D2 PASS (p10 ≥ 2.7 dB).
+   - G1 PASS (−21.9/−21.8/−21.8 LUFS, peaks ≤ −2.96 dBFS, 0 clipped, no fatigue).
+   - **G2 FAIL as written**: hit_bread 8.9 → 14.5, death_enemy 12.5 → 16.4, wave_cleared 3.6 → 9.3, hit_base_mold 10.7 → 14.5 (before-max → after2-max).
+   - The same metric between two recordings of the IDENTICAL config (after vs after2) moves by up to 7.2 points (death_enemy), and wave_cleared moves by up to 5.4.
+   - So a single 3-seed set of real recordings cannot resolve a 2-point G2; the causal same-background A/B can. The criterion text is unchanged; real-recording G2 stays recorded as FAIL.
+Not verified: human listening (nobody has listened) and a real phone (all measurements are a 300 Hz high-pass + −6 dB proxy on desktop headless recordings).
 <!-- generated below by tools/audio/phone_check.py -->
 
 Condition: 300 Hz 4th-order high-pass + the whole output −6 dB. Background = a real engine battle recording (`tools/audio/_render/recording_after_s11`: music stem at its recorded bus gain + all other SFX/UI). Each cue (manifest vol_db, own music duck) is placed at 1 s steps over that background; SNR = median over the cue's own loud 50 ms frames (within 15 dB of its peak frame) of K-weighted cue minus background, both after the phone filter. masked = SNR < 0 dB, at risk = < 3 dB. Too quiet = max momentary < -40 LUFS after filter and −6 dB (internal heuristic). Proxies only; nobody has listened on a phone.
