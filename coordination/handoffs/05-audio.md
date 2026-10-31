@@ -21,7 +21,7 @@ Validation (final code): `validate.py --determinism` PASS. `run_godot_checks.ps1
 - deploy 14 = 14, skill 7 = 7, wave_cleared 1 = 1, upgrade 2 = 2, hero 1 = 1/1
 - 0 duplicates, audio-class exit leaks 0
 Not verified: human listening, Android device, screen capture (not needed; none taken).
-Git v3.2: 6fa744d7c4bea79e6c78781df3d33eb5e78e5f2a [Feat] PUSHED; 5cd4d644d3e2f3bdad8e5df458ab9302b0082fa4 [Docs] PUSHED.
+Git v3.2: 15851e269d85a23578b7c548a744d344f7c8def0 [Feat] PUSHED; 5758d0bc2858b926bd00f145b254a03e597fc345 [Docs] PUSHED; dcfaaf9 [Docs] PUSHED (its SHA line was wrong; corrected in the next commit). Rule for me: write SHAs only after the push prints them.
 ## v3.1 (Codex review of f0646dd/e551fa9, tasks 1–4)
 Decisions read: Q3 working title "빵집 기사단: 곰팡이 디펜스" (user, 16:19; the final store name waits for a KIPRIS check). Q2 monetization ON HOLD: no purchase or ad-reward sounds were made.
 1. **wave_cleared**: new cue `wave_cleared` (two quick bells up a fifth + crust cheer, 0.7 s, prio 8, gap 1.0, duck −3). The bridge connects to `Events.wave_cleared` (02 22d99ea), category `milestone`.
