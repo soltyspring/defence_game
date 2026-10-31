@@ -70,7 +70,9 @@ def main():
     rep = {"src": "working tree" if os.path.abspath(S) == ROOT else "clean HEAD copy (" + os.path.basename(os.path.abspath(S)) + ")"}
     # B1 safe circle 66 dp (r = 33 dp = 132 px) on the 432 canvas
     yy, xx = np.mgrid[0:432, 0:432]
-    out = (fg[..., 3] > 0) & (((xx - 215.5) ** 2 + (yy - 215.5) ** 2) > 132 ** 2)
+    # farthest pixel corner from the canvas centre (216, 216), same rule as tests/services/check_store_graphics.py
+    dxm = np.maximum(np.abs(xx - 216.0), np.abs(xx + 1 - 216.0)); dym = np.maximum(np.abs(yy - 216.0), np.abs(yy + 1 - 216.0))
+    out = (fg[..., 3] > 0) & (np.hypot(dxm, dym) > 132 + 1e-9)
     vis, fgm = visible(fg, bg)
     clipped = {k: int((fgm & ~m).sum()) for k, m in masks(288).items()}
     rep["B1"] = {"fg_outside_66dp_px": int(out.sum()), "mask_clipped_px": clipped, "pass": int(out.sum()) == 0 and max(clipped.values()) == 0}

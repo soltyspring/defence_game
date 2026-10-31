@@ -58,3 +58,15 @@ T1–T3은 `title_block.gd`의 슬롯·정수배 규칙으로 계산하는 방�
   `docs/art/evidence/branding/launcher_metrics.json`. OWNERSHIP.md의 06 목록에 없는 경로라 담당 확인을 요청한다. 깨끗한 복사본에서는
   같은 그림에서 생성됨을 확인했다(B6).
 - 바뀐 PNG는 Godot import를 다시 해야 기기에 반영된다(빌드 파이프라인의 `--import`). 실제 런처·실제 폰 확인은 하지 않았다.
+
+## 정정과 스토어 그림 맞추기 (2026-11-01 08:4x KST)
+- **정정:** 1f15719의 B1 "원 밖 0 px"는 틀렸다. 내 도구는 픽셀 중심으로 쟀고, 06-services `tests/services/check_store_graphics.py`는
+  픽셀의 가장 먼 모서리로 잰다. 그 규칙으로는 망토 아래 외곽선 1 px가 66 dp 원 밖이었다(48 그리드 (7, 37)).
+  `branding_audit.py` B1을 같은 규칙으로 바꿨고, 망토는 y ≥ 34에서 원래 폭으로 되돌렸다. 줄어든 면적은 장화 한 줄(`O`, y 38)로 메웠다.
+- 다시 잰 값(깨끗한 HEAD 복사본 85d22bd + 고친 branding.py, `branding_after.json`): B1 원 밖 0 px(엄격 규칙)·마스크 잘림 0,
+  B2 48 dp 면적 25.5 %·ΔL* 33.9·protan 39.7, 36 dp 26.2 %·31.1·37.7, B3·B4·B5 PASS. 06-services 검사기도 원 안 PASS.
+- **스토어 그림:** 같은 실행에서 `docs/art/branding/**`(512 아이콘, 그래픽 이미지 ko·en·바탕·제목 층, 적응형 층, 미리보기)과
+  `docs/art/evidence/branding/*`를 다시 만들어 커밋한다(08:35 소유 결정). 512 아이콘 512×512 RGBA 투명 0 px, 그래픽 이미지
+  1024×500 RGB(알파 없음). 그래픽 이미지 바탕은 지금 HEAD의 게임 그림(09 새 배경 포함)이다.
+- 06-services 검사기의 "Feature graphic MISSING"은 최종 업로드 폴더 `docs/services/store_assets/`에 파일이 없다는 뜻이다. 그 폴더는
+  Q2 보류로 얼어 있어 쓰지 않았다(읽기만 함).

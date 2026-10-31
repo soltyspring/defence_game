@@ -1,5 +1,5 @@
 {
- "src": "clean HEAD copy (ui06_icon)",
+ "src": "clean HEAD copy (ui06_store)",
  "B1": {
   "fg_outside_66dp_px": 0,
   "mask_clipped_px": {
@@ -12,21 +12,21 @@
  },
  "B2": {
   "48dp": {
-   "hero_area_pct": 25.1,
-   "hero_dL_vs_bg": 34.7,
+   "hero_area_pct": 25.5,
+   "hero_dL_vs_bg": 33.9,
    "hero_vs_mould_dE": {
-    "normal": 53.8,
-    "protan": 39.8,
-    "deutan": 50.5
+    "normal": 53.6,
+    "protan": 39.7,
+    "deutan": 50.3
    },
    "pass": true
   },
   "36dp": {
-   "hero_area_pct": 25.7,
-   "hero_dL_vs_bg": 32.0,
+   "hero_area_pct": 26.2,
+   "hero_dL_vs_bg": 31.1,
    "hero_vs_mould_dE": {
     "normal": 50.3,
-    "protan": 37.6,
+    "protan": 37.7,
     "deutan": 47.6
    },
    "pass": true
@@ -53,34 +53,34 @@
   "pass": true
  },
  "B4": {
-  "area_pct_48dp": 28.8,
+  "area_pct_48dp": 29.2,
   "components_48dp": 1,
   "pass": true
  },
  "B5": {
   "battlecats": {
    "mean_dE": 27.1,
-   "pattern_dL": 28.2,
+   "pattern_dL": 28.1,
    "pass": true
   },
   "catwar2": {
    "mean_dE": 33.8,
-   "pattern_dL": 21.8,
+   "pattern_dL": 21.7,
    "pass": true
   },
   "stickwar": {
    "mean_dE": 40.9,
-   "pattern_dL": 29.1,
+   "pattern_dL": 29.0,
    "pass": true
   },
   "growcastle": {
    "mean_dE": 22.9,
-   "pattern_dL": 22.0,
+   "pattern_dL": 21.9,
    "pass": true
   },
   "aow2": {
    "mean_dE": 42.2,
-   "pattern_dL": 25.8,
+   "pattern_dL": 25.7,
    "pass": true
   },
   "pass": true

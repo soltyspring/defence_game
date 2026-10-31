@@ -186,7 +186,7 @@ def icon48_fg() -> Canvas:
     fg.hline(20, 23, 24, c("w"))                      # determined mouth
     # jam-red cape behind the body (matches the sprite; art 0.12.3: also widens the logo to >= 48 dp)
     for y in range(28, 37):
-        x0 = 9 - (y - 28) // 3 if y < 34 else 8          # ui-art 1.3: cape 1 px wider (B2)
+        x0 = 9 - (y - 28) // 3 if y < 34 else 9          # ui-art 1.3: cape 1 px wider above y 34 (bottom rows stay: 66 dp circle)
         fg.hline(x0, 12, y, c("R"))
         fg.put(x0, y, c("r"))
     # body (art 0.12.2, matches the sprite): white chef jacket, egg-wash apron with a loaf emblem
@@ -197,6 +197,7 @@ def icon48_fg() -> Canvas:
     fg.rect(16, 31, 7, 3, c("T")); fg.hline(16, 22, 31, c("o")); fg.put(16, 33, c("o")); fg.put(22, 33, c("o"))
     fg.put(18, 32, c("U")); fg.put(20, 32, c("U"))
     fg.rect(12, 36, 15, 2, c("y"))
+    fg.hline(13, 25, 38, c("O"))                     # ui-art 1.3: crust boots row (B2 hero area), inside the 66 dp circle
     # crust pauldron (armour cue, 09 R09-03) + arm reaching to the pin
     fg.ellipse(14, 28, 4, 3, c("o")); fg.ellipse(13.5, 27, 2.5, 1.5, c("T"))
     fg.thick_line(23, 29, 26, 31, c("Y"), t=3)
