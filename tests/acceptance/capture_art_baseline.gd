@@ -126,11 +126,11 @@ func _run() -> void:
 	report.tag = tag
 	report.safe = [SafeArea.override_insets.x, SafeArea.override_insets.y, SafeArea.override_insets.z, SafeArea.override_insets.w]
 	report.seed_call = SEED
-	report.script_sha256 = FileAccess.get_file_as_string("res://tests/acceptance/capture_art_baseline.gd").sha256_text()
+	report.script_sha256 = FileAccess.get_file_as_string("res://tests/acceptance/capture_art_baseline.gd").trim_prefix(char(0xFEFF)).replace("\r\n", "\n").sha256_text()   # line-end independent (LF/CRLF checkouts hash the same)
 	report.anim = {}
 	await create_timer(SETTLE_S).timeout
 	await _grab(out_dir.path_join("%s_1_menu.png" % tag))
-	report.scenes["1_menu"] = {"kind": "ui"}
+	report.scenes["1_menu"] = {"kind": "ui", "layout": _layout_dump()}
 	fix = CamFix.new()
 	fix.process_priority = 1000
 	root.add_child(fix)
@@ -147,7 +147,7 @@ func _run() -> void:
 		guard += CHUNK
 	await create_timer(4.0).timeout
 	await _grab(out_dir.path_join("%s_7_result.png" % tag))
-	report.scenes["7_result"] = {"kind": "ui", "round": "r01", "won": b.sim.won, "sim_t": snappedf(b.sim.t, 0.01), "screen": str(app.get("screen"))}
+	report.scenes["7_result"] = {"kind": "ui", "round": "r01", "won": b.sim.won, "sim_t": snappedf(b.sim.t, 0.01), "screen": str(app.get("screen")), "layout": _layout_dump()}
 	# ---- r06: 04's ZOOM_PREVIEW scenario (no upgrades, scripted deploys)
 	b = await _start("r06", "none")
 	var plan := {"items": [[2.0, "melee_basic"], [4.0, "tank"], [6.0, "ranged_basic"], [9.0, "melee_basic"], [12.0, "fast"], [15.0, "siege"],
@@ -451,7 +451,54 @@ func _meta(b: Node, budget: String) -> Dictionary:
 		"camera_x": float(view.cam_x), "ground_screen_y": (ct * Vector2(0, view.ground_y)).y,
 		"units_in_camera": allies + enemies, "allies_in_camera": allies, "enemies_in_camera": enemies, "boss_in_camera": boss_in,
 		"fx_alive": nfx, "projectiles_alive": npr, "texts_alive": ntx, "units": units, "cards": cards,
-		"j1_rect_pct": _j1_rect(sim, view, vs)}
+		"j1_rect_pct": _j1_rect(sim, view, vs), "layout": _layout_dump(), "enemy_offscreen_right": _offscreen_right(sim, view, vs)}
+
+## Layout dump (LAYOUT rules L1-L8): every visible Control under the UI layer with its global rect (logical px), role,
+## text and font size; the two threat markers (shown or not, rect, state). Read-only.
+func _layout_dump() -> Dictionary:
+	var hud = _find_hud(app.ui_layer)
+	var roles := {}
+	if hud:
+		for bb in hud.card_buttons: if bb is Object: roles[bb.get_instance_id()] = "card"
+		for bb in hud.skill_buttons: if bb is Object: roles[bb.get_instance_id()] = "skill"
+		for pair in [["btn_left", "move"], ["btn_right", "move"], ["btn_worker", "worker"], ["btn_pause", "pause"]]:
+			var n = hud.get(pair[0])
+			if n is Object: roles[n.get_instance_id()] = pair[1]
+	var nodes := []
+	_walk_ui(app.ui_layer, nodes, roles, "")
+	var thr := []
+	if hud:
+		for k in ["threat_right", "threat_left"]:
+			var n = hud.get(k)
+			if n is Control:
+				var r: Rect2 = n.get_global_rect()
+				thr.append({"name": k, "visible": n.is_visible_in_tree(), "rect": [r.position.x, r.position.y, r.size.x, r.size.y], "state": str(n.get("state"))})
+	var ins := SafeArea.override_insets
+	return {"nodes": nodes, "threat": thr, "safe_insets": [ins.x, ins.y, ins.z, ins.w], "hud": hud != null}
+
+func _walk_ui(n: Node, out: Array, roles: Dictionary, path: String) -> void:
+	for c in n.get_children():
+		var p := path + "/" + str(c.name)
+		if c is Control and c.is_visible_in_tree():
+			var r: Rect2 = c.get_global_rect()
+			var touch: bool = c.get_script() == TouchButtonS or c is BaseButton
+			var fs = c.get("font_size")
+			if c is Label: fs = c.get_theme_font_size("font_size")
+			var txt = c.get("text")
+			out.append({"path": p, "class": c.get_class(), "script": str(c.get_script().resource_path).get_file() if c.get_script() else "",
+				"rect": [r.position.x, r.position.y, r.size.x, r.size.y], "touch": touch, "role": roles.get(c.get_instance_id(), ""),
+				"text": str(txt) if txt != null else "", "font_size": int(fs) if fs != null else -1,
+				"disabled": bool(c.get("disabled")) if c.get("disabled") != null else false})
+		_walk_ui(c, out, roles, p)
+
+## Nearest alive enemy to the right of the camera (world px beyond the right edge), or -1: does a threat marker matter here?
+func _offscreen_right(sim, view: Node2D, vs: Vector2) -> float:
+	var vr: float = float(view.cam_x) + vs.x * 0.5
+	var best := -1.0
+	for e in sim.enemies:
+		if e.dying: continue
+		if e.x > vr and (best < 0.0 or e.x - vr < best): best = e.x - vr
+	return snappedf(best, 0.1)
 
 func _find_hud(n: Node) -> Node:
 	for c in n.get_children():

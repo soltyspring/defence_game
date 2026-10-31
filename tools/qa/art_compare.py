@@ -12,8 +12,46 @@ import argparse
 import json
 
 BATTLE = ["2_r01_t10", "3_r01_t30", "4_r06_t46", "5_r08_peak", "6_r10_boss"]
+ALL = ["1_menu"] + BATTLE + ["7_result"]
 CARDS = ["4_r06_t46", "5_r08_peak", "6_r10_boss"]
 STATE_KEYS = ["sim_t", "units_in_camera", "allies_in_camera", "enemies_in_camera", "boss_in_camera"]
+
+
+def canonical_sha256(path):
+    """Harness identity that does not depend on the checkout: UTF-8 text, BOM dropped, CRLF -> LF, then sha256.
+    Equal for LF and CRLF copies of the same file (G2 fix, 2026-11-01)."""
+    import hashlib
+    t = open(path, "rb").read().decode("utf-8")
+    if t.startswith("\ufeff"):
+        t = t[1:]
+    return hashlib.sha256(t.replace("\r\n", "\n").encode("utf-8")).hexdigest()
+
+
+def harness_hash(metrics, cap_dir):
+    """Canonical capture-script hash of a run: <cap>/harness.json (written by the art_compare job) if present, else the
+    hash the capture script reported itself (LF-normalised since 2026-11-01; earlier runs hashed an LF file, which is the
+    same value)."""
+    import os
+    if cap_dir:
+        hp = os.path.join(cap_dir, "harness.json")
+        if os.path.exists(hp):
+            return json.load(open(hp, encoding="utf-8")).get("canonical_sha256", "")
+    return metrics.get("ko_1x", {}).get("script_sha256", "")
+
+
+def accepted_harness(metrics, base_dir):
+    """Capture-script hashes the baseline accepts: its own, plus every hash listed in <baseline>/harness_accepted.json.
+    A hash is added there only with proof that the new script renders the baseline SHA pixel-identically
+    (render-neutral change, e.g. an added read-only layout dump)."""
+    import os
+    acc = {harness_hash(metrics, base_dir)}
+    if base_dir:
+        hp = os.path.join(base_dir, "harness_accepted.json")
+        if os.path.exists(hp):
+            for e in json.load(open(hp, encoding="utf-8")).get("accepted", []):
+                acc.add(e.get("canonical_sha256", ""))
+    acc.discard("")
+    return acc
 
 # (id, owner, player question, scenes, metric, op, threshold, better, tolerance)
 #   op: ">=" / "<=" / "==" threshold rule, or None for a no-worse-than-baseline rule
@@ -34,7 +72,21 @@ SCENE_RULES = [
     ("U1c", "06", "closest card pair colour (dE, info)", CARDS, "cards_min_dE_normal", None, None, "higher", 0.5),
     ("U2", "06", "the HUD eats the battlefield (% px, max baseline + 0.5)", BATTLE, "hud_px_pct", "base+", 0.5, "lower", 0.05),
     ("U3", "06", "the HUD covers my units (% of unit px)", BATTLE, "hud_on_units_pct", "<=", 0.0, "lower", 0.0),
-]
+    # LAYOUT.md L1-L8 (04 layout overhaul). 393x873 dp phone: 360 view px = 393 dp, so 1 view px = 1.092 dp = 0.173 mm.
+    ("L1", "04", "the HUD takes battlefield away (battlefield %, max -0.5 pp vs baseline)", BATTLE, "battlefield_visible_pct", "base-", 0.5, "higher", 0.05),
+    ("L2", "04", "the HUD covers the lane where units stand (HUD px in the lane band)", BATTLE, "hud_on_lane_px", "base+", 0, "lower", 0),
+    ("L3", "04", "a button is too small for a thumb (smallest side px; 44 px = 48 dp, Android minimum)", ALL, "touch_min_side_px", ">=", 44.0, "higher", 0.5),
+    ("L4", "04", "I hit the wrong button (smallest gap px; 7.3 px = 8 dp, Android spacing)", ALL, "touch_min_gap_px", ">=", 7.3, "higher", 0.2),
+    ("L4o", "04", "touch targets overlap (pairs)", ALL, "touch_overlaps", "==", 0, "lower", 0),
+    ("L5", "04", "a frequent button is in the top half, away from the thumbs (move/card/skill/worker count)", BATTLE, "frequent_outside_bottom_half", "==", 0, "lower", 0),
+    ("L5m", "04", "move buttons further from a bottom corner (mm, max +3 vs baseline)", BATTLE, "thumb_move_max_mm", "base+", 3.0, "lower", 0.5),
+    ("L5c", "04", "worst card further from a bottom corner (mm, max +3 vs baseline)", BATTLE, "thumb_card_max_mm", "base+", 3.0, "lower", 0.5),
+    ("L5s", "04", "worst skill further from a bottom corner (mm, max +3 vs baseline)", BATTLE, "thumb_skill_max_mm", "base+", 3.0, "lower", 0.5),
+    ("L5p", "04", "pause distance from a bottom corner (mm; info only: far from thumbs avoids accidental pauses)", BATTLE, "thumb_pause_max_mm", "info", None, "higher", 0.5),
+    ("L6", "02+04", "an enemy is off screen to the right and nothing shows it (scenes without the D39 marker)", BATTLE, "threat_missing", "==", 0, "lower", 0),
+    ("L6o", "04", "the right-edge threat marker is under other HUD (overlap px^2)", BATTLE, "threat_right_overlap_px", "<=", 0.0, "lower", 0.5),
+    ("L7", "04", "text too small to read (smallest node font px; 11 px = 12 sp, Android minimum body size)", ALL, "text_min_px", ">=", 11, "higher", 0),
+    ("L8", "04", "a button sits under the notch (targets outside the safe area)", ALL, "touch_outside_safe", "==", 0, "lower", 0),]
 
 # animation rules (ART_BASELINE.md section 5), evaluated per unit id present in both captures
 ANIM_RULES = [
@@ -60,6 +112,8 @@ def ok(op, val, thr, base):
         return val == thr
     if op == "base+":
         return base is None or val <= base + thr
+    if op == "base-":
+        return base is None or val >= base - thr
     return None
 
 
@@ -118,8 +172,9 @@ def main():
         if ns[s].get("prepass_matches") is False:
             diffs.append("prepass_matches")
         gates.append(("G2", s, "state equal" if not diffs else "differs: " + ", ".join(diffs), not diffs))
-    hn, hb = new.get(tag, {}).get("script_sha256", ""), base.get(tag, {}).get("script_sha256", "")
-    gates.append(("G2", "harness", "capture script identical to baseline's" if hn == hb else f"capture script differs ({hn[:12]} vs {hb[:12]})", hn == hb))
+    hn, acc = harness_hash(new, a.new_dir), accepted_harness(base, a.base_dir)
+    gates.append(("G2", "harness", "capture script accepted by the baseline (line-end independent hash)" if hn in acc
+                  else f"capture script differs ({hn[:12]} not in {sorted(h[:12] for h in acc)})", hn in acc))
     # G3: 2x copy of 1x, no new fractional drawing. Tolerance 64 1x px: a HUD card-cooldown edge drawn at a fractional
     # height changes by up to 46 1x px between identical runs (ad47eda re-run, ko_2x 6_r10_boss).
     for loc in ("ko", "en"):
@@ -148,6 +203,8 @@ def main():
             t = trend(nv, bv, better, tol)
             if op is None:
                 r_ok = t != "WORSE" if t != "n/a" else None
+            if op == "info":
+                r_ok = None
             res.append(r_ok)
             tr.append(t)
             rows.append({"rule": rid, "owner": owner, "where": s, "base": bv, "new": nv, "pass": r_ok, "trend": t})

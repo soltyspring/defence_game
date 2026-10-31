@@ -80,3 +80,9 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
   - Options: hold alpha at 1 for the first part of the death, fade only the last frames, or match dead_t to the animation length. Agree with 03 who changes what.
 - **QA-O006 (observation):** every unit atlas has a 2-frame `hit` animation and the hero has `cast`, but `battle_view._anim_name()` maps only walk/attack/death/idle, so the player never sees them. The on-screen hit is the 0.12 s flash, which passes A4 (ΔE 21–32). Wire them or tell 03 to stop drawing them.
 - Re-check: `.\tools\qa\art_compare.ps1 -Sha <your commit>` (detached), then `-Report`. Rows A6 and A6b.
+
+## 2026-11-01 07:3x — QA-B026 (P2): off-screen threat markers are never shown
+- Code reading at e2404af: `src/ui/hud.gd:250` calls `_update_threat(s.get("threat", {}))`, but no code in src/gameplay or src/core, and nothing in docs/contracts/INTERFACES.md, publishes a `threat` field in the HUD snapshot. 04's markers therefore stay hidden. This is 04→02 R16, still open.
+- Why it matters now: 01 D39 accepts the zoom's shorter enemy warning time (6.0 → 3.9 s) on the condition that the off-screen markers are kept, and the markers do not exist in the game.
+- Pass: LAYOUT.md L6. With an alive enemy beyond the right camera edge, the right marker is shown; L6o, it is not under other HUD. 07 will add an off-screen-enemy frame to its fixed set to exercise it.
+- Full `-Head` at e2404af: PASS 156 / FAIL 0 (run 20261101-070302). Nothing else for you from that run.

@@ -7,7 +7,12 @@ Updated 2026-10-31 09:18 +09:00. Scope: desktop headless Godot 4.7.2 on Windows.
 | **HEAD** | `.\tools\qa\run_acceptance.ps1 -Head` | clean `git archive` of committed HEAD in `%TEMP%\qa07_head` (own import, current tests overlaid) → **committed defect** |
 | **Workspace** | `.\tools\qa\run_acceptance.ps1` | shared tree with every worker's uncommitted WIP → only here = **work-tree contamination** |
 
-## Current: HEAD 278d52b, run 20261101-012951 (import guard 0 missing, private APPDATA proven, inside heavy_run.ps1)
+## Current: HEAD e2404af, run 20261101-070302 (import guard 0 missing, private APPDATA proven, heavy_run_detached)
+PASS 156 · FAIL 0 · NOT_TESTED 2 (AUD-03, PLAT-03) · BLOCKED 0; services exit 0; runner exit 0. Summary: [runs/head-e2404af.md](runs/head-e2404af.md).
+- Re-run after the changes since 278d52b: 05 28d6827 (audio_manager, audio manifest, 5 SFX), 03 90c9790 (build.py), 01 b98cb31 (balance docs), 06 adc0965 and 02ec60f (ui_main). Same 156 checks pass. No FAIL, so there is no owner request.
+- The job was queued at f606801; local HEAD had moved to e2404af (08 docs commit) when the lock was taken. The run tested e2404af.
+
+## Previous: HEAD 278d52b, run 20261101-012951 (import guard 0 missing, private APPDATA proven, inside heavy_run.ps1)
 PASS 156 · FAIL 0 · NOT_TESTED 2 (AUD-03, PLAT-03) · BLOCKED 0; services exit 0; runner exit 0. Summary: [runs/head-278d52b.md](runs/head-278d52b.md).
 - The 3 FAILs of 3e355a8 are gone on the same checks. DATA-13/14 (QA-B019) were fixed by 01 4882771 and 04 1850c3f. BD-SPLASH was a 07 test defect (QA-T002), fixed in 98e4f49.
 - 02 52f9fa3 (save D32/F2/X1, QA-B012) did not regress save, faults, purchase or flow: all PASS. TP-13c now loads in 17 ms, because 02's size guard refuses the 50 MB file.

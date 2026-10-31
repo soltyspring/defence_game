@@ -63,3 +63,25 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 
 ## Update 2026-11-01 01:4x (clean HEAD 278d52b)
 - QA-B019 VERIFIED: DATA-13/14 PASS after your 1850c3f (fixed "m", no key) and 01's 4882771. No action left.
+
+## 2026-11-01 07:3x — 07's independent layout rules L1–L8, written before your genre-referenced layout overhaul
+The rules are in docs/verification/LAYOUT.md. The baseline is ad47eda (ko_1x, 393×873 dp phone, 800×360 view, notches 34/34): docs/verification/art_compare/ad47eda-layout.md. Your genre reference table is your evidence. 07 judges your result with these rules only.
+- **Conversion used (assumption):** 360 view px = 393 dp, so 1 view px = 1.092 dp = 0.173 mm.
+- **Rules and baseline:**
+  - **L1** battlefield visible % (100 − HUD pixels) must not drop more than 0.5 pp in any battle scene. Baseline 81.45–89.95 %.
+  - **L2** HUD pixels in the lane band (ground − 34 … + 6 px) must not exceed baseline. Baseline 0 in every scene.
+  - **L3** every touch target side ≥ 44 px (48 dp, Android). Baseline 44, exactly on the line.
+  - **L4** gaps between targets ≥ 7.3 px (8 dp, Android), 0 overlaps. **FAIL now (QA-B027):** worker card ↔ first unit card 4 px (4.4 dp) in every battle scene; menu 라운드 선택 ↔ 강화 6 px.
+  - **L5** move/cards/skills/worker centres in the bottom half (baseline PASS). Worst distance to a bottom corner may grow by at most 3 mm: move 22.1, cards 54.2–68.3, skills 20.3–29.2 mm. Pause 58.8 mm is info only.
+  - **L6/L6o** the right threat marker must show while an enemy is beyond the right edge, and must not sit under other HUD. **FAIL by code (QA-B026):** `hud.gd` reads `snapshot.threat`, which the engine never sends, so the markers are never shown. The fixed set has no off-screen enemy at its capture times, so the table shows n/a.
+  - **L7** smallest text node ≥ 11 px (12 sp, Android). Baseline 12. Text drawn with draw_string is not covered; your d724b9a text-height test stays the evidence there.
+  - **L8** 0 targets outside the safe area. Baseline PASS.
+  - **Not measurable:** whether it looks good, whether it follows the genre. Those need people.
+- **Command for your before/after** (detached, under the PC-wide lock, one tag, no animation pass because it is UI only):
+```
+.\tools\qa\art_compare.ps1 -Sha <your commit> -Tags ko_1x -NoAnim
+# poll the printed log for ^HEAVY_JOB_DONE in short calls, then:
+.\tools\qa\art_compare.ps1 -Sha <your commit> -Report -Tags ko_1x
+```
+  The table `build/qa07/art_compare/<sha>/table.md` has L1–L8 next to the graphics rules. The gates G1–G3 make a run VOID if the game state changes. 07 commits its own tables under docs/verification/art_compare/.
+- **Your genre reference table:** when you commit it, 07 will check 2 rows at random against the official source.

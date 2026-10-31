@@ -86,7 +86,7 @@ def pct(n, d):
     return round(100.0 * n / d, 2) if d else None
 
 
-def scene_metrics(d, tag, scene, meta, k):
+def scene_metrics(d, tag, scene, meta, k, view=(800, 360)):
     base = os.path.join(d, "layers", f"{tag}_{scene}")
     full = load(os.path.join(d, f"{tag}_{scene}.png"))
     h, ht, htf, bg = (load(base + s + ".png") for s in ("_h", "_ht", "_htf", "_bg"))
@@ -199,6 +199,14 @@ def scene_metrics(d, tag, scene, meta, k):
         out["cards_pairs_total"] = len(feats) * (len(feats) - 1) // 2
         out["cards_pairs_failing_u1"] = len(fails)
         out["cards_pairs_failing_u1_list"] = fails
+    # LAYOUT L1/L2: battlefield left visible by the HUD, and HUD pixels on the lane band (same band as lane_busy_dL)
+    out["battlefield_visible_pct"] = round(100.0 - out["hud_px_pct"], 2)
+    ly0, ly1 = max(0, int((gy - 34) * k)), min(shape[0], int((gy + 6) * k))   # own names: y0/y1 are reused by the card loop above
+    band_hud = hud[ly0:ly1, :]
+    out["hud_on_lane_px"] = int(round(band_hud.sum() / (k * k)))
+    out["hud_on_lane_pct"] = pct(int(band_hud.sum()), band_hud.size)
+    if meta.get("layout"):
+        out.update(layout_metrics(meta["layout"], view, meta))
     out["frame_mean"] = round(float(full.mean()), 1)
     out["frame_near_black_pct"] = pct(int((full.sum(axis=-1) < 30).sum()), screen)
     return out
@@ -315,6 +323,89 @@ def anim_metrics(d, tag, rep, k, sheet_dir=""):
     return out
 
 
+def _rect_gap(a, b):
+    dx = max(0.0, b[0] - (a[0] + a[2]), a[0] - (b[0] + b[2]))
+    dy = max(0.0, b[1] - (a[1] + a[3]), a[1] - (b[1] + b[3]))
+    if dx == 0.0 and dy == 0.0:
+        ox = min(a[0] + a[2], b[0] + b[2]) - max(a[0], b[0])
+        oy = min(a[1] + a[3], b[1] + b[3]) - max(a[1], b[1])
+        return -1.0 if ox > 0 and oy > 0 else 0.0
+    return float(np.hypot(dx, dy))
+
+
+def _overlap_area(a, b):
+    ox = min(a[0] + a[2], b[0] + b[2]) - max(a[0], b[0])
+    oy = min(a[1] + a[3], b[1] + b[3]) - max(a[1], b[1])
+    return max(0.0, ox) * max(0.0, oy)
+
+
+def layout_metrics(lay, view, meta=None):
+    """LAYOUT.md L3-L8 from the UI node dump (logical px of the 800x360 view; mm on the 393 dp phone)."""
+    vw, vh = view
+    nodes = lay.get("nodes", [])
+    # only the top screen counts: targets under a later full-screen top-level layer (e.g. HUD under /Result) are not
+    # reachable by the player and are left out of L3/L4/L5/L8
+    top = [i for i, n in enumerate(nodes) if n["path"].count("/") == 1 and n["rect"][2] * n["rect"][3] >= 0.9 * vw * vh]
+    first = top[-1] if top else -1
+    tg = [n for i, n in enumerate(nodes) if i > first and n["touch"] and n["rect"][2] > 0 and n["rect"][3] > 0]
+    out = {"touch_targets": len(tg), "top_layer": nodes[first]["path"] if first >= 0 else ""}
+    if tg:
+        sides = [(min(n["rect"][2], n["rect"][3]), n) for n in tg]
+        mn = min(sides, key=lambda s: s[0])
+        out["touch_min_side_px"] = round(mn[0], 1)
+        out["touch_min_side_mm"] = round(mn[0] * MM_PER_VIEW_PX, 2)
+        out["touch_min_side_who"] = (mn[1]["role"] or mn[1]["text"] or mn[1]["path"].split("/")[-1])[:24]
+        out["touch_below_44"] = sum(1 for s, _ in sides if s < 44.0)
+        gaps, ov = [], 0
+        for i in range(len(tg)):
+            for j in range(i + 1, len(tg)):
+                g = _rect_gap(tg[i]["rect"], tg[j]["rect"])
+                if g < 0:
+                    ov += 1
+                gaps.append((max(g, 0.0), tg[i], tg[j]))
+        if gaps:
+            g = min(gaps, key=lambda x: x[0])
+            out["touch_min_gap_px"] = round(g[0], 1)
+            out["touch_min_gap_mm"] = round(g[0] * MM_PER_VIEW_PX, 2)
+            out["touch_min_gap_pair"] = " / ".join((x["role"] or x["text"] or x["path"].split("/")[-1])[:16] for x in (g[1], g[2]))
+        out["touch_overlaps"] = ov
+        ins = lay.get("safe_insets", [0, 0, 0, 0])
+        out["touch_outside_safe"] = sum(1 for n in tg if n["rect"][0] < ins[0] - 0.5 or n["rect"][0] + n["rect"][2] > vw - ins[2] + 0.5
+                                        or n["rect"][1] < ins[1] - 0.5 or n["rect"][1] + n["rect"][3] > vh - ins[3] + 0.5)
+        # frequent controls (move, card, skill, worker) with their centre in the top half of the screen
+        out["frequent_outside_bottom_half"] = sum(1 for n in tg if n["role"] in ("move", "card", "skill", "worker")
+                                                  and n["rect"][1] + n["rect"][3] / 2.0 < vh / 2.0)
+        # thumb reach: centre distance to the nearest BOTTOM corner of the screen (both hands hold the bottom corners)
+        for role in ("move", "card", "skill", "worker", "pause"):
+            ds = []
+            for n in tg:
+                if n["role"] == role:
+                    cx, cy = n["rect"][0] + n["rect"][2] / 2.0, n["rect"][1] + n["rect"][3] / 2.0
+                    ds.append(min(np.hypot(cx, vh - cy), np.hypot(vw - cx, vh - cy)))
+            if ds:
+                out[f"thumb_{role}_max_mm"] = round(max(ds) * MM_PER_VIEW_PX, 1)
+    txt = [n for n in nodes if n["text"].strip() and n["font_size"] > 0]
+    if txt:
+        m = min(txt, key=lambda n: n["font_size"])
+        out["text_min_px"] = m["font_size"]
+        out["text_min_mm"] = round(m["font_size"] * MM_PER_VIEW_PX, 2)
+        out["text_min_who"] = m["text"][:24]
+    for t in lay.get("threat", []):
+        if t["name"] != "threat_right":
+            continue
+        out["threat_right_shown"] = bool(t["visible"])
+        big = vw * vh * 0.5
+        anc = [n for n in nodes if not (n["rect"][2] * n["rect"][3] >= big) and "threat" not in n["path"]]
+        out["threat_right_overlap_px"] = round(max([_overlap_area(t["rect"], n["rect"]) for n in anc] or [0.0]), 1) if t["visible"] else None
+    if meta is not None and "enemy_offscreen_right" in meta:
+        out["enemy_offscreen_right_px"] = meta["enemy_offscreen_right"]
+        need = meta["enemy_offscreen_right"] > 0
+        out["threat_needed"] = need
+        # None = not exercised (no enemy beyond the right edge at this frame), so L6 cannot pass vacuously
+        out["threat_missing"] = (0 if out.get("threat_right_shown", False) else 1) if need else None
+    return out
+
+
 def compare_dirs(a_dir, b_dir, tag):
     """Re-run check: every PNG of `tag` in a_dir (main shots and layers) against the same file in b_dir."""
     rows = []
@@ -363,8 +454,10 @@ def main():
                 img = load(os.path.join(a.dir, f"{tag}_{scene}.png"))
                 res[tag]["scenes"][scene] = {"scene": scene, "frame_mean": round(float(img.mean()), 1),
                                              "frame_near_black_pct": pct(int((img.sum(axis=-1) < 30).sum()), img.shape[0] * img.shape[1])}
+                if meta.get("layout"):
+                    res[tag]["scenes"][scene].update(layout_metrics(meta["layout"], rep["view"]))
                 continue
-            res[tag]["scenes"][scene] = scene_metrics(a.dir, tag, scene, meta, k)
+            res[tag]["scenes"][scene] = scene_metrics(a.dir, tag, scene, meta, k, rep["view"])
             for key in ("prepass", "prepass_matches", "battle_seed", "budget", "bot"):
                 if key in meta:
                     res[tag]["scenes"][scene][key] = meta[key]

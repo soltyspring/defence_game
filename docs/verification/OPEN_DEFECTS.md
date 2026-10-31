@@ -1,5 +1,5 @@
 # Open defects: owner and blocking condition (owner: 07-qa)
-Updated 2026-11-01 01:4x +09:00 at clean HEAD 278d52b (run 20261101-012951 PASS 156 / FAIL 0 / NOT_TESTED 2, exit 0; QA-B012 crowd retest 0 overlaps; D28 all rows PASS at 3e355a8). Desktop only; not Android certification.
+Updated 2026-11-01 07:3x +09:00. Last full -Head: e2404af run 20261101-070302 PASS 156 / FAIL 0 / NOT_TESTED 2, exit 0. Graphics/layout baseline ad47eda (ART_BASELINE.md, LAYOUT.md). Desktop only; not Android certification; no human play test.
 
 | ID | Sev | Owner | State now | Blocks what | Closing condition (same check, HEAD condition) | Next 07 action |
 |---|---|---|---|---|---|---|
@@ -15,4 +15,6 @@ Updated 2026-11-01 01:4x +09:00 at clean HEAD 278d52b (run 20261101-012951 PASS 
 | QA-B023 | P3 | 03 (+ 09) | OPEN ad47eda: 11–67 % of units ΔL* < 15; r08 deutan pair 11.9; boss over nest 11.0 | readability | C2, C4, C5 | re-run on a 03/09 commit |
 | QA-B024 | P3 | 03 | OPEN ad47eda: e_brute walk 0 px / 14 %, death 21.5 %; tank walk 1 px | animation reading | ART_BASELINE A1, A1c, A5 per unit id | art_compare on a 03 commit |
 | QA-B025 | P3 | 02 (fade) + 03 | OPEN ad47eda: deaths readable 0.25–0.50 s, 40–80 % of frames | animation reading | A6 ≥ 0.4 s, A6b ≥ 60 % | art_compare on a 02/03 commit |
+| QA-B026 | P2 | 02 + 04 (cc 01) | OPEN e2404af: threat markers never shown (no `threat` field in the snapshot) | enemy warning (D39 mitigation) | LAYOUT L6/L6o with an off-screen enemy | art_compare on a 02/04 commit; add an off-screen-enemy frame |
+| QA-B027 | P3 | 04 | OPEN ad47eda: worker–card gap 4 px (4.4 dp), menu 6 px | mis-taps | LAYOUT L4 ≥ 7.3 px (8 dp) | art_compare on a 04 commit |
 Closed (for reference): B001–B012, B014, B015, B016, B019, J2 (D24a), J3, W001–W003, W005. B012 and B019 VERIFIED at 278d52b (run 20261101-012951, VISUAL_CHECKS M14). Details: BUG_REGISTER.md.

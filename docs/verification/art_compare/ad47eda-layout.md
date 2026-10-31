@@ -1,0 +1,295 @@
+# Graphics comparison: ad47eda vs baseline (07 fixed set, ART_BASELINE.md)
+
+Layout baseline run: ad47eda, ko_1x, new capture script (canonical fc1ccf01, adds the read-only layout dump), accepted through harness_accepted.json after a pixel-identity proof (27/27 frames and layers, 217/217 pose crops vs the 3c092c46 run). Capture job 07:14 (heavy_run_detached, DISPLAY2, private APPDATA). Rules L1–L8: docs/verification/LAYOUT.md.
+
+
+**Run: VALID** (gates G1–G3 below). Tags in this run: ko_1x.
+
+| Gate | Where | Result |
+|---|---|---|
+| G1 | all frames | OK: 7 frames valid (mean > 10, near-black < 50 %) |
+| G2 | 2_r01_t10 | OK: state equal |
+| G2 | 3_r01_t30 | OK: state equal |
+| G2 | 4_r06_t46 | OK: state equal |
+| G2 | 5_r08_peak | OK: state equal |
+| G2 | 6_r10_boss | OK: state equal |
+| G2 | harness | OK: capture script accepted by the baseline (line-end independent hash) |
+| G3 | 2x vs 1x | OK: not checked (no 2x tag in this run) |
+
+## Summary per rule
+| Rule | Owner | Player question | Rule | vs baseline |
+|---|---|---|---|---|
+| C1 | 03 | my soldiers are specks on a phone (mm) | FAIL | SAME |
+| C1b | 03 | soldiers never smaller than baseline (mm) | PASS | SAME |
+| C2 | 03 | closest ally-enemy pair, normal vision (dE) | PASS | SAME |
+| C2d | 03 | closest ally-enemy pair, deutan (dE) | FAIL | SAME |
+| C3 | 03+09 | I lose my hero against the street (dL*) | FAIL | SAME |
+| C4 | 03 | units melt into the lane (% of units dL* < 15) | FAIL | SAME |
+| C4m | 03 | unit vs lane contrast median never lower (dL*) | PASS | SAME |
+| C5 | 03+09 | the boss is part of the nest (dL*) | FAIL | SAME |
+| C6 | 03 | the army got smaller on screen (% px) | PASS | SAME |
+| W1 | 09 | the street is busier than the battle (mean dL* per px) | PASS | SAME |
+| W3 | 09 | effects hide my soldiers (% of unit px) | PASS | SAME |
+| W3m | 09 | effects hide one soldier (% of its px) | PASS | SAME |
+| U1 | 06 | all cards look the same (pairs failing) | FAIL | SAME |
+| U1c | 06 | closest card pair colour (dE, info) | PASS | SAME |
+| U2 | 06 | the HUD eats the battlefield (% px, max baseline + 0.5) | PASS | SAME |
+| U3 | 06 | the HUD covers my units (% of unit px) | PASS | SAME |
+| L1 | 04 | the HUD takes battlefield away (battlefield %, max -0.5 pp vs baseline) | PASS | SAME |
+| L2 | 04 | the HUD covers the lane where units stand (HUD px in the lane band) | PASS | SAME |
+| L3 | 04 | a button is too small for a thumb (smallest side px; 44 px = 48 dp, Android minimum) | PASS | SAME |
+| L4 | 04 | I hit the wrong button (smallest gap px; 7.3 px = 8 dp, Android spacing) | FAIL | SAME |
+| L4o | 04 | touch targets overlap (pairs) | PASS | SAME |
+| L5 | 04 | a frequent button is in the top half, away from the thumbs (move/card/skill/worker count) | PASS | SAME |
+| L5m | 04 | move buttons further from a bottom corner (mm, max +3 vs baseline) | PASS | SAME |
+| L5c | 04 | worst card further from a bottom corner (mm, max +3 vs baseline) | PASS | SAME |
+| L5s | 04 | worst skill further from a bottom corner (mm, max +3 vs baseline) | PASS | SAME |
+| L5p | 04 | pause distance from a bottom corner (mm; info only: far from thumbs avoids accidental pauses) | n/a | SAME |
+| L6 | 02+04 | an enemy is off screen to the right and nothing shows it (scenes without the D39 marker) | n/a | SAME |
+| L6o | 04 | the right-edge threat marker is under other HUD (overlap px^2) | n/a | SAME |
+| L7 | 04 | text too small to read (smallest node font px; 11 px = 12 sp, Android minimum body size) | PASS | SAME |
+| L8 | 04 | a button sits under the notch (targets outside the safe area) | PASS | SAME |
+| A1 | 03 | can I see it walk? (largest edge travel or bob, px) | FAIL | SAME |
+| A1c | 03 | does the walk change the body? (% of silhouette, max consecutive pair) | FAIL | SAME |
+| A2 | 03 | can I tell hitting from walking? (% of silhouette) | PASS | SAME |
+| A3 | 03 | does the attack reach forward? (px) | PASS | SAME |
+| A4 | 02+03 | can I see that it was hit? (dE of the hit flash) | PASS | SAME |
+| A5 | 03 | does it read as dying? (silhouette change in the visible death frames, %) | FAIL | SAME |
+| A6 | 02+03 | does the death stay readable long enough? (s) | FAIL | SAME |
+| A6b | 02+03 | death frames the player can still see (% of frames) | FAIL | SAME |
+
+## Rows
+| Rule | Where | Baseline | New | Rule | vs baseline |
+|---|---|---|---|---|---|
+| C1 | 4_r06_t46 | 3.55 | 3.55 | FAIL | SAME |
+| C1 | 5_r08_peak | 4.25 | 4.25 | FAIL | SAME |
+| C1b | 2_r01_t10 | 4.42 | 4.42 | PASS | SAME |
+| C1b | 3_r01_t30 | 3.47 | 3.47 | PASS | SAME |
+| C1b | 4_r06_t46 | 3.55 | 3.55 | PASS | SAME |
+| C1b | 5_r08_peak | 4.25 | 4.25 | PASS | SAME |
+| C1b | 6_r10_boss | 5.03 | 5.03 | PASS | SAME |
+| C2 | 2_r01_t10 | 24.6 | 24.6 | PASS | SAME |
+| C2 | 3_r01_t30 | 23.7 | 23.7 | PASS | SAME |
+| C2 | 4_r06_t46 | 22.4 | 22.4 | PASS | SAME |
+| C2 | 5_r08_peak | 15 | 15 | PASS | SAME |
+| C2 | 6_r10_boss | 17.5 | 17.5 | PASS | SAME |
+| C2d | 2_r01_t10 | 23.6 | 23.6 | PASS | SAME |
+| C2d | 3_r01_t30 | 22.2 | 22.2 | PASS | SAME |
+| C2d | 4_r06_t46 | 21.4 | 21.4 | PASS | SAME |
+| C2d | 5_r08_peak | 11.9 | 11.9 | FAIL | SAME |
+| C2d | 6_r10_boss | 14.6 | 14.6 | PASS | SAME |
+| C3 | 2_r01_t10 | 12.1 | 12.1 | FAIL | SAME |
+| C3 | 3_r01_t30 | 8.7 | 8.7 | FAIL | SAME |
+| C3 | 4_r06_t46 | 5.1 | 5.1 | FAIL | SAME |
+| C3 | 5_r08_peak | 15.8 | 15.8 | PASS | SAME |
+| C3 | 6_r10_boss | 10.3 | 10.3 | FAIL | SAME |
+| C4 | 2_r01_t10 | 66.67 | 66.67 | FAIL | SAME |
+| C4 | 3_r01_t30 | 11.11 | 11.11 | FAIL | SAME |
+| C4 | 4_r06_t46 | 18.18 | 18.18 | FAIL | SAME |
+| C4 | 5_r08_peak | 18.52 | 18.52 | FAIL | SAME |
+| C4 | 6_r10_boss | 20 | 20 | FAIL | SAME |
+| C4m | 2_r01_t10 | 14.5 | 14.5 | PASS | SAME |
+| C4m | 3_r01_t30 | 25.6 | 25.6 | PASS | SAME |
+| C4m | 4_r06_t46 | 24.7 | 24.7 | PASS | SAME |
+| C4m | 5_r08_peak | 23.4 | 23.4 | PASS | SAME |
+| C4m | 6_r10_boss | 24.1 | 24.1 | PASS | SAME |
+| C5 | 6_r10_boss | 11 | 11 | FAIL | SAME |
+| C6 | 2_r01_t10 | 0.28 | 0.28 | PASS | SAME |
+| C6 | 3_r01_t30 | 0.58 | 0.58 | PASS | SAME |
+| C6 | 4_r06_t46 | 1.09 | 1.09 | PASS | SAME |
+| C6 | 5_r08_peak | 1.28 | 1.28 | PASS | SAME |
+| C6 | 6_r10_boss | 0.87 | 0.87 | PASS | SAME |
+| W1 | 2_r01_t10 | 5.2 | 5.2 | PASS | SAME |
+| W1 | 3_r01_t30 | 5.43 | 5.43 | PASS | SAME |
+| W1 | 4_r06_t46 | 5.17 | 5.17 | PASS | SAME |
+| W1 | 5_r08_peak | 5.16 | 5.16 | PASS | SAME |
+| W1 | 6_r10_boss | 5.15 | 5.15 | PASS | SAME |
+| W3 | 2_r01_t10 | 0 | 0 | PASS | SAME |
+| W3 | 3_r01_t30 | 0 | 0 | PASS | SAME |
+| W3 | 4_r06_t46 | 2.34 | 2.34 | PASS | SAME |
+| W3 | 5_r08_peak | 2.53 | 2.53 | PASS | SAME |
+| W3 | 6_r10_boss | 0 | 0 | PASS | SAME |
+| W3m | 2_r01_t10 | 0 | 0 | PASS | SAME |
+| W3m | 3_r01_t30 | 0 | 0 | PASS | SAME |
+| W3m | 4_r06_t46 | 9.45 | 9.45 | PASS | SAME |
+| W3m | 5_r08_peak | 17.41 | 17.41 | PASS | SAME |
+| W3m | 6_r10_boss | 0 | 0 | PASS | SAME |
+| U1 | 4_r06_t46 | 6 | 6 | FAIL | SAME |
+| U1 | 5_r08_peak | 1 | 1 | FAIL | SAME |
+| U1 | 6_r10_boss | 2 | 2 | FAIL | SAME |
+| U1c | 4_r06_t46 | 0.6 | 0.6 | PASS | SAME |
+| U1c | 5_r08_peak | 3.6 | 3.6 | PASS | SAME |
+| U1c | 6_r10_boss | 1.4 | 1.4 | PASS | SAME |
+| U2 | 2_r01_t10 | 10.05 | 10.05 | PASS | SAME |
+| U2 | 3_r01_t30 | 10.12 | 10.12 | PASS | SAME |
+| U2 | 4_r06_t46 | 15.28 | 15.28 | PASS | SAME |
+| U2 | 5_r08_peak | 16.18 | 16.18 | PASS | SAME |
+| U2 | 6_r10_boss | 18.55 | 18.55 | PASS | SAME |
+| U3 | 2_r01_t10 | 0 | 0 | PASS | SAME |
+| U3 | 3_r01_t30 | 0 | 0 | PASS | SAME |
+| U3 | 4_r06_t46 | 0 | 0 | PASS | SAME |
+| U3 | 5_r08_peak | 0 | 0 | PASS | SAME |
+| U3 | 6_r10_boss | 0 | 0 | PASS | SAME |
+| L1 | 2_r01_t10 | 89.95 | 89.95 | PASS | SAME |
+| L1 | 3_r01_t30 | 89.88 | 89.88 | PASS | SAME |
+| L1 | 4_r06_t46 | 84.72 | 84.72 | PASS | SAME |
+| L1 | 5_r08_peak | 83.82 | 83.82 | PASS | SAME |
+| L1 | 6_r10_boss | 81.45 | 81.45 | PASS | SAME |
+| L2 | 2_r01_t10 | 0 | 0 | PASS | SAME |
+| L2 | 3_r01_t30 | 0 | 0 | PASS | SAME |
+| L2 | 4_r06_t46 | 0 | 0 | PASS | SAME |
+| L2 | 5_r08_peak | 0 | 0 | PASS | SAME |
+| L2 | 6_r10_boss | 0 | 0 | PASS | SAME |
+| L3 | 1_menu | 44 | 44 | PASS | SAME |
+| L3 | 2_r01_t10 | 44 | 44 | PASS | SAME |
+| L3 | 3_r01_t30 | 44 | 44 | PASS | SAME |
+| L3 | 4_r06_t46 | 44 | 44 | PASS | SAME |
+| L3 | 5_r08_peak | 44 | 44 | PASS | SAME |
+| L3 | 6_r10_boss | 44 | 44 | PASS | SAME |
+| L3 | 7_result | 44 | 44 | PASS | SAME |
+| L4 | 1_menu | 6 | 6 | FAIL | SAME |
+| L4 | 2_r01_t10 | 4 | 4 | FAIL | SAME |
+| L4 | 3_r01_t30 | 4 | 4 | FAIL | SAME |
+| L4 | 4_r06_t46 | 4 | 4 | FAIL | SAME |
+| L4 | 5_r08_peak | 4 | 4 | FAIL | SAME |
+| L4 | 6_r10_boss | 4 | 4 | FAIL | SAME |
+| L4 | 7_result | 8 | 8 | PASS | SAME |
+| L4o | 1_menu | 0 | 0 | PASS | SAME |
+| L4o | 2_r01_t10 | 0 | 0 | PASS | SAME |
+| L4o | 3_r01_t30 | 0 | 0 | PASS | SAME |
+| L4o | 4_r06_t46 | 0 | 0 | PASS | SAME |
+| L4o | 5_r08_peak | 0 | 0 | PASS | SAME |
+| L4o | 6_r10_boss | 0 | 0 | PASS | SAME |
+| L4o | 7_result | 0 | 0 | PASS | SAME |
+| L5 | 2_r01_t10 | 0 | 0 | PASS | SAME |
+| L5 | 3_r01_t30 | 0 | 0 | PASS | SAME |
+| L5 | 4_r06_t46 | 0 | 0 | PASS | SAME |
+| L5 | 5_r08_peak | 0 | 0 | PASS | SAME |
+| L5 | 6_r10_boss | 0 | 0 | PASS | SAME |
+| L5m | 2_r01_t10 | 22.1 | 22.1 | PASS | SAME |
+| L5m | 3_r01_t30 | 22.1 | 22.1 | PASS | SAME |
+| L5m | 4_r06_t46 | 22.1 | 22.1 | PASS | SAME |
+| L5m | 5_r08_peak | 22.1 | 22.1 | PASS | SAME |
+| L5m | 6_r10_boss | 22.1 | 22.1 | PASS | SAME |
+| L5c | 2_r01_t10 | 54.2 | 54.2 | PASS | SAME |
+| L5c | 3_r01_t30 | 54.2 | 54.2 | PASS | SAME |
+| L5c | 4_r06_t46 | 65.9 | 65.9 | PASS | SAME |
+| L5c | 5_r08_peak | 68.3 | 68.3 | PASS | SAME |
+| L5c | 6_r10_boss | 68.3 | 68.3 | PASS | SAME |
+| L5s | 4_r06_t46 | 20.3 | 20.3 | PASS | SAME |
+| L5s | 5_r08_peak | 29.2 | 29.2 | PASS | SAME |
+| L5s | 6_r10_boss | 29.2 | 29.2 | PASS | SAME |
+| L5p | 2_r01_t10 | 58.8 | 58.8 | — | SAME |
+| L5p | 3_r01_t30 | 58.8 | 58.8 | — | SAME |
+| L5p | 4_r06_t46 | 58.8 | 58.8 | — | SAME |
+| L5p | 5_r08_peak | 58.8 | 58.8 | — | SAME |
+| L5p | 6_r10_boss | 58.8 | 58.8 | — | SAME |
+| L7 | 1_menu | 12 | 12 | PASS | SAME |
+| L7 | 2_r01_t10 | 12 | 12 | PASS | SAME |
+| L7 | 3_r01_t30 | 12 | 12 | PASS | SAME |
+| L7 | 4_r06_t46 | 12 | 12 | PASS | SAME |
+| L7 | 5_r08_peak | 12 | 12 | PASS | SAME |
+| L7 | 6_r10_boss | 12 | 12 | PASS | SAME |
+| L7 | 7_result | 12 | 12 | PASS | SAME |
+| L8 | 1_menu | 0 | 0 | PASS | SAME |
+| L8 | 2_r01_t10 | 0 | 0 | PASS | SAME |
+| L8 | 3_r01_t30 | 0 | 0 | PASS | SAME |
+| L8 | 4_r06_t46 | 0 | 0 | PASS | SAME |
+| L8 | 5_r08_peak | 0 | 0 | PASS | SAME |
+| L8 | 6_r10_boss | 0 | 0 | PASS | SAME |
+| L8 | 7_result | 0 | 0 | PASS | SAME |
+| A1 | boss_warlord | 2 | 2 | PASS | SAME |
+| A1 | e_brute | 0 | 0 | FAIL | SAME |
+| A1 | e_grunt | 4 | 4 | PASS | SAME |
+| A1 | e_spitter | 3 | 3 | PASS | SAME |
+| A1 | e_swarm | 3 | 3 | PASS | SAME |
+| A1 | fast | 2 | 2 | PASS | SAME |
+| A1 | hero_captain | 4 | 4 | PASS | SAME |
+| A1 | melee_basic | 2 | 2 | PASS | SAME |
+| A1 | ranged_basic | 2 | 2 | PASS | SAME |
+| A1 | tank | 1 | 1 | FAIL | SAME |
+| A1c | boss_warlord | 58.4 | 58.4 | PASS | SAME |
+| A1c | e_brute | 14 | 14 | FAIL | SAME |
+| A1c | e_grunt | 74.4 | 74.4 | PASS | SAME |
+| A1c | e_spitter | 69.2 | 69.2 | PASS | SAME |
+| A1c | e_swarm | 81.2 | 81.2 | PASS | SAME |
+| A1c | fast | 66.3 | 66.3 | PASS | SAME |
+| A1c | hero_captain | 66.1 | 66.1 | PASS | SAME |
+| A1c | melee_basic | 76 | 76 | PASS | SAME |
+| A1c | ranged_basic | 69.2 | 69.2 | PASS | SAME |
+| A1c | tank | 62.3 | 62.3 | PASS | SAME |
+| A2 | boss_warlord | 76.4 | 76.4 | PASS | SAME |
+| A2 | e_brute | 62.4 | 62.4 | PASS | SAME |
+| A2 | e_grunt | 77.7 | 77.7 | PASS | SAME |
+| A2 | e_spitter | 83.1 | 83.1 | PASS | SAME |
+| A2 | e_swarm | 96.3 | 96.3 | PASS | SAME |
+| A2 | fast | 47.1 | 47.1 | PASS | SAME |
+| A2 | hero_captain | 80.2 | 80.2 | PASS | SAME |
+| A2 | melee_basic | 85.8 | 85.8 | PASS | SAME |
+| A2 | ranged_basic | 77.4 | 77.4 | PASS | SAME |
+| A2 | tank | 69.3 | 69.3 | PASS | SAME |
+| A3 | boss_warlord | 18 | 18 | PASS | SAME |
+| A3 | e_brute | 4 | 4 | PASS | SAME |
+| A3 | e_grunt | 6 | 6 | PASS | SAME |
+| A3 | e_spitter | 9 | 9 | PASS | SAME |
+| A3 | e_swarm | 3 | 3 | PASS | SAME |
+| A3 | fast | 5 | 5 | PASS | SAME |
+| A3 | hero_captain | 9 | 9 | PASS | SAME |
+| A3 | melee_basic | 8 | 8 | PASS | SAME |
+| A3 | ranged_basic | 3 | 3 | PASS | SAME |
+| A3 | tank | 5 | 5 | PASS | SAME |
+| A4 | boss_warlord | 25.2 | 25.2 | PASS | SAME |
+| A4 | e_brute | 25.1 | 25.1 | PASS | SAME |
+| A4 | e_grunt | 22.4 | 22.4 | PASS | SAME |
+| A4 | e_spitter | 27 | 27 | PASS | SAME |
+| A4 | e_swarm | 21.1 | 21.1 | PASS | SAME |
+| A4 | fast | 30.8 | 30.8 | PASS | SAME |
+| A4 | hero_captain | 32.1 | 32.1 | PASS | SAME |
+| A4 | melee_basic | 24.9 | 24.9 | PASS | SAME |
+| A4 | ranged_basic | 25.1 | 25.1 | PASS | SAME |
+| A4 | tank | 25.6 | 25.6 | PASS | SAME |
+| A5 | boss_warlord | 85 | 85 | PASS | SAME |
+| A5 | e_brute | 21.5 | 21.5 | FAIL | SAME |
+| A5 | e_grunt | 86.5 | 86.5 | PASS | SAME |
+| A5 | e_spitter | 79.9 | 79.9 | PASS | SAME |
+| A5 | e_swarm | 100 | 100 | PASS | SAME |
+| A5 | fast | 78.8 | 78.8 | PASS | SAME |
+| A5 | hero_captain | 84.5 | 84.5 | PASS | SAME |
+| A5 | melee_basic | 83.7 | 83.7 | PASS | SAME |
+| A5 | ranged_basic | 80.6 | 80.6 | PASS | SAME |
+| A5 | tank | 82.1 | 82.1 | PASS | SAME |
+| A6 | boss_warlord | 0.43 | 0.43 | PASS | SAME |
+| A6 | e_brute | 0.43 | 0.43 | PASS | SAME |
+| A6 | e_grunt | 0.5 | 0.5 | PASS | SAME |
+| A6 | e_spitter | 0.38 | 0.38 | FAIL | SAME |
+| A6 | e_swarm | 0.5 | 0.5 | PASS | SAME |
+| A6 | fast | 0.25 | 0.25 | FAIL | SAME |
+| A6 | hero_captain | 0.38 | 0.38 | FAIL | SAME |
+| A6 | melee_basic | 0.38 | 0.38 | FAIL | SAME |
+| A6 | ranged_basic | 0.38 | 0.38 | FAIL | SAME |
+| A6 | tank | 0.5 | 0.5 | PASS | SAME |
+| A6b | boss_warlord | 42.9 | 42.9 | FAIL | SAME |
+| A6b | e_brute | 50 | 50 | FAIL | SAME |
+| A6b | e_grunt | 66.7 | 66.7 | PASS | SAME |
+| A6b | e_spitter | 50 | 50 | FAIL | SAME |
+| A6b | e_swarm | 80 | 80 | PASS | SAME |
+| A6b | fast | 40 | 40 | FAIL | SAME |
+| A6b | hero_captain | 50 | 50 | FAIL | SAME |
+| A6b | melee_basic | 50 | 50 | FAIL | SAME |
+| A6b | ranged_basic | 50 | 50 | FAIL | SAME |
+| A6b | tank | 66.7 | 66.7 | PASS | SAME |
+
+## What changed on screen (main frames vs baseline frames, exact pixels; image px)
+| Frame | Changed % | Where |
+|---|---|---|
+| ko_1x_1_menu.png | 0 | — |
+| ko_1x_2_r01_t10.png | 0 | — |
+| ko_1x_3_r01_t30.png | 0 | — |
+| ko_1x_4_r06_t46.png | 0 | — |
+| ko_1x_5_r08_peak.png | 0 | — |
+| ko_1x_6_r10_boss.png | 0 | — |
+| ko_1x_7_result.png | 0 | — |
+
+## Not measurable by tools
+- Do the units read as bread knights and mould, are the screens appealing: human naming test (5 players, 5" screen, point at ally / enemy / hero / dangerous unit within 3 s; fewer than 2 of 5 mistakes). Not run; never marked PASS from frames.
+- Atlas `hit` animations exist but battle_view never draws them (10 unit ids): the on-screen hit is the 0.12 s flash only (A4).

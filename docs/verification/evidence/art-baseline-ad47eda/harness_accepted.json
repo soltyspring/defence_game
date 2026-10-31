@@ -1,0 +1,11 @@
+{
+  "note": "Capture-script hashes (canonical: UTF-8, BOM dropped, CRLF->LF, sha256) accepted by this baseline besides its own (3c092c46...). Each entry needs proof that the script renders the baseline SHA pixel-identically.",
+  "accepted": [
+    {
+      "canonical_sha256": "fc1ccf0157cea8b8b095bb52874e9305378335de5e17690111d201ca284612a4",
+      "git_blob": "e76c79721911138148ec2f7ba6a52a20a55733cd",
+      "change": "read-only layout dump (_layout_dump, _offscreen_right) and line-end independent self-hash",
+      "proof": "ad47eda ko_1x run 2026-11-01 07:14 via art_compare.ps1: 27/27 main+layer frames and 217/217 pose crops pixel-identical to the 3c092c46 run (build/qa07/art_compare/ad47eda_layout/render_identity.json)"
+    }
+  ]
+}

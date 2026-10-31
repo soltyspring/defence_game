@@ -8,9 +8,9 @@
 #   git archive <commit> -> %TEMP%\qa07_art_<short>; overlay 07's tests/acceptance/capture_art_baseline.gd(.uid) from this
 #   checkout; Godot --import with a private APPDATA (import guard: every .import target must exist, else retry, else stop);
 #   tests/acceptance/capture_art_baseline.gd through tools/build/visible_launch.ps1 (secondary monitor, isolated APPDATA)
-#   for each tag, 393 dp condition; ko_1x also with --anim.
+#   for each tag, 393 dp condition; ko_1x also with --anim unless -NoAnim (UI-only commits).
 # Default out: build\qa07\art_compare\<short>. Default baseline: docs\verification\evidence\art-baseline-ad47eda.
-param([Parameter(Mandatory)][string]$Sha, [string[]]$Tags = @('ko_1x'), [switch]$Report, [string]$Out = '',
+param([Parameter(Mandatory)][string]$Sha, [string[]]$Tags = @('ko_1x'), [switch]$Report, [string]$Out = '', [switch]$NoAnim,
       [string]$Baseline = '')
 $ErrorActionPreference = 'Stop'
 $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
@@ -20,6 +20,7 @@ $full = (& git rev-parse --verify "$Sha^{commit}" 2>$null)
 if (-not $full) { Write-Host "unknown commit: $Sha"; exit 2 }
 $short = $full.Substring(0, 7)
 if (-not $Out) { $Out = Join-Path $Root "build\qa07\art_compare\$short" }
+$Out = [IO.Path]::GetFullPath([IO.Path]::Combine($Root, $Out))   # absolute: Godot resolves a relative --out against its own folder (07 bug 07:14)
 if (-not $Baseline) { $Baseline = Join-Path $Root 'docs\verification\evidence\art-baseline-ad47eda' }
 $cap = Join-Path $Out 'cap'
 if ($Report) {
@@ -47,6 +48,14 @@ Expand-Archive "`$snap.zip" `$snap -Force; Remove-Item "`$snap.zip"
 Copy-Item '$Root\tests\acceptance\capture_art_baseline.gd' (Join-Path `$snap 'tests\acceptance') -Force
 if (Test-Path '$Root\tests\acceptance\capture_art_baseline.gd.uid') { Copy-Item '$Root\tests\acceptance\capture_art_baseline.gd.uid' (Join-Path `$snap 'tests\acceptance') -Force }
 "capture script sha256=" + (Get-FileHash '$Root\tests\acceptance\capture_art_baseline.gd' -Algorithm SHA256).Hash.ToLower()
+# harness identity independent of the checkout's line ends (G2): BOM dropped, CRLF -> LF, sha256; plus git's blob id
+`$hs = '$Root\tests\acceptance\capture_art_baseline.gd'
+`$ht = [Text.Encoding]::UTF8.GetString([IO.File]::ReadAllBytes(`$hs)).TrimStart([char]0xFEFF).Replace("``r``n", "``n")
+`$hc = ([BitConverter]::ToString([Security.Cryptography.SHA256]::Create().ComputeHash([Text.Encoding]::UTF8.GetBytes(`$ht)))).Replace('-', '').ToLower()
+`$hg = (& git hash-object `$hs).Trim()
+New-Item -ItemType Directory -Force `$cap | Out-Null
+@{ capture_script = 'tests/acceptance/capture_art_baseline.gd'; canonical_sha256 = `$hc; git_blob = `$hg; commit_under_test = '$full' } | ConvertTo-Json | Set-Content (Join-Path `$cap 'harness.json') -Encoding utf8
+"harness canonical_sha256=`$hc git_blob=`$hg"
 `$prevApp = `$env:APPDATA
 `$env:APPDATA = '$Out\import_appdata'
 New-Item -ItemType Directory -Force `$env:APPDATA | Out-Null
@@ -73,7 +82,7 @@ foreach (`$t in @($tagList)) {
     `$res = if (`$t -like '*_2x') { '1600x720' } else { '800x360' }
     `$loc = `$t.Split('_')[0]
     `$ua = @("--out=`$(`$cap.Replace('\','/'))", "--tag=`$t", "--locale=`$loc", '--safe=34,0,34,0', '--target=44')
-    if (`$t -eq 'ko_1x') { `$ua += '--anim' }
+    if (`$t -eq 'ko_1x' -and '$([bool]$NoAnim)' -ne 'True') { `$ua += '--anim' }   # -NoAnim: UI-only commits skip the pose pass (fewer GPU frames)
     & '$Root\tools\build\visible_launch.ps1' -ProjectPath `$snap -Script res://tests/acceptance/capture_art_baseline.gd -Resolution `$res -TimeoutSec 420 -EvidenceDir `$cap -UserArgs `$ua
     "visible `$t exit=`$LASTEXITCODE"
 }

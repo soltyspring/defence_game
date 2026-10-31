@@ -25,6 +25,11 @@ This file is 07's yardstick for the three graphics owners: 03 (characters, anima
   - Tutorials are marked done, and each capture waits 3 s so transient toasts expire.
 - **Re-run proof:** a second ko_1x run in the same lock is pixel-identical on **27/27 files**, main frames and layer frames (`rerun_compare.json`).
 - **Baseline re-made 2026-11-01 02:5x–03:05** with the animation pass (§5), at the same SHA, through `tools/qa/art_compare.ps1`. The capture script sha256 is 3c092c46… and is recorded in every report (gate G2).
+- **G2 line-end fix (2026-11-01 06:5x).** The harness hash is now computed after normalising the text: UTF-8, BOM dropped, CRLF → LF, then sha256.
+  - Python `art_compare.canonical_sha256`, the capture script itself and the art_compare job (`<cap>/harness.json`, which also records the git blob id) all use this rule.
+  - Checked on LF, CRLF and CRLF+BOM copies of the same file: one canonical value (fc1ccf01…), where the raw sha256 values were 3 different ones.
+  - The committed baseline file (bbc839d blob) gives canonical 3c092c46…, the same as before, so the existing baseline and the 700692d table stay VALID (re-reported).
+  - A changed capture script is accepted only if `<baseline>/harness_accepted.json` lists its hash with proof that it renders the baseline SHA pixel-identically. A test with a foreign hash gives VOID.
   - Against the first set, 107 of 108 files are pixel-identical (`remake_vs_first.json`).
   - The one difference is `ko_2x_6_r10_boss.png`: 184 px in one 2x row at the top edge of a card. The HUD's card cooldown shade sits at a fractional height there and depends on real time. All battlefield layers are identical.
   - The evidence folder now holds the re-made frames and metrics.
@@ -107,7 +112,8 @@ How to read the rules:
 2. Start the capture. It runs detached under the PC-wide lock (`coordination/heavy_run_detached.ps1`) and returns at once:
 ```
 .\tools\qa\art_compare.ps1 -Sha <commit>                       # ko_1x (+ animation pass) while iterating
-.\tools\qa\art_compare.ps1 -Sha <commit> -Tags ko_1x,en_1x,ko_2x,en_2x   # final claim
+.\tools\qa\art_compare.ps1 -Sha <commit> -Tags ko_1x -NoAnim   # UI-only commits: no pose pass (fewer GPU frames)
+.\tools\qa\art_compare.ps1 -Sha <commit> -Tags ko_1x,en_1x,ko_2x,en_2x   # final claim (one tag per window, still one job)
 ```
    - The job makes a clean `git archive` of the commit with its own import (private APPDATA, import guard) and overlays 07's capture script.
    - It runs a headless dry check, then captures each tag on the secondary monitor.
@@ -167,3 +173,4 @@ These rules judge what the game draws on screen. 03's atlas Q5–Q8 measure the 
 | ad47eda | — | reference (baseline vs itself) | VALID, all SAME; FAIL rows are the baseline's own failures |
 | 700692d | 06-art-ui | ko/en × 1x/2x, VALID (G1–G3 OK) | UI changed where 06 said: menu logo (3.1 % ko / 4.1 % en of the frame), move buttons and skill plates (0.43–0.69 %). U1 unchanged (card badges are not built into ui_main yet). U2 HUD pixels +0.03–0.07 pp (PASS, but the trend is WORSE in r06/r08/r10). U3 0. No other owner's metric moved |
 | 90c9790 | 03 | not captured | tools/art/build.py only, no rendered asset changed (06 rebuilds ui_main next) |
+| ad47eda (layout) | — | ko_1x, layout baseline, VALID | new capture script (layout dump) proven render-identical; L1–L8 baseline: [art_compare/ad47eda-layout.md](art_compare/ad47eda-layout.md), rules in [LAYOUT.md](LAYOUT.md) |

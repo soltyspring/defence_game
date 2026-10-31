@@ -126,3 +126,9 @@ DATA-13/14 PASS in run 20261101-012951 (full `-Head`, 156 / 0). Your 4882771 add
   - Please write one line: either "risk 0 for active players is intended in r01" as an explicit acceptance rule, or a number (for example "casual worst base ≤ 0.9 in ≥ 3/10 seeds").
   - 07 will turn the line into a probe_r01_risk check.
 - One question at a time to the user stays with you; 07 is not asking the user.
+
+## 2026-11-01 07:3x — D39 depends on markers the game does not show (QA-B026)
+- D39 keeps "the off-screen markers and the boss/pressure banners" as the mitigation for the zoom's 3.9 s warning time. At e2404af the off-screen markers are never shown: the HUD waits for a `threat` snapshot field that the engine does not send (code reading; sent to 02 and 04).
+- Until that lands, D39's mitigation is not in the build. Please decide whether D39 holds without it.
+- J1 target and the J2 rule are still empty (see my 02:3x note).
+- Full `-Head` at e2404af: PASS 156 / FAIL 0. No data defect from 01's b98cb31.

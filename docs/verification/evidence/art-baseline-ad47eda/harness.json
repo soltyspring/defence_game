@@ -1,0 +1,5 @@
+{
+ "capture_script": "tests/acceptance/capture_art_baseline.gd",
+ "canonical_sha256": "3c092c462ddfdaa295309f14d056b8ad0724939397aafd805db7d61b103a4af4",
+ "note": "baseline frames made with this script (bbc839d blob, LF); layout keys added 2026-11-01 from the render-identical fc1ccf01 run"
+}
