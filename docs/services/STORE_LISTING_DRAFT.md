@@ -39,8 +39,20 @@ Play title and App Store app name use the same text. **KIPRIS class 9/41 search:
 
 Not chosen in Q3 (kept for history only, not store text): 빵집 기사단 / Bakery Knights; 빵집 기사단 대 곰팡이 군단 / Bakery Knights vs Mold Legion.
 
-## 2b. Home-screen (launcher) name vs store title — waiting for Q4 (01 asked the user)
-Current launcher name in the build: `Lane Defence` (export_presets.cfg `package/name`, project.godot `config/name`; the 07e97ca APK shows `application-label:'Lane Defence'` in every locale, aapt2 dump badging). **06 does not change it** (02 owns these files, and Q4 is unanswered). Whatever the answer is, `Lane Defence` should not ship, because it matches neither the store title nor the in-game title (`ui.title`).
+## 2b. Home-screen (launcher) name vs store title — Q4 DECIDED by user
+**User decision Q4, 2026-10-31 17:19 KST** (Codex chat, original words "빵집 기사단"; coordinator-to-06-services.md "사용자 결정 Q4"): option A. The launcher name is ko `빵집 기사단`, en `Bakery Knights`. The in-game title and the store title stay the full working title. The final store name still waits for the KIPRIS check.
+
+<!-- BEGIN launcher.ko -->
+빵집 기사단
+<!-- END launcher.ko -->
+
+<!-- BEGIN launcher.en -->
+Bakery Knights
+<!-- END launcher.en -->
+
+Relation checked by the lint (`launcher_label_note`): each launcher name equals the store title up to its ":" ("빵집 기사단" + ": 곰팡이 디펜스", "Bakery Knights" + ": Mold Defense"). Both are KIPRIS terms (T2/T3, T11/T12), and both pass the same banned-word, brand and Bread Defense checks as the store text. The APK check (`tests/services/test_services_android.gd` group `launcher_label`) reads the real label with aapt2 once 02 rebuilds.
+
+Current launcher name in the build: `Lane Defence` (export_presets.cfg `package/name`, project.godot `config/name`; the 07e97ca APK shows `application-label:'Lane Defence'` in every locale, aapt2 dump badging). **06 does not change it** (02 owns these files and applies Q4). It must not ship, because it matches neither the store title nor the in-game title (`ui.title`).
 
 What Play's rules say (official pages, checked 2026-10-31):
 | Rule (paraphrased) | Source |
@@ -50,7 +62,7 @@ What Play's rules say (official pages, checked 2026-10-31):
 | Title and developer name must not make users download the wrong app or imply a relationship with someone else; do not use another app's name in a misleading way | https://support.google.com/googleplay/android-developer/answer/13393723 (App title, Impersonation) |
 Content was rephrased for compliance with licensing restrictions.
 
-06 found **no rule that the launcher name must equal the store title**. The pages above treat them separately: the store name is set in Play Console, and the launcher name comes from the app. The risk to manage is misleading users. How each Q4 option looks against these rules (06 reading, not legal advice):
+06 found **no rule that the launcher name must equal the store title**. The pages above treat them separately: the store name is set in Play Console, and the launcher name comes from the app. The risk to manage is misleading users. How each Q4 option looked against these rules (06 reading, not legal advice; **the user chose A**):
 | Q4 option | Launcher name | Same as store title? | Policy reading |
 |---|---|---|---|
 | A | 빵집 기사단 / Bakery Knights | first part of it | fine: a user who installs "빵집 기사단: 곰팡이 디펜스" sees the start of the same name |

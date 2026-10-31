@@ -13,6 +13,7 @@ Version: 1 (2026-10-31). 06 does not ask the user. 01 asks these **one at a time
 | U7 | Remote analytics at launch: none / own minimal endpoint / vendor SDK (routed in M3) | Data safety (V1), consent | — |
 | U8 | Legal review of the Korean 개인정보 처리방침 and refund notice: who does it? | V5 could not be verified by tool; amendments reported effective 2026-09-11 | — |
 | U9 | Store title. **Working title DECIDED by user 2026-10-31 16:19 KST:** 빵집 기사단: 곰팡이 디펜스 / Bakery Knights: Mold Defense. Final store name only after a person runs the KIPRIS class 9 and 41 search (docs/services/KIPRIS_MANUAL_CHECK.md, NOT DONE) | Store listing; privacy policy {{APP_NAME}} | — (independent of U1–U8; theme A decided 2026-10-31 09:03) |
+| U10 | Launcher (home-screen) name. **DECIDED by user 2026-10-31 17:19 KST** (Q4 = A, original words "빵집 기사단"): ko 빵집 기사단 / en Bakery Knights; in-game and store titles keep the full working title. 02 applies it in the export settings; 06 checks the rebuilt APK label (test_services_android `launcher_label`, WAITING until then) | export_presets.cfg / project.godot (02); STORE_LISTING_DRAFT §2b | U9 (same KIPRIS check covers the short name: T2/T3, T11/T12) |
 
 Recommendation from 06 (not a decision): U1 first; for U6 option A until a server is budgeted; for U7 "none".
 

@@ -3,6 +3,8 @@ Version: 2. Searched **2026-10-31 09:15–09:25 KST** by 06-services. This is a 
 
 Update 2026-10-31 (Q3): the user chose the working title "빵집 기사단: 곰팡이 디펜스" / "Bakery Knights: Mold Defense" at 16:19 KST. The other four rows below are kept as history. The final store name waits for the KIPRIS class 9 and 41 search by a person: procedure, terms and empty record form in **docs/services/KIPRIS_MANUAL_CHECK.md**. Until that record is filled, the KIPRIS rows stay `NOT_CHECKED` (the lint enforces this).
 
+Update 2026-10-31 (Q4): the user chose the launcher (home-screen) name ko "빵집 기사단" / en "Bakery Knights" at 17:19 KST (Codex chat, original words "빵집 기사단"). The rows for these two names below are now in use again. They are the launcher names, not the store title. Their KIPRIS rows stay `NOT_CHECKED`; they are terms T2/T3 and T11/T12 in KIPRIS_MANUAL_CHECK.md.
+
 09's later store search (docs/research/product/SUCCESS_ANALYSIS.md §28) found the similar bread-themed game "Bread Defense / 빵어전" (ETERNAXCODE). It does not share our name; the wording overlap and how the store text avoids it are in STORE_LISTING_DRAFT.md §7.
 
 Machine-checked by `tests/services/test_services_listing.gd` group `name_search_log`: the working title in STORE_LISTING_DRAFT.md §2 has one row per source below, each with a date and a status from the fixed set.

@@ -23,7 +23,7 @@ Machine-checked by `tests/services/test_services_listing.gd` group `kipris_manua
 7. Tell 01 when done. 01 updates DECISIONS.md and asks the user to confirm the final name; 06 updates NAME_SEARCH_LOG.md and STORE_LISTING_DRAFT.md.
 
 ## 3. Search terms
-Spaces and punctuation change KIPRIS hits, so both forms are listed. "Similar" terms cover sound and meaning (for example "베이커리나이츠" is how "Bakery Knights" sounds in Korean).
+Spaces and punctuation change KIPRIS hits, so both forms are listed. "Similar" terms cover sound and meaning (for example "베이커리나이츠" is how "Bakery Knights" sounds in Korean). Since Q4 (user, 2026-10-31 17:19 KST), T2/T3 "빵집 기사단" and T11/T12 "Bakery Knights" are also the **launcher names**, so search them first.
 
 | T# | Term | Language | Kind |
 |---|---|---|---|
