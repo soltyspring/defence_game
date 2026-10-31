@@ -1,0 +1,1441 @@
+{
+ "before": {
+  "dir": "C:\\Users\\aghose\\AppData\\Local\\Temp\\a09\\cam_before_bases",
+  "root": "C:\\Users\\aghose\\AppData\\Local\\Temp\\a09\\head_676b105",
+  "res": {
+   "r10_110": {
+    "t": 110.016666666662,
+    "cam_x": 230.0,
+    "units": 17,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "ally": {
+     "px": 669,
+     "dE_median": 41.7,
+     "camo_pct": 6.0,
+     "dL_median": 22.1,
+     "ring_dL": 9.7,
+     "ring_dE": 12.9,
+     "slice_dL_median": 5.5,
+     "slice_dL_min": 4.5,
+     "unit_L_mean": 68.8,
+     "ring_L_mean": 59.1,
+     "inner_edge_density": 48.1
+    },
+    "enemy": null,
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 67.0,
+      "L_std": 17.8,
+      "C_mean": 39.4,
+      "chroma_hi_pct": 78.9,
+      "edge_density": 17.4
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 70.0,
+      "L_std": 21.9,
+      "C_mean": 28.6,
+      "chroma_hi_pct": 42.3,
+      "edge_density": 19.7
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 70.5,
+      "L_std": 19.4,
+      "C_mean": 23.6,
+      "chroma_hi_pct": 32.7,
+      "edge_density": 24.7
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 48.1,
+      "L_std": 10.2,
+      "C_mean": 37.1,
+      "chroma_hi_pct": 81.1,
+      "edge_density": 21.5
+     }
+    },
+    "base_player": {
+     "px": 6775,
+     "dE_median": 45.1,
+     "camo_pct": 8.0,
+     "dL_median": 21.2,
+     "ring_dL": 2.6,
+     "ring_dE": 8.7,
+     "slice_dL_median": 15.7,
+     "slice_dL_min": 2.3,
+     "unit_L_mean": 62.1,
+     "ring_L_mean": 64.7,
+     "inner_edge_density": 38.8,
+     "state": "idle",
+     "match_pct": 96.6
+    }
+   },
+   "base_player_damaged": {
+    "t": 110.016666666662,
+    "cam_x": 230.0,
+    "units": 17,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 0.4,
+      "x": 40.0
+     }
+    },
+    "ally": {
+     "px": 669,
+     "dE_median": 41.7,
+     "camo_pct": 6.0,
+     "dL_median": 22.1,
+     "ring_dL": 10.3,
+     "ring_dE": 13.7,
+     "slice_dL_median": 5.7,
+     "slice_dL_min": 4.5,
+     "unit_L_mean": 68.8,
+     "ring_L_mean": 58.5,
+     "inner_edge_density": 48.1
+    },
+    "enemy": null,
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 66.9,
+      "L_std": 17.9,
+      "C_mean": 39.4,
+      "chroma_hi_pct": 78.9,
+      "edge_density": 17.3
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 69.9,
+      "L_std": 22.0,
+      "C_mean": 28.5,
+      "chroma_hi_pct": 42.1,
+      "edge_density": 19.9
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 70.4,
+      "L_std": 19.5,
+      "C_mean": 23.5,
+      "chroma_hi_pct": 32.6,
+      "edge_density": 24.8
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 48.1,
+      "L_std": 10.2,
+      "C_mean": 37.1,
+      "chroma_hi_pct": 81.1,
+      "edge_density": 21.5
+     }
+    },
+    "base_player": {
+     "px": 6663,
+     "dE_median": 45.8,
+     "camo_pct": 8.1,
+     "dL_median": 21.2,
+     "ring_dL": 4.7,
+     "ring_dE": 10.8,
+     "slice_dL_median": 14.8,
+     "slice_dL_min": 2.3,
+     "unit_L_mean": 61.3,
+     "ring_L_mean": 66.0,
+     "inner_edge_density": 40.1,
+     "state": "damaged",
+     "match_pct": 96.6
+    }
+   },
+   "base_enemy_damaged": {
+    "t": 110.016666666662,
+    "cam_x": 1930.0,
+    "units": 17,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 0.4,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "ally": null,
+    "enemy": {
+     "px": 1208,
+     "dE_median": 31.6,
+     "camo_pct": 18.7,
+     "dL_median": 24.3,
+     "ring_dL": 1.5,
+     "ring_dE": 10.9,
+     "slice_dL_median": 3.4,
+     "slice_dL_min": 0.1,
+     "unit_L_mean": 43.8,
+     "ring_L_mean": 42.3,
+     "inner_edge_density": 38.9
+    },
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 66.9,
+      "L_std": 18.0,
+      "C_mean": 39.5,
+      "chroma_hi_pct": 78.9,
+      "edge_density": 17.4
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 68.8,
+      "L_std": 23.3,
+      "C_mean": 26.4,
+      "chroma_hi_pct": 37.4,
+      "edge_density": 19.3
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 65.9,
+      "L_std": 23.1,
+      "C_mean": 20.3,
+      "chroma_hi_pct": 25.0,
+      "edge_density": 21.3
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 46.6,
+      "L_std": 11.5,
+      "C_mean": 36.0,
+      "chroma_hi_pct": 80.0,
+      "edge_density": 19.6
+     }
+    },
+    "base_enemy": {
+     "px": 4269,
+     "dE_median": 57.6,
+     "camo_pct": 0.3,
+     "dL_median": 51.4,
+     "ring_dL": 36.1,
+     "ring_dE": 47.6,
+     "slice_dL_median": 38.0,
+     "slice_dL_min": 17.7,
+     "unit_L_mean": 33.9,
+     "ring_L_mean": 70.1,
+     "inner_edge_density": 17.6,
+     "state": "damaged",
+     "match_pct": 100.0
+    }
+   },
+   "base_player_ruined": {
+    "t": 110.016666666662,
+    "cam_x": 230.0,
+    "units": 17,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 0.0,
+      "x": 40.0
+     }
+    },
+    "ally": {
+     "px": 670,
+     "dE_median": 41.7,
+     "camo_pct": 6.0,
+     "dL_median": 21.2,
+     "ring_dL": 9.3,
+     "ring_dE": 12.7,
+     "slice_dL_median": 5.7,
+     "slice_dL_min": 0.7,
+     "unit_L_mean": 68.3,
+     "ring_L_mean": 59.0,
+     "inner_edge_density": 47.7
+    },
+    "enemy": null,
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 67.0,
+      "L_std": 17.9,
+      "C_mean": 39.4,
+      "chroma_hi_pct": 78.9,
+      "edge_density": 17.2
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 71.6,
+      "L_std": 21.7,
+      "C_mean": 27.2,
+      "chroma_hi_pct": 38.4,
+      "edge_density": 17.6
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 70.3,
+      "L_std": 19.7,
+      "C_mean": 23.5,
+      "chroma_hi_pct": 32.5,
+      "edge_density": 24.9
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 48.6,
+      "L_std": 10.4,
+      "C_mean": 37.2,
+      "chroma_hi_pct": 82.1,
+      "edge_density": 22.0
+     }
+    },
+    "base_player": {
+     "px": 2449,
+     "dE_median": 42.9,
+     "camo_pct": 12.5,
+     "dL_median": 20.1,
+     "ring_dL": 4.5,
+     "ring_dE": 7.8,
+     "slice_dL_median": 4.8,
+     "slice_dL_min": 2.5,
+     "unit_L_mean": 60.3,
+     "ring_L_mean": 64.8,
+     "inner_edge_density": 41.1,
+     "state": "ruined",
+     "match_pct": 91.8
+    }
+   },
+   "base_enemy_ruined": {
+    "t": 110.016666666662,
+    "cam_x": 1930.0,
+    "units": 17,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 0.0,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "ally": null,
+    "enemy": {
+     "px": 1357,
+     "dE_median": 49.5,
+     "camo_pct": 13.2,
+     "dL_median": 30.4,
+     "ring_dL": 11.0,
+     "ring_dE": 22.1,
+     "slice_dL_median": 13.1,
+     "slice_dL_min": 0.2,
+     "unit_L_mean": 44.2,
+     "ring_L_mean": 55.2,
+     "inner_edge_density": 40.9
+    },
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 66.9,
+      "L_std": 18.0,
+      "C_mean": 39.5,
+      "chroma_hi_pct": 79.0,
+      "edge_density": 17.3
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 71.6,
+      "L_std": 21.7,
+      "C_mean": 27.2,
+      "chroma_hi_pct": 38.4,
+      "edge_density": 17.6
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 68.4,
+      "L_std": 22.4,
+      "C_mean": 21.7,
+      "chroma_hi_pct": 27.7,
+      "edge_density": 22.2
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 47.4,
+      "L_std": 10.5,
+      "C_mean": 36.0,
+      "chroma_hi_pct": 79.8,
+      "edge_density": 21.1
+     }
+    },
+    "base_enemy": {
+     "px": 1422,
+     "dE_median": 46.3,
+     "camo_pct": 0.0,
+     "dL_median": 34.0,
+     "ring_dL": 37.5,
+     "ring_dE": 49.2,
+     "slice_dL_median": 39.0,
+     "slice_dL_min": 21.9,
+     "unit_L_mean": 29.6,
+     "ring_L_mean": 67.1,
+     "inner_edge_density": 17.6,
+     "state": "ruined",
+     "match_pct": 100.0
+    }
+   }
+  }
+ },
+ "after": {
+  "dir": "C:\\Users\\aghose\\AppData\\Local\\Temp\\a09\\cam_after",
+  "root": "C:\\Users\\aghose\\AppData\\Local\\Temp\\a09\\after_676b105",
+  "res": {
+   "r01_030": {
+    "t": 30.0166666666662,
+    "cam_x": 439.89217251901,
+    "units": 9,
+    "fx": 0,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 1060.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "ally": {
+     "px": 565,
+     "dE_median": 59.5,
+     "camo_pct": 1.8,
+     "dL_median": 39.4,
+     "ring_dL": 40.6,
+     "ring_dE": 41.2,
+     "slice_dL_median": 45.7,
+     "slice_dL_min": 24.4,
+     "unit_L_mean": 70.4,
+     "ring_L_mean": 29.8,
+     "inner_edge_density": 46.1
+    },
+    "enemy": {
+     "px": 371,
+     "dE_median": 44.7,
+     "camo_pct": 0.0,
+     "dL_median": 29.9,
+     "ring_dL": 23.6,
+     "ring_dE": 39.2,
+     "slice_dL_median": 21.1,
+     "slice_dL_min": 10.5,
+     "unit_L_mean": 53.0,
+     "ring_L_mean": 29.5,
+     "inner_edge_density": 47.3
+    },
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 78.6,
+      "L_std": 23.9,
+      "C_mean": 16.5,
+      "chroma_hi_pct": 4.7,
+      "edge_density": 17.7
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 61.2,
+      "L_std": 25.7,
+      "C_mean": 24.0,
+      "chroma_hi_pct": 12.1,
+      "edge_density": 20.0
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 29.4,
+      "L_std": 7.8,
+      "C_mean": 26.5,
+      "chroma_hi_pct": 1.4,
+      "edge_density": 13.6
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 33.6,
+      "L_std": 1.1,
+      "C_mean": 28.9,
+      "chroma_hi_pct": 0.3,
+      "edge_density": 0.7
+     }
+    }
+   },
+   "r01_060": {
+    "t": 60.0166666666645,
+    "cam_x": 632.833333333334,
+    "units": 13,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 1060.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "ally": {
+     "px": 747,
+     "dE_median": 59.5,
+     "camo_pct": 3.7,
+     "dL_median": 39.4,
+     "ring_dL": 39.4,
+     "ring_dE": 40.3,
+     "slice_dL_median": 35.3,
+     "slice_dL_min": 6.9,
+     "unit_L_mean": 69.2,
+     "ring_L_mean": 29.7,
+     "inner_edge_density": 48.7
+    },
+    "enemy": {
+     "px": 373,
+     "dE_median": 44.7,
+     "camo_pct": 2.7,
+     "dL_median": 26.6,
+     "ring_dL": 19.6,
+     "ring_dE": 34.1,
+     "slice_dL_median": 21.1,
+     "slice_dL_min": 9.3,
+     "unit_L_mean": 48.0,
+     "ring_L_mean": 28.4,
+     "inner_edge_density": 52.8
+    },
+    "fx_cover_of_units_pct": 0.4,
+    "fx_px": 8,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 78.6,
+      "L_std": 24.1,
+      "C_mean": 16.6,
+      "chroma_hi_pct": 4.8,
+      "edge_density": 17.6
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 61.2,
+      "L_std": 25.7,
+      "C_mean": 24.0,
+      "chroma_hi_pct": 12.1,
+      "edge_density": 20.0
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 29.4,
+      "L_std": 7.8,
+      "C_mean": 26.5,
+      "chroma_hi_pct": 1.4,
+      "edge_density": 13.6
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 33.6,
+      "L_std": 1.1,
+      "C_mean": 28.9,
+      "chroma_hi_pct": 0.3,
+      "edge_density": 0.7
+     }
+    }
+   },
+   "r06_046": {
+    "t": 46.0166666666653,
+    "cam_x": 1041.63405884051,
+    "units": 14,
+    "fx": 0,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 1860.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "ally": {
+     "px": 855,
+     "dE_median": 44.5,
+     "camo_pct": 7.5,
+     "dL_median": 26.3,
+     "ring_dL": 19.4,
+     "ring_dE": 20.7,
+     "slice_dL_median": 15.5,
+     "slice_dL_min": 9.3,
+     "unit_L_mean": 48.9,
+     "ring_L_mean": 29.5,
+     "inner_edge_density": 56.8
+    },
+    "enemy": {
+     "px": 886,
+     "dE_median": 44.7,
+     "camo_pct": 0.0,
+     "dL_median": 26.6,
+     "ring_dL": 19.4,
+     "ring_dE": 37.0,
+     "slice_dL_median": 27.2,
+     "slice_dL_min": 2.7,
+     "unit_L_mean": 48.4,
+     "ring_L_mean": 29.0,
+     "inner_edge_density": 36.9
+    },
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 78.5,
+      "L_std": 24.3,
+      "C_mean": 16.6,
+      "chroma_hi_pct": 4.8,
+      "edge_density": 17.6
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 61.2,
+      "L_std": 25.7,
+      "C_mean": 24.0,
+      "chroma_hi_pct": 12.2,
+      "edge_density": 20.0
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 29.4,
+      "L_std": 7.8,
+      "C_mean": 26.5,
+      "chroma_hi_pct": 1.4,
+      "edge_density": 13.5
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 33.6,
+      "L_std": 1.1,
+      "C_mean": 28.9,
+      "chroma_hi_pct": 0.3,
+      "edge_density": 0.7
+     }
+    }
+   },
+   "r06_075": {
+    "t": 75.0166666666637,
+    "cam_x": 1218.96662822364,
+    "units": 21,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 1860.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "ally": {
+     "px": 567,
+     "dE_median": 57.1,
+     "camo_pct": 1.4,
+     "dL_median": 39.4,
+     "ring_dL": 36.8,
+     "ring_dE": 37.7,
+     "slice_dL_median": 37.6,
+     "slice_dL_min": 15.9,
+     "unit_L_mean": 67.4,
+     "ring_L_mean": 30.6,
+     "inner_edge_density": 47.5
+    },
+    "enemy": {
+     "px": 919,
+     "dE_median": 36.9,
+     "camo_pct": 9.1,
+     "dL_median": 24.5,
+     "ring_dL": 6.5,
+     "ring_dE": 24.9,
+     "slice_dL_median": 4.1,
+     "slice_dL_min": 1.7,
+     "unit_L_mean": 35.7,
+     "ring_L_mean": 29.2,
+     "inner_edge_density": 38.9
+    },
+    "fx_cover_of_units_pct": 0.4,
+    "fx_px": 8,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 77.3,
+      "L_std": 25.4,
+      "C_mean": 16.7,
+      "chroma_hi_pct": 5.4,
+      "edge_density": 17.5
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 61.2,
+      "L_std": 25.7,
+      "C_mean": 24.0,
+      "chroma_hi_pct": 12.1,
+      "edge_density": 20.0
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 29.4,
+      "L_std": 7.8,
+      "C_mean": 26.5,
+      "chroma_hi_pct": 1.4,
+      "edge_density": 13.6
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 33.6,
+      "L_std": 1.1,
+      "C_mean": 28.9,
+      "chroma_hi_pct": 0.3,
+      "edge_density": 0.7
+     }
+    }
+   },
+   "r10_060": {
+    "t": 60.0166666666645,
+    "cam_x": 1056.6415859994,
+    "units": 16,
+    "fx": 0,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "ally": {
+     "px": 623,
+     "dE_median": 60.5,
+     "camo_pct": 2.2,
+     "dL_median": 52.0,
+     "ring_dL": 41.2,
+     "ring_dE": 41.8,
+     "slice_dL_median": 46.2,
+     "slice_dL_min": 21.8,
+     "unit_L_mean": 70.8,
+     "ring_L_mean": 29.6,
+     "inner_edge_density": 47.7
+    },
+    "enemy": {
+     "px": 206,
+     "dE_median": 49.1,
+     "camo_pct": 0.0,
+     "dL_median": 28.0,
+     "ring_dL": 21.0,
+     "ring_dE": 42.7,
+     "slice_dL_median": 23.0,
+     "slice_dL_min": 17.2,
+     "unit_L_mean": 50.8,
+     "ring_L_mean": 29.8,
+     "inner_edge_density": 54.4
+    },
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 82.2,
+      "L_std": 20.2,
+      "C_mean": 16.3,
+      "chroma_hi_pct": 4.0,
+      "edge_density": 16.9
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 61.2,
+      "L_std": 25.7,
+      "C_mean": 24.0,
+      "chroma_hi_pct": 12.2,
+      "edge_density": 20.0
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 29.4,
+      "L_std": 7.8,
+      "C_mean": 26.5,
+      "chroma_hi_pct": 1.4,
+      "edge_density": 13.6
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 33.6,
+      "L_std": 1.1,
+      "C_mean": 28.9,
+      "chroma_hi_pct": 0.3,
+      "edge_density": 0.7
+     }
+    }
+   },
+   "r10_110": {
+    "t": 110.016666666662,
+    "cam_x": 230.0,
+    "units": 18,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "ally": {
+     "px": 667,
+     "dE_median": 45.8,
+     "camo_pct": 2.1,
+     "dL_median": 29.8,
+     "ring_dL": 24.2,
+     "ring_dE": 25.0,
+     "slice_dL_median": 28.7,
+     "slice_dL_min": 12.4,
+     "unit_L_mean": 67.2,
+     "ring_L_mean": 43.0,
+     "inner_edge_density": 46.9
+    },
+    "enemy": null,
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 81.4,
+      "L_std": 20.5,
+      "C_mean": 16.8,
+      "chroma_hi_pct": 4.2,
+      "edge_density": 17.6
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 61.9,
+      "L_std": 25.9,
+      "C_mean": 25.5,
+      "chroma_hi_pct": 16.2,
+      "edge_density": 21.8
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 35.1,
+      "L_std": 18.4,
+      "C_mean": 26.9,
+      "chroma_hi_pct": 6.7,
+      "edge_density": 17.2
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 34.8,
+      "L_std": 9.8,
+      "C_mean": 28.5,
+      "chroma_hi_pct": 2.1,
+      "edge_density": 3.6
+     }
+    },
+    "base_player": {
+     "px": 6840,
+     "dE_median": 51.2,
+     "camo_pct": 6.7,
+     "dL_median": 37.3,
+     "ring_dL": 25.4,
+     "ring_dE": 29.0,
+     "slice_dL_median": 38.7,
+     "slice_dL_min": 6.2,
+     "unit_L_mean": 71.7,
+     "ring_L_mean": 46.3,
+     "inner_edge_density": 34.1,
+     "state": "idle",
+     "match_pct": 96.6
+    }
+   },
+   "base_player_damaged": {
+    "t": 110.016666666662,
+    "cam_x": 230.0,
+    "units": 18,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 0.4,
+      "x": 40.0
+     }
+    },
+    "ally": {
+     "px": 667,
+     "dE_median": 47.1,
+     "camo_pct": 2.1,
+     "dL_median": 33.2,
+     "ring_dL": 24.6,
+     "ring_dE": 25.4,
+     "slice_dL_median": 28.7,
+     "slice_dL_min": 12.4,
+     "unit_L_mean": 67.2,
+     "ring_L_mean": 42.6,
+     "inner_edge_density": 46.9
+    },
+    "enemy": null,
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 81.5,
+      "L_std": 20.5,
+      "C_mean": 16.7,
+      "chroma_hi_pct": 4.1,
+      "edge_density": 17.5
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 61.8,
+      "L_std": 26.1,
+      "C_mean": 25.1,
+      "chroma_hi_pct": 15.2,
+      "edge_density": 22.1
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 34.9,
+      "L_std": 18.3,
+      "C_mean": 26.9,
+      "chroma_hi_pct": 6.6,
+      "edge_density": 17.3
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 34.8,
+      "L_std": 9.8,
+      "C_mean": 28.5,
+      "chroma_hi_pct": 2.1,
+      "edge_density": 3.6
+     }
+    },
+    "base_player": {
+     "px": 6186,
+     "dE_median": 51.2,
+     "camo_pct": 8.3,
+     "dL_median": 37.3,
+     "ring_dL": 26.3,
+     "ring_dE": 31.7,
+     "slice_dL_median": 37.9,
+     "slice_dL_min": 0.7,
+     "unit_L_mean": 71.7,
+     "ring_L_mean": 45.4,
+     "inner_edge_density": 36.7,
+     "state": "damaged",
+     "match_pct": 96.3
+    }
+   },
+   "base_enemy_damaged": {
+    "t": 110.016666666662,
+    "cam_x": 1930.0,
+    "units": 18,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 0.4,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "ally": null,
+    "enemy": {
+     "px": 1204,
+     "dE_median": 31.6,
+     "camo_pct": 18.3,
+     "dL_median": 24.3,
+     "ring_dL": 12.7,
+     "ring_dE": 18.4,
+     "slice_dL_median": 11.9,
+     "slice_dL_min": 3.2,
+     "unit_L_mean": 44.3,
+     "ring_L_mean": 31.6,
+     "inner_edge_density": 38.6
+    },
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 81.5,
+      "L_std": 20.5,
+      "C_mean": 16.8,
+      "chroma_hi_pct": 4.1,
+      "edge_density": 17.5
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 60.4,
+      "L_std": 26.2,
+      "C_mean": 23.4,
+      "chroma_hi_pct": 11.6,
+      "edge_density": 21.1
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 29.1,
+      "L_std": 9.8,
+      "C_mean": 24.0,
+      "chroma_hi_pct": 1.2,
+      "edge_density": 13.8
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 32.2,
+      "L_std": 5.2,
+      "C_mean": 27.3,
+      "chroma_hi_pct": 0.3,
+      "edge_density": 1.7
+     }
+    },
+    "base_enemy": {
+     "px": 3540,
+     "dE_median": 38.7,
+     "camo_pct": 2.4,
+     "dL_median": 16.1,
+     "ring_dL": 15.7,
+     "ring_dE": 28.3,
+     "slice_dL_median": 10.5,
+     "slice_dL_min": 0.5,
+     "unit_L_mean": 34.8,
+     "ring_L_mean": 50.5,
+     "inner_edge_density": 14.4,
+     "state": "damaged",
+     "match_pct": 100.0
+    }
+   },
+   "base_player_ruined": {
+    "t": 110.016666666662,
+    "cam_x": 230.0,
+    "units": 18,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 0.0,
+      "x": 40.0
+     }
+    },
+    "ally": {
+     "px": 670,
+     "dE_median": 43.1,
+     "camo_pct": 2.1,
+     "dL_median": 32.9,
+     "ring_dL": 25.3,
+     "ring_dE": 25.9,
+     "slice_dL_median": 28.7,
+     "slice_dL_min": 15.2,
+     "unit_L_mean": 67.2,
+     "ring_L_mean": 42.0,
+     "inner_edge_density": 46.8
+    },
+    "enemy": null,
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 81.4,
+      "L_std": 20.6,
+      "C_mean": 16.7,
+      "chroma_hi_pct": 4.0,
+      "edge_density": 17.4
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 61.2,
+      "L_std": 25.8,
+      "C_mean": 24.0,
+      "chroma_hi_pct": 12.3,
+      "edge_density": 20.3
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 34.7,
+      "L_std": 18.1,
+      "C_mean": 26.9,
+      "chroma_hi_pct": 6.7,
+      "edge_density": 17.5
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 34.3,
+      "L_std": 8.4,
+      "C_mean": 28.6,
+      "chroma_hi_pct": 2.8,
+      "edge_density": 4.3
+     }
+    },
+    "base_player": {
+     "px": 2989,
+     "dE_median": 41.7,
+     "camo_pct": 15.3,
+     "dL_median": 37.3,
+     "ring_dL": 31.5,
+     "ring_dE": 32.8,
+     "slice_dL_median": 38.5,
+     "slice_dL_min": 14.1,
+     "unit_L_mean": 66.8,
+     "ring_L_mean": 35.3,
+     "inner_edge_density": 38.5,
+     "state": "ruined",
+     "match_pct": 92.4
+    }
+   },
+   "base_enemy_ruined": {
+    "t": 110.016666666662,
+    "cam_x": 1930.0,
+    "units": 18,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 0.0,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "ally": null,
+    "enemy": {
+     "px": 1313,
+     "dE_median": 38.8,
+     "camo_pct": 12.6,
+     "dL_median": 22.4,
+     "ring_dL": 12.7,
+     "ring_dE": 23.3,
+     "slice_dL_median": 10.1,
+     "slice_dL_min": 0.8,
+     "unit_L_mean": 44.3,
+     "ring_L_mean": 31.6,
+     "inner_edge_density": 40.3
+    },
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 81.4,
+      "L_std": 20.5,
+      "C_mean": 16.7,
+      "chroma_hi_pct": 4.0,
+      "edge_density": 17.4
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 61.2,
+      "L_std": 25.7,
+      "C_mean": 24.0,
+      "chroma_hi_pct": 12.2,
+      "edge_density": 20.1
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 29.0,
+      "L_std": 9.3,
+      "C_mean": 24.6,
+      "chroma_hi_pct": 1.2,
+      "edge_density": 14.6
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 32.8,
+      "L_std": 5.2,
+      "C_mean": 27.3,
+      "chroma_hi_pct": 0.3,
+      "edge_density": 2.8
+     }
+    },
+    "base_enemy": {
+     "px": 1693,
+     "dE_median": 38.7,
+     "camo_pct": 0.0,
+     "dL_median": 11.6,
+     "ring_dL": 2.8,
+     "ring_dE": 34.3,
+     "slice_dL_median": 4.0,
+     "slice_dL_min": 1.8,
+     "unit_L_mean": 28.7,
+     "ring_L_mean": 31.5,
+     "inner_edge_density": 14.0,
+     "state": "ruined",
+     "match_pct": 100.0
+    }
+   }
+  }
+ },
+ "same_state": {
+  "r10_110": {
+   "units_identical": false,
+   "t_before": 110.016666666662,
+   "t_after": 110.016666666662,
+   "cam_identical": true
+  },
+  "base_player_damaged": {
+   "units_identical": false,
+   "t_before": 110.016666666662,
+   "t_after": 110.016666666662,
+   "cam_identical": true
+  },
+  "base_enemy_damaged": {
+   "units_identical": false,
+   "t_before": 110.016666666662,
+   "t_after": 110.016666666662,
+   "cam_identical": true
+  },
+  "base_player_ruined": {
+   "units_identical": false,
+   "t_before": 110.016666666662,
+   "t_after": 110.016666666662,
+   "cam_identical": true
+  },
+  "base_enemy_ruined": {
+   "units_identical": false,
+   "t_before": 110.016666666662,
+   "t_after": 110.016666666662,
+   "cam_identical": true
+  }
+ }
+}

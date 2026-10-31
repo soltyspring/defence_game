@@ -1,0 +1,46 @@
+{
+ "ground_y": 295,
+ "head_band_y": [
+  255,
+  290
+ ],
+ "lane_band_y": [
+  284,
+  298
+ ],
+ "lines": {
+  "sky_pct_max": 35.0,
+  "band_L35_pct_min_info_only": 90.0
+ },
+ "meadow": {
+  "sky_pct": 52.1,
+  "sky_rows_top": 168,
+  "head_band_L35_pct": 44.4,
+  "head_band_L_min": 17.4,
+  "lane_band_L35_pct": 94.0,
+  "lane_band_L_min": 33.4
+ },
+ "village_v1": {
+  "sky_pct": 24.7,
+  "sky_rows_top": 80,
+  "head_band_L35_pct": 94.7,
+  "head_band_L_min": 33.4,
+  "lane_band_L35_pct": 94.1,
+  "lane_band_L_min": 33.4
+ },
+ "village": {
+  "sky_pct": 26.1,
+  "sky_rows_top": 89,
+  "head_band_L35_pct": 27.5,
+  "head_band_L_min": 17.4,
+  "lane_band_L35_pct": 3.9,
+  "lane_band_L_min": 17.4
+ },
+ "pass": {
+  "sky": true
+ },
+ "info_old_dark_biome_line": {
+  "head_band": false,
+  "lane_band": false
+ }
+}

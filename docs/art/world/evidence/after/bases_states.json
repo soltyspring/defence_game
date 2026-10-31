@@ -1,0 +1,50 @@
+{
+ "v1_player": {
+  "damaged": {
+   "changed_px_pct_of_idle": 2.7,
+   "silhouette_area_ratio": 1.0,
+   "cue_dE_to_idle_mean_median": 26.3
+  },
+  "ruined": {
+   "changed_px_pct_of_idle": 65.2,
+   "silhouette_area_ratio": 0.41,
+   "cue_dE_to_idle_mean_median": 26.3
+  }
+ },
+ "v1_enemy": {
+  "damaged": {
+   "changed_px_pct_of_idle": 3.5,
+   "silhouette_area_ratio": 1.0,
+   "cue_dE_to_idle_mean_median": 14.5
+  },
+  "ruined": {
+   "changed_px_pct_of_idle": 72.2,
+   "silhouette_area_ratio": 0.36,
+   "cue_dE_to_idle_mean_median": 14.5
+  }
+ },
+ "v2_player": {
+  "damaged": {
+   "changed_px_pct_of_idle": 16.8,
+   "silhouette_area_ratio": 0.91,
+   "cue_dE_to_idle_mean_median": 37.4
+  },
+  "ruined": {
+   "changed_px_pct_of_idle": 61.3,
+   "silhouette_area_ratio": 0.47,
+   "cue_dE_to_idle_mean_median": 33.3
+  }
+ },
+ "v2_enemy": {
+  "damaged": {
+   "changed_px_pct_of_idle": 27.2,
+   "silhouette_area_ratio": 0.86,
+   "cue_dE_to_idle_mean_median": 27.1
+  },
+  "ruined": {
+   "changed_px_pct_of_idle": 65.5,
+   "silhouette_area_ratio": 0.44,
+   "cue_dE_to_idle_mean_median": 27.1
+  }
+ }
+}

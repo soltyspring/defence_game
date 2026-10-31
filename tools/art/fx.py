@@ -353,3 +353,71 @@ SETS = {
     "fire": (fx_fire, 12, 16, (6, 15)),
     "coin": (coin, 12, 12, (6, 6)),
 }
+
+
+# =============================================================================
+# art-world 1 (09-art-world, 2026-11-01, docs/art/world/WORLD_AUDIT.md P5): impacts that do not hide the unit.
+# Same frame sizes, pivots, frame counts and fps as before. hit_spark: hollow burst (no filled centre, no rays straight
+# up/down where they would lie on the body), thin rays from radius 3 outward, orange inner end + pale-gold tip so it
+# reads on cream bread AND on grey mould. explosion: one dashed 1 px ring with short rays outside it, a 3 px flash only
+# in frame 0, rim-only smoke.
+# =============================================================================
+_DIRS8 = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)]
+
+
+def hit_spark_v2():
+    frames = []
+    H6 = [(1, 0), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]       # no straight up/down: those rays lie on the body
+    D4 = [(1, 1), (-1, -1), (1, -1), (-1, 1)]
+    spec = [  # (directions, inner radius, outer radius, inner key, outer key)
+        (D4, 2, 2, "Z", "Z"),
+        (H6, 3, 4, "e", "Z"),
+        (H6, 5, 6, "e", "Z"),
+        (D4, 6, 6, "e", "e"),
+        ([(1, 0), (-1, 0)], 7, 7, "e", "e"),
+    ]
+    for dirs, r0, r1, k0, k1 in spec:
+        cv = _cv(16, 16)
+        for (dx, dy) in dirs:
+            diag = dx != 0 and dy != 0
+            for r in range(r0, r1 + 1):
+                rr = r - 1 if diag else r            # diagonals one step shorter (same visual length)
+                if rr < 1:
+                    continue
+                cv.put(8 + dx * rr, 8 + dy * rr, c(k1 if r == r1 else k0))
+        frames.append(cv)
+    return {"play": dict(frames=frames, fps=20, loop=False)}
+
+
+def explosion_v2():
+    frames = []
+    for i in range(7):
+        cv = _cv(40, 40)
+        cx, cy = 20, 22
+        if i == 0:
+            cv.ellipse(cx, cy, 3, 2.6, c("Z"))
+            cv.put(cx, cy, c("W"))
+        elif i <= 3:
+            r = [0, 8, 12, 15][i]
+            for a in range(0, 360, 4):                # dashed ring: 2 of every 3 steps
+                if (a // 4) % 3 == 2:
+                    continue
+                x = cx + round(math.cos(math.radians(a)) * r)
+                y = cy + round(math.sin(math.radians(a)) * r * 0.85)
+                cv.put(x, y, c("E" if i < 3 else "e"))
+            for a in range(0, 360, 45):               # short rays outside the ring
+                for t in (1, 2):
+                    x = cx + round(math.cos(math.radians(a + 20 * i)) * (r + t))
+                    y = cy + round(math.sin(math.radians(a + 20 * i)) * (r + t) * 0.85)
+                    cv.put(x, y, c("Z" if t == 1 else "e"))
+        else:
+            for (dx, dy) in [(-13, -4), (12, -7), (1, -15)]:
+                cv.ellipse(cx + dx, cy + dy - (i - 4) * 2, 2.6 - (i - 4) * 0.5, 2.0 - (i - 4) * 0.4, c("X"))
+            cv.dissolve(6 + (i - 4) * 4)
+        frames.append(cv)
+    return {"play": dict(frames=frames, fps=16, loop=False)}
+
+
+hit_spark_v1, explosion_v1 = hit_spark, explosion
+SETS["hit_spark"] = (hit_spark_v2, 16, 16, (8, 8))
+SETS["explosion"] = (explosion_v2, 40, 40, (20, 22))

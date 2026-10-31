@@ -431,3 +431,258 @@ def mine(phase: int) -> Canvas:
     cv.put(34, 12, c("Z" if phase == 0 else "Y"))
     cv.outline(c("K"))
     return cv
+
+
+# =============================================================================
+# art-world 1 (09-art-world, 2026-11-01, docs/art/world/WORLD_AUDIT.md C3): both bases redrawn for a value that
+# separates from the new street (warm shadow at the bottom, lit plaster and pale haze above) and for damage states
+# that change the SILHOUETTE, not only a few pixels. Same contract: 96x128, pivot (48,127), idle/damaged/ruined x2,
+# keep gate faces RIGHT, nest cave faces LEFT, no_flip. build.py still applies theme.BAKERY_KEEP / theme.MOULD_FORT,
+# so the keep is drawn only in keys those remaps leave alone (o O w T U R r E e Z K h H) and the nest only in mould
+# keys (D l t z q Q a A X x K), which theme.ENEMY does not touch.
+# =============================================================================
+def _brick_wall(cv, x0, y0, x1, y1, rng, base="T", mortar="U", hi="U", bw=6, bh=4, edge="o"):
+    for y in range(y0, y1):
+        row = (y - y0) // bh
+        off = (bw // 2) * (row % 2)
+        for x in range(x0, x1):
+            k = base
+            if (y - y0) % bh == bh - 1 or (x - x0 + off) % bw == 0:
+                k = mortar
+            elif (y - y0) % bh == 0 and (x - x0 + off) % bw in (1, 2):
+                k = hi
+            cv.put(x, y, c(k))
+    cv.vline(x0, y0, y1 - 1, c(hi))
+    cv.vline(x1 - 1, y0, y1 - 1, c(edge))
+
+
+def _crenels(cv, x0, x1, y, h, w, gap, skip=()):
+    x, i = x0, 0
+    while x + w <= x1:
+        if i not in skip:
+            cv.rect(x, y - h, w, h, c("T"))
+            cv.hline(x, x + w - 1, y - h, c("U"))
+            cv.vline(x + w - 1, y - h, y - 1, c("o"))
+        x += w + gap
+        i += 1
+
+
+def _cone_roof(cv, cx, top, base_y, half_w):
+    for y in range(top, base_y + 1):
+        t = (y - top) / max(1, base_y - top)
+        hw = int(round(1 + t * half_w))
+        for x in range(cx - hw, cx + hw + 1):
+            k = "R"
+            if x < cx - hw // 3:
+                k = "E"
+            if x > cx + hw // 2:
+                k = "r"
+            if (y - top) % 4 == 3:
+                k = "r"
+            cv.put(x, y, c(k))
+
+
+def _loaf_sign(cv, cx, cy):
+    """Big round loaf with three score marks: the bakery identity at a glance."""
+    cv.ellipse(cx, cy, 9, 5.5, c("O"))
+    cv.ellipse(cx - 0.5, cy - 0.5, 8, 4.5, c("o"))
+    cv.ellipse(cx - 2.5, cy - 2, 4, 2, c("T"))
+    for dx in (-4, 0, 4):
+        cv.line(cx + dx - 1, cy + 2, cx + dx + 1, cy - 2, c("U"))
+
+
+def _flag(cv, x, y, phase, length=8, w=6):
+    cv.vline(x - 1, y - 3, y + length + 2, c("w"))
+    cv.put(x - 1, y - 4, c("Z"))
+    for j in range(length):
+        sway = int(round(np.sin((j / 3.0) + phase * np.pi))) if j > 1 else 0
+        for i in range(w):
+            if j == length - 1 and i % 2 == 1:
+                continue
+            cv.put(x + i + sway, y + j, c("R" if i < w - 1 else "r"))
+    cv.put(x + 2, y + 3, c("Z")); cv.put(x + 3, y + 3, c("Z")); cv.put(x + 2, y + 4, c("Z")); cv.put(x + 3, y + 4, c("U"))
+
+
+def _smoke(cv, x, y, phase, n=3):
+    for k in range(n):
+        r = 2.2 + k * 0.9
+        cv.ellipse(x + (k if phase % 2 else -k), y - k * 5, r, r * 0.8, c("h" if k else "w"))
+        cv.put(x - 1 + (k if phase % 2 else -k), y - k * 5 - 1, c("H"))
+
+
+KEEP_PLINTH = dict(base="O", mortar="w", hi="o", edge="w")   # dark crust course behind the units (WORLD_AUDIT §6, keep_plinth_ab.py)
+
+
+def keep_v2(state: str, phase: int) -> Canvas:
+    rng = np.random.default_rng(1101)
+    cv = Canvas(W, H)
+    g = H - 1
+    cv.ellipse(48, g + 2, 46, 6, c("O"))                                    # foundation mound
+    hurt = state in ("damaged", "ruined")
+    # left tower: tall, red cone roof (the silhouette landmark)
+    PL = 88                                                                 # plinth row (screen y ~250): units walk in
+    _brick_wall(cv, 8, 34, 34, PL, rng)                                     # front of the rows below it, so they are a
+    _brick_wall(cv, 8, PL, 34, g - 1, rng, **KEEP_PLINTH)          # dark course (cream units stay visible)
+    if not hurt:
+        _cone_roof(cv, 21, 4, 34, 15)
+        _flag(cv, 21, 0, phase)
+    # main keep block
+    _brick_wall(cv, 30, 54, 80, PL, rng)
+    _brick_wall(cv, 30, PL, 80, g - 1, rng, **KEEP_PLINTH)
+    _crenels(cv, 30, 82, 54, 6, 6, 3, skip=(() if not hurt else (1, 3, 4)))
+    # front gate tower (right)
+    _brick_wall(cv, 64, 66, 92, PL, rng, base="U", mortar="T", hi="W", edge="T")
+    _brick_wall(cv, 64, PL, 92, g - 1, rng, **KEEP_PLINTH)
+    for x in range(8, 92):                                                  # cream string course on top of the plinth
+        if cv.get(x, PL):
+            cv.put(x, PL, c("U"))
+    _crenels(cv, 64, 93, 66, 5, 5, 3, skip=(() if not hurt else (0, 2)))
+    for x in range(64, 92):                                                 # flour-white string course
+        cv.put(x, 72, c("U"))
+    # gate (faces right): cream stone arch around a lit plank door (it sits in the dark lower course)
+    gx0, gx1, gtop = 70, 86, 96
+    cx = (gx0 + gx1) / 2
+    for y in range(gtop - 2, g - 1):                                        # arch frame, 2 px wider than the door
+        for x in range(gx0 - 2, gx1 + 2):
+            dy = y - (gtop - 2)
+            if dy < 7 and abs(x + 0.5 - cx) > 3 + dy * 1.4:
+                continue
+            cv.put(x, y, c("U" if (x + y) % 5 else "T"))
+    for y in range(gtop, g - 1):
+        for x in range(gx0, gx1):
+            dy = y - gtop
+            if dy < 6 and abs(x + 0.5 - cx) > 1 + dy * 1.4:
+                continue
+            k = "o" if (x - gx0) % 4 else "O"
+            if dy in (9, 19):
+                k = "w"
+            cv.put(x, y, c(k))
+    # windows: dark with a warm oven glow
+    for (wx, wy) in [(18, 46), (18, 66), (40, 70), (54, 70), (40, 90)]:
+        cv.rect(wx, wy, 4, 6, c("K"))
+        cv.put(wx + 1, wy + 3, c("e")); cv.put(wx + 2, wy + 3, c("Z")); cv.put(wx + 1, wy + 4, c("E")); cv.put(wx + 2, wy + 4, c("e"))
+        cv.hline(wx - 1, wx + 4, wy - 1, c("U"))
+    _loaf_sign(cv, 52, 62)
+    if hurt:
+        # broken tower top (jagged), holes, cracks: the outline changes, not only the colours
+        top = 30 if state == "damaged" else 0
+        for x in range(6, 37):
+            jag = top + int(rng.integers(0, 7)) + (6 if x > 22 else 0)
+            cv.a[:jag, x] = 0
+        damage_holes(cv, rng, (10, 40, 80, 112), 10, col="w", inner="K")
+        for _ in range(5):
+            crack(cv, rng, int(rng.integers(30, 90)), int(rng.integers(58, 84)), int(rng.integers(8, 16)))
+        for x in range(30, 82):                                             # scorched band under the crenels
+            if cv.get(x, 60) and (x * 3) % 5:
+                cv.put(x, 60, c("w")); cv.put(x, 61, c("h"))
+    if state == "ruined":
+        ruin_cut(cv, rng, 88, jag=7)
+        rubble(cv, rng, 2, 94, g, cols=("o", "O", "T", "w"))
+    cv.outline(c("K"))
+    if state == "damaged":
+        fire(cv, 20, 40, phase, 2)
+        fire(cv, 60, 58, phase + 1, 2)
+        fire(cv, 84, 70, phase, 1)
+        _smoke(cv, 20, 30, phase)
+        _smoke(cv, 61, 48, phase + 1)
+    if state == "ruined":
+        fire(cv, 36, 96, phase, 2)
+        fire(cv, 70, 98, phase + 1, 2)
+        _smoke(cv, 37, 86, phase)
+    return cv
+
+
+NEST2_BLOBS = [(52, 104, 42, 28), (22, 110, 20, 20), (80, 98, 16, 30), (60, 78, 24, 20), (36, 84, 18, 16), (12, 102, 10, 22)]
+
+
+def nest_v2(state: str, phase: int) -> Canvas:
+    rng = np.random.default_rng(2103)
+    cv = Canvas(W, H)
+    g = H - 1
+    hurt = state in ("damaged", "ruined")
+    blobs = NEST2_BLOBS if not hurt else [(cx, cy + (6 if i in (3, 4) else 0), rx, ry - (6 if i in (3, 4) else 0))
+                                          for i, (cx, cy, rx, ry) in enumerate(NEST2_BLOBS)]
+    cv.ellipse(50, g + 2, 47, 6, c("D"))                                   # mould stain on the street
+    for (cx, cy, rx, ry) in blobs:                                          # dark mould mass (reads against the lit
+        cv.ellipse(cx, cy, rx, ry, c("D"))                                  # plaster/haze above and, by hue and the
+    for (cx, cy, rx, ry) in blobs:                                          # light rim, against the street below)
+        cv.ellipse(cx - rx * 0.16, cy - ry * 0.2, rx * 0.72, ry * 0.64, c("l"))
+        cv.ellipse(cx - rx * 0.36, cy - ry * 0.46, rx * 0.2, ry * 0.14, c("t"))
+        cv.ellipse(cx - rx * 0.42, cy - ry * 0.56, rx * 0.12, ry * 0.08, c("z"))
+    for x in range(W):                                                      # fuzzy light rim on every top edge
+        ys = [y for y in range(H) if cv.get(x, y)]
+        if not ys:
+            continue
+        t = ys[0]
+        cv.put(x, t, c("t"))
+        for k in range(1, 1 + (x * 7 + 3) % 3):
+            if (x + k) % 2 == 0:
+                cv.put(x, t - k, c("t" if k < 2 else "z"))
+    for _ in range(8):                                                      # mould colonies (light rings, spore centre)
+        x, y = int(rng.integers(26, 90)), int(rng.integers(74, 116))
+        if cv.get(x, y) and cv.get(x + 3, y + 2):
+            r = float(rng.uniform(1.6, 2.8))
+            for yy in range(int(y - r) - 1, int(y + r) + 2):
+                for xx in range(int(x - r) - 1, int(x + r) + 2):
+                    d = ((xx - x) ** 2 + (yy - y) ** 2) ** 0.5
+                    if abs(d - r) < 0.6 and cv.get(xx, yy):
+                        cv.put(xx, yy, c("t"))
+            cv.put(x, y, c("z"))
+    for y in range(90, g):                                                  # cave mouth facing LEFT
+        hw = min(11, 3 + (y - 90))
+        for x in range(16 - hw, 16 + hw + 1):
+            cv.put(x, y, c("K" if abs(x - 16) < hw - 1 else "D"))
+    for (x, y0, y1) in [(9, 95, 103), (13, 92, 100), (19, 93, 106), (23, 97, 103)]:
+        cv.vline(x, y0, y1, c("t")); cv.put(x, y1 + 1, c("z"))
+    for (x, y) in [(12, 110), (20, 114)]:                                   # eyes in the dark
+        cv.put(x, y, c("Q" if phase == 0 else "q")); cv.put(x + 1, y, c("Q" if phase == 0 else "q"))
+    stalks = [(6, 6, 104, 5), (40, 38, 74, 4), (70, 28, 72, 4), (86, 50, 76, 3)]
+    if hurt:
+        stalks = [(6, 40, 104, 0), (40, 56, 74, 0), (70, 28, 72, 4)] if state == "damaged" else [(6, 84, 104, 0), (70, 74, 90, 0)]
+    for (x, top, base, r) in stalks:
+        if r > 0:
+            _sporangium(cv, x, top, base, r, phase, rng)
+        else:                                                               # broken stump with a torn tip
+            cv.vline(x, top, base, c("l")); cv.vline(x + 1, top, base, c("D"))
+            cv.put(x - 1, top, c("z")); cv.put(x + 2, top + 1, c("t"))
+    pods = [(46, 96), (66, 88), (82, 108), (30, 82)]
+    for i, (x, y) in enumerate(pods):                                       # glowing pods (burst when damaged)
+        if hurt and i % 2 == 0:
+            cv.ellipse(x, y, 3.0, 2.4, c("K"))
+            for (dx, dy) in [(-3, -3), (3, -3), (0, -4), (-4, 0), (4, 0)]:
+                cv.put(x + dx, y + dy, c("z"))
+            continue
+        cv.ellipse(x, y, 2.8, 2.3, c("q"))
+        cv.put(x, y, c("z" if phase == 0 else "Q"))
+        cv.put(x - 1, y - 1, c("Q"))
+    for k, (x, y) in enumerate([(4, 2), (18, 14), (30, 24), (54, 20), (78, 14), (92, 30)]):
+        if not hurt:
+            cv.put(x + (phase if k % 2 else -phase), y + (0 if k % 2 else phase), c("z"))
+    if hurt:
+        # a black split through the mound + dried grey crust patches
+        x, y = 58, 72
+        for s in range(40):
+            for w2 in range(-1, 2):
+                if cv.get(x + w2, y):
+                    cv.put(x + w2, y, c("K"))
+            x += int(rng.integers(-1, 2))
+            y += 1
+        for _ in range(9):
+            px, py = int(rng.integers(30, 92)), int(rng.integers(76, 118))
+            if cv.get(px, py):
+                cv.ellipse(px, py, float(rng.uniform(2, 4)), float(rng.uniform(1.5, 3)), c("X"))
+                cv.put(px - 1, py - 1, c("x"))
+        for (x, y) in [(34, 66), (62, 60), (84, 70), (50, 54)]:             # spore puffs escaping
+            r = 2.6 + (phase + x) % 2
+            cv.ellipse(x, y, r, r * 0.8, c("z"))
+            cv.put(x + 1, y + 1, c("x"))
+    if state == "ruined":
+        ruin_cut(cv, rng, 100, jag=5)
+        rubble(cv, rng, 4, 92, g, cols=("D", "l", "X", "a"))
+    cv.outline(c("K"))
+    return cv
+
+
+# What build.py ships (it calls bases.player_keep / bases.mould_nest). The art 0.12/0.13 versions stay for comparison.
+player_keep_v1, mould_nest_v1 = player_keep, mould_nest
+player_keep, mould_nest = keep_v2, nest_v2

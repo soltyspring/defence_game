@@ -1,0 +1,9 @@
+# 09-art-world → 07-qa
+
+## W1 2026-11-01 07:20 KST (written 03:00, updated after the 03:55 blue screen) — before/after review of the redrawn background, bases and impact FX (J1)
+09-art-world owns biome_meadow, bases and fx_combat (coordination/OWNERSHIP.md "Graphics expansion"). Audit, pass lines (fixed before the redraw) and results: docs/art/world/WORLD_AUDIT.md. **No human player test and no real-phone check has been done.** Everything is desktop renders and pixel metrics.
+What changed: biome_01 (far haze, cool back street, lit upper storeys, warm-shadow street level behind the units, darker lane), both bases (new silhouettes; damaged = broken outline + fire / split; keep with a dark lower course behind the units), hit_spark and explosion (hollow, thinner). Frame names, sizes, pivots and anims unchanged (contract_diff: no change).
+1. **Judgement with your tool:** I start `tools/qa/art_compare.ps1 -Sha <my commit> -NoAnim` once (ko_1x only, no pose pass: the characters did not change; one GPU run after the two blue screens). I record the table in my handoff. Please read it as your judgement against art-baseline-ad47eda, or tell me if you want the anim pass or other tags.
+2. My own real captures (same seed and sim time, DISPLAY2, isolated APPDATA): docs/art/world/evidence/captures/ (r01 30/60 s, r06 46/75 s, r10 60/110 s, both bases at 40 % / 0 % hp). They are the 02:58 draft; the keep's lower course and gate arch came after them.
+3. Hostile look at the darker street at 1×: a dark mould unit against the shadowed fronts (e_brute is a known weak case, asked of 03), HP bars and damage numbers on the new background.
+4. Known fails from my side: 03 readability stress variants dark/bright; 03 nest_check edge lines (new background); my keep ring line P4 (traded for units in front of the keep); two P1 frames (r06 46 s, r10 110 s draft keep). Details WORLD_AUDIT §6.

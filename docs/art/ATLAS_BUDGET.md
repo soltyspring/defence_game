@@ -8,13 +8,13 @@ Art version 0.13.0. Numbers are measured from the written files. GPU bytes = wid
 | `char_player` | character | battle | 1024×512 | 30.2 KiB | 2.00 MiB | 0.60 | 235 |
 | `char_boss_warlord` | character | battle_roster | 512×512 | 6.4 KiB | 1.00 MiB | 0.38 | 24 |
 | `char_boss_overlord` | character | battle_roster | 1024×512 | 11.2 KiB | 2.00 MiB | 0.42 | 32 |
-| `bases` | base | battle | 512×512 | 10.6 KiB | 1.00 MiB | 0.57 | 14 |
-| `fx_combat` | fx | battle | 512×256 | 4.3 KiB | 0.50 MiB | 0.51 | 79 |
+| `bases` | base | battle | 512×512 | 10.5 KiB | 1.00 MiB | 0.57 | 14 |
+| `fx_combat` | fx | battle | 512×256 | 4.2 KiB | 0.50 MiB | 0.51 | 79 |
 | `ui_main` | ui | always | 256×256 | 5.7 KiB | 0.25 MiB | 0.36 | 100 |
 | `ui_title_ko` | title | menu | 512×64 | 2.4 KiB | 0.12 MiB | 0.56 | 2 |
 | `ui_title_en` | title | menu | 256×128 | 3.2 KiB | 0.12 MiB | 0.51 | 2 |
-| `biome_meadow` | biome | per_round | 1024×512 | 12.1 KiB | 2.00 MiB | 0.46 | 5 |
-| **Total** | | | | **86.2 KiB** | **9.00 MiB** | | |
+| `biome_meadow` | biome | per_round | 1024×512 | 13.6 KiB | 2.00 MiB | 0.46 | 5 |
+| **Total** | | | | **87.5 KiB** | **9.00 MiB** | | |
 
 Residency by scene (provisional, matches ENGINE.md §8 load rules):
 - Menu / round select: `always` pages + the current locale's `ui_title_<locale>` page = **0.375 MiB**

@@ -514,7 +514,272 @@ VILLAGE = [
     ("ground", village_ground),
     ("front", front_layer),
 ]
-BIOME_01 = VILLAGE      # what build.py ships as biome_01 (atlas id biome_meadow kept: contract)
+
+
+# =============================================================================
+# art-world 1 (09-art-world, 2026-11-01): biome_01 redrawn for figure/ground (docs/art/world/WORLD_AUDIT.md).
+# Same 5 frames, sizes, view_y, parallax and lane_line as VILLAGE (frame contract unchanged).
+# Value plan (CIE L*, measured in WORLD_AUDIT): far = pale haze (L* 80-95, C* < 20, low contrast), back street =
+# cool blue-grey (L* 40-57), front street upper storeys = lit plaster + red roofs ABOVE the units, street level
+# y 244-297 = warm shadow (L* 17-35, C* < 35) so light bread soldiers and cool grey-green mould both separate.
+# =============================================================================
+def v2_sky(meta):
+    """Morning sky: blue at the top fading into a pale haze at the horizon."""
+    cv = Canvas(16, 360)
+    bands = [(0, "I"), (34, "j"), (72, "J")]
+    for y in range(360):
+        k = [kk for (y0, kk) in bands if y >= y0][-1]
+        cv.hline(0, 15, y, c(k))
+        for bi, (y0, kk) in enumerate(bands[1:], 1):
+            if y0 - 6 <= y < y0:
+                d = y0 - y
+                for x in range(16):
+                    if (d > 3 and (x + y) % 4 == 0) or (d <= 3 and (x + y) % 2 == 0):
+                        cv.put(x, y, c(kk))
+    meta.update(view_y=0, parallax=0.0, repeat_x=16, clear_color="#6f9ae0")
+    return cv
+
+
+def _cloud(cv, rng, cx, cy):
+    for j in range(int(rng.integers(3, 5))):
+        rx = float(rng.uniform(5, 9))
+        cv.ellipse(cx + int(rng.integers(-9, 10)), cy + int(rng.integers(-2, 2)), rx, rx * 0.4, c("J"))
+    cv.hline(cx - 12, cx + 12, cy + 3, c("j"))
+
+
+def v2_far(meta, seed=211):
+    """Hazy distance (parallax 0.15): pale blue hills, a pale wheat plain, a blue-grey village line and windmills.
+    Values stay close together so the far layer recedes instead of competing with the units."""
+    rng = np.random.default_rng(seed)
+    W, H = PERIOD, 150
+    cv = WrapCanvas(W, H)
+    for k in range(4):
+        _cloud(cv, rng, int(rng.integers(0, W)), int(rng.integers(8, 26)))
+    n1, n2, n3, n4, n5 = (wrap_noise(rng, 4), wrap_noise(rng, 17), wrap_noise(rng, 6), wrap_noise(rng, 29), wrap_noise(rng, 11))
+    hills, plain = [], []
+    for x in range(W):
+        hb = int(48 - 9 * n1(x) - 3 * n2(x))            # far hills crest (pale blue)
+        hp = int(70 - 5 * n3(x) - 2 * n4(x))            # wheat plain crest
+        hills.append(hb)
+        plain.append(hp)
+        for y in range(hb, H):
+            k = "N" if y < hb + 1 else "c"              # thin grey ridge so the pale hills are not lost in the sky
+            if y >= hb + 1 and y < hb + 3 and n1(x + 3) < n1(x):        # crest lit from the left
+                k = "J"
+            cv.put(x, y, c(k))
+        nb = int(hb + 9 + 4 * n2(x + 40))                # a nearer, slightly greyer range in front
+        for y in range(nb, H):
+            cv.put(x, y, c("N" if y > nb else "x"))
+    rnd = np.random.default_rng(seed + 1).random((H, W))   # fixed per-pixel noise (x in 0..639, so still seamless)
+    for x in range(W):
+        hp = plain[x]
+        for y in range(hp, H):
+            d = y - hp
+            k = "U"                                       # pale wheat plain, flat tone
+            if rnd[y, x] < 0.05:
+                k = "x"
+            elif d >= 26 and rnd[y, x] > 0.95:
+                k = "T"
+            cv.put(x, y, c(k))
+        cv.put(x, hp, c("x"))                             # soft crest line against the grey range
+        # soft field strips: a sage hedge line and a thin sunlit band under it, following the plain
+        for g in (9, 21, 37, 58):
+            yy = hp + g + int(2 * n5(x + g * 7))
+            if yy < H and (x // 3) % 2 == 0:
+                cv.put(x, yy, c("t") if (x // 6) % 4 else c("x"))
+            for dy in (2, 3):
+                if yy + dy < H and rnd[yy + dy, x] < 0.3:
+                    cv.put(x, yy + dy, c("T"))
+    # distant village line on the plain crest: grey walls, slightly darker roofs, nothing brighter than the plain
+    x = 0
+    while x < W:
+        w = int(rng.integers(6, 11))
+        if rng.uniform() < 0.6:
+            t = min(plain[(x + i) % W] for i in range(w)) + 1
+            hh = int(rng.integers(3, 6))
+            cv.rect(x, t - hh, w, hh + 2, c("N"))
+            for yy in range(3):
+                cv.hline(x - 1 + yy, x + w - yy, t - hh - 1 - yy, c("u" if yy == 2 else "X"))
+            if rng.uniform() < 0.4:
+                cv.put(x + 2, t - hh + 1, c("X"))
+        x += w + int(rng.integers(2, 10))
+    for wx in (150, 470):                               # windmills as hazy silhouettes
+        base = plain[wx] + 1
+        cv.rect(wx - 2, base - 14, 5, 14, c("N"))
+        cv.vline(wx + 2, base - 14, base - 1, c("X"))
+        for yy in range(base - 17, base - 14):
+            w2 = yy - (base - 17)
+            cv.hline(wx - w2 - 1, wx + w2 + 1, yy, c("X"))
+        hy = base - 16
+        for (dx, dy) in [(1, -1), (-1, 1), (1, 1), (-1, -1)]:
+            for t in range(1, 8):
+                cv.put(wx + dx * t, hy + dy * t, c("X" if t < 7 else "u"))
+    for _ in range(9):                                  # a few round trees, sage, on the plain
+        x = int(rng.integers(0, W))
+        y = plain[x] + int(rng.integers(8, 40))
+        if y + 2 < H:
+            cv.ellipse(x, y, 2.6, 2.2, c("t"))
+            cv.put(x - 1, y - 1, c("z"))
+            cv.put(x, y + 2, c("l"))
+    meta.update(view_y=50, parallax=0.15)
+    return cv
+
+
+def _v2_house(cv, rng, x0, w, wall_top, shop, roof_kind):
+    H = cv.h
+    SH = 64                                             # first shadow row (screen y 244): the street level starts here
+    plaster = ["x", "U", "x", "N"][int(rng.integers(0, 4))]
+    cv.rect(x0, wall_top, w, SH - wall_top, c(plaster))
+    cv.vline(x0, wall_top, SH - 1, c("X" if plaster in "xN" else "T"))       # left corner shade
+    cv.vline(x0 + w - 1, wall_top, SH - 1, c("X"))
+    if rng.uniform() < 0.5:                                                    # half-timber frame
+        cv.hline(x0, x0 + w - 1, wall_top + 1, c("O"))
+        for bx in range(x0 + 5, x0 + w - 3, 10):
+            cv.vline(bx, wall_top + 1, SH - 2, c("O"))
+    roof, dark, hi = roof_kind
+    rh = int(rng.integers(8, 13))
+    for i in range(rh + 1):
+        y = wall_top - 1 - i
+        a, b = x0 - 2 + i, x0 + w + 1 - i
+        if a > b:
+            break
+        cv.hline(a, b, y, c(roof))
+        cv.put(a, y, c(hi))
+        cv.put(b, y, c(dark))
+        if i % 3 == 2:                                                         # tile courses
+            for xx in range(a + 1, b, 4):
+                cv.put(xx, y, c(dark))
+    cv.hline(x0 - 2, x0 + w + 1, wall_top - 1, c(dark))
+    if rng.uniform() < 0.55:                                                   # chimney + a little smoke
+        cx = x0 + int(rng.integers(3, max(4, w - 7)))
+        cy = wall_top - rh + 2
+        cv.rect(cx, cy - 5, 3, 7, c("A")); cv.hline(cx - 1, cx + 3, cy - 6, c("a"))
+        for k in range(2):
+            cv.ellipse(cx + 1 - k * 3, cy - 9 - k * 4, 1.8 + k * 0.6, 1.3 + k * 0.4, c("J" if k else "x"))
+    for wx in range(x0 + 5, x0 + w - 7, 13):                                   # upper windows: dark glass, warm glint
+        wy = wall_top + 8
+        cv.rect(wx, wy, 6, 7, c("O"))
+        cv.rect(wx + 1, wy + 1, 4, 5, c("a"))
+        cv.put(wx + 1, wy + 1, c("Z" if (wx // 13) % 2 == 0 else "y"))
+        cv.hline(wx - 1, wx + 6, wy + 7, c("o"))
+    # eave / awning line just above the street shadow
+    if shop:
+        for xx in range(x0, x0 + w):
+            cv.vline(xx, SH - 5, SH - 2, c("R"))
+            cv.put(xx, SH - 5, c("E") if xx % 2 == 0 else c("R"))
+            if (xx - x0) % 4 in (1, 2):
+                cv.put(xx, SH - 1, c("r"))
+    else:
+        cv.hline(x0, x0 + w - 1, SH - 3, c("O"))
+        cv.hline(x0, x0 + w - 1, SH - 2, c("w"))
+    # street level in shadow: warm mid-dark (L* ~33-35) so the bread soldiers' mass AND every unit's dark outline
+    # separate from it (03 readability: outline vs background dL* >= 15 needs L* >= ~23; darker walls failed it)
+    cv.rect(x0, SH, w, H - SH, c("O"))
+    cv.vline(x0, SH, H - 1, c("H"))
+    if shop:
+        sx, sw = x0 + 4, w - 18
+        cv.rect(sx - 1, SH + 5, sw + 2, 20, c("h"))                           # window frame
+        cv.rect(sx, SH + 6, sw, 18, c("H"))                                    # dim display window
+        for bx in range(sx + 3, sx + sw - 4, 7):
+            cv.ellipse(bx + 2, SH + 20, 2.4, 1.4, c("o"))                      # loaves in the half-light
+        door_x = x0 + w - 11
+    else:
+        door_x = x0 + w // 2 - 4
+        for wx in (x0 + 5, x0 + w - 12):
+            if abs(wx - door_x) > 10:
+                cv.rect(wx - 1, SH + 7, 9, 11, c("h"))
+                cv.rect(wx, SH + 8, 7, 9, c("H"))
+    cv.rect(door_x - 1, SH + 5, 10, H - SH - 5, c("h"))
+    cv.rect(door_x, SH + 6, 8, H - SH - 6, c("H"))
+    cv.put(door_x + 5, SH + 18, c("o"))                                        # knob
+    lx = x0 + w // 2 + (6 if shop else -12)                                   # one small oven-warm lantern per front
+    if abs(lx - (door_x + 4)) < 7:
+        lx = door_x - 6
+    cv.put(lx, SH, c("w"))
+    cv.rect(lx - 1, SH + 1, 3, 3, c("e")); cv.put(lx, SH + 2, c("Z")); cv.hline(lx - 1, lx + 1, SH + 4, c("w"))
+
+
+def v2_mid(meta, seed=222):
+    """Bakery street (parallax 0.45): a cool blue-grey back row, then houses and shops whose upper storeys are lit
+    and whose street level (screen y >= 244, behind the units) is in warm shadow."""
+    rng = np.random.default_rng(seed)
+    W, H = PERIOD, 120
+    cv = WrapCanvas(W, H)
+    x = 0
+    while x < W:                                                                # back row: distant roofs, cool
+        w = int(rng.integers(16, 30))
+        t = int(rng.integers(9, 18))
+        cv.rect(x, t + 5, w, H - t - 5, c("u"))
+        for i in range(6):
+            cv.hline(x - 1 + i, x + w - i, t + 4 - i, c("n"))
+        if rng.uniform() < 0.5:
+            cv.rect(x + w // 3, t - 3, 2, 4, c("n"))
+        cv.put(x + w // 2, t + 9, c("n")); cv.put(x + w // 2 + 1, t + 9, c("n"))
+        x += w
+    widths, x = [], 0
+    while W - x > 80:
+        w = int(rng.integers(46, 70))
+        widths.append(w)
+        x += w
+    widths.append(W - x)
+    roofs = [("R", "r", "E"), ("O", "w", "o"), ("R", "r", "E"), ("r", "w", "R")]
+    x = 0
+    for i, w in enumerate(widths):
+        _v2_house(cv, rng, x, w, int(rng.integers(30, 38)), shop=(i % 2 == 0), roof_kind=roofs[i % len(roofs)])
+        x += w
+    meta.update(view_y=180, parallax=0.45)
+    return cv
+
+
+def v2_ground(meta, seed=233):
+    """Street floor (feet line row 15 unchanged): shadowed pavement, a kerb line, a packed-earth lane, dark soil."""
+    rng = np.random.default_rng(seed)
+    W, H = PERIOD, 80
+    cv = WrapCanvas(W, H)
+    LANE = 15
+    for x in range(W):
+        for y in range(H):
+            if y < 7:
+                k = "h" if (y == 3 or (x + (y // 4) * 5) % 9 == 0) else "w"    # pavement joints, low contrast
+            elif y == 7:
+                k = "O"                                                            # kerb edge
+            elif y == 8:
+                k = "w"
+            elif y < 22:
+                k = "O"                                                            # packed-earth lane
+            elif y < 24:
+                k = "h"
+            else:
+                k = "w"
+            cv.put(x, y, c(k))
+    for x in range(W):                                                             # faint wheel ruts
+        if (x // 3) % 6 != 0 and x % 2 == 0:
+            cv.put(x, 15, c("H"))
+        if (x // 5) % 7 != 0 and x % 3 == 0:
+            cv.put(x, 19, c("H"))
+    for _ in range(110):                                                           # flour dust and crumbs on the lane
+        x, y = int(rng.integers(0, W)), int(rng.integers(10, 21))
+        cv.put(x, y, c("H"))
+        if rng.uniform() < 0.25:
+            cv.put(x + 1, y, c("o"))
+    for _ in range(60):                                                            # soil stones (mostly under the HUD)
+        x, y, w = int(rng.integers(0, W)), int(rng.integers(26, 76)), int(rng.integers(2, 5))
+        for i in range(w):
+            cv.put(x + i, y, c("O"))
+            cv.put(x + i, y - 1, c("H" if y > 40 else "o"))
+    meta.update(view_y=280, parallax=1.0, tile=True, lane_line=LANE,
+                note="layer row 15 is the feet line: place layer at view_y = ground_y - 15")
+    return cv
+
+
+VILLAGE2 = [
+    ("sky", v2_sky),
+    ("far", v2_far),
+    ("mid", v2_mid),
+    ("ground", v2_ground),
+    ("front", front_layer),
+]
+BIOME_01 = VILLAGE2     # what build.py ships as biome_01 (atlas id biome_meadow kept: contract). VILLAGE = art 0.11-0.13.
 
 
 def build_meadow(layers=None):

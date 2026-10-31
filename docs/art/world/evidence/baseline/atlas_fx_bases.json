@@ -1,0 +1,188 @@
+{
+ "root": "Z:\\.solty\\dev\\appintoss\\defence",
+ "ground_y": 290.0,
+ "fx": {
+  "hit_spark": [
+   {
+    "target": "melee_basic",
+    "cover_peak": 14.5,
+    "cover_mean": 6.9,
+    "frames": 5,
+    "fx_same_pct_mean": 1.9
+   },
+   {
+    "target": "ranged_basic",
+    "cover_peak": 18.1,
+    "cover_mean": 8.6,
+    "frames": 5,
+    "fx_same_pct_mean": 2.8
+   },
+   {
+    "target": "tank",
+    "cover_peak": 14.2,
+    "cover_mean": 6.8,
+    "frames": 5,
+    "fx_same_pct_mean": 0.0
+   },
+   {
+    "target": "hero_captain",
+    "cover_peak": 7.9,
+    "cover_mean": 3.8,
+    "frames": 5,
+    "fx_same_pct_mean": 2.8
+   },
+   {
+    "target": "worker",
+    "cover_peak": 20.3,
+    "cover_mean": 9.8,
+    "frames": 5,
+    "fx_same_pct_mean": 13.8
+   },
+   {
+    "target": "e_grunt",
+    "cover_peak": 14.2,
+    "cover_mean": 6.7,
+    "frames": 5,
+    "fx_same_pct_mean": 0.0
+   },
+   {
+    "target": "e_spitter",
+    "cover_peak": 15.2,
+    "cover_mean": 7.3,
+    "frames": 5,
+    "fx_same_pct_mean": 0.0
+   },
+   {
+    "target": "e_brute",
+    "cover_peak": 6.9,
+    "cover_mean": 3.3,
+    "frames": 5,
+    "fx_same_pct_mean": 0.7
+   },
+   {
+    "target": "e_swarm",
+    "cover_peak": 16.3,
+    "cover_mean": 7.6,
+    "frames": 5,
+    "fx_same_pct_mean": 0.8
+   }
+  ],
+  "explosion": [
+   {
+    "target": "melee_basic",
+    "cover_peak": 26.9,
+    "cover_mean": 11.8,
+    "frames": 7,
+    "fx_same_pct_mean": 0.0
+   },
+   {
+    "target": "ranged_basic",
+    "cover_peak": 35.2,
+    "cover_mean": 11.6,
+    "frames": 7,
+    "fx_same_pct_mean": 2.6
+   },
+   {
+    "target": "tank",
+    "cover_peak": 30.4,
+    "cover_mean": 12.6,
+    "frames": 7,
+    "fx_same_pct_mean": 2.4
+   },
+   {
+    "target": "hero_captain",
+    "cover_peak": 16.5,
+    "cover_mean": 6.5,
+    "frames": 7,
+    "fx_same_pct_mean": 0.2
+   },
+   {
+    "target": "worker",
+    "cover_peak": 33.2,
+    "cover_mean": 11.8,
+    "frames": 7,
+    "fx_same_pct_mean": 0.4
+   },
+   {
+    "target": "e_grunt",
+    "cover_peak": 31.7,
+    "cover_mean": 11.5,
+    "frames": 7,
+    "fx_same_pct_mean": 0.0
+   },
+   {
+    "target": "e_spitter",
+    "cover_peak": 31.8,
+    "cover_mean": 12.7,
+    "frames": 7,
+    "fx_same_pct_mean": 8.3
+   },
+   {
+    "target": "e_brute",
+    "cover_peak": 21.6,
+    "cover_mean": 11.2,
+    "frames": 7,
+    "fx_same_pct_mean": 1.6
+   },
+   {
+    "target": "e_swarm",
+    "cover_peak": 36.1,
+    "cover_mean": 13.9,
+    "frames": 7,
+    "fx_same_pct_mean": 2.5
+   }
+  ]
+ },
+ "bases": {
+  "base_player": {
+   "damaged": {
+    "changed_px_pct_of_idle": 4.4,
+    "silhouette_area_ratio": 0.99,
+    "cue_dE_to_idle_mean_median": 26.4,
+    "cue_px": 241
+   },
+   "ruined": {
+    "changed_px_pct_of_idle": 65.6,
+    "silhouette_area_ratio": 0.41,
+    "cue_dE_to_idle_mean_median": 26.4,
+    "cue_px": 482
+   },
+   "idle_vs_bg": {
+    "px": 7246,
+    "dE_median": 36.5,
+    "camo_pct": 9.5,
+    "dL_median": 21.2,
+    "ring_dL": 2.5,
+    "ring_dE": 7.0,
+    "unit_L_mean": 61.9,
+    "ring_L_mean": 64.3,
+    "inner_edge_density": 38.5
+   }
+  },
+  "base_enemy": {
+   "damaged": {
+    "changed_px_pct_of_idle": 3.5,
+    "silhouette_area_ratio": 1.0,
+    "cue_dE_to_idle_mean_median": 14.5,
+    "cue_px": 223
+   },
+   "ruined": {
+    "changed_px_pct_of_idle": 72.2,
+    "silhouette_area_ratio": 0.36,
+    "cue_dE_to_idle_mean_median": 14.5,
+    "cue_px": 503
+   },
+   "idle_vs_bg": {
+    "px": 5311,
+    "dE_median": 57.6,
+    "camo_pct": 0.3,
+    "dL_median": 43.4,
+    "ring_dL": 33.4,
+    "ring_dE": 47.0,
+    "unit_L_mean": 35.8,
+    "ring_L_mean": 69.1,
+    "inner_edge_density": 14.7
+   }
+  }
+ }
+}

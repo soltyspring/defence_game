@@ -1,0 +1,250 @@
+{
+ "hit_spark": {
+  "v1": {
+   "peak_max": 20.3,
+   "same_max": 13.8,
+   "targets": [
+    {
+     "target": "melee_basic",
+     "cover_peak": 14.5,
+     "cover_mean": 6.9,
+     "same_pct": 1.9
+    },
+    {
+     "target": "ranged_basic",
+     "cover_peak": 18.1,
+     "cover_mean": 8.6,
+     "same_pct": 2.8
+    },
+    {
+     "target": "tank",
+     "cover_peak": 14.2,
+     "cover_mean": 6.8,
+     "same_pct": 0.0
+    },
+    {
+     "target": "hero_captain",
+     "cover_peak": 7.9,
+     "cover_mean": 3.8,
+     "same_pct": 2.8
+    },
+    {
+     "target": "worker",
+     "cover_peak": 20.3,
+     "cover_mean": 9.8,
+     "same_pct": 13.8
+    },
+    {
+     "target": "e_grunt",
+     "cover_peak": 14.2,
+     "cover_mean": 6.7,
+     "same_pct": 0.0
+    },
+    {
+     "target": "e_spitter",
+     "cover_peak": 15.2,
+     "cover_mean": 7.3,
+     "same_pct": 0.0
+    },
+    {
+     "target": "e_brute",
+     "cover_peak": 6.9,
+     "cover_mean": 3.3,
+     "same_pct": 0.7
+    },
+    {
+     "target": "e_swarm",
+     "cover_peak": 16.3,
+     "cover_mean": 7.6,
+     "same_pct": 0.8
+    }
+   ]
+  },
+  "v2": {
+   "peak_max": 6.8,
+   "same_max": 2.1,
+   "targets": [
+    {
+     "target": "melee_basic",
+     "cover_peak": 3.8,
+     "cover_mean": 1.8,
+     "same_pct": 0.0
+    },
+    {
+     "target": "ranged_basic",
+     "cover_peak": 6.0,
+     "cover_mean": 2.7,
+     "same_pct": 2.1
+    },
+    {
+     "target": "tank",
+     "cover_peak": 4.6,
+     "cover_mean": 1.8,
+     "same_pct": 0.0
+    },
+    {
+     "target": "hero_captain",
+     "cover_peak": 2.5,
+     "cover_mean": 1.2,
+     "same_pct": 2.1
+    },
+    {
+     "target": "worker",
+     "cover_peak": 6.4,
+     "cover_mean": 3.0,
+     "same_pct": 1.7
+    },
+    {
+     "target": "e_grunt",
+     "cover_peak": 3.7,
+     "cover_mean": 1.7,
+     "same_pct": 0.0
+    },
+    {
+     "target": "e_spitter",
+     "cover_peak": 4.1,
+     "cover_mean": 2.0,
+     "same_pct": 0.0
+    },
+    {
+     "target": "e_brute",
+     "cover_peak": 2.0,
+     "cover_mean": 1.1,
+     "same_pct": 0.0
+    },
+    {
+     "target": "e_swarm",
+     "cover_peak": 6.8,
+     "cover_mean": 3.4,
+     "same_pct": 0.0
+    }
+   ]
+  }
+ },
+ "explosion": {
+  "v1": {
+   "peak_max": 36.1,
+   "same_max": 8.3,
+   "targets": [
+    {
+     "target": "melee_basic",
+     "cover_peak": 26.9,
+     "cover_mean": 11.8,
+     "same_pct": 0.0
+    },
+    {
+     "target": "ranged_basic",
+     "cover_peak": 35.2,
+     "cover_mean": 11.6,
+     "same_pct": 2.6
+    },
+    {
+     "target": "tank",
+     "cover_peak": 30.4,
+     "cover_mean": 12.6,
+     "same_pct": 2.4
+    },
+    {
+     "target": "hero_captain",
+     "cover_peak": 16.5,
+     "cover_mean": 6.5,
+     "same_pct": 0.2
+    },
+    {
+     "target": "worker",
+     "cover_peak": 33.2,
+     "cover_mean": 11.8,
+     "same_pct": 0.4
+    },
+    {
+     "target": "e_grunt",
+     "cover_peak": 31.7,
+     "cover_mean": 11.5,
+     "same_pct": 0.0
+    },
+    {
+     "target": "e_spitter",
+     "cover_peak": 31.8,
+     "cover_mean": 12.7,
+     "same_pct": 8.3
+    },
+    {
+     "target": "e_brute",
+     "cover_peak": 21.6,
+     "cover_mean": 11.2,
+     "same_pct": 1.6
+    },
+    {
+     "target": "e_swarm",
+     "cover_peak": 36.1,
+     "cover_mean": 13.9,
+     "same_pct": 2.5
+    }
+   ]
+  },
+  "v2": {
+   "peak_max": 12.8,
+   "same_max": 6.7,
+   "targets": [
+    {
+     "target": "melee_basic",
+     "cover_peak": 10.7,
+     "cover_mean": 4.4,
+     "same_pct": 0.0
+    },
+    {
+     "target": "ranged_basic",
+     "cover_peak": 12.6,
+     "cover_mean": 4.1,
+     "same_pct": 1.3
+    },
+    {
+     "target": "tank",
+     "cover_peak": 12.3,
+     "cover_mean": 4.4,
+     "same_pct": 3.1
+    },
+    {
+     "target": "hero_captain",
+     "cover_peak": 5.6,
+     "cover_mean": 2.7,
+     "same_pct": 0.0
+    },
+    {
+     "target": "worker",
+     "cover_peak": 12.8,
+     "cover_mean": 4.4,
+     "same_pct": 0.0
+    },
+    {
+     "target": "e_grunt",
+     "cover_peak": 11.0,
+     "cover_mean": 4.4,
+     "same_pct": 0.0
+    },
+    {
+     "target": "e_spitter",
+     "cover_peak": 11.1,
+     "cover_mean": 4.7,
+     "same_pct": 6.7
+    },
+    {
+     "target": "e_brute",
+     "cover_peak": 7.9,
+     "cover_mean": 4.5,
+     "same_pct": 3.6
+    },
+    {
+     "target": "e_swarm",
+     "cover_peak": 12.2,
+     "cover_mean": 5.5,
+     "same_pct": 3.8
+    }
+   ]
+  }
+ },
+ "pass": {
+  "hit_spark": true,
+  "explosion": true
+ }
+}

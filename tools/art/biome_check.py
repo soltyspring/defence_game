@@ -1,16 +1,17 @@
-"""Biome framing metrics (owner: 03-art, art 0.11.0, QA-J1 / 09 X10).
+"""Biome framing metrics (owner: 09-art-world since 2026-11-01; written by 03-art for art 0.11.0, QA-J1 / 09 X10).
 
     python tools/art/biome_check.py [out_dir]
 
-Composes the shipped biome_01 layers and the old meadow layers exactly like
-biome.compose_preview (02's draw order, 640x360 reference view, cam 0, ground_y 295
-as in readability.py) and measures, for each:
+Composes three versions of biome_01 exactly like biome.compose_preview (02's draw order, 640x360 reference view,
+cam 0, ground_y 295 as in readability.py): `meadow` (art <= 0.10), `village_v1` (art 0.11-0.13) and `village`
+(what build.py ships now, biome.BIOME_01). For each:
   sky_pct          share of view pixels where only the sky strip (sky / clouds) is visible
   head_band_L35    share of pixels with L* >= 35 in the band behind unit heads (y 255..289)
   lane_band_L35    share of pixels with L* >= 35 in the lane band (y 284..297)
   sky_rows         rows (top-down) whose pixels are >= 90 % sky
-Lines (ART_AUDIT dark-biome rule, fixed before measuring): head/lane band L* >= 35 on >= 90 % of pixels.
-sky_pct target for QA-J1 (03 internal): <= 35 % at the 640x360 reference view.
+Lines: sky_pct <= 35 % (03, QA-J1). The old dark-biome line "head/lane band L* >= 35 on >= 90 %" is printed for
+comparison only: art-world 1 puts the street level in warm shadow on purpose and replaces that line with direct
+ring-contrast lines for both factions (docs/art/world/WORLD_AUDIT.md P1/P2, tools/art/world/world_metrics.py).
 Writes biome_metrics.json and side-by-side previews (1x and 2x).
 """
 from __future__ import annotations
@@ -34,10 +35,11 @@ from readability import lab_L  # noqa: E402
 GY = 295
 HEAD = (255, 290)
 LANE = (284, 298)
+KINDS = {"meadow": biome.MEADOW, "village_v1": biome.VILLAGE, "village": biome.BIOME_01}
 
 
 def layers(kind):
-    ls = biome.build_meadow(biome.MEADOW if kind == "meadow" else biome.VILLAGE)
+    ls = biome.build_meadow(KINDS[kind])
     for name, cv, meta in ls:
         if name == "front":
             theme.remap_keys(cv, theme.WHEAT_FRONT)
@@ -80,18 +82,19 @@ def measure(kind):
 def main(out):
     os.makedirs(out, exist_ok=True)
     rep, imgs = {"ground_y": GY, "head_band_y": HEAD, "lane_band_y": LANE,
-                 "lines": {"band_L35_pct_min": 90.0, "sky_pct_max": 35.0}}, []
-    for kind in ("meadow", "village"):
+                 "lines": {"sky_pct_max": 35.0, "band_L35_pct_min_info_only": 90.0}}, []
+    for kind in KINDS:
         img, m = measure(kind)
         rep[kind] = m
         imgs.append(Image.fromarray(np.rint(img).astype(np.uint8)))
     v = rep["village"]
-    rep["pass"] = {"sky": v["sky_pct"] <= 35.0, "head_band": v["head_band_L35_pct"] >= 90.0,
-                   "lane_band": v["lane_band_L35_pct"] >= 90.0}
-    sheet = Image.new("RGB", (640, 720 + 4), (0, 0, 0))
-    sheet.paste(imgs[0], (0, 0)); sheet.paste(imgs[1], (0, 364))
-    sheet.save(os.path.join(out, "biome_meadow_vs_village_1x.png"))
-    imgs[1].resize((1280, 720), Image.NEAREST).save(os.path.join(out, "biome_village_2x.png"))
+    rep["pass"] = {"sky": v["sky_pct"] <= 35.0}
+    rep["info_old_dark_biome_line"] = {"head_band": v["head_band_L35_pct"] >= 90.0, "lane_band": v["lane_band_L35_pct"] >= 90.0}
+    sheet = Image.new("RGB", (640, 360 * 3 + 8), (0, 0, 0))
+    for i, im in enumerate(imgs):
+        sheet.paste(im, (0, i * 364))
+    sheet.save(os.path.join(out, "biome_meadow_v1_v2_1x.png"))
+    imgs[-1].resize((1280, 720), Image.NEAREST).save(os.path.join(out, "biome_village_2x.png"))
     with open(os.path.join(out, "biome_metrics.json"), "w", encoding="utf-8", newline="\n") as f:
         json.dump(rep, f, indent=1)
         f.write("\n")
@@ -99,4 +102,4 @@ def main(out):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "docs", "art", "evidence", "biome_village"))
+    main(sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "docs", "art", "world", "evidence", "biome_check"))

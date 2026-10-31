@@ -1,0 +1,2316 @@
+{
+ "before": {
+  "dir": "C:\\Users\\aghose\\AppData\\Local\\Temp\\a09\\cam_before",
+  "root": "C:\\Users\\aghose\\AppData\\Local\\Temp\\a09\\head_676b105",
+  "res": {
+   "r01_030": {
+    "t": 30.0166666666662,
+    "cam_x": 439.89217251901,
+    "units": 9,
+    "fx": 0,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 1060.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "tinted_units_excluded": 0,
+    "ally": {
+     "px": 553,
+     "dE_median": 40.7,
+     "camo_pct": 18.1,
+     "dL_median": 17.2,
+     "ring_dL": 10.9,
+     "ring_dE": 14.4,
+     "slice_dL_median": 7.4,
+     "slice_dL_min": 4.3,
+     "unit_L_mean": 69.5,
+     "ring_L_mean": 58.7,
+     "inner_edge_density": 45.2
+    },
+    "enemy": {
+     "px": 354,
+     "dE_median": 42.7,
+     "camo_pct": 2.3,
+     "dL_median": 12.7,
+     "ring_dL": 8.5,
+     "ring_dE": 22.4,
+     "slice_dL_median": 6.3,
+     "slice_dL_min": 2.6,
+     "unit_L_mean": 52.5,
+     "ring_L_mean": 61.0,
+     "inner_edge_density": 47.4
+    },
+    "per_unit": [
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 410.0,
+      "ring_dL": 7.5,
+      "ring_dE": 17.3
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 261.0,
+      "ring_dL": 7.7,
+      "ring_dE": 19.9
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 443.0,
+      "ring_dL": 5.6,
+      "ring_dE": 23.5
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 443.0,
+      "ring_dL": 5.8,
+      "ring_dE": 29.6
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 443.0,
+      "ring_dL": 11.6,
+      "ring_dE": 19.7
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 462.0,
+      "ring_dL": 10.0,
+      "ring_dE": 23.7
+     },
+     {
+      "set": "hero_captain",
+      "side": 1,
+      "x": 386.0,
+      "ring_dL": 12.9,
+      "ring_dE": 13.2
+     }
+    ],
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 64.3,
+      "L_std": 21.2,
+      "C_mean": 37.6,
+      "chroma_hi_pct": 74.1,
+      "edge_density": 17.6
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 71.6,
+      "L_std": 21.7,
+      "C_mean": 27.2,
+      "chroma_hi_pct": 38.4,
+      "edge_density": 17.5
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 72.3,
+      "L_std": 17.7,
+      "C_mean": 22.6,
+      "chroma_hi_pct": 29.7,
+      "edge_density": 22.4
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 49.1,
+      "L_std": 7.4,
+      "C_mean": 38.2,
+      "chroma_hi_pct": 86.6,
+      "edge_density": 20.0
+     }
+    }
+   },
+   "r01_060": {
+    "t": 60.0166666666645,
+    "cam_x": 632.833333333334,
+    "units": 13,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 1060.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "tinted_units_excluded": 1,
+    "ally": {
+     "px": 731,
+     "dE_median": 44.6,
+     "camo_pct": 9.0,
+     "dL_median": 20.1,
+     "ring_dL": 8.8,
+     "ring_dE": 12.9,
+     "slice_dL_median": 8.2,
+     "slice_dL_min": 0.0,
+     "unit_L_mean": 68.3,
+     "ring_L_mean": 59.5,
+     "inner_edge_density": 48.6
+    },
+    "enemy": {
+     "px": 212,
+     "dE_median": 46.3,
+     "camo_pct": 0.0,
+     "dL_median": 12.7,
+     "ring_dL": 5.7,
+     "ring_dE": 26.7,
+     "slice_dL_median": 7.1,
+     "slice_dL_min": 3.4,
+     "unit_L_mean": 52.2,
+     "ring_L_mean": 57.9,
+     "inner_edge_density": 49.0
+    },
+    "per_unit": [
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 593.0,
+      "ring_dL": 7.6,
+      "ring_dE": 19.5
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 593.0,
+      "ring_dL": 6.1,
+      "ring_dE": 23.9
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 593.0,
+      "ring_dL": 15.3,
+      "ring_dE": 19.0
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 593.0,
+      "ring_dL": 6.4,
+      "ring_dE": 22.8
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 533.0,
+      "ring_dL": 7.2,
+      "ring_dE": 20.5
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 362.0,
+      "ring_dL": 5.2,
+      "ring_dE": 22.6
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 621.0,
+      "ring_dL": 8.4,
+      "ring_dE": 17.4
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 621.0,
+      "ring_dL": 2.4,
+      "ring_dE": 26.8
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 882.0,
+      "ring_dL": 6.9,
+      "ring_dE": 30.2
+     },
+     {
+      "set": "hero_captain",
+      "side": 1,
+      "x": 573.0,
+      "ring_dL": 8.7,
+      "ring_dE": 10.8
+     }
+    ],
+    "fx_cover_of_units_pct": 1.3,
+    "fx_px": 24,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 64.3,
+      "L_std": 21.3,
+      "C_mean": 37.5,
+      "chroma_hi_pct": 73.6,
+      "edge_density": 17.6
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 71.6,
+      "L_std": 21.7,
+      "C_mean": 27.2,
+      "chroma_hi_pct": 38.4,
+      "edge_density": 17.5
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 72.3,
+      "L_std": 17.7,
+      "C_mean": 22.6,
+      "chroma_hi_pct": 29.7,
+      "edge_density": 22.4
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 49.1,
+      "L_std": 7.4,
+      "C_mean": 38.2,
+      "chroma_hi_pct": 86.6,
+      "edge_density": 20.0
+     }
+    }
+   },
+   "r06_046": {
+    "t": 46.0166666666653,
+    "cam_x": 1041.63405884051,
+    "units": 14,
+    "fx": 0,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 1860.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "tinted_units_excluded": 0,
+    "ally": {
+     "px": 855,
+     "dE_median": 49.2,
+     "camo_pct": 19.9,
+     "dL_median": 22.1,
+     "ring_dL": 13.6,
+     "ring_dE": 16.6,
+     "slice_dL_median": 13.7,
+     "slice_dL_min": 8.8,
+     "unit_L_mean": 48.9,
+     "ring_L_mean": 62.5,
+     "inner_edge_density": 56.8
+    },
+    "enemy": {
+     "px": 867,
+     "dE_median": 44.0,
+     "camo_pct": 1.2,
+     "dL_median": 17.0,
+     "ring_dL": 9.3,
+     "ring_dE": 27.8,
+     "slice_dL_median": 11.1,
+     "slice_dL_min": 10.5,
+     "unit_L_mean": 48.0,
+     "ring_L_mean": 57.2,
+     "inner_edge_density": 36.3
+    },
+    "per_unit": [
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 1015.0,
+      "ring_dL": 13.4,
+      "ring_dE": 14.7
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 885.0,
+      "ring_dL": 19.4,
+      "ring_dE": 23.0
+     },
+     {
+      "set": "e_brute",
+      "side": -1,
+      "x": 1334.0,
+      "ring_dL": 9.0,
+      "ring_dE": 30.9
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 1043.0,
+      "ring_dL": 10.0,
+      "ring_dE": 26.4
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 1077.0,
+      "ring_dL": 9.6,
+      "ring_dE": 23.9
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 1115.0,
+      "ring_dL": 7.8,
+      "ring_dE": 28.6
+     },
+     {
+      "set": "hero_captain",
+      "side": 1,
+      "x": 995.0,
+      "ring_dL": 10.8,
+      "ring_dE": 12.4
+     }
+    ],
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 64.1,
+      "L_std": 21.4,
+      "C_mean": 37.5,
+      "chroma_hi_pct": 73.9,
+      "edge_density": 17.6
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 71.6,
+      "L_std": 21.7,
+      "C_mean": 27.2,
+      "chroma_hi_pct": 38.4,
+      "edge_density": 17.5
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 72.3,
+      "L_std": 17.7,
+      "C_mean": 22.6,
+      "chroma_hi_pct": 29.7,
+      "edge_density": 22.4
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 49.1,
+      "L_std": 7.4,
+      "C_mean": 38.2,
+      "chroma_hi_pct": 86.6,
+      "edge_density": 20.0
+     }
+    }
+   },
+   "r06_075": {
+    "t": 75.0166666666637,
+    "cam_x": 1218.96662822364,
+    "units": 21,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 1860.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "tinted_units_excluded": 1,
+    "ally": {
+     "px": 541,
+     "dE_median": 40.7,
+     "camo_pct": 7.2,
+     "dL_median": 17.2,
+     "ring_dL": 5.9,
+     "ring_dE": 9.6,
+     "slice_dL_median": 3.6,
+     "slice_dL_min": 0.8,
+     "unit_L_mean": 66.0,
+     "ring_L_mean": 60.1,
+     "inner_edge_density": 46.3
+    },
+    "enemy": {
+     "px": 390,
+     "dE_median": 45.4,
+     "camo_pct": 0.0,
+     "dL_median": 12.7,
+     "ring_dL": 9.1,
+     "ring_dE": 31.8,
+     "slice_dL_median": 13.3,
+     "slice_dL_min": 1.7,
+     "unit_L_mean": 48.4,
+     "ring_L_mean": 57.4,
+     "inner_edge_density": 49.7
+    },
+    "per_unit": [
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 1167.0,
+      "ring_dL": 14.1,
+      "ring_dE": 19.0
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 1167.0,
+      "ring_dL": 8.9,
+      "ring_dE": 24.9
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 1167.0,
+      "ring_dL": 0.9,
+      "ring_dE": 14.2
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 1167.0,
+      "ring_dL": 14.4,
+      "ring_dE": 20.1
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 1037.0,
+      "ring_dL": 8.7,
+      "ring_dE": 17.9
+     },
+     {
+      "set": "e_spitter",
+      "side": -1,
+      "x": 1267.0,
+      "ring_dL": 12.2,
+      "ring_dE": 31.3
+     },
+     {
+      "set": "e_spitter",
+      "side": -1,
+      "x": 1497.0,
+      "ring_dL": 6.7,
+      "ring_dE": 31.8
+     },
+     {
+      "set": "e_spitter",
+      "side": -1,
+      "x": 1531.0,
+      "ring_dL": 8.2,
+      "ring_dE": 32.5
+     },
+     {
+      "set": "hero_captain",
+      "side": 1,
+      "x": 1159.0,
+      "ring_dL": 4.7,
+      "ring_dE": 5.7
+     }
+    ],
+    "fx_cover_of_units_pct": 1.2,
+    "fx_px": 24,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 63.2,
+      "L_std": 22.2,
+      "C_mean": 37.2,
+      "chroma_hi_pct": 72.9,
+      "edge_density": 17.6
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 71.6,
+      "L_std": 21.7,
+      "C_mean": 27.3,
+      "chroma_hi_pct": 38.4,
+      "edge_density": 17.5
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 72.3,
+      "L_std": 17.7,
+      "C_mean": 22.6,
+      "chroma_hi_pct": 29.7,
+      "edge_density": 22.4
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 49.1,
+      "L_std": 7.4,
+      "C_mean": 38.2,
+      "chroma_hi_pct": 86.6,
+      "edge_density": 20.0
+     }
+    }
+   },
+   "r10_060": {
+    "t": 60.0166666666645,
+    "cam_x": 1056.6415859994,
+    "units": 16,
+    "fx": 0,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "tinted_units_excluded": 0,
+    "ally": {
+     "px": 593,
+     "dE_median": 41.1,
+     "camo_pct": 7.1,
+     "dL_median": 16.3,
+     "ring_dL": 8.1,
+     "ring_dE": 13.2,
+     "slice_dL_median": 5.3,
+     "slice_dL_min": 0.9,
+     "unit_L_mean": 69.7,
+     "ring_L_mean": 61.5,
+     "inner_edge_density": 48.1
+    },
+    "enemy": {
+     "px": 203,
+     "dE_median": 44.0,
+     "camo_pct": 0.0,
+     "dL_median": 17.0,
+     "ring_dL": 13.9,
+     "ring_dE": 32.1,
+     "slice_dL_median": 18.1,
+     "slice_dL_min": 0.2,
+     "unit_L_mean": 50.6,
+     "ring_L_mean": 64.5,
+     "inner_edge_density": 54.6
+    },
+    "per_unit": [
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 1031.0,
+      "ring_dL": 9.5,
+      "ring_dE": 20.3
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 895.0,
+      "ring_dL": 3.9,
+      "ring_dE": 21.3
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 735.0,
+      "ring_dL": 10.6,
+      "ring_dE": 21.1
+     },
+     {
+      "set": "e_spitter",
+      "side": -1,
+      "x": 1081.0,
+      "ring_dL": 12.6,
+      "ring_dE": 30.6
+     },
+     {
+      "set": "e_spitter",
+      "side": -1,
+      "x": 1081.0,
+      "ring_dL": 18.6,
+      "ring_dE": 30.9
+     },
+     {
+      "set": "e_spitter",
+      "side": -1,
+      "x": 1081.0,
+      "ring_dL": 13.4,
+      "ring_dE": 30.7
+     },
+     {
+      "set": "e_spitter",
+      "side": -1,
+      "x": 1081.0,
+      "ring_dL": 8.9,
+      "ring_dE": 31.9
+     },
+     {
+      "set": "hero_captain",
+      "side": 1,
+      "x": 1002.0,
+      "ring_dL": 7.8,
+      "ring_dE": 7.9
+     }
+    ],
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 66.8,
+      "L_std": 18.4,
+      "C_mean": 38.4,
+      "chroma_hi_pct": 76.1,
+      "edge_density": 17.5
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 71.6,
+      "L_std": 21.7,
+      "C_mean": 27.2,
+      "chroma_hi_pct": 38.4,
+      "edge_density": 17.5
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 72.3,
+      "L_std": 17.7,
+      "C_mean": 22.6,
+      "chroma_hi_pct": 29.7,
+      "edge_density": 22.4
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 49.1,
+      "L_std": 7.4,
+      "C_mean": 38.2,
+      "chroma_hi_pct": 86.6,
+      "edge_density": 19.9
+     }
+    }
+   },
+   "r10_110": {
+    "t": 110.016666666662,
+    "cam_x": 230.0,
+    "units": 18,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "tinted_units_excluded": 0,
+    "ally": {
+     "px": 655,
+     "dE_median": 41.7,
+     "camo_pct": 6.3,
+     "dL_median": 22.1,
+     "ring_dL": 9.7,
+     "ring_dE": 12.4,
+     "slice_dL_median": 5.6,
+     "slice_dL_min": 4.1,
+     "unit_L_mean": 68.6,
+     "ring_L_mean": 58.9,
+     "inner_edge_density": 47.4
+    },
+    "enemy": null,
+    "per_unit": [
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 517.0,
+      "ring_dL": 7.9,
+      "ring_dE": 20.0
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 346.0,
+      "ring_dL": 5.6,
+      "ring_dE": 24.0
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 175.0,
+      "ring_dL": 4.6,
+      "ring_dE": 21.0
+     },
+     {
+      "set": "hero_captain",
+      "side": 1,
+      "x": 50.0,
+      "ring_dL": 14.8,
+      "ring_dE": 20.5
+     }
+    ],
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 66.4,
+      "L_std": 18.6,
+      "C_mean": 39.2,
+      "chroma_hi_pct": 78.0,
+      "edge_density": 17.6
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 70.0,
+      "L_std": 21.9,
+      "C_mean": 28.6,
+      "chroma_hi_pct": 42.3,
+      "edge_density": 19.7
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 70.5,
+      "L_std": 19.4,
+      "C_mean": 23.6,
+      "chroma_hi_pct": 32.7,
+      "edge_density": 24.7
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 48.1,
+      "L_std": 10.2,
+      "C_mean": 37.1,
+      "chroma_hi_pct": 81.1,
+      "edge_density": 21.5
+     }
+    },
+    "base_player": {
+     "px": 6775,
+     "dE_median": 45.1,
+     "camo_pct": 8.0,
+     "dL_median": 21.2,
+     "ring_dL": 2.6,
+     "ring_dE": 8.7,
+     "slice_dL_median": 15.7,
+     "slice_dL_min": 2.3,
+     "unit_L_mean": 62.1,
+     "ring_L_mean": 64.7,
+     "inner_edge_density": 38.8,
+     "state": "idle",
+     "match_pct": 96.6
+    }
+   }
+  }
+ },
+ "after": {
+  "dir": "C:\\Users\\aghose\\AppData\\Local\\Temp\\a09\\cam_after",
+  "root": "C:\\Users\\aghose\\AppData\\Local\\Temp\\a09\\commit_3f70d8f",
+  "res": {
+   "r01_030": {
+    "t": 30.0166666666662,
+    "cam_x": 439.89217251901,
+    "units": 9,
+    "fx": 0,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 1060.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "tinted_units_excluded": 0,
+    "ally": {
+     "px": 565,
+     "dE_median": 59.5,
+     "camo_pct": 1.8,
+     "dL_median": 39.4,
+     "ring_dL": 40.6,
+     "ring_dE": 41.2,
+     "slice_dL_median": 45.7,
+     "slice_dL_min": 24.4,
+     "unit_L_mean": 70.4,
+     "ring_L_mean": 29.8,
+     "inner_edge_density": 46.1
+    },
+    "enemy": {
+     "px": 371,
+     "dE_median": 44.7,
+     "camo_pct": 0.0,
+     "dL_median": 29.9,
+     "ring_dL": 23.6,
+     "ring_dE": 39.2,
+     "slice_dL_median": 21.1,
+     "slice_dL_min": 10.5,
+     "unit_L_mean": 53.0,
+     "ring_L_mean": 29.5,
+     "inner_edge_density": 47.3
+    },
+    "per_unit": [
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 410.0,
+      "ring_dL": 34.7,
+      "ring_dE": 36.7
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 261.0,
+      "ring_dL": 38.1,
+      "ring_dE": 40.9
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 443.0,
+      "ring_dL": 25.3,
+      "ring_dE": 39.5
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 443.0,
+      "ring_dL": 23.3,
+      "ring_dE": 37.8
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 443.0,
+      "ring_dL": 30.3,
+      "ring_dE": 42.7
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 462.0,
+      "ring_dL": 20.2,
+      "ring_dE": 37.3
+     },
+     {
+      "set": "hero_captain",
+      "side": 1,
+      "x": 386.0,
+      "ring_dL": 43.5,
+      "ring_dE": 43.8
+     }
+    ],
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 78.6,
+      "L_std": 23.9,
+      "C_mean": 16.5,
+      "chroma_hi_pct": 4.7,
+      "edge_density": 17.7
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 61.2,
+      "L_std": 25.7,
+      "C_mean": 24.0,
+      "chroma_hi_pct": 12.1,
+      "edge_density": 20.0
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 29.4,
+      "L_std": 7.8,
+      "C_mean": 26.5,
+      "chroma_hi_pct": 1.4,
+      "edge_density": 13.6
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 33.6,
+      "L_std": 1.1,
+      "C_mean": 28.9,
+      "chroma_hi_pct": 0.3,
+      "edge_density": 0.7
+     }
+    }
+   },
+   "r01_060": {
+    "t": 60.0166666666645,
+    "cam_x": 632.833333333334,
+    "units": 13,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 1060.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "tinted_units_excluded": 1,
+    "ally": {
+     "px": 747,
+     "dE_median": 59.5,
+     "camo_pct": 3.7,
+     "dL_median": 39.4,
+     "ring_dL": 39.4,
+     "ring_dE": 40.3,
+     "slice_dL_median": 35.3,
+     "slice_dL_min": 6.9,
+     "unit_L_mean": 69.2,
+     "ring_L_mean": 29.7,
+     "inner_edge_density": 48.7
+    },
+    "enemy": {
+     "px": 213,
+     "dE_median": 44.7,
+     "camo_pct": 0.0,
+     "dL_median": 26.6,
+     "ring_dL": 23.7,
+     "ring_dE": 38.2,
+     "slice_dL_median": 28.0,
+     "slice_dL_min": 9.5,
+     "unit_L_mean": 51.8,
+     "ring_L_mean": 28.1,
+     "inner_edge_density": 49.0
+    },
+    "per_unit": [
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 593.0,
+      "ring_dL": 38.9,
+      "ring_dE": 41.0
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 593.0,
+      "ring_dL": 37.9,
+      "ring_dE": 41.7
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 593.0,
+      "ring_dL": 37.8,
+      "ring_dE": 40.6
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 593.0,
+      "ring_dL": 38.3,
+      "ring_dE": 41.7
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 533.0,
+      "ring_dL": 37.8,
+      "ring_dE": 39.9
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 362.0,
+      "ring_dL": 35.4,
+      "ring_dE": 37.4
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 621.0,
+      "ring_dL": 23.7,
+      "ring_dE": 34.6
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 621.0,
+      "ring_dL": 22.7,
+      "ring_dE": 36.9
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 882.0,
+      "ring_dL": 21.4,
+      "ring_dE": 36.8
+     },
+     {
+      "set": "hero_captain",
+      "side": 1,
+      "x": 573.0,
+      "ring_dL": 42.9,
+      "ring_dE": 43.1
+     }
+    ],
+    "fx_cover_of_units_pct": 0.4,
+    "fx_px": 8,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 78.6,
+      "L_std": 24.1,
+      "C_mean": 16.6,
+      "chroma_hi_pct": 4.8,
+      "edge_density": 17.6
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 61.2,
+      "L_std": 25.7,
+      "C_mean": 24.0,
+      "chroma_hi_pct": 12.1,
+      "edge_density": 20.0
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 29.4,
+      "L_std": 7.8,
+      "C_mean": 26.5,
+      "chroma_hi_pct": 1.4,
+      "edge_density": 13.6
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 33.6,
+      "L_std": 1.1,
+      "C_mean": 28.9,
+      "chroma_hi_pct": 0.3,
+      "edge_density": 0.7
+     }
+    }
+   },
+   "r06_046": {
+    "t": 46.0166666666653,
+    "cam_x": 1041.63405884051,
+    "units": 14,
+    "fx": 0,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 1860.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "tinted_units_excluded": 0,
+    "ally": {
+     "px": 855,
+     "dE_median": 44.5,
+     "camo_pct": 7.5,
+     "dL_median": 26.3,
+     "ring_dL": 19.4,
+     "ring_dE": 20.7,
+     "slice_dL_median": 15.5,
+     "slice_dL_min": 9.3,
+     "unit_L_mean": 48.9,
+     "ring_L_mean": 29.5,
+     "inner_edge_density": 56.8
+    },
+    "enemy": {
+     "px": 886,
+     "dE_median": 44.7,
+     "camo_pct": 0.0,
+     "dL_median": 26.6,
+     "ring_dL": 19.4,
+     "ring_dE": 37.0,
+     "slice_dL_median": 27.2,
+     "slice_dL_min": 2.7,
+     "unit_L_mean": 48.4,
+     "ring_L_mean": 29.0,
+     "inner_edge_density": 36.9
+    },
+    "per_unit": [
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 1015.0,
+      "ring_dL": 13.8,
+      "ring_dE": 15.3
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 885.0,
+      "ring_dL": 12.8,
+      "ring_dE": 14.4
+     },
+     {
+      "set": "e_brute",
+      "side": -1,
+      "x": 1334.0,
+      "ring_dL": 17.4,
+      "ring_dE": 36.8
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 1043.0,
+      "ring_dL": 19.5,
+      "ring_dE": 37.3
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 1077.0,
+      "ring_dL": 22.4,
+      "ring_dE": 37.9
+     },
+     {
+      "set": "e_grunt",
+      "side": -1,
+      "x": 1115.0,
+      "ring_dL": 21.0,
+      "ring_dE": 37.4
+     },
+     {
+      "set": "hero_captain",
+      "side": 1,
+      "x": 995.0,
+      "ring_dL": 23.2,
+      "ring_dE": 24.5
+     }
+    ],
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 78.5,
+      "L_std": 24.3,
+      "C_mean": 16.6,
+      "chroma_hi_pct": 4.8,
+      "edge_density": 17.6
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 61.2,
+      "L_std": 25.7,
+      "C_mean": 24.0,
+      "chroma_hi_pct": 12.2,
+      "edge_density": 20.0
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 29.4,
+      "L_std": 7.8,
+      "C_mean": 26.5,
+      "chroma_hi_pct": 1.4,
+      "edge_density": 13.5
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 33.6,
+      "L_std": 1.1,
+      "C_mean": 28.9,
+      "chroma_hi_pct": 0.3,
+      "edge_density": 0.7
+     }
+    }
+   },
+   "r06_075": {
+    "t": 75.0166666666637,
+    "cam_x": 1218.96662822364,
+    "units": 21,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 1860.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "tinted_units_excluded": 1,
+    "ally": {
+     "px": 567,
+     "dE_median": 57.1,
+     "camo_pct": 1.4,
+     "dL_median": 39.4,
+     "ring_dL": 36.8,
+     "ring_dE": 37.7,
+     "slice_dL_median": 37.6,
+     "slice_dL_min": 15.9,
+     "unit_L_mean": 67.4,
+     "ring_L_mean": 30.6,
+     "inner_edge_density": 47.5
+    },
+    "enemy": {
+     "px": 394,
+     "dE_median": 45.8,
+     "camo_pct": 0.0,
+     "dL_median": 26.6,
+     "ring_dL": 19.8,
+     "ring_dE": 40.7,
+     "slice_dL_median": 21.0,
+     "slice_dL_min": 16.1,
+     "unit_L_mean": 48.6,
+     "ring_L_mean": 28.8,
+     "inner_edge_density": 49.8
+    },
+    "per_unit": [
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 1167.0,
+      "ring_dL": 36.9,
+      "ring_dE": 39.9
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 1167.0,
+      "ring_dL": 39.1,
+      "ring_dE": 42.8
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 1167.0,
+      "ring_dL": 42.1,
+      "ring_dE": 42.9
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 1167.0,
+      "ring_dL": 38.0,
+      "ring_dE": 41.0
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 1037.0,
+      "ring_dL": 35.3,
+      "ring_dE": 37.3
+     },
+     {
+      "set": "e_spitter",
+      "side": -1,
+      "x": 1267.0,
+      "ring_dL": 19.2,
+      "ring_dE": 40.5
+     },
+     {
+      "set": "e_spitter",
+      "side": -1,
+      "x": 1497.0,
+      "ring_dL": 20.4,
+      "ring_dE": 40.9
+     },
+     {
+      "set": "e_spitter",
+      "side": -1,
+      "x": 1531.0,
+      "ring_dL": 19.9,
+      "ring_dE": 40.8
+     },
+     {
+      "set": "hero_captain",
+      "side": 1,
+      "x": 1159.0,
+      "ring_dL": 37.4,
+      "ring_dE": 38.0
+     }
+    ],
+    "fx_cover_of_units_pct": 0.4,
+    "fx_px": 8,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 77.3,
+      "L_std": 25.4,
+      "C_mean": 16.7,
+      "chroma_hi_pct": 5.4,
+      "edge_density": 17.5
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 61.2,
+      "L_std": 25.7,
+      "C_mean": 24.0,
+      "chroma_hi_pct": 12.1,
+      "edge_density": 20.0
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 29.4,
+      "L_std": 7.8,
+      "C_mean": 26.5,
+      "chroma_hi_pct": 1.4,
+      "edge_density": 13.6
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 33.6,
+      "L_std": 1.1,
+      "C_mean": 28.9,
+      "chroma_hi_pct": 0.3,
+      "edge_density": 0.7
+     }
+    }
+   },
+   "r10_060": {
+    "t": 60.0166666666645,
+    "cam_x": 1056.6415859994,
+    "units": 16,
+    "fx": 0,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "tinted_units_excluded": 0,
+    "ally": {
+     "px": 623,
+     "dE_median": 60.5,
+     "camo_pct": 2.2,
+     "dL_median": 52.0,
+     "ring_dL": 41.2,
+     "ring_dE": 41.8,
+     "slice_dL_median": 46.2,
+     "slice_dL_min": 21.8,
+     "unit_L_mean": 70.8,
+     "ring_L_mean": 29.6,
+     "inner_edge_density": 47.7
+    },
+    "enemy": {
+     "px": 206,
+     "dE_median": 49.1,
+     "camo_pct": 0.0,
+     "dL_median": 28.0,
+     "ring_dL": 21.0,
+     "ring_dE": 42.7,
+     "slice_dL_median": 23.0,
+     "slice_dL_min": 17.2,
+     "unit_L_mean": 50.8,
+     "ring_L_mean": 29.8,
+     "inner_edge_density": 54.4
+    },
+    "per_unit": [
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 1031.0,
+      "ring_dL": 39.9,
+      "ring_dE": 41.6
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 895.0,
+      "ring_dL": 35.4,
+      "ring_dE": 37.4
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 735.0,
+      "ring_dL": 44.2,
+      "ring_dE": 46.8
+     },
+     {
+      "set": "e_spitter",
+      "side": -1,
+      "x": 1081.0,
+      "ring_dL": 20.2,
+      "ring_dE": 42.1
+     },
+     {
+      "set": "e_spitter",
+      "side": -1,
+      "x": 1081.0,
+      "ring_dL": 23.0,
+      "ring_dE": 44.2
+     },
+     {
+      "set": "e_spitter",
+      "side": -1,
+      "x": 1081.0,
+      "ring_dL": 21.2,
+      "ring_dE": 42.7
+     },
+     {
+      "set": "e_spitter",
+      "side": -1,
+      "x": 1081.0,
+      "ring_dL": 18.7,
+      "ring_dE": 40.7
+     },
+     {
+      "set": "hero_captain",
+      "side": 1,
+      "x": 1002.0,
+      "ring_dL": 42.5,
+      "ring_dE": 42.7
+     }
+    ],
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 82.2,
+      "L_std": 20.2,
+      "C_mean": 16.3,
+      "chroma_hi_pct": 4.0,
+      "edge_density": 16.9
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 61.2,
+      "L_std": 25.7,
+      "C_mean": 24.0,
+      "chroma_hi_pct": 12.2,
+      "edge_density": 20.0
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 29.4,
+      "L_std": 7.8,
+      "C_mean": 26.5,
+      "chroma_hi_pct": 1.4,
+      "edge_density": 13.6
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 33.6,
+      "L_std": 1.1,
+      "C_mean": 28.9,
+      "chroma_hi_pct": 0.3,
+      "edge_density": 0.7
+     }
+    }
+   },
+   "r10_110": {
+    "t": 110.016666666662,
+    "cam_x": 230.0,
+    "units": 18,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "tinted_units_excluded": 0,
+    "ally": {
+     "px": 667,
+     "dE_median": 45.8,
+     "camo_pct": 2.1,
+     "dL_median": 29.8,
+     "ring_dL": 24.2,
+     "ring_dE": 25.0,
+     "slice_dL_median": 28.7,
+     "slice_dL_min": 12.4,
+     "unit_L_mean": 67.2,
+     "ring_L_mean": 43.0,
+     "inner_edge_density": 46.9
+    },
+    "enemy": null,
+    "per_unit": [
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 517.0,
+      "ring_dL": 37.6,
+      "ring_dE": 40.3
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 346.0,
+      "ring_dL": 36.6,
+      "ring_dE": 39.2
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 175.0,
+      "ring_dL": 37.3,
+      "ring_dE": 39.4
+     },
+     {
+      "set": "hero_captain",
+      "side": 1,
+      "x": 50.0,
+      "ring_dL": 0.6,
+      "ring_dE": 6.2
+     }
+    ],
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 81.4,
+      "L_std": 20.5,
+      "C_mean": 16.8,
+      "chroma_hi_pct": 4.2,
+      "edge_density": 17.6
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 61.9,
+      "L_std": 25.9,
+      "C_mean": 25.5,
+      "chroma_hi_pct": 16.2,
+      "edge_density": 21.8
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 35.1,
+      "L_std": 18.4,
+      "C_mean": 26.9,
+      "chroma_hi_pct": 6.7,
+      "edge_density": 17.2
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 34.8,
+      "L_std": 9.8,
+      "C_mean": 28.5,
+      "chroma_hi_pct": 2.1,
+      "edge_density": 3.6
+     }
+    },
+    "base_player": {
+     "px": 6840,
+     "dE_median": 51.2,
+     "camo_pct": 6.7,
+     "dL_median": 37.3,
+     "ring_dL": 25.4,
+     "ring_dE": 29.0,
+     "slice_dL_median": 38.7,
+     "slice_dL_min": 6.2,
+     "unit_L_mean": 71.7,
+     "ring_L_mean": 46.3,
+     "inner_edge_density": 34.1,
+     "state": "idle",
+     "match_pct": 60.8
+    }
+   },
+   "base_player_damaged": {
+    "t": 110.016666666662,
+    "cam_x": 230.0,
+    "units": 18,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 0.4,
+      "x": 40.0
+     }
+    },
+    "tinted_units_excluded": 0,
+    "ally": {
+     "px": 667,
+     "dE_median": 47.1,
+     "camo_pct": 2.1,
+     "dL_median": 33.2,
+     "ring_dL": 24.6,
+     "ring_dE": 25.4,
+     "slice_dL_median": 28.7,
+     "slice_dL_min": 12.4,
+     "unit_L_mean": 67.2,
+     "ring_L_mean": 42.6,
+     "inner_edge_density": 46.9
+    },
+    "enemy": null,
+    "per_unit": [
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 517.0,
+      "ring_dL": 37.6,
+      "ring_dE": 40.3
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 346.0,
+      "ring_dL": 36.6,
+      "ring_dE": 39.2
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 175.0,
+      "ring_dL": 37.3,
+      "ring_dE": 39.4
+     },
+     {
+      "set": "hero_captain",
+      "side": 1,
+      "x": 50.0,
+      "ring_dL": 1.7,
+      "ring_dE": 6.1
+     }
+    ],
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 81.5,
+      "L_std": 20.5,
+      "C_mean": 16.7,
+      "chroma_hi_pct": 4.1,
+      "edge_density": 17.5
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 61.8,
+      "L_std": 26.1,
+      "C_mean": 25.1,
+      "chroma_hi_pct": 15.2,
+      "edge_density": 22.1
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 34.9,
+      "L_std": 18.3,
+      "C_mean": 26.9,
+      "chroma_hi_pct": 6.6,
+      "edge_density": 17.3
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 34.8,
+      "L_std": 9.8,
+      "C_mean": 28.5,
+      "chroma_hi_pct": 2.1,
+      "edge_density": 3.6
+     }
+    },
+    "base_player": {
+     "px": 6186,
+     "dE_median": 51.2,
+     "camo_pct": 8.3,
+     "dL_median": 37.3,
+     "ring_dL": 26.3,
+     "ring_dE": 31.7,
+     "slice_dL_median": 37.9,
+     "slice_dL_min": 0.7,
+     "unit_L_mean": 71.7,
+     "ring_L_mean": 45.4,
+     "inner_edge_density": 36.7,
+     "state": "damaged",
+     "match_pct": 57.7
+    }
+   },
+   "base_enemy_damaged": {
+    "t": 110.016666666662,
+    "cam_x": 1930.0,
+    "units": 18,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 0.4,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "tinted_units_excluded": 0,
+    "ally": null,
+    "enemy": {
+     "px": 1204,
+     "dE_median": 31.6,
+     "camo_pct": 18.3,
+     "dL_median": 24.3,
+     "ring_dL": 12.7,
+     "ring_dE": 18.4,
+     "slice_dL_median": 11.9,
+     "slice_dL_min": 3.2,
+     "unit_L_mean": 44.3,
+     "ring_L_mean": 31.6,
+     "inner_edge_density": 38.6
+    },
+    "per_unit": [
+     {
+      "set": "e_spitter",
+      "side": -1,
+      "x": 1669.0,
+      "ring_dL": 20.2,
+      "ring_dE": 39.8
+     },
+     {
+      "set": "e_swarm",
+      "side": -1,
+      "x": 1702.0,
+      "ring_dL": 34.6,
+      "ring_dE": 38.4
+     },
+     {
+      "set": "boss_overlord",
+      "side": -1,
+      "x": 2138.0,
+      "ring_dL": 3.3,
+      "ring_dE": 9.4
+     },
+     {
+      "set": "e_brute",
+      "side": -1,
+      "x": 2138.0,
+      "ring_dL": 19.7,
+      "ring_dE": 20.9
+     }
+    ],
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 81.5,
+      "L_std": 20.5,
+      "C_mean": 16.8,
+      "chroma_hi_pct": 4.1,
+      "edge_density": 17.5
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 60.4,
+      "L_std": 26.2,
+      "C_mean": 23.4,
+      "chroma_hi_pct": 11.6,
+      "edge_density": 21.1
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 29.1,
+      "L_std": 9.8,
+      "C_mean": 24.0,
+      "chroma_hi_pct": 1.2,
+      "edge_density": 13.8
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 32.2,
+      "L_std": 5.2,
+      "C_mean": 27.3,
+      "chroma_hi_pct": 0.3,
+      "edge_density": 1.7
+     }
+    },
+    "base_enemy": {
+     "px": 3540,
+     "dE_median": 38.7,
+     "camo_pct": 2.4,
+     "dL_median": 16.1,
+     "ring_dL": 15.7,
+     "ring_dE": 28.3,
+     "slice_dL_median": 10.5,
+     "slice_dL_min": 0.5,
+     "unit_L_mean": 34.8,
+     "ring_L_mean": 50.5,
+     "inner_edge_density": 14.4,
+     "state": "damaged",
+     "match_pct": 100.0
+    }
+   },
+   "base_player_ruined": {
+    "t": 110.016666666662,
+    "cam_x": 230.0,
+    "units": 18,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 1.0,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 0.0,
+      "x": 40.0
+     }
+    },
+    "tinted_units_excluded": 0,
+    "ally": {
+     "px": 670,
+     "dE_median": 43.1,
+     "camo_pct": 2.1,
+     "dL_median": 32.9,
+     "ring_dL": 25.3,
+     "ring_dE": 25.9,
+     "slice_dL_median": 28.7,
+     "slice_dL_min": 15.2,
+     "unit_L_mean": 67.2,
+     "ring_L_mean": 42.0,
+     "inner_edge_density": 46.8
+    },
+    "enemy": null,
+    "per_unit": [
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 517.0,
+      "ring_dL": 37.6,
+      "ring_dE": 40.3
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 346.0,
+      "ring_dL": 36.6,
+      "ring_dE": 39.2
+     },
+     {
+      "set": "melee_basic",
+      "side": 1,
+      "x": 175.0,
+      "ring_dL": 37.3,
+      "ring_dE": 39.4
+     },
+     {
+      "set": "hero_captain",
+      "side": 1,
+      "x": 50.0,
+      "ring_dL": 3.2,
+      "ring_dE": 6.9
+     }
+    ],
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 81.4,
+      "L_std": 20.6,
+      "C_mean": 16.7,
+      "chroma_hi_pct": 4.0,
+      "edge_density": 17.4
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 61.2,
+      "L_std": 25.8,
+      "C_mean": 24.0,
+      "chroma_hi_pct": 12.3,
+      "edge_density": 20.3
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 34.7,
+      "L_std": 18.1,
+      "C_mean": 26.9,
+      "chroma_hi_pct": 6.7,
+      "edge_density": 17.5
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 34.3,
+      "L_std": 8.4,
+      "C_mean": 28.6,
+      "chroma_hi_pct": 2.8,
+      "edge_density": 4.3
+     }
+    },
+    "base_player": {
+     "px": 2989,
+     "dE_median": 41.7,
+     "camo_pct": 15.3,
+     "dL_median": 37.3,
+     "ring_dL": 31.5,
+     "ring_dE": 32.8,
+     "slice_dL_median": 38.5,
+     "slice_dL_min": 14.1,
+     "unit_L_mean": 66.8,
+     "ring_L_mean": 35.3,
+     "inner_edge_density": 38.5,
+     "state": "ruined",
+     "match_pct": 28.8
+    }
+   },
+   "base_enemy_ruined": {
+    "t": 110.016666666662,
+    "cam_x": 1930.0,
+    "units": 18,
+    "fx": 2,
+    "ended": false,
+    "bases": {
+     "enemy": {
+      "ratio": 0.0,
+      "x": 2160.0
+     },
+     "player": {
+      "ratio": 1.0,
+      "x": 40.0
+     }
+    },
+    "tinted_units_excluded": 0,
+    "ally": null,
+    "enemy": {
+     "px": 1313,
+     "dE_median": 38.8,
+     "camo_pct": 12.6,
+     "dL_median": 22.4,
+     "ring_dL": 12.7,
+     "ring_dE": 23.3,
+     "slice_dL_median": 10.1,
+     "slice_dL_min": 0.8,
+     "unit_L_mean": 44.3,
+     "ring_L_mean": 31.6,
+     "inner_edge_density": 40.3
+    },
+    "per_unit": [
+     {
+      "set": "e_spitter",
+      "side": -1,
+      "x": 1669.0,
+      "ring_dL": 20.2,
+      "ring_dE": 39.8
+     },
+     {
+      "set": "e_swarm",
+      "side": -1,
+      "x": 1702.0,
+      "ring_dL": 34.6,
+      "ring_dE": 38.4
+     },
+     {
+      "set": "boss_overlord",
+      "side": -1,
+      "x": 2138.0,
+      "ring_dL": 2.8,
+      "ring_dE": 15.9
+     },
+     {
+      "set": "e_brute",
+      "side": -1,
+      "x": 2138.0,
+      "ring_dL": 18.7,
+      "ring_dE": 19.9
+     }
+    ],
+    "fx_cover_of_units_pct": 0.0,
+    "fx_px": 0,
+    "bg_bands": {
+     "far": {
+      "rows": [
+       60,
+       175
+      ],
+      "L_mean": 81.4,
+      "L_std": 20.5,
+      "C_mean": 16.7,
+      "chroma_hi_pct": 4.0,
+      "edge_density": 17.4
+     },
+     "street_upper": {
+      "rows": [
+       180,
+       250
+      ],
+      "L_mean": 61.2,
+      "L_std": 25.7,
+      "C_mean": 24.0,
+      "chroma_hi_pct": 12.2,
+      "edge_density": 20.1
+     },
+     "head_band": {
+      "rows": [
+       255,
+       285
+      ],
+      "L_mean": 29.0,
+      "L_std": 9.3,
+      "C_mean": 24.6,
+      "chroma_hi_pct": 1.2,
+      "edge_density": 14.6
+     },
+     "lane": {
+      "rows": [
+       284,
+       297
+      ],
+      "L_mean": 32.8,
+      "L_std": 5.2,
+      "C_mean": 27.3,
+      "chroma_hi_pct": 0.3,
+      "edge_density": 2.8
+     }
+    },
+    "base_enemy": {
+     "px": 1693,
+     "dE_median": 38.7,
+     "camo_pct": 0.0,
+     "dL_median": 11.6,
+     "ring_dL": 2.8,
+     "ring_dE": 34.3,
+     "slice_dL_median": 4.0,
+     "slice_dL_min": 1.8,
+     "unit_L_mean": 28.7,
+     "ring_L_mean": 31.5,
+     "inner_edge_density": 14.0,
+     "state": "ruined",
+     "match_pct": 100.0
+    }
+   }
+  }
+ },
+ "same_state": {
+  "r01_030": {
+   "units_identical": true,
+   "t_before": 30.0166666666662,
+   "t_after": 30.0166666666662,
+   "cam_identical": true
+  },
+  "r01_060": {
+   "units_identical": true,
+   "t_before": 60.0166666666645,
+   "t_after": 60.0166666666645,
+   "cam_identical": true
+  },
+  "r06_046": {
+   "units_identical": true,
+   "t_before": 46.0166666666653,
+   "t_after": 46.0166666666653,
+   "cam_identical": true
+  },
+  "r06_075": {
+   "units_identical": true,
+   "t_before": 75.0166666666637,
+   "t_after": 75.0166666666637,
+   "cam_identical": true
+  },
+  "r10_060": {
+   "units_identical": true,
+   "t_before": 60.0166666666645,
+   "t_after": 60.0166666666645,
+   "cam_identical": true
+  },
+  "r10_110": {
+   "units_identical": true,
+   "t_before": 110.016666666662,
+   "t_after": 110.016666666662,
+   "cam_identical": true
+  }
+ }
+}

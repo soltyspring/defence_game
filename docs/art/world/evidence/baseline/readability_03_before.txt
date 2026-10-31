@@ -1,0 +1,19 @@
+r01/meadow   A12/E11 godot=None sil_min=85.5 crowd_min=9.0 fx=[18.5, 10.9, 5.1] proj_sep=[]
+r01/dark     A12/E11 godot=None sil_min=61.0 crowd_min=9.0 fx=[18.5, 10.9, 5.1] proj_sep=[]
+r01/bright   A12/E11 godot=None sil_min=71.4 crowd_min=9.0 fx=[18.5, 10.9, 5.1] proj_sep=[]
+r05/meadow   A13/E12 godot=None sil_min=75.5 crowd_min=1.7 fx=[14.9, 12.6, 13.9] proj_sep=[80.0, 80.0, 76.0]
+r05/dark     A13/E12 godot=None sil_min=61.9 crowd_min=1.7 fx=[14.9, 12.6, 13.9] proj_sep=[95.0, 95.0, 100.0]
+r05/bright   A13/E12 godot=None sil_min=71.4 crowd_min=1.7 fx=[14.9, 12.6, 13.9] proj_sep=[80.0, 80.0, 76.0]
+r10/meadow   A13/E14 godot=None sil_min=85.5 crowd_min=4.6 fx=[18.1, 7.7, 12.6] proj_sep=[95.5, 80.0, 75.5]
+r10/dark     A13/E14 godot=None sil_min=62.5 crowd_min=4.6 fx=[18.1, 7.7, 12.6] proj_sep=[60.6, 95.0, 100.0]
+r10/bright   A13/E14 godot=None sil_min=71.4 crowd_min=4.6 fx=[18.1, 7.7, 12.6] proj_sep=[95.5, 80.0, 75.5]
+FAILS:
+   ('r01/meadow', 'crowd_fail', [('melee_basic', 300, 25.8), ('e_grunt', 312, 9.0), ('e_grunt', 329, 29.9), ('e_grunt', 362, 35.3)])
+   ('r01/dark', 'crowd_fail', [('melee_basic', 300, 25.8), ('e_grunt', 312, 9.0), ('e_grunt', 329, 29.9), ('e_grunt', 362, 35.3)])
+   ('r01/bright', 'crowd_fail', [('melee_basic', 300, 25.8), ('e_grunt', 312, 9.0), ('e_grunt', 329, 29.9), ('e_grunt', 362, 35.3)])
+   ('r05/meadow', 'crowd_fail', [('melee_basic', 300, 30.7), ('e_spitter', 340, 1.7), ('e_swarm', 321, 14.0), ('melee_basic', 260, 31.3), ('e_swarm', 386, 25.7), ('e_grunt', 312, 22.2), ('e_grunt', 405, 2.0)])
+   ('r05/dark', 'crowd_fail', [('melee_basic', 300, 30.7), ('e_spitter', 340, 1.7), ('e_swarm', 321, 14.0), ('melee_basic', 260, 31.3), ('e_swarm', 386, 25.7), ('e_grunt', 312, 22.2), ('e_grunt', 405, 2.0)])
+   ('r05/bright', 'crowd_fail', [('melee_basic', 300, 30.7), ('e_spitter', 340, 1.7), ('e_swarm', 321, 14.0), ('melee_basic', 260, 31.3), ('e_swarm', 386, 25.7), ('e_grunt', 312, 22.2), ('e_grunt', 405, 2.0)])
+   ('r10/meadow', 'crowd_fail', [('ranged_basic', 186, 19.2), ('e_swarm', 406, 18.9), ('e_bomber', 312, 4.6), ('e_swarm', 387, 11.9), ('e_swarm', 331, 8.4), ('tank', 300, 26.8)])
+   ('r10/dark', 'crowd_fail', [('ranged_basic', 186, 19.2), ('e_swarm', 406, 18.9), ('e_bomber', 312, 4.6), ('e_swarm', 387, 11.9), ('e_swarm', 331, 8.4), ('tank', 300, 26.8)])
+   ('r10/bright', 'crowd_fail', [('ranged_basic', 186, 19.2), ('e_swarm', 406, 18.9), ('e_bomber', 312, 4.6), ('e_swarm', 387, 11.9), ('e_swarm', 331, 8.4), ('tank', 300, 26.8)])

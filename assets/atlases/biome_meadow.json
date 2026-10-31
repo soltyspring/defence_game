@@ -17,7 +17,7 @@
  "repeat": false,
  "gpu_format": "RGBA8 (lossless, no VRAM compression)",
  "gpu_bytes": 2097152,
- "disk_bytes": 12346,
+ "disk_bytes": 13894,
  "unique_regions": 5,
  "occupancy": 0.46,
  "frames": {
@@ -33,7 +33,7 @@
    "view_y": 0,
    "parallax": 0.0,
    "repeat_x": 16,
-   "clear_color": "#3b5aa8"
+   "clear_color": "#6f9ae0"
   },
   "far": {
    "x": 23,

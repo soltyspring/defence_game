@@ -1,0 +1,326 @@
+{
+ "ground_y": 295,
+ "lines": {
+  "dL_mean": 25,
+  "sil_pct": 60,
+  "dE_bg_min": 20
+ },
+ "camera_note": "r01: enemy base x = lane 1100 - 40 = 1060, frame left edge 1012; a 640-px view shows it once cam_x >= 692 (800-px wide view: cam_x >= 612). Camera follows the hero (02), so t = 10 s visibility needs a camera change or an edge indicator (04), not art.",
+ "cases": {
+  "nest_world1/vis24": {
+   "vis_px": 24,
+   "dL_mean": 17.9,
+   "sil_pct": 93.9,
+   "dE_bg": {
+    "normal": 29.1,
+    "protan": 17.3,
+    "deutan": 23.6,
+    "tritan": 35.2
+   },
+   "faction": {
+    "normal": {
+     "to_enemy": 11.2,
+     "to_ally": 45.6
+    },
+    "protan": {
+     "to_enemy": 11.1,
+     "to_ally": 37.9
+    },
+    "deutan": {
+     "to_enemy": 11.0,
+     "to_ally": 44.4
+    },
+    "tritan": {
+     "to_enemy": 10.7,
+     "to_ally": 46.2
+    }
+   },
+   "pass": {
+    "dL": false,
+    "sil": true,
+    "dE_bg": false,
+    "reads_as_mould": true
+   }
+  },
+  "nest_world1/vis40": {
+   "vis_px": 40,
+   "dL_mean": 17.7,
+   "sil_pct": 94.9,
+   "dE_bg": {
+    "normal": 28.3,
+    "protan": 16.8,
+    "deutan": 22.8,
+    "tritan": 34.3
+   },
+   "faction": {
+    "normal": {
+     "to_enemy": 9.6,
+     "to_ally": 44.7
+    },
+    "protan": {
+     "to_enemy": 9.4,
+     "to_ally": 36.7
+    },
+    "deutan": {
+     "to_enemy": 9.3,
+     "to_ally": 43.3
+    },
+    "tritan": {
+     "to_enemy": 8.9,
+     "to_ally": 45.6
+    }
+   },
+   "pass": {
+    "dL": false,
+    "sil": true,
+    "dE_bg": false,
+    "reads_as_mould": true
+   }
+  },
+  "nest_world1/vis96": {
+   "vis_px": 96,
+   "dL_mean": 19.0,
+   "sil_pct": 95.1,
+   "dE_bg": {
+    "normal": 26.4,
+    "protan": 17.9,
+    "deutan": 22.5,
+    "tritan": 31.1
+   },
+   "faction": {
+    "normal": {
+     "to_enemy": 10.6,
+     "to_ally": 45.6
+    },
+    "protan": {
+     "to_enemy": 10.5,
+     "to_ally": 37.8
+    },
+    "deutan": {
+     "to_enemy": 10.4,
+     "to_ally": 44.4
+    },
+    "tritan": {
+     "to_enemy": 10.1,
+     "to_ally": 46.2
+    }
+   },
+   "pass": {
+    "dL": false,
+    "sil": true,
+    "dE_bg": false,
+    "reads_as_mould": true
+   }
+  },
+  "nest_0.12.0/vis24": {
+   "vis_px": 24,
+   "dL_mean": 19.7,
+   "sil_pct": 94.0,
+   "dE_bg": {
+    "normal": 30.3,
+    "protan": 19.7,
+    "deutan": 25.9,
+    "tritan": 36.2
+   },
+   "faction": {
+    "normal": {
+     "to_enemy": 12.6,
+     "to_ally": 47.1
+    },
+    "protan": {
+     "to_enemy": 12.6,
+     "to_ally": 40.0
+    },
+    "deutan": {
+     "to_enemy": 12.5,
+     "to_ally": 46.4
+    },
+    "tritan": {
+     "to_enemy": 12.5,
+     "to_ally": 47.0
+    }
+   },
+   "pass": {
+    "dL": false,
+    "sil": true,
+    "dE_bg": false,
+    "reads_as_mould": true
+   }
+  },
+  "nest_0.12.0/vis40": {
+   "vis_px": 40,
+   "dL_mean": 16.4,
+   "sil_pct": 95.0,
+   "dE_bg": {
+    "normal": 27.5,
+    "protan": 15.7,
+    "deutan": 21.8,
+    "tritan": 33.6
+   },
+   "faction": {
+    "normal": {
+     "to_enemy": 8.2,
+     "to_ally": 43.8
+    },
+    "protan": {
+     "to_enemy": 8.0,
+     "to_ally": 35.7
+    },
+    "deutan": {
+     "to_enemy": 7.9,
+     "to_ally": 42.3
+    },
+    "tritan": {
+     "to_enemy": 7.4,
+     "to_ally": 44.6
+    }
+   },
+   "pass": {
+    "dL": false,
+    "sil": true,
+    "dE_bg": false,
+    "reads_as_mould": true
+   }
+  },
+  "nest_0.12.0/vis96": {
+   "vis_px": 96,
+   "dL_mean": 18.2,
+   "sil_pct": 93.3,
+   "dE_bg": {
+    "normal": 25.9,
+    "protan": 17.0,
+    "deutan": 21.7,
+    "tritan": 30.8
+   },
+   "faction": {
+    "normal": {
+     "to_enemy": 9.5,
+     "to_ally": 44.7
+    },
+    "protan": {
+     "to_enemy": 9.3,
+     "to_ally": 36.6
+    },
+    "deutan": {
+     "to_enemy": 9.2,
+     "to_ally": 43.2
+    },
+    "tritan": {
+     "to_enemy": 8.8,
+     "to_ally": 45.5
+    }
+   },
+   "pass": {
+    "dL": false,
+    "sil": true,
+    "dE_bg": false,
+    "reads_as_mould": true
+   }
+  },
+  "fort_0.11.0/vis24": {
+   "vis_px": 24,
+   "dL_mean": 5.1,
+   "sil_pct": 78.6,
+   "dE_bg": {
+    "normal": 29.4,
+    "protan": 25.2,
+    "deutan": 28.2,
+    "tritan": 30.1
+   },
+   "faction": {
+    "normal": {
+     "to_enemy": 8.9,
+     "to_ally": 43.9
+    },
+    "protan": {
+     "to_enemy": 5.8,
+     "to_ally": 40.7
+    },
+    "deutan": {
+     "to_enemy": 4.4,
+     "to_ally": 44.9
+    },
+    "tritan": {
+     "to_enemy": 5.6,
+     "to_ally": 36.4
+    }
+   },
+   "pass": {
+    "dL": false,
+    "sil": true,
+    "dE_bg": true,
+    "reads_as_mould": true
+   }
+  },
+  "fort_0.11.0/vis40": {
+   "vis_px": 40,
+   "dL_mean": 7.7,
+   "sil_pct": 72.9,
+   "dE_bg": {
+    "normal": 27.6,
+    "protan": 24.5,
+    "deutan": 26.7,
+    "tritan": 28.3
+   },
+   "faction": {
+    "normal": {
+     "to_enemy": 10.1,
+     "to_ally": 42.5
+    },
+    "protan": {
+     "to_enemy": 7.2,
+     "to_ally": 39.5
+    },
+    "deutan": {
+     "to_enemy": 6.4,
+     "to_ally": 43.4
+    },
+    "tritan": {
+     "to_enemy": 7.4,
+     "to_ally": 34.6
+    }
+   },
+   "pass": {
+    "dL": false,
+    "sil": true,
+    "dE_bg": true,
+    "reads_as_mould": true
+   }
+  },
+  "fort_0.11.0/vis96": {
+   "vis_px": 96,
+   "dL_mean": 2.4,
+   "sil_pct": 78.5,
+   "dE_bg": {
+    "normal": 26.1,
+    "protan": 21.9,
+    "deutan": 25.9,
+    "tritan": 27.2
+   },
+   "faction": {
+    "normal": {
+     "to_enemy": 9.0,
+     "to_ally": 44.7
+    },
+    "protan": {
+     "to_enemy": 7.1,
+     "to_ally": 41.0
+    },
+    "deutan": {
+     "to_enemy": 6.2,
+     "to_ally": 45.6
+    },
+    "tritan": {
+     "to_enemy": 4.0,
+     "to_ally": 37.8
+    }
+   },
+   "pass": {
+    "dL": false,
+    "sil": true,
+    "dE_bg": true,
+    "reads_as_mould": true
+   }
+  }
+ }
+}

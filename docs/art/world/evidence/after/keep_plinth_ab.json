@@ -1,0 +1,138 @@
+{
+ "none (tan to the ground)": {
+  "keep_ring_dE": 27.1,
+  "keep_ring_dL": 22.6,
+  "keep_slice_dL_median": 43.1,
+  "units_min_dL": 2.4,
+  "units_min_dE": 6.0,
+  "units": [
+   {
+    "set": "hero_captain",
+    "ring_dL": 3.2,
+    "ring_dE": 7.4
+   },
+   {
+    "set": "melee_basic",
+    "ring_dL": 5.4,
+    "ring_dE": 7.7
+   },
+   {
+    "set": "worker",
+    "ring_dL": 2.9,
+    "ring_dE": 7.7
+   },
+   {
+    "set": "ranged_basic",
+    "ring_dL": 2.4,
+    "ring_dE": 6.0
+   },
+   {
+    "set": "tank",
+    "ring_dL": 10.1,
+    "ring_dE": 11.3
+   }
+  ]
+ },
+ "crust o": {
+  "keep_ring_dE": 18.9,
+  "keep_ring_dL": 11.3,
+  "keep_slice_dL_median": 18.7,
+  "units_min_dL": 13.8,
+  "units_min_dE": 14.3,
+  "units": [
+   {
+    "set": "hero_captain",
+    "ring_dL": 27.5,
+    "ring_dE": 28.6
+   },
+   {
+    "set": "melee_basic",
+    "ring_dL": 16.8,
+    "ring_dE": 17.3
+   },
+   {
+    "set": "worker",
+    "ring_dL": 24.1,
+    "ring_dE": 25.8
+   },
+   {
+    "set": "ranged_basic",
+    "ring_dL": 14.7,
+    "ring_dE": 15.8
+   },
+   {
+    "set": "tank",
+    "ring_dL": 13.8,
+    "ring_dE": 14.3
+   }
+  ]
+ },
+ "dark crust O (shipped)": {
+  "keep_ring_dE": 12.6,
+  "keep_ring_dL": 5.5,
+  "keep_slice_dL_median": 14.9,
+  "units_min_dL": 20.6,
+  "units_min_dE": 22.6,
+  "units": [
+   {
+    "set": "hero_captain",
+    "ring_dL": 39.7,
+    "ring_dE": 39.8
+   },
+   {
+    "set": "melee_basic",
+    "ring_dL": 27.9,
+    "ring_dE": 29.8
+   },
+   {
+    "set": "worker",
+    "ring_dL": 37.2,
+    "ring_dE": 37.5
+   },
+   {
+    "set": "ranged_basic",
+    "ring_dL": 20.6,
+    "ring_dE": 22.6
+   },
+   {
+    "set": "tank",
+    "ring_dL": 26.2,
+    "ring_dE": 28.4
+   }
+  ]
+ },
+ "grey stone M": {
+  "keep_ring_dE": 12.2,
+  "keep_ring_dL": 12.0,
+  "keep_slice_dL_median": 19.4,
+  "units_min_dL": 12.3,
+  "units_min_dE": 26.0,
+  "units": [
+   {
+    "set": "hero_captain",
+    "ring_dL": 26.1,
+    "ring_dE": 38.8
+   },
+   {
+    "set": "melee_basic",
+    "ring_dL": 15.4,
+    "ring_dE": 38.2
+   },
+   {
+    "set": "worker",
+    "ring_dL": 22.9,
+    "ring_dE": 38.5
+   },
+   {
+    "set": "ranged_basic",
+    "ring_dL": 14.1,
+    "ring_dE": 26.0
+   },
+   {
+    "set": "tank",
+    "ring_dL": 12.3,
+    "ring_dE": 40.9
+   }
+  ]
+ }
+}

@@ -1,4 +1,6 @@
-"""Mold-nest edge readability (owner: 03-art, art 0.12.0, 09 X9). Python composite only.
+"""Mold-nest edge readability (owner: 09-art-world since 2026-11-01; written by 03-art for art 0.12.0, 09 X9). Python composite only.
+Cases: the nest on disk (art-world 1), the 0.12.0 nest from git rev ART_NEST_PREV (default HEAD) and the old bramble fort
+(11ceacb), all on the CURRENT biome. ART_GIT_ROOT points git at a checkout when this runs inside a git-archive snapshot.
 
     python tools/art/nest_check.py [out_dir]
 
@@ -46,11 +48,14 @@ def page_frame(doc, page, name):
     return page[f["y"]:f["y"] + f["h"], f["x"]:f["x"] + f["w"]], f["pivot"]
 
 
+GIT_ROOT = os.environ.get("ART_GIT_ROOT", ROOT)
+
+
 def load_bases(rev=None):
     if rev:
-        j = json.loads(subprocess.run(["git", "show", f"{rev}:assets/atlases/bases.json"], cwd=ROOT,
+        j = json.loads(subprocess.run(["git", "show", f"{rev}:assets/atlases/bases.json"], cwd=GIT_ROOT,
                                       capture_output=True, check=True).stdout)
-        p = np.array(Image.open(io.BytesIO(subprocess.run(["git", "show", f"{rev}:assets/atlases/bases.png"], cwd=ROOT,
+        p = np.array(Image.open(io.BytesIO(subprocess.run(["git", "show", f"{rev}:assets/atlases/bases.png"], cwd=GIT_ROOT,
                                                           capture_output=True, check=True).stdout)).convert("RGBA"))
     else:
         j = json.load(open(os.path.join(ROOT, "assets", "atlases", "bases.json"), encoding="utf-8"))
@@ -126,7 +131,7 @@ def main(out):
                           "cam_x >= 692 (800-px wide view: cam_x >= 612). Camera follows the hero (02), so t = 10 s "
                           "visibility needs a camera change or an edge indicator (04), not art.", "cases": {}}
     renders = []
-    for label, rev in (("nest_0.12.0", None), ("fort_0.11.0", "11ceacb")):
+    for label, rev in (("nest_world1", None), ("nest_0.12.0", os.environ.get("ART_NEST_PREV", "HEAD")), ("fort_0.11.0", "11ceacb")):
         doc, page = load_bases(rev)
         fr, pv = page_frame(doc, page, "base_enemy")
         for vis in (24, 40, 96):
