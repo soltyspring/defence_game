@@ -69,6 +69,8 @@ In plain words: today a player keeps progress across updates only. Reinstalling,
 
 Not recommended: backing up the whole files dir (would carry `.tmp`, `.corrupt-*`, screenshots), or adding a cloud-save account (needs a server, sign-in, Data safety "collected").
 
+Cross-check by 10 (docs/research/systems/DATA_AND_BACKEND_ANALYSIS.md §9.9, request 10→06 v0.18, no change requested). On Godot 4.7.2, Android `user://` writes do not fsync. 10 infers, without a device test, that a power cut right after two quick saves could corrupt both `save.json` and `.bak`. A B1 backup copy would then be the only way back. The include-only rule set also leaves out the `save.json.tmp-XXXXXX` files Godot would create if save-and-swap were ever enabled.
+
 ## 5. Data safety and privacy policy re-check against the backup policy
 | Statement | File | Holds under B0 (current)? | Under B1 | Under B2 | Under B3 |
 |---|---|---|---|---|---|
