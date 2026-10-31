@@ -26,3 +26,16 @@
 ## Not claimed (evidence too weak in this run)
 - Message stacking and tutorial-hint timing: the t30/t60 frames were produced by stepping the simulation 30 s within one frame, so all toasts/banners appear together. Not reported as a defect.
 - "Fun", retention and difficulty for humans: D11, needs the 5-player pilot.
+
+## Re-judgement with numbers, HEAD 68866e9 (2026-10-31 16:50)
+| Item | Metric (how measured) | Value | Verdict |
+|---|---|---|---|
+| J1 framing | screen area covered by unit/hero/base sprites, union on a 2-px logical grid, r01 casual bot, real time, sampled every 5 s to 32 s (`capture_m8.gd` j1) | **5.0–6.9 %** of the 640×360 view; identical ko/en, 1×/2×, notch/full | OPEN |
+| J1 framing | lane band = top of tallest visible unit to bottom of ground strip, % of view height | **16.1 %** | OPEN |
+| J1 enemy visibility | enemies inside the camera view, r01 t = 7…32 s | **0** at every sample; r08 peak frame (34 units, 160 s) also shows 0 enemies | OPEN |
+| J1 sides | ally vs enemy colour (TH-COL) + CVD frames | PASS (ΔE 19–25) | closed part |
+| J2 risk | `probe_r01_risk.gd --seeds=20`, casual policy | 20/20 wins, **20/20 three stars**, player base hit in **0/20** runs, max base damage **0 %**, median clear **108 s**, waves reached 3 of 6 | OPEN |
+| J2 risk | same, competent policy | 20/20 wins, 20/20 three stars, base hit 0/20, median clear 129.9 s | OPEN |
+| J3 | worker shape + resource names (VISUAL_CHECKS C5) | PASS | **closed** (04 6051b3c) |
+Observation for 01/04: the r01 HUD shows "웨이브 0/3" while data/rounds/r01.json has 6 waves (late pressure waves at 160/210/260 s); intended hiding or a count mismatch, not yet decided.
+Pass rules still owed by 01 (see 07-qa-to-01-director.md): J2 numeric rule in ROUNDS.md; J1 target for object-area % or enemy visibility agreed with 03/04.

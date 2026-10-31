@@ -19,6 +19,9 @@ Runs named `head-<sha>` / made with `run_acceptance.ps1 -Head` test a clean `git
 | QA-B011 | P2 (proxy) | 03 | VERIFIED 3b2d830 (TH-COL-* PASS, closest ΔE 19–25 after 7705aec; CVD-simulated r08 frame separable) | TH-COL-PROTAN/DEUTAN | Ally vs enemy colour separation under CVD |
 | QA-B012 | P3 | 02 | OPEN | VISUAL C4 | Damage numbers: fallback font 8 px, up to 21 at once, stacked numbers merge and overlap HP bars |
 | QA-B013 | P3 | 04 (cc 02) | OPEN | VISUAL C4 | Green/red base and unit HP bars indistinguishable under protan/deutan simulation |
+| QA-B014 | P3 | 01 | OPEN | DATA-13/14 | 10 ui.upgrade* keys missing in data/text ko+en (renders only via 04 fallback) |
+| QA-B015 | P2 (pre-check) | 04 (cc 01) | OPEN | VISUAL C7 | Q3 EN title 'Bakery Knights: Mold Defense' 588 px > 572 px notch safe width at menu title font |
+| QA-J3 | P2 | 04 | VERIFIED 68866e9 (C5) | VISUAL C5 | Worker vs soldier card + resource names |
 | QA-W001 | — | 01 | RESOLVED 2884231 (D18, cbfb0a8; R1/R2-LOSS PASS) | R1-LOSS, R2-LOSS | Workspace run 20261031-074155 only: with 01's uncommitted round edits (enemy_ai disabled), an idle player in r01/r02 no longer loses (base 1310/1500, 1365/1500 at the 900 s limit). Committed HEAD 462991a passes R1/R2-LOSS. Blocks commit of that data change unless intended |
 | QA-W002 | — | 02 | RESOLVED 2026-10-31 (e9dfaa4) | FLOW-03 | Uncommitted `_cue()` call broke battle.gd compile in workspace run 20261031-080624. 02 committed the audio cue integration in e9dfaa4; battles start at HEAD and in workspace; AUD-02 PASS |
 | QA-W003 | P2 at HEAD | 01 (cc 04) | RESOLVED (ui.star_* committed) | DATA-13/14 | Committed result.gd (183e4a6) uses `ui.star_win/star_base_hp/star_base_hp_any/star_time/star_time_any`; the text exists only in 01's uncommitted ko/en edits, so HEAD shows raw ids |

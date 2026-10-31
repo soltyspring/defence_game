@@ -40,3 +40,8 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 - C3 PASS: narrowest notch layout (34+34) rendered ko/en 1x/2x, 0 truncated or out-of-safe buttons on menu, round select, r08 HUD, result; base HP shown in full.
 - **QA-B013 (P3)**: player/enemy base bars (green/red) become the same olive under protan/deutan simulation (evidence/visual3-3b2d830/ko_2x_peak_{protan,deutan}.png, made with tests/acceptance/cvd_sim.gd). Pass: bars separable in the simulated frames by luminance or a pattern/icon, not hue alone.
 - Note: HUD focus-out auto-pause fired on a real desktop focus loss during my run (ko_2x_t101.png); behaves as designed.
+
+## Update 2026-10-31 16:50 (clean HEAD 68866e9; VISUAL_CHECKS C5-C8, FIRST_3MIN_REVIEW re-judgement)
+- QA-J3 **VERIFIED** (C5): econ-shape worker card survives deutan/protan; 반죽/기력 and Dough/Energy shown. Upgrade panel (C6): disabled + '준비 중' notice, inside safe area at 34+34, 0 monetization words.
+- **QA-B015 (P2, pre-check, with 01)**: Q3 working title 'Bakery Knights: Mold Defense' is 588 px at the menu title font (FONT_XL bold) vs 572 px safe width at 34+34 notch -> will overflow when 01 sets ui.title. Pass: rendered menu at en 1x/2x with 34+34 notch shows the full title (smaller step, 2 lines, or logo). KO 456 px fits.
+- QA-J1 still OPEN with numbers: objects cover 5.0-6.9 % of the view, enemies on screen 0 at r01 t=7..32 s and at the r08 peak frame. Pass target to be agreed with 01/03 (suggest: nearest enemy group or an off-screen indicator always visible).

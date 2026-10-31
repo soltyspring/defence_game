@@ -44,3 +44,27 @@ Run 2026-10-31 16:12, clean HEAD **5c08bb4**, `tests/acceptance/capture_narrow.g
 - **QA-B012 (P3, 02)** damage numbers: drawn with `ThemeDB.fallback_font` at 8 logical px (battle_view.gd `_draw_text`), not the bundled pixel font; up to 21 alive at once; stacked numbers merge ("1212" over the hero in `visual2…/ko_2x_t046.png`) and sit on the unit HP bars.
 - **QA-B013 (P3, 04 HUD + 02 unit bars)** under protan/deutan simulation the green player-base bar and red enemy-base bar (and unit HP bars) become the same olive/yellow (`ko_2x_peak_deutan.png`). Side is still given by position and VS, so not a blocker.
 - Bot result: the competent bot lost r08 in both full runs (known OPEN since D18, r04–r10 balance). Not a UI finding.
+
+## M8 run — clean origin/main HEAD 68866e9 (includes 04 6051b3c QA-J3 + upgrade screen, 03 7705aec art)
+Script `tests/acceptance/capture_m8.gd` via `visible_launch.ps1 -ProjectPath %TEMP%\qa07_head`; all windows on `\\.\DISPLAY2`, EXIT_0 (`evidence/visual4-68866e9/launch_*.json`). Configs: ko/en × 1×/2× with 34+34 px notch (masked black) + ko 2× full width. CVD frames via `cvd_sim.gd`.
+
+### C5 QA-J3 worker vs soldier card, resource names — PASS
+- Worker button `shape = econ` (clipped octagon corners, brown fill, gold top strip) vs soldier `shape = rect` (blue-grey), same 50×56 size (`*_m8_report.json` j3). The shape difference survives the deutan/protan simulation (`ko_2x_notch_3_r01_hud_t02_{deutan,protan}.png`), so it does not rely on colour.
+- HUD shows the resource names: ko **반죽 / 기력**, en **Dough / Energy** (top-left, `ko_2x_notch_3_r01_hud_t02.png`, `en_1x_notch_3_r01_hud_t02.png`); `tut_buy_worker` uses the same word.
+- Limit: no human tested whether the shape alone is understood (D11).
+
+### C6 Upgrade screen, disabled services (Q2 보류) — PASS, one text-ownership finding
+- Opened from the main menu in all 5 configs. `purchase_available() == false`; all 5 buy buttons disabled (grey); notice **"※ 강화 기능 준비 중입니다"** / **"※ Upgrades are coming soon"**; panel and buttons inside the safe area at 34+34 notch; no truncated labels.
+- Monetization text scan (광고/구매/상점/결제/보석/젬/패키지/광고 제거/ads/shop/store/purchase/gem(s)/iap/remove ads/restore) on menu, upgrade panel and HUD: **0 hits**. Prices are in-game coins only.
+- **QA-B014 (P3, 01)**: the 10 `ui.upgrade*` keys used by upgrade_panel.gd are not in `data/text/ko.json` / `en.json` (DATA-13/14 FAIL at 68866e9); the screen renders only because of 04's built-in fallback table.
+- Observation: disabled buttons still show bright gold prices, which reads as "buyable but not now". Acceptable with the notice; no bug filed.
+
+### C7 Working title (Q3) — NOT_IMPLEMENTED, projected to clip in English
+- In-game title at 68866e9 is still `ui.title` = "레인 디펜스" / "Lane Defence" (`*_1_menu.png`). `project.godot` `config/name = "Lane Defence"`.
+- Projection with the committed menu code (FONT_XL bold, centred in the safe area): **"Bakery Knights: Mold Defense" = 588 px** vs safe width **572 px** at 34+34 notch → would overflow by 16 px; fits at full 640 px with 26 px margins. **"빵집 기사단: 곰팡이 디펜스" = 456 px** fits both.
+- 360 dp height / 640 logical width is the layout measured here (canvas_items 640×360). Waiting for 01 (text) and 04 (menu title layout); final store name needs a human KIPRIS check of classes 9/41 (Q3).
+
+### C8 r08 crowd, new art, real time — PASS (messages), J1 still open
+- 240 s continuous at 2× (`--autoplay --round=r08`, competent bot, normal fixed step). One real window focus loss at 85.08 s triggered the HUD auto-pause; the harness resumed 2 ms later and logged it (`focus_log`); max wall−sim drift 0.11 s, so the run stays real time. Run condition: launcher keeps the game window topmost on DISPLAY2; other worker terminals on the primary monitor were active, which is the likely focus thief.
+- 14 389 frames: peak 34 units, max 7 projectiles, max 24 damage numbers, max 2 HUD messages at once, **0 message overlaps**.
+- At the peak-unit frame (`ko_2x_crowd_peak.png`, sim 160 s) only allies and the player base are on screen: the 34 units are spread over the lane and every enemy is off camera.

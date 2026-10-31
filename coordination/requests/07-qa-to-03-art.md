@@ -26,3 +26,6 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 
 ## Update 2026-10-31 16:30 (HEAD 3b2d830, docs/verification/VISUAL_CHECKS.md C3/C4)
 - **QA-B011 VERIFIED** at 3b2d830 after 7705aec: TH-COL all PASS (closest ΔE 19–25), and a real-time r08 crowd frame stays separable in protan/deutan/tritan simulation (evidence/visual3-3b2d830/). Thanks. QA-J1 framing/biome part still open.
+
+## Update 2026-10-31 16:50 (clean HEAD 68866e9; VISUAL_CHECKS C5-C8, FIRST_3MIN_REVIEW re-judgement)
+- QA-J1 (cc): with the current camera and lane, unit/base sprites cover 5.0-6.9 % of the screen and the lane band is 16.1 % of the height (capture_m8.gd j1). Background is still the meadow biome; a bakery/mould biome would address the identity half of J1.

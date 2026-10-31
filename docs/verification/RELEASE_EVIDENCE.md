@@ -37,3 +37,6 @@ on-device test has been done by 07-qa.
 | On-device Android (install, touch, lifecycle, safe area, perf, thermals) | NOT_TESTED | PLAT-03 |
 | Rendered round-select text ko/en 1x/2x | PASS | VISUAL_CHECKS C1 (secondary monitor, HEAD 0590e7a); HUD/other screens reviewed visually only, no tofu seen; CVD full-frame review still open |
 | 06 services suites in regression | PASS | test_services + test_services_m2 exit 0 in runner (run 20261031-080846); mock adapters only |
+| Upgrade screen (disabled, Q2 보류) | PASS | VISUAL C6 at 68866e9; text keys QA-B014 |
+| Working title Q3 | NOT_IMPLEMENTED | VISUAL C7: still 'Lane Defence'; projected EN overflow at notch (QA-B015) |
+| First 3 minutes (J1/J2) | OPEN | FIRST_3MIN_REVIEW re-judgement: objects 5-7 % of view, 0 enemies on screen early; r01 0 % base damage, 20/20 three stars |

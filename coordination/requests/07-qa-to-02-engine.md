@@ -33,3 +33,6 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 ## Update 2026-10-31 16:30 (HEAD 3b2d830, docs/verification/VISUAL_CHECKS.md C3/C4)
 - **QA-B012 (P3)** damage numbers. Reproduce: `visible_launch.ps1 -ProjectPath %TEMP%\qa07_head -Script res://tests/acceptance/capture_crowd.gd -Resolution 1280x720 -UserArgs '--autoplay','--round=r08','--shot-dir=<abs>','--tag=x'`. Actual: `battle_view.gd _draw_text` uses `ThemeDB.fallback_font` at 8 px; up to 21 alive at once; stacked numbers merge (evidence/visual2-5c08bb4/ko_2x_t046.png '1212') and sit on HP bars. Pass: bundled pixel/number font at an integer size, vertical stagger or merge for the same target, no overlap with HP bars in a crowd frame.
 - **QA-B013 (cc)** unit HP bars green/red merge under protan/deutan (evidence/visual3-3b2d830/ko_2x_peak_deutan.png).
+
+## Update 2026-10-31 16:50 (clean HEAD 68866e9; VISUAL_CHECKS C5-C8, FIRST_3MIN_REVIEW re-judgement)
+- QA-J1 (cc): enemies are on screen 0 times in r01 t=7..32 s and at the r08 peak frame; camera follows hero+60 px. If 04 picks camera framing, the change is in battle.gd.

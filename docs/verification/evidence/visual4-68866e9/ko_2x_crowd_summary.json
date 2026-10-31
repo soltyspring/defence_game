@@ -1,0 +1,45 @@
+{
+  "ended": false,
+  "focus_log": [
+    {
+      "event": "battle_paused",
+      "paused": true,
+      "wall_s": 85.081
+    },
+    {
+      "event": "focus_out",
+      "wall_s": 85.081
+    },
+    {
+      "event": "battle_paused",
+      "paused": false,
+      "wall_s": 85.083
+    }
+  ],
+  "frames": 14389,
+  "frames_with_2plus_messages": 360,
+  "max_simultaneous_messages": 2,
+  "max_wall_minus_sim_s": 0.11,
+  "overlaps": {},
+  "pauses": 1,
+  "peak": {
+    "damage_texts": 1,
+    "projectiles": 0,
+    "sim_t": 159.833333333353,
+    "units": 34,
+    "wall_s": 159.736
+  },
+  "sim_t_end": 240.12,
+  "tag": "ko_2x_crowd",
+  "timeline_cols": [
+    "wall",
+    "sim_t",
+    "units",
+    "projectiles",
+    "damage_texts",
+    "messages",
+    "overlaps"
+  ],
+  "wall_s": 240.02,
+  "won": false
+}

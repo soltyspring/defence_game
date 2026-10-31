@@ -1,0 +1,124 @@
+{
+  "insets": [
+    34.0,
+    0.0,
+    34.0,
+    0.0
+  ],
+  "j1": [
+    {
+      "enemies_on_screen": 0,
+      "lane_band_pct": 16.1,
+      "object_area_pct": 5.0,
+      "objects_on_screen": 2,
+      "sim_t": 7.0
+    },
+    {
+      "enemies_on_screen": 0,
+      "lane_band_pct": 16.1,
+      "object_area_pct": 5.0,
+      "objects_on_screen": 2,
+      "sim_t": 12.0
+    },
+    {
+      "enemies_on_screen": 0,
+      "lane_band_pct": 16.1,
+      "object_area_pct": 5.0,
+      "objects_on_screen": 2,
+      "sim_t": 17.0
+    },
+    {
+      "enemies_on_screen": 0,
+      "lane_band_pct": 16.1,
+      "object_area_pct": 5.5,
+      "objects_on_screen": 3,
+      "sim_t": 22.0
+    },
+    {
+      "enemies_on_screen": 0,
+      "lane_band_pct": 16.1,
+      "object_area_pct": 6.0,
+      "objects_on_screen": 4,
+      "sim_t": 27.0
+    },
+    {
+      "enemies_on_screen": 0,
+      "lane_band_pct": 16.1,
+      "object_area_pct": 6.8,
+      "objects_on_screen": 6,
+      "sim_t": 32.0
+    }
+  ],
+  "j3": {
+    "hud_texts": [],
+    "res_energy": "Energy",
+    "res_supply": "Dough",
+    "soldier": {
+      "fill": "(0.22, 0.25, 0.33, 0.95)",
+      "shape": "rect",
+      "size": [
+        50.0,
+        56.0
+      ],
+      "sub": "30",
+      "text": "Toast"
+    },
+    "tut_buy_worker": "Hire bakers to make dough faster.",
+    "worker": {
+      "fill": "(0.3, 0.26, 0.16, 0.95)",
+      "shape": "econ",
+      "size": [
+        50.0,
+        56.0
+      ],
+      "sub": "40",
+      "text": "Baker"
+    }
+  },
+  "money_hud": [],
+  "money_menu": [],
+  "title": {
+    "drawn": "Lane Defence",
+    "fits": true,
+    "projected_en_w": 588.0,
+    "projected_ko_w": 456.0,
+    "q3_present": false,
+    "safe_w": 572.0,
+    "width": 267.0
+  },
+  "upgrade": {
+    "all_disabled": true,
+    "buttons": [
+      {
+        "disabled": true,
+        "text": "Upgrade",
+        "truncated": false
+      },
+      {
+        "disabled": true,
+        "text": "Upgrade",
+        "truncated": false
+      },
+      {
+        "disabled": true,
+        "text": "Upgrade",
+        "truncated": false
+      },
+      {
+        "disabled": true,
+        "text": "Upgrade",
+        "truncated": false
+      },
+      {
+        "disabled": true,
+        "text": "Upgrade",
+        "truncated": false
+      }
+    ],
+    "buttons_outside_safe": 0,
+    "money_words": [],
+    "purchase_available": false,
+    "status_text": "Upgrades are coming soon"
+  },
+  "view": "(640.0, 360.0)"
+}

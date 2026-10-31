@@ -20,6 +20,8 @@ var overlaps := {}
 var peak := {"units": -1}
 var _next_shot := 1.0
 var _t0 := 0
+var focus_log := []          # window focus changes + HUD auto-pauses (harness resumes, logged)
+var resume_after_pause := true
 
 func _initialize() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -27,6 +29,7 @@ func _initialize() -> void:
 		elif a.begins_with("--tag="): tag = a.get_slice("=", 1)
 		elif a.begins_with("--seconds="): seconds = float(a.get_slice("=", 1))
 		elif a.begins_with("--every="): every = float(a.get_slice("=", 1))
+		elif a == "--no-resume": resume_after_pause = false
 		elif a.begins_with("--locale="): load("res://src/ui/ui_text.gd").load_locale(a.get_slice("=", 1))
 	var save = root.get_node_or_null("Save")
 	if save:
@@ -59,6 +62,12 @@ func _run() -> void:
 	var main: Node = load("res://scenes/gameplay/main.tscn").instantiate()
 	root.add_child(main)
 	_t0 = Time.get_ticks_msec()
+	var ev := root.get_node("Events")
+	root.focus_exited.connect(func(): focus_log.append({"wall_s": (Time.get_ticks_msec() - _t0) / 1000.0, "event": "focus_out"}))
+	root.focus_entered.connect(func(): focus_log.append({"wall_s": (Time.get_ticks_msec() - _t0) / 1000.0, "event": "focus_in"}))
+	ev.battle_paused.connect(func(p):
+		focus_log.append({"wall_s": (Time.get_ticks_msec() - _t0) / 1000.0, "event": "battle_paused", "paused": p})
+		if p and resume_after_pause: ev.cmd_set_paused.emit.call_deferred(false))
 	while (Time.get_ticks_msec() - _t0) / 1000.0 < seconds:
 		await process_frame
 		var wall := (Time.get_ticks_msec() - _t0) / 1000.0
@@ -105,7 +114,7 @@ func _run() -> void:
 		drift = maxf(drift, absf(float(row[0]) - float(row[1])))
 	var rep := {"tag": tag, "frames": timeline.size(), "wall_s": timeline.back()[0] if timeline.size() > 0 else 0,
 		"sim_t_end": timeline.back()[1] if timeline.size() > 0 else 0, "max_wall_minus_sim_s": snappedf(drift, 0.01),
-		"max_simultaneous_messages": max_msgs, "frames_with_2plus_messages": frames_2, "overlaps": overlaps, "peak": peak,
+		"max_simultaneous_messages": max_msgs, "focus_log": focus_log, "pauses": focus_log.filter(func(e): return e.event == "battle_paused" and e.paused).size(), "frames_with_2plus_messages": frames_2, "overlaps": overlaps, "peak": peak,
 		"ended": app.battle != null and app.battle.sim != null and app.battle.sim.ended,
 		"won": app.battle.sim.won if app.battle and app.battle.sim else null, "timeline_cols": ["wall", "sim_t", "units", "projectiles", "damage_texts", "messages", "overlaps"], "timeline": timeline}
 	if shot_dir != "":
