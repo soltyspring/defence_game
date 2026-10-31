@@ -25,6 +25,7 @@ var tutorial_key := ""
 var banner_label: Label
 var skill_tip: Label              # skill name above the pressed skill button
 var toasts_suppressed := 0        # QA
+var unknown_toasts: Array = []     # QA: engine toast keys with no text (not shown)
 var pause_layer: Control
 var pause_buttons: Array = []
 var settings_panel: Control
@@ -239,7 +240,12 @@ func _on_toast(key: String, _args: Dictionary) -> void:
 	var k := "toast." + key
 	if not UiText.has(k) and UiText.has("ui." + key):
 		k = "ui." + key          # e.g. engine toast "save_recovered" -> ui.save_recovered
-	show_toast(UiText.t(k, key))
+	if not UiText.has(k):
+		# never show a raw engine id to players (07 FLOW-04B); report it so 01/02 add the text
+		unknown_toasts.append(key)
+		push_warning("[HUD] toast key without text: %s (add toast.%s to data/text)" % [key, key])
+		return
+	show_toast(UiText.t(k))
 	if key == "boss_incoming":
 		show_banner(UiText.t("ui.boss"))
 

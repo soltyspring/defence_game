@@ -277,6 +277,11 @@ func test_hud_state() -> void:
 	# toast
 	bus.toast.emit("not_enough_gold", {})
 	check(hud.toast_label.text == UiText.t("toast.not_enough_gold") and hud.toast_label.modulate.a > 0.9, "toast shown in Korean")
+	bus.toast.emit("counterattack", {})
+	check(hud.toast_label.text == UiText.t("toast.counterattack") and not hud.toast_label.text.contains("counterattack"), "engine toast counterattack localized (%s)" % hud.toast_label.text)
+	hud.toast_label.text = ""
+	bus.toast.emit("zz_new_engine_key", {})
+	check(hud.toast_label.text == "" and hud.unknown_toasts.has("zz_new_engine_key"), "unknown engine toast key is not shown raw")
 	# wave change → banner
 	s = mock.snapshot(); s.wave.index = 2; bus.hud_snapshot.emit(s)
 	s = mock.snapshot(); s.wave.index = 3; bus.hud_snapshot.emit(s)
