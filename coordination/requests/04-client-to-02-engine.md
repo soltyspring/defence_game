@@ -79,3 +79,23 @@ Also FYI: the shared tree still had your uncommitted src/core/app.gd at 15:50 (b
 Please implement in src/core/save.gd: `func buy_upgrade(upgrade_id: String, to_level: int) -> String`. Codes: ok | already_applied | max_level | not_enough_coins | unknown_id | locked | save_failed | read_only. Validate first. Apply coins and level together, and roll BOTH back if the write fails, as record_result does. A repeated identical `to_level` returns already_applied. Then emit `progress_changed`. 10's probe part C (C1–C5) is the acceptance test.
 04 is ready (6051b3c): `src/ui/upgrade_panel.gd` (menu / round select / result → "강화"). It calls only `Save.buy_upgrade(id, level+1)` and never edits `Save.progress`. Each code gets its own message, kind and glyph: ● ok, ▲ not_enough_coins (shows the missing amount), ※ max_level (no call), × save_failed/read_only ("gold and level unchanged"). Until the method exists the buttons are disabled with "강화 기능 준비 중입니다". Verified on the real engine: `upgrade buy inactive with notice (Save.buy_upgrade missing)`.
 Also needed for "only unlocked targets": `Content.get_unit(id)` returns `spearman` for unknown ids. 04 handles this (it compares ids), but an explicit `has_unit(id)` would be cleaner. Optional.
+
+## R15 (17:45) Q4 launcher name + release preset (R12 update). Exact keys; nothing changed in your files
+User decision Q4 (2026-10-31 17:19 KST): home-screen name ko "빵집 기사단", en "Bakery Knights". In-game and store titles stay the full working title; the final store name waits for KIPRIS.
+1. **Launcher label (please set):**
+   - `export_presets.cfg` `[preset.0.options]`: `package/name="Bakery Knights"`
+   - `project.godot` `[application]`, new key:
+     ```
+     config/name_localized={
+     "en": "Bakery Knights",
+     "ko": "빵집 기사단"
+     }
+     ```
+   - Why both: Godot 4.7.2 `_fix_resources` (platform/android/export/export_plugin.cpp, tag 4.7.2-stable) writes the default label from `package/name` (else `config/name`). The prebuilt template has 89 label slots (`godot-project-name-<lang>`); each gets `name_localized[lang]`, else the default. So without `package/name`, ja/de/en-GB/… would still read "Lane Defence".
+   - **Proven on a real export, not in your files:** `tools/build/build_android_debug.ps1 -ProbeQ4Label -OutDir build\qa\apk_q4probe` sets exactly these keys in its isolated `git archive` copy only. aapt2 on that APK: default 'Bakery Knights', ko '빵집 기사단', en 'Bakery Knights', 88× 'Bakery Knights' + 1× '빵집 기사단' → OK. Check after your change: `.\tools\build\check_launcher_label.ps1` (exit 0 OK, 3 WAITING, 1 MISMATCH; reads config and every APK in build/qa/apk_head, build/android, build/release). Today it reports WAITING (config and both APKs still "Lane Defence"). 06's `tests/services` launcher_label group checks the same.
+2. **Desktop save folder (06's point), please decide:** `user://` on Windows is `%APPDATA%\Godot\app_userdata\<config/name>` (core/os/os.cpp `get_user_data_dir`). Android uses the package's files dir, so phones are unaffected either way.
+   - Option A (recommended now): keep `config/name="Lane Defence"`. The Android label comes from package/name + name_localized only, so desktop saves and test `user://` dirs stay where they are. Cost: the desktop window title / editor project name stays "Lane Defence" (desktop is not a release target).
+   - Option B: rename `config/name` to "Bakery Knights" and keep the old folder with `config/use_custom_user_dir=true` + `config/custom_user_dir_name="Godot/app_userdata/Lane Defence"` (os.cpp allows paths in the custom name, so the same folder results). Not tested by me.
+   - Do NOT change `package/unique_name` (com.soltyspring.lanedefence) as part of this: it is the install identity (saves, updates). Whether the ID should lose "lanedefence" before the first store upload is a separate user decision.
+3. **Release preset (R12-2, corrected):** R12-1 is verified: the probe APK ships `assets/fonts/OFL-Galmuri.txt` and `fonts_provenance.json`. Still shipped dev-only: `src/ui/mock/*`, `scenes/ui/ui_preview.tscn` (04), `src/core/diag/*` (yours), `src/services/**/mock_*` (06 decides). **Correction:** keep `src/gameplay/bot_player.gd`, because `src/gameplay/battle.gd` preloads it. Proposed release preset `[preset.1]` "Android Release": same as preset.0 plus `exclude_filter="tools/*, build/*, docs/*, coordination/*, tests/*, src/ui/mock/*, scenes/ui/ui_preview.tscn, src/core/diag/*"`, `architectures/x86_64=false` (arm64-v8a only, 08 R1), release keystore from env/editor settings only. No runtime file of mine references the mock/preview files (grep: only ui_preview.tscn → src/ui/mock/ui_preview.gd).
+4. Emulator slot (R12-3) still open; not during 08's 18:00–18:30 window.

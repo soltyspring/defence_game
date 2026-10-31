@@ -63,7 +63,14 @@ State at checkpoint: work stopped at a safe point. The owned working tree is CLE
   - Logo mode 640+notch ko/en: 2-line logo at integer scale, above the subtitle.
   The earlier build/qa/b015/ set was taken at 97c8b9c (before the hook), so it does NOT show text mode. Ignore it.
 - 7ed4a5f: 1 of 13 visible runs failed the wave_cleared check. Cause: App pauses the battle on APPLICATION_FOCUS_OUT and `sim.step()` returns while paused, so the fast-forward loop ran out of guard frames at t=36.7 s. The test now resumes the battle if it was paused and logs it. Verified with an injected focus-out (headless, 44/44) and 5 visible runs (44/44). Gate: UI 3354/0, integration 44/0.
-- Not done: 03's per-locale title pages (`ui_title_ko`/`ui_title_en`) are only in the shared tree as uncommitted 03 WIP (committed `ui_title` is shown as deleted there). title_block.gd still reads `ui_title`. Switch after 03 commits.
+- Not done: 03's per-locale title pages (`ui_title_ko`/`ui_title_en`) are only in the shared tree as uncommitted 03 WIP (committed `ui_title` is shown as deleted there). title_block.gd still reads `ui_title`. Switch after 03 commits. (Superseded 17:45: 03 committed 11ceacb; switched in a6369ba.)
+## 17:45 milestone (Q4 launcher name, title pages per locale, stale-title fix)
+- **Correction:** my 17:26 notes said data/text `ui.title` was still "레인 디펜스". Wrong: 01's a262640 (included in cb2470a) already set "빵집 기사단: 곰팡이 디펜스" / "Bakery Knights: Mold Defense". baa1672 removed the stale-name override in title_block.gd; the menu reads `ui.title`; FALLBACK_KO/EN now hold the working title for a missing key. `upgrade.supply_regen` "보급 증가" is really still open (01 R6).
+- **Q4 (user, 17:19 KST):** launcher ko "빵집 기사단", en "Bakery Knights"; in-game/store titles unchanged. 4915682: `tools/build/check_launcher_label.ps1` (config + aapt2 labels of real APKs; OK / WAITING / MISMATCH; self-test 14/14; no Godot needed). Today: WAITING. `build_android_debug.ps1 -ProbeQ4Label` exported an APK from an isolated copy with the proposed keys: ko '빵집 기사단', other 88 slots 'Bakery Knights' → OK (build/qa/apk_q4probe). Keys + desktop user:// options + release preset sent to 02 (R15).
+- **R12 re-audit (probe APK, HEAD 5357ca3):** OFL text and fonts_provenance.json are shipped. Still shipped: src/ui/mock/*, ui_preview, src/core/diag/*, services mocks. bot_player.gd must stay (battle.gd preloads it); my earlier R12-2 was wrong there.
+- **a6369ba:** logo from `ui_title_<locale>` (03 11ceacb removed `ui_title`, so HEAD showed the text title from 17:36 to 17:44). Menu holds only that page, released in battle. DISPLAY2 ko/en 1×/2× + notch: logo drawn, refs 1 → 0, integration 48/48 ×4 (build/qa/title_v011_0f3dfc8).
+- First wave_cleared ≈45 s stays an 01 decision (D16 upper edge).
+- Not done: 03's chrome colour proposal (all screens, contrast tests), after 08's 18:00–18:30 quiet window (no Godot/editor/emulator by 04 in that window).
 ## Unfinished / open (not done, do not claim)
 1. Theme-A labels: waiting for 01 to commit data/text. Then: run test_ui (typography gate) + worst-layout ko/en visible captures.
 2. 2.5× (non-integer) pixel text irregular (57–68% odd runs): waiting for 02 `scale_mode="integer"` (04 R9).
@@ -71,7 +78,7 @@ State at checkpoint: work stopped at a safe point. The owned working tree is CLE
 4. OFL licence text not in the APK; release preset should exclude mock/diag code and ship arm64 only (R12).
 5. APK not installed by 04 on any emulator (02 owns LaneDefence_Phone; slot requested in R12). No physical device; no release key/AAB (user actions).
 6. Not implemented: 2× speed UI, flash-limit/hold-toggle settings. Upgrade purchases work on the real engine since 97c8b9c; not tested on a device.
-7. Title atlas per locale (wait for 03 commit), see 17:26.
+7. Launcher label: WAITING for 02 (R15), then rebuild and `check_launcher_label.ps1` must say OK. Chrome colours (03 A10) not done.
 
 ## Exact next steps on resume
 1. Read coordinator-to-04-client.md, DECISIONS.md, 02-engine-to-04-client.md (R9/R11/R12 replies), 01-director-to-04-client.md (theme labels).
