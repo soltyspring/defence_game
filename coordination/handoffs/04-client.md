@@ -1,79 +1,41 @@
-# 04-client handoff
-Updated: 2026-10-31 08:12 +09:00. Session: sess_a24d01e7-e535-413c-9ff6-d5258090820b (same window, resumed under the new account). Quota usage.json 0.11% (08:05).
-triggered.json shows a 0% reading at 07:44. This looks like a stale marker from the account change; I did not remove it. Coordinator, please confirm.
+# 04-client handoff — FINAL CHECKPOINT (user-requested shutdown)
+Updated: 2026-10-31 09:25 +09:00
+Session: sess_a24d01e7-e535-413c-9ff6-d5258090820b (Kiro CLI, claude-opus-5.5, trust-all; same window throughout, resumed after two account changes).
+State at checkpoint: work stopped at a safe point. The owned working tree is CLEAN (all 04 work committed and pushed). No 04-started Godot or emulator process is running. Nothing was left unverified or uncommitted.
 
-## Read receipts / processed IDs
-coordinator-to-04-client (R3–R5, C04, C06, completion gate, window stability, quota checkpoints), QUOTA_POLICY.md, QUALITY_REVIEW.md, gongmojeon SKILL.md (read; reject→fix→retest applied below), docs/art/TYPOGRAPHY.md, 03-art-to-04-client A1/A2, 03-art-to-02 A2/A3, 06/08 requests to 04, DECISIONS.md (Q1 theme still PENDING; all D* are DEFAULT, not user approvals).
+## User decisions known to 04
+- Theme: user chose A "빵집 기사단 vs 곰팡이 군단" (relayed by the coordinator 09:15). At the checkpoint, 01 had not yet recorded it (DECISIONS Q1 still PENDING) and data/text was unchanged. All other D* entries are DEFAULTS. No monetization decision; no ad/IAP UI by design.
 
-## Commits this session (Publish-Task.ps1, all PUSHED origin/main)
-- 8b24e59 [Feat] bundled Galmuri fonts (no OS fallback, pixel flags forced), 12/24/36 + 10/20 grid sizes only, fixed-cell numerals, typography gate
-- 0333cd3 [Fix] grid-safe label fit for English (Latin falls to Galmuri9 10; ellipsis 15 → 2), real-scene shots in the integration test (`--shot-dir/--tag/--tile/--locale`), `visible_launch.ps1 -Script` + `--log-file`, capture_ui.ps1 routed through the secondary-monitor launcher
-- c1bf13d [Docs] TYPOGRAPHY_QA.md rewrite, QA_CHECKLIST update, requests 02 R9/R10 and 01 R3, handoff
-- 183e4a6 [Feat] tutorial hint (Events.tutorial_step), boss HP bar (HudSnapshot.boss), result star-condition rows with real round thresholds, feedback strips kept clear of the stacked skill column, stale-atlas-import guard (vector fallbacks)
-- (this commit) [Docs] handoff/status + request 03 R4
-Earlier: e62fe86, e4aa059, d7651af, 0b987c9, 8915190, 225abc6.
+## Delivered (all pushed to origin/main)
+| SHA | What |
+|---|---|
+| e62fe86 | Mobile UI: main menu, round select, battle HUD, result, settings, multi-touch TouchButton, safe-area layout, mock adapter + preview |
+| e4aa059, 8b24e59, 0333cd3 | Bundled Galmuri fonts (no OS fallback, pixel flags), 12/24/36 + 10/20 grid sizes, fixed-cell numerals, grid-safe English label fit |
+| 183e4a6, 3fd301f, 22bdd9e | Tutorial hint (Events.tutorial_step), boss HP bar, result star-condition rows, stale-atlas-import guard (tested recovery; covers engine-supplied icons) |
+| 5ba49a4 | Base HP "hp/max" numbers, star met/unmet by shape (filled/hollow), credits panel (OFL font credit), skill-name press tooltip, duplicate boss message fix, settings title clip fix |
+| 70b7409 | 07 QA-B001 (one back press handled once: claim_back + deferred navigation), QA-B002 (no HUD pause menu under the result), visible_launch `-ProjectPath` (07 QA-R5) |
+| 0d8cc5b | FLOW-04B: `toast.counterattack` ko/en; unknown engine toast keys are never shown raw |
+| d7651af, 0b987c9, 997d0a4 | Tests/tools: tests/ui/test_ui.gd, tests/integration/test_ui_integration.gd (real engine; `--shot-dir/--tag/--tile/--locale/--safe/--boss`), tools/build/{common,run_tests,capture_ui,visible_launch,build_android_debug}.ps1, inspect_apk.py |
+| 8915190 … 5426645 | Docs/requests: docs/qa/{QA_CHECKLIST,TYPOGRAPHY_QA,RELEASE_READINESS}.md, docs/mobile/BUILD_PLAN.md, requests to 01/02/03/07/09/coordinator |
 
-## Validation actually run
-- tests/ui/test_ui.gd headless: 3223 pass / 0 fail. The layout matrix covers 3000 configurations, including the integer-scale views 800×450, 666×400 and 683×384. Fonts are bundled: res://assets/fonts/Galmuri11.ttf, Galmuri11-Bold.ttf and Galmuri9.ttf. 230/230 ko chars are present in Regular and Bold. allow_system_fallback=false and the pixel flags are asserted. Digit cells are fixed.
-- tests/integration/test_ui_integration.gd headless: 27/27 with the real App/BattleSim.
-- Visible runs of the same integration script on DISPLAY2 (secondary): ko r01 1280×720 27/27; ko r06 1600×720 pass; en r06 1280×800 26/26 (the tile run skips the fresh-save check); ko r06 1600×900 pass. The shot logs record `ui_roots` = src/ui scripts only. Images are in build/qa/real/.
-- Mock screens at 6 shapes were re-captured through the launcher; all 6 windows were verified on DISPLAY2 (build/qa/screens/launch_*.json).
-- Pixel regularity: at 2×, 0% odd-width glyph runs. At 2.5×, 82% odd-width runs, which is a defect (see below).
+## Actual validation (latest runs)
+- tests/ui/test_ui.gd (headless): 3284 pass / 0 fail. Covers 3000 layout configurations, typography (230+ ko chars, 0 missing, 0 ko/en ellipsis), atlas guard, back-once/pause-after-end regressions.
+- tests/integration/test_ui_integration.gd (real App/BattleSim): 31/31 headless; also 31/31 in visible DISPLAY2 runs (ko/en, 1×/2×, r05 boss).
+- 07 acceptance `--only=flow` on a clean `git archive` of HEAD 0d8cc5b (own import): PASS=44 FAIL=0 (build/qa/flow_head_0d8cc5b). 07's own `-Head` rerun is not yet confirmed: their run lock was held by their job.
+- Debug APK from an isolated HEAD copy (07e97ca): 59,106,028 B; no permissions; minSdk 24 / target 36; v2+v3 debug signature; 0 raw PNG/TTF/WAV; 10/10 atlas .ctex; 0 keys/passwords in the repo (build/qa/apk_head/).
+- Evidence images are in git-ignored build/qa/{real,real2,real3,real4,real5,screens}.
 
-## Reject → fix → retest (gongmojeon applied)
-1. Rejected: Hangul came from the OS fallback, and sizes 9/18/28 were off-grid. Fix: 8b24e59. Retest: 0 missing glyphs, the bundled-source assert passes, and the 2× renders are regular.
-2. Rejected: 15 English labels were ellipsized ("Footman" → "Foo…"). Fix: fit_label steps down to Galmuri9 10 on its grid. Retest: 2 remain, only in the worst layout (sent to 01 R3).
-3. Rejected: the visible run failed "fresh save: r01 open". Cause: my harness set unlocked_round=99 even with --tile=0. This was a test bug, not a game bug. Fix + retest: 27/27.
-4. Rejected: text is irregular at 2.5×. 04 cannot fix this inside the UI. It needs integer scale_mode (02 R9, also 03 A2c). Open.
+## Unfinished / open (not done, do not claim)
+1. Theme-A labels: waiting for 01 to commit data/text. Then: run test_ui (typography gate) + worst-layout ko/en visible captures.
+2. 2.5× (non-integer) pixel text irregular (57–68% odd runs): waiting for 02 `scale_mode="integer"` (04 R9).
+3. Shared dev-tree import stale (ui_main, char_*_adv, char_boss_*): waiting for 02 `--import` (R11). Fresh snapshots render correctly.
+4. OFL licence text not in the APK; release preset should exclude mock/diag code and ship arm64 only (R12).
+5. APK not installed by 04 on any emulator (02 owns LaneDefence_Phone; slot requested in R12). No physical device; no release key/AAB (user actions).
+6. Not implemented: upgrade screen (P1), 2× speed UI, flash-limit/hold-toggle settings.
 
-## Open defects / limits
-- P1: 2.5× (non-integer) devices render uneven pixel text and sprites until 02 sets `scale_mode="integer"`.
-- en "Footman"/"Catapult" ellipsized in the worst layout (01).
-- No Android device or emulator evidence from 04. 02's APK (07:07) was not installed by 04, and I did not start a second AVD because 02 uses its own.
-- OFL credits not shown in-game yet (keys requested from 01; export include of the licence requested from 02).
-- White vertical lines in the biome are still visible; 02 is fixing the seam (22cd2bb, from 03).
-
-## Tutorial / boss / result-star milestone (183e4a6) — validation
-- tests/ui/test_ui.gd: 3232 pass / 0 fail. New checks: tutorial hint shown/hidden; boss bar drawn only while the boss is alive; star reasons win✓/base✓/time✗ with thresholds 50/120 and no mismatch; loss shows none met. Layout matrix (3000 configurations) now also checks that the boss/tutorial/toast/banner strips avoid every touch target and stay inside the safe area. The first run caught 7 layouts where the banner overlapped a stacked skill column, and a missing "≥" glyph in Galmuri; both were fixed and the same tests rerun to 0 failures.
-- tests/integration (real App/BattleSim): 29/29. The real r01 tutorial hint was shown ("◀ ▶ 버튼을 누르고 있으면…"). Star reasons from the real r01 thresholds (base 50%, 150 s) match the engine stars (3/3).
-- Visible on DISPLAY2: build/qa/screens/guard_20x9_{3_hud,5_result_win}.png (mock data: boss bar, tutorial, toast, star rows); build/qa/real/ko_16x9_r01_v2_*.png (real engine).
-- Defect found in the visual check, and not 04's: 03's uncommitted ui_main re-pack combined with a stale import showed wrong icons. 04 added detection and fallback, and sent 03 R4. Icon screens must be re-captured after the re-import.
-- Not verified: a real boss round (r05) end-to-end with the bar (only mock and unit data were used); whether the hint disappearing in the mid-battle real shot is correct engine step timing or a gap (the integration check only confirms that the first hint appears).
-
-## 08:40 resume (new Kiro login; 08:21–08:22 requests had failed with authExpiryRetry)
-- The owned working tree was clean (no lost edits). The `tests/performance/*` changes in the tree belong to 08 and were not touched.
-- The HISTORICAL QUOTA CHECKPOINT notices are from the previous account and were ignored as instructed. Usage was 4.35% at 08:37.
-- Dependencies are still missing at HEAD e9dfaa4: no `scale_mode` in project.godot (02 R9); ui_main import stale (png f16e31cf… vs import source_md5 224f322f…; 03 committed in c49de70, so 02 must re-import → 02 R11); en "Footman"/"Catapult" unchanged (01 R4 with measured proposals Spear 37 px / Siege 36 px at 12 px).
-- Done: `UiStyle.import_is_fresh(png)` is now a pure, tested check. test_atlas_import_guard verifies stale → icons off, matching md5 → icons back (no permanent masking), PNG changed → off, no md5/export → on. It also checks that ui_main.json size matches the source PNG and that 14 UI frames have pixels. UI suite: 3252/0. Source-PNG contact sheet: build/qa/ui_main_source_frames_3x.png, with correct icons.
-- 01 delivered 67bf9ca (Troop/Siege + credits/star keys), so I re-captured the worst layout on DISPLAY2 at 08:42 (build/qa/real2/): en has 0 ellipsis; 2× text is regular; 2.5× is still irregular (57–68% odd runs, needs 02 R9).
-- Defect found in that capture: BattleInfo card icons went through `icon_texture` without the stale guard, so they showed wrong art. Fix: the guard now lives inside `icon_texture`, plus a regression check. The same capture was retested (`*_v2`) and shows consistent glyphs. Test suite 3253/0, integration 27/27 ×6 visible runs.
-- New finding sent to 02 (R11 addendum): char_player_adv/char_enemy_adv are not imported (load errors in every run).
-## 09:00 milestone 5ba49a4 (09 findings + boss/credits/skill names)
-- Base HP numbers ("hp/max", fixed-cell Galmuri9 10, inside each bar at the outer end, clear of VS). Result and round-tile star markers: met = filled, unmet = hollow outline, so the shape differs (greyscale crop checked). Credits view in settings: Galmuri11 12 only, word-wrapped, with © and Hangul. Skill-name tooltip while the finger is down, clamped to the safe area. The same sentence from a toast and the tutorial hint is now shown once. Settings title is no longer clipped by the panel border (found in the visible credits frame, fixed, retested).
-- X3 confirmed as my own test artefact. The capture order was fixed, and a real-play check now shows no toast without input.
-- Validation: UI suite 3275/0; integration 31/31 headless; visible DISPLAY2 r05 (`--tile=4 --boss=boss_warlord --safe=34,0,34,0`) ko and en at 2× both 31/31. Frames: build/qa/real3/{ko,en}_r05_v3_*.png, mock_mixed_2x_5_result_win.png, stars_greyscale_2x.png.
-- Open: 2.5× irregular pixels (02 R9); ui_main, adv and boss atlases not imported (02 R11 + addenda), so icons are vector fallbacks and the boss has no sprite; 1× capture of the HP numbers not taken.
-## 09:10 milestone: 1× capture + HEAD APK audit + release checklist
-- 1× (640×360 window on DISPLAY2, worst notch layout, real r05 + boss): base HP numbers "1700/1800" / "1800/1800" legible and inside their bars; integration 31/31 ko and en. Files: build/qa/real4/{ko,en}_1x_*.png, zoom_*_bases.png.
-- APK: new `tools/build/build_android_debug.ps1` + `tools/build/inspect_apk.py` (isolated git-archive export, no shared cache/AVD use). HEAD 07e97ca: 59,106,028 B, no permissions, min 24 / target 36, debug v2+v3 signature, no raw sources, 10/10 atlases, 0 repo secrets. Open: the OFL text is not shipped; mock/diag code is shipped (debug); install not tested (slot requested from 02, R12).
-- docs/qa/RELEASE_READINESS.md created (sections A–D, tested/untested/blocked).
-## 09:20 milestone: 07 defects + user theme decision received
-- The user decided the theme: A "빵집 기사단 vs 곰팡이 군단" (relayed by the coordinator). 01 has not yet written the decision or new labels: DECISIONS Q1 still PENDING and data/text unchanged at 0d8cc5b. 04 text comes from data/text, so the title, menu, cards and HUD switch automatically when 01 commits. Then: re-run the typography gate plus worst-layout ko/en visible captures (no 04 code change expected unless names exceed 37 px; tests report this).
-- QA-B001/B002 fixed (70b7409); FLOW-04B raw `counterattack` id fixed (0d8cc5b). 07 flow suite on a HEAD archive at 0d8cc5b: 44/44 PASS (build/qa/flow_head_0d8cc5b). UI 3284/0, integration 31/31.
-- 07 QA-R5: `visible_launch.ps1 -ProjectPath` added. Verified against a HEAD snapshot on DISPLAY2. In the fresh snapshot the real UI icons render correctly (build/qa/real5).
-- 02 R12 (OFL include, release preset excludes, install slot) and R9/R11: no reply in 02-engine-to-04-client.md as of 09:20 (last entry R3 08:30). Still tracked.
-## Next task (exact)
-1. After 02 re-imports (R11) and/or sets integer scale (R9): re-capture real scenes on DISPLAY2 under the same conditions (worst layout 640 + notches + 5 cards/3 skills, ko/en, 1280×720 and 1600×900). Confirm the stale warning is gone, there are 0% odd glyph runs at 1600×900, and Footman/Catapult are fixed if 01 accepts R4.
-2. Real r05 boss run (`--round=r05` or the integration `--tile=4`) on the secondary monitor: boss bar visible with real data.
-3. Credits panel (OFL font credit; keys requested from 01 R3; fallbacks exist: ui.credits / ui.font_credit).
-4. Skill names are hidden on 48 px skill buttons: show the name in the toast on press, or in a long-press tooltip.
-5. Integer-scale retest after 02 R9; upgrade screen (P1, data/meta.json).
-
-## (superseded) previous next-task list
-The engine already provides these, and the UI does not consume them yet:
-1. `Events.tutorial_step(key)`: a non-blocking banner under the top bar using text `<key>` from data/text (e.g. tut_move_hero). "" hides it. 01 R1 says never pause after step 2.
-2. `HudSnapshot.boss {alive, hp, hp_max, name_key}`: a boss HP bar with its name under the base bars while the boss is alive, plus the existing boss_incoming banner.
-3. Result star reasons: ★1 승리, ★2 기지 체력 ≥ stars.base_hp_2 (from `player_base_ratio`), ★3 시간 ≤ stars.time_3 (round data via Content.get_round). Show each condition as met or unmet.
-4. Skill names are hidden on 48 px skill buttons. Show the name on press or in the tutorial instead.
-5. A credits panel with the OFL font credit.
-Then: integer-scale retest after 02 R9; upgrade screen (P1, data/meta.json).
+## Exact next steps on resume
+1. Read coordinator-to-04-client.md, DECISIONS.md, 02-engine-to-04-client.md (R9/R11/R12 replies), 01-director-to-04-client.md (theme labels).
+2. If 01 committed theme text: `tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://tests/ui/test_ui.gd` (expect 0 ko/en ellipsis). Then on DISPLAY2: `.\tools\build\visible_launch.ps1 -Script res://tests/integration/test_ui_integration.gd -Resolution 1280x720 -UserArgs '--shot-dir=<abs>','--tag=themeA_ko','--tile=4','--boss=boss_warlord','--locale=ko','--safe=34,0,34,0'` (repeat with en, and at 640x360).
+3. If 02 set integer scale / re-imported: the same command at `-Resolution 1600x900` → expect an 800×450 view and 0% odd glyph runs; check icons in the shared tree (no `[UiStyle] … stale` warning in godot_*.log).
+4. If 02 gives an install slot: `.\tools\build\build_android_debug.ps1`, then install/start/screencap on their AVD only in the agreed slot; record the result in docs/qa/RELEASE_READINESS.md A13.
+5. Commit only verified owned files with coordination/Publish-Task.ps1 (no stderr redirection).
