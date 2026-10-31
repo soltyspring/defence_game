@@ -1,0 +1,805 @@
+{
+ "rev": "HEAD",
+ "frames_added": [],
+ "frames_removed": [],
+ "frame_changes": {},
+ "frame_page_moves": {
+  "e_bomber/attack/0": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/attack/1": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/attack/2": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/death/0": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/death/1": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/death/2": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/death/3": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/death/4": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/death/5": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/die/0": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/die/1": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/die/2": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/die/3": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/die/4": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/die/5": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/hit/0": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/hit/1": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/idle/0": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/idle/1": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/walk/0": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/walk/1": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/walk/2": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/walk/3": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/walk/4": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_bomber/walk/5": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/attack/0": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/attack/1": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/attack/2": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/attack/3": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/attack/4": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/death/0": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/death/1": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/death/2": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/death/3": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/death/4": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/death/5": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/die/0": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/die/1": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/die/2": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/die/3": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/die/4": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/die/5": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/hit/0": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/hit/1": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/idle/0": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/idle/1": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/idle/2": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/idle/3": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/walk/0": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/walk/1": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/walk/2": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/walk/3": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/walk/4": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_brute/walk/5": [
+   "char_enemy_adv",
+   "char_player"
+  ],
+  "e_grunt/attack/0": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/attack/1": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/attack/2": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/attack/3": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/death/0": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/death/1": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/death/2": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/death/3": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/death/4": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/death/5": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/die/0": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/die/1": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/die/2": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/die/3": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/die/4": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/die/5": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/hit/0": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/hit/1": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/idle/0": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/idle/1": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/idle/2": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/idle/3": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/walk/0": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/walk/1": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/walk/2": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/walk/3": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/walk/4": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_grunt/walk/5": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/attack/0": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/attack/1": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/attack/2": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/attack/3": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/death/0": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/death/1": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/death/2": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/death/3": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/death/4": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/death/5": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/die/0": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/die/1": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/die/2": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/die/3": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/die/4": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/die/5": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/hit/0": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/hit/1": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/idle/0": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/idle/1": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/idle/2": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/idle/3": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/walk/0": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/walk/1": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/walk/2": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/walk/3": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/walk/4": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_spitter/walk/5": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/attack/0": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/attack/1": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/attack/2": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/death/0": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/death/1": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/death/2": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/death/3": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/death/4": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/die/0": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/die/1": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/die/2": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/die/3": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/die/4": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/hit/0": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/hit/1": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/idle/0": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/idle/1": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/walk/0": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/walk/1": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/walk/2": [
+   "char_enemy",
+   "char_player"
+  ],
+  "e_swarm/walk/3": [
+   "char_enemy",
+   "char_player"
+  ],
+  "fast/attack/0": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/attack/1": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/attack/2": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/attack/3": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/death/0": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/death/1": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/death/2": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/death/3": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/death/4": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/die/0": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/die/1": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/die/2": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/die/3": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/die/4": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/hit/0": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/hit/1": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/idle/0": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/idle/1": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/walk/0": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/walk/1": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/walk/2": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/walk/3": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/walk/4": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "fast/walk/5": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/attack/0": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/attack/1": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/attack/2": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/attack/3": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/attack/4": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/attack/5": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/death/0": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/death/1": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/death/2": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/death/3": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/death/4": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/die/0": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/die/1": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/die/2": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/die/3": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/die/4": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/hit/0": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/hit/1": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/idle/0": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/idle/1": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/walk/0": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/walk/1": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/walk/2": [
+   "char_player_adv",
+   "char_player"
+  ],
+  "siege/walk/3": [
+   "char_player_adv",
+   "char_player"
+  ]
+ },
+ "anim_changes": {
+  "e_bomber": {
+   "page": [
+    "char_enemy_adv",
+    "char_player"
+   ]
+  },
+  "e_brute": {
+   "page": [
+    "char_enemy_adv",
+    "char_player"
+   ]
+  },
+  "e_grunt": {
+   "page": [
+    "char_enemy",
+    "char_player"
+   ]
+  },
+  "e_spitter": {
+   "page": [
+    "char_enemy",
+    "char_player"
+   ]
+  },
+  "e_swarm": {
+   "page": [
+    "char_enemy",
+    "char_player"
+   ]
+  },
+  "fast": {
+   "page": [
+    "char_player_adv",
+    "char_player"
+   ]
+  },
+  "siege": {
+   "page": [
+    "char_player_adv",
+    "char_player"
+   ]
+  }
+ },
+ "anim_sets_added": [],
+ "anim_sets_removed": [],
+ "page_sizes": {
+  "char_enemy": [
+   [
+    512,
+    256
+   ],
+   null
+  ],
+  "char_enemy_adv": [
+   [
+    512,
+    256
+   ],
+   null
+  ],
+  "char_player": [
+   [
+    512,
+    512
+   ],
+   [
+    1024,
+    512
+   ]
+  ],
+  "char_player_adv": [
+   [
+    512,
+    256
+   ],
+   null
+  ]
+ },
+ "moved_rects": 179,
+ "contract_changed": true
+}

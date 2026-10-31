@@ -40,42 +40,12 @@
   ],
   "pages": [
     {
-      "frames": 152,
+      "frames": 331,
       "id": "char_player",
       "loaded": true,
       "size": [
-        512,
+        1024,
         512
-      ],
-      "size_ok": true
-    },
-    {
-      "frames": 77,
-      "id": "char_enemy",
-      "loaded": true,
-      "size": [
-        512,
-        256
-      ],
-      "size_ok": true
-    },
-    {
-      "frames": 48,
-      "id": "char_player_adv",
-      "loaded": true,
-      "size": [
-        512,
-        256
-      ],
-      "size_ok": true
-    },
-    {
-      "frames": 54,
-      "id": "char_enemy_adv",
-      "loaded": true,
-      "size": [
-        512,
-        256
       ],
       "size_ok": true
     },
@@ -162,5 +132,5 @@
   ],
   "raw_png_present": false,
   "remap_present": true,
-  "pck_bytes": 1270608
+  "pck_bytes": 1268992
 }

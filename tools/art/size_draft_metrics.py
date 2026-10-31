@@ -27,7 +27,7 @@ sys.path.insert(0, HERE)
 import lineup_metrics as LM  # noqa: E402
 
 MM = 0.173
-UNITS = {"melee_basic": "char_player", "e_grunt": "char_enemy"}
+UNITS = {"melee_basic": "char_player", "e_grunt": "char_enemy"}   # page ids of the art 0.12.x drafts (pre-merge)
 
 
 def frame(root, page, name):

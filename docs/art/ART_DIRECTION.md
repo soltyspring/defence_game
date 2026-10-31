@@ -1,5 +1,5 @@
 # ART_DIRECTION.md — visual identity and asset contract (owner: 03-art)
-Art version 0.12.3 · 2026-10-31 · Status: **theme DECIDED by the user (Q1 = A "빵집 기사단 vs 곰팡이 군단", 2026-10-31)**. Art 0.8.0 applies it as a palette-level retheme (tools/art/theme.py). Silhouettes, frame sizes, pivots, hit/spawn frames and frame names are unchanged. A bread-specific detail pass (crust scoring, loaf-shaped helmets) is still open.
+Art version 0.13.0 · 2026-10-31 · Status: **theme DECIDED by the user (Q1 = A "빵집 기사단 vs 곰팡이 군단", 2026-10-31)**. Art 0.8.0 applies it as a palette-level retheme (tools/art/theme.py). Silhouettes, frame sizes, pivots, hit/spawn frames and frame names are unchanged. A bread-specific detail pass (crust scoring, loaf-shaped helmets) is still open.
 
 ## 1. How the art is made (provenance)
 - Tool inventory on this machine: Python 3.11.9, Pillow 11.2.1, numpy 2.2.4. There are **no** image-generation, Aseprite or ImageMagick tools. Godot 4.7.2 is in tools/engine (owned by 02).
@@ -29,6 +29,7 @@ Art version 0.12.3 · 2026-10-31 · Status: **theme DECIDED by the user (Q1 = A 
 - `hit_frame` is the frame where damage applies. `events` holds other named frames (`release` for hero cast). `points.projectile_spawn` is a frame-space offset (archer, spitter).
 
 ## 5. Animation set (current)
+Art 0.13.0: all regular characters of both factions are on `char_player` (1024x512); bosses keep their own pages.
 | anim_set | atlas | frame | anims (frames @fps) |
 |---|---|---|---|
 | hero_captain | char_player | 48×48 | idle 4@5, walk 6@10, attack 6@14 (hit 3), cast 6@12 (release 4), hit 2@10, death 6@8 |
@@ -36,14 +37,14 @@ Art version 0.12.3 · 2026-10-31 · Status: **theme DECIDED by the user (Q1 = A 
 | melee_basic (spearman) | char_player | 32×32 | idle 4, walk 6, attack 5@12 (hit 2), hit 2, death 6 |
 | ranged_basic (archer) | char_player | 32×32 | idle 4, walk 6, attack 4@10 (hit 2, projectile_spawn), hit 2, death 6 |
 | tank (shieldbearer) | char_player | 32×32 | idle 3@3, walk 6@8, attack 4@9 (hit 2), hit 2, death 6 |
-| e_grunt | char_enemy | 32×32 | idle 4, walk 6@11, attack 4@10 (hit 2), hit 2, death 6 |
-| e_spitter | char_enemy | 32×32 | idle 4, walk 6, attack 4@10 (hit 2, projectile_spawn), hit 2, death 6 |
-| e_swarm (beetle) | char_enemy | 32×24 (~16 px tall) | idle 2, walk 4@14, attack 3@10 (hit 1), hit 2, death 5 |
+| e_grunt | char_player | 32×32 | idle 4, walk 6@11, attack 4@10 (hit 2), hit 2, death 6 |
+| e_spitter | char_player | 32×32 | idle 4, walk 6, attack 4@10 (hit 2, projectile_spawn), hit 2, death 6 |
+| e_swarm (beetle) | char_player | 32×24 (~16 px tall) | idle 2, walk 4@14, attack 3@10 (hit 1), hit 2, death 5 |
 | base_player / base_enemy | bases | 96×128 | idle 2@3, damaged 2@5, ruined 2@5 (+ static frame `base_player` / `base_enemy`) |
-| fast (pony lancer) | char_player_adv | 40×32 (~26 px) | idle 2@4, walk 6@14 (gallop), attack 4@10 (hit 1), hit 2, death 5 |
-| siege (catapult) | char_player_adv | 48×40 (~27 px) | idle 2@2, walk 4@8 (wheels turn), attack 6@10 (hit 3 = release, projectile_spawn), hit 2, death 5 |
-| e_brute (bramble troll) | char_enemy_adv | 48×48 (~32 px) | idle 4@4, walk 6@7, attack 5@8 (hit 3, ground cracks), hit 2, death 6 |
-| e_bomber (keg sapper) | char_enemy_adv | 32×32 (~17 px + keg) | idle 2@6, walk 6@14 (fuse flicker), attack 3@10 (hit 1; engine plays `explosion`), hit 2, death 6 |
+| fast (pony lancer) | char_player | 40×32 (~26 px) | idle 2@4, walk 6@14 (gallop), attack 4@10 (hit 1), hit 2, death 5 |
+| siege (catapult) | char_player | 48×40 (~27 px) | idle 2@2, walk 4@8 (wheels turn), attack 6@10 (hit 3 = release, projectile_spawn), hit 2, death 5 |
+| e_brute (bramble troll) | char_player | 48×48 (~32 px) | idle 4@4, walk 6@7, attack 5@8 (hit 3, ground cracks), hit 2, death 6 |
+| e_bomber (keg sapper) | char_player | 32×32 (~17 px + keg) | idle 2@6, walk 6@14 (fuse flicker), attack 3@10 (hit 1; engine plays `explosion`), hit 2, death 6 |
 | boss_warlord | char_boss_warlord | 64×64 (~45 px) | idle 4@4, walk 6@7, attack 6@9 (hit 3, purple cleave arc + ground cue), hit 2, death 7 |
 | boss_overlord (hive overlord) | char_boss_overlord | 88×80 (~56 px idle, staff to ~66 px) | idle 4@4, walk 6@6, attack 6@8 (hit 3, rune ring at staff impact), **summon 6@8 (events.spawn 3, points.spawn_origin)**, hit 2, death 8 |
 | prop_mine | bases | 48×32 | idle 2@3 (worker destination behind the keep, static frame `prop_mine`) |

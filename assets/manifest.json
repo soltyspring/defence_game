@@ -1,6 +1,6 @@
 {
  "version": 1,
- "art_version": "0.12.3",
+ "art_version": "0.13.0",
  "schema": "INTERFACES.md §5.1 (02-engine) + additive keys",
  "pixel_scale": 1,
  "reference_view": [
@@ -52,76 +52,25 @@
    "image": "res://assets/atlases/char_player.png",
    "frames": "res://assets/atlases/char_player.json",
    "size": [
-    512,
+    1024,
     512
    ],
-   "disk_bytes": 12327,
-   "gpu_bytes": 1048576,
-   "biome": "",
-   "anim_sets": [
-    "hero_captain",
-    "melee_basic",
-    "ranged_basic",
-    "tank",
-    "worker"
-   ],
-   "image_frames": 0
-  },
-  {
-   "id": "char_enemy",
-   "group": "character",
-   "load_policy": "battle_roster",
-   "image": "res://assets/atlases/char_enemy.png",
-   "frames": "res://assets/atlases/char_enemy.json",
-   "size": [
-    512,
-    256
-   ],
-   "disk_bytes": 5001,
-   "gpu_bytes": 524288,
-   "biome": "",
-   "anim_sets": [
-    "e_grunt",
-    "e_spitter",
-    "e_swarm"
-   ],
-   "image_frames": 0
-  },
-  {
-   "id": "char_player_adv",
-   "group": "character",
-   "load_policy": "battle_roster",
-   "image": "res://assets/atlases/char_player_adv.png",
-   "frames": "res://assets/atlases/char_player_adv.json",
-   "size": [
-    512,
-    256
-   ],
-   "disk_bytes": 5499,
-   "gpu_bytes": 524288,
-   "biome": "",
-   "anim_sets": [
-    "fast",
-    "siege"
-   ],
-   "image_frames": 0
-  },
-  {
-   "id": "char_enemy_adv",
-   "group": "character",
-   "load_policy": "battle_roster",
-   "image": "res://assets/atlases/char_enemy_adv.png",
-   "frames": "res://assets/atlases/char_enemy_adv.json",
-   "size": [
-    512,
-    256
-   ],
-   "disk_bytes": 4743,
-   "gpu_bytes": 524288,
+   "disk_bytes": 30955,
+   "gpu_bytes": 2097152,
    "biome": "",
    "anim_sets": [
     "e_bomber",
-    "e_brute"
+    "e_brute",
+    "e_grunt",
+    "e_spitter",
+    "e_swarm",
+    "fast",
+    "hero_captain",
+    "melee_basic",
+    "ranged_basic",
+    "siege",
+    "tank",
+    "worker"
    ],
    "image_frames": 0
   },
@@ -285,13 +234,13 @@
   "melee_basic": "char_player",
   "ranged_basic": "char_player",
   "tank": "char_player",
-  "e_grunt": "char_enemy",
-  "e_spitter": "char_enemy",
-  "e_swarm": "char_enemy",
-  "fast": "char_player_adv",
-  "siege": "char_player_adv",
-  "e_brute": "char_enemy_adv",
-  "e_bomber": "char_enemy_adv",
+  "fast": "char_player",
+  "siege": "char_player",
+  "e_grunt": "char_player",
+  "e_spitter": "char_player",
+  "e_swarm": "char_player",
+  "e_brute": "char_player",
+  "e_bomber": "char_player",
   "boss_warlord": "char_boss_warlord",
   "boss_overlord": "char_boss_overlord",
   "base_player": "bases",
@@ -522,9 +471,6 @@
   ],
   "battle": [
    "char_player",
-   "char_enemy",
-   "char_player_adv",
-   "char_enemy_adv",
    "char_boss_warlord",
    "char_boss_overlord",
    "bases",
@@ -547,8 +493,8 @@
   "license": "Original work created for this project; owned by the project owner. No third-party assets included."
  },
  "totals": {
-  "disk_bytes": 84652,
-  "gpu_bytes_all_pages": 9961472,
+  "disk_bytes": 88037,
+  "gpu_bytes_all_pages": 9437184,
   "note": "GPU = w*h*4 (RGBA8, lossless import, no mipmaps). See docs/art/ATLAS_BUDGET.md"
  }
 }

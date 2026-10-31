@@ -58,3 +58,6 @@
 ## A11 2026-10-31 23:27 +09:00 — cc: unit-size drafts, QA-B012 palette answer (QUEUED)
 - Unit size (your QA-J1 / LANE_OCCLUSION §2): drafts measured in the real game, ART_AUDIT round 15. Nothing shipped until 02 decides the zoom.
 - QA-B012: palette answer sent to 02 (A17): white digits on the light walls are 1.13-1.69:1; a 1 px K outline on all sides gives 10.7-15.9:1.
+
+## A12 2026-10-31 23:57 +09:00 — cc: character pages merged (art 0.13.0) (QUEUED)
+Pixels unchanged (331 frames identical), only page ids: all regular units are on char_player now. If any of your runners name char_enemy / char_player_adv / char_enemy_adv directly, they need the manifest anim_sets lookup instead. Real r03 capture: docs/art/evidence/merge_0130/.

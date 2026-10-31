@@ -120,7 +120,17 @@ func _frame_tex(atlas_id: String, frame: String) -> AtlasTexture:
 	return at
 
 
+func _page_of(frame: String) -> String:
+	# art 0.13.0: character pages were merged; find the page that holds the frame
+	for id in _atlas_docs:
+		if _atlas_docs[id]["frames"].has(frame):
+			return id
+	return ""
+
+
 func _sprite(atlas_id: String, frame: String, pos: Vector2, flip := false) -> Sprite2D:
+	if not _atlas_docs.has(atlas_id) or not _atlas_docs[atlas_id]["frames"].has(frame):
+		atlas_id = _page_of(frame)
 	var f: Dictionary = _atlas_docs[atlas_id]["frames"][frame]
 	var s := Sprite2D.new()
 	s.texture = _frame_tex(atlas_id, frame)

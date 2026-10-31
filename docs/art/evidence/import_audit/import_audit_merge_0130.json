@@ -1,0 +1,350 @@
+{
+ "project": "C:\\Users\\aghose\\AppData\\Local\\Temp\\art03_merge",
+ "filter_nearest": true,
+ "pages": {
+  "char_player": {
+   "params": {
+    "importer": "texture",
+    "compress/mode": "0",
+    "mipmaps/generate": "false",
+    "detect_3d/compress_to": "0",
+    "process/size_limit": "0"
+   },
+   "fails": [],
+   "source_md5_match": true,
+   "ctex": {
+    "version": 1,
+    "w": 1024,
+    "h": 512,
+    "flags": 201326592,
+    "data_format": 2,
+    "mipmaps": 0,
+    "format": 5
+   },
+   "size": {
+    "json": [
+     1024,
+     512
+    ],
+    "png": [
+     1024,
+     512
+    ],
+    "ctex": [
+     1024,
+     512
+    ]
+   },
+   "page_px_mismatch": 0,
+   "frames": 331,
+   "frames_out_of_page": 0,
+   "frames_px_mismatch": 0
+  },
+  "char_boss_warlord": {
+   "params": {
+    "importer": "texture",
+    "compress/mode": "0",
+    "mipmaps/generate": "false",
+    "detect_3d/compress_to": "0",
+    "process/size_limit": "0"
+   },
+   "fails": [],
+   "source_md5_match": true,
+   "ctex": {
+    "version": 1,
+    "w": 512,
+    "h": 512,
+    "flags": 201326592,
+    "data_format": 2,
+    "mipmaps": 0,
+    "format": 5
+   },
+   "size": {
+    "json": [
+     512,
+     512
+    ],
+    "png": [
+     512,
+     512
+    ],
+    "ctex": [
+     512,
+     512
+    ]
+   },
+   "page_px_mismatch": 0,
+   "frames": 32,
+   "frames_out_of_page": 0,
+   "frames_px_mismatch": 0
+  },
+  "char_boss_overlord": {
+   "params": {
+    "importer": "texture",
+    "compress/mode": "0",
+    "mipmaps/generate": "false",
+    "detect_3d/compress_to": "0",
+    "process/size_limit": "0"
+   },
+   "fails": [],
+   "source_md5_match": true,
+   "ctex": {
+    "version": 1,
+    "w": 1024,
+    "h": 512,
+    "flags": 201326592,
+    "data_format": 2,
+    "mipmaps": 0,
+    "format": 5
+   },
+   "size": {
+    "json": [
+     1024,
+     512
+    ],
+    "png": [
+     1024,
+     512
+    ],
+    "ctex": [
+     1024,
+     512
+    ]
+   },
+   "page_px_mismatch": 0,
+   "frames": 41,
+   "frames_out_of_page": 0,
+   "frames_px_mismatch": 0
+  },
+  "bases": {
+   "params": {
+    "importer": "texture",
+    "compress/mode": "0",
+    "mipmaps/generate": "false",
+    "detect_3d/compress_to": "0",
+    "process/size_limit": "0"
+   },
+   "fails": [],
+   "source_md5_match": true,
+   "ctex": {
+    "version": 1,
+    "w": 512,
+    "h": 512,
+    "flags": 201326592,
+    "data_format": 2,
+    "mipmaps": 0,
+    "format": 5
+   },
+   "size": {
+    "json": [
+     512,
+     512
+    ],
+    "png": [
+     512,
+     512
+    ],
+    "ctex": [
+     512,
+     512
+    ]
+   },
+   "page_px_mismatch": 0,
+   "frames": 17,
+   "frames_out_of_page": 0,
+   "frames_px_mismatch": 0
+  },
+  "fx_combat": {
+   "params": {
+    "importer": "texture",
+    "compress/mode": "0",
+    "mipmaps/generate": "false",
+    "detect_3d/compress_to": "0",
+    "process/size_limit": "0"
+   },
+   "fails": [],
+   "source_md5_match": true,
+   "ctex": {
+    "version": 1,
+    "w": 512,
+    "h": 256,
+    "flags": 201326592,
+    "data_format": 2,
+    "mipmaps": 0,
+    "format": 5
+   },
+   "size": {
+    "json": [
+     512,
+     256
+    ],
+    "png": [
+     512,
+     256
+    ],
+    "ctex": [
+     512,
+     256
+    ]
+   },
+   "page_px_mismatch": 0,
+   "frames": 83,
+   "frames_out_of_page": 0,
+   "frames_px_mismatch": 0
+  },
+  "ui_main": {
+   "params": {
+    "importer": "texture",
+    "compress/mode": "0",
+    "mipmaps/generate": "false",
+    "detect_3d/compress_to": "0",
+    "process/size_limit": "0"
+   },
+   "fails": [],
+   "source_md5_match": true,
+   "ctex": {
+    "version": 1,
+    "w": 256,
+    "h": 256,
+    "flags": 201326592,
+    "data_format": 2,
+    "mipmaps": 0,
+    "format": 5
+   },
+   "size": {
+    "json": [
+     256,
+     256
+    ],
+    "png": [
+     256,
+     256
+    ],
+    "ctex": [
+     256,
+     256
+    ]
+   },
+   "page_px_mismatch": 0,
+   "frames": 104,
+   "frames_out_of_page": 0,
+   "frames_px_mismatch": 0
+  },
+  "ui_title_ko": {
+   "params": {
+    "importer": "texture",
+    "compress/mode": "0",
+    "mipmaps/generate": "false",
+    "detect_3d/compress_to": "0",
+    "process/size_limit": "0"
+   },
+   "fails": [],
+   "source_md5_match": true,
+   "ctex": {
+    "version": 1,
+    "w": 512,
+    "h": 64,
+    "flags": 201326592,
+    "data_format": 2,
+    "mipmaps": 0,
+    "format": 5
+   },
+   "size": {
+    "json": [
+     512,
+     64
+    ],
+    "png": [
+     512,
+     64
+    ],
+    "ctex": [
+     512,
+     64
+    ]
+   },
+   "page_px_mismatch": 0,
+   "frames": 2,
+   "frames_out_of_page": 0,
+   "frames_px_mismatch": 0
+  },
+  "ui_title_en": {
+   "params": {
+    "importer": "texture",
+    "compress/mode": "0",
+    "mipmaps/generate": "false",
+    "detect_3d/compress_to": "0",
+    "process/size_limit": "0"
+   },
+   "fails": [],
+   "source_md5_match": true,
+   "ctex": {
+    "version": 1,
+    "w": 256,
+    "h": 128,
+    "flags": 201326592,
+    "data_format": 2,
+    "mipmaps": 0,
+    "format": 5
+   },
+   "size": {
+    "json": [
+     256,
+     128
+    ],
+    "png": [
+     256,
+     128
+    ],
+    "ctex": [
+     256,
+     128
+    ]
+   },
+   "page_px_mismatch": 0,
+   "frames": 2,
+   "frames_out_of_page": 0,
+   "frames_px_mismatch": 0
+  },
+  "biome_meadow": {
+   "params": {
+    "importer": "texture",
+    "compress/mode": "0",
+    "mipmaps/generate": "false",
+    "detect_3d/compress_to": "0",
+    "process/size_limit": "0"
+   },
+   "fails": [],
+   "source_md5_match": true,
+   "ctex": {
+    "version": 1,
+    "w": 1024,
+    "h": 512,
+    "flags": 201326592,
+    "data_format": 2,
+    "mipmaps": 0,
+    "format": 5
+   },
+   "size": {
+    "json": [
+     1024,
+     512
+    ],
+    "png": [
+     1024,
+     512
+    ],
+    "ctex": [
+     1024,
+     512
+    ]
+   },
+   "page_px_mismatch": 0,
+   "frames": 5,
+   "frames_out_of_page": 0,
+   "frames_px_mismatch": 0
+  }
+ },
+ "fails": [],
+ "pass": true
+}

@@ -42,3 +42,9 @@ Correction to A1: the dynamic font cache pages are LA8, 128 KiB per 256x256 page
 
 ## A9 2026-10-31 18:03 +09:00 — art 0.12.1: pixels + one 16x16 frame, sizes unchanged (QUEUED)
 - bases (mould nest, e3c4621), char_player (A26) and ui_main (A26 cards + new `icon_nest`) changed pixels; every page size is unchanged. Your `asset_budget_check.py --worktree`: PASS, worst battle 9.25, all pages 9.50, menu 0.50 MiB. Your inventory now counts both per-locale title pages (conservative); a single-locale menu measured 0.375 MiB in the snapshot log (A8).
+
+## A10 2026-10-31 23:57 +09:00 — A9 done: one character page (commit SHA in the 03 handoff) (QUEUED)
+- char_player now holds all 12 regular anim sets (both factions), 1024x512, load_policy battle; char_player_adv, char_enemy, char_enemy_adv are removed. Bosses unchanged. Your asset_budget_check --worktree: PASS, worst battle 8.75 MiB, all pages 9.00 MiB (as you predicted). Packing: 235 regions, occupancy 0.60.
+- Please re-measure draw calls with tools/perf/drawcall_run.ps1 (03 did not measure them).
+- **Your files that name the removed pages:** tests/performance/test_asset_budget_check.py case 2 enlarges assets/atlases/char_enemy.png (that file no longer exists; char_player.png or fx_combat.png would do), and tests/performance/drawcall_view.gd CHAR_PAGES / "merge2". 03 did not edit them.
+- If the 32 px roster (03 round 15) is adopted, this page needs 1024x1024 (4.0 MiB, worst battle about 10.75 MiB).

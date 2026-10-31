@@ -1,5 +1,5 @@
 # 03-art handoff
-Updated: 2026-10-31 23:27 +09:00 (real time from Get-Date). Q1 = A, Q2 deferred, Q3 working title 빵집 기사단: 곰팡이 디펜스, Q4 home-screen name 빵집 기사단 (all DECIDED); Q5 difficulty unanswered (D28 is only a default). Art version 0.12.3.
+Updated: 2026-10-31 23:57 +09:00 (real time from Get-Date). Q1 = A, Q2 deferred, Q3 working title 빵집 기사단: 곰팡이 디펜스, Q4 home-screen name 빵집 기사단 (all DECIDED); Q5 difficulty unanswered (D28 is only a default). Art version 0.13.0.
 
 ## Session
 - Kiro CLI session ID: not visible from inside the session, so I cannot record it. Codex should read it from coordination/.runtime/quota/sessions.json / the launcher.
@@ -131,8 +131,14 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - 02 zoom (R17): not decided. Drafts D1 (proportional) / D2 (chunky) + S15 reference built via ART_DRAFT32 (tools/art/chars_big.py, not shipped) and captured in the real game at 1280x720 and 640x360 (isolated APPDATA, DISPLAY2). Results ART_AUDIT round 15, docs/art/evidence/size_drafts/.
 - Requests: 02 A17 (import, zoom data, QA-B012 palette), 04 A15 (drafts, star outline #8b90a3), 07 A11, 10 A1 (user-folder reply; my 19:05-19:20 runs were not isolated).
 - Heavy-run rule from 23:2x: every Godot/import/export run through coordination/heavy_run.ps1, one at a time.
+- Commit 07b90c5 [Test] (drafts, crash check, replies): PUSHED origin/main (verified with git branch -r --contains at 23:28).
+
+## Milestone 19: one character page (08 A9, art 0.13.0)
+- build.py packs all regular characters into char_player 1024x512 (id kept for 02's flip_check); char_player_adv / char_enemy / char_enemy_adv removed with their .import and locks; check.gd finds a frame's page by name.
+- Verified: 331 frames pixel-identical, 152 kept x/y; validate --determinism PASS; 08 budget PASS (worst 8.75 MiB); PCK 9/9 (heavy_run, waited 657 s); snapshot isolated import + import_audit 9/9 PASS + r03 real capture (heavy_run, waited 664 s). ART_AUDIT round 16.
+- Requests: 08 A10 (re-measure draw calls; their tests name char_enemy), 02 A18, 07 A12.
 
 ## Exact next steps on resume
-1. 08 A9 (merge the 4 battle character pages into one 1024x512): packer dry run fits (235 regions, 386,896 padded px of 524,288). Implement in build.py, then verify under heavy_run: PCK check, snapshot import + import_audit, one real capture. Not started.
-2. After 02 re-imports: python tools/art/import_audit.py . (expect PASS).
-3. After 02 decides R17: ship D1 or D2 (and resize brute/hero) or drop the drafts.
+1. After 02 re-imports: python tools/art/import_audit.py . (expect PASS).
+2. After 02 decides R17 (zoom): ship D1 or D2 (+ brute/hero sizes) or drop the drafts; the merged page then needs 1024x1024.
+3. After 02 A14 + 06 APK rebuild: check the APK launcher layers with 06.

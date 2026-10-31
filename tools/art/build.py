@@ -73,7 +73,7 @@ REL_ATLAS = "assets/atlases"
 PREV = os.path.join(ROOT, "docs", "art", "previews")
 # Layout locks: existing regions keep their page position across rebuilds (see atlas._pack).
 LOCK_DIR = os.path.join(HERE, "layout_lock")
-ART_VERSION = "0.12.3"
+ART_VERSION = "0.13.0"
 
 REQUIRED_CHAR_ANIMS = ("idle", "walk", "attack", "death")
 
@@ -130,28 +130,25 @@ def build():
     sheets = {}
 
     # --- characters --------------------------------------------------------
-    cp = atl.Atlas("char_player", "character", "battle",
-                   "Player roster: hero, worker, infantry. Acquire on battle enter, release on exit.")
-    for sid, (body, fn) in chars_player.ALL.items():
-        an = add_char(cp, sid, body, fn, "player")
-        sheets[sid] = (an, body.W, body.H, (body.px, body.H - 1))
-    pages.append(cp)
-
-    ce = atl.Atlas("char_enemy", "character", "battle_roster",
-                   "Enemy faction 'bramble' (default theme). Split per faction/boss as roster grows.")
-    for sid, (body, fn) in chars_enemy.ALL.items():
-        an = add_char(ce, sid, body, fn, "enemy")
-        sheets[sid] = (an, body.W, body.H, (body.px, body.H - 1))
-    pages.append(ce)
-
-    # --- r04+ roster: separate pages so r01-r03 battles don't hold these pixels (08 A1) ---
+    # art 0.13.0 (08 A9, draw calls): every regular battle character, both factions, on ONE page so units
+    # drawn in depth order do not switch textures (08 measured 49-60 page runs per frame at caps).
+    # The page id stays "char_player" for compatibility (02's src/core/diag/flip_check.gd acquires it).
+    # Former pages char_player_adv, char_enemy, char_enemy_adv no longer exist. Bosses keep own pages.
     import chars_r04
     import chars_boss
+    cp = atl.Atlas("char_player", "character", "battle",
+                   "All regular battle characters, both factions (hero, worker, infantry, r04+ roster, enemies). "
+                   "Acquire on battle enter, release on exit. Bosses are on their own pages.")
+    for group_map, faction in ((chars_player.ALL, "player"), (chars_r04.PLAYER, "player"),
+                               (chars_enemy.ALL, "enemy"), (chars_r04.ENEMY, "enemy")):
+        for sid, (body, fn) in group_map.items():
+            an = add_char(cp, sid, body, fn, faction)
+            sheets[sid] = (an, body.W, body.H, (body.px, body.H - 1))
+    pages.append(cp)
+
     for aid, group_map, faction, note in [
-        ("char_player_adv", chars_r04.PLAYER, "player", "fast (r04+), siege (r06+). Acquire only when in roster."),
-        ("char_enemy_adv", chars_r04.ENEMY, "enemy", "e_brute (r04+), e_bomber (r07+). Acquire only when in roster."),
         ("char_boss_warlord", chars_r04.BOSS, "enemy", "boss_warlord (r05+). Own page: boss pixels resident only in boss rounds."),
-        ("char_boss_overlord", chars_boss.BOSS, "enemy", "boss_overlord (r10). Own page; summon anim spawns e_swarm (char_enemy)."),
+        ("char_boss_overlord", chars_boss.BOSS, "enemy", "boss_overlord (r10). Own page; summon anim spawns e_swarm (char_player page)."),
     ]:
         pg = atl.Atlas(aid, "character", "battle_roster", note)
         for sid, (body, fn) in group_map.items():

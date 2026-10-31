@@ -11,7 +11,7 @@
  "extrude": 1,
  "group": "character",
  "load_policy": "battle_roster",
- "note": "boss_overlord (r10). Own page; summon anim spawns e_swarm (char_enemy).",
+ "note": "boss_overlord (r10). Own page; summon anim spawns e_swarm (char_player page).",
  "filter": "nearest",
  "mipmaps": false,
  "repeat": false,
