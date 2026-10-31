@@ -78,6 +78,7 @@ func _run() -> void:
 	_group("binding_failure_injection", test_failure_injection)
 	_group("binding_process_death", test_process_death)
 	_group("state_table_sync", test_state_table_sync)
+	_group("readiness_doc_sync", test_readiness_doc_sync)
 	# Hygiene: put the autoload Save back on the player's file (read only) and prove no write.
 	save.path = orig_path
 	save.load_progress()
@@ -575,4 +576,61 @@ func test_state_table_sync() -> bool:
 		if TABLE[id] != "":
 			check(report.rows.has(id), "row %s has a result in this run" % id)
 	report.table_rows = tab_ids.size()
+	return true
+
+# ------------------------------------------------------------------ release readiness doc sync
+
+## RELEASE_READINESS_SERVICES.md: §1 requirements and §2 gap table must list the same IDs; every
+## §1 row needs an official https source and a 2026 check date; §2 statuses come from a fixed set.
+## OPEN_DECISIONS.md: user questions U1..Un are numbered consecutively (01 asks them in order).
+func test_readiness_doc_sync() -> bool:
+	var path := "res://docs/services/RELEASE_READINESS_SERVICES.md"
+	if not check(FileAccess.file_exists(path), "RELEASE_READINESS_SERVICES.md exists"):
+		return true
+	var section := 0
+	var req := {}
+	var gap := {}
+	var re := RegEx.create_from_string("^\\| ([BAVC]\\d+) \\|")
+	for line in FileAccess.get_file_as_string(path).split("\n"):
+		if line.begins_with("## 1."):
+			section = 1
+		elif line.begins_with("## 2."):
+			section = 2
+		elif line.begins_with("## "):
+			section = 0
+		var m := re.search(line)
+		if m == null:
+			continue
+		if section == 1:
+			req[m.get_string(1)] = line
+		elif section == 2:
+			gap[m.get_string(1)] = line
+	var rk: Array = req.keys()
+	rk.sort()
+	var gk: Array = gap.keys()
+	gk.sort()
+	check(rk.size() >= 20, "readiness: at least 20 requirement rows (%d)" % rk.size())
+	eq(gk, rk, "readiness: gap table IDs == requirement IDs")
+	for id in req:
+		check(str(req[id]).contains("https://"), "readiness %s has an official https source" % id)
+		check(RegEx.create_from_string("\\| 2026-\\d\\d-\\d\\d").search(str(req[id])) != null, "readiness %s has a check date" % id)
+	var allowed := ["MET", "MET (mock)", "PARTIAL", "MISSING", "N/A-YET", "UNVERIFIED", "MET (today) / MISSING (ads)"]
+	for id in gap:
+		var cells: PackedStringArray = str(gap[id]).split("|")
+		var status := cells[2].strip_edges() if cells.size() > 2 else ""
+		check(allowed.has(status), "readiness %s gap status '%s' is from the fixed set" % [id, status])
+	var dpath := "res://docs/services/OPEN_DECISIONS.md"
+	if check(FileAccess.file_exists(dpath), "OPEN_DECISIONS.md exists"):
+		var ure := RegEx.create_from_string("^\\| U(\\d+) \\|")
+		var nums: Array = []
+		for line in FileAccess.get_file_as_string(dpath).split("\n"):
+			var um := ure.search(line)
+			if um:
+				nums.append(int(um.get_string(1)))
+		check(nums.size() >= 5, "open decisions: at least 5 user questions (%d)" % nums.size())
+		var expect: Array = []
+		for i in nums.size():
+			expect.append(i + 1)
+		eq(nums, expect, "open decisions: U1..Un consecutive, asked in order")
+	report.readiness_rows = rk.size()
 	return true

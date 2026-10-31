@@ -1,5 +1,5 @@
 # Production requirements for real ads, billing and analytics (owner: 06-services)
-Date: 2026-10-31. Status: REQUIREMENTS ONLY. None of this is installed, configured or verified.
+Date: 2026-10-31. Status: REQUIREMENTS ONLY. **Superseded for policy facts by RELEASE_READINESS_SERVICES.md (official URLs re-checked 2026-10-31, incl. Play Billing v9.1.0 and API 36); user decisions in OPEN_DECISIONS.md.** None of this is installed, configured or verified.
 Nothing below may be started until the user approves the business model and specific products/placements through 01 (ECONOMY.md Q2–Q5). Paid services and store accounts are separate user actions.
 
 ## 1. Rewarded ads (only if Q2 = M2 or hybrid and Q3 approves placements)
