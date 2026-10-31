@@ -116,3 +116,43 @@ libraries for two ABIs (x86_64 28.2 MB, arm64-v8a 25.5 MB); game content ~1 MB.
 | 5 | no on-device data at all; ×4 slowdown assumption uncalibrated | user (device) via 01, 04 build, 02 perf preset | P5, 04 request |
 | 6 | missing art pages for six anim sets → placeholder draw cost; page plan for bosses | 03 | 08-performance-to-03-art.md |
 Each request names the acceptance check in this harness, so the same scenario is re-run after the owner's change.
+
+## 7. Retests of committed engine fixes (2026-10-31 08:08–09:00, CONTENDED_DESKTOP_PROXY)
+Method: `tools/perf/ab_retest.ps1` builds two read-only git snapshots (no checkout; other workers' uncommitted WIP is never measured):
+"fix" = the commit's tree, "base" = the same tree with only `src/gameplay/battle_sim.gd` swapped back to the pre-fix blob. Same harness,
+same seeds (rounds 11/22/33, scaling seed 77), base/fix runs interleaved, other Godot processes counted per run.
+
+### 7.1 fdd4d86 — `_area_damage_side` no longer duplicates the victim array (P3 item)
+Base blob a4a549e vs fix (HEAD c1bf13d), 3 pairs, 2–7 other Godot processes (`build/perf/ab_20261031-081107`):
+cap clash avg 1.139 → 1.147 ms (+0.7 %), p95 1.73 → 1.91 ms; bot rounds avg 0.175 → 0.195 ms. Outcomes per seed identical.
+**Verdict: no measurable change** — within run-to-run noise (noise-floor p99 0.13 vs 0.30 ms between the two sides). Correct cleanup,
+not a performance lever. (A single quick pair at 08:08 had shown −23 %; the 3-pair run did not reproduce it, so that number is withdrawn.)
+
+### 7.2 e9dfaa4 — sorted-lane `_find_target` (P2 item)
+Base blob d4d7c13 (linear scan) vs fix (HEAD 2aa6d28), 3 pairs, 0–8 other Godot processes (`build/perf/ab_20261031-084117`):
+| metric (median of 3) | base | fix | Δ |
+|---|---|---|---|
+| cap clash 36/side step avg | 1.659 ms | 0.899 ms | −45.8 % |
+| cap clash p50 | 1.090 ms | 0.626 ms | −42.6 % |
+| cap clash p95 | 4.385 ms | 1.394 ms | −68.2 % |
+| section `units` avg | 1.931 ms | 0.918 ms | −52.4 % |
+| mirrored step total avg | 2.355 ms | 1.353 ms | −42.5 % |
+| bot rounds step avg | 0.279 ms | 0.284 ms | +1.8 % (few units; sort overhead ≈ saving) |
+New `sort_lanes` section: 0.12 ms of 1.35 ms at caps. Same-build switch (02's `_linear_targets`): target lookup for all 72 units
+p50 0.89 ms linear vs 0.24 ms sorted. **The P2 acceptance (≥ 50 % lower cap step avg and find_target) is met for find_target and close
+for the step avg (−46 %).**
+
+**Behaviour regression found:** `tests/performance/targeting_equivalence.gd` (same build, only `_linear_targets` differs, committed tree
+cd76358) reports `DIVERGES` in 29/30 round×seed runs and a **different winner in 3/30** (r01 seed 22, r03 seeds 11 and 33: linear wins,
+sorted loses). Every first disagreement is an **exact x tie**: two candidate targets at the same x (stacked blocked melee units), e.g.
+r01 seed 11 t=74.67 s: e_grunt uid 25 → linear picks melee_basic uid 19, sorted picks uid 29, both at x=748.67, d=26.8. The linear scan
+keeps the first unit in array order on ties; the sorted lookup returns a later one. The change concentrates or spreads damage
+differently on stacked units and shifts balance. Requested from 02 (P2b): deterministic tie-break identical to the linear scan
+(lowest array index / lowest uid among equal d). Acceptance: `targeting_equivalence.gd` verdict `EQUIVALENT` (30/30).
+
+### 7.3 Frame stress after these changes (09:10, `build/perf/20261031-091015`)
+The stress probe reached only 37–40 units (M1: 72–75) with at most 1 projectile, in a working tree that also contains uncommitted
+01 data changes (data/rounds/*, data/heroes/*). So its view A/B (1.76 vs 0.85 ms) is **not comparable** with §3 and the battle_view
+P1 cost at caps is **not re-measured**. Cause of the lower unit count not yet investigated (open item).
+R09-08-1 readability counts in that run: max simultaneous damage popups 16/24, fx 8/48, projectiles 1/64, 0 frames at any cap.
+These do not cover a dense late-wave scene yet.

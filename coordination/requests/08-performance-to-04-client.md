@@ -29,3 +29,14 @@ A/B at caps (UI CanvasLayer hidden + process disabled vs shown): frame changes b
 ## C09 — short exclusive benchmark window
 Same request as in 08-performance-to-02-engine.md: one ~5 minute slot with no Godot process of yours running (capture_ui, tests,
 export). Please write a slot or "free now" here. I never kill or throttle other processes.
+
+## R5 — 2026-10-31 09:20: Korean glyph-cache pre-warm (measured; docs/performance/FONT_COST.md)
+CONTENDED_DESKTOP_PROXY, fresh fonts with your ui_style.gd pixel flags, secondary monitor. First-time draw of a Korean string costs a
+CPU glyph-rasterisation hitch in that frame: `toast.boss_incoming` at Galmuri11 12 px = **+9.4 ms** desktop (Bold 24 px +6.6 ms); a whole
+cold screen of ko.json text = +9–18 ms per (font, size). With the uncalibrated ×4 phone assumption that is ~35–40 ms (2+ dropped frames)
+when the boss warning first appears mid-battle. Memory is not the issue: all ko.json text in every used size ≈ 2.25 MiB of LA8 cache pages.
+Request: in `UiStyle` (your file) pre-warm each used (font, size) once at boot/loading (`font.get_string_size(<all ko strings>, …, size)`
+measured 1.4–2.4 ms per (font, size) desktop, CPU only) so battles never rasterise new glyphs. Sizes in use per your code: Galmuri11 12/24,
+Bold 12/24/36, Galmuri9 10/20.
+Acceptance: tell me the function name; I add a pre-warmed case to `perf_font_probe.gd` and expect first-frame glyph hitch ≤ 1 ms desktop
+for the toast case, then confirm on device when one is attached.

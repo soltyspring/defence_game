@@ -6,7 +6,9 @@ extends SceneTree
 ## Measures: content load latency, per-round sim step distribution (bot-driven), sustained combat at
 ## N units per side (scaling curve up to caps), HUD snapshot cost, object/static-memory drift (leak and
 ## pooling proxy), save/load latency and size. Budgets are PROVISIONAL (docs/performance/BUDGETS.md).
-## Exit: 0 = harness ran (budget results in JSON), 1 = harness error, or budget FAIL with --strict.
+## Exit: 0 = harness ran (budget results in JSON); 1 = harness error, or with --strict an ADOPTED check failed, or with
+## --strict-all ANY check failed. Checks are tagged "adopted" (release invariants already in contracts: no leaked or unpooled
+## objects, ENGINE.md §7) or "provisional" (numeric targets awaiting device data). --strict never fails on provisional targets.
 ## Owner: 08-performance.
 
 const ContentS := preload("res://src/core/content.gd")
@@ -27,6 +29,7 @@ var report := {}
 var checks := []
 var quick := false
 var strict := false
+var strict_all := false
 var out_path := ""
 
 func _initialize() -> void:
@@ -35,7 +38,8 @@ func _initialize() -> void:
 func _run() -> void:
 	var args := OS.get_cmdline_user_args()
 	quick = args.has("--quick")
-	strict = args.has("--strict")
+	strict_all = args.has("--strict-all")
+	strict = args.has("--strict") or strict_all
 	var git_sha := ""
 	var contended := -1
 	var selfcheck := ""
@@ -57,7 +61,9 @@ func _run() -> void:
 	if selfcheck != "":
 		# Exit-semantics regression mode (tests/performance/test_bench_semantics.ps1): no measurements, one synthetic check.
 		report.mode = "selfcheck"
-		_check("selfcheck_synthetic", 1.0 if selfcheck == "fail" else 0.0, 0.5, "synthetic")
+		# pass | fail (a provisional check fails) | fail_adopted (an adopted check fails)
+		_check("selfcheck_provisional", 1.0 if selfcheck == "fail" else 0.0, 0.5, "synthetic")
+		_check("selfcheck_adopted", 1.0 if selfcheck == "fail_adopted" else 0.0, 0.5, "synthetic", true)
 		_finish(0, t0)
 		return
 	report.noise = _noise_floor()
@@ -105,14 +111,19 @@ func _finish(code: int, t0: int) -> void:
 	for c in checks:
 		if c.result == "FAIL": fails += 1
 	report.budget_fails = fails
+	var adopted_fails := 0
+	for c in checks:
+		if c.result == "FAIL" and c.status == "adopted": adopted_fails += 1
+	report.adopted_fails = adopted_fails
+	report.provisional_fails = fails - adopted_fails
 	var failed_ids := PackedStringArray()
 	for c in checks:
 		if c.result == "FAIL": failed_ids.append(c.id)
 	report.failed_checks = Array(failed_ids)
 	report.harness = "OK" if code == 0 else "ERROR"
 	report.budgets = "PASS" if fails == 0 else "FAIL"
-	report.strict = strict
-	if code == 0 and strict and fails > 0:
+	report.strict = "all" if strict_all else ("adopted" if strict else "off")
+	if code == 0 and ((strict_all and fails > 0) or (strict and adopted_fails > 0)):
 		code = 1
 	report.exit_code = code
 	report.total_ms = Time.get_ticks_msec() - t0
@@ -126,17 +137,17 @@ func _finish(code: int, t0: int) -> void:
 		printerr("cannot write ", out_path)
 	print(txt)
 	for c in checks:
-		print("[perf] %-4s %s: %s (budget %s)" % [c.result, c.id, str(c.value), str(c.budget)])
+		print("[perf] %-4s %-11s %s: %s (budget %s)" % [c.result, c.status, c.id, str(c.value), str(c.budget)])
 	print("[perf] report ", out_path)
 
 	# Harness completion and budget verdict are reported separately: "harness=OK budgets=FAIL" is NOT a pass.
-	# Default exit 0 = harness ran (budgets are PROVISIONAL); --strict turns any budget FAIL into exit 1.
-	print("PERF_BENCH harness=%s budgets=%s fails=%d [%s] class=%s strict=%s exit=%d" % [
-		report.harness, report.budgets, fails, ",".join(failed_ids), report.evidence_class, str(strict), code])
+	# Default exit 0 = harness ran. --strict: exit 1 on ADOPTED failures only. --strict-all: exit 1 on any failure.
+	print("PERF_BENCH harness=%s budgets=%s fails=%d adopted_fails=%d provisional_fails=%d [%s] class=%s strict=%s exit=%d" % [
+		report.harness, report.budgets, fails, adopted_fails, fails - adopted_fails, ",".join(failed_ids), report.evidence_class, report.strict, code])
 	quit(code)
 
-func _check(id: String, value: float, budget: float, note := "") -> void:
-	checks.append({"id": id, "value": snappedf(value, 0.0001), "budget": budget,
+func _check(id: String, value: float, budget: float, note := "", adopted := false) -> void:
+	checks.append({"id": id, "value": snappedf(value, 0.0001), "budget": budget, "status": "adopted" if adopted else "provisional",
 		"result": "PASS" if value <= budget else "FAIL", "note": note})
 
 static func _stats(us: PackedFloat32Array) -> Dictionary:
@@ -264,7 +275,7 @@ func _bench_scaling(content) -> void:
 	_check("cap_clash_step_p95_ms_desktop", cap_row.p95_ms, SIM_BUDGET_MID_MS / PHONE_SLOWDOWN_ASSUMED,
 		"36/side sustained mid-lane combat, best-of-runs; gate = mid-tier 2 ms / assumed slowdown")
 	_check("cap_clash_step_avg_ms_desktop", cap_row.avg_ms, SIM_BUDGET_MID_MS / PHONE_SLOWDOWN_ASSUMED, "mean step at cap")
-	_check("cap_clash_unexplained_object_drift", absf(cap_row.object_drift_unexplained), 0.0, "objects not held by sim pools (leak proxy)")
+	_check("cap_clash_unexplained_object_drift", absf(cap_row.object_drift_unexplained), 0.0, "objects not held by sim pools (ENGINE.md §7 pooling)", true)
 
 func _scale_row(content, rid: String, mode: String, n: int, measured: int, pids: Array, eids: Array) -> Dictionary:
 	var sim = SimS.new()
@@ -370,6 +381,7 @@ func _bench_sections(content) -> void:
 	for i in steps:
 		_refill(b, pids, eids, 36, 36, 240 + i, true)
 		# isolated micro-costs on the current state (read-only calls)
+		if b.has_method("_sort_lanes"): b._sort_lanes()   # lanes must be current for the sorted lookup
 		var t := Time.get_ticks_usec()
 		for u in b.players: b._find_target(u)
 		for u in b.enemies: b._find_target(u)
@@ -384,6 +396,36 @@ func _bench_sections(content) -> void:
 	var rows := {}
 	for k in acc:
 		rows[k] = {"avg_ms": snappedf(acc[k] / steps / 1000.0, 0.0001), "share": snappedf(acc[k] / maxf(1.0, total), 0.001)}
+	var lin_us := PackedFloat32Array()
+	if "_linear_targets" in b:
+		for i in (200 if quick else 600):
+			b._sort_lanes()
+			var t0 := Time.get_ticks_usec()
+			b._linear_targets = true
+			for u in b.players: b._find_target(u)
+			for u in b.enemies: b._find_target(u)
+			b._linear_targets = false
+			lin_us.append(float(Time.get_ticks_usec() - t0))
+		var srt := PackedFloat32Array()
+		for i in (200 if quick else 600):
+			b._sort_lanes()
+			var t1 := Time.get_ticks_usec()
+			for u in b.players: b._find_target(u)
+			for u in b.enemies: b._find_target(u)
+			srt.append(float(Time.get_ticks_usec() - t1))
+		var agree := 0
+		var total_u := 0
+		b._sort_lanes()
+		for u in b.players + b.enemies:
+			if u.dying: continue
+			total_u += 1
+			var s1 = b._find_target(u)
+			b._linear_targets = true
+			var s2 = b._find_target(u)
+			b._linear_targets = false
+			if s1 == s2: agree += 1
+		report.targeting_ab = {"linear_all_units": _stats(lin_us), "sorted_all_units": _stats(srt), "same_target": agree, "units": total_u,
+			"note": "same build/state, 02 _linear_targets switch; sorted lookup excludes the per-step _sort_lanes cost (see sections.sort_lanes)"}
 	report.sections = {"mirror_matches_step": fidelity, "status": "OK" if fidelity else "STALE_MIRROR (numbers indicative only)",
 		"state": "36/side clash, round %s" % rid, "steps": steps, "sections": rows,
 		"step_total_avg_ms": snappedf(total / steps / 1000.0, 0.0001),
@@ -408,7 +450,7 @@ static func _state_hash(sim) -> String:
 	for p in sim.projectiles: s += "|%s%.3f" % [p.alive, p.x]
 	return s.sha256_text()
 
-## Exact copy of BattleSim.step() (src/gameplay/battle_sim.gd) with timers between subsystems.
+## Exact copy of BattleSim.step() (both the pre-e9dfaa4 body and the e9dfaa4 _step_inner with _sort_lanes; detected by has_method) (src/gameplay/battle_sim.gd) with timers between subsystems.
 func _mirror_step(s, dt: float, acc: Dictionary) -> void:
 	if s.ended or s.paused:
 		return
@@ -429,6 +471,11 @@ func _mirror_step(s, dt: float, acc: Dictionary) -> void:
 	var t1 := Time.get_ticks_usec()
 	s._step_aura()
 	var t2 := Time.get_ticks_usec()
+	var new_api: bool = s.has_method("_sort_lanes")   # 02 e9dfaa4: sorted lanes + _step_inner
+	if new_api:
+		s._in_step = true
+		s._sort_lanes()
+	var t2b := Time.get_ticks_usec()
 	s._step_hero(dt)
 	var t3 := Time.get_ticks_usec()
 	for u in s.players: s._step_unit(u, dt)
@@ -442,11 +489,17 @@ func _mirror_step(s, dt: float, acc: Dictionary) -> void:
 	var t7 := Time.get_ticks_usec()
 	s._reap()
 	s.stats.max_units = maxi(s.stats.max_units, s.players.size() + s.enemies.size())
-	if s.t >= s.TIME_LIMIT and not s.ended:
+	if new_api:
+		if not s.ended and (s._base_dead_enemy or s._base_dead_player):
+			s._end(s._base_dead_enemy)
+		if s.time_limit > 0.0 and s.t >= s.time_limit and not s.ended:
+			s._end(false)
+		s._in_step = false
+	elif s.t >= s.TIME_LIMIT and not s.ended:
 		s._end(false)
 	var t8 := Time.get_ticks_usec()
 	if acc != null:
-		for pair in [["economy_waves_ai", t1 - t0], ["aura", t2 - t1], ["hero", t3 - t2], ["units", t4 - t3],
+		for pair in [["economy_waves_ai", t1 - t0], ["aura", t2 - t1], ["sort_lanes", t2b - t2], ["hero", t3 - t2b], ["units", t4 - t3],
 				["towers", t5 - t4], ["projectiles", t6 - t5], ["fx_text", t7 - t6], ["reap", t8 - t7]]:
 			acc[pair[0]] = acc.get(pair[0], 0.0) + float(pair[1])
 
@@ -490,7 +543,7 @@ func _bench_leak(content) -> void:
 	var mem1 := OS.get_static_memory_usage()
 	report.leak = {"battles": reps, "object_delta": obj1 - obj0, "static_mem_delta_bytes": mem1 - mem0,
 		"note": "after releasing the sim; >0 means objects outlive a battle (RefCounted cycle or cache)"}
-	_check("battle_object_leak", absf(obj1 - obj0), 0.0, "objects retained after %d full battles" % reps)
+	_check("battle_object_leak", absf(obj1 - obj0), 0.0, "objects retained after %d full battles" % reps, true)
 
 # ---------------------------------------------------------------- save
 func _bench_save() -> void:

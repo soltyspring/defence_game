@@ -14,8 +14,8 @@ Compares against PROVISIONAL tier budgets (ENGINE.md §7). Desktop/static number
 
 Usage (workspace root):
   python tools/perf/budget_inventory.py [--out build/perf] [--write-doc] [--apk path.apk]
-Exit 0 = inventory written; 1 = could not read inputs. Budget overruns are reported, not fatal,
-unless --strict.
+Exit 0 = inventory written; 1 = could not read inputs, or --strict and an ADOPTED check failed (contract rules such as the
+2048 px hard page limit), or --strict-all and any check failed. Provisional budgets never fail the default or --strict run.
 """
 from __future__ import annotations
 
@@ -178,6 +178,10 @@ def residency(manifest: dict, pages: list[dict], needs: dict, units: dict) -> di
     biomes = manifest.get("biomes", {})
     always = [p["id"] for p in pages if p.get("group") == "ui" or p.get("load_policy") == "always"]
     all_enemy_sets = sorted({u.get("anim_set") or u["id"] for u in units.values() if u.get("faction") == "enemy"})
+    # Current engine behaviour: battle.gd acquires the round roster via Content.round_enemy_roster (02 e9dfaa4, same sources as
+    # round_needs: waves, ai pool, trickle, hp triggers, boss summons) or, in older code, every enemy anim set.
+    battle_src = os.path.join(ROOT, "src", "gameplay", "battle.gd")
+    engine_uses_roster = os.path.isfile(battle_src) and "round_enemy_roster" in open(battle_src, encoding="utf-8").read()
     rows = {}
     missing_art = {}
     for rid, n in needs.items():
@@ -196,7 +200,7 @@ def residency(manifest: dict, pages: list[dict], needs: dict, units: dict) -> di
             return sorted(out)
 
         contract = pages_for(n["anim_sets"])
-        engine = pages_for(sorted(set(n["anim_sets"]) | set(all_enemy_sets)))
+        engine = pages_for(n["anim_sets"]) if engine_uses_roster else pages_for(sorted(set(n["anim_sets"]) | set(all_enemy_sets)))
         rows[rid] = {
             "biome": n["biome"], "biome_page": biome_page or "(none: procedural fallback)",
             "contract_pages": contract,
@@ -208,7 +212,8 @@ def residency(manifest: dict, pages: list[dict], needs: dict, units: dict) -> di
         if miss:
             missing_art[rid] = miss
     menu = sorted(always)
-    return {"menu_pages": menu, "menu_gpu_bytes": sum(by_id.get(p, {}).get("gpu_bytes", 0) for p in menu),
+    return {"engine_model": "roster (battle.gd uses Content.round_enemy_roster)" if engine_uses_roster else "all enemy anim sets",
+            "menu_pages": menu, "menu_gpu_bytes": sum(by_id.get(p, {}).get("gpu_bytes", 0) for p in menu),
             "rounds": rows, "anim_sets_without_art": missing_art}
 
 
@@ -285,6 +290,7 @@ def build_markdown(inv: dict) -> str:
     L.append("")
     r = inv["residency"]
     L.append("## Texture residency per scene")
+    L.append(f"Current engine residency model: {r.get('engine_model', '?')}. Atlas inputs are the working tree (may include 03 WIP).")
     L.append(f"Menu / round select: {', '.join('`'+x+'`' for x in r['menu_pages'])} = **{mib(r['menu_gpu_bytes'])}**.")
     L.append("")
     L.append("| Round | Biome page | Contract pages (roster only) | Contract GPU | Current engine GPU | Low-tier headroom (32 MiB) |")
@@ -332,7 +338,7 @@ def build_markdown(inv: dict) -> str:
     L.append("")
     L.append("## Budget checks")
     for c in inv["checks"]:
-        L.append(f"- {c['result']} `{c['id']}`: {c['value']} (budget {c['budget']})")
+        L.append(f"- {c['result']} ({c.get('status', 'provisional')}) `{c['id']}`: {c['value']} (budget {c['budget']})")
     return "\n".join(L) + "\n"
 
 
@@ -341,7 +347,8 @@ def main() -> int:
     ap.add_argument("--out", default=os.path.join(ROOT, "build", "perf"))
     ap.add_argument("--write-doc", action="store_true", help="also write docs/performance/RESOURCE_INVENTORY.md")
     ap.add_argument("--apk", default="")
-    ap.add_argument("--strict", action="store_true")
+    ap.add_argument("--strict", action="store_true", help="exit 1 when an ADOPTED check fails")
+    ap.add_argument("--strict-all", action="store_true", help="exit 1 when ANY check (incl. provisional) fails")
     args = ap.parse_args()
 
     man_path = os.path.join(ROOT, "assets", "manifest.json")
@@ -380,8 +387,9 @@ def main() -> int:
     worst_round = max((v["engine_gpu_bytes"] for v in res["rounds"].values()), default=0)
     checks = []
 
-    def check(cid, value, budget, fmt=mib):
+    def check(cid, value, budget, fmt=mib, adopted=False):
         checks.append({"id": cid, "value": fmt(value), "budget": fmt(budget), "raw": value, "raw_budget": budget,
+                       "status": "adopted" if adopted else "provisional",
                        "result": "PASS" if value <= budget else "FAIL"})
 
     check("battle_texture_resident_low_tier", worst_round, TIERS["low"]["texture"])
@@ -390,8 +398,11 @@ def main() -> int:
     if apk:
         check("apk_size", apk["apk_bytes"], APK_BUDGET)
     for p in pages:
-        if any("exceeds hard" in i for i in p["issues"]):
-            checks.append({"id": f"page_size_{p['id']}", "value": f"{p['w']}x{p['h']}", "budget": f"<= {PAGE_HARD}", "result": "FAIL"})
+        # ENGINE.md §8 hard page limit is a contract rule, so it is ADOPTED (every page reported, pass or fail)
+        if "w" in p:
+            side = max(p["w"], p["h"])
+            checks.append({"id": f"page_size_{p['id']}", "value": f"{p['w']}x{p['h']}", "budget": f"<= {PAGE_HARD}",
+                           "status": "adopted", "result": "PASS" if side <= PAGE_HARD else "FAIL"})
 
     inv = {"generated": _dt.datetime.now().astimezone().isoformat(timespec="seconds"), "git": git_sha(),
            "evidence_class": "STATIC", "tiers_provisional": TIERS, "atlases": pages, "round_needs": needs,
@@ -406,12 +417,17 @@ def main() -> int:
         with open(os.path.join(ROOT, "docs", "performance", "RESOURCE_INVENTORY.md"), "w", encoding="utf-8", newline="\n") as f:
             f.write(md)
     for c in checks:
-        print(f"[inventory] {c['result']:4} {c['id']}: {c['value']} (budget {c['budget']})")
+        print(f"[inventory] {c['result']:4} {c['status']:11} {c['id']}: {c['value']} (budget {c['budget']})")
     print(f"[inventory] atlas pages={len(pages)} gpu_all={mib(totals['atlas_gpu_bytes'])} worst_battle={mib(worst_round)} "
           f"wav_pcm={mib(audio['wav_pcm_bytes'])} assets_disk={mib(assets_disk)} apk={'%s' % mib(apk['apk_bytes']) if apk else 'none'}")
     print(f"[inventory] wrote {os.path.join(args.out, 'inventory.md')}")
     fails = sum(1 for c in checks if c["result"] == "FAIL")
-    return 1 if (args.strict and fails) else 0
+    adopted_fails = sum(1 for c in checks if c["result"] == "FAIL" and c["status"] == "adopted")
+    print(f"INVENTORY fails={fails} adopted_fails={adopted_fails} provisional_fails={fails - adopted_fails} "
+          f"strict={'all' if args.strict_all else ('adopted' if args.strict else 'off')}")
+    if args.strict_all:
+        return 1 if fails else 0
+    return 1 if (args.strict and adopted_fails) else 0
 
 
 if __name__ == "__main__":

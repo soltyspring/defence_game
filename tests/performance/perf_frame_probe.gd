@@ -128,6 +128,8 @@ func _process(delta: float) -> bool:
 		peak.units = maxi(peak.units, int(perf.counts.units))
 		peak.projectiles = maxi(peak.projectiles, int(perf.counts.projectiles))
 		peak.fx = maxi(peak.fx, int(perf.counts.fx))
+	if app and app.battle and app.battle.sim:
+		_readability(app.battle.sim, fm)
 	var m := _mon()
 	for k in ["tex_mem", "video_mem", "static_mem", "objects", "nodes"]:
 		peak[k] = maxi(peak[k], m[k])
@@ -146,6 +148,31 @@ func _stress(sim) -> void:
 		sim._spawn_enemy(str(sim.round_def.enemy_ai.pool[_frames % sim.round_def.enemy_ai.pool.size()]))
 	sim.player_base.hp = sim.player_base.hp_max
 	sim.enemy_base.hp = sim.enemy_base.hp_max
+
+## R09-08-1 (09-research): simultaneous damage popups / fx / projectiles per frame vs caps, with the frame time of the
+## busiest frame. Counted directly from the live sim pools (alive flags), not from Perf.counts.
+var readability := {"frames": 0, "max": {"texts": 0, "fx": 0, "projectiles": 0}, "frames_at_cap": {"texts": 0, "fx": 0, "projectiles": 0},
+	"caps": {}, "peak_frame": {}}
+
+func _readability(sim, fm: float) -> void:
+	var n := {"texts": 0, "fx": 0, "projectiles": 0}
+	for x in sim.texts:
+		if x.alive: n.texts += 1
+	for x in sim.fxs:
+		if x.alive: n.fx += 1
+	for x in sim.projectiles:
+		if x.alive: n.projectiles += 1
+	var caps := {"texts": int(sim.caps.text), "fx": int(sim.caps.fx), "projectiles": int(sim.caps.projectiles)}
+	readability.caps = caps
+	readability.frames += 1
+	var load_sum := 0
+	for k in n:
+		readability.max[k] = maxi(readability.max[k], n[k])
+		if n[k] >= caps[k]: readability.frames_at_cap[k] += 1
+		load_sum += n[k]
+	if readability.peak_frame.is_empty() or load_sum > int(readability.peak_frame.get("sum", -1)):
+		readability.peak_frame = {"sum": load_sum, "counts": n, "frame_ms": snappedf(fm, 0.001), "t": snappedf(_t, 0.01),
+			"units": sim.players.size() + sim.enemies.size()}
 
 static func _dist(a: PackedFloat32Array) -> Dictionary:
 	if a.is_empty(): return {"n": 0}
@@ -183,6 +210,7 @@ func _finish(app) -> void:
 		"render_cpu_ms": _dist(rcpu_ms), "render_gpu_ms": _dist(rgpu_ms), "battle_loop_ms": _dist(sim_ms),
 		"draw_calls": _idist(draw_calls), "primitives": _idist(prims), "units": _idist(units),
 		"frames_over_ms": over_budget_frames,
+		"readability_load": readability,
 		"ab": {"target": ab_target, "frame_ms_shown": _dist(frame_visible), "frame_ms_hidden": _dist(frame_hidden),
 			"process_worst_per_s_shown": _dist(proc_visible), "process_worst_per_s_hidden": _dist(proc_hidden),
 			"note": "difference = CPU cost of the target (view = battle_view._draw, 02; ui = HUD/menus, 04 or 02 fallback)"} if ab_view else {},

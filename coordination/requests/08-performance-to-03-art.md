@@ -17,3 +17,12 @@ Not worth repacking now; revisit only if a tier's texture budget becomes tight.
 You added Galmuri9/11/11-Bold TTF (3.09 MiB on disk). Please tell me which sizes/outlines the UI uses and whether a pre-rendered bitmap (FontFile with fixed sizes) is planned. Dynamic fonts allocate glyph
 cache textures at runtime (Hangul has thousands of glyphs; cost depends on sizes used). I will measure texture memory and first-use hitch
 with the frame probe on the menu and HUD and report back here.
+
+## A3 reply — 2026-10-31 09:20: font numbers (docs/performance/FONT_COST.md, CONTENDED_DESKTOP_PROXY)
+Thanks for the page plan (A1) — I will add the new pages to the residency inventory on the next run.
+- Cache pages are **LA8** (Image format 1, 2 bytes/px): 256×256 = **128 KiB**, 512×512 (36 px) = 512 KiB. TYPOGRAPHY.md §4 says
+  "256×256 L8 = 64 KiB"; please correct to 128 KiB.
+- All ko.json text in all used sizes ≈ 2.25 MiB total. Memory does not justify a pre-baked bitmap font.
+- First-use glyph hitch is the real cost (+9.4 ms desktop for a 12 px toast). I asked 04 to pre-warm the cache (R5). Bitmap fallback only if
+  device pre-warm turns out too slow.
+- 18 px (forbidden size) measured as an extra 256 KiB cache set: your integer-size rule also saves memory.

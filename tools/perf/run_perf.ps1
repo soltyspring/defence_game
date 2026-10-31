@@ -5,10 +5,11 @@
 #   .\tools\perf\run_perf.ps1 -Frame          # + windowed frame probes (opens a game window ~2 min)
 #   .\tools\perf\run_perf.ps1 -Strict         # exit 1 when a provisional budget check fails
 #   .\tools\perf\run_perf.ps1 -Frame -SkipBench  # visible probes only (secondary monitor)
+#   .\tools\perf\run_perf.ps1 -Font -SkipBench   # Galmuri glyph-cache memory + first-use hitch probe (secondary monitor)
 # Output: build/perf/<timestamp>/ (git-ignored) + build/perf/latest/ copy. Never imports, never opens the editor,
 # never touches the real save (bench uses user://perf/). Records concurrently running Godot processes because
 # other workers' editors/builds distort timing.
-param([switch]$Quick, [switch]$Frame, [switch]$Strict, [switch]$SkipBench, [string]$Round = 'r06', [int]$Seconds = 20)
+param([switch]$Quick, [switch]$Frame, [switch]$Strict, [switch]$SkipBench, [switch]$Font, [int]$FontReps = 3, [string]$Round = 'r06', [int]$Seconds = 20)
 $ErrorActionPreference = 'Stop'
 $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 Set-Location $Root
@@ -71,7 +72,7 @@ function Invoke-GodotVisible([string]$Name, [string[]]$GodotArgs) {
     if ($rect -and -not $onSecondary) { Write-Warning "$Name window is not on the secondary monitor" }
     $proc.WaitForExit()
     $code = $proc.ExitCode
-    Get-Content $so -ErrorAction SilentlyContinue | Where-Object { $_ -match '^\[frame_probe\]|SCRIPT ERROR' } | ForEach-Object { Write-Host $_.TrimEnd() }
+    Get-Content $so -ErrorAction SilentlyContinue | Where-Object { $_ -match '^\[frame_probe\]|^\[font_summary\]|SCRIPT ERROR' } | ForEach-Object { Write-Host $_.TrimEnd() }
     Write-Host "=== $Name exit=$code ==="
     return $code
 }
@@ -96,14 +97,31 @@ if ($Quick) { $benchArgs += '--quick' }
 if ($Strict) { $benchArgs += '--strict' }
 if (-not $SkipBench) { if ((Invoke-Godot 'bench' $benchArgs) -ne 0) { $fail += 'bench' } }
 
-if ($Frame -and -not $secondary) {
+# Shared import/export lock (07 QA-R2): never measure while 02/04 import or export.
+$lockPath = Join-Path $Root 'build\.godot-import.lock'
+function Test-ImportLockHeld {
+    if (-not (Test-Path $lockPath)) { return $false }
+    try { $fs = [IO.File]::Open($lockPath, 'Open', 'Read', 'None'); $fs.Dispose(); return $false } catch { return $true }
+}
+$waited = 0
+while ((Test-ImportLockHeld) -and $waited -lt 300) { if ($waited -eq 0) { Write-Host '[run_perf] build/.godot-import.lock held: waiting (max 300 s)' }; Start-Sleep -Seconds 5; $waited += 5 }
+$meta.import_lock_wait_s = $waited
+if (Test-ImportLockHeld) { Write-Host 'BLOCKED_IMPORT_LOCK: import/export still running after 300 s; visible probes skipped.'; $Frame = $false; $Font = $false; $meta.blocked = 'import lock' }
+$meta.godot_processes_at_visible_start = @(Get-Process | Where-Object { $_.ProcessName -like 'Godot*' }).Count
+
+if (($Frame -or $Font) -and -not $secondary) {
     Write-Host 'BLOCKED_NO_SECONDARY_MONITOR: visible frame probes skipped (user rule: visible tests on secondary monitor only).'
     $meta.frame_blocked = 'no secondary monitor'
-} elseif ($Frame) {
+} else {
+  if ($Font) {
+    if ((Invoke-GodotVisible 'font' @('--path', '.', '-s', 'res://tests/performance/perf_font_probe.gd', '--', "--font-out=$Out\font.json", "--font-reps=$FontReps")) -ne 0) { $fail += 'font' }
+  }
+  if ($Frame) {
     $probe = @('--path', '.', '-s', 'res://tests/performance/perf_frame_probe.gd', '--', '--autoplay', "--round=$Round")
     if ((Invoke-GodotVisible 'frame_paced' ($probe + @("--perf-seconds=$Seconds", '--perf-warmup=5', "--perf-out=$Out\frame_paced.json"))) -ne 0) { $fail += 'frame_paced' }
     if ((Invoke-GodotVisible 'frame_stress_ab_view' ($probe + @("--perf-seconds=$Seconds", '--perf-warmup=6', '--perf-stress', '--perf-uncapped', '--perf-ab-view', "--perf-out=$Out\frame_stress_ab_view.json"))) -ne 0) { $fail += 'frame_stress_ab_view' }
     if ((Invoke-GodotVisible 'frame_menu_uncapped' @('--path', '.', '-s', 'res://tests/performance/perf_frame_probe.gd', '--', '--perf-seconds=8', '--perf-warmup=3', '--perf-uncapped', "--perf-out=$Out\frame_menu_uncapped.json")) -ne 0) { $fail += 'frame_menu_uncapped' }
+  }
 }
 
 # ---- summary ----
@@ -128,6 +146,13 @@ foreach ($f in 'frame_paced', 'frame_stress_ab_view', 'frame_menu_uncapped') {
         $s += "frame ms p50/p95/p99: $($j.frame_ms.p50)/$($j.frame_ms.p95)/$($j.frame_ms.p99); gpu p95 $($j.render_gpu_ms.p95); draw calls p95 $($j.draw_calls.p95); units max $($j.peak.units); tex mem peak $([math]::Round($j.peak.tex_mem/1MB,2)) MiB"
         if ($j.ab.target) { $s += "A/B $($j.ab.target): frame avg shown $($j.ab.frame_ms_shown.avg) ms vs hidden $($j.ab.frame_ms_hidden.avg) ms" }
     }
+}
+$fj = Join-Path $Out 'font.json'
+if (Test-Path $fj) {
+    $fo = Get-Content $fj -Raw | ConvertFrom-Json
+    $s += ''; $s += "## font ($($fo.evidence_class), reps $($fo.reps))"
+    $s += '| case | allowed size | shape cold ms | warm ms | first frame ms | warm-label frame ms | glyph hitch ms | idle ms | cache pages | cache bytes | load ms |'; $s += '|---|---|---|---|---|---|---|---|---|---|---|'
+    foreach ($r in $fo.summary) { $s += "| $($r.case) | $($r.allowed_size) | $($r.shape_cold_ms_med) | $($r.shape_warm_ms_med) | $($r.first_frame_ms_med) | $($r.warm_label_frame_ms_med) | $($r.glyph_hitch_ms_med) | $($r.idle_ms_med) | $($r.cache_pages) | $($r.cache_bytes) | $($r.load_ms_med) |" }
 }
 $meta.failures = $fail
 $meta | ConvertTo-Json | Set-Content (Join-Path $Out 'meta.json') -Encoding utf8

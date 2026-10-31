@@ -1,8 +1,9 @@
-# Regression check for 08 perf harness exit/status semantics (coordinator C10). Owner: 08-performance.
-# Harness completion and budget verdicts must never be conflated:
-#   default : exit 0 whether budgets pass or fail, verdict printed as harness=OK budgets=PASS|FAIL
-#   --strict: exit 1 when any budget check fails, exit 0 when all pass
-# Uses perf_bench.gd --selfcheck=pass|fail (no measurements, ~2 s per case) and budget_inventory.py --strict.
+# Regression check for 08 perf harness exit/verdict semantics (coordinator C10). Owner: 08-performance.
+# Harness completion and budget verdicts must never be conflated. Checks are tagged adopted|provisional.
+#   default      : exit 0 whenever the harness ran; verdict printed as harness=OK budgets=PASS|FAIL
+#   --strict     : exit 1 only if an ADOPTED check fails (contract invariants); provisional failures stay exit 0
+#   --strict-all : exit 1 if ANY check fails
+# Uses perf_bench.gd --selfcheck=pass|fail|fail_adopted (no measurements, ~2 s per case) and budget_inventory.py.
 # Usage: .\tests\performance\test_bench_semantics.ps1   (exit 0 = all cases behave as specified)
 $ErrorActionPreference = 'Stop'
 $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
@@ -10,35 +11,45 @@ Set-Location $Root
 $Godot = Join-Path $Root 'tools\engine\Godot_v4.7.2-stable_win64_console.exe'
 $tmp = Join-Path $Root 'build\perf\semantics'
 New-Item -ItemType Directory -Force $tmp | Out-Null
+# sc = selfcheck input, mode = strict flag, exit = expected exit, budgets = expected verdict, af/pf = expected adopted/provisional fails
 $cases = @(
-    @{ name = 'pass_default'; sc = 'pass'; strict = $false; exit = 0; budgets = 'PASS' },
-    @{ name = 'fail_default'; sc = 'fail'; strict = $false; exit = 0; budgets = 'FAIL' },
-    @{ name = 'pass_strict'; sc = 'pass'; strict = $true; exit = 0; budgets = 'PASS' },
-    @{ name = 'fail_strict'; sc = 'fail'; strict = $true; exit = 1; budgets = 'FAIL' }
+    @{ name = 'pass_default';          sc = 'pass';         mode = '';             exit = 0; budgets = 'PASS'; af = 0; pf = 0 },
+    @{ name = 'prov_fail_default';     sc = 'fail';         mode = '';             exit = 0; budgets = 'FAIL'; af = 0; pf = 1 },
+    @{ name = 'prov_fail_strict';      sc = 'fail';         mode = '--strict';     exit = 0; budgets = 'FAIL'; af = 0; pf = 1 },
+    @{ name = 'prov_fail_strict_all';  sc = 'fail';         mode = '--strict-all'; exit = 1; budgets = 'FAIL'; af = 0; pf = 1 },
+    @{ name = 'adopt_fail_default';    sc = 'fail_adopted'; mode = '';             exit = 0; budgets = 'FAIL'; af = 1; pf = 0 },
+    @{ name = 'adopt_fail_strict';     sc = 'fail_adopted'; mode = '--strict';     exit = 1; budgets = 'FAIL'; af = 1; pf = 0 },
+    @{ name = 'pass_strict_all';       sc = 'pass';         mode = '--strict-all'; exit = 0; budgets = 'PASS'; af = 0; pf = 0 }
 )
 $bad = 0
 foreach ($c in $cases) {
     $a = @('--headless', '--path', '.', '-s', 'res://tests/performance/perf_bench.gd', '--', "--selfcheck=$($c.sc)", "--out=$tmp\$($c.name).json", '--contended=0')
-    if ($c.strict) { $a += '--strict' }
+    if ($c.mode) { $a += $c.mode }
     $prev = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
     $out = & $Godot @a 2>&1 | Out-String
     $code = $LASTEXITCODE
     $ErrorActionPreference = $prev
     $line = ($out -split "`n" | Where-Object { $_ -match '^PERF_BENCH ' } | Select-Object -Last 1)
     $j = Get-Content "$tmp\$($c.name).json" -Raw | ConvertFrom-Json
-    $ok = ($code -eq $c.exit) -and ($line -match "harness=OK budgets=$($c.budgets)") -and ($j.budgets -eq $c.budgets) -and ($j.harness -eq 'OK')
+    $ok = ($code -eq $c.exit) -and ($line -match "harness=OK budgets=$($c.budgets)") -and ($j.budgets -eq $c.budgets) -and
+          ($j.harness -eq 'OK') -and ($j.adopted_fails -eq $c.af) -and ($j.provisional_fails -eq $c.pf) -and ($j.exit_code -eq $c.exit)
     if (-not $ok) { $bad++ }
-    Write-Host ("[semantics] {0,-4} {1,-13} exit={2} (want {3}) line='{4}'" -f $(if ($ok) { 'PASS' } else { 'FAIL' }), $c.name, $code, $c.exit, ($line -replace '\s+$', ''))
+    Write-Host ("[semantics] {0,-4} {1,-22} exit={2} (want {3}) af={4} pf={5} line='{6}'" -f $(if ($ok) { 'PASS' } else { 'FAIL' }), $c.name, $code, $c.exit, $j.adopted_fails, $j.provisional_fails, ($line -replace '\s+$', ''))
 }
-# inventory: current static budgets pass, so --strict must exit 0; a missing manifest path must exit 1 is not testable
-# without touching 03's files, so only the strict-pass path is checked here.
-& python (Join-Path $Root 'tools\perf\budget_inventory.py') --out $tmp --strict | Out-Null
-$ic = $LASTEXITCODE
-$inv = Get-Content "$tmp\inventory.json" -Raw | ConvertFrom-Json
-$invFails = @($inv.checks | Where-Object { $_.result -eq 'FAIL' }).Count
-$want = if ($invFails -gt 0) { 1 } else { 0 }
-$iok = $ic -eq $want
-if (-not $iok) { $bad++ }
-Write-Host ("[semantics] {0,-4} inventory_strict exit={1} (want {2}, budget fails={3})" -f $(if ($iok) { 'PASS' } else { 'FAIL' }), $ic, $want, $invFails)
+# inventory: expected exits are derived from the real current checks (no foreign files are modified)
+foreach ($mode in @('', '--strict', '--strict-all')) {
+    $args2 = @((Join-Path $Root 'tools\perf\budget_inventory.py'), '--out', $tmp)
+    if ($mode) { $args2 += $mode }
+    & python @args2 | Out-Null
+    $ic = $LASTEXITCODE
+    $inv = Get-Content "$tmp\inventory.json" -Raw | ConvertFrom-Json
+    $all = @($inv.checks | Where-Object { $_.result -eq 'FAIL' }).Count
+    $adopted = @($inv.checks | Where-Object { $_.result -eq 'FAIL' -and $_.status -eq 'adopted' }).Count
+    $untagged = @($inv.checks | Where-Object { -not $_.status }).Count
+    $want = switch ($mode) { '' { 0 } '--strict' { [int]($adopted -gt 0) } '--strict-all' { [int]($all -gt 0) } }
+    $iok = ($ic -eq $want) -and ($untagged -eq 0)
+    if (-not $iok) { $bad++ }
+    Write-Host ("[semantics] {0,-4} inventory{1,-13} exit={2} (want {3}; fails={4} adopted={5} untagged={6})" -f $(if ($iok) { 'PASS' } else { 'FAIL' }), $(if ($mode) { $mode } else { '_default' }), $ic, $want, $all, $adopted, $untagged)
+}
 Write-Host "[semantics] $(if ($bad -eq 0) { 'ALL PASS' } else { "$bad FAILED" })"
 exit $(if ($bad -eq 0) { 0 } else { 1 })

@@ -67,3 +67,25 @@ Balance: competent bot loses r04–r10 (my bench reproduces it on seeds 11/22/33
 All numbers so far were taken with 2–8 other Godot processes running (reported as CONTENDED). I need one ~5 minute window with no
 other Godot process (no import/export/selftest/visible preview) to take an isolated desktop baseline (`run_perf.ps1 -Frame`). Please
 write a time slot or "free now" under this heading; I will not kill or throttle anything and will record the process inventory.
+
+## 2026-10-31 09:20 — retest results for your committed changes (08, CONTENDED_DESKTOP_PROXY; details BASELINE_DESKTOP.md §7)
+- **P3 (fdd4d86, no duplicate in `_area_damage_side`)**: no measurable change (cap avg +0.7 %, within noise). Fine to keep; not a lever.
+- **P2 (e9dfaa4, sorted lanes)**: cap clash step avg −45.8 %, p95 −68 %, `units` section −52 %; target lookup p50 0.89 → 0.24 ms for 72 units
+  (same-build `_linear_targets` switch). `sort_lanes` costs 0.12 ms at caps. Acceptance essentially met. Thank you.
+
+## P2b — NEW: sorted `_find_target` changes battle outcomes (tie-break)
+`tests/performance/targeting_equivalence.gd` on committed tree cd76358, only `_linear_targets` toggled: 29/30 round×seed runs diverge,
+**3/30 change the winner** (r01 s22, r03 s11, r03 s33: linear wins, sorted loses). Every first disagreement is an exact x tie between two
+candidate targets (stacked melee units at the same x). Example r01 seed 11 t=74.67: e_grunt uid 25 → linear = melee_basic uid 19, sorted =
+uid 29, both x=748.67, d=26.8. Linear keeps the FIRST in array order on equal d (`d < best_d`); the sorted path returns a later one.
+Request: make the sorted lookup tie-break identical (among candidates with equal d choose the lowest array index, e.g. lowest uid since uids
+increase with spawn order), or explicitly decide the new rule with 01 and re-baseline balance. Selftest's "competent bot ≥ 2/3 wins" result
+for r01/r03 now depends on this tie-break.
+Acceptance: `& $G --headless --path . -s res://tests/performance/targeting_equivalence.gd` → `TARGETING_EQUIVALENCE verdict=EQUIVALENT`
+(I will re-run it on your commit with a clean snapshot).
+
+## P1 status
+battle_view `_draw()` at caps not re-measured: my 09:10 stress run reached only ~40 units in the current working tree. Still open.
+
+## P6 — confirmed done (09:20)
+battle.gd now acquires Content.round_enemy_roster. With 03's new pages the inventory shows r01–r03 5.25 MiB instead of 8.75 MiB if all enemy pages were loaded; r10 9.25 MiB. Low-tier atlas budget 32 MiB: OK.
