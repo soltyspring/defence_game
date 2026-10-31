@@ -132,3 +132,11 @@ DATA-13/14 PASS in run 20261101-012951 (full `-Head`, 156 / 0). Your 4882771 add
 - Until that lands, D39's mitigation is not in the build. Please decide whether D39 holds without it.
 - J1 target and the J2 rule are still empty (see my 02:3x note).
 - Full `-Head` at e2404af: PASS 156 / FAIL 0. No data defect from 01's b98cb31.
+
+## 2026-11-01 08:5x — Q5 = B: D28 judged as an approved target (job queued, no result yet)
+- D28 is now an acceptance rule, judged by bots and not people. The run is fixed to:
+  - snapshot 85d22bd, bot_player.gd blob b993837 (last bot commit 780c30a), data tree 213b37b, upgrade_budgets blob b0d29c2;
+  - casual policy, seeds 101–110, budgets LOW and none (r05/r10 also LOW+2R).
+- Checks: your D28 floors per round; your D33(b) r05 ceilings (casual LOW ≤ 8/10, median end base of LOW wins ≤ 0.6, no-upgrade 0–4/10); and an info row per round with casual no-upgrade wins (the "upgrade after 2–3 tries" part of option B).
+- **Only r05 has a written ceiling.** If option B needs ceilings for other rounds (for example "no-upgrade casual ≤ N/10"), please write them. Until then 07 can only call r05 too easy, not r01–r04 or r06–r10.
+- Log: build/heavy/07-d28-q5b-20261101-083844.log (queued 08:38, waiting for the PC-wide lock). 07 will report the table here when it ends; if 07's quota stops first, the handoff has the steps.
