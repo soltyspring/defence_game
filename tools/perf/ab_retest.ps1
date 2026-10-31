@@ -6,13 +6,18 @@
 # Usage:
 #   .\tools\perf\ab_retest.ps1 -BaseRev a4a549e -FixRev HEAD -Files src/gameplay/battle_sim.gd [-Pairs 2] [-Quick]
 #   (BaseRev may be a commit or a blob id when exactly one file is given)
+#   -RequireQuiet: wait (max -QuietWaitSec) until no foreign Godot/emulator process runs, else exit 2 without measuring.
+# Every run is monitored once per second; any foreign Godot/emulator process seen during a run marks it CONTAMINATED and the
+# summary INVALID_CONTAMINATED. Only VALID_QUIET summaries may be used as pass/fail evidence for an owner's acceptance target.
 # Output: build/perf/ab_<stamp>/ (git-ignored): base_N.json, fix_N.json, ab_summary.json, ab_summary.md
 param(
     [Parameter(Mandatory = $true)][string]$BaseRev,
     [string]$FixRev = 'HEAD',
     [Parameter(Mandatory = $true)][string[]]$Files,
     [int]$Pairs = 2,
-    [switch]$Quick
+    [switch]$Quick,
+    [switch]$RequireQuiet,          # refuse to measure unless no foreign Godot/emulator process runs (waits up to QuietWaitSec)
+    [int]$QuietWaitSec = 600
 )
 $ErrorActionPreference = 'Stop'
 $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
@@ -45,22 +50,53 @@ $diffs = foreach ($f in $Files) { [ordered]@{ file = $f; base_sha256 = (Get-File
 $lockPath = Join-Path $Root 'build\.godot-import.lock'
 function Test-ImportLockHeld { if (-not (Test-Path $lockPath)) { return $false }; try { $fs = [IO.File]::Open($lockPath, 'Open', 'Read', 'None'); $fs.Dispose(); return $false } catch { return $true } }
 
+# Foreign-process monitor: every second during each run, list Godot/emulator processes that are not this run's process tree.
+# Any foreign process seen at any time marks the run CONTAMINATED (coordinator notice 08:53: start-time counts are not enough).
+function Get-ForeignHeavy([int[]]$own) {
+    @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
+        ($_.Name -like 'Godot*' -or $_.Name -like 'qemu-system*' -or $_.Name -like 'emulator*') -and ($own -notcontains [int]$_.ProcessId)
+    } | ForEach-Object { [ordered]@{ pid = [int]$_.ProcessId; name = $_.Name; cmd = $(if ($_.CommandLine) { $_.CommandLine.Substring(0, [math]::Min(160, $_.CommandLine.Length)) } else { '' }) } })
+}
+if ($RequireQuiet) {
+    $w0 = 0
+    while (@(Get-ForeignHeavy @()).Count -gt 0 -and $w0 -lt $QuietWaitSec) { Start-Sleep 10; $w0 += 10 }
+    $still = @(Get-ForeignHeavy @())
+    if ($still.Count -gt 0) {
+        Write-Host "BLOCKED_NOT_QUIET: $($still.Count) foreign Godot/emulator process(es) still running after ${QuietWaitSec}s; no measurement taken."
+        $still | ForEach-Object { Write-Host "  $($_.pid) $($_.cmd)" }
+        exit 2
+    }
+}
 $runs = @()
 for ($i = 1; $i -le $Pairs; $i++) {
     foreach ($side in @('base', 'fix')) {
         $w = 0; while ((Test-ImportLockHeld) -and $w -lt 300) { Start-Sleep 5; $w += 5 }
-        $others = @(Get-Process | Where-Object { $_.ProcessName -like 'Godot*' }).Count
+        $others = @(Get-ForeignHeavy @()).Count
         $dir = if ($side -eq 'base') { $baseDir } else { $fixDir }
         $json = Join-Path $Out "${side}_$i.json"
         $a = @('--headless', '--path', $dir, '-s', 'res://tests/performance/perf_bench.gd', '--', "--out=$json", "--git=$fixSha+$side", "--contended=$others")
         if ($Quick) { $a += '--quick' }
-        $prev = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
-        $log = & $Godot @a 2>&1 | Out-String
-        $code = $LASTEXITCODE; $ErrorActionPreference = $prev
-        Set-Content (Join-Path $Out "${side}_$i.log") $log -Encoding utf8
+        $so = Join-Path $Out "${side}_$i.log"; $se = Join-Path $Out "${side}_$i.err.log"
+        $t0 = Get-Date
+        $proc = Start-Process -FilePath $Godot -ArgumentList $a -RedirectStandardOutput $so -RedirectStandardError $se -PassThru -WindowStyle Hidden
+        $null = $proc.Handle
+        $seen = @{}
+        while (-not $proc.HasExited) {
+            $own = @($proc.Id) + @(Get-CimInstance Win32_Process -Filter "ParentProcessId=$($proc.Id)" -ErrorAction SilentlyContinue | ForEach-Object { [int]$_.ProcessId })
+            foreach ($f in (Get-ForeignHeavy $own)) {
+                if (-not $seen.ContainsKey($f.pid)) { $seen[$f.pid] = [ordered]@{ pid = $f.pid; cmd = $f.cmd; first_seen_s = [math]::Round(((Get-Date) - $t0).TotalSeconds, 1) } }
+            }
+            Start-Sleep -Milliseconds 1000
+        }
+        $proc.WaitForExit()
+        $code = $proc.ExitCode
+        $log = (Get-Content $so -Raw -ErrorAction SilentlyContinue)
         $line = ($log -split "`n" | Where-Object { $_ -match '^PERF_BENCH ' } | Select-Object -Last 1)
-        Write-Host "[ab] $side#$i other_godot=$others lock_wait=${w}s exit=$code $line"
-        $runs += [ordered]@{ side = $side; pair = $i; json = $json; exit = $code; other_godot = $others }
+        $foreign = @($seen.Values)
+        $state = if ($foreign.Count -gt 0) { 'CONTAMINATED' } else { 'CLEAN' }
+        Write-Host "[ab] $side#$i $state foreign_seen=$($foreign.Count) start_others=$others lock_wait=${w}s exit=$code $line"
+        $runs += [ordered]@{ side = $side; pair = $i; json = $json; exit = $code; other_godot = $others; start = $t0.ToString('s');
+            duration_s = [math]::Round(((Get-Date) - $t0).TotalSeconds, 1); state = $state; foreign_seen = $foreign }
     }
 }
 
@@ -92,14 +128,16 @@ if ($data.base.Count -gt 0 -and $data.fix.Count -gt 0) {
     }
 }
 $maxOthers = ($runs | ForEach-Object { $_.other_godot } | Measure-Object -Maximum).Maximum
+$contaminated = @($runs | Where-Object { $_.state -eq 'CONTAMINATED' }).Count
 $summary = [ordered]@{
-    evidence_class = $(if ($maxOthers -gt 0) { 'CONTENDED_DESKTOP_PROXY' } else { 'DESKTOP_PROXY' })
+    evidence_class = $(if ($contaminated -gt 0 -or $maxOthers -gt 0) { 'CONTENDED_DESKTOP_PROXY' } else { 'DESKTOP_PROXY' })
+    validity = $(if ($contaminated -gt 0) { "INVALID_CONTAMINATED ($contaminated of $($runs.Count) runs overlapped foreign Godot/emulator processes)" } else { 'VALID_QUIET (no foreign Godot/emulator process observed during any run)' })
     note = 'Same harness, same seeds (rounds 11/22/33, scaling seed 77), interleaved runs. Debug editor binary. Not phone evidence.'
     fix_rev = $fixSha; base_rev = $BaseRev; files = $diffs; pairs = $Pairs; quick = [bool]$Quick; runs = $runs
     metrics = $rows; determinism = $det; deterministic_outcomes_identical = (@($det | Where-Object { -not $_.identical }).Count -eq 0)
 }
 $summary | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $Out 'ab_summary.json') -Encoding utf8
-$md = @("# A/B retest $stamp ($($summary.evidence_class))", "fix $fixSha vs base $BaseRev for $($Files -join ', '); $Pairs interleaved pairs; max other Godot processes $maxOthers", '',
+$md = @("# A/B retest $stamp ($($summary.evidence_class)) — $($summary.validity)", "fix $fixSha vs base $BaseRev for $($Files -join ', '); $Pairs interleaved pairs; max other Godot processes $maxOthers", '',
     '| metric | base median | fix median | delta % |', '|---|---|---|---|')
 foreach ($r in $rows) { $md += "| $($r.metric) | $($r.base_median) | $($r.fix_median) | $($r.delta_pct) |" }
 $md += ''; $md += "Deterministic round outcomes identical (won + end time per seed): $($summary.deterministic_outcomes_identical)"

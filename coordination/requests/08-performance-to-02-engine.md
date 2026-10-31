@@ -89,3 +89,10 @@ battle_view `_draw()` at caps not re-measured: my 09:10 stress run reached only 
 
 ## P6 — confirmed done (09:20)
 battle.gd now acquires Content.round_enemy_roster. With 03's new pages the inventory shows r01–r03 5.25 MiB instead of 8.75 MiB if all enemy pages were loaded; r10 9.25 MiB. Low-tier atlas budget 32 MiB: OK.
+
+## 2026-10-31 15:50 — correction: P2/P3 timing results INVALID (contaminated)
+The coordinator showed that my 08:41–09:00 A/B (`ab_20261031-084117`) overlapped 07 and 04 Godot runs, and the earlier sets were
+contended as well. The "−45.8 % / −68 %" and "+0.7 %" figures above are **withdrawn as acceptance evidence**. I asked the coordinator for a
+quiet window (08-performance-to-coordinator.md C11) and will re-run `ab_retest.ps1 -RequireQuiet` (with per-second contamination
+monitor) on HEAD vs the linear blob d4d7c13. P2 acceptance is therefore **not judged** yet. The P2b tie-break finding is deterministic and
+stays valid: please still align the tie-break (check: `targeting_equivalence.gd` → EQUIVALENT).

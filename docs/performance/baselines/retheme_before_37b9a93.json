@@ -1,0 +1,1683 @@
+{
+  "generated": "2026-10-31T15:42:26+09:00",
+  "git": "37b9a93 (committed tree via git archive)",
+  "evidence_class": "STATIC",
+  "tiers_provisional": {
+    "low": {
+      "texture": 33554432,
+      "pss": 262144000,
+      "sfx_ram": 8388608
+    },
+    "mid": {
+      "texture": 50331648,
+      "pss": 314572800,
+      "sfx_ram": 12582912
+    },
+    "high": {
+      "texture": 67108864,
+      "pss": 367001600,
+      "sfx_ram": 16777216
+    }
+  },
+  "atlases": [
+    {
+      "id": "char_player",
+      "group": "character",
+      "load_policy": "battle",
+      "biome": "",
+      "manifest_size": [
+        512,
+        512
+      ],
+      "issues": [],
+      "w": 512,
+      "h": 512,
+      "png_color": "indexed",
+      "png_bit_depth": 8,
+      "disk_bytes": 12226,
+      "gpu_bytes": 1048576,
+      "frames": 152,
+      "unique_rects": 113,
+      "occupancy": 0.583,
+      "unused_gpu_bytes": 437248,
+      "anim_sets": [
+        "hero_captain",
+        "melee_basic",
+        "ranged_basic",
+        "tank",
+        "worker"
+      ],
+      "max_frame": [
+        48,
+        48
+      ]
+    },
+    {
+      "id": "char_enemy",
+      "group": "character",
+      "load_policy": "battle_roster",
+      "biome": "",
+      "manifest_size": [
+        512,
+        256
+      ],
+      "issues": [],
+      "w": 512,
+      "h": 256,
+      "png_color": "indexed",
+      "png_bit_depth": 8,
+      "disk_bytes": 5207,
+      "gpu_bytes": 524288,
+      "frames": 77,
+      "unique_rects": 53,
+      "occupancy": 0.391,
+      "unused_gpu_bytes": 319488,
+      "anim_sets": [
+        "e_grunt",
+        "e_spitter",
+        "e_swarm"
+      ],
+      "max_frame": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "char_player_adv",
+      "group": "character",
+      "load_policy": "battle_roster",
+      "biome": "",
+      "manifest_size": [
+        512,
+        256
+      ],
+      "issues": [],
+      "w": 512,
+      "h": 256,
+      "png_color": "indexed",
+      "png_bit_depth": 8,
+      "disk_bytes": 5482,
+      "gpu_bytes": 524288,
+      "frames": 48,
+      "unique_rects": 33,
+      "occupancy": 0.4,
+      "unused_gpu_bytes": 314368,
+      "anim_sets": [
+        "fast",
+        "siege"
+      ],
+      "max_frame": [
+        48,
+        40
+      ]
+    },
+    {
+      "id": "char_enemy_adv",
+      "group": "character",
+      "load_policy": "battle_roster",
+      "biome": "",
+      "manifest_size": [
+        512,
+        256
+      ],
+      "issues": [],
+      "w": 512,
+      "h": 256,
+      "png_color": "indexed",
+      "png_bit_depth": 8,
+      "disk_bytes": 5165,
+      "gpu_bytes": 524288,
+      "frames": 54,
+      "unique_rects": 40,
+      "occupancy": 0.527,
+      "unused_gpu_bytes": 247808,
+      "anim_sets": [
+        "e_bomber",
+        "e_brute"
+      ],
+      "max_frame": [
+        48,
+        48
+      ]
+    },
+    {
+      "id": "char_boss_warlord",
+      "group": "character",
+      "load_policy": "battle_roster",
+      "biome": "",
+      "manifest_size": [
+        512,
+        512
+      ],
+      "issues": [],
+      "w": 512,
+      "h": 512,
+      "png_color": "indexed",
+      "png_bit_depth": 8,
+      "disk_bytes": 6682,
+      "gpu_bytes": 1048576,
+      "frames": 32,
+      "unique_rects": 24,
+      "occupancy": 0.375,
+      "unused_gpu_bytes": 655360,
+      "anim_sets": [
+        "boss_warlord"
+      ],
+      "max_frame": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "char_boss_overlord",
+      "group": "character",
+      "load_policy": "battle_roster",
+      "biome": "",
+      "manifest_size": [
+        1024,
+        512
+      ],
+      "issues": [],
+      "w": 1024,
+      "h": 512,
+      "png_color": "indexed",
+      "png_bit_depth": 8,
+      "disk_bytes": 11568,
+      "gpu_bytes": 2097152,
+      "frames": 41,
+      "unique_rects": 32,
+      "occupancy": 0.417,
+      "unused_gpu_bytes": 1221888,
+      "anim_sets": [
+        "boss_overlord"
+      ],
+      "max_frame": [
+        88,
+        80
+      ]
+    },
+    {
+      "id": "bases",
+      "group": "base",
+      "load_policy": "battle",
+      "biome": "",
+      "manifest_size": [
+        512,
+        512
+      ],
+      "issues": [],
+      "w": 512,
+      "h": 512,
+      "png_color": "indexed",
+      "png_bit_depth": 8,
+      "disk_bytes": 10303,
+      "gpu_bytes": 1048576,
+      "frames": 17,
+      "unique_rects": 14,
+      "occupancy": 0.574,
+      "unused_gpu_bytes": 446464,
+      "anim_sets": [
+        "base_enemy",
+        "base_player",
+        "prop_mine"
+      ],
+      "max_frame": [
+        96,
+        128
+      ]
+    },
+    {
+      "id": "fx_combat",
+      "group": "fx",
+      "load_policy": "battle",
+      "biome": "",
+      "manifest_size": [
+        512,
+        256
+      ],
+      "issues": [],
+      "w": 512,
+      "h": 256,
+      "png_color": "indexed",
+      "png_bit_depth": 8,
+      "disk_bytes": 4441,
+      "gpu_bytes": 524288,
+      "frames": 83,
+      "unique_rects": 79,
+      "occupancy": 0.509,
+      "unused_gpu_bytes": 257632,
+      "anim_sets": [
+        "arrow",
+        "coin",
+        "death_poof",
+        "dust",
+        "explosion",
+        "fire",
+        "heal",
+        "hit_spark",
+        "hit_spit",
+        "rock",
+        "skill_barrage",
+        "skill_rally",
+        "skill_slam",
+        "spawn",
+        "spit",
+        "tower_bolt"
+      ],
+      "max_frame": [
+        90,
+        64
+      ]
+    },
+    {
+      "id": "ui_main",
+      "group": "ui",
+      "load_policy": "always",
+      "biome": "",
+      "manifest_size": [
+        256,
+        256
+      ],
+      "issues": [],
+      "w": 256,
+      "h": 256,
+      "png_color": "indexed",
+      "png_bit_depth": 8,
+      "disk_bytes": 5550,
+      "gpu_bytes": 262144,
+      "frames": 103,
+      "unique_rects": 98,
+      "occupancy": 0.35,
+      "unused_gpu_bytes": 170280,
+      "anim_sets": [],
+      "max_frame": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "biome_meadow",
+      "group": "biome",
+      "load_policy": "per_round",
+      "biome": "meadow",
+      "manifest_size": [
+        1024,
+        512
+      ],
+      "issues": [],
+      "w": 1024,
+      "h": 512,
+      "png_color": "indexed",
+      "png_bit_depth": 8,
+      "disk_bytes": 7416,
+      "gpu_bytes": 2097152,
+      "frames": 5,
+      "unique_rects": 5,
+      "occupancy": 0.46,
+      "unused_gpu_bytes": 1132032,
+      "anim_sets": [],
+      "max_frame": [
+        640,
+        360
+      ]
+    }
+  ],
+  "round_needs": {
+    "r01": {
+      "biome": "biome_01",
+      "anim_sets": [
+        "e_grunt",
+        "hero_captain",
+        "melee_basic",
+        "worker"
+      ],
+      "enemy_units": [
+        "e_grunt"
+      ],
+      "player_units": [
+        "melee_basic"
+      ]
+    },
+    "r02": {
+      "biome": "biome_01",
+      "anim_sets": [
+        "arrow",
+        "e_grunt",
+        "e_swarm",
+        "hero_captain",
+        "melee_basic",
+        "ranged_basic",
+        "skill_slam",
+        "worker"
+      ],
+      "enemy_units": [
+        "e_grunt",
+        "e_swarm"
+      ],
+      "player_units": [
+        "melee_basic",
+        "ranged_basic"
+      ]
+    },
+    "r03": {
+      "biome": "biome_01",
+      "anim_sets": [
+        "arrow",
+        "e_grunt",
+        "e_spitter",
+        "e_swarm",
+        "hero_captain",
+        "melee_basic",
+        "ranged_basic",
+        "skill_slam",
+        "spit",
+        "tank",
+        "worker"
+      ],
+      "enemy_units": [
+        "e_grunt",
+        "e_spitter",
+        "e_swarm"
+      ],
+      "player_units": [
+        "melee_basic",
+        "ranged_basic",
+        "tank"
+      ]
+    },
+    "r04": {
+      "biome": "biome_01",
+      "anim_sets": [
+        "arrow",
+        "e_brute",
+        "e_grunt",
+        "e_spitter",
+        "e_swarm",
+        "fast",
+        "hero_captain",
+        "melee_basic",
+        "ranged_basic",
+        "skill_rally",
+        "skill_slam",
+        "spit",
+        "tank",
+        "worker"
+      ],
+      "enemy_units": [
+        "e_brute",
+        "e_grunt",
+        "e_spitter",
+        "e_swarm"
+      ],
+      "player_units": [
+        "fast",
+        "melee_basic",
+        "ranged_basic",
+        "tank"
+      ]
+    },
+    "r05": {
+      "biome": "biome_01",
+      "anim_sets": [
+        "arrow",
+        "boss_warlord",
+        "e_brute",
+        "e_grunt",
+        "e_spitter",
+        "e_swarm",
+        "fast",
+        "hero_captain",
+        "melee_basic",
+        "ranged_basic",
+        "skill_rally",
+        "skill_slam",
+        "spit",
+        "tank",
+        "worker"
+      ],
+      "enemy_units": [
+        "boss_warlord",
+        "e_brute",
+        "e_grunt",
+        "e_spitter",
+        "e_swarm"
+      ],
+      "player_units": [
+        "fast",
+        "melee_basic",
+        "ranged_basic",
+        "tank"
+      ]
+    },
+    "r06": {
+      "biome": "biome_01",
+      "anim_sets": [
+        "arrow",
+        "e_brute",
+        "e_grunt",
+        "e_spitter",
+        "e_swarm",
+        "fast",
+        "hero_captain",
+        "melee_basic",
+        "ranged_basic",
+        "rock",
+        "siege",
+        "skill_rally",
+        "skill_slam",
+        "spit",
+        "tank",
+        "worker"
+      ],
+      "enemy_units": [
+        "e_brute",
+        "e_grunt",
+        "e_spitter",
+        "e_swarm"
+      ],
+      "player_units": [
+        "fast",
+        "melee_basic",
+        "ranged_basic",
+        "siege",
+        "tank"
+      ]
+    },
+    "r07": {
+      "biome": "biome_01",
+      "anim_sets": [
+        "arrow",
+        "e_bomber",
+        "e_brute",
+        "e_grunt",
+        "e_spitter",
+        "e_swarm",
+        "fast",
+        "hero_captain",
+        "melee_basic",
+        "ranged_basic",
+        "rock",
+        "siege",
+        "skill_rally",
+        "skill_slam",
+        "spit",
+        "tank",
+        "worker"
+      ],
+      "enemy_units": [
+        "e_bomber",
+        "e_brute",
+        "e_grunt",
+        "e_spitter",
+        "e_swarm"
+      ],
+      "player_units": [
+        "fast",
+        "melee_basic",
+        "ranged_basic",
+        "siege",
+        "tank"
+      ]
+    },
+    "r08": {
+      "biome": "biome_01",
+      "anim_sets": [
+        "arrow",
+        "e_bomber",
+        "e_brute",
+        "e_grunt",
+        "e_spitter",
+        "e_swarm",
+        "fast",
+        "hero_captain",
+        "melee_basic",
+        "ranged_basic",
+        "rock",
+        "siege",
+        "skill_barrage",
+        "skill_rally",
+        "skill_slam",
+        "spit",
+        "tank",
+        "worker"
+      ],
+      "enemy_units": [
+        "e_bomber",
+        "e_brute",
+        "e_grunt",
+        "e_spitter",
+        "e_swarm"
+      ],
+      "player_units": [
+        "fast",
+        "melee_basic",
+        "ranged_basic",
+        "siege",
+        "tank"
+      ]
+    },
+    "r09": {
+      "biome": "biome_01",
+      "anim_sets": [
+        "arrow",
+        "e_bomber",
+        "e_brute",
+        "e_grunt",
+        "e_spitter",
+        "e_swarm",
+        "fast",
+        "hero_captain",
+        "melee_basic",
+        "ranged_basic",
+        "rock",
+        "siege",
+        "skill_barrage",
+        "skill_rally",
+        "skill_slam",
+        "spit",
+        "tank",
+        "worker"
+      ],
+      "enemy_units": [
+        "e_bomber",
+        "e_brute",
+        "e_grunt",
+        "e_spitter",
+        "e_swarm"
+      ],
+      "player_units": [
+        "fast",
+        "melee_basic",
+        "ranged_basic",
+        "siege",
+        "tank"
+      ]
+    },
+    "r10": {
+      "biome": "biome_01",
+      "anim_sets": [
+        "arrow",
+        "boss_overlord",
+        "boss_warlord",
+        "e_bomber",
+        "e_brute",
+        "e_grunt",
+        "e_spitter",
+        "e_swarm",
+        "fast",
+        "hero_captain",
+        "melee_basic",
+        "ranged_basic",
+        "rock",
+        "siege",
+        "skill_barrage",
+        "skill_rally",
+        "skill_slam",
+        "spit",
+        "tank",
+        "worker"
+      ],
+      "enemy_units": [
+        "boss_overlord",
+        "boss_warlord",
+        "e_bomber",
+        "e_brute",
+        "e_grunt",
+        "e_spitter",
+        "e_swarm"
+      ],
+      "player_units": [
+        "fast",
+        "melee_basic",
+        "ranged_basic",
+        "siege",
+        "tank"
+      ]
+    }
+  },
+  "residency": {
+    "engine_model": "roster (battle.gd uses Content.round_enemy_roster)",
+    "menu_pages": [
+      "ui_main"
+    ],
+    "menu_gpu_bytes": 262144,
+    "rounds": {
+      "r01": {
+        "biome": "biome_01",
+        "biome_page": "biome_meadow",
+        "contract_pages": [
+          "bases",
+          "biome_meadow",
+          "char_enemy",
+          "char_player",
+          "fx_combat",
+          "ui_main"
+        ],
+        "contract_gpu_bytes": 5505024,
+        "engine_pages": [
+          "bases",
+          "biome_meadow",
+          "char_enemy",
+          "char_player",
+          "fx_combat",
+          "ui_main"
+        ],
+        "engine_gpu_bytes": 5505024
+      },
+      "r02": {
+        "biome": "biome_01",
+        "biome_page": "biome_meadow",
+        "contract_pages": [
+          "bases",
+          "biome_meadow",
+          "char_enemy",
+          "char_player",
+          "fx_combat",
+          "ui_main"
+        ],
+        "contract_gpu_bytes": 5505024,
+        "engine_pages": [
+          "bases",
+          "biome_meadow",
+          "char_enemy",
+          "char_player",
+          "fx_combat",
+          "ui_main"
+        ],
+        "engine_gpu_bytes": 5505024
+      },
+      "r03": {
+        "biome": "biome_01",
+        "biome_page": "biome_meadow",
+        "contract_pages": [
+          "bases",
+          "biome_meadow",
+          "char_enemy",
+          "char_player",
+          "fx_combat",
+          "ui_main"
+        ],
+        "contract_gpu_bytes": 5505024,
+        "engine_pages": [
+          "bases",
+          "biome_meadow",
+          "char_enemy",
+          "char_player",
+          "fx_combat",
+          "ui_main"
+        ],
+        "engine_gpu_bytes": 5505024
+      },
+      "r04": {
+        "biome": "biome_01",
+        "biome_page": "biome_meadow",
+        "contract_pages": [
+          "bases",
+          "biome_meadow",
+          "char_enemy",
+          "char_enemy_adv",
+          "char_player",
+          "char_player_adv",
+          "fx_combat",
+          "ui_main"
+        ],
+        "contract_gpu_bytes": 6553600,
+        "engine_pages": [
+          "bases",
+          "biome_meadow",
+          "char_enemy",
+          "char_enemy_adv",
+          "char_player",
+          "char_player_adv",
+          "fx_combat",
+          "ui_main"
+        ],
+        "engine_gpu_bytes": 6553600
+      },
+      "r05": {
+        "biome": "biome_01",
+        "biome_page": "biome_meadow",
+        "contract_pages": [
+          "bases",
+          "biome_meadow",
+          "char_boss_warlord",
+          "char_enemy",
+          "char_enemy_adv",
+          "char_player",
+          "char_player_adv",
+          "fx_combat",
+          "ui_main"
+        ],
+        "contract_gpu_bytes": 7602176,
+        "engine_pages": [
+          "bases",
+          "biome_meadow",
+          "char_boss_warlord",
+          "char_enemy",
+          "char_enemy_adv",
+          "char_player",
+          "char_player_adv",
+          "fx_combat",
+          "ui_main"
+        ],
+        "engine_gpu_bytes": 7602176
+      },
+      "r06": {
+        "biome": "biome_01",
+        "biome_page": "biome_meadow",
+        "contract_pages": [
+          "bases",
+          "biome_meadow",
+          "char_enemy",
+          "char_enemy_adv",
+          "char_player",
+          "char_player_adv",
+          "fx_combat",
+          "ui_main"
+        ],
+        "contract_gpu_bytes": 6553600,
+        "engine_pages": [
+          "bases",
+          "biome_meadow",
+          "char_enemy",
+          "char_enemy_adv",
+          "char_player",
+          "char_player_adv",
+          "fx_combat",
+          "ui_main"
+        ],
+        "engine_gpu_bytes": 6553600
+      },
+      "r07": {
+        "biome": "biome_01",
+        "biome_page": "biome_meadow",
+        "contract_pages": [
+          "bases",
+          "biome_meadow",
+          "char_enemy",
+          "char_enemy_adv",
+          "char_player",
+          "char_player_adv",
+          "fx_combat",
+          "ui_main"
+        ],
+        "contract_gpu_bytes": 6553600,
+        "engine_pages": [
+          "bases",
+          "biome_meadow",
+          "char_enemy",
+          "char_enemy_adv",
+          "char_player",
+          "char_player_adv",
+          "fx_combat",
+          "ui_main"
+        ],
+        "engine_gpu_bytes": 6553600
+      },
+      "r08": {
+        "biome": "biome_01",
+        "biome_page": "biome_meadow",
+        "contract_pages": [
+          "bases",
+          "biome_meadow",
+          "char_enemy",
+          "char_enemy_adv",
+          "char_player",
+          "char_player_adv",
+          "fx_combat",
+          "ui_main"
+        ],
+        "contract_gpu_bytes": 6553600,
+        "engine_pages": [
+          "bases",
+          "biome_meadow",
+          "char_enemy",
+          "char_enemy_adv",
+          "char_player",
+          "char_player_adv",
+          "fx_combat",
+          "ui_main"
+        ],
+        "engine_gpu_bytes": 6553600
+      },
+      "r09": {
+        "biome": "biome_01",
+        "biome_page": "biome_meadow",
+        "contract_pages": [
+          "bases",
+          "biome_meadow",
+          "char_enemy",
+          "char_enemy_adv",
+          "char_player",
+          "char_player_adv",
+          "fx_combat",
+          "ui_main"
+        ],
+        "contract_gpu_bytes": 6553600,
+        "engine_pages": [
+          "bases",
+          "biome_meadow",
+          "char_enemy",
+          "char_enemy_adv",
+          "char_player",
+          "char_player_adv",
+          "fx_combat",
+          "ui_main"
+        ],
+        "engine_gpu_bytes": 6553600
+      },
+      "r10": {
+        "biome": "biome_01",
+        "biome_page": "biome_meadow",
+        "contract_pages": [
+          "bases",
+          "biome_meadow",
+          "char_boss_overlord",
+          "char_boss_warlord",
+          "char_enemy",
+          "char_enemy_adv",
+          "char_player",
+          "char_player_adv",
+          "fx_combat",
+          "ui_main"
+        ],
+        "contract_gpu_bytes": 9699328,
+        "engine_pages": [
+          "bases",
+          "biome_meadow",
+          "char_boss_overlord",
+          "char_boss_warlord",
+          "char_enemy",
+          "char_enemy_adv",
+          "char_player",
+          "char_player_adv",
+          "fx_combat",
+          "ui_main"
+        ],
+        "engine_gpu_bytes": 9699328
+      }
+    },
+    "anim_sets_without_art": {}
+  },
+  "audio": {
+    "files": [
+      {
+        "file": "assets/audio/music/music_battle.ogg",
+        "disk_bytes": 347602,
+        "kind": "ogg"
+      },
+      {
+        "file": "assets/audio/music/music_menu.ogg",
+        "disk_bytes": 207256,
+        "kind": "ogg"
+      },
+      {
+        "file": "assets/audio/sfx/boss_incoming.wav",
+        "disk_bytes": 79424,
+        "kind": "wav",
+        "pcm_bytes": 79380,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 1.8
+      },
+      {
+        "file": "assets/audio/sfx/death_ally.wav",
+        "disk_bytes": 9746,
+        "kind": "wav",
+        "pcm_bytes": 9702,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.22
+      },
+      {
+        "file": "assets/audio/sfx/death_enemy.wav",
+        "disk_bytes": 9746,
+        "kind": "wav",
+        "pcm_bytes": 9702,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.22
+      },
+      {
+        "file": "assets/audio/sfx/deploy.wav",
+        "disk_bytes": 11510,
+        "kind": "wav",
+        "pcm_bytes": 11466,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.26
+      },
+      {
+        "file": "assets/audio/sfx/explosion.wav",
+        "disk_bytes": 30914,
+        "kind": "wav",
+        "pcm_bytes": 30870,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.7
+      },
+      {
+        "file": "assets/audio/sfx/gold_tick.wav",
+        "disk_bytes": 4896,
+        "kind": "wav",
+        "pcm_bytes": 4852,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.11
+      },
+      {
+        "file": "assets/audio/sfx/hero_death.wav",
+        "disk_bytes": 44144,
+        "kind": "wav",
+        "pcm_bytes": 44100,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 1.0
+      },
+      {
+        "file": "assets/audio/sfx/hero_respawn.wav",
+        "disk_bytes": 26504,
+        "kind": "wav",
+        "pcm_bytes": 26460,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.6
+      },
+      {
+        "file": "assets/audio/sfx/hit_arrow.wav",
+        "disk_bytes": 3572,
+        "kind": "wav",
+        "pcm_bytes": 3528,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.08
+      },
+      {
+        "file": "assets/audio/sfx/hit_base.wav",
+        "disk_bytes": 16802,
+        "kind": "wav",
+        "pcm_bytes": 16758,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.38
+      },
+      {
+        "file": "assets/audio/sfx/hit_melee_1.wav",
+        "disk_bytes": 4454,
+        "kind": "wav",
+        "pcm_bytes": 4410,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.1
+      },
+      {
+        "file": "assets/audio/sfx/hit_melee_2.wav",
+        "disk_bytes": 4454,
+        "kind": "wav",
+        "pcm_bytes": 4410,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.1
+      },
+      {
+        "file": "assets/audio/sfx/hit_melee_3.wav",
+        "disk_bytes": 4454,
+        "kind": "wav",
+        "pcm_bytes": 4410,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.1
+      },
+      {
+        "file": "assets/audio/sfx/shoot_arrow.wav",
+        "disk_bytes": 5336,
+        "kind": "wav",
+        "pcm_bytes": 5292,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.12
+      },
+      {
+        "file": "assets/audio/sfx/shoot_rock.wav",
+        "disk_bytes": 7100,
+        "kind": "wav",
+        "pcm_bytes": 7056,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.16
+      },
+      {
+        "file": "assets/audio/sfx/shoot_spit.wav",
+        "disk_bytes": 5776,
+        "kind": "wav",
+        "pcm_bytes": 5732,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.13
+      },
+      {
+        "file": "assets/audio/sfx/skill_barrage.wav",
+        "disk_bytes": 70604,
+        "kind": "wav",
+        "pcm_bytes": 70560,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 1.6
+      },
+      {
+        "file": "assets/audio/sfx/skill_cast.wav",
+        "disk_bytes": 15478,
+        "kind": "wav",
+        "pcm_bytes": 15434,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.35
+      },
+      {
+        "file": "assets/audio/sfx/skill_heal.wav",
+        "disk_bytes": 35324,
+        "kind": "wav",
+        "pcm_bytes": 35280,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.8
+      },
+      {
+        "file": "assets/audio/sfx/skill_rally.wav",
+        "disk_bytes": 37528,
+        "kind": "wav",
+        "pcm_bytes": 37484,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.85
+      },
+      {
+        "file": "assets/audio/sfx/skill_slam.wav",
+        "disk_bytes": 26504,
+        "kind": "wav",
+        "pcm_bytes": 26460,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.6
+      },
+      {
+        "file": "assets/audio/sfx/stinger_defeat.wav",
+        "disk_bytes": 132344,
+        "kind": "wav",
+        "pcm_bytes": 132300,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 3.0
+      },
+      {
+        "file": "assets/audio/sfx/stinger_win.wav",
+        "disk_bytes": 123524,
+        "kind": "wav",
+        "pcm_bytes": 123480,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 2.8
+      },
+      {
+        "file": "assets/audio/sfx/ui_back.wav",
+        "disk_bytes": 5336,
+        "kind": "wav",
+        "pcm_bytes": 5292,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.12
+      },
+      {
+        "file": "assets/audio/sfx/ui_confirm.wav",
+        "disk_bytes": 8864,
+        "kind": "wav",
+        "pcm_bytes": 8820,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.2
+      },
+      {
+        "file": "assets/audio/sfx/ui_error.wav",
+        "disk_bytes": 8864,
+        "kind": "wav",
+        "pcm_bytes": 8820,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.2
+      },
+      {
+        "file": "assets/audio/sfx/ui_tap.wav",
+        "disk_bytes": 2028,
+        "kind": "wav",
+        "pcm_bytes": 1984,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.045
+      },
+      {
+        "file": "assets/audio/sfx/wave_incoming.wav",
+        "disk_bytes": 39734,
+        "kind": "wav",
+        "pcm_bytes": 39690,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.9
+      },
+      {
+        "file": "assets/audio/sfx/worker_buy.wav",
+        "disk_bytes": 18566,
+        "kind": "wav",
+        "pcm_bytes": 18522,
+        "format_tag": 1,
+        "channels": 1,
+        "rate": 22050,
+        "bits": 16,
+        "seconds": 0.42
+      }
+    ],
+    "wav_count": 29,
+    "wav_disk_bytes": 793530,
+    "wav_pcm_bytes": 792254,
+    "stream_disk_bytes": 554858,
+    "note": "WAV imported uncompressed stays fully resident as PCM (AudioStreamWAV). OGG streams; RAM ~ decoder buffers."
+  },
+  "fonts": {
+    "files": [
+      {
+        "file": "assets/fonts/Galmuri11-Bold.ttf",
+        "disk_bytes": 1469824,
+        "kind": "ttf"
+      },
+      {
+        "file": "assets/fonts/Galmuri11.ttf",
+        "disk_bytes": 1764716,
+        "kind": "ttf"
+      },
+      {
+        "file": "assets/fonts/Galmuri9.ttf",
+        "disk_bytes": 10288,
+        "kind": "ttf"
+      }
+    ],
+    "disk_bytes": 3244828,
+    "note": "Dynamic TTF/OTF: runtime cost = glyph cache textures created on first use per size/outline; measure with tests/performance/perf_frame_probe.gd (tex_mem) and on device. Disk cost lands in the APK."
+  },
+  "apk": {
+    "apk": "..\\..\\android\\defence-debug.apk",
+    "apk_bytes": 59021726,
+    "groups": {
+      "classes.dex": {
+        "files": 1,
+        "compressed": 1960045,
+        "uncompressed": 5711532
+      },
+      "classes10.dex": {
+        "files": 1,
+        "compressed": 13236,
+        "uncompressed": 28280
+      },
+      "classes11.dex": {
+        "files": 1,
+        "compressed": 21053,
+        "uncompressed": 47076
+      },
+      "classes12.dex": {
+        "files": 1,
+        "compressed": 11585,
+        "uncompressed": 39156
+      },
+      "classes13.dex": {
+        "files": 1,
+        "compressed": 2268,
+        "uncompressed": 4348
+      },
+      "classes2.dex": {
+        "files": 1,
+        "compressed": 1152,
+        "uncompressed": 1960
+      },
+      "classes3.dex": {
+        "files": 1,
+        "compressed": 19690,
+        "uncompressed": 40204
+      },
+      "classes4.dex": {
+        "files": 1,
+        "compressed": 27734,
+        "uncompressed": 64160
+      },
+      "classes5.dex": {
+        "files": 1,
+        "compressed": 9884,
+        "uncompressed": 22304
+      },
+      "classes6.dex": {
+        "files": 1,
+        "compressed": 20779,
+        "uncompressed": 49584
+      },
+      "classes7.dex": {
+        "files": 1,
+        "compressed": 58427,
+        "uncompressed": 137052
+      },
+      "classes8.dex": {
+        "files": 1,
+        "compressed": 9648,
+        "uncompressed": 20052
+      },
+      "classes9.dex": {
+        "files": 1,
+        "compressed": 3872,
+        "uncompressed": 7772
+      },
+      "lib": {
+        "files": 4,
+        "compressed": 54620353,
+        "uncompressed": 160080240
+      },
+      "AndroidManifest.xml": {
+        "files": 1,
+        "compressed": 2218,
+        "uncompressed": 7632
+      },
+      "res": {
+        "files": 69,
+        "compressed": 43503,
+        "uncompressed": 56302
+      },
+      "resources.arsc": {
+        "files": 1,
+        "compressed": 39568,
+        "uncompressed": 39568
+      },
+      "DebugProbesKt.bin": {
+        "files": 1,
+        "compressed": 782,
+        "uncompressed": 1738
+      },
+      "kotlin": {
+        "files": 8,
+        "compressed": 11134,
+        "uncompressed": 32063
+      },
+      "assets/assets/atlases": {
+        "files": 12,
+        "compressed": 9721,
+        "uncompressed": 72367
+      },
+      "assets/.godot/imported": {
+        "files": 41,
+        "compressed": 1736791,
+        "uncompressed": 1813668
+      },
+      "assets/assets/audio": {
+        "files": 32,
+        "compressed": 6001,
+        "uncompressed": 16679
+      },
+      "assets/assets/fonts": {
+        "files": 4,
+        "compressed": 1278,
+        "uncompressed": 2294
+      },
+      "assets/assets": {
+        "files": 1,
+        "compressed": 2575,
+        "uncompressed": 8958
+      },
+      "assets/.godot/exported": {
+        "files": 7,
+        "compressed": 5776,
+        "uncompressed": 5776
+      },
+      "assets/data/rounds": {
+        "files": 11,
+        "compressed": 6964,
+        "uncompressed": 27922
+      },
+      "assets/src/ui": {
+        "files": 32,
+        "compressed": 66684,
+        "uncompressed": 66725
+      },
+      "assets/src/services": {
+        "files": 52,
+        "compressed": 54064,
+        "uncompressed": 54123
+      },
+      "assets/data/heroes": {
+        "files": 1,
+        "compressed": 307,
+        "uncompressed": 644
+      },
+      "assets/icon.svg.import": {
+        "files": 1,
+        "compressed": 160,
+        "uncompressed": 192
+      },
+      "assets/data": {
+        "files": 3,
+        "compressed": 2194,
+        "uncompressed": 6912
+      },
+      "assets/data/units": {
+        "files": 1,
+        "compressed": 1369,
+        "uncompressed": 8509
+      },
+      "assets/data/text": {
+        "files": 2,
+        "compressed": 3978,
+        "uncompressed": 10511
+      },
+      "assets/data/skills": {
+        "files": 3,
+        "compressed": 611,
+        "uncompressed": 1097
+      },
+      "assets/src/gameplay": {
+        "files": 14,
+        "compressed": 64785,
+        "uncompressed": 65262
+      },
+      "assets/src/core": {
+        "files": 16,
+        "compressed": 41182,
+        "uncompressed": 41294
+      },
+      "assets/src/audio": {
+        "files": 4,
+        "compressed": 18853,
+        "uncompressed": 18915
+      },
+      "assets/scenes/ui": {
+        "files": 5,
+        "compressed": 471,
+        "uncompressed": 505
+      },
+      "assets/scenes/gameplay": {
+        "files": 2,
+        "compressed": 180,
+        "uncompressed": 196
+      },
+      "assets/.godot": {
+        "files": 2,
+        "compressed": 1986,
+        "uncompressed": 4714
+      },
+      "assets/icon.svg": {
+        "files": 1,
+        "compressed": 224,
+        "uncompressed": 617
+      },
+      "assets/project.binary": {
+        "files": 1,
+        "compressed": 810,
+        "uncompressed": 1983
+      },
+      "assets/assets.sparsepck": {
+        "files": 1,
+        "compressed": 20080,
+        "uncompressed": 20080
+      },
+      "assets/_cl_": {
+        "files": 1,
+        "compressed": 94,
+        "uncompressed": 94
+      },
+      "META-INF": {
+        "files": 3,
+        "compressed": 33017,
+        "uncompressed": 81631
+      }
+    },
+    "largest": [
+      {
+        "name": "lib/x86_64/libgodot_android.so",
+        "compressed": 28237815,
+        "uncompressed": 81186808
+      },
+      {
+        "name": "lib/arm64-v8a/libgodot_android.so",
+        "compressed": 25465279,
+        "uncompressed": 76181608
+      },
+      {
+        "name": "classes.dex",
+        "compressed": 1960045,
+        "uncompressed": 5711532
+      },
+      {
+        "name": "assets/.godot/imported/Galmuri11.ttf-dc494bdf43221ea4068442166ca7b6a4.fontdata",
+        "compressed": 562646,
+        "uncompressed": 562646
+      },
+      {
+        "name": "lib/x86_64/libc++_shared.so",
+        "compressed": 462409,
+        "uncompressed": 1337488
+      },
+      {
+        "name": "lib/arm64-v8a/libc++_shared.so",
+        "compressed": 454850,
+        "uncompressed": 1374336
+      },
+      {
+        "name": "assets/.godot/imported/Galmuri11-Bold.ttf-3a23d149e7b99ee54cc37134f38f9040.fontdata",
+        "compressed": 450038,
+        "uncompressed": 450038
+      },
+      {
+        "name": "assets/.godot/imported/music_battle.ogg-29d1ed4ae21574dbbf14c70630f7c523.oggvorbisstr",
+        "compressed": 332065,
+        "uncompressed": 359898
+      },
+      {
+        "name": "assets/.godot/imported/music_menu.ogg-790b915b8f6d7d6a25c4473ad7ac468c.oggvorbisstr",
+        "compressed": 192678,
+        "uncompressed": 215178
+      },
+      {
+        "name": "classes7.dex",
+        "compressed": 58427,
+        "uncompressed": 137052
+      },
+      {
+        "name": "resources.arsc",
+        "compressed": 39568,
+        "uncompressed": 39568
+      },
+      {
+        "name": "assets/src/gameplay/battle_sim.gdc",
+        "compressed": 29798,
+        "uncompressed": 30128
+      },
+      {
+        "name": "classes4.dex",
+        "compressed": 27734,
+        "uncompressed": 64160
+      },
+      {
+        "name": "assets/.godot/imported/stinger_win.wav-de3bcf91b046e692f975b22a9f65945f.sample",
+        "compressed": 21720,
+        "uncompressed": 25399
+      },
+      {
+        "name": "classes11.dex",
+        "compressed": 21053,
+        "uncompressed": 47076
+      }
+    ]
+  },
+  "totals": {
+    "atlas_disk_bytes": 74040,
+    "atlas_gpu_bytes": 9699328,
+    "atlas_unused_gpu_bytes": 5202568,
+    "assets_disk_bytes": 4807370
+  },
+  "checks": [
+    {
+      "id": "battle_texture_resident_low_tier",
+      "value": "9.25 MiB",
+      "budget": "32.00 MiB",
+      "raw": 9699328,
+      "raw_budget": 33554432,
+      "status": "provisional",
+      "result": "PASS"
+    },
+    {
+      "id": "sfx_pcm_resident_low_tier",
+      "value": "0.76 MiB",
+      "budget": "8.00 MiB",
+      "raw": 792254,
+      "raw_budget": 8388608,
+      "status": "provisional",
+      "result": "PASS"
+    },
+    {
+      "id": "assets_disk",
+      "value": "4.58 MiB",
+      "budget": "20.00 MiB",
+      "raw": 4807370,
+      "raw_budget": 20971520,
+      "status": "provisional",
+      "result": "PASS"
+    },
+    {
+      "id": "apk_size",
+      "value": "56.29 MiB",
+      "budget": "60.00 MiB",
+      "raw": 59021726,
+      "raw_budget": 62914560,
+      "status": "provisional",
+      "result": "PASS"
+    },
+    {
+      "id": "page_size_char_player",
+      "value": "512x512",
+      "budget": "<= 2048",
+      "status": "adopted",
+      "result": "PASS"
+    },
+    {
+      "id": "page_size_char_enemy",
+      "value": "512x256",
+      "budget": "<= 2048",
+      "status": "adopted",
+      "result": "PASS"
+    },
+    {
+      "id": "page_size_char_player_adv",
+      "value": "512x256",
+      "budget": "<= 2048",
+      "status": "adopted",
+      "result": "PASS"
+    },
+    {
+      "id": "page_size_char_enemy_adv",
+      "value": "512x256",
+      "budget": "<= 2048",
+      "status": "adopted",
+      "result": "PASS"
+    },
+    {
+      "id": "page_size_char_boss_warlord",
+      "value": "512x512",
+      "budget": "<= 2048",
+      "status": "adopted",
+      "result": "PASS"
+    },
+    {
+      "id": "page_size_char_boss_overlord",
+      "value": "1024x512",
+      "budget": "<= 2048",
+      "status": "adopted",
+      "result": "PASS"
+    },
+    {
+      "id": "page_size_bases",
+      "value": "512x512",
+      "budget": "<= 2048",
+      "status": "adopted",
+      "result": "PASS"
+    },
+    {
+      "id": "page_size_fx_combat",
+      "value": "512x256",
+      "budget": "<= 2048",
+      "status": "adopted",
+      "result": "PASS"
+    },
+    {
+      "id": "page_size_ui_main",
+      "value": "256x256",
+      "budget": "<= 2048",
+      "status": "adopted",
+      "result": "PASS"
+    },
+    {
+      "id": "page_size_biome_meadow",
+      "value": "1024x512",
+      "budget": "<= 2048",
+      "status": "adopted",
+      "result": "PASS"
+    }
+  ]
+}

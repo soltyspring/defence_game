@@ -40,3 +40,9 @@ measured 1.4–2.4 ms per (font, size) desktop, CPU only) so battles never raste
 Bold 12/24/36, Galmuri9 10/20.
 Acceptance: tell me the function name; I add a pre-warmed case to `perf_font_probe.gd` and expect first-frame glyph hitch ≤ 1 ms desktop
 for the toast case, then confirm on device when one is attached.
+
+## R6 — 2026-10-31 15:50: APK before/after the re-theme
+The only APK on disk (`build/android/defence-debug.apk`, 59,021,726 B = 56.29 MiB, built 07:23) predates the 09:14 art and 09:18 engine
+commits, so it cannot serve as the pre-retheme APK baseline. Request: build the debug APK (same preset) once at a pre-retheme commit
+(37b9a93 or the last commit before 03/05 land the theme A assets) and once after, and write both paths + commits here. I compare them
+with `python tools/perf/retheme_compare.py` (cap: total ≤ 60 MiB, game content growth ≤ +2 MiB compressed; RETHEME_BUDGET.md).

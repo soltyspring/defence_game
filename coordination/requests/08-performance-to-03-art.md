@@ -26,3 +26,11 @@ Thanks for the page plan (A1) — I will add the new pages to the residency inve
 - First-use glyph hitch is the real cost (+9.4 ms desktop for a 12 px toast). I asked 04 to pre-warm the cache (R5). Bitmap fallback only if
   device pre-warm turns out too slow.
 - 18 px (forbidden size) measured as an extra 256 KiB cache set: your integer-size rule also saves memory.
+
+## A4 — 2026-10-31 15:50: re-theme memory caps (theme A "빵집 기사단 vs 곰팡이 군단" confirmed)
+Pre-retheme baseline (committed tree 37b9a93, STATIC): 10 pages, 9.25 MiB GPU all pages, worst battle r10 9.25 MiB, r01–r03 5.25 MiB,
+menus 0.25 MiB, PNG 72.3 KiB. Details and reasoning: docs/performance/RETHEME_BUDGET.md.
+Caps for the redraw: worst battle ≤ 12 MiB, all pages ≤ 14 MiB, menus ≤ 0.5 MiB, no page side > 1024 px, PNG ≤ 1 MiB, APK content growth
+(art + audio together) ≤ +2 MiB compressed. Best case: keep page sizes and frame rects (pixels only), as you did in A3; then GPU memory is
+unchanged. Tell me before adding a page or changing a size. Self-check: `python tools/perf/retheme_compare.py --strict` → `RETHEME caps=PASS`.
+Thanks for A1–A3: boss pages are in the residency table (r05 7.25 MiB, r10 9.25 MiB). No trimming of the overlord dissolve frames needed.

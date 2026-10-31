@@ -117,7 +117,15 @@ libraries for two ABIs (x86_64 28.2 MB, arm64-v8a 25.5 MB); game content ~1 MB.
 | 6 | missing art pages for six anim sets → placeholder draw cost; page plan for bosses | 03 | 08-performance-to-03-art.md |
 Each request names the acceptance check in this harness, so the same scenario is re-run after the owner's change.
 
-## 7. Retests of committed engine fixes (2026-10-31 08:08–09:00, CONTENDED_DESKTOP_PROXY)
+## 7. Retests of committed engine fixes (2026-10-31 08:08–09:00) — **INVALID as pass/fail evidence (contaminated)**
+> **15:50 correction.** The coordinator's notice (08:53 KST) shows that run `ab_20261031-084117` (pair 2: base ended 08:52:41, fix
+> 08:52:43–08:55:08) overlapped 07 acceptance (PIDs 31764/46152, from 08:53:10) and 04 UI integration (PIDs 32816/36208, from
+> 08:53:11). The other two sets (`ab_20261031-080826`, `ab_20261031-081107`) also ran with 2–7 other Godot processes, and the tool
+> counted those only at start. **All three A/B sets in §7.1–7.2 are therefore INVALID for judging 02's targets.** The percentages below stay as
+> history only. Do not quote them as results. `tools/perf/ab_retest.ps1` now polls foreign Godot/emulator processes once per second and
+> labels any overlap `INVALID_CONTAMINATED`. A quiet 25-minute window was requested (coordination/requests/08-performance-to-coordinator.md
+> C11). The re-measurement is pending.
+> Still valid: §7.2's **behaviour** finding (`targeting_equivalence.gd`). It is deterministic and does not depend on timing.
 Method: `tools/perf/ab_retest.ps1` builds two read-only git snapshots (no checkout; other workers' uncommitted WIP is never measured):
 "fix" = the commit's tree, "base" = the same tree with only `src/gameplay/battle_sim.gd` swapped back to the pre-fix blob. Same harness,
 same seeds (rounds 11/22/33, scaling seed 77), base/fix runs interleaved, other Godot processes counted per run.
@@ -125,7 +133,7 @@ same seeds (rounds 11/22/33, scaling seed 77), base/fix runs interleaved, other 
 ### 7.1 fdd4d86 — `_area_damage_side` no longer duplicates the victim array (P3 item)
 Base blob a4a549e vs fix (HEAD c1bf13d), 3 pairs, 2–7 other Godot processes (`build/perf/ab_20261031-081107`):
 cap clash avg 1.139 → 1.147 ms (+0.7 %), p95 1.73 → 1.91 ms; bot rounds avg 0.175 → 0.195 ms. Outcomes per seed identical.
-**Verdict: no measurable change** — within run-to-run noise (noise-floor p99 0.13 vs 0.30 ms between the two sides). Correct cleanup,
+**Verdict (INVALID, contaminated): no measurable change was seen** — within run-to-run noise (noise-floor p99 0.13 vs 0.30 ms between the two sides). Correct cleanup,
 not a performance lever. (A single quick pair at 08:08 had shown −23 %; the 3-pair run did not reproduce it, so that number is withdrawn.)
 
 ### 7.2 e9dfaa4 — sorted-lane `_find_target` (P2 item)
@@ -140,7 +148,7 @@ Base blob d4d7c13 (linear scan) vs fix (HEAD 2aa6d28), 3 pairs, 0–8 other Godo
 | bot rounds step avg | 0.279 ms | 0.284 ms | +1.8 % (few units; sort overhead ≈ saving) |
 New `sort_lanes` section: 0.12 ms of 1.35 ms at caps. Same-build switch (02's `_linear_targets`): target lookup for all 72 units
 p50 0.89 ms linear vs 0.24 ms sorted. **The P2 acceptance (≥ 50 % lower cap step avg and find_target) is met for find_target and close
-for the step avg (−46 %).**
+for the step avg (−46 %).** → **WITHDRAWN 15:50: contaminated run, see the correction above; acceptance is NOT judged.**
 
 **Behaviour regression found:** `tests/performance/targeting_equivalence.gd` (same build, only `_linear_targets` differs, committed tree
 cd76358) reports `DIVERGES` in 29/30 round×seed runs and a **different winner in 3/30** (r01 seed 22, r03 seeds 11 and 33: linear wins,

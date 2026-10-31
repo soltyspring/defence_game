@@ -1,5 +1,27 @@
 # 08-performance handoff
-## FINAL CHECKPOINT (user stop order, 2026-10-31 09:18 +09:00 by system clock)
+## M3 — resumed 2026-10-31 15:35 (user restart), updated 15:55 +09:00
+- Recovery check: owned paths showed no diff between HEAD and `checkpoint/quota-20261031-092323/08-performance` (86c00f7), and the owned
+  working tree was clean, so no work was lost. The HISTORICAL QUOTA CHECKPOINT text was ignored as instructed. Session ID: not exposed.
+- User decision processed: **Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by user, 09:03)**. Coordinator contamination notice
+  (08:53) processed. 03 replies A1–A3 processed (boss pages, LA8 font note, pixel-only changes).
+- Done (verified, see Validation):
+  1. All 08:08–09:00 A/B timing sets are marked **INVALID (contaminated)** in BASELINE_DESKTOP.md §7, BUDGETS.md and the 02 request.
+     The P2 acceptance is not judged. The deterministic tie-break finding (P2b) stays valid.
+  2. `tools/perf/ab_retest.ps1`: per-second foreign Godot/emulator monitor, CLEAN/CONTAMINATED per run, `validity` in the summary,
+     `-RequireQuiet` (waits ≤ `-QuietWaitSec`, exit 2 without numbers). Functional check 15:39 (quick, 1 pair): it correctly reported
+     INVALID_CONTAMINATED (48 and 21 foreign processes from 07/06). Its timings are not used.
+  3. Quiet-window request **C11** in `coordination/requests/08-performance-to-coordinator.md` (25 min, exact command listed).
+  4. Re-theme baseline: `docs/performance/baselines/retheme_before_37b9a93.json` (git-archive of committed tree, so 03/05 WIP excluded),
+     `docs/performance/RETHEME_BUDGET.md`, new gate `tools/perf/retheme_compare.py [--strict]`. Caps sent to 03 (A4), 05 (AU1, new file);
+     before/after APK build requested from 04 (R6). The existing APK (07:23) is stale and labelled as such.
+- Not done / waiting: the quiet A/B re-run (needs C11 grant); after-retheme numbers (03/05 have not committed theme A yet); a fresh APK
+  (04); P2b fix (02); 04 R5 font pre-warm; stress-scene unit drop (~40 units) investigation; device data (no phone).
+- Next steps (exact): (1) Read C11 in the coordinator file. When it is granted:
+  `.\tools\perf\ab_retest.ps1 -BaseRev d4d7c13 -FixRev HEAD -Files src/gameplay/battle_sim.gd -Pairs 3 -RequireQuiet`. Record the summary
+  validity and numbers in BASELINE §7 and the 02 request, then release the window in the coordinator file. (2) When 03/05 commit theme A:
+  `python tools/perf/retheme_compare.py --strict`, fill RETHEME_BUDGET §5, then run the frame probe for draw cost. (3) The remaining items from
+  the M2 "Next steps" below.
+## (history) FINAL CHECKPOINT (user stop order, 2026-10-31 09:18 +09:00 by system clock)
 - Stopped at a safe point: there is no measurement or implementation in progress. No new work was started.
 - Processes: I left no Godot or emulator processes running. The three Godot processes running at 09:18 belong to 06-services
   (`tests/services/test_services_m3.gd`, `m3_child.gd`), so I did not touch them. I never started an emulator.

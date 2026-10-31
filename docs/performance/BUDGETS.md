@@ -22,7 +22,7 @@ Note: export preset min SDK is still unset (`gradle_build/min_sdk=""`) and BUILD
 |---|---|---|---|---|---|---|
 | Frame time | 30 fps: p95 ≤ 36 ms | 60 fps: p95 ≤ 20 ms | 60 fps | Desktop paced r06 autoplay: 16.67 ms p95 (vsync 60). Desktop uncapped at 36/side caps: ~3.7 ms/frame avg (view drawn) | DESKTOP_PROXY | UNMEASURED on phone |
 | Frame CPU at caps (sim + draw + engine) | ≤ 33 ms | ≤ 16 ms (leave GPU/OS headroom: aim ≤ 12 ms) | — | Desktop: ~1.0 engine base + ~1.0–1.7 sim step + ~2.3 battle_view._draw ≈ 4.3–5 ms | DESKTOP_PROXY | AT RISK: ×4 assumed phone slowdown → ~17–20 ms mid tier |
-| Battle sim step at caps (36/side) | ≤ 4 ms | ≤ 2 ms (ENGINE.md §7) | ≤ 2 ms | M1: desktop 1.07–1.72 ms avg, p95 1.66–3.04 ms. After 02 e9dfaa4 (sorted lanes): A/B median 1.66 → 0.90 ms avg, p95 4.39 → 1.39 ms (BASELINE §7.2) | CONTENDED_DESKTOP_PROXY | IMPROVED; still unmeasured on phone. Sorted lookup changes outcomes on x ties (P2b open) |
+| Battle sim step at caps (36/side) | ≤ 4 ms | ≤ 2 ms (ENGINE.md §7) | ≤ 2 ms | M1: desktop 1.07–1.72 ms avg, p95 1.66–3.04 ms (contended). 02 e9dfaa4 sorted-lane A/B: **INVALID (contaminated, coordinator 08:53 notice)**, re-measurement in a quiet window pending (C11) | CONTENDED_DESKTOP_PROXY | UNJUDGED; sorted lookup changes outcomes on x ties (P2b open) |
 | Battle sim step, normal rounds (bot) | ≤ 4 ms | ≤ 2 ms | — | Desktop avg 0.17–0.21 ms, p95 0.28–0.42 ms | DESKTOP_PROXY | OK on proxy |
 | Draw calls in battle | ≤ 100 (provisional, low-end GLES3) | ≤ 200 | — | 19 menu; 93 at 3 units (04 HUD); 186–217 at caps (mixed atlas art and procedural placeholders) | DESKTOP_PROXY (count is renderer-side, transferable) | OVER low-tier target at caps |
 | Total PSS | ≤ 250 MB | ≤ 300 MB | ≤ 350 MB | not measured (needs phone `dumpsys meminfo`) | — | UNMEASURED |
@@ -41,6 +41,7 @@ Note: export preset min SDK is still unset (`gradle_build/min_sdk=""`) and BUILD
 | Thermal | no status ≥ 3 (severe) in a 15–20 min cap soak | | | not measured | — | UNMEASURED |
 | APK size | ≤ 60 MB | | | debug APK 55.30 MiB (04, 07:07): native libs 54.6 MB compressed, x86_64 28.2 MB + arm64-v8a 25.5 MB; game content ~1 MB | STATIC | AT RISK: universal APK carries x86_64; release-template/AAB size unmeasured |
 | Source assets on disk | ≤ 20 MB | | | 4.52 MiB (incl. 3.09 MiB Galmuri TTF fonts added ~07:15) | STATIC | OK |
+| Re-theme caps (theme A) | worst battle atlas ≤ 12 MiB, all pages ≤ 14 MiB, SFX PCM ≤ 2 MiB, music ≤ 1.5 MiB, APK content +≤ 2 MiB | | | baseline 37b9a93: 9.25 / 9.25 / 0.76 / 0.53 MiB, APK content 1.95 MiB (stale 07:23 APK) | STATIC | set; checked by tools/perf/retheme_compare.py (RETHEME_BUDGET.md) |
 | Font glyph cache (memory) | ≤ 4 MiB (provisional) | | | ≤ 2.25 MiB for all ko.json text in every used size (LA8 pages: 128 KiB per 256², 512 KiB per 512²) | CONTENDED_DESKTOP_PROXY (exact byte counts) | OK |
 | Font first-use hitch | ≤ 1 frame budget at 60 fps (provisional) | | | +9.4 ms desktop for a first-time 12 px Korean toast; +9–18 ms for a whole cold screen per size (FONT_COST.md) | CONTENDED_DESKTOP_PROXY | AT RISK on phone; pre-warm requested from 04 (R5) |
 
