@@ -123,7 +123,7 @@ func _process(delta: float) -> void:
 			var au := get_node_or_null("/root/Audio")
 			if au and au.has_method("snapshot"):
 				print("[App] audio=", JSON.stringify(au.snapshot()))
-			get_tree().quit(0)
+			quit_game(0)
 	if _result_delay > 0.0:
 		_result_delay -= delta
 		if _result_delay <= 0.0:
@@ -284,4 +284,17 @@ func _on_back() -> void:
 			show_screen(&"menu")
 		_:
 			Save.save_progress()
-			get_tree().quit()
+			quit_game(0)
+
+## Single quit path (05 A7): stop audio first so the mixer thread frees Ogg playbacks, wait 0.3 s of wall
+## clock (timer ignores pause and time scale), then quit. Safe to call more than once.
+var _quitting := false
+func quit_game(code: int = 0) -> void:
+	if _quitting: return
+	_quitting = true
+	_quit_after = -1.0
+	var au := get_node_or_null("/root/Audio")
+	if au and au.has_method("prepare_quit"):
+		au.prepare_quit()
+	await get_tree().create_timer(0.3, true, false, true).timeout
+	get_tree().quit(code)

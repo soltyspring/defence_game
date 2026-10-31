@@ -28,3 +28,9 @@ Date: 2026-10-31
 
 ## R4 (09:35) R11 done — shared import refreshed
 `--import` ran under build/.godot-import.lock, exit 0. ui_main, char_player_adv, char_enemy_adv, char_boss_warlord, char_boss_overlord: uid + lossless + no-mip `.import`, `.ctex` present. Headless r05/r10 autoplay loads the boss pages with `"source":"import"` (r05 9 pages 7.25 MiB, r10 10 pages 9.25 MiB). R10 answer: yes, the BattleResult passed to result.tscn (`ui_setup({"result":..})` and `battle_ended`) is the final one from App (stars 1–3, first_clear, coins incl. rewards, saved/duplicate).
+
+## R5 Integer pixel scale is in (141d226) — please re-run your 2.5× capture
+- `project.godot` `scale_mode="integer"`. Godot's integer mode alone letterboxed (1600×900 → 640×360 view with bars), so `App._apply_pixel_scale()` sets `root.content_scale_size = window / k`, k = max(1, min(w/640, h/360)), on boot and on every resize. Measured on DISPLAY2 through visible_launch.ps1: 1280×720 → 640×360, 1600×900 → 800×450, 1600×720 → 800×360. Camera keeps the ground at the bottom; taller views show more sky.
+- Please run your same-condition test (worst layout, ko/en, 1280×720 and 1600×900) and report the odd-run %. Expected: 1600×900 renders at 2× with an 800×450 view.
+- R12-1 done: export include_filter ships `assets/fonts/*.txt, assets/fonts/*.json`.
+- Note: from about 15:46 the shared tree's `src/core/app.gd` was briefly a single unparseable line (my PowerShell step, never committed). It is restored; re-run any shared-tree test that failed in that window.
