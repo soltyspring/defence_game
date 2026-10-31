@@ -130,8 +130,7 @@ func _run() -> void:
 		elif a.begins_with("--safe="):
 			# simulated notch insets L,T,R,B in logical px (same as ui_preview); worst case = 34,0,34,0
 			var p := a.get_slice("=", 1).split(",")
-			var vs := root.get_visible_rect().size
-			load("res://src/ui/safe_area.gd").override_safe_rect = Rect2(float(p[0]), float(p[1]), vs.x - float(p[0]) - float(p[2]), vs.y - float(p[1]) - float(p[3]))
+			load("res://src/ui/safe_area.gd").override_insets = Vector4(float(p[0]), float(p[1]), float(p[2]), float(p[3]))
 		elif a.begins_with("--locale="):
 			load("res://src/ui/ui_text.gd").load_locale(a.get_slice("=", 1))
 
@@ -165,6 +164,8 @@ func _run() -> void:
 	check(app.screen == &"battle" and app.battle != null, "battle running after tile tap")
 	check(hud.card_buttons.size() >= 1, "HUD built %d real cards" % hud.card_buttons.size())
 	check(HudOk(hud), "HUD layout valid on real mount: %s" % [hud.layout.get("overflow", "?")])
+	var vsz: Vector2 = root.get_visible_rect().size
+	check(hud.btn_left.get_global_rect().end.y >= vsz.y - 16.0, "HUD bottom row anchored to the real view bottom (btn end %.0f, view %s)" % [hud.btn_left.get_global_rect().end.y, vsz])
 	await _seconds(0.4)
 	check(snaps.size() >= 2, "real HudSnapshots received (%d)" % snaps.size())
 	if tile == 0:

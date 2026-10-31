@@ -48,8 +48,7 @@ func _ready() -> void:
 	var args := _args()
 	if args.has("safe"):
 		var p: PackedStringArray = str(args.safe).split(",")
-		var vs := get_viewport().get_visible_rect().size
-		SafeArea.override_safe_rect = Rect2(float(p[0]), float(p[1]), vs.x - float(p[0]) - float(p[2]), vs.y - float(p[1]) - float(p[3]))
+		SafeArea.override_insets = Vector4(float(p[0]), float(p[1]), float(p[2]), float(p[3]))
 	if args.has("capture"):
 		_capture(str(args.capture), str(args.get("tag", "shot")))
 	else:

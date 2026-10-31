@@ -9,6 +9,10 @@ const EDGE_MARGIN := 4.0
 
 ## Test hook: when set (size > 0) overrides the platform safe area, in logical units.
 static var override_safe_rect := Rect2()
+## Test hook: simulated notch insets (left, top, right, bottom) applied to the CURRENT view size.
+## Preferred over override_safe_rect: a fixed rect captured at startup goes stale when the window or
+## the integer-scale view (e.g. 800×450 at 1600×900) changes afterwards (seen 15:42).
+static var override_insets := Vector4()
 static var override_view_size := Vector2()
 
 static func view_size(vp: Viewport) -> Vector2:
@@ -19,6 +23,8 @@ static func view_size(vp: Viewport) -> Vector2:
 ## Safe area in logical units. Converts DisplayServer pixels using the window→viewport ratio.
 static func safe_rect(vp: Viewport) -> Rect2:
 	var vs := view_size(vp)
+	if override_insets != Vector4.ZERO:
+		return Rect2(override_insets.x, override_insets.y, vs.x - override_insets.x - override_insets.z, vs.y - override_insets.y - override_insets.w)
 	if override_safe_rect.size != Vector2.ZERO:
 		return override_safe_rect
 	var full := Rect2(Vector2.ZERO, vs)
