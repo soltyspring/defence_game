@@ -70,3 +70,26 @@ Faction hits (3 bread vs 3 mold variants), leave-one-out nearest-centroid accura
 | hit_base_mold | SFX | -9 | 0 | 12.2 | 1.5 | 7.4 | 18.5 | -30.5 |  |
 
 Faction hits (3 bread vs 3 mold variants), leave-one-out nearest-centroid accuracy: full band 100%, phone 100%; centroid separation / spread 11.25 (> 1 = groups apart); envelope graininess bread 0.02 vs mold 0.02.
+
+## v3.6-rally
+
+| Cue | Bus | vol_db | duck | SNR median dB | SNR p10 dB | masked % | at risk % | phone −6 dB LUFS | flags |
+|---|---|---|---|---|---|---|---|---|---|
+| hit_bread | SFX | -8 | 0 | 14.8 | -0.4 | 12.3 | 17.5 | -34.4 |  |
+| hit_mold | SFX | -6 | 0 | 12.7 | -1.7 | 12.3 | 17.5 | -31.9 |  |
+| death_ally | SFX | -8.5 | 0 | 11.2 | -0.3 | 12.3 | 17.5 | -30.9 |  |
+| death_enemy | SFX | -11 | 0 | 11.9 | 0.7 | 8.8 | 15.8 | -31.3 |  |
+| deploy | SFX | -7 | 0 | 17.2 | 5.6 | 1.8 | 5.3 | -25.4 |  |
+| skill_slam | SFX | -4 | -4 | 19.0 | 1.8 | 7.0 | 12.3 | -27.4 |  |
+| skill_rally | SFX | -6 | -4 | 16.4 | 3.2 | 0.0 | 10.7 | -26.0 |  |
+| skill_barrage | SFX | -5 | -5 | 14.0 | 7.1 | 1.8 | 3.6 | -28.1 |  |
+| skill_heal | SFX | -7 | -3 | 18.4 | 6.9 | 0.0 | 3.5 | -23.9 |  |
+| wave_incoming | SFX | -7 | -4 | 17.8 | 6.4 | 0.0 | 0.0 | -24.9 |  |
+| boss_incoming | SFX | -4 | -8 | 21.8 | 13.8 | 0.0 | 0.0 | -23.9 |  |
+| wave_cleared | SFX | -7 | -3 | 17.6 | 6.8 | 1.8 | 7.0 | -25.5 |  |
+| ui_confirm | UI | -8 | 0 | 13.7 | 2.4 | 5.3 | 12.3 | -29.0 |  |
+| ui_error | UI | -9 | 0 | 13.9 | 0.5 | 8.8 | 12.3 | -28.6 |  |
+| hit_base | SFX | -4.5 | 0 | 12.1 | 0.2 | 10.5 | 15.8 | -28.5 |  |
+| hit_base_mold | SFX | -9 | 0 | 12.9 | 0.7 | 8.8 | 12.3 | -30.5 |  |
+
+Faction hits (3 bread vs 3 mold variants), leave-one-out nearest-centroid accuracy: full band 100%, phone 100%; centroid separation / spread 11.25 (> 1 = groups apart); envelope graininess bread 0.02 vs mold 0.02.

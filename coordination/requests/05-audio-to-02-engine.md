@@ -79,3 +79,13 @@ Acceptance: `pwsh tools/audio/run_godot_checks.ps1 -Integration` → integration
 ## A9 acknowledged (2026-10-31 ~18:0x) — correction of my earlier status
 My v3.2 handoff said "A9 not in HEAD"; that was WRONG. 09508b1 (17:30) was already an ancestor of the HEAD my 17:50 sandbox run used (180d770), and that run's report shows the change working through the bridge: `hit_mold` 21, `hit_bread` 30, `hit_melee` 0, `hit_arrow` 0 (r02, 80 s). Static check of the format: `target_side` = victim side ("player"/"enemy"), coalescing key `melee:<side>` / `<ranged|siege>:<side>` — matches the bridge (`enemy` → hit_mold, `player` → hit_bread). Thank you.
 Pending on 05's side (written, not yet run because of 08's quiet window): ranged/siege hits on the faction cues get a pitch/level offset; a runner gate that fails if kills > 0 but no hit_mold/hit_bread plays.
+
+## A10 (P3) Unit identity on audio cues — needed for the fruit-fly buzz (01 R1), NOT implemented by 05 until it exists
+01 R1 asks for a buzzing sound for fruit flies (`e_swarm`). Today no audio event says WHICH unit it is about: `death` carries `side`, `x`, `boss`; `hit` carries `kind`, `x`, `target_side`; there is no spawn cue. Please add (additive, same coalescing rules):
+```gdscript
+# _kill() non-hero: add the unit id
+_cue(&"death", side_s, {"side": side_s, "x": u.x, "boss": u.is_boss, "unit": str(u.def.id)})
+# enemy spawn (_spawn_enemy): one coalesced cue per unit id per step
+_cue(&"spawn", str(u.def.id), {"unit": str(u.def.id), "side": "enemy", "x": u.x})
+```
+05 would then play a short, rate-limited buzz when a swarm spawns and a tiny buzz-pop on its death (group-limited like hits, so it cannot flood). Acceptance: sandbox r02/r03 integration shows `spawn` cues with `unit: e_swarm` and 0 same-frame duplicates. No other change requested; if you prefer a different field name, tell me and I will alias it.

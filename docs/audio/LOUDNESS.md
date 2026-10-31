@@ -34,7 +34,7 @@ M = max momentary K-weighted loudness over 100 ms (BS.1770 K filter; short SFX a
 | hero_death | hero_death.wav | SFX | -5 | -10.9 | -15.9 | +3.9 | 9 |
 | hero_respawn | hero_respawn.wav | SFX | -8 | -9.8 | -17.8 | +2.0 | 8 |
 | skill_slam | skill_slam.wav | SFX | -4 | -11.0 | -15.0 | +4.8 | 9 |
-| skill_rally | skill_rally.wav | SFX | -6 | -10.8 | -16.8 | +3.0 | 9 |
+| skill_rally | skill_rally.wav | SFX | -6 | -11.6 | -17.6 | +2.2 | 9 |
 | skill_barrage | skill_barrage.wav | SFX | -5 | -14.6 | -19.6 | +0.2 | 9 |
 | skill_heal | skill_heal.wav | SFX | -7 | -9.9 | -16.9 | +2.9 | 9 |
 | skill_cast | skill_cast.wav | SFX | -7 | -9.0 | -16.0 | +3.8 | 8 |

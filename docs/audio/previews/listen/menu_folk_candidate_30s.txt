@@ -1,0 +1,1 @@
+Folk menu CANDIDATE (preview only; not in assets, not connected). G major 120 BPM, 8-bar loop (16 s) played twice then cut at 30 s with a 0.5 s fade. Peak -3.00 dBFS. Made by tools/audio/menu_candidate.py.

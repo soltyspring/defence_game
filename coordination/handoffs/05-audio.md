@@ -1,12 +1,29 @@
+RULE (line 1, fixed after 3 violations: af491c2, 53883db, f5f42df batch): a commit SHA is written ONLY in a separate tool call made AFTER the Publish-Task call that printed `PUSHED <sha>` has returned; copy it from that output, check it with `git log origin/main`, and never record the SHA-record commit's own SHA in the file.
 # 05-audio handoff
-Updated: 2026-10-31 ~21:xx (v3.5: app lifecycle suspend/resume, settings persistence + zero output, phone-speaker check and fixes)
-Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all.
+Updated: 2026-10-31 ~22:xx (v3.6: 01 R1 rally voice, folk menu candidate preview, swarm buzz request; private-APPDATA isolation)
+Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all. Quota at start of v3.6: 90.0 %; checked again before the Godot run: 90.8 %.
 
-## FIXED RULE — commit SHAs (after two mistakes: af491c2, 53883db)
-1. Never type a SHA before the push has printed it. Never fill in a SHA "for the next commit".
-2. Write SHAs only in a SEPARATE Publish-Task call, after the earlier calls have returned, by copying the `PUSHED <sha>` lines from their output.
-3. That SHA-record commit records only commits that already exist on origin (check with `git log origin/main`). It never records its own SHA; that one is reported in chat.
-
+## v3.6 (Codex review of 11c29cc–f5f42df)
+01 R1, remaining 3 timbres; only those with a real game event were implemented:
+1. **Rally (implemented)**: the event exists (`Events.sfx(&"skill")` → kind `rally` → `skill_rally`; data r04–r10 list skill_rally).
+   - New `r36_skill_rally`: oven-door whoosh, five synthetic "hey!" voices (saw source + vowel formants; no samples or speech data), bell accent. 0.9 s, peak −1.0 dBFS, 87 % of energy ≥ 300 Hz.
+   - Size +2,206 B (only skill_rally.wav changed).
+   - Phone check (same method): masked 0.0 %, at risk 10.7 % (before 0.0 / 3.8 %); phone loudness −26.0 LUFS.
+   - Repetition: cooldown 20 s → at most 3 plays/min.
+   - The integration battle (r02) has no rally, so engine-path playback of the new file was not observed in the harness. The skill → cue mapping is covered by the selftest, and the selftest also plays every cue.
+2. **Fruit-fly buzz (NOT implemented)**: no audio event identifies `e_swarm` (death/hit cues carry no unit id; there is no spawn cue). Requested from 02 as A10 (add `unit` to death, plus a coalesced `spawn` cue).
+3. **Folk menu motif (preview only)**: `tools/audio/menu_candidate.py` → `docs/audio/previews/listen/menu_folk_candidate_30s.mp3` (G major, 120 BPM, accordion + pluck + frame drum, peak −3.0 dBFS).
+   - NOT in assets, NOT in the manifest, NOT connected. Replace or add = 01/user decision; it overlaps the music-variation question.
+4. **Isolation**: `run_godot_checks.ps1` now gives every Godot child a PRIVATE APPDATA (10's isolated_godot.ps1 method) on top of custom_user_dir.
+   - Proof line: `user_dir_logs_present=True`, `real_save_changed_during_run=False`.
+Validation:
+- `validate.py --determinism` PASS.
+- `run_godot_checks.ps1 -Integration -BattleSeconds 80 -Record -ProbeArgs --probe-seed=11 -Lifecycle` → PASS:
+  - hits mold 12 / bread 21 / fallback 0; deploy 14 = 14, skill 7 = 7, wave_cleared 1 = 1, upgrade 2 = 2, hero 1 = 1/1
+  - 0 dups; audio-class exit leaks 0; lifecycle 27/27; settings 3/3 + 5/5
+- Mix: buried 7.5 %, 0 clipped. Phone check: worst masked 12.3 % (death_ally).
+- No own Godot left running.
+Not verified: human listening, Android device.
 ## v3.5 (Codex review of 65502e8–53883db: release-facing sound problems)
 1. **App lifecycle** (src/audio/audio_manager.gd): APPLICATION_PAUSED/FOCUS_OUT now SUSPEND audio. Master is muted, every player is stream-paused, no new cue or music starts (a requested music change is kept and started on resume). RESUMED/FOCUS_IN continue in place; battle SFX stay paused until the player resumes the battle.
    - New `tools/audio/lifecycle_probe.gd` + `run_godot_checks.ps1 -Lifecycle` → 27/27 checks PASS:
