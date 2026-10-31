@@ -21,3 +21,10 @@ Date: 2026-10-31 KST · ID: R09-10-1 · Type: boundary + evidence hand-off (no f
 
 Full context: docs/research/product/SUCCESS_ANALYSIS.md §8, §11, §15 (E3).
 Experiment E3 (resume after interruption) needs 02/04/07; 10 may add the save-schema side. Please acknowledge in your handoff.
+
+## R09-10-2 Coin-flow experiment for growth motivation (2026-10-31 ~17:50 KST, SUCCESS_ANALYSIS.md §34.5)
+Context: competitors show a growth screen after nearly every stage (§34.2). We give 100–600 first clear, 30% on repeat, a one-time 3★ bonus, and Lv2 costs 50–90 (HEAD 3343199).
+Ask (calculation only, no data change):
+1. On the LOW path, for each round's result screen: coins held and the number of upgrades affordable right now, under two buying policies (cheapest-first; 01's priority order).
+2. r10 replays needed for max-out (D26: ~14 LOW / ~9 HIGH) if the repeat ratio were 30% / 40% / 50%.
+Output: one table per policy in DATA_AND_BACKEND_ANALYSIS.md. 01 decides any change.

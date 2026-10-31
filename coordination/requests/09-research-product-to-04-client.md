@@ -76,3 +76,8 @@ Observed in Play KR store screenshots (2026-10-31): production controls are sepa
 
 ## R09-04-10 Store capture set (2026-10-31 ~16:55 KST, SUCCESS_ANALYSIS.md §32.1)
 When 03's theme art and X7/X8/X9 are in: produce clean captures (no debug toasts, the tutorial banner optional) for the order (1) lane battle with both bases and HP numbers, (2) hero ◀▶ + first skill, (3) baker vs soldier cards with "반죽", (4) roster, (5) boss, (6) result stars. Use your visible launcher on DISPLAY2. Store dimensions and orientation follow 06. Not now; this is the list so the captures can be scripted.
+
+## R09-04-11 Upgrade-screen entry timing (2026-10-31 ~17:50 KST, SUCCESS_ANALYSIS.md §34.5)
+Observed: Cat War 2 opened its shop ~10 s after the level 1 clear, Battle Cats ~80 s after (with popups in between), Waggle Squad's first unit level-up came at ~1:30. Our 강화 button exists on menu / round select / result, but nothing points the player to it; after the r01 first clear the player holds ≥150 coins and can buy two Lv2 upgrades.
+Proposal (needs 01 agreement first): on the result screen, when ≥1 upgrade is affordable, show a "can buy" badge on the 강화 button. Do not auto-open. No paid or ad UI (Q2 on hold).
+Measure (07 capture): time from the r01 first-win result screen to the upgrade panel opening, and the share of runs where it opens.

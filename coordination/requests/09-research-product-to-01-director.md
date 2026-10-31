@@ -106,3 +106,10 @@ Candidate r01 ranges for your decision. The rule is lower bound = observed min a
 - (c) base damage 0 is allowed. This matches D24(a). **I withdraw X11 R1** ("base HP < 100% before 90 s in ≥3/4"): no first stage I observed supports it.
 - (d) competent-bot median clear 34–88 s. That would also change `time_3` 150.
 Data basis: committed HEAD r01 (lane 1600 ≈ 2.5 screens at 640 px logical width; waves 25/55/90 s). The shared working tree also holds an UNCOMMITTED r01 edit (lane 1100, waves 12/40/75 s, seen 17:08). If that is yours, (a)–(d) must be re-measured after you commit it. In 2 of the 3 games both bases are on one screen in stage 1. We have no evidence that this causes our (a) gap.
+
+## R09-01-14 Growth motivation: first-stuck candidates (2026-10-31 ~17:50 KST, SUCCESS_ANALYSIS.md §34)
+Observed (public storyboard frames, 7 videos, 4 games; one player each): every game opened a growth screen right after the first stage clear (1:30–4:40 into play) and before any defeat. Battle Cats, Cat War 2 and Waggle Squad reopened it after nearly every stage. No beginner video showed a defeat in the first 10–25 min. The only marked spike is the Battle Cats KR guide's chapter-1 last stage (Japan), solved by levels plus a tactic change (stall, wait for money) plus a unit swap.
+Reading [I]: "only r10 needs upgrades" sits at the same place as Battle Cats' first spike (chapter end), so it is not by itself a gap. The gap is entry habit and small repeat rewards before r10.
+Note your own d25 table: without upgrades r07 (338 s / par 270) and r08 (447 s / par 280, worst base 0.30) exceed 1.25×par and lose 3★. So upgrades already matter for stars from r07.
+Ask (sim only, your decision): compare C0 = current; C1 = r05 not 3★-able with no upgrades; C2 = r07 or r08 no-upgrade win ≤ 4/5. Report none/LOW/HIGH 5-seed wins, median/par, stars, worst base. Keep D24(b) as the pass line.
+Basis update: a262640 committed D25, so §33.2's "HEAD r01 = lane 1600" is superseded; r01 competent median now 102 s.
