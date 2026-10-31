@@ -32,6 +32,12 @@
   drawcall_run v10 exit 0, isolated. PowerShell parse 0 errors for perf_isolation, run_perf, ab_retest, c11_window, drawcall_run,
   android_capture and test_bench_semantics. Lock-guard test exit 4 / pass.
 - Not touched: 04's uncommitted hud_top/touch_button/ui_style edits (read-only diff only) and other roles' WIP.
+- Commit: `3c8ff18a38585fe4c87bcb059c399ed9b4563299` `[Test] 드로우콜 감소안 실측(…), 성능 실행 전부 머신 잠금 필수화`, 19 files.
+  Publish-Task.ps1 printed `PUSHED 3c8ff18… origin/main` (ecf06e7..3c8ff18). Checked with `git cat-file -t` = commit and
+  `git branch -r --contains` = origin/main.
+- Next: (1) when 04 commits R8 layering, run `heavy_run.ps1 -Label '08-drawcalls-r8' -Script { & .\tools\perf\drawcall_run.ps1
+  -Rev origin/main -SkipMicro }`; acceptance hud_top ≤ 10, card ≤ 5, frame ≤ 100. (2) When 02 commits H3, run ab_retest
+  -RequireQuiet + equivalence in the lock. (3) Run asset_budget_check.py --range d724b9a..origin/main on new commits.
 
 ## M14 — draw-call breakdown, emulator check, user:// isolation (2026-10-31 18:47–19:40 KST)
 - **(1) Draw calls** (DRAWCALLS.md). New `tests/performance/drawcall_view.gd` (test-only subclass of 02's battle_view: category
