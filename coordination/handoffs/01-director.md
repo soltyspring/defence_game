@@ -1,4 +1,9 @@
 # 01-director handoff
+## TASK 2026-11-01 07:1x– — move the first block to r06/r07 (DEFAULT experiment)
+- Criteria pre-registered in 8bc03e2 (BALANCE_DIAGNOSIS Update 12).
+- Job 1 01-move-block (07:34–08:00, exit 0, committed bot 780c30a): r05 A passes length; r06/r07 variants give no block. Early-nest: r02/r03/r04/r06 nests fall before the last scripted wave; no round blocks a no-upgrade bot any more.
+- **Found a bot-version confound:** D38/D40 compared an old-bot baseline with fixed-bot variants; their causal claims are withdrawn (DECISIONS correction row, Update 13).
+- Job 2 01-move-block2 queued 08:03 (log build/heavy/01-move-block2-20261101-080341.log): committed-bot baseline LOW/LOW+2R r01–r10, r06 1.8, r07 2.0/2.4, nest ×1.4. Results pending; no data change yet.
 ## TASK 2026-11-01 — r05 structure experiment (coordination/prompts/01-r05-structure.txt)
 - Pass criteria were pre-registered in 3d44666 (BALANCE_DIAGNOSIS Update 10). 02 R12 (boss-death hooks, request only) and the 04 R10 threat-marker condition were also in 3d44666.
 - Blue screen 03:55: my job 01-r05-structure (queued 03:18:44) never got the lock. heavy_run.log has no 01-r05-structure START/END, so there is no partial result to discard. Working tree clean, no empty or NUL files, data JSON ok.

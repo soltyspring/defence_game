@@ -178,3 +178,40 @@ Criteria (10 seeds, 02 bots competent skill 2 and casual skill 1, budgets none/L
 3. The D28 curve must not get worse in r01–r10: casual LOW ≥ 9/10 (r01–r04), ≥ 7/10 (r06–r09 except the block round, whose own rule is 2), r10 LOW+2R ≥ 5/10; LOW median ≤ 1.25 × par in every round where it holds today; the needed upgrade budget (LOW) is unchanged.
 4. Early-nest check: in no round may a no-upgrade bot destroy the enemy base before the boss spawns or before the last scripted wave starts.
 Variants (data only, one detached job): r05 A = s4 (boss 60 s + smaller 150 s wave) + enemy_scaling 1.1; r05 B = s1 (boss 60 s) + scaling 1.1; r06 C = scaling 1.1 → 1.35; r07 D = scaling 1.14 → 1.35; r07 E = scaling 1.14 → 1.55. Plus the early-nest check on the current data r01–r10 (none, 2 bots, 5 seeds).
+## Update 2026-11-01 (13) — BOT VERSION CONFOUND in D38/D40, and first move-block results (bot sims, not human playtests)
+**Confound (found from 02's URGENT note):** sweep.ps1 loads src/gameplay/bot_player.gd from the shared working tree. 02 changed the bot at 01:03:49 (stall and hero fixes) and committed it at 07:13:49 (780c30a). My runs by start time: d38_a 00:55 = OLD bot; d38_b 01:14, d38_c 01:46, d38_d 02:04, d38_e 02:57, r05_s1–s4 06:53 = FIXED bot; move-block 07:34 and later = committed fixed bot.
+- So D38 (a vs b–e) and D40 (a vs s1–s4) compared different bots. Their causal claims ("splash/knockback make the block", "removing any structural element removes the block") are **withdrawn**: with the fixed bot, r05 none wins 10/10 even with unchanged data (02's measurement; mine below: 5/5).
+- Lesson: from now on, every comparison table must come from one job with one bot commit, and that commit is recorded.
+Early-nest check, current data, committed fixed bot, none budget, 5 seeds:
+| round | last scripted wave (s) | boss wave (s) | policy | none wins | min win t (s) | wins before last wave | wins before boss | flag |
+|---|---|---|---|---|---|---|---|---|
+| r01 | 75 | - | competent | 5/5 | 99 | 0 | - |  |
+| r01 | 75 | - | casual | 5/5 | 84 | 0 | - |  |
+| r02 | 120 | - | competent | 5/5 | 118 | 1 | - | EARLY |
+| r02 | 120 | - | casual | 5/5 | 114 | 5 | - | EARLY |
+| r03 | 130 | - | competent | 5/5 | 129 | 1 | - | EARLY |
+| r03 | 130 | - | casual | 5/5 | 154 | 0 | - |  |
+| r04 | 150 | - | competent | 5/5 | 133 | 5 | - | EARLY |
+| r04 | 150 | - | casual | 5/5 | 138 | 1 | - | EARLY |
+| r05 | 150 | 95 | competent | 5/5 | 370 | 0 | 0 |  |
+| r05 | 150 | 95 | casual | 5/5 | 381 | 0 | 0 |  |
+| r06 | 160 | - | competent | 5/5 | 154 | 4 | - | EARLY |
+| r06 | 160 | - | casual | 5/5 | 145 | 3 | - | EARLY |
+| r07 | 165 | - | competent | 5/5 | 263 | 0 | - |  |
+| r07 | 165 | - | casual | 5/5 | 302 | 0 | - |  |
+| r08 | 155 | - | competent | 5/5 | 366 | 0 | - |  |
+| r08 | 155 | - | casual | 5/5 | 381 | 0 | - |  |
+| r09 | 200 | - | competent | 5/5 | 282 | 0 | - |  |
+| r09 | 200 | - | casual | 5/5 | 363 | 0 | - |  |
+| r10 | 230 | 110 | competent | 5/5 | 827 | 0 | 0 |  |
+| r10 | 230 | 110 | casual | 4/5 | 865 | 0 | 0 |  |
+Readings: (1) with the fixed bot, **no round blocks a no-upgrade player any more** (r05 none 5/5, r10 4–5/5 near the 900 s cap). (2) The early-nest weakness is common: in r02, r03, r04 and r06 a no-upgrade bot destroys the nest before the last scripted wave starts.
+Move-block job 1 (committed bot, 10 seeds, none/LOW):
+| variant | casual LOW W | comp LOW W | none W (cas/comp) | LOW median cas/comp (s) | limit (s) | result |
+|---|---|---|---|---|---|---|
+| r05 A (s4 + scaling 1.1) | 10/10 | 10/10 | 10/10 / 10/10 | 323 / 274 | 325 | r05 length PASS |
+| r05 B (s1 + scaling 1.1) | 10/10 | 10/10 | 10/10 / 10/10 | 325 / 289 | 325 | casual at the limit (fail by rounding) |
+| r06 C (scaling 1.35) | 10/10 | 10/10 | 5/10 / 10/10 | 143 / 149 | 325 | no block |
+| r07 D (scaling 1.35) | 10/10 | 10/10 | 10/10 / 10/10 | 260 / 209 | 337 | no block |
+| r07 E (scaling 1.55) | 10/10 | 10/10 | 10/10 / 10/10 | 284 / 235 | 337 | no block (none wins slowly: 458–518 s) |
+Job 2 (queued 08:03): committed-bot baseline r01–r10 LOW/LOW+2R, r06 1.8, r07 2.0/2.4, early-nest fix (enemy base ×1.4 in r02/r03/r04/r06).
