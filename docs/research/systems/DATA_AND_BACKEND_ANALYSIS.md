@@ -1,5 +1,5 @@
 # 데이터·백엔드 분석: 성공한 디펜스 게임의 온라인 기능과 우리 게임의 최소 설계
-작성: 10-research-systems · 버전 v0.34 (v0.34 §9.26 업데이트 뒤 라운드 재잠금 원인 확정(save.gd 5단계, 10의 §9.6 규칙)·재현 표·release_guard 재잠금 검사, AC9 에뮬레이터 확인(실기기 미검증), git archive 줄 끝 위험 표, §9.24 AC2 정정(모두 깬 세이브), v0.33 §9.25 04 APK·06 AAB 패키지 data 바이트 같음(eb8d5c4, LF c1-989c3422c910), 앞선 줄 끝 주장의 사실·추론 구분, 04 이전 안내 시험 검토·실제 재부팅 보완 탐침(연속 업데이트·일시정지·환불 0), v0.32 §9.24 02 52f9fa3 재검증: F2 9/9, 업데이트 시나리오, 마이그레이션, AC1~AC9, 카나리 해시 기준 전환, v0.31 §9.22 정규화 해시 도입 전 호환성 공격 사례·02 수용 기준, heavy_run 덮어쓰기 원인, v0.30 §9.21 줄 끝과 content_version: 엔진 실측·APK 바이트·업데이트 재현·정규화 위치 추천, v0.29 §9.20 재개 후 손실 점검, D32/D33 대조와 출시 가드, HEAD 재실행, 재개 시간대 감시, v0.28 §9.19 실제 사용자 폴더 감시 30분·담당별 쓰기 증거·qa07 996 MB 원인, v0.27 §9.18 실제 사용자 폴더 백업, 업데이트·다운그레이드 실측, D26 결정 요청과 이전 전 백업 방어안, v0.26 §9.17 실제 사용자 폴더 오염 경로 전수 조사와 공통 격리 방법, v0.25 §9.16 01 opt 정책 구현·대조, 원거리 L5 역전 원인과 수정안, R5 수용 실행·F2 발견, v0.24 §9.15 D27 데이터 경제표·효과표 재실행·F1 독립 재실행·09 코인 흐름 회신, v0.23 §9.14 환불 근거 두 방식의 JSON 형식·장단점·테스트, v0.22 §9.13 경쟁작 공식 문서의 밸런스 변경·업데이트·오지급 처리와 D26 대조, v0.21 §9.12 정책별 경제 기준표·메뉴 토스트 미표시, v0.20 §9.11 a262640 재계산·업그레이드 화면 확인, v0.19 §9.10 buy_upgrade C1~C13, v0.18 §9.9 엔진 저장 내구성 판정·경쟁작 기기 변경 정책, v0.17 §9.8 저장 원자성 점검, v0.16 §9.7 챕터 1 코인 흐름·비용 대비 효과, v0.15 §9.6 데이터 버전 변경과 세이브, v0.14 §9.5 업그레이드 효과 곡선, v0.13 §9.4 업그레이드 트랜잭션·content_version, … v0.11 재시작 후 무결성 재실행: D17 확인, v0.12 테마 A 이름표 검사 통과·세이브 재확인) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
+작성: 10-research-systems · 버전 v0.35 (v0.35 §9.27 재잠금 검증 묶음 준비·ID 기준 해제 저장안(ID_UNLOCK_SAVE_DESIGN.md)·SwiftShader 셰이더 한도 위험 판단·AAB 에뮬레이터 설치, v0.34 §9.26 업데이트 뒤 라운드 재잠금 원인 확정(save.gd 5단계, 10의 §9.6 규칙)·재현 표·release_guard 재잠금 검사, AC9 에뮬레이터 확인(실기기 미검증), git archive 줄 끝 위험 표, §9.24 AC2 정정(모두 깬 세이브), v0.33 §9.25 04 APK·06 AAB 패키지 data 바이트 같음(eb8d5c4, LF c1-989c3422c910), 앞선 줄 끝 주장의 사실·추론 구분, 04 이전 안내 시험 검토·실제 재부팅 보완 탐침(연속 업데이트·일시정지·환불 0), v0.32 §9.24 02 52f9fa3 재검증: F2 9/9, 업데이트 시나리오, 마이그레이션, AC1~AC9, 카나리 해시 기준 전환, v0.31 §9.22 정규화 해시 도입 전 호환성 공격 사례·02 수용 기준, heavy_run 덮어쓰기 원인, v0.30 §9.21 줄 끝과 content_version: 엔진 실측·APK 바이트·업데이트 재현·정규화 위치 추천, v0.29 §9.20 재개 후 손실 점검, D32/D33 대조와 출시 가드, HEAD 재실행, 재개 시간대 감시, v0.28 §9.19 실제 사용자 폴더 감시 30분·담당별 쓰기 증거·qa07 996 MB 원인, v0.27 §9.18 실제 사용자 폴더 백업, 업데이트·다운그레이드 실측, D26 결정 요청과 이전 전 백업 방어안, v0.26 §9.17 실제 사용자 폴더 오염 경로 전수 조사와 공통 격리 방법, v0.25 §9.16 01 opt 정책 구현·대조, 원거리 L5 역전 원인과 수정안, R5 수용 실행·F2 발견, v0.24 §9.15 D27 데이터 경제표·효과표 재실행·F1 독립 재실행·09 코인 흐름 회신, v0.23 §9.14 환불 근거 두 방식의 JSON 형식·장단점·테스트, v0.22 §9.13 경쟁작 공식 문서의 밸런스 변경·업데이트·오지급 처리와 D26 대조, v0.21 §9.12 정책별 경제 기준표·메뉴 토스트 미표시, v0.20 §9.11 a262640 재계산·업그레이드 화면 확인, v0.19 §9.10 buy_upgrade C1~C13, v0.18 §9.9 엔진 저장 내구성 판정·경쟁작 기기 변경 정책, v0.17 §9.8 저장 원자성 점검, v0.16 §9.7 챕터 1 코인 흐름·비용 대비 효과, v0.15 §9.6 데이터 버전 변경과 세이브, v0.14 §9.5 업그레이드 효과 곡선, v0.13 §9.4 업그레이드 트랜잭션·content_version, … v0.11 재시작 후 무결성 재실행: D17 확인, v0.12 테마 A 이름표 검사 통과·세이브 재확인) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
 범위: 경쟁작에서 **관찰되는** 온라인 기능, 그 기능의 **공개 문서화된** 기술, **UNKNOWN**, 우리 오프라인 우선 Godot 게임에 필요한 최소 콘텐츠 DB·세이브·거래 계약. 런타임 코드는 수정하지 않았다. 내부 DB나 비공개 구현에 접근한 적 없다. 게임을 직접 플레이하지 않았다(스토어 텍스트·공개 스크린샷만 확인).
 
 ## 0. 현재 판단 (요약)
@@ -1785,6 +1785,45 @@ HEAD 40382b0 결과(`-Rev HEAD`, exit 0, 업그레이드 총비용 5,595). "카�
 - 작업 트리(`--path .`)에서 내보내는 스크립트와 `--export-release` 스크립트는 아직 없다. 앞으로 만들 출시 빌드 스크립트가 남은 가장 큰 위험이다. 06 경로처럼 LF 고정과 CRLF 차단을 같이 넣거나, 02가 AC1(해시 정규화)을 고치면 이 위험이 없어진다.
 - `.gitattributes`(`data/** text eol=lf`)는 위생 조치다. 그러나 `Publish-Task.ps1`의 소유 규칙에 이 파일의 담당이 없다(02의 루트 허용 목록에도 없음).
 
+### 9.27 재잠금 수정 검증 준비, ID 기준 해제 저장안, SwiftShader 셰이더 한도 위험, AAB 에뮬레이터 설치 (v0.35)
+**(1) 재잠금 수정 검증 준비**
+- 준비물(f1af87e):
+  - `probes/relock_cases.json`: 사례 25개. U1~U6 정의, 단계별 변형, 마지막 단계 기대값(must_open/must_locked), f606801 예측을 실행 전에 적었다.
+  - `probes/relock_suite_job.ps1`: 대상 SHA는 `probes/relock_target.txt`의 첫 줄에서 읽는다.
+  - `probes/relock_eval.py`: 판정 스크립트.
+  - `relock_variants.py`에 변형을 더했다: 맨 앞 삽입, 같은 업데이트 안의 삭제+삽입, 이름 변경+이동, 세 번째 연속 삽입, 끝에 덧붙이기.
+  - 시드도 더했다: 모두 깬 세이브, 새 세이브(깨기 전 저장), 세이브 없음, 이미 잠긴 세이브.
+- f606801 실행(`10-relock-suite`, 07:43 대기열)은 이 판 작성 시점에 아직 잠금을 기다리는 중이다. **현재 결과는 아직 기록하지 않았다.**
+- f606801 예측(코드 읽기와 정적 모델, 실행 전): 25개 중 12 FAIL이다. 2개 삽입, 연속 2·3회, 이동, 이름 변경+이동, map 없는 이름 변경, 모두 깬 세이브+바이트(U4), 모두 깬 세이브+2개 삽입, 새 세이브+맨 앞 삽입, 일관되지 않은 세이브 2개, 이미 잠긴 세이브+data 변경이 해당한다. 같은 data의 이미 잠긴 세이브는 INFO로 복구되지 않는다.
+
+**(2) ID 기준 해제 저장안**: 별도 문서 `ID_UNLOCK_SAVE_DESIGN.md`에 썼다. 담긴 내용은 저장 필드 3안, 지금 세이브에서 옮기는 규칙, 408행 U6, 읽는 곳 목록, 스토어 되돌림 호환표다. 요약은 다음과 같다.
+- 정적 모델(`probes/unlock_options_model.py`, Godot 미실행)로 사례 25개에 적용한 결과다. 지금 규칙은 12 FAIL, 숫자만 고치는 B'는 3 FAIL(라운드 이동 2, 재잠금 복구 1, 모두 U3), ID 집합 A는 0 FAIL이다. U6 사례 1개는 따로 INFO로 셌다.
+- 추천은 A(덧붙이는 필드 `open_rounds`, VERSION 1 유지, 모든 로드 때 `_migrate`에서 계산, 줄지 않음)다. 반론으로는 비용(런타임에서 숫자를 직접 읽는 곳 6곳, 시험 30곳 이상)과, B'에 데이터 규칙 C를 더하면 충분하다는 안을 적었다. 결정은 02·01이 한다.
+- VERSION을 2로 올리면 옛 빌드가 세이브를 읽기 전용으로 연다(save.gd 12·74행). 그러면 되돌림 빌드에서 한 플레이가 저장되지 않는다. 그래서 덧붙이기만 권했다.
+
+**(3) SwiftShader에서 난 GLES3 셰이더 링크 실패: 실제 폰 위험 판단**
+- 실패한 것은 **Godot 기본 셰이더**다. logcat의 실패 이름은 `SceneShaderGLES3`(엔진 시작 때 4건)와 `CanvasShaderGLES3`(첫 2D 그리기 때 1건)다. 우리 프로젝트에는 사용자 셰이더가 없다. `git ls-files '*.gdshader' '*.shader'` 0건이고, `ShaderMaterial`·`shader_type`·`CanvasItemMaterial` 사용도 0건이다. 렌더러는 `project.godot`의 `rendering_method`와 `rendering_method.mobile`이 모두 `gl_compatibility`다.
+- 기기 쪽 사실: 기기는 `OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1) - Compatibility`라고 보고했다. 한도 261은 SwiftShader가 보고한 값이다. GLSL ES 3.x의 최소값은 224다(Khronos OpenGL-API 이슈 #59가 ESSL 3.10 §7.2를 인용, S34). 그러니 261은 규격상 정상 범위다.
+- Godot 4.7.2 셰이더 원본(S35): `canvas.glsl` 조각 셰이더의 기본 블록 uniform은 sampler 7개와 uint 2개뿐이다. 큰 배열은 모두 uniform 블록(UBO)에 있다. `GlobalShaderUniformData`(vec4 × MAX_GLOBAL_SHADER_UNIFORMS), `CanvasData`, `LightData`(Light × MAX_LIGHTS, Light 하나가 vec4 8개 분량)가 그렇다.
+  - 추론: `GL_MAX_FRAGMENT_UNIFORM_VECTORS`는 기본 블록 한도이고 UBO 멤버는 따로 센다(블록 크기 한도). 따라서 261을 넘었다는 보고는 에뮬레이터의 GLES 번역층이나 SwiftShader가 UBO 배열까지 같은 한도로 셌다는 뜻으로 보인다. 이 규격 구분은 이번에 원문으로 다시 확인하지 못했다(미검증).
+- 비교 자료:
+  - 06이 호스트 GPU(NVIDIA, 같은 에뮬레이터 번역층)로 돌린 logcat에는 이 오류가 0건이다.
+  - Godot 공개 이슈 #109550(S33)도 SwiftShader 기기(Play 내부 테스트)에서 같은 메시지를 보고했다.
+  - 공개 기기 값 DB(opengles.gpuinfo.org)는 값을 스크립트로만 보여 줘서 이번에 가져오지 못했다. 실제 Adreno·Mali·PowerVR 값은 **미검증**이다.
+- 판단:
+  - (사실) SwiftShader에서는 게임 화면이 그려지지 않는다.
+  - (추론, 중간 확신) 하드웨어 GPU 폰에서 같은 오류가 날 위험은 낮다. 근거는 큰 배열이 UBO에 있다는 점과, 호스트 GPU 실행에서 0건이었다는 점이다.
+  - (추론, 높은 확신) Play 사전 출시 보고서나 Firebase Test Lab처럼 SwiftShader 가상 기기를 쓰는 자동 시험은 빈 화면 스크린샷을 낼 수 있다. 그 결과를 실패로 오해하거나, 반대로 화면 검사가 무의미해진다.
+- 확인 방법(08·04 요청):
+  - 실제 폰 1대 이상에서 첫 실행 logcat에 `Program linking failed`가 없는지 본다.
+  - 같은 기기의 `GL_MAX_FRAGMENT_UNIFORM_VECTORS`·`GL_MAX_UNIFORM_BLOCK_SIZE`를 기록한다(Godot `--verbose`나 adb로 GL 정보 확인).
+  - SwiftShader에서 줄여 볼 수 있는지 확인하려면 MAX_LIGHTS·MAX_GLOBAL_SHADER_UNIFORMS를 정하는 프로젝트 설정을 낮춘 시험 사본 하나로 확인한다(설정 이름은 미검증).
+
+**(4) AAB 에뮬레이터 설치**
+- 로컬에 도구가 있다: `%LOCALAPPDATA%\svc06_tools\bundletool-all-1.18.3.jar`, JDK 17, 디버그 키스토어, v0.33의 eb8d5c4 AAB.
+- 작업 `.local_inspect/job_emu_aab.ps1`: `bundletool build-apks --connected-device` 다음 `install-apks`로 설치하고, 설치된 분할 APK마다 data 바이트의 content_version을 잰다. 그 뒤 첫 실행과 E1·E3 시드를 돌린다. 에뮬레이터는 `-no-window`, SwiftShader, 포트 5596이다.
+- 07:38에 대기열에 넣었고, 이 판 작성 시점에 아직 잠금을 기다리는 중이다. **결과는 아직 없다.**
+
 ## 10. 출처 (모두 2026-10-31 KST 접근)
 | ID | 출처 | URL | 한계 |
 |---|---|---|---|
@@ -1821,3 +1860,5 @@ HEAD 40382b0 결과(`-Rev HEAD`, exit 0, 업그레이드 총비용 5,595). "카�
 | S31 | 게임듀오 자사 게임 페이지 "아처키우기" | https://gameduo.net/game/archer-forest | 게시일 없음. 공지 채널 링크 없음 |
 | S32 | Godot 4.7.2-stable 소스: platform/windows/os_windows.cpp(get_config_path·get_data_path·get_user_data_dir, 2417~2425·2508행), core/os/os.cpp(OS::get_user_data_dir, 338~353행) | https://github.com/godotengine/godot/blob/4.7.2-stable/platform/windows/os_windows.cpp · https://github.com/godotengine/godot/blob/4.7.2-stable/core/os/os.cpp | 소스 읽기와 비공개 APPDATA 실험 X1~X3으로 확인. Android 경로와는 무관 |
 | S33 | Godot 이슈 #109550 "Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS"(2025-08, 4.5 beta5, SwiftShader 기기의 Play 내부 테스트 보고) | https://github.com/godotengine/godot/issues/109550 | 2026-11-01 접근. 우리 4.7.2와 판이 다름. 원인·수정 여부는 확인하지 않음 |
+| S34 | Khronos OpenGL-API 이슈 #59 "OpenGL ES 3.1 minimum value for Max Fragment Uniform Vectors?"(2019) | https://github.com/KhronosGroup/OpenGL-API/issues/59 | 2026-11-01 접근. ESSL 3.10 §7.2 = 224, ES 3.1 표 20.44 = 256이라는 불일치 보고. ES 3.0 원문은 직접 확인하지 않음 |
+| S35 | Godot 4.7.2-stable `drivers/gles3/shaders/canvas.glsl`, `canvas_uniforms_inc.glsl` | https://raw.githubusercontent.com/godotengine/godot/4.7.2-stable/drivers/gles3/shaders/canvas.glsl · https://raw.githubusercontent.com/godotengine/godot/4.7.2-stable/drivers/gles3/shaders/canvas_uniforms_inc.glsl | 2026-11-01 접근. 소스 읽기. scene.glsl은 읽지 않음 |

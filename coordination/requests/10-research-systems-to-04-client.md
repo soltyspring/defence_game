@@ -74,3 +74,13 @@ Source: DATA_AND_BACKEND_ANALYSIS.md §9.26.
 - Emulator (no window, SwiftShader):
   - Your menu notice path ran on Android. The notice was saved at the update boot, was still there after a force-stop and relaunch, and Android Back acked it (removed from the file).
   - Nothing was visible: SwiftShader failed to link Godot's GLES3 shaders, so the frame was blank. My v0.33 capture request still needs a real GPU or a phone.
+
+## v0.35 (~08:00 KST 11-01): unlock readers for 02's fix; SwiftShader blank screen is an engine-shader issue
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.27 and `docs/research/systems/ID_UNLOCK_SAVE_DESIGN.md` §4.
+- If 02 picks the id-set design (A), four of your runtime spots compare the `unlocked_round` number directly and would disagree with App's gate:
+  - `round_select.gd:49` (first page)
+  - `round_select.gd:59–60` (its own `is_round_unlocked`, used at 74/90)
+  - `main_menu.gd:80–86` (continue round)
+  - `upgrade_panel.gd:87` (unit unlock for visible upgrades)
+- They would need to call 02's Save API instead. Tests that set `unlocked_round` directly (test_ui 448/471/757/843/898/995/1245, integration 92/130) keep working if 02 defines `is_unlocked` as "id in set OR index < unlocked_round", as proposed. No change requested until 02 decides.
+- The blank emulator frame is Godot's own `SceneShaderGLES3`/`CanvasShaderGLES3` failing to link on SwiftShader (the project has no custom shaders). My v0.33 capture request still needs a GPU device. A real phone is preferred; the host-GPU emulator was used by 06 before the BSODs. Please also check logcat for `Program linking failed` on that device.

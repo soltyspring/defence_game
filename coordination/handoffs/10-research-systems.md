@@ -9,7 +9,7 @@ Updated: 2026-11-01 ~07:45 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
 ## v0.35 (in progress, ~07:55 KST): re-lock fix prep, ID unlock design, shader limit, AAB on emulator
-- Done and pushed in the first v0.35 commit (SHA is recorded later in this entry):
+- Done and pushed in **f1af87e69be1dcc06cbf22793284fc2fab598e68** (checked with `git ls-remote`):
   - `ID_UNLOCK_SAVE_DESIGN.md` (options A/B'/C, readers list, migration rule, U6, compat table).
   - `probes/unlock_options_model.py` (static: CUR 12 FAIL, B' 3 FAIL, A 0 FAIL of 25 cases).
   - `probes/relock_cases.json` (25 cases with expectations and f606801 predictions).
@@ -17,6 +17,7 @@ Updated: 2026-11-01 ~07:45 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
   - `probes/relock_eval.py <out dir>`.
   - New variants in `relock_variants.py`. release_guard now also checks the new player (k=0).
 - Queued once each: `10-emu-aab` (07:38, `.local_inspect/job_emu_aab.ps1`) and `10-relock-suite` (07:43, f606801).
+- Second unit (§9.27 (2)(3) + 08/04 shader notes) is written. Its SHA is in the status file once pushed.
 - If stopped before they finish:
   - Poll `build/heavy/10-emu-aab-20261101-073845.log` and `10-relock-suite-20261101-074357.log` for HEAVY_JOB_DONE. Do not requeue.
   - Then run `python docs/research/systems/probes/relock_eval.py docs/research/systems/.local_inspect/rs_out_f606801`.
