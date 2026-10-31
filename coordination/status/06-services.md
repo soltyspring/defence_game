@@ -6,7 +6,7 @@ Status: COMPLETE except the emulator install check.
 - **Emulator:** WAITING for 02.
 - Q2 DEFERRED. Nothing published.
 Current task: none. Next: see handoff.
-Commits: next [Docs].
+Commits: 95d9b1cc42985840f2bde2128bff9e5a88c01445 [Docs] PUSHED.
 Previous: 96e9962 / 287ad66 / 369a2dc (blue-screen resume, heavy_run guard).
 --- History (older entries, not current) ---
 (blue-screen entry) Updated: 2026-10-31 ~23:33 KST (blue-screen resume; heavy_run guard; post-crash validation)

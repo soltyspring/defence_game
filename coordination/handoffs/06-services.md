@@ -7,6 +7,7 @@ Updated: 2026-10-31 ~23:42 KST (real-folder leftovers quarantined; CRLF check; b
   - Not touched: save files, logs/, other roles' files.
 - **Line endings:** blobs LF; `git archive` CRLF (system core.autocrlf=true); 04 apk_head CRLF; 02 build/android LF + economy.json mixed. PLAY_TECH_REQUIREMENTS §9; request to 02.
 - **Next AAB run** (under heavy_run): add a check of `assets/data/**` line endings in the AAB. Expected CRLF until 02 adds .gitattributes or normalises the hash.
+- **Commit:** 95d9b1cc42985840f2bde2128bff9e5a88c01445 [Docs] (quarantine record, PLAY_TECH §9, requests 02/10, status, handoff).
 ## Blue-screen resume check (23:23)
 - `git status` for 06 paths: clean. `git diff HEAD` over all 127 tracked 06 files: clean. No file is missing, zero-byte or NUL-filled (byte scan).
 - Last 06 commit before the crash, 6303e18, is in origin/main. No 06 temp folders and no Gradle Java processes were left.
