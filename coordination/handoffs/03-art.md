@@ -66,6 +66,8 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - Menu budget: dry run only (docs/art/evidence/menu_budget_dryrun.json). Proposal B (per-locale ui_title pages) / C (ui_main 256x128 by moving 5 battle-only frames) / A (x1-master logos, not recommended) / D (raise cap) sent to 08 A7 and 04 A9. No contract change made.
 - Corrections: 07 request A3 now records 07's QA-B011 PASS (5b36f4e at 3b2d830, dE 19-25); TYPOGRAPHY section 4 font cache = LA8 128 KiB per 256x256 (08).
 - Requests: 04 A9, 06 A2, 07 A4 (+A3 fix), 08 A7.
+- Validation on this build: validate.py --determinism PASS (byte-identical across 2 builds; 11 WARNs = main-tree cache stale/unimported for every page, 02). Exported PCK 11/11 pages + 3 fonts load, raw PNG absent, PCK 1,255,352 B. 08 asset_budget_check --worktree PASS (menu 0.50, all pages 9.50 MiB). assets/ unchanged by the rebuild.
+- Commit b692107 [Design]: PUSHED origin/main (verified with git branch -r --contains, 16:59).
 - Processes: none of mine running at 16:55. Godot PIDs 57532/58828 (05 audio sandbox) and 12768/58768 (multi_seed_sim) are other roles' and were not touched.
 
 ## Exact next steps on resume
