@@ -1,4 +1,8 @@
 # 01-director handoff
+## TASK 2026-11-01 ~09:0x — Q5 recorded, Q6 asked (docs only, no Godot)
+- Q5 DECIDED by user (08:23 KST, words "b") = B. D28 status is now DECIDED (Q5 B); numbers unchanged. Status note: the current data fails D28 (the fixed bot wins every round with no upgrades). The upper bound for rounds other than r05 (07 d0fcf66) is UNDECIDED until the 01-move-block2 results.
+- Q6 (Android save backup, 06 B0–B3 condensed to 3 options, A = B0 now + B1 at the Gradle build, recommended) is ASKED; it is the only open question.
+- 01-move-block2 stays queued (not re-queued). Next: follow the steps in the 08:55 checkpoint below, then set the non-r05 upper bound in D28.
 ## TASK 2026-11-01 07:1x– — move the first block to r06/r07 (DEFAULT experiment)
 - Criteria pre-registered in 8bc03e2 (BALANCE_DIAGNOSIS Update 12).
 - Job 1 01-move-block (07:34–08:00, exit 0, committed bot 780c30a): r05 A passes length; r06/r07 variants give no block. Early-nest: r02/r03/r04/r06 nests fall before the last scripted wave; no round blocks a no-upgrade bot any more.
