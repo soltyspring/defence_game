@@ -19,3 +19,11 @@ Validation 17:39–17:41: selftest PASS (70 scripts; report path still app_userd
 1. 10 R5 content_version (minimal contract in 10's v0.15): Content computes `content_version = "c1-" + sha256(sorted data/**/*.json)[:12]`; Save writes it and `migrations_applied`; on mismatch in ONE atomic save: apply data/migrations.json renames (01 owns the file), clamp upgrades to max_level, refund per 01's rule (unknown → 0 + logged), recompute unlocks id-based (order[i] unlocked iff i==0 or stars has order[i] or order[i-1]); roll back on failed write. Needs from 01: refund rule / cost history and migrations.json schema. Acceptance: 10's run_content_migration.ps1 M1/M2/M4/M5b.
 2. 07/06/10 re-verify on 4b5926d (requests written). 04 to rebuild build/qa/apk_head (still OLD label).
 3. 08 remaining H3/H4/H8/H9–H13, P4, P5; QA-J1 camera framing with 04; 01 decisions (D16 vs r01 data, D7 caps text, 900 s timer); 05 A8; OS close → quit_game; 04 R12 release preset.
+
+## 17:53 KST — uncommitted WIP in the shared tree (verify after 18:30, then commit)
+- `src/core/app.gd`: `_apply_window_title()` sets the desktop window title to `UiText.t("ui.title")` (04's locale rule) at boot; config/name unchanged; no Android effect (launcher label comes from name_localized + package/name at export).
+- `src/core/content.gd`: `content_version` ("c1-" + sha256 of sorted data/**/*.json [:12]) and `migrations` (data/migrations.json, optional).
+- `src/core/save.gd`: R5 content migration on load (PROVISIONAL rules: renames via migrations.json or same-target heuristic, clamp + refund at prices recorded in `content_snapshot`, id-based unlock recompute only when a previous content_version exists, one atomic save, rollback on failure, `migration_log`); every save stamps `content_version` + `content_snapshot`.
+- Checks done before 18:00: `--check-only` parse of all 3 files OK (only the autoload-name notice); 3-s headless boot reaches the menu without script errors. NOT yet run: selftest, 10 run_content_migration.ps1 M1/M2/M4/M5b, 07 save/faults (load now may write: legacy/no-cv saves get stamped), visible window-title check.
+- Committed docs (653188e): docs/architecture/CAMERA_FRAMING_OPTIONS.md + proposals to 01/04/07 (no code change).
+- 18:00–18:30: no Godot/editor/emulator by 02.
