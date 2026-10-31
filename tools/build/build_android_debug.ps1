@@ -21,7 +21,8 @@ $work = Join-Path $OutDir 'src'
 if (Test-Path $work) { Remove-Item -Recurse -Force $work }   # only our own scratch copy under build/
 New-Item -ItemType Directory -Force $work | Out-Null
 $zip = Join-Path $OutDir "src_$sha.zip"
-& git archive --format=zip -o $zip $Ref
+# LF data (06 23:55 / 10: this PC has core.autocrlf=true, so a plain archive packed CRLF data and changed content_version)
+& git -c core.autocrlf=false -c core.eol=lf archive --format=zip -o $zip $Ref
 if ($LASTEXITCODE -ne 0) { throw 'git archive failed' }
 Expand-Archive -Path $zip -DestinationPath $work -Force
 Remove-Item $zip

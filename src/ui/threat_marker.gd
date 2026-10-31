@@ -19,7 +19,6 @@ extends Control
 ## vector shapes if a frame is missing. Shapes differ (dome vs skull/diamond), so the kind never depends on colour alone.
 
 const UiStyle := preload("res://src/ui/ui_style.gd")
-const UiText := preload("res://src/ui/ui_text.gd")
 
 const PX_PER_M := 16.0          # 1 m = 16 world px (a 24 px soldier is 1.5 m); lane 1600 px = 100 m
 const NEST_MIN_VISIBLE := 24.0
@@ -64,7 +63,9 @@ static func compute(t: Dictionary) -> Dictionary:
 	return out
 
 func label() -> String:
-	return UiText.t("ui.distance_m", "%dm") % int(state.get("m", 0))
+	# Fixed unit string: "m" reads the same in ko and en, so no data/text key (07 QA-B019: ui.distance_m was
+	# referenced but never added; 01 R9 withdrawn).
+	return "%dm" % int(state.get("m", 0))
 
 func _draw() -> void:
 	var kind := str(state.get("kind", ""))

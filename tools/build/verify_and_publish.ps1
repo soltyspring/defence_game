@@ -18,7 +18,7 @@ Set-Location $Root
 Get-ChildItem $env:TEMP -Directory -Filter 'ui04_gate_*' -ErrorAction SilentlyContinue | Where-Object { $_.LastWriteTime -lt (Get-Date).AddHours(-1) } | ForEach-Object { Remove-Item -Recurse -Force $_.FullName -ErrorAction SilentlyContinue }
 $snap = Join-Path $env:TEMP ("ui04_gate_{0}_{1}" -f (Get-Date -Format 'HHmmss'), $PID)
 New-Item -ItemType Directory $snap | Out-Null
-& git archive --format=zip -o "$snap.zip" HEAD
+& git -c core.autocrlf=false -c core.eol=lf archive --format=zip -o "$snap.zip" HEAD   # LF, byte-identical to the repo (06/10)
 Expand-Archive "$snap.zip" $snap -Force; Remove-Item "$snap.zip"
 foreach ($req in @('project.godot', 'tests\ui\test_ui.gd', 'tests\integration\test_ui_integration.gd')) {
     if (-not (Test-Path (Join-Path $snap $req))) { Write-Host "GATE FAILED: snapshot incomplete ($req missing) — environment, not a test result."; exit 2 }
