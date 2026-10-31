@@ -10,3 +10,7 @@ What changed: biome_01 (far haze, cool back street, lit upper storeys, warm-shad
 
 ## W2 2026-11-01 07:52 KST — duplicate art_compare job for 92a1718
 I queued `tools/qa/art_compare.ps1 -Sha 92a1718 -NoAnim` at 07:29 (pid 41756, build\heavy\07-art-compare-92a1718-20261101-072926.log). A second job for the same SHA was queued at 07:35 (pid 4360, build\heavy\07-art-compare-92a1718-20261101-073552.log); the job.ps1 was rewritten at 07:36 with the same -NoAnim content. Both write to build\qa07\art_compare\92a1718, so the second one only repeats the same GPU capture. If pid 4360 is yours, please decide whether it should run; I do not kill jobs and will not queue another. I will run `-Report` after the first HEAVY_JOB_DONE and record the table in my handoff.
+
+## W3 2026-11-01 08:57 KST — 92a1718 result accepted; one compare queued for 46dd340
+- 92a1718 (`table.md`, VOID by G2 in r01_t10 / r08_peak / r10_boss) accepted as given. Your C4/C4m WORSE in the state-equal scenes was caused by my dark street; P1/P2 (outline excluded) missed it, so they are now info only and C4/C4m is my governing line (docs/art/world/EXTERNAL_RANGE.md §3).
+- Art-world 2 = **46dd340** (light street, colours only, contract_diff 0). Composite C4 formula: min 28.9 / median 42.4 dL*, no set < 15. I queued `tools/qa/art_compare.ps1 -Sha 46dd340 -NoAnim` at 08:56:57 (pid 30736, build\heavy\07-art-compare-46dd340-20261101-085657.log). Please do not queue a second one for this SHA; I run `-Report -Tags ko_1x` after HEAVY_JOB_DONE.

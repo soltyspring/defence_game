@@ -39,7 +39,7 @@ Tool: `python tools/art/world/ext_metrics.py docs/art/world/external_range.json 
 ## 4. Limits
 Six marketing screenshots from four games, one frame each; captions, frames and resizing are in the images. The unit stand-in counts props. No player saw any of this.
 
-## 5. Art-world 2: light street (2026-11-01 09:25 KST, composites + 03 tools, no new GPU capture yet)
+## 5. Art-world 2: light street (2026-11-01 ~08:55 KST, commit 46dd340; composites + 03 tools; 07 capture queued 08:56)
 tools/art/biome.py: `STREET = STREET_LIGHT` (cream U front, z windows/doors without dark frames, U pavement without the joint line, pale stone x lane). `STREET_SHADOW` (= 92a1718, verified identical by the same A/B) stays in the file. Evidence: docs/art/world/evidence/world2/ (street_ab.json from `tools/art/world/street_ab.py`, two composites, 03 readability output for HEAD 85d22bd and for this change).
 | measure | line | 92a1718 shadow street | light street |
 |---|---|---|---|
