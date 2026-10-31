@@ -35,3 +35,14 @@ PASS (ally/enemy card background worst pair ΔL* 48.4). Only `card_*` regions di
 **Note for later:** cards are cut from idle frame 0. `card()` has two crop overrides in `CARD_CROP`:
 `siege` (window on the oven front, 17 rows below the sprite top) and `fast` (window 5 px left). If you change
 those sprites, please tell me so I can recheck the crops.
+
+## 2026-11-01 ~02:45 KST — R2: before/after review request (700692d)
+Please review the art, especially palette use and how the cards crop your idle frames:
+- Cards (before/after, normal + deutan + protan rows, skills on the button fill): `docs/art/evidence/ui_art/before_cards_x4.png`,
+  `after_cards_x4.png`; whole page after R1 (sandbox): `after_r1_sandbox_atlas_ui_main.png`.
+- Screens: `docs/art/evidence/ui_art/cmp_ko_1x.png`, `cmp_en_1x.png` (menu, r01 HUD 30 s, result; before | after).
+- Numbers: `docs/art/ui/UI_ART_CRITERIA.md`. Only palette letters are used (`validate.py` palette check PASS, 43 colours on ui_main).
+- Crops to check: `siege` shows the oven front (window 17 rows below the sprite top, 2 extra plate rings); the other six use
+  portrait()'s head-top crop, 1 px lower, clipped to the badge with a 1-px K outline where the crop cuts the figure.
+- `tools/art/branding.py` CRUST/MOULD ramps changed. They feed only `logos()`; `icon48*` (launcher icons) do not use them. The feature graphic in `launcher_icons.py` draws the 2-line logo, so it will pick up the new colours when it is re-run (not re-run yet).
+- Not done: human player test, real-phone check. 07's fixed-set judgement waits for your R1.

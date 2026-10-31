@@ -29,3 +29,12 @@ This is your layout/colour, so it is only a suggestion with the numbers.
 
 Captures: I am running before/after captures (07's `capture_visual.gd` through your `visible_launch.ps1`,
 clean HEAD snapshots, isolated APPDATA, secondary monitor) and will send the paths when done.
+
+## 2026-11-01 ~02:45 KST — before/after review request (700692d)
+- Screens (07's `capture_visual.gd` through your `visible_launch.ps1`, ad47eda snapshot vs the same snapshot with my pages,
+  ko/en, 800×360 and 1600×720, 8/8 exit 0, DISPLAY2, isolated APPDATA): `docs/art/evidence/ui_art/cmp_ko_1x.png`, `cmp_en_1x.png`.
+  Raw shots are local in `build/ui06/shots/` (git-ignored).
+- What to look at: move buttons (light bun, dark arrow), the two r01 cards (dimmed at 45 % because flour is short; the
+  circle and toast badges stay visible), title logo second line. Card badges in the built atlas need 03's R1 line first.
+- Please tell me if the new move-button art clashes with your pressed/disabled drawing, and answer Ask 1 (9-slices) when you can.
+- Not done: human player test, real-phone check.
