@@ -1,0 +1,517 @@
+{
+ "note": "09-art-world external range spec; images are not committed, only URL, access time and pixel rectangles.",
+ "shots": [
+  {
+   "id": "bc_en_3",
+   "game": "The Battle Cats (EN)",
+   "pkg": "jp.co.ponos.battlecatsen",
+   "page": "https://play.google.com/store/apps/details?id=jp.co.ponos.battlecatsen&hl=ko&gl=KR",
+   "image": "https://play-lh.googleusercontent.com/W8f7FjWe1lBoQIw_8UT-DxNKZcf-7ZpWIwgt75kXjniPY4VoPB2WciHVs-tIjoscR0_mknbgva9EmMn4mYbi=w1920-h1080",
+   "accessed": "2026-11-01T08:06+09:00",
+   "size": [
+    1280,
+    900
+   ],
+   "file": "%TEMP%/a09/ext/jp.co.ponos.battlecatsen/3.png",
+   "layers": {
+    "sky": [
+     0,
+     153,
+     307,
+     360
+    ],
+    "behind": [
+     0,
+     360,
+     1075,
+     522
+    ],
+    "lane": [
+     0,
+     540,
+     1075,
+     648
+    ]
+   },
+   "band": [
+    0,
+    270,
+    1075,
+    648
+   ],
+   "bases": {
+    "ally_base": [
+     1094,
+     270,
+     1274,
+     585
+    ]
+   }
+  },
+  {
+   "id": "gc_1",
+   "game": "Grow Castle",
+   "pkg": "com.raongames.growcastle",
+   "page": "https://play.google.com/store/apps/details?id=com.raongames.growcastle&hl=ko&gl=KR",
+   "image": "https://play-lh.googleusercontent.com/zm6x4tNA3gn5fhUVwLULEkJpcRS8wVC6kCxor9xPfvapj_g7ELxbHplgmtlmZ8HDm2wE0hXNxifZ_CBdPY6c=w1920-h1080",
+   "accessed": "2026-11-01T08:06+09:00",
+   "size": [
+    1280,
+    720
+   ],
+   "file": "%TEMP%/a09/ext/com.raongames.growcastle/1.png",
+   "layers": {
+    "sky": [
+     448,
+     72,
+     870,
+     216
+    ],
+    "far": [
+     448,
+     274,
+     870,
+     346
+    ],
+    "behind": [
+     448,
+     324,
+     1216,
+     504
+    ],
+    "lane": [
+     448,
+     446,
+     1216,
+     576
+    ]
+   },
+   "band": [
+    422,
+    288,
+    1216,
+    590
+   ],
+   "bases": {
+    "ally_tower": [
+     256,
+     36,
+     410,
+     612
+    ]
+   }
+  },
+  {
+   "id": "gc_5",
+   "game": "Grow Castle",
+   "pkg": "com.raongames.growcastle",
+   "page": "https://play.google.com/store/apps/details?id=com.raongames.growcastle&hl=ko&gl=KR",
+   "image": "https://play-lh.googleusercontent.com/szngl_KE8ONEvoDTctJiZXp0Z54xBgeTKCkG0lmZvSRCW16pbmOmflAuyu9b65GAytvVvzvoDivW3BKde0OV=w1920-h1080",
+   "accessed": "2026-11-01T08:06+09:00",
+   "size": [
+    1280,
+    720
+   ],
+   "file": "%TEMP%/a09/ext/com.raongames.growcastle/5.png",
+   "layers": {
+    "sky": [
+     845,
+     86,
+     1216,
+     216
+    ],
+    "far": [
+     845,
+     230,
+     1216,
+     302
+    ],
+    "behind": [
+     486,
+     288,
+     1216,
+     490
+    ],
+    "lane": [
+     486,
+     396,
+     1216,
+     576
+    ]
+   },
+   "band": [
+    486,
+    230,
+    1216,
+    590
+   ],
+   "bases": {
+    "ally_tower": [
+     256,
+     86,
+     486,
+     612
+    ]
+   }
+  },
+  {
+   "id": "cw2_1",
+   "game": "Cat War 2",
+   "pkg": "com.westriversw.CatWar2",
+   "page": "https://play.google.com/store/apps/details?id=com.westriversw.CatWar2&hl=ko&gl=KR",
+   "image": "https://play-lh.googleusercontent.com/-VPV_ZAMkn5UbORgtMNkfz0r5LR7wLhPWWkOP2o5PnxXmzA12aP6W2wfkdz8x3o9UqqRdDHPYBIWIF73WOaLyg=w1920-h1080",
+   "accessed": "2026-11-01T08:06+09:00",
+   "size": [
+    480,
+    320
+   ],
+   "file": "%TEMP%/a09/ext/com.westriversw.CatWar2/1.png",
+   "layers": {
+    "sky": [
+     192,
+     67,
+     432,
+     90
+    ],
+    "far": [
+     82,
+     90,
+     432,
+     144
+    ],
+    "behind": [
+     82,
+     144,
+     442,
+     208
+    ],
+    "lane": [
+     82,
+     208,
+     442,
+     230
+    ]
+   },
+   "band": [
+    77,
+    128,
+    442,
+    240
+   ],
+   "bases": {}
+  },
+  {
+   "id": "cw2_4",
+   "game": "Cat War 2",
+   "pkg": "com.westriversw.CatWar2",
+   "page": "https://play.google.com/store/apps/details?id=com.westriversw.CatWar2&hl=ko&gl=KR",
+   "image": "https://play-lh.googleusercontent.com/URQXNGwErh6yGFvlOHin2KyCJbX_jXYm5852tATHxtcd0IFWajfKkJZKMpRedMf7lwdTMwW3U_-m0Rw2tx9s8oQ=w1920-h1080",
+   "accessed": "2026-11-01T08:06+09:00",
+   "size": [
+    480,
+    320
+   ],
+   "file": "%TEMP%/a09/ext/com.westriversw.CatWar2/4.png",
+   "layers": {
+    "sky": [
+     96,
+     64,
+     442,
+     86
+    ],
+    "far": [
+     86,
+     86,
+     442,
+     144
+    ],
+    "behind": [
+     72,
+     144,
+     442,
+     218
+    ],
+    "lane": [
+     72,
+     218,
+     442,
+     250
+    ]
+   },
+   "band": [
+    72,
+    96,
+    446,
+    250
+   ],
+   "bases": {
+    "enemy_castle": [
+     288,
+     90,
+     394,
+     240
+    ]
+   }
+  },
+  {
+   "id": "swl_3",
+   "game": "Stick War: Legacy",
+   "pkg": "com.maxgames.stickwarlegacy",
+   "page": "https://play.google.com/store/apps/details?id=com.maxgames.stickwarlegacy&hl=ko&gl=KR",
+   "image": "https://play-lh.googleusercontent.com/HUWnb6Ya_Xz64T7BTkCvqgLtW-5T6numyvTGRVD-ghO4CzUpC1xQH_MGFQ-6A-8Ow3zUX_Pj4kfQofdRi7j4VQ=w1920-h1080",
+   "accessed": "2026-11-01T08:06+09:00",
+   "size": [
+    1920,
+    1080
+   ],
+   "file": "%TEMP%/a09/ext/com.maxgames.stickwarlegacy/3.png",
+   "layers": {
+    "sky": [
+     0,
+     216,
+     864,
+     324
+    ],
+    "far": [
+     0,
+     356,
+     864,
+     626
+    ],
+    "behind": [
+     0,
+     670,
+     1056,
+     918
+    ],
+    "lane": [
+     0,
+     864,
+     1056,
+     1048
+    ]
+   },
+   "band": [
+    0,
+    670,
+    1075,
+    1048
+   ],
+   "bases": {}
+  },
+  {
+   "id": "ours_before_ad47eda_3_r01_t30",
+   "game": "ours",
+   "file": "build/qa07/art-baseline-ad47eda/run1/ko_1x_3_r01_t30.png",
+   "size": [
+    800,
+    360
+   ],
+   "layers": {
+    "sky": [
+     230,
+     50,
+     800,
+     78
+    ],
+    "far": [
+     0,
+     100,
+     800,
+     180
+    ],
+    "mid": [
+     0,
+     200,
+     800,
+     240
+    ],
+    "behind": [
+     0,
+     248,
+     800,
+     282
+    ],
+    "lane": [
+     0,
+     282,
+     800,
+     300
+    ]
+   },
+   "band": [
+    0,
+    240,
+    800,
+    300
+   ],
+   "bases": {
+    "keep": [
+     88,
+     160,
+     176,
+     290
+    ]
+   },
+   "layers_dir": "build/qa07/art-baseline-ad47eda/run1/layers",
+   "scene": "3_r01_t30"
+  },
+  {
+   "id": "ours_before_ad47eda_4_r06_t46",
+   "game": "ours",
+   "file": "build/qa07/art-baseline-ad47eda/run1/ko_1x_4_r06_t46.png",
+   "size": [
+    800,
+    360
+   ],
+   "layers": {
+    "sky": [
+     230,
+     50,
+     800,
+     78
+    ],
+    "far": [
+     0,
+     100,
+     800,
+     180
+    ],
+    "mid": [
+     0,
+     200,
+     800,
+     240
+    ],
+    "behind": [
+     0,
+     248,
+     800,
+     282
+    ],
+    "lane": [
+     0,
+     282,
+     800,
+     300
+    ]
+   },
+   "band": [
+    0,
+    240,
+    800,
+    300
+   ],
+   "bases": {},
+   "layers_dir": "build/qa07/art-baseline-ad47eda/run1/layers",
+   "scene": "4_r06_t46"
+  },
+  {
+   "id": "ours_after_92a1718_3_r01_t30",
+   "game": "ours",
+   "file": "build/qa07/art_compare/92a1718/cap/ko_1x_3_r01_t30.png",
+   "size": [
+    800,
+    360
+   ],
+   "layers": {
+    "sky": [
+     230,
+     50,
+     800,
+     78
+    ],
+    "far": [
+     0,
+     100,
+     800,
+     180
+    ],
+    "mid": [
+     0,
+     200,
+     800,
+     240
+    ],
+    "behind": [
+     0,
+     248,
+     800,
+     282
+    ],
+    "lane": [
+     0,
+     282,
+     800,
+     300
+    ]
+   },
+   "band": [
+    0,
+    240,
+    800,
+    300
+   ],
+   "bases": {
+    "keep": [
+     88,
+     160,
+     176,
+     290
+    ]
+   },
+   "layers_dir": "build/qa07/art_compare/92a1718/cap/layers",
+   "scene": "3_r01_t30"
+  },
+  {
+   "id": "ours_after_92a1718_4_r06_t46",
+   "game": "ours",
+   "file": "build/qa07/art_compare/92a1718/cap/ko_1x_4_r06_t46.png",
+   "size": [
+    800,
+    360
+   ],
+   "layers": {
+    "sky": [
+     230,
+     50,
+     800,
+     78
+    ],
+    "far": [
+     0,
+     100,
+     800,
+     180
+    ],
+    "mid": [
+     0,
+     200,
+     800,
+     240
+    ],
+    "behind": [
+     0,
+     248,
+     800,
+     282
+    ],
+    "lane": [
+     0,
+     282,
+     800,
+     300
+    ]
+   },
+   "band": [
+    0,
+    240,
+    800,
+    300
+   ],
+   "bases": {},
+   "layers_dir": "build/qa07/art_compare/92a1718/cap/layers",
+   "scene": "4_r06_t46"
+  }
+ ]
+}

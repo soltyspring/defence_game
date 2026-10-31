@@ -81,7 +81,7 @@ Real captures: `tools/art/world/world_cam.gd` (same seed, same sim time; units, 
 | P7 | sky ≤ 35 % | 24.7 % | 26.1 % | PASS |
 
 **03's nest_check.py lines** (dL* ≥ 25, protan dE ≥ 20 against the background at the screen edge) now fail: new nest 17.7–19.0 dL*, protan dE 16.8–17.9 (silhouette 94–95 %, reads as mould: PASS). The 0.12.0 nest on the new background gives 16.4–19.7, so the drop comes from the new background (dark street under, light plaster above the nest), not from the nest drawing. It passed (30.4–32.6) on the old cream street.
-**07's judgement:** `tools/qa/art_compare.ps1 -Sha <this commit>` against the ad47eda baseline (docs/verification/ART_BASELINE.md). Result is recorded in coordination/handoffs/09-art-world.md when it is in.
+**07's judgement:** `tools/qa/art_compare.ps1 -Sha 92a1718 -NoAnim` against the ad47eda baseline (docs/verification/ART_BASELINE.md), in at 08:11 KST, accepted as given. The run is VOID (G2: game state differs in r01_t10, r08_peak, r10_boss). BETTER: C3, C5, W1, W3, W3m. **WORSE and caused by this street: C4 / C4m** in the two state-equal scenes (units below 15 dL* 11.1 → 66.7 % and 18.2 → 54.5 %; median 25.6 → 9.8 and 24.7 → 14.0). C4 measures the whole unit with its dark outline against the background under it; P1/P2 above excluded the outline, which is why they passed. Consequences and the replacement line: docs/art/world/EXTERNAL_RANGE.md §3.
 
 ## 7. Not done / limits
 - No human player test and no real-phone check. All numbers are desktop renders and composites; the lines are 09's internal lines, fixed before the redraw, not validated with players.
