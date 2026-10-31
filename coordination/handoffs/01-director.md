@@ -1,4 +1,12 @@
 # 01-director handoff
+## TASK 2026-10-31 — Q2 DEFERRED, Q3 ASKED, QA-J2 + length retune (D24), 5-seed check
+- Q2 DEFERRED by user (16:09 "수익모델은 보류"): recorded in DECISIONS.md and both USER_QUESTION files. Ads/IAP stay disabled. Q3 (title) is ASKED and waiting.
+- D24: r01 is a tutorial (QA-J2), with a numeric rule; length rule LOW median ≤ 1.25 × par; retune of bosses and r05/r09/r10 (r10 par 380).
+- Evidence: multi_seed_sim.gd.txt (timing-noise seeds; the sim is otherwise deterministic), multi_seed_2026-10-31_before/after.{json,md}, fix_M_overrides.json. After: LOW 50/50 W, all medians in rule, worst LOW base 0.40; idle loses all; r01 late-45 s player wins 5/5.
+- Also: added 10 `ui.upgrade*` keys (a 04 regression), keys 132/132 ALL_OK; probe ERROR/WARN/INFO 0.
+- Weak points: one bot policy; upgrades proven necessary only for r10; r02–r04 put little pressure on an active bot; no human data.
+- Replies: 01→07 R5, 01→10 R4.
+
 ## TASK 2026-10-31 — LOW-budget chapter-1 clear check + D23 retune
 - New script docs/design/balance/low_budget_sim.gd.txt (02's bot, LOW/none/high budgets, cause-of-base-damage attribution, idle check, in-memory overrides). Before: LOW r04–r10 L (spitter + brute). Tried A–I in memory; applied I to data (D23). After: LOW 10/10 W, none r05/r09/r10 L, HIGH 10/10 W, idle loses all by destruction. 10 probe ERROR/WARN/INFO 0; l10n ALL_OK. Evidence files low_budget_2026-10-31_{low,none,high}.json, fix_I_overrides.json.
 - OPEN: durations far over par (r10 760 s); one seed; bot artefacts; no human data. 07 (R4) and 10 (R3) asked to retest. Q2 still waiting on the user (watch USER_QUESTION.md).

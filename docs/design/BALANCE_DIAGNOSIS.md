@@ -41,3 +41,10 @@ Still open, not hidden:
 1. Duration: r05, r07, r09 and r10 run far past par +25%. r10 at 760 s is only 140 s from the 900 s limit. With HIGH upgrades, r07/r09 are SLOWER than with LOW, a non-monotonic bot artefact (it stalls the push), so time-based stars are not trustworthy from this bot.
 2. One seed only. The sim is deterministic with the AI off, but small data changes could flip close rounds (r05 at 53%, r07 at 66% base). The bot's limits (3 workers, expensive-first card order) still apply. A human may find r04+ easier or harder.
 3. Human difficulty is unmeasured (D11 pilot).
+
+## Update 2026-10-31 (2) — multi-seed check and length retune (D24)
+Script docs/design/balance/multi_seed_sim.gd.txt + summarize_multi_seed.py. Seeds 1–5, budgets none/LOW/HIGH, plus an idle player and a late starter (r01).
+**The sim is deterministic with the AI off.** Varying the sim seed alone gives identical runs (F5). Seed variance is therefore injected as bot timing noise (start U(0,3) s, per-decision U(0,0.35) s). This stands in for human reaction variance; it is not a human model.
+Before (multi_seed_2026-10-31_before.md): r10 LOW only 3/5 W (worst base 0) and HIGH 4/5. The single-seed D23 claim "10/10 W" was fragile. r05 LOW 5/5 but worst base 0.14 and median 368 s; r09 LOW 410 s; r10 681 s.
+After (multi_seed_2026-10-31_after.md): every round LOW 5/5 W and median ≤ 1.25 × par (r10 par now 380). Worst LOW base: r05 0.40, r10 0.67, others 1.00. Without upgrades: r10 1/5, everything else 5/5. Idle loses everywhere (107–260 s). r01 late starter (45 s): 5/5 W, no base damage (tutorial, D24a).
+Still weak evidence: one bot policy; timing noise only; the "none" budget wins most rounds, so upgrades are only proven necessary for r10. r02–r04 put almost no pressure on an active bot's base. Human pilot needed (D11).

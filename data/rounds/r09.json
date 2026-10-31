@@ -8,7 +8,7 @@
   "biome": "biome_01",
   "lane_length": 2100,
   "player_base_hp": 2200,
-  "enemy_base_hp": 2700,
+  "enemy_base_hp": 2000.0,
   "start_gold": 100,
   "hero": "hero_captain",
   "cards": [
@@ -74,17 +74,17 @@
       "spawns": [
         {
           "unit": "e_brute",
-          "count": 3,
+          "count": 1,
           "interval": 1.8
         },
         {
           "unit": "e_bomber",
-          "count": 4,
+          "count": 2,
           "interval": 1.0
         },
         {
           "unit": "e_grunt",
-          "count": 5,
+          "count": 2,
           "interval": 0.8
         }
       ]
@@ -94,17 +94,17 @@
       "spawns": [
         {
           "unit": "e_brute",
-          "count": 4,
+          "count": 2,
           "interval": 1.6
         },
         {
           "unit": "e_spitter",
-          "count": 6,
+          "count": 3,
           "interval": 0.7
         },
         {
           "unit": "e_swarm",
-          "count": 10,
+          "count": 5,
           "interval": 0.3
         }
       ]
@@ -136,8 +136,8 @@
       "e_bomber",
       "e_grunt"
     ],
-    "interval": 7.5,
-    "interval_min": 5.3,
+    "interval": 8.5,
+    "interval_min": 6.3,
     "ramp_per_min": 0.7
   },
   "enemy_base_spawns_on_hp": [
@@ -146,12 +146,12 @@
       "spawns": [
         {
           "unit": "e_brute",
-          "count": 2,
+          "count": 1,
           "interval": 1.5
         },
         {
           "unit": "e_bomber",
-          "count": 3,
+          "count": 2,
           "interval": 1.0
         }
       ]
@@ -161,7 +161,7 @@
       "spawns": [
         {
           "unit": "e_swarm",
-          "count": 12,
+          "count": 8,
           "interval": 0.3
         }
       ]
@@ -182,8 +182,8 @@
     "hp": 1.225,
     "atk": 1.225
   },
-  "enemy_tower_atk_mult": 1.2,
+  "enemy_tower_atk_mult": 1.0,
   "tutorial": [],
   "provisional": true,
-  "balance_note": "D23 (2026-10-31): enemy_scaling halved; r07-r10 trickle without e_brute and 1.5 s slower; validated at the LOW first-clear budget (docs/design/balance/low_budget_2026-10-31_low.json)."
+  "balance_note": "D23 (2026-10-31): enemy_scaling halved; r07-r10 trickle without e_brute and 1.5 s slower; validated at the LOW first-clear budget (docs/design/balance/low_budget_2026-10-31_low.json). D24 (2026-10-31): length/fragility retune, 5-seed check docs/design/balance/multi_seed_2026-10-31_after.json."
 }

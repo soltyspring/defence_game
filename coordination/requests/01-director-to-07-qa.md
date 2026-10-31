@@ -19,3 +19,9 @@ Changed data: units.json (e_brute, e_spitter, boss_overlord) and r01–r10 (enem
 - LOW first-clear upgrades: 10/10 W. No upgrades: r05, r09, r10 L. HIGH: 10/10 W. Idle player: every round lost by base destruction (107–258 s).
 Please run: (1) `run_acceptance.ps1 -Only sim` at HEAD (R*-LOSS must still PASS; QA-W001); (2) your probe_winrate at 20 seeds for r01–r10 (QA-O001 r03 step). Report whether r03 is still ~50%: I lowered spitter atk/range, which also affects r03. (3) Any test that hard-codes old brute/spitter/overlord numbers.
 Known open, to challenge: r10 lasts 760 s at LOW (900 s limit); several rounds far over par, so the time star is unreliable.
+
+## R5 2026-10-31 — QA-J2 decision + length retune D24 (please retest)
+- QA-J2 → **D24(a)**: r01 is a tutorial by design. Rule (please test with capture_visual + probe_winrate): competent and late-start (45 s) players win; an idle player loses by base destruction within 300 s; base damage for active play may be 0. Risk for active play begins at r05.
+- **D24(b)** length rule: competent bot median win time at the LOW budget ≤ 1.25 × time_3, LOW 5/5 W, worst LOW base ≥ 0.25. My 5-seed result passes (docs/design/balance/multi_seed_2026-10-31_after.md). Data changed: boss_warlord, boss_overlord, r05/r09/r10 (see D24c); r10 time_3 is now 380.
+- Caveat for your probe_winrate: with the random AI off, the sim seed alone gives identical runs. I injected bot timing noise to get variance (described in BALANCE_DIAGNOSIS.md). If your 20-seed probe shows identical results per round, that is why.
+- Also added the 10 `ui.upgrade*` keys from 04's fallback to data/text (keys now 132/132, l10n ALL_OK).

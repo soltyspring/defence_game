@@ -125,6 +125,16 @@
     "toast.save_recovered": "Your save was damaged and has been restored from backup.",
     "toast.save_read_only": "Storage is read-only. Progress will not be saved.",
     "toast.save_failed": "Could not save. Please check your storage.",
-    "toast.round_locked": "This round is still locked."
+    "toast.round_locked": "This round is still locked.",
+    "ui.upgrades": "Upgrades",
+    "ui.upgrade_buy": "Upgrade",
+    "ui.upgrade_ok": "%s Lv %d done!",
+    "ui.upgrade_not_enough": "Need %d more gold",
+    "ui.upgrade_max": "Already at max level",
+    "ui.upgrade_save_failed": "Could not save. Gold and level unchanged",
+    "ui.upgrade_unavailable": "Upgrades are coming soon",
+    "ui.upgrade_locked": "This upgrade is not unlocked yet",
+    "ui.upgrade_error": "Cannot upgrade (%s)",
+    "ui.upgrade_none": "Nothing to upgrade yet"
   }
 }

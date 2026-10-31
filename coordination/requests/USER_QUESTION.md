@@ -1,17 +1,19 @@
 # USER_QUESTION (asked in CLI 01, one at a time)
 
 ## Q1 — 테마/캐릭터: ANSWERED 2026-10-31 09:03 KST
-User's words: "모두 고치고 A) 빵집 기사단 vs 곰팡이 군단이걸로". DECIDED = A 빵집 기사단 vs 곰팡이 군단 (DECISIONS.md Q1).
+User's words: "모두 고치고 A) 빵집 기사단 vs 곰팡이 군단이걸로". DECIDED = A 빵집 기사단 vs 곰팡이 군단.
 
-## Q2 — 수익 모델 (PREPARED, asked in CLI 01 after Q1)
+## Q2 — 수익 모델: DEFERRED 2026-10-31 16:09 KST
+User's words: "수익모델은 보류". None of A/B/C is approved (01's recommendation A is not approved). Ads and payments stay disabled.
+
+## Q3 — 게임 제목 (ASKED 2026-10-31)
 Status: WAITING FOR USER ANSWER
-질문: 게임으로 어떻게 수익을 낼까요?
-A) 무료 + 선택형 보상 광고(결과 화면 골드 2배, 기지 수리 1회) + 광고 제거·후원 팩 1회 구매 (추천)
-   과금 없이 1장을 끝까지 깰 수 있습니다. 광고 SDK, 동의 화면, 결제·구매 복원 작업이 필요합니다.
-B) 유료 앱(처음에 한 번 구매)
-   광고·결제 기능이 필요 없어 가장 단순합니다. 대신 설치 수가 적을 가능성이 큽니다.
-C) 1장 무료 + 이후 장(챕터) 1회 구매
-   광고 없이 콘텐츠에만 돈을 받습니다. 2장 콘텐츠가 먼저 있어야 합니다.
-추천: A. 근거: docs/design/ECONOMY.md §4, RELEASE_DESIGN_REVIEW.md §4.
-확률형 뽑기(가챠)는 공정 진행 원칙과 확률 공개 의무 부담 때문에 선택지에서 뺐습니다.
-답변 전 기본값: 모든 광고·결제 기능은 꺼진 상태로 유지합니다(06 mock만). 기본값은 사용자 승인이 아닙니다.
+질문: 게임 제목을 무엇으로 할까요? 작업 제목입니다. 출시 전에 KIPRIS 상표 조회(9류·41류)를 직접 해 주셔야 확정됩니다. 06의 웹 검색은 예비 조사이고 상표 조회 결과는 없습니다.
+A) 빵집 기사단 / Bakery Knights (추천)
+   가장 짧아 아이콘·홈 화면에서 잘리지 않습니다. 대신 다른 앱과 이름이 겹칠 위험이 가장 큽니다.
+B) 빵집 기사단: 곰팡이 디펜스 / Bakery Knights: Mold Defense
+   스토어 검색에서 '디펜스' 장르가 바로 보입니다. 홈 화면에서는 뒷부분이 잘립니다.
+C) 빵집 기사단 대 곰팡이 군단 / Bakery Knights vs Mold Legion
+   테마 구도가 그대로 드러납니다. 가장 길어 잘림도 가장 심합니다.
+추천: A를 작업 제목으로 씁니다. 스토어 등록명은 KIPRIS 결과를 본 뒤 B로 바꿀 수 있습니다.
+답변 전 기본값: 화면 제목(ui.title)은 임시 '레인 디펜스'로 둡니다. 기본값은 사용자 승인이 아닙니다.
