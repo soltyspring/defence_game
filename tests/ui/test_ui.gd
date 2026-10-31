@@ -531,8 +531,8 @@ func test_korean_text_fit() -> void:
 	var ms: float = UiStyle.prewarm_fonts()
 	check(ms > 0.0 and UiStyle.prewarm_fonts() == 0.0, "font prewarm runs once (%.1f ms) and is idempotent" % ms)
 	report["prewarm_ms_headless"] = ms
-	var fl: Dictionary = UiStyle.fit_lines("Break the Mold Wall", 97.0, 12, 2)
-	check(fl.size == 12 and fl.lines.size() == 2 and not fl.truncated, "2-line tile prefers wrap at 12 px over the 10 px cut (%s)" % [fl])
+	var wrap12: Dictionary = UiStyle.fit_lines("Break the Mold Wall", 97.0, 12, 2)
+	check(wrap12.size == 12 and wrap12.lines.size() == 2 and not wrap12.truncated, "2-line tile prefers wrap at 12 px over the 10 px cut (%s)" % [wrap12])
 	fu = UiStyle.font(&"ui"); fb = UiStyle.font(&"bold"); fnum = UiStyle.font(&"num")
 	# --- slot widths from the real layout code, narrow and wide
 	var layouts := {
