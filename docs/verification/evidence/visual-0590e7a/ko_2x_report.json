@@ -1,0 +1,221 @@
+{
+  "money_controls": [],
+  "r01_at_60s": {
+    "deployed": 12,
+    "enemy_base": 800.0,
+    "enemy_base_max": 800.0,
+    "kills": 7,
+    "player_base": 1500.0,
+    "t": 60.0999999999979,
+    "workers": 3
+  },
+  "r01_end": {
+    "t": 105.933333333329,
+    "won": true
+  },
+  "services": {
+    "autoload": true,
+    "diagnostics_live": {
+      "real_ads": false,
+      "real_billing": false,
+      "remote_analytics": false,
+      "trusted_verifier": false
+    },
+    "mode": "disabled"
+  },
+  "shots": [
+    "1_menu",
+    "2_round_select",
+    "3_settings",
+    "4_r01_t00",
+    "5_r01_t30",
+    "5_r01_t60",
+    "6_result"
+  ],
+  "tiles": [
+    {
+      "block_bottom": 81.0,
+      "block_top": 67.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "첫 번째 반죽"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "첫 번째 반죽",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 70.0
+    },
+    {
+      "block_bottom": 81.0,
+      "block_top": 67.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "초파리의 습격"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "초파리의 습격",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 77.0
+    },
+    {
+      "block_bottom": 81.0,
+      "block_top": 67.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "포자가 날아온다"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "포자가 날아온다",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 89.0
+    },
+    {
+      "block_bottom": 81.0,
+      "block_top": 67.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "썩은 발굽 소리"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "썩은 발굽 소리",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 82.0
+    },
+    {
+      "block_bottom": 81.0,
+      "block_top": 67.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "곰팡이 장군"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "곰팡이 장군",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 65.0
+    },
+    {
+      "block_bottom": 88.0,
+      "block_top": 60.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "곰팡이 성벽을",
+        "부숴라"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "곰팡이 성벽을 부숴라",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 77.0
+    },
+    {
+      "block_bottom": 88.0,
+      "block_top": 60.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "부풀어 터지는",
+        "효모"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "부풀어 터지는 효모",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 77.0
+    },
+    {
+      "block_bottom": 81.0,
+      "block_top": 67.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "끝없는 초파리"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "끝없는 초파리",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 77.0
+    },
+    {
+      "block_bottom": 81.0,
+      "block_top": 67.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "곰팡이 총공세"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "곰팡이 총공세",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 77.0
+    },
+    {
+      "block_bottom": 81.0,
+      "block_top": 67.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "부패 대군주"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "부패 대군주",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 65.0
+    }
+  ],
+  "view": "(640.0, 360.0)",
+  "window": "(1280, 720)"
+}

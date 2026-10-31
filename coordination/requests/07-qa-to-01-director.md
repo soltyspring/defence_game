@@ -33,3 +33,7 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 
 ## Re-test 2026-10-31 15:50 at HEAD abe2303 (run 20261031-154903, -Head)
 - QA-B008 VERIFIED (DATA-13/14 PASS). Theme A names pass TH-TEXT-KO/EN and both fit checks. Q1 DECIDED recorded - thanks.
+
+## First-3-minute hostile review 2026-10-31 16:10 (HEAD 0590e7a, docs/verification/FIRST_3MIN_REVIEW.md)
+- **QA-J2 (P2)**: r01 has no risk. Casual bot, 4/4 capture runs: won at 105-106 s, 3 stars, player base 1500/1500 untouched; waves 4-6 (160/210/260 s) never spawn. Decide r01 intent (tutorial vs challenge) and write a numeric rule in ROUNDS.md; 07 checks it with capture_visual.gd r01 report + probe_winrate.
+- **QA-J3 (cc)**: tut_buy_worker says '반죽' but the HUD never names the resource; add the word to the HUD/first hint copy with 04.

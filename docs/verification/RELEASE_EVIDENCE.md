@@ -30,8 +30,8 @@ on-device test has been done by 07-qa.
 | Audio assets | PASS | AUD-01 (31 file refs exist) |
 | Audio in game | PARTIAL | AUD-02 PASS at e9dfaa4 (`Audio` autoload registered). AUD-03 (cues fire on events, honour settings/pause) NOT_TESTED; nothing was listened to |
 | Monetization disabled (D9) | PASS | MON-01..03 (data flags off, no SDK singletons, services default `disabled`) |
-| Services wired | PASS (static) | `Services` autoload now registered (MON-04 no longer reported); MON-03 mode=disabled PASS; disabled-state UI not exercised |
+| Services wired / disabled UI | PASS | Services autoload, mode=disabled, live flags false; 0 ad/purchase texts on menu, round select, settings, HUD, result (VISUAL_CHECKS C2) |
 | Android export preset / permissions | PASS (static) | PLAT-01/02 |
 | On-device Android (install, touch, lifecycle, safe area, perf, thermals) | NOT_TESTED | PLAT-03 |
-| Rendered text (Hangul tofu/clipping), colour-blind readability, visual frames | NOT_TESTED | needs 04 secondary-monitor visible-test launcher (requested) |
+| Rendered round-select text ko/en 1x/2x | PASS | VISUAL_CHECKS C1 (secondary monitor, HEAD 0590e7a); HUD/other screens reviewed visually only, no tofu seen; CVD full-frame review still open |
 | 06 services suites in regression | PASS | test_services + test_services_m2 exit 0 in runner (run 20261031-080846); mock adapters only |

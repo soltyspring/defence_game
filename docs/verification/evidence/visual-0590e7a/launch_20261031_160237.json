@@ -1,0 +1,73 @@
+{
+  "time": "2026-10-31T16:02:37.0140901+09:00",
+  "monitors": [
+    {
+      "Device": "\\\\.\\DISPLAY1",
+      "Primary": true,
+      "Bounds": [
+        0,
+        0,
+        2560,
+        1440
+      ],
+      "Work": [
+        0,
+        0,
+        2560,
+        1392
+      ],
+      "Dpi": 96,
+      "Scale": 1.0
+    },
+    {
+      "Device": "\\\\.\\DISPLAY2",
+      "Primary": false,
+      "Bounds": [
+        -1920,
+        174,
+        0,
+        1254
+      ],
+      "Work": [
+        -1920,
+        174,
+        0,
+        1206
+      ],
+      "Dpi": 96,
+      "Scale": 1.0
+    }
+  ],
+  "chosen": "\\\\.\\DISPLAY2",
+  "window": {
+    "hwnd": 1247436,
+    "pid": 51016,
+    "first_seen": {
+      "rect": [
+        -1288,
+        479,
+        -632,
+        878
+      ],
+      "on_secondary": true
+    },
+    "rect": [
+      -1280,
+      510,
+      -624,
+      909
+    ],
+    "on_secondary": true,
+    "requested": [
+      -1280,
+      510,
+      640,
+      360
+    ],
+    "screen_index": 1,
+    "topmost": true
+  },
+  "result": "EXIT_0",
+  "project": "C:\\Users\\aghose\\AppData\\Local\\Temp\\qa07_head",
+  "log": "Z:\\.solty\\dev\\appintoss\\defence\\build\\qa07\\visual-0590e7a\\godot_20261031_160237.log"
+}

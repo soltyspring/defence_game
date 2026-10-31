@@ -35,6 +35,9 @@ A. release blocker (data loss, crash, cannot progress) · B. contract/logic cont
 ## 3. What is already strong (E only; does not offset any item above)
 First three rounds are winnable and losable at HEAD with deterministic seeds; touch, multi-touch hold-and-tap, background/resume pause, safe-area layouts across 16:9–21:9 and 4:3, atlas residency/release, monetization disabled in every layer, 06 service suites green (run 20261031-080846). These are necessary conditions, not reasons a player would choose this game.
 
+## 3a. First 3 minutes after retheme (2026-10-31 16:10)
+See [FIRST_3MIN_REVIEW.md](FIRST_3MIN_REVIEW.md): J1 cannot see the fight / tell sides apart (03, cc 04/02), J2 r01 has no risk (01), J3 worker vs soldier card indistinguishable and resource unnamed (04, cc 01). Visual evidence: [VISUAL_CHECKS.md](VISUAL_CHECKS.md).
+
 ## 3b. Method additions
 Evidence staleness and vertical-slice gate from the external reference: [EXTERNAL_REFERENCE_REVIEW.md](EXTERNAL_REFERENCE_REVIEW.md) (A2: emulator frames used in R8–R10 predate the font/UI commits; A4: slice gate is NOT PROCEED, Q4 = NO because of QA-B004).
 

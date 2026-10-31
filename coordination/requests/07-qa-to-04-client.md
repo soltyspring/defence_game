@@ -30,3 +30,8 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 
 ## Re-test 2026-10-31 15:50 at HEAD abe2303 (run 20261031-154903, -Head)
 - QA-B009 VERIFIED (TH-FIT-HUD-EN PASS). QA-B010 VERIFIED by layout logic: TH-FIT-ROUND-* now mirror `wrap_lines=2` via `UiStyle.fit_lines`; 3 KO and 7 EN names wrap. Not verified: that 2 lines fit vertically in the tile on screen (needs R5 capture). R5 (-ProjectPath) still open.
+
+## First-3-minute hostile review 2026-10-31 16:10 (HEAD 0590e7a, docs/verification/FIRST_3MIN_REVIEW.md)
+- **QA-J1 (cc)**: off-screen enemy indicator or camera framing showing the nearest enemy group (with 02 for camera). Pass: enemy or indicator visible in r01 t=30/60 s HEAD frames.
+- **QA-J3 (P2)**: worker card (제빵사 40) and soldier card (식빵병 30) look identical apart from a small badge; resource name '반죽' used by tut_buy_worker never shown in HUD. Pass: rendered ko+en 1x HUD where worker and soldier buttons differ by more than a badge and the resource word is visible.
+- Verified with your -ProjectPath: QA-B010 2-line round tiles fit in ko/en at 1x and 2x (block 60-88 px inside 148 px tile, 0/10 fail); disabled services show no ad/purchase text on menu, round select, settings, HUD, result. Evidence docs/verification/VISUAL_CHECKS.md.

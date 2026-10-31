@@ -1,0 +1,224 @@
+{
+  "money_controls": [],
+  "r01_at_60s": {
+    "deployed": 12,
+    "enemy_base": 800.0,
+    "enemy_base_max": 800.0,
+    "kills": 7,
+    "player_base": 1500.0,
+    "t": 60.1166666666645,
+    "workers": 3
+  },
+  "r01_end": {
+    "t": 105.949999999995,
+    "won": true
+  },
+  "services": {
+    "autoload": true,
+    "diagnostics_live": {
+      "real_ads": false,
+      "real_billing": false,
+      "remote_analytics": false,
+      "trusted_verifier": false
+    },
+    "mode": "disabled"
+  },
+  "shots": [
+    "1_menu",
+    "2_round_select",
+    "3_settings",
+    "4_r01_t00",
+    "5_r01_t30",
+    "5_r01_t60",
+    "6_result"
+  ],
+  "tiles": [
+    {
+      "block_bottom": 81.0,
+      "block_top": 67.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "First Batch"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "First Batch",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 70.0
+    },
+    {
+      "block_bottom": 81.0,
+      "block_top": 67.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "Fruit Fly Raid"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "Fruit Fly Raid",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 87.0
+    },
+    {
+      "block_bottom": 88.0,
+      "block_top": 60.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "Spores",
+        "Incoming"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "Spores Incoming",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 55.0
+    },
+    {
+      "block_bottom": 81.0,
+      "block_top": 67.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "Rotten Hooves"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "Rotten Hooves",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 94.0
+    },
+    {
+      "block_bottom": 88.0,
+      "block_top": 60.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "The Mold",
+        "General"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "The Mold General",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 58.0
+    },
+    {
+      "block_bottom": 88.0,
+      "block_top": 60.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "Break the Mold",
+        "Wall"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "Break the Mold Wall",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 97.0
+    },
+    {
+      "block_bottom": 81.0,
+      "block_top": 67.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "Rising Yeast"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "Rising Yeast",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 78.0
+    },
+    {
+      "block_bottom": 81.0,
+      "block_top": 67.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "Endless Flies"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "Endless Flies",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 82.0
+    },
+    {
+      "block_bottom": 88.0,
+      "block_top": 60.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "Mold",
+        "Onslaught"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "Mold Onslaught",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 63.0
+    },
+    {
+      "block_bottom": 88.0,
+      "block_top": 60.0,
+      "disabled": false,
+      "fits": true,
+      "lines": [
+        "The Rot",
+        "Overlord"
+      ],
+      "number_bottom": 30.0,
+      "star_top": 112.5,
+      "text": "The Rot Overlord",
+      "tile": [
+        103.0,
+        148.0
+      ],
+      "truncated": false,
+      "widest_px": 56.0
+    }
+  ],
+  "view": "(640.0, 360.0)",
+  "window": "(1280, 720)"
+}

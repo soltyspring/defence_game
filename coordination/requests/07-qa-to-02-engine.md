@@ -26,3 +26,6 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 
 ## Re-test 2026-10-31 15:50 at HEAD abe2303 (run 20261031-154903, -Head)
 - TP-01H/TP-02H now drive your `Save._fault` hook at all 4 FAULT_POINTS: every fault fires, save returns false, reload keeps committed or newer progress (after_bak_rename/before_final_rename recover from tmp, unlocked 4). PASS. Thanks.
+
+## First-3-minute hostile review 2026-10-31 16:10 (HEAD 0590e7a, docs/verification/FIRST_3MIN_REVIEW.md)
+- QA-J1 (cc): if 04 chooses camera framing over an indicator, the camera is yours (battle.gd _update_camera follows hero +60 px).
