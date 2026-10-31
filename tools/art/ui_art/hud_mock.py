@@ -50,7 +50,24 @@ BASE_SHA = "ad47eda"
 INK = None   # --ink: draw the chrome frames' K pixels in another colour (decision variant, e.g. 04's #07070c)
 
 
+EDGE = None   # --edge K1,K2: recolour the outermost 2 px of every 06 HUD element (palette keys, depth 0 then 1)
+ECON = False  # --econ: draw the worker on a NEW econ frame (04 R3 reply) instead of keeping 04's octagon
+
+
+def _er(m):
+    q = np.pad(m, 1, constant_values=False)
+    return m & q[:-2, 1:-1] & q[2:, 1:-1] & q[1:-1, :-2] & q[1:-1, 2:]
+
+
 def ink(px):
+    if EDGE is not None:
+        px = px.copy()
+        m = px[..., 3] > 0
+        e1 = _er(m)
+        e2 = _er(e1)
+        px[m & ~e1, :3] = EDGE[0]
+        px[e1 & ~e2, :3] = EDGE[1]
+        px[m & ~e1, 3] = 255
     if INK is None:
         return px
     px = px.copy()
@@ -163,7 +180,7 @@ def build_scene(full, h, meta, rnd_cards, old, new, all_dimmed=False, dim_alpha=
     mock = h.copy()
     replaced = np.zeros(hudm.shape, bool)
     for (k, x, y, w, hh) in els:
-        if k != "worker":
+        if k != "worker" or ECON:
             replaced[y:y + hh, x:x + w] = True
     group = [e for e in els if e[0] in ("card", "worker")]
     if len(group) >= 2:
@@ -181,7 +198,7 @@ def build_scene(full, h, meta, rnd_cards, old, new, all_dimmed=False, dim_alpha=
         put(mock, tr, tx, ty)
         # the worker keeps 04's pixels: re-put them over the tray
         for e in group:
-            if e[0] == "worker":
+            if e[0] == "worker" and not ECON:
                 _, x, y, w, hh = e
                 wm = hudm[y:y + hh, x:x + w]
                 sub = mock[y:y + hh, x:x + w]
@@ -208,10 +225,16 @@ def build_scene(full, h, meta, rnd_cards, old, new, all_dimmed=False, dim_alpha=
             hit = find(reg, old("card_worker"), bc)
             if hit and hit[0] < 8:
                 _, fx, fy, dim = hit
-                ow = old("card_worker")
-                cut = ow[..., 3] > 0
-                mock[y + fy:y + fy + 24, x + fx:x + fx + 24][cut] = bc
-                put(mock, new["card_worker"], x + fx, y + fy, dim)
+                if ECON:
+                    cv, m = new["econ_frame"]
+                    put(mock, ink(CH.nine_draw(rgba(cv), m, w, hh)), x, y)
+                    copy_text(mock, full, x, y, w, hh, bc, exclude=(x + fx, y + fy, 24, 24))
+                    put(mock, new["card_worker"], x + fx, y + fy, 1.0 if dim == 1.0 else dim)
+                else:
+                    ow = old("card_worker")
+                    cut = ow[..., 3] > 0
+                    mock[y + fy:y + fy + 24, x + fx:x + fx + 24][cut] = bc
+                    put(mock, new["card_worker"], x + fx, y + fy, dim)
         elif k == "skill":
             best = None
             for sid in ("skill_slam", "skill_rally", "skill_barrage"):
@@ -395,8 +418,13 @@ def main():
     ap.add_argument("--frames", default="", help="dir with <tag>_<scene>.png + reports (default 07 ad47eda set)")
     ap.add_argument("--layers", default="", help="dir with layer frames (default 07 ad47eda layers)")
     ap.add_argument("--variant-name", default="", help="label stored in the json")
+    ap.add_argument("--edge", default="", help="two palette keys for the outer 2 px of HUD elements, e.g. T,T")
+    ap.add_argument("--econ", action="store_true", help="worker on a NEW econ frame")
     a = ap.parse_args()
-    global INK, OFF_BADGE, E, L
+    global INK, OFF_BADGE, E, L, EDGE, ECON
+    if a.edge:
+        EDGE = [tuple(int(v) for v in pixel.RGBA[ui.c(k_)][:3]) for k_ in a.edge.split(",")]
+    ECON = a.econ
     if a.frames:
         E = a.frames
     if a.layers:
@@ -407,6 +435,7 @@ def main():
     fr = CP.idle_frames()
     new = {k: v for k, v in ui.frames9().items()}
     new.update(ui.chrome_proposed())
+    new["econ_frame"] = (ui.chrome_frame(20, 24, ["K", "K", ("Z", "y"), "w"], 5), (6, 6, 6, 6))   # NEW econ (worker) proposal
     if a.lit_body:
         new.update(ui.frames9_lit())
     new.update({"card_" + u: rgba(ui.card(u, fr[u])) for u in A.CARDS})
@@ -417,7 +446,7 @@ def main():
     res = {"note": "PROPOSAL MOCK on 07 baseline ad47eda frames; not screen evidence", "all_dimmed_alpha": a.dim_alpha,
            "ink": a.ink or "palette K", "off_badge": a.off_badge, "lit_body": a.lit_body,
            "off_l_scale": ui.OFF_L_SCALE if a.off_badge else None, "frames_dir": os.path.relpath(E, ROOT).replace("\\", "/"),
-           "variant": a.variant_name, "tags": {}, "state": {}}
+           "variant": a.variant_name, "edge": a.edge or None, "econ": a.econ, "tags": {}, "state": {}}
     keep = {}
     for loc in a.tags.split(","):
         rep1 = json.load(open(os.path.join(E, f"{loc}_1x_art_report.json"), encoding="utf-8"))
