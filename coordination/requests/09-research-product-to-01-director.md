@@ -41,3 +41,10 @@ Basis: SUCCESS_ANALYSIS.md §22. 100 newest KO Play reviews per competitor; not 
 2. Balance wall: your sim shows r04–r10 lose in all configs. The same complaint pattern ("must grind or pay") appears in Random Dice 2 and 궁수키우기 RPG. Ask: release gate = no round requires grinding replays beyond first-clear coins (your QUALITY_BAR claim 6).
 3. If ads are ever chosen: no placement where watching an ad is the only way to continue, and a fallback when no ad fills (Archer Forest complaint: quest blocked because ads did not load).
 4. Content stagnation reads as abandonment (Random Dice 1). Plan the first data-only content drop and an in-game contact link in the roadmap.
+
+## R09-01-6 Theme A distinctiveness (2026-10-31 ~10:40 KST, SUCCESS_ANALYSIS.md §23)
+0. DECISIONS.md still lists Q1 as PENDING, but the coordinator recorded the user answer at 09:03 (A). Please record it as DECIDED there.
+1. Store check (Play ko/KR + en/US, top results, 2026-10-31): no app is named 빵집 기사단 / Bakery Knights / 곰팡이 군단. The biggest overlap is Devsisters' Cookie Run series (baked-goods characters, 킹덤 10M+). "빵" in the Korean store mostly signals tycoon/cozy games (11 of 32 hits are simulation).
+2. Distinctive levers found: mold as the enemy (no defence game found), the side-view two-base lane battle, and pixel art. Proposal: the title, the store's first screenshot and the r01 opening should show all three together.
+3. Naming rules for text keys: no "쿠키"/"오븐" in titles or unit names; no "-충" suffix on pest enemies (common Korean slur pattern); no real brand names (곰표, bakery chains).
+4. Trademark is UNVERIFIED (no KIPRIS search was done). Ask 06 to check classes 9 and 41 before any store listing. Any user-facing decision goes through you.
