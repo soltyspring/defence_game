@@ -10,6 +10,7 @@ Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, tr
   1. Record the decision in ONSET_PEAK_CHECK.md and AUDIO_CONTRACT.md; explain the P5-after 1/45 miss from the re-render log.
   2. 03 e8c6d96 made every death animation play within 0.5 s: measure the death/hit SFX lengths and tails against it; change only after writing criteria first; Python checks only (R1–R4 offline, variant level).
 - Done (Python only): decision written in ONSET_PEAK_CHECK.md §6 and AUDIO_CONTRACT.md. P5 after-miss explained: one gold_tick was logged one 512-frame chunk late (time only; verdict stays FAIL). DEATH_SYNC_CHECK.md: criteria T1–T3 first. Only explosion failed T1 (0.56 s); it was shortened 0.7 → 0.5 s, audible end 0.42 s, attack +0.01 dB, −8,820 B. validate/determinism/budget PASS, offline R1–R4 0 fails, 48 files. hero_death 1.0 s is exempt (event cue) and is a listening question for 01/03.`n- Next session (needs Godot via heavy_run_detached, one job): import + selftest, re-record r02/r06/r08 × 11/23/37 with the new explosion, then re-judge D1/D2/G1/G2/R1–R4/P5 with rerender.py. Log fix: read the audio clock BEFORE play() and log both.
+- Git (copied from the PUSHED line; git ls-remote origin refs/heads/main = 3821f780398dbc0818603f81ad506709456e4058): 3821f780398dbc0818603f81ad506709456e4058 [Fix].
 - Not verified: human listening, real phone.
 
 ## v3.9 onset peak (coordinator task coordination/prompts/05-peak-cause.txt). Details: docs/audio/ONSET_PEAK_CHECK.md
