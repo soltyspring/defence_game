@@ -47,6 +47,7 @@ func _ready() -> void:
 	Events.cmd_next_round.connect(_on_next_round)
 	Events.cmd_open_screen.connect(func(s): show_screen(StringName(s)))
 	Events.cmd_set_setting.connect(_on_setting)
+	Events.cmd_buy_upgrade.connect(_on_buy_upgrade)
 	var args := OS.get_cmdline_user_args()
 	autoplay = args.has("--autoplay")
 	for a in args:
@@ -257,6 +258,13 @@ func _on_next_round() -> void:
 		start_round(nid)
 	else:
 		show_screen(&"round_select")
+
+func _on_buy_upgrade(upgrade_id: String, to_level: int) -> void:
+	var code: String = Save.buy_upgrade(upgrade_id, to_level)
+	Events.upgrade_result.emit({"id": upgrade_id, "to_level": to_level, "code": code,
+		"coins": int(Save.progress.coins), "level": Save.upgrade_level(upgrade_id)})
+	if code == Save.UPG_SAVE_FAILED or code == Save.UPG_SAVE_UNCERTAIN:
+		Events.toast.emit("save_failed", {"error": Save.last_error})
 
 func _on_setting(key: String, value: Variant) -> void:
 	Save.set_setting(key, value)

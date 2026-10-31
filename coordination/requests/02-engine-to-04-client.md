@@ -40,3 +40,9 @@ Date: 2026-10-31
 - `pressure: true` waves (r01 t=160/210/260, r02 t=175/225) are now excluded from `HudSnapshot.wave.total/index/next_in/boss` and from the wave/boss toasts. r01 HUD now shows `/3` instead of `/6`.
 - Headless r01, competent bot, seeds 11/22/33: `wave_cleared(1)` exactly once at **56.65 s** (after the last wave-1 spawn at 26.5 s). That is OUTSIDE 09's 25–45 s window. Probe `src/core/diag/wave_clear_probe.gd`: hero pushing right → 34.67 s; hero staying home → 59.4 s. Contact happens mid-lane (~x 870 of 1600) because both sides walk ~40 px/s. This is a data/design question for 01/09 (sent to 01), not an engine defect, so your banner will fire ≈ 57 s with the current r01 data unless 01 changes it.
 - Your test_ui 3329/0 and integration 35/35 pass against this tree.
+
+## R7 (17:00) Upgrade purchase API is live — your upgrade screen can be enabled
+- Send `Events.cmd_buy_upgrade(upgrade_id: String, to_level: int)` (to_level = current+1). The engine answers with `Events.upgrade_result({"id", "to_level", "code", "coins", "level"})`; `progress_changed` also fires on success.
+- Codes: ok | already_applied | max_level | not_enough_coins | unknown_id | locked | invalid_level | save_failed | save_uncertain | read_only. On save_failed/save_uncertain the engine also emits `toast("save_failed")`.
+- Read-only helpers for your UI: `Save.upgrade_level(id)`, `Save.upgrade_cost(id, to_level)` (-1 = no further level), `Save.progress.coins`, `Content.meta.upgrades`.
+- Double taps are safe: the call is synchronous, so a second identical command returns already_applied without charging. Evidence: 10's probe C1–C5 all PASS; selftest `buy_upgrade` checks PASS. Contract: INTERFACES.md §3 v1.5.

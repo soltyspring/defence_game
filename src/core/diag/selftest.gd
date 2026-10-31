@@ -27,6 +27,7 @@ func _initialize() -> void:
 	_check_rules(content)
 	_check_tutorial(content)
 	_check_waves_and_pools(content)
+	_check_buy_upgrade(content)
 	_check_save()
 	_check_save_faults()
 	content.free()
@@ -50,6 +51,7 @@ func _initialize() -> void:
 	print("rules ", JSON.stringify(report.get("rules", {})))
 	print("tutorial ", JSON.stringify(report.get("tutorial", {})))
 	print("waves_and_pools ", JSON.stringify(report.get("waves_and_pools", {})))
+	print("buy_upgrade ", JSON.stringify(report.get("buy_upgrade", {})))
 	print("scripts ok %d/%d, scenes %d, foreign errors %s" % [report.scripts_ok, report.scripts_total, report.scenes_total, str(report.foreign_script_errors)])
 	for b in balance_flags: print("BALANCE: ", b)
 	print("report: ", ProjectSettings.globalize_path("user://selftest_report.json"))
@@ -553,3 +555,68 @@ func _check_waves_and_pools(content) -> void:
 	out.scripted_waves = scripted
 	out.pressure_waves = pressure
 	report.waves_and_pools = out
+
+## Save.buy_upgrade (10 R3 contract C1–C5 + locked / invalid / unknown). Needs /root/Content, so the Save node joins the tree.
+func _check_buy_upgrade(content) -> void:
+	var s = SaveS.new()
+	s.path = "user://selftest_faults/upg.json"
+	DirAccess.make_dir_recursive_absolute("user://selftest_faults")
+	for suf in ["", ".bak", ".tmp"]:
+		if FileAccess.file_exists(s.path + suf): DirAccess.remove_absolute(s.path + suf)
+	root.add_child(s)
+	s.content_ref = content
+	s.load_progress()
+	var up := "up_melee_basic"
+	var cost: int = s.upgrade_cost(up, 2)
+	var out := {"cost_to_2": cost}
+	var fails := []
+	s.progress.coins = 500; s.save_progress()
+	var c1 := [s.buy_upgrade(up, 2), s.buy_upgrade(up, 2)]
+	var r = _reload(s)
+	out.C1 = {"codes": c1, "disk_coins": r.progress.coins, "disk_level": r.progress.upgrades.get(up, 1)}
+	if c1 != ["ok", "already_applied"] or int(r.progress.coins) != 500 - cost or int(r.progress.upgrades.get(up, 1)) != 2: fails.append("C1")
+	r.free()
+	s._fault = "after_tmp_write"
+	var c2: String = s.buy_upgrade(up, 3)
+	var r2 = _reload(s)
+	out.C2 = {"code": c2, "mem_coins": s.progress.coins, "mem_level": s.upgrade_level(up), "disk_level": r2.progress.upgrades.get(up, 1)}
+	if c2 != "save_failed" or int(s.progress.coins) != 500 - cost or s.upgrade_level(up) != 2 or int(r2.progress.upgrades.get(up, 1)) != 2: fails.append("C2")
+	r2.free()
+	s._fault = "before_final_rename"
+	var c3: String = s.buy_upgrade(up, 3)
+	var r3 = _reload(s)
+	var lv3 := int(r3.progress.upgrades.get(up, 1))
+	out.C3 = {"code": c3, "disk_level": lv3, "disk_coins": r3.progress.coins}
+	if c3 != "save_uncertain" or not ((lv3 == 2 and int(r3.progress.coins) == 500 - cost) or (lv3 == 3 and int(r3.progress.coins) == 500 - cost - s.upgrade_cost(up, 3))): fails.append("C3")
+	r3.free()
+	s.load_progress()   # adopt whatever disk holds, like a relaunch
+	s.progress.upgrades.erase(up); s.progress.coins = cost - 1; s.save_progress()
+	var c4 := [s.buy_upgrade(up, 2)]
+	s.progress.coins = cost; s.save_progress()
+	c4.append(s.buy_upgrade(up, 2))
+	out.C4 = {"codes": c4, "coins": s.progress.coins}
+	if c4 != ["not_enough_coins", "ok"] or int(s.progress.coins) != 0: fails.append("C4")
+	s.progress.coins = 99999; s.save_progress()
+	out.invalid = s.buy_upgrade(up, 4)
+	if out.invalid != "invalid_level": fails.append("invalid")
+	out.unknown = s.buy_upgrade("up_does_not_exist", 2)
+	if out.unknown != "unknown_id": fails.append("unknown")
+	var max_l := 1
+	for u in content.meta.get("upgrades", []):
+		if str(u.id) == up: max_l = int(u.max_level)
+	s.progress.upgrades[up] = max_l; s.save_progress()
+	out.C5 = s.buy_upgrade(up, max_l + 1)
+	if out.C5 != "max_level" or int(s.progress.coins) != 99999: fails.append("C5")
+	# locked: a unit whose unlock_round is beyond unlocked_round
+	var locked_id := ""
+	for u in content.meta.get("upgrades", []):
+		var tgt := str(u.get("target", ""))
+		if tgt.begins_with("unit:") and content.units.has(tgt.trim_prefix("unit:")) and int(content.units[tgt.trim_prefix("unit:")].get("unlock_round", 1)) > 1:
+			locked_id = str(u.id); break
+	if locked_id != "":
+		s.progress.unlocked_round = 1
+		out.locked = [locked_id, s.buy_upgrade(locked_id, 2)]
+		if out.locked[1] != "locked": fails.append("locked")
+	report.buy_upgrade = out
+	for f in fails: _fail("buy_upgrade %s: %s" % [f, str(out)])
+	s.free()

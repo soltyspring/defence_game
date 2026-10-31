@@ -192,10 +192,16 @@ func save_progress() -> bool:
 		return false
 	var old_rev := int(progress.get("revision", 0))
 	progress.revision = old_rev + 1
+	last_write_stage = "start"
 	var ok := _write()
 	if not ok:
 		progress.revision = old_rev
 	return ok
+
+## Furthest point the last write reached: start | tmp_verified | done. After "tmp_verified" a failed save may
+## still be adopted on the next launch (load prefers a verified .tmp when main is missing), so callers must treat
+## that failure as "outcome unknown".
+var last_write_stage := "start"
 
 func _write() -> bool:
 	var payload_txt := JSON.stringify(progress, "", true)
@@ -214,6 +220,7 @@ func _write() -> bool:
 	if _fault_here("after_tmp_write"): return false
 	if _read(tmp) == null:
 		return _fail("tmp verify failed")
+	last_write_stage = "tmp_verified"
 	var dir := DirAccess.open(path.get_base_dir())
 	if dir == null:
 		return _fail("open dir failed")
@@ -235,6 +242,7 @@ func _write() -> bool:
 	if err != OK:
 		return _fail("rename tmp->main failed: %d" % err)
 	_main_good = true
+	last_write_stage = "done"
 	var ev := _events()
 	if ev:
 		ev.progress_changed.emit(progress)
@@ -289,6 +297,86 @@ func record_result(result: Dictionary, round_index_in_order: int) -> bool:
 
 func is_unlocked(order_index: int) -> bool:
 	return order_index + 1 <= int(progress.unlocked_round)
+
+# ---------------------------------------------------------------- meta upgrades (10 R3 contract)
+## Result codes of buy_upgrade().
+const UPG_OK := "ok"
+const UPG_ALREADY := "already_applied"   # to_level <= current level (repeat of a completed purchase)
+const UPG_MAX := "max_level"
+const UPG_COINS := "not_enough_coins"
+const UPG_UNKNOWN := "unknown_id"
+const UPG_LOCKED := "locked"             # target unit not unlocked yet (unlock_round > unlocked_round)
+const UPG_INVALID := "invalid_level"     # to_level skips levels (must be current + 1)
+const UPG_SAVE_FAILED := "save_failed"   # nothing changed, in memory or on disk
+const UPG_SAVE_UNCERTAIN := "save_uncertain"  # memory rolled back, but the verified .tmp may be adopted next launch
+const UPG_READ_ONLY := "read_only"
+
+func _content() -> Node:
+	if content_ref != null:
+		return content_ref
+	return get_node_or_null("/root/Content") if is_inside_tree() else null
+
+## Optional explicit Content (tests / tools); default is the /root/Content autoload.
+var content_ref: Node = null
+
+func _upgrade_def(upgrade_id: String) -> Dictionary:
+	var c := _content()
+	if c == null:
+		return {}
+	for u in c.meta.get("upgrades", []):
+		if u is Dictionary and str(u.get("id", "")) == upgrade_id:
+			return u
+	return {}
+
+func upgrade_level(upgrade_id: String) -> int:
+	return int(progress.get("upgrades", {}).get(upgrade_id, 1))
+
+## Coins needed to go from to_level-1 to to_level (data/meta.json costs[i] = price from level i+1 to i+2), or -1.
+func upgrade_cost(upgrade_id: String, to_level: int) -> int:
+	var u := _upgrade_def(upgrade_id)
+	var costs: Array = u.get("costs", [])
+	var i := to_level - 2
+	if i < 0 or i >= costs.size():
+		return -1
+	return int(costs[i])
+
+func _upgrade_locked(u: Dictionary) -> bool:
+	var target := str(u.get("target", ""))
+	if not target.begins_with("unit:"):
+		return false
+	var uid := target.trim_prefix("unit:")
+	var c := _content()
+	if c == null or not c.units.has(uid):
+		return false
+	return int(c.units[uid].get("unlock_round", 1)) > int(progress.unlocked_round)
+
+## Buy one upgrade level: validate, then deduct coins and raise the level in ONE atomic save.
+## On a failed write both are rolled back in memory. Synchronous, so a second identical call in the same frame
+## sees the new level and returns already_applied.
+func buy_upgrade(upgrade_id: String, to_level: int) -> String:
+	if read_only: return UPG_READ_ONLY
+	var u := _upgrade_def(upgrade_id)
+	if u.is_empty(): return UPG_UNKNOWN
+	var cur := upgrade_level(upgrade_id)
+	var max_l := int(u.get("max_level", 1))
+	if to_level <= cur: return UPG_ALREADY
+	if to_level > max_l or cur >= max_l: return UPG_MAX
+	if to_level != cur + 1: return UPG_INVALID
+	if _upgrade_locked(u): return UPG_LOCKED
+	var cost := upgrade_cost(upgrade_id, to_level)
+	if cost < 0: return UPG_MAX
+	var coins := int(progress.coins)
+	if coins < cost: return UPG_COINS
+	var ups: Dictionary = progress.upgrades
+	var had_key := ups.has(upgrade_id)
+	progress.coins = coins - cost
+	ups[upgrade_id] = to_level
+	if save_progress():
+		return UPG_OK
+	progress.coins = coins
+	if had_key: ups[upgrade_id] = cur
+	else: ups.erase(upgrade_id)
+	return UPG_SAVE_UNCERTAIN if last_write_stage == "tmp_verified" else UPG_SAVE_FAILED
 
 func set_setting(key: String, value: Variant) -> void:
 	progress.settings[key] = value

@@ -18,3 +18,9 @@ Commit SHA: 08ef08257825c777035401750280c45bd853d3bd (PUSHED origin/main, verifi
 
 ## Update — shared-tree app.gd incident, restored
 `src/core/app.gd` in the shared working tree was a single line with no newlines from about 15:46 (my PowerShell A/B step, never committed). Your probes that load the project in the shared tree may have failed in that window. It is restored (300 lines, selftest PASS, UI integration 32/32); HEAD was never affected. Please re-run anything that failed then. R6 fault hook and R3 ledger are unchanged (08ef082).
+
+## Update — R3 meta upgrade transaction implemented (buy_upgrade), your probe as acceptance
+- `Save.buy_upgrade(upgrade_id, to_level) -> String` per your proposal, plus `invalid_level` (to_level must be current+1) and `save_uncertain` (your C3 note: failure after the verified .tmp → memory rolled back, outcome unknown until relaunch). `Events.cmd_buy_upgrade` / `Events.upgrade_result` for the UI. Contract text: INTERFACES.md §3 v1.5.
+- Your `probe_upgrade_transaction.gd`, unmodified, on my workspace: A IMPLEMENTED (Save.buy_upgrade, events_cmd_buy_upgrade=true); C1 ok/already_applied → 440, L2 PASS; C2 save_failed, memory+disk 500/L1 PASS; C3 disk 440/L2 PASS; C4 exact → 0/L2 ok, short by 1 → 59/L1 not_enough_coins PASS; C5 max_level PASS. Log: build/save_evidence/upg_probe_after.log (local).
+- Not done yet: R5 content_version / clamp+refund (your part D). Next after the current 02 queue.
+Commit SHA: see the next line written after push.

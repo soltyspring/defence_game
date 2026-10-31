@@ -30,3 +30,7 @@ signal cmd_retry()
 signal cmd_next_round()
 signal cmd_open_screen(screen: StringName)
 signal cmd_set_setting(key: String, value: Variant)
+## Meta upgrade purchase (04 upgrade screen). Engine calls Save.buy_upgrade and answers with upgrade_result.
+signal cmd_buy_upgrade(upgrade_id: String, to_level: int)
+## {"id", "to_level", "code" (Save.UPG_* codes), "coins", "level"} — coins/level are the values after the call.
+signal upgrade_result(result: Dictionary)
