@@ -7,15 +7,15 @@ Updated 2026-10-31 09:18 +09:00. Scope: desktop headless Godot 4.7.2 on Windows.
 | **HEAD** | `.\tools\qa\run_acceptance.ps1 -Head` | clean `git archive` of committed HEAD in `%TEMP%\qa07_head` (own import, current tests overlaid) → **committed defect** |
 | **Workspace** | `.\tools\qa\run_acceptance.ps1` | shared tree with every worker's uncommitted WIP → only here = **work-tree contamination** |
 
-## Current: HEAD 5426645, run 20261031-091441
-PASS 137 · FAIL 6 · NOT_IMPLEMENTED 1 (MON-04) · NOT_TESTED 2 (AUD-03, PLAT-03) · BLOCKED 0; services suites exit 0. Summary: runs/head-5426645.md.
+## Current: HEAD 2884231, run 20261031-153757
+PASS 137 · FAIL 6 · NOT_IMPLEMENTED 1 (MON-04) · NOT_TESTED 2 (AUD-03, PLAT-03) · BLOCKED 0; services suites exit 0. Summary: runs/head-2884231.md.
 | Check | Bug | Owner | Cause | Reproduce | Pass criterion |
 |---|---|---|---|---|---|
-| DATA-13, DATA-14 | QA-B008 P2 | 01 | `toast.counterattack/save_recovered/round_locked/save_failed/save_read_only` used in src, absent from data/text ko+en | `-Head -Only data` | both PASS; FLOW-04B stays PASS |
+| DATA-13, DATA-14 | QA-B008 P2 | 01 | `toast.save_recovered/save_read_only/round_locked/save_failed` used in src, absent from data/text ko+en (`toast.counterattack` now present) | `-Head -Only data` | both PASS; FLOW-04B stays PASS |
 | TH-FIT-HUD-EN | QA-B009 P2 | 04 (cc 01) | 5-card rounds r08–r10 leave a 36.7 px label slot; EN names 37–42 px | `-Head -Only theme` | every drawn card/skill label fits, no ellipsis (KO and EN) |
 | TH-FIT-ROUND-EN | QA-B010 P2 | 04 (cc 01) | 83 px round tile; 7/10 EN names longer | `-Head -Only theme` | no ellipsis (KO and EN) |
-| TH-COL-PROTAN, TH-COL-DEUTAN | QA-B011 P2 (proxy) | 03 | archer vs Warlord mean colour ΔE 1.18 / 2.24 after CVD simulation | `-Head -Only theme` | ΔE ≥ 2.3, or a CVD-simulated HEAD battle frame showing the marker separates them |
-
+| TH-COL-PROTAN, TH-COL-DEUTAN | QA-B011 P2 (proxy) | 03 | closest pair changed after the D14 recolour: protan `siege` vs `e_brute` ΔE 1.96, deutan `siege` vs `boss_overlord` ΔE 1.75 (archer vs Warlord no longer closest) | `-Head -Only theme` | ΔE ≥ 2.3, or a CVD-simulated HEAD battle frame showing the marker separates them |
+Theme names are not renamed yet at HEAD (still "보병/Troop"…); Q1 = A is recorded in coordinator-to-07-qa.md (09:03) but `DECISIONS.md` Q1 still reads PENDING.
 ## Verified fixed (same check IDs, HEAD condition)
 | Bug | Fix commit | Verified at | Checks |
 |---|---|---|---|
@@ -31,7 +31,7 @@ PASS 137 · FAIL 6 · NOT_IMPLEMENTED 1 (MON-04) · NOT_TESTED 2 (AUD-03, PLAT-0
 ## Work-tree contamination
 | Warning | Owner | Status |
 |---|---|---|
-| QA-W001 idle player survives r01/r02 with uncommitted round data | 01 | open in workspace; HEAD PASS |
+| QA-W001 idle player survives r01/r02 with uncommitted round data | 01 | resolved: D18 late waves committed (cbfb0a8); R1/R2-LOSS PASS at HEAD 2884231 |
 | QA-W002 `_cue()` undefined broke battle.gd | 02 | resolved e9dfaa4 |
 | QA-W003 `ui.star_*` text only in WIP | 01 | resolved (committed) |
 
@@ -41,4 +41,5 @@ PASS 137 · FAIL 6 · NOT_IMPLEMENTED 1 (MON-04) · NOT_TESTED 2 (AUD-03, PLAT-0
 - TH-FIT-HUD first measured skill names that the committed HUD does not draw (icon + cost on a < 54 px button) → check mirrors `TouchButton.show_name` and lists icon-only buttons in evidence.
 
 ## History
+- HEAD 5426645 (20261031-091441): 6 FAIL (same IDs; QA-B011 pair archer vs boss_warlord).
 - HEAD 462991a (head-462991a): 12 FAIL. HEAD e9dfaa4 (20261031-083824/085129): same 12 FAIL.

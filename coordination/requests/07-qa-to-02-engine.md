@@ -20,3 +20,6 @@ None at HEAD e5bd4aa.
 - B008 cc: you added `toast.save_failed` and `toast.save_read_only`; their text is 01's (see 07-qa-to-01-director.md). Acceptance there.
 
 Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, DATA-14, TH-FIT-HUD-EN, TH-FIT-ROUND-EN, TH-COL-PROTAN, TH-COL-DEUTAN) · NOT_IMPLEMENTED 1 · NOT_TESTED 2 · BLOCKED 0.
+
+## Re-test 2026-10-31 15:40 at HEAD 2884231 (run 20261031-153757, -Head)
+- No 02 FAIL at HEAD. All save/fault checks PASS. QA-R1/R2 still open.

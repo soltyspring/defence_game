@@ -1,6 +1,6 @@
 # Release evidence matrix (owner: 07-qa)
-Latest full run: **HEAD 5426645** (`-Head` clean snapshot, run 20261031-091441; Godot 4.7.2 headless, Windows desktop). Triage: [FAILURE_TRIAGE.md](FAILURE_TRIAGE.md). Theme guard: [THEME_CHANGE_CHECKS.md](THEME_CHANGE_CHECKS.md).
-Counts: PASS 137 · FAIL 6 · NOT_IMPLEMENTED 1 · NOT_TESTED 2 · BLOCKED 0; 06 services suites exit 0. Summary: [runs/head-5426645.md](runs/head-5426645.md). Hostile review: [HOSTILE_REVIEW.md](HOSTILE_REVIEW.md).
+Latest full run: **HEAD 2884231** (`-Head` clean snapshot, run 20261031-153757; Godot 4.7.2 headless, Windows desktop). Triage: [FAILURE_TRIAGE.md](FAILURE_TRIAGE.md). Theme guard: [THEME_CHANGE_CHECKS.md](THEME_CHANGE_CHECKS.md).
+Counts: PASS 137 · FAIL 6 · NOT_IMPLEMENTED 1 · NOT_TESTED 2 · BLOCKED 0; 06 services suites exit 0. Summary: [runs/head-2884231.md](runs/head-2884231.md). Hostile review: [HOSTILE_REVIEW.md](HOSTILE_REVIEW.md).
 
 **Scope warning:** desktop headless acceptance only. This is NOT Android release certification.
 `adb devices` at run time listed `emulator-5580` (an emulator, not a phone); no APK install or
@@ -23,9 +23,9 @@ on-device test has been done by 07-qa.
 | Save corruption / recovery / semantics | PASS (6/8) | SAVE-01..04, 07, 08; recovery notice on menu FLOW-24 |
 | Save type normalisation | PASS | SAVE-05, SAVE-06 (QA-B003 verified) |
 | Save fault tolerance (TP-01/02/06/13/14) | PASS | all 9 faults checks at e5bd4aa/5426645; QA-B004 P1 verified (fix 08ef082). Kill points rebuilt from file states, not yet via `Save._fault` |
-| Localised text for engine toasts | FAIL | DATA-13/14: 5 `toast.*` keys missing in data/text (QA-B008); FLOW-04B PASS |
+| Localised text for engine toasts | FAIL | DATA-13/14: 4 `toast.*` keys missing in data/text (QA-B008); FLOW-04B PASS |
 | Theme guard: label fit, names, colour separation | FAIL | TH-FIT-HUD-EN (QA-B009), TH-FIT-ROUND-EN (QA-B010), TH-COL-PROTAN/DEUTAN proxy (QA-B011); TH-TEXT-*, TH-FIT-*-KO, TH-COL-NORMAL/TRITAN PASS |
-| Visual baselines | STALE | 40 of 69 committed docs images predate d6cf7df (runs/head-5426645-stale-baselines.txt); no theme-era capture at HEAD yet |
+| Visual baselines | STALE | 107 committed docs images predate cbfb0a8 (runs/head-2884231-stale-baselines.txt); no theme-era capture at HEAD yet |
 | Image integration (atlases, P0 sprites/fx/biome/icons/bases, residency, release) | PASS | ART-01..11; resident battle pages ≤ 32 MiB estimate |
 | Audio assets | PASS | AUD-01 (31 file refs exist) |
 | Audio in game | PARTIAL | AUD-02 PASS at e9dfaa4 (`Audio` autoload registered). AUD-03 (cues fire on events, honour settings/pause) NOT_TESTED; nothing was listened to |

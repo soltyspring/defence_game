@@ -13,3 +13,7 @@ Verification condition: clean committed HEAD, `.\tools\qa\run_acceptance.ps1 -He
 - 40 of 69 committed docs images predate baseline d6cf7df (runner `stale_baselines.txt`). New contact sheets/previews are needed for theme verdicts.
 
 Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, DATA-14, TH-FIT-HUD-EN, TH-FIT-ROUND-EN, TH-COL-PROTAN, TH-COL-DEUTAN) · NOT_IMPLEMENTED 1 · NOT_TESTED 2 · BLOCKED 0.
+
+## Re-test 2026-10-31 15:40 at HEAD 2884231 (run 20261031-153757, -Head)
+- QA-B011 still FAIL but the closest pair moved after your D14 recolour: protan `siege` vs `e_brute` ΔE 1.96; deutan `siege` vs `boss_overlord` ΔE 1.75 (pass ≥ 2.3). Archer vs Warlord is no longer the closest pair. Reproduce: `.\tools\qa\run_acceptance.ps1 -Head -Only theme`.
+- 107 committed docs images predate baseline cbfb0a8 (docs/verification/runs/head-2884231-stale-baselines.txt).

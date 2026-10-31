@@ -24,3 +24,6 @@ Needed so 07 can capture the clean HEAD snapshot (`%TEMP%\qa07_head`) on the sec
 New names must keep QA-B009/B010 checks PASS; 07 re-runs `-Head -Only theme,data,flow` after each text/layout commit. 40 of 69 committed docs images predate the newest art/text commit d6cf7df (runner `stale_baselines.txt`); do not use them as baselines for theme verdicts.
 
 Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, DATA-14, TH-FIT-HUD-EN, TH-FIT-ROUND-EN, TH-COL-PROTAN, TH-COL-DEUTAN) · NOT_IMPLEMENTED 1 · NOT_TESTED 2 · BLOCKED 0.
+
+## Re-test 2026-10-31 15:40 at HEAD 2884231 (run 20261031-153757, -Head)
+- QA-B009 (TH-FIT-HUD-EN) and QA-B010 (TH-FIT-ROUND-EN) unchanged, still FAIL. Same pass criteria. R5 (-ProjectPath) still open.

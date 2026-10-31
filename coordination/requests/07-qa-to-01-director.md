@@ -24,3 +24,9 @@ After renaming, TH-TEXT-KO/EN must stay PASS: every card/skill/round/hero/enemy 
 QA-O001 bot win rate at HEAD e9dfaa4 (20 seeds, casual/competent): r01 18/15, r02 20/20, r03 14/10.
 
 Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, DATA-14, TH-FIT-HUD-EN, TH-FIT-ROUND-EN, TH-COL-PROTAN, TH-COL-DEUTAN) · NOT_IMPLEMENTED 1 · NOT_TESTED 2 · BLOCKED 0.
+
+## Re-test 2026-10-31 15:40 at HEAD 2884231 (run 20261031-153757, -Head)
+- QA-B008 still FAIL (DATA-13/14): missing `toast.save_recovered`, `toast.save_read_only`, `toast.round_locked`, `toast.save_failed` in ko+en. `toast.counterattack` now present. Pass: DATA-13, DATA-14 PASS.
+- QA-W001 RESOLVED (D18 committed; R1/R2-LOSS PASS).
+- Q1 = A is in coordinator-to-07-qa.md (09:03) but `DECISIONS.md` row Q1 still says PENDING at HEAD: please change it to DECIDED with the literal answer.
+- Theme names not renamed at HEAD; TH-TEXT-* and TH-FIT-* will be re-run on your rename commit.
