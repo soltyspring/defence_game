@@ -14,7 +14,7 @@
 - Next steps (exact): (1) Add sim-state logging (t, paused, ended, steps per frame) to the frame probe and verify it in the next allowed
   Godot run. (2) In C11: the M3 A/B command, then the frame probe stress run from a HEAD snapshot for the H1/H2 baselines. (3) Run the
   asset gate on every 03/05 asset commit.
-- M6 commit: recorded below only after `git show` verification.
+- M6 commit: `2620274e575eab77fe1889af9098a1eda6e824e3` [Fix]. Verified with `git show --stat` (5 files: handoff, status, BASELINE_DESKTOP, CODE_REVIEW_HOTPATH, perf_frame_probe.gd), and `git branch -r --contains` shows origin/main. Helper printed `PUSHED 2620274... origin/main` (7b812a2..2620274).
 ## M5 — static hot-path code review (2026-10-31 16:4x +09:00, no Godot used)
 - Coordinator review: 9cbae83/3d07db5 accepted. C11 is still closed (01/02/03/04/05/07 working), so this milestone is Godot-free only.
 - Done: `docs/performance/CODE_REVIEW_HOTPATH.md`. Committed HEAD 0590e7a was exported with `git show`. The doc covers per-frame
