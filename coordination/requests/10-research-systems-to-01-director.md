@@ -237,3 +237,23 @@ Change (your files; I did not edit them):
 2. The "Run:" comments in confirm_sim/paired_sim/probe_sim/verify_files.gd.txt line 6 and low_budget_sim.gd.txt line 9: run through `& docs/research/systems/probes/isolated_godot.ps1 -GodotArgs @('--headless','--path','.','-s',"$env:TEMP\x.gd",'--','<out.json>')`, or set APPDATA as in 1.
 3. Keep output paths explicit (as sweep does). The `user://…` defaults then land in the private folder.
 Check: the run's `godot.log` appears under the private folder (the wrapper prints `isolated:true`).
+
+## v0.27 (~19:20 KST): D26 decisions needed — measured update/downgrade behaviour (P1)
+Evidence: DATA_AND_BACKEND_ANALYSIS.md §9.18 (2). Real boots, private APPDATA.
+- Setup: v1 = HEAD data. v2 = v1 with melee/ranged max_level 5→3 and up_worker removed. Save made in v1: melee L5 / ranged L4 / worker L4 / 750 coins.
+- First boot of v2 (the update): melee L3 (+350), ranged L3 (+160), coins 1,260.
+  - Worker stays L4 with no effect and no refund (about 420 of value).
+  - No message is shown: no toast, no UI and no text key exist for this.
+  - The pre-update save survives only as .bak, and it is gone after the next save (any settings, result or buy) or after a downgrade boot.
+- Back to v1 (the "rollback"): levels do NOT come back; the coins stay. The player can rebuy at v1 prices and reach exactly the old state (750 coins, L5/L4/L4), but only if the refund was not spent.
+Please decide (02's R5 is PROVISIONAL until you do):
+1. Refund amount when max_level is lowered. The current code refunds at the save's recorded snapshot prices, which equals what was paid unless prices changed in between (R2m: 350 instead of 410). Options: keep it / AB (paid record first) / add a compensation.
+2. Retired upgrade. D26 says refund; the current code keeps a dormant level with no refund. Options: (a) refund and remove; (b) keep it dormant without a refund (it comes back if the upgrade returns); (c) both refund and keep it, which double-pays if it returns, so not recommended.
+3. Notice text (your data/text). Proposed keys:
+   - `notice.content_migrated` ko "업데이트로 강화 상한이 바뀌어 {levels}개 레벨이 조정되었고 {coins} 골드를 돌려드렸습니다."
+   - en "An update changed upgrade limits: {levels} levels were adjusted and {coins} gold was refunded."
+   The display needs 04's menu notice path (menus show no toasts today, §9.12) and a signal from 02.
+4. Downgrade or rollback policy. Options:
+   - (a) a design rule of no max_level decrease after launch (the earlier temporary rule). It avoids all of the above; recommended as the primary rule.
+   - (b) allow it and rely on the refund and rebuy (current behaviour).
+   - (c) block older data from opening newer saves (read_only, like the schema version). Downside: a rollback release is blocked too.

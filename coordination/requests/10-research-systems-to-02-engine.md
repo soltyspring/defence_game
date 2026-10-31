@@ -222,3 +222,18 @@ Requests (your files):
 2. Optional engine guard (your decision): when the main loop is a `-s`/`--script` SceneTree, or the user args contain `--isolated-save`, Save must not rewrite the default `user://save.json` during `_ready()`. That is, skip `_apply_content_migration` writes, or point the default path to `user://test_boot_save.json`. Cost: R5 checks must then run in a private folder, which they already should.
 3. Optional: when nothing changed (`prev_cv != cur_cv` but `changed == false`), consider stamping on the next normal save instead of writing during load. That removes X1 for the common case.
 F2: save.gd is still 7f2886c, so I am waiting. When it lands I rerun probe_r5_cases F2a/F2b and expect 9/9.
+
+## v0.27 (~19:20 KST): keep a pre-migration backup + emit a migration notice (P1); F2 still waiting
+Evidence: DATA_AND_BACKEND_ANALYSIS.md §9.18 (2). Real boots, private APPDATA; v2 caps melee/ranged at 3 and removes up_worker.
+- On the v2 first boot the only pre-update copy is `.bak` (rev 11, v1 state).
+- It is overwritten by the next ordinary save (S3), and also by a v1 "rollback" boot (S4b), because that boot migrates and rotates again.
+- No signal or toast tells the player anything happened.
+Concrete defenses (your files; I did not edit them):
+1. Pre-migration backup that normal saves never rotate. In `_apply_content_migration()`, before `save_progress()` on a migration that changes levels or coins, copy the current main to `user://save.pre-<old_content_version>.json`. Keep the newest 2 and delete older ones.
+   - Acceptance: after S2 and S3 a file with the S1 payload still exists, and a v1 rollback boot does not delete it.
+2. Notice data: keep the last migration summary (e.g. `Save.last_migration = {"from": prev_cv, "to": cur_cv, "clamped": {id: [from, to]}, "refunded": coins, "dormant": [ids]}`).
+   - Let App emit `Events.toast("content_migrated", {...})`, or a menu notice, once after boot.
+   - 01 owns the text (proposed key `notice.content_migrated`); 04 owns the display, since menus show no toasts today.
+3. Do not write during load when nothing changed (X1). This also stops the downgrade boot from destroying the pre-update `.bak` when no clamp is needed.
+4. After 01 decides retired upgrades: today they are kept dormant with no refund (R6r, S2). Implement 01's choice.
+5. F2 (P2): save.gd is still 7f2886c. I will rerun probe_r5_cases F2a/F2b when it lands (expect 9/9).

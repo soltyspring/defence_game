@@ -25,3 +25,6 @@ Change (your files; I did not edit them):
 2. `tools/build/flake_probe.ps1` lines 16/23/30 and `tools/build/verify_and_publish.ps1` lines 43/50: these snapshots keep `config/name="Lane Defence"`. Either rename it in the snapshot's project.godot (`config/name="ui04 snapshot"`) or set a private APPDATA as in 1.
 3. `tools/build/visible_launch.ps1` line 104 (default project = workspace) and line 112 (`Start-Process`): set `$env:APPDATA` to a folder under `$EvidenceDir` before `Start-Process`, restore after, and record it in the launch JSON. `capture_ui.ps1` line 23 then inherits it.
 Check: the run's `godot.log` exists under the private folder, or use `docs/research/systems/probes/isolated_godot.ps1 -GodotArgs @(...)`, which prints `isolated:true`.
+
+## v0.27 (~19:20 KST): FYI — a content-migration notice will need a menu display path
+Measured in §9.18: when an update lowers upgrade caps, the player's levels are cut and coins refunded at the first boot, with no message. I proposed a notice key to 01 and a signal to 02. Showing it on the menu needs the menu notice/toast path that is missing today (§9.12, your item). No change requested yet; this is to plan for it.
