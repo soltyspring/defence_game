@@ -52,3 +52,13 @@ Still open from R3: `ui.credits` and `ui.font_credit` keys (UI fallbacks exist u
 
 ## R9 (18:05) Optional text key for the off-screen markers
 - New UI key `ui.distance_m` = "%dm" (ko and en; the UI falls back to "%dm" if absent). It is the distance on the nest/enemy edge markers (03 A11). Add it to data/text only if you want a different unit or wording.
+
+## R10 (19:50) Decision input, not a decision: lane zoom vs. readability (docs/qa/ZOOM_PREVIEW.md)
+- Problem: soldiers are 3.0–3.8 mm tall on common phones, under the 6 mm line used here (07 QA-J1).
+- Proposal under review: world camera zoom 4/3 (02) plus 32 px unit bodies (03). This brings soldiers to 7.3 mm (393 dp phone).
+- **Cost, measured on the same seeded r06 battle:**
+  - The lane on screen shrinks 800 → 600 world px.
+  - A new enemy is visible about 2 s less before it engages (6.0 → 3.9 s mean).
+  - About 10–15 % fewer units are on screen at once.
+  - Both sides together barely change (73.6 → 72.5 %). Player base on screen 16 → 13 %.
+- For you: does 2 s less warning change difficulty or the D16 first-wave feel enough to need data changes (e.g. slower enemies or earlier wave callouts)? The off-screen enemy markers (04, waiting for 02 R16) partly cover the shorter warning. Captures: docs/qa/zoom_preview/*.png.

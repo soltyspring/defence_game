@@ -1,0 +1,320 @@
+{
+ "line_mm": 1.7,
+ "k": 3,
+ "devices": [
+  [
+   "360x800dp",
+   3.0
+  ],
+  [
+   "393x873dp",
+   2.75
+  ],
+  [
+   "412x915dp",
+   2.625
+  ]
+ ],
+ "rows": [
+  {
+   "item": "resource name 밀가루 / 기력 (hud_top)",
+   "font": "Galmuri11.ttf",
+   "px": 12,
+   "ink_px": 11,
+   "devices": {
+    "360x800dp": {
+     "mm": 1.75,
+     "ok": true
+    },
+    "393x873dp": {
+     "mm": 1.9,
+     "ok": true
+    },
+    "412x915dp": {
+     "mm": 2.0,
+     "ok": true
+    }
+   }
+  },
+  {
+   "item": "resource amount (bold digits)",
+   "font": "Galmuri11-Bold.ttf",
+   "px": 12,
+   "ink_px": 11,
+   "devices": {
+    "360x800dp": {
+     "mm": 1.75,
+     "ok": true
+    },
+    "393x873dp": {
+     "mm": 1.9,
+     "ok": true
+    },
+    "412x915dp": {
+     "mm": 2.0,
+     "ok": true
+    }
+   }
+  },
+  {
+   "item": "resource cap / income digits (Galmuri9)",
+   "font": "Galmuri9.ttf",
+   "px": 10,
+   "ink_px": 9,
+   "devices": {
+    "360x800dp": {
+     "mm": 1.43,
+     "ok": false
+    },
+    "393x873dp": {
+     "mm": 1.56,
+     "ok": false
+    },
+    "412x915dp": {
+     "mm": 1.63,
+     "ok": false
+    }
+   }
+  },
+  {
+   "item": "base HP numbers 1500/1500 (Galmuri9)",
+   "font": "Galmuri9.ttf",
+   "px": 10,
+   "ink_px": 9,
+   "devices": {
+    "360x800dp": {
+     "mm": 1.43,
+     "ok": false
+    },
+    "393x873dp": {
+     "mm": 1.56,
+     "ok": false
+    },
+    "412x915dp": {
+     "mm": 1.63,
+     "ok": false
+    }
+   }
+  },
+  {
+   "item": "army count 5/36 (Galmuri9)",
+   "font": "Galmuri9.ttf",
+   "px": 10,
+   "ink_px": 9,
+   "devices": {
+    "360x800dp": {
+     "mm": 1.43,
+     "ok": false
+    },
+    "393x873dp": {
+     "mm": 1.56,
+     "ok": false
+    },
+    "412x915dp": {
+     "mm": 1.63,
+     "ok": false
+    }
+   }
+  },
+  {
+   "item": "wave line 웨이브 1/4 다음 7초",
+   "font": "Galmuri11.ttf",
+   "px": 12,
+   "ink_px": 11,
+   "devices": {
+    "360x800dp": {
+     "mm": 1.75,
+     "ok": true
+    },
+    "393x873dp": {
+     "mm": 1.9,
+     "ok": true
+    },
+    "412x915dp": {
+     "mm": 2.0,
+     "ok": true
+    }
+   }
+  },
+  {
+   "item": "boss name 곰팡이 장군",
+   "font": "Galmuri11.ttf",
+   "px": 12,
+   "ink_px": 11,
+   "devices": {
+    "360x800dp": {
+     "mm": 1.75,
+     "ok": true
+    },
+    "393x873dp": {
+     "mm": 1.9,
+     "ok": true
+    },
+    "412x915dp": {
+     "mm": 2.0,
+     "ok": true
+    }
+   }
+  },
+  {
+   "item": "card name 식빵병 (12 px)",
+   "font": "Galmuri11.ttf",
+   "px": 12,
+   "ink_px": 11,
+   "devices": {
+    "360x800dp": {
+     "mm": 1.75,
+     "ok": true
+    },
+    "393x873dp": {
+     "mm": 1.9,
+     "ok": true
+    },
+    "412x915dp": {
+     "mm": 2.0,
+     "ok": true
+    }
+   }
+  },
+  {
+   "item": "card cost 30 (Galmuri9)",
+   "font": "Galmuri9.ttf",
+   "px": 10,
+   "ink_px": 9,
+   "devices": {
+    "360x800dp": {
+     "mm": 1.43,
+     "ok": false
+    },
+    "393x873dp": {
+     "mm": 1.56,
+     "ok": false
+    },
+    "412x915dp": {
+     "mm": 1.63,
+     "ok": false
+    }
+   }
+  },
+  {
+   "item": "card badge / worker count (Galmuri9)",
+   "font": "Galmuri9.ttf",
+   "px": 10,
+   "ink_px": 9,
+   "devices": {
+    "360x800dp": {
+     "mm": 1.43,
+     "ok": false
+    },
+    "393x873dp": {
+     "mm": 1.56,
+     "ok": false
+    },
+    "412x915dp": {
+     "mm": 1.63,
+     "ok": false
+    }
+   }
+  },
+  {
+   "item": "toast / tutorial hint",
+   "font": "Galmuri11.ttf",
+   "px": 12,
+   "ink_px": 11,
+   "devices": {
+    "360x800dp": {
+     "mm": 1.75,
+     "ok": true
+    },
+    "393x873dp": {
+     "mm": 1.9,
+     "ok": true
+    },
+    "412x915dp": {
+     "mm": 2.0,
+     "ok": true
+    }
+   }
+  },
+  {
+   "item": "off-screen marker distance 57m",
+   "font": "Galmuri11.ttf",
+   "px": 12,
+   "ink_px": 11,
+   "devices": {
+    "360x800dp": {
+     "mm": 1.75,
+     "ok": true
+    },
+    "393x873dp": {
+     "mm": 1.9,
+     "ok": true
+    },
+    "412x915dp": {
+     "mm": 2.0,
+     "ok": true
+    }
+   }
+  },
+  {
+   "item": "respawn countdown (Galmuri9 20)",
+   "font": "Galmuri9.ttf",
+   "px": 20,
+   "ink_px": 18,
+   "devices": {
+    "360x800dp": {
+     "mm": 2.86,
+     "ok": true
+    },
+    "393x873dp": {
+     "mm": 3.12,
+     "ok": true
+    },
+    "412x915dp": {
+     "mm": 3.27,
+     "ok": true
+    }
+   }
+  },
+  {
+   "item": "banner 웨이브 1/4 (bold 24)",
+   "font": "Galmuri11-Bold.ttf",
+   "px": 24,
+   "ink_px": 22,
+   "devices": {
+    "360x800dp": {
+     "mm": 3.49,
+     "ok": true
+    },
+    "393x873dp": {
+     "mm": 3.81,
+     "ok": true
+    },
+    "412x915dp": {
+     "mm": 3.99,
+     "ok": true
+    }
+   }
+  },
+  {
+   "item": "damage numbers in the lane (Galmuri9 10, 02 battle_view)",
+   "font": "Galmuri9.ttf",
+   "px": 10,
+   "ink_px": 9,
+   "devices": {
+    "360x800dp": {
+     "mm": 1.43,
+     "ok": false
+    },
+    "393x873dp": {
+     "mm": 1.56,
+     "ok": false
+    },
+    "412x915dp": {
+     "mm": 1.63,
+     "ok": false
+    }
+   }
+  }
+ ]
+}

@@ -122,3 +122,14 @@ Details: docs/qa/LANE_OCCLUSION.md (measured with tests/integration/lane_occlusi
 1. **Bottom HUD vs lane: fixed on the 04 side for desktop (45c05f0).** Windows reported its taskbar work area as the safe area, which lifted the HUD row 16 px into the lane (11–13 px of unit sprites covered). Now 0 px in every condition: three phone shapes 800×360, 2.5× window 800×450, fullscreen 640×360. The lowest sprite bottom is 296–297 against the HUD row top at 300 (390 at 450).
 2. **Request:** a phone that reports a real bottom inset still loses 12 px (measured with a 16 px inset). The HUD cannot sit in the inset, so please raise the ground row by the bottom safe inset in `_update_camera`: `ground_screen_y = view.y − 70 − bottom_inset`, where bottom_inset = view.y − SafeArea.safe_rect().end.y (logical px; 04's `src/ui/safe_area.gd` gives it, mobile only). Then tell me and I add `ground_screen_y` to my threat-marker layout (or publish it in `snapshot.threat`, R16).
 3. **Unit size:** 12 of 14 units are under 6 mm body height on 360/393/412 dp phones (soldiers 3.0–3.8 mm). Option B for you: a world-only camera zoom of (k+1)/k, i.e. 4/3 at k=3, 3/2 at k=2, 5/4 at k=4. The HUD stays at k, and every art px becomes exactly k+1 device px, so the pixel grid stays exact. The lane on screen becomes 600 world px wide at k=3. Together with 03 redrawing soldiers at ~32 px bodies (option A), soldiers reach 6.8–7.7 mm. B alone gives 4.4–5.1 mm. Please say whether a world zoom fits your camera code and the R8 auto camera; nothing is measured on a device yet.
+
+## R18 (19:50) Preview of R17-3 (world zoom 4/3) on the real engine: no decision, data for you and 01 (docs/qa/ZOOM_PREVIEW.md)
+- Runtime-only harness (tests/integration/zoom_preview.gd). I did not edit any of your files. It sets `cam.zoom` 4/3 after your `_update_camera` each frame, keeps the ground 70 px above the view bottom (cam.y = ground_y − (view.y/2 − 70)/zoom), and sets view_w/cam_x/view_top for drawing. Same seeded r06 battle in every combo, sim stepped by the script.
+- Results, 393 dp phone (800×360 view), 0–90 s:
+  - Lane on screen: 800 → 600 world px.
+  - Enemy visible before it engages: 6.0 → 3.9 s mean.
+  - Units on screen: allies 5.6 → 5.2, enemies 3.0 → 2.5 (mean).
+  - Both sides on screen together: 73.6 → 72.5 %. Player base on screen: 16 → 13 %.
+  - Soldier body: 3.6 → 4.9 mm, and 7.3 mm with 03's bigger sprites.
+- Things I found that matter if you implement it: `_update_camera` clamps with the full view width, so the clamp must use view.x/zoom. `view.view_w` must be the zoomed width, or the parallax/biome strips are drawn for the wrong width (harmless overdraw, but culling would break). The vertical anchor must be recomputed, otherwise the ground drops 37 px into the HUD at zoom 4/3.
+- Not decided: whether to zoom is yours with 01; 03 owns sprite size.

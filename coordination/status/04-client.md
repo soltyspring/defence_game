@@ -1,4 +1,4 @@
 # 04-client status
-Updated: 2026-10-31 19:25 +09:00
-Status: ACTIVE. Lane occlusion fixed (45c05f0): the desktop taskbar was treated as a safe area; now 0 px of units covered on the three phone shapes, at 2.5× and in desktop fullscreen. Unit-size table: soldiers 3.0–3.8 mm on 360–412 dp phones (docs/qa/LANE_OCCLUSION.md); fixes requested from 03 (bigger bodies) and 02 (pixel-exact world zoom). Store set retaken (#4 now a mid-screen fight), checker 12/12.
-Waiting: 02 R16 threat field, R17 bottom inset + world zoom, release preset, emulator slot; 03 unit body size; 01 captions/wording, `upgrade.supply_regen`, D16 timing call; 06 pick of store screenshots; 07/10 re-verification.
+Updated: 2026-10-31 19:50 +09:00
+Status: ACTIVE. Zoom preview (no decision): 4/3 world zoom + 32 px units would bring soldiers from 3.6 to 7.3 mm. The cost is 800 → 600 px of lane on screen and 2 s less enemy warning (6.0 → 3.9 s) (docs/qa/ZOOM_PREVIEW.md). Text audit: all Galmuri9 10 px numbers are 1.43–1.63 mm, under the 1.7 mm line (04 fix pending). Earlier: lane occlusion fixed (45c05f0), store set retaken (e3c871c).
+Waiting: 02 R16 threat field, R17 bottom inset + zoom, R18 preview reply, release preset, emulator slot; 01 R10 difficulty judgement, captions, `upgrade.supply_regen`; 03 unit body size; 06 store pick; 07/10 re-verification.

@@ -85,6 +85,14 @@ State at checkpoint: work stopped at a safe point. The owned working tree is CLE
 - 45c05f0 [Fix]: the bottom HUD covered 11–13 px of lane units only on desktop. Windows reports the taskbar work area as the display safe area (16 px bottom inset in fullscreen). safe_area.gd now applies the display safe area on mobile only (`from_display`, unit-tested). SafeArea.override_target test hook added. tests/integration/lane_occlusion_probe.gd measures this per frame. Before/after on DISPLAY2: three phone shapes (800×360, targets 48/44/42) and the 2.5× window (800×450) were 0 px before and after; desktop fullscreen 13/11 px → 0 px. A phone with a real bottom inset would still lose 12 px → 02 R17 (raise the ground row by the inset). docs/qa/LANE_OCCLUSION.md.
 - Unit size: tools/build/unit_screen_size.py (alpha bbox from atlases, k=3 1080×2400 at 3.0/2.75/2.625). Soldiers 3.0–3.8 mm; 12 of 14 units are under the 6 mm working line. Requests: 03 (32 px bodies), 02 R17 (pixel-exact world zoom (k+1)/k). A+B gives 6.8–7.7 mm.
 - Store set retaken from a 45c05f0 snapshot: HUD row top 300 in all 12 frames. #4 now shows a mid-screen fight (contact at 63 % of the r06 lane, 3 allies engaged). Checker 12 files / 60 checks / 0 FAIL/INVALID, dark ≤ 3.5 %. Viewed 6 of 12 by eye.
+## 19:50 zoom preview (no decision) — docs/qa/ZOOM_PREVIEW.md
+- tests/integration/zoom_preview.gd: runtime-only combos current / zoom 4/3 / zoom + ×1.5 units on one seeded r06 battle (snapshot 84c18ab, DISPLAY2, isolated APPDATA via new `visible_launch.ps1 -IsolateAppData`; real save hashes unchanged). Enemy visible before engaging 6.0 → 3.9 s; units on screen −10–15 %; both sides visible 73.6 → 72.5 %; soldier 3.6 / 4.9 / 7.3 mm.
+- tools/build/text_screen_size.py: all Galmuri9 10 px numbers (HP, cost, income, army, badges, damage) are 1.43–1.63 mm (< 1.7 mm line); 12 px Hangul labels are 1.75–2.00 mm. The fix is a 04 task, not done yet (needs layout room).
+- Requests: 02 R18, 03, 07, 01 R10 (difficulty impact of 2 s less warning). Nothing decided.
+## Exact next steps on resume (19:50)
+1. Read the replies to 02 R16/R17/R18, 01 R10 and 03 (unit size).
+2. 04 task: raise the Galmuri9 10 px numbers to ≥ 1.7 mm (Galmuri9 20 or Galmuri11 12), check the layout matrix and captures.
+3. If 02 adds `snapshot.threat`: verify the markers on the real engine (tests/ui + DISPLAY2 capture).
 ## Unfinished / open (not done, do not claim)
 1. Theme-A labels: waiting for 01 to commit data/text. Then: run test_ui (typography gate) + worst-layout ko/en visible captures.
 2. 2.5× (non-integer) pixel text irregular (57–68% odd runs): waiting for 02 `scale_mode="integer"` (04 R9).

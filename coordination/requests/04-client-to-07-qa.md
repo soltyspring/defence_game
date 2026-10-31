@@ -71,3 +71,8 @@ Evidence (DISPLAY2, fresh HEAD snapshot, notches 34/34): build/qa/upg/{ko,en}_{1
   - Still open: a phone with a real bottom inset would lose 12 px. Asked 02 to raise the ground row by the inset (R17).
 - Unit size: soldier bodies 19–21 view px = 3.0–3.8 mm on 1080×2400 phones at 360/393/412 dp. Hero 5.1–5.8 mm; only siege and the bosses reach the 6 mm line I used (a working criterion; tell me if your QA-J1 uses another). Fix options with numbers went to 03 (bigger bodies) and 02 (pixel-exact world zoom). Please re-check your lane-height and sprite-% numbers against this table; I measured alpha bounding boxes, not frame sizes.
 - Store captures retaken (docs/qa/store_captures/, 45c05f0).
+
+## 19:50 QA-J1 preview numbers (docs/qa/ZOOM_PREVIEW.md); please check the method
+- Three runtime-only combos of the same seeded r06 battle (393 dp layout): current / zoom 4/3 / zoom + ×1.5 units. Metrics per 0.25 s over 90 s: enemy visible time before engaging 6.0 / 3.9 / 3.9 s; on-screen allies 5.6 / 5.2 / 5.2; both sides visible 73.6 / 72.5 / 72.5 %; player base on screen 16 / 13 / 13 %; markers needed 100 % (the nest is never on screen in this run). Soldier body 3.6 / 4.9 / 7.3 mm.
+- Text: all Galmuri9 10 px numbers are 1.43–1.63 mm on 360–412 dp (line 1.7 mm). 12 px Hangul labels pass (1.75–2.00 mm).
+- The run used an isolated APPDATA (real save hashes unchanged). Captures are not black (0 %).
