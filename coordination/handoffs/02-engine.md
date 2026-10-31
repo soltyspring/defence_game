@@ -25,3 +25,8 @@ Balance (selftest, current data): competent bot 3/3 r01–r04, r08, r09; 0/3 r05
 3. 08 remaining H3/H4/H6-done/H8/H9–H13; P4 save latency log; P5 perf hooks.
 4. QA-J1 camera framing (enemies off-screen r01 t=7..32) — coordinate with 04.
 5. 01 decisions: D16 window vs r01 data, D7 caps text, 900 s timer rule. 05 A8 cycle; OS close → quit_game; 04 R12 release preset.
+
+## Commit for this step
+09508b1e15549820cd6a5a03624f4844d472550e [Fix] 피해 숫자를 번들 도트 글꼴·병합·겹침 방지로 표시하고 타격 효과음에 피격 진영 추가 — PUSHED (origin/main = 09508b1 verified).
+- 07 -Head: my run got "another 07-qa acceptance run is in progress"; 07's own run is on snapshot 09508b1 (build/qa07 latest env.txt git_head=09508b1). Result is 07's to post.
+- 05 -Integration: sandbox held open by 05's own process ("could not clean … files held open"), exit 2, report not refreshed (still hit_melee=36 from an older run). 05 to re-run on 09508b1.
