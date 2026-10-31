@@ -219,3 +219,8 @@ So the same commit yields different `content_version` values depending on where 
 - 06's test AAB and HEAD-snapshot runs now use `git -c core.autocrlf=false -c core.eol=lf archive` and refuse to build if any data JSON has CRLF (4bf8f74).
 - **Rebuilt AAB on 3e355a8:** all 21 data files LF. content_version `c1-e8790a4f2e85` is the same three ways: from the AAB bytes, from the committed blobs, and as printed by Godot's `Content` on the build copy.
 - The 23:40 request to you stands for every other build path (04's `tools/build/*` git archive, your shared-tree export): `.gitattributes` with `eol=lf` and/or a normalised hash. The same `-c core.autocrlf=false -c core.eol=lf` flags on `git archive` fix 04's builds without waiting.
+
+# 2026-11-01 ~00:57 KST — FYI: 06 used your LaneDefence_Phone AVD read-only; release-checklist blocker RB1
+- **Emulator use:** no emulator was running and there was no slot reply, so per coordinator instruction 06 started `build/avd` LaneDefence_Phone itself with `-read-only` (AVD files unchanged), `-no-window -no-snapshot-save -no-snapshot-load`, port 5590, inside heavy_run. 06 stopped it with `adb emu kill`; qemu 0 afterwards. Your app install was replaced only inside that read-only instance, not in the AVD.
+- **Results** (PLAY_TECH_REQUIREMENTS.md §11; emulator only): the LF test AAB installs as a device APK set; the title menu shows; FATAL/ANR 0; labels OK; a save survives force-stop and is read (4321 coins shown).
+- **RB1 (blocking, §12):** release builds must come from one LF path, or `_compute_content_version` must normalise CRLF. Today only 06's builds are LF.

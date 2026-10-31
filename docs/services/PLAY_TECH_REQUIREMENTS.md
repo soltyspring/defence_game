@@ -185,3 +185,44 @@ Request to 02 (root files are 02's): pin line endings for release builds, e.g. `
 | arm64 download | 30,404,065–30,415,747 B |
 | Leftovers after the run | %TEMP%\svc06_aab_* deleted, no svc06_iso_* folder, 0 Gradle 8.11.1 / svc06_tools Java processes |
 The PowerShell reimplementation (`tests/services/svc06_content_version.ps1`) was checked first against 10's published values for 7b93d1f (LF `c1-a7b265ce4f6f`, CRLF `c1-ea9c929ba40e`); both reproduce exactly. The §9 inference ("06's AAB carried CRLF") applied to the earlier builds. From 4bf8f74 on, 06 test builds carry LF data, and the value matches the repo. Builds from other paths (04 apk_head, 02's shared tree) are still as in §9 until 02 pins line endings.
+
+## 11. Test AAB installed and run on an emulator (2026-11-01 00:14–00:56 KST; EMULATOR EVIDENCE ONLY)
+**Not a real-phone check and not a payment check.** Ads and billing stay disabled (Q2 deferred). Debug key; nothing uploaded.
+
+**AAB:** rebuilt from the LF-pinned copy of 3e355a8 in heavy_run '06-aab-emu-check'.
+- eol gate 21/0; AAB data CRLF 0
+- content_version c1-e8790a4f2e85 = committed blobs
+- AAB SHA-256 4B7A24CF…2CD98, 59,212,655 B
+
+**Script:** `tests/services/emu_install_check.ps1`, run inside heavy_run '06-emu-check'.
+- No emulator was running, so 06 started `build/avd` LaneDefence_Phone itself: `-no-window -no-snapshot-save -no-snapshot-load -read-only -no-audio -no-boot-anim -gpu host -port 5590`. `-read-only` leaves the AVD files unchanged; 02's install on the AVD was only replaced inside this throw-away instance.
+- Device: sdk_gphone64_x86_64, Android 16 / API 36, x86_64.
+- Device APK set: `bundletool build-apks`/`extract-apks` with the device spec + ko-KR → base-master, base-x86_64, base-xhdpi, base-en, base-ko, assetPackInstallTime. Installed with `adb install-multiple` → **Success**.
+| Check | Run 2 (00:49) | Run 3 (00:52, final) |
+|---|---|---|
+| Boot (cold) | 25 s | 26 s |
+| Installed target SDK | 36 | 36 |
+| Launcher label (installed package) | default `Bakery Knights`; `split_config.ko.apk` contains `빵집 기사단` | same |
+| First launch | running (pid); `[App] boot ok … title=Bakery Knights: Mold Defense screen=menu … save_recovered=false` | same |
+| Title shown | screenshot `docs/services/evidence/emu_first_launch.png`: logo "Bakery Knights / Mold Defense", Play / Select Round / Upgrades / Settings, 0 coins | — |
+| Godot log errors (`ERROR`/`SCRIPT ERROR`) | 0 | 0 (one "Failed to load cached shader, recompiling" warning) |
+| logcat FATAL / Fatal signal / F DEBUG lines | **76, not attributed** (full log not kept in that run) | **0** |
+| ANR | 0 | 0 |
+| Save persistence | — | a valid save (checksum per save.gd; coins 4321, unlocked_round 2) was written to `files/save.json` via `run-as`, then: launch (no recovery) → `am force-stop` → relaunch. The file is byte-identical (sha 3de5c46d…), `save_recovered=false`, and screenshot `emu_relaunch.png` shows **4321 coins and "Continue"**, i.e. the game read it |
+| After relaunch | running, FATAL 0, ANR 0 | same |
+| Cleanup | `adb emu kill` → emulator exited; qemu 0; Gradle/svc06 Java 0 | same |
+Limits:
+- The 76 lines in run 2 cannot be attributed afterwards. In that run the app process was alive and its Godot log had 0 errors. The final run, which records per-process attribution (`logcat_fatal_*.txt`), shows 0.
+- The ko label was checked in the installed ko split, not visually on the launcher (device locale en-US).
+- The save was seeded, not created by gameplay. The game did not rewrite it on boot (no data change required a write). So this shows the files dir survives a force-stop and is loaded, not a gameplay-made save.
+- Run 1 (00:20) failed at device-spec handling and was fixed. The 00:41 attempt timed out at boot (warm boot) and was fixed with `-no-snapshot-load`.
+- Evidence files (6ca56a7): trailing spaces at line ends of the logcat extracts were trimmed (the repo whitespace check rejects them), and the local temp path in `emu_check.json` was replaced by `%TEMP%`. No other content changed.
+
+## 12. Release checklist (blocking items)
+| ID | Item | Status | Blocks release until |
+|---|---|---|---|
+| RB1 | **One line-ending path for every release build.** All release AAB/APK builds come from one build path whose data bytes are LF (06's pinned `git -c core.autocrlf=false -c core.eol=lf archive` + CRLF gate, or a checkout covered by `.gitattributes eol=lf`), **or** 02 normalises `\r\n`→`\n` in `Content._compute_content_version`. Today 06 builds are LF (§10). 04 `tools/build/build_android_debug.ps1` (plain git archive → CRLF on this PC) and 02 shared-tree exports (LF + mixed `data/economy.json`) are not | **OPEN (blocking)** | the release build's `assets/data/**` is checked LF (or the hash is normalised) and its content_version equals the repo's (06 `aab_data_check.txt`) |
+| RB2 | Gradle/AAB release preset in export_presets.cfg (02) and a JDK 17 the build uses | OPEN | §4, §6 |
+| RB3 | Launcher icon keys set (02), placeholder replaced | OPEN | STORE_GRAPHICS.md §2 |
+| RB4 | Real phone run (not emulator) and Play Console 16 KB / 64-bit status on the uploaded bundle | OPEN (user / 07) | §11 is emulator-only |
+| RB5 | KIPRIS check before the final store name | OPEN (user) | KIPRIS_MANUAL_CHECK.md |

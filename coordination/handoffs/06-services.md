@@ -1,5 +1,17 @@
 # 06-services handoff
-Updated: 2026-10-31 ~23:56 KST (LF-pinned builds, AAB data verified; quarantine before)
+Updated: 2026-11-01 ~00:58 KST (emulator install/run check done; release blockers; LF builds before)
+## Emulator install/run check (00:14–00:56, heavy_run, emulator only)
+- **Script:** `tests/services/emu_install_check.ps1 -Aab <aab> -OutDir docs/services/evidence`. Run it inside heavy_run with `$ErrorActionPreference='Continue'` and **no** `2>$null` on the child; with the lock's Stop mode, redirecting stderr killed the child before its cleanup ran. It uses a running emulator if one exists; otherwise it starts build/avd LaneDefence_Phone read-only on port 5590 and stops only that instance.
+- **Attempts:**
+  1. 00:20 — device-spec property error. Emulator stopped by finally.
+  2. 00:39 — `--x=(Join-Path …)` args split into two. The child died; 06 stopped its own emulator-5590 by hand with `adb emu kill`.
+  3. 00:48 — warm boot did not complete in 425 s.
+  4. 00:51 — cold boot; all checks passed except 76 unattributed FATAL-pattern lines.
+  5. 00:55 — final run with attribution: FATAL 0, ANR 0, everything else as in run 4.
+- **Evidence (committed):** docs/services/evidence/emu_check.json, emu_first_launch.png, emu_relaunch.png, logcat_godot_*.txt, logcat_fatal_*.txt. PLAY_TECH_REQUIREMENTS §11.
+- **Release checklist:** PLAY_TECH §12, RB1 (one LF build path or a normalised hash) blocking; RB2–RB5.
+- **Next:** none for 06 until 02 or 04 change their build paths (RB1) or a real phone is available (RB4, user/07).
+- **Known script gap:** the emulator's redirected log files can still be locked when the script deletes its `%TEMP%\svc06_emu_*` work dir. After the 00:55 run two such dirs were left and 06 deleted them by hand at 00:57. A retry loop is not committed because it has not been run; delete leftovers after each run.
 ## LF-pinned test builds (23:38–23:56)
 - **Scripts (4bf8f742e049c7cc050e8951ba88321b860c1585):**
   - `svc06_content_version.ps1` (new) reimplements content_version, checked against 10's 7b93d1f values; it also counts line endings.

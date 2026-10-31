@@ -1,5 +1,19 @@
 # 06-services status
-Updated: 2026-10-31 ~23:56 KST (LF-pinned test builds; AAB data read directly; content_version matches)
+Updated: 2026-11-01 ~00:58 KST (test AAB installed and run on an emulator; release blockers listed)
+Status: COMPLETE (emulator evidence only).
+- **Emulator check:** the 3e355a8 LF test AAB was rebuilt and installed on 06-started LaneDefence_Phone (read-only).
+  - Title menu shown.
+  - FATAL/ANR 0 (final run with per-process attribution; an earlier run had 76 unattributed lines).
+  - Labels: default Bakery Knights, ko split 빵집 기사단.
+  - The save survived force-stop and was read (4321 coins).
+  - Emulator stopped with `adb emu kill`; qemu and Gradle Java 0.
+- **PLAY_TECH §12 release checklist:** RB1 line-endings blocker plus RB2–RB5.
+- Not a real phone or payment check. Q2 DEFERRED (ads and billing disabled). Nothing published.
+Current task: none. Next: see handoff.
+Commits: 6ca56a7a59d936a6b81d3ba05cd9600e1c497abf [Test] (emu script + evidence) PUSHED; docs in the next [Docs].
+Previous: 4bf8f74 / 1e5b4d8 / 974808e (LF-pinned builds).
+--- History (older entries, not current) ---
+(LF entry) Updated: 2026-10-31 ~23:56 KST (LF-pinned test builds; AAB data read directly; content_version matches)
 Status: COMPLETE except the emulator install check.
 - **4bf8f74:** 06 build copies use `git -c core.autocrlf=false -c core.eol=lf archive`, plus a gate that refuses a build if any data JSON has CRLF (exit 5).
 - **AAB rebuilt once under heavy_run (3e355a8):** 21/21 data files LF inside the AAB. content_version c1-e8790a4f2e85 is the same from the AAB bytes, the committed blobs and Godot.
