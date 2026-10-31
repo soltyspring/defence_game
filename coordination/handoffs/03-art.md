@@ -49,6 +49,7 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - Fixed during review: yeast puff too light (protan dL* 9.9) -> darkened, then rim lightened (dark silhouette passes); fly ground dots failed the dark silhouette -> removed; boar shortened 38 -> 32 px; roll projectile lightened (meadow 45 -> 95 %).
 - Still open: A27 crowd occlusion by the boar (e_spitter 1.7 % in the test scene) -> 02 A23; A28 fast/melee bread cues; e_brute dark 59.1 %; main-tree re-import + in-game recapture (02 then 04/07).
 - build.py now also retries text/json writes on Errno 22 (the Z: share).
+- Commit 7705aec [Design] name-matching redraws: PUSHED origin/main (verified with git branch -r --contains). One Publish attempt before it failed `git diff --check` (blank line at EOF in 3 files); I unstaged only my own 68 files, fixed them and re-published. No foreign files were touched.
 
 ## Exact next steps on resume
 1. Read coordinator-to-03-art.md, DECISIONS.md (Q1 first: re-theme takes priority), and incoming *-to-03-art.md.
