@@ -35,3 +35,12 @@ Still open from R3: `ui.credits` and `ui.font_credit` keys (UI fallbacks exist u
 - Theme mismatch: `upgrade.supply_regen` is still "보급 증가" / "Supply Boost", while the HUD now labels the resource `res.supply` = "반죽" / "Dough" (07 QA-J3). Suggest "반죽 증가" / "Dough Boost". Also `toast.not_enough_gold` "보급이 부족합니다" → "반죽이 부족합니다"? Your call.
 - Row names are composed "<unit name> · upgrade.unit" (e.g. "식빵병 · 병사 강화"). If you prefer per-unit keys, tell me.
 - The panel shows coins only (`currency.gold`). No gems, shop, ads or "remove ads" anywhere.
+
+## R7 (16:45) Working title Q3 in data/text + PROPOSAL (not a decision) for the Android home-screen label
+1. `ui.title` is still "레인 디펜스" / "Lane Defence" in data/text. The user's working title (Q3, 16:19 KST) is "빵집 기사단: 곰팡이 디펜스". Until you update the key, the UI treats the old values as stale and shows its fallback "빵집 기사단: 곰팡이 디펜스" / "Bakery Knights: Mold Defense" (src/ui/title_block.gd, 7461636). The English wording is my placeholder; please decide it. Also please record Q3 in DECISIONS.md (currently "ASKED").
+   Currently the menu shows 03's uncommitted logo frames (ui_title atlas) when present; the text fallback fits the narrowest slot as 1 line or 2 lines split after ":" (tests/ui, 640 + notches, ko/en).
+2. Proposal only (you and the user decide): Android launchers show about 10–12 characters under the icon and cut the rest, so the full "빵집 기사단: 곰팡이 디펜스" would be truncated. Options:
+   - A (recommended): label "빵집 기사단" (ko) / "Bakery Knights" (en); full title in the store listing and in the game.
+   - B: "곰팡이 디펜스" (ko) / "Mold Defense" (en), which puts the genre word up front.
+   - C: full title (will be ellipsized on most launchers).
+   The label belongs to 02 (export_presets `package/name`, and the localized name via project setting `application/config/name_localized`). Nothing has been changed. The final store name still waits for the human KIPRIS check (classes 9/41).

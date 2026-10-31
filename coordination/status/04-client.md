@@ -1,4 +1,4 @@
 # 04-client status
-Updated: 2026-10-31 16:25 +09:00
-Status: ACTIVE. Upgrade screen (inactive until 02 Save.buy_upgrade), QA-J3 worker shape + resource names, first-wave banner (inactive until 02 wave_cleared). No monetization UI (Q2 보류). All pushes gated by tests.
-Waiting: 02 R13/R14, 01 R5/R6, 07 re-verification.
+Updated: 2026-10-31 16:45 +09:00
+Status: ACTIVE. Gate flake explained and fixed (missing import + shared user://). Working title shown on the menu (logo or text fallback). Android label proposal sent to 01 (not decided).
+Waiting: 02 R13 wave_cleared, R14 buy_upgrade; 01 R5–R7; 07 re-verification.

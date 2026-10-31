@@ -1,5 +1,5 @@
 # 04-client handoff — FINAL CHECKPOINT (user-requested shutdown)
-Updated: 2026-10-31 16:25 +09:00
+Updated: 2026-10-31 16:45 +09:00
 Session: sess_a24d01e7-e535-413c-9ff6-d5258090820b (Kiro CLI, claude-opus-5.5, trust-all; same window throughout, resumed after two account changes).
 State at checkpoint: work stopped at a safe point. The owned working tree is CLEAN (all 04 work committed and pushed). No 04-started Godot or emulator process is running. Nothing was left unverified or uncommitted.
 
@@ -43,6 +43,10 @@ State at checkpoint: work stopped at a safe point. The owned working tree is CLE
 - New src/ui/upgrade_panel.gd (modal from menu, round select and result). It calls only `Save.buy_upgrade(id, to_level)` (02 R14, 10's contract) and is inactive with a notice until 02 adds it. Each result has its own text, kind and glyph. Verified: tests/ui (fake Save: ok, not_enough_coins, max_level, save_failed, inactive); real engine on DISPLAY2 ko/en 1×/2×: inactive notice, integration 35/35 ×4 (build/qa/upg/).
 - QA-J3: octagon "econ" worker button; HUD resource names (반죽/기력). Asked 01 to retheme "보급 증가" (R6).
 - Waiting: 02 R13 (wave_cleared), R14 (buy_upgrade); 01 R5/R6 texts; 07 re-verification (16:05, 16:25).
+## 16:45 milestone: flake root cause, working title (Q3), Android label proposal
+- Flake: reproduced the 14 FAILs exactly by running without a completed import. Also found a parallel-run race on shared user://. Fixed in 3aed626 (per-process paths, explicit ENV_NOT_IMPORTED check, the gate verifies imports with 3 retries). 5 sequential + 5 parallel UI runs and 3 parallel integration runs are now clean (tools/build/flake_probe.ps1, logs build/qa/flake/).
+- Title: src/ui/title_block.gd (7461636, 2177a45). The 03 logo is used if present, else text in 1 line or 2 lines split after ":". Stale "레인 디펜스" is replaced by the working-title fallback until 01 updates ui.title (R7). Captured ko/en 1×/2× on DISPLAY2 (build/qa/title). Q2 = 보류 (no monetization UI). Q3 working title only, final name after a human KIPRIS check.
+- Android label: proposal sent to 01 (R7), not decided (A: "빵집 기사단"/"Bakery Knights").
 ## Unfinished / open (not done, do not claim)
 1. Theme-A labels: waiting for 01 to commit data/text. Then: run test_ui (typography gate) + worst-layout ko/en visible captures.
 2. 2.5× (non-integer) pixel text irregular (57–68% odd runs): waiting for 02 `scale_mode="integer"` (04 R9).
