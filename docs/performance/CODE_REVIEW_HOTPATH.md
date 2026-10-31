@@ -53,8 +53,7 @@ duplicates (fdd4d86); `battle.gd` swaps the event buffer (P3); towers scan foes 
 ## 3. Measurement plan (in the quiet window C11, same seeds, contamination monitor on)
 1. Baseline at HEAD: `perf_bench.gd` (sections) and `run_perf.ps1 -Frame` (stress A/B view, draw calls, readability counts). The stress
    refill must be fixed first. Root cause found in this review: D18 set `enemy_ai.pool = []` in r01–r10, and `perf_frame_probe.gd _stress()`
-   only refilled enemies from that pool, which explains the drop to ~40 units. Fix it in the 08 probe (use `Content.round_enemy_roster`)
-   before the window.
+   only refilled enemies from that pool, which explains the drop to ~40 units. **Fixed 17:0x** (BASELINE §7.4: 36/36 reached in a functional check). In that run the sim did not step (open item).
 2. After each 02 change: `ab_retest.ps1 -RequireQuiet` for sim items (H3, H4, H7, H8, H10, H11) and the frame probe for view items
    (H1, H2, H5, H6, H9, H13). Accept only VALID_QUIET runs.
 3. Device: none attached. The H1/H2 effects are expected to be larger on Mali-G52/Adreno 610 class GPUs and little cores.

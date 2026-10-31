@@ -130,6 +130,7 @@ func _process(delta: float) -> bool:
 		peak.fx = maxi(peak.fx, int(perf.counts.fx))
 	if app and app.battle and app.battle.sim:
 		_readability(app.battle.sim, fm)
+		if stress: _stress_track(app.battle.sim)
 	var m := _mon()
 	for k in ["tex_mem", "video_mem", "static_mem", "objects", "nodes"]:
 		peak[k] = maxi(peak[k], m[k])
@@ -138,16 +139,64 @@ func _process(delta: float) -> bool:
 	return false
 
 ## Keep both sides at caps: test-only cheat on the live sim.
+## Enemies are refilled from the round's enemy roster (Content.round_enemy_roster: waves, ai pool, trickle, hp triggers, summons),
+## bosses excluded. Earlier versions used only enemy_ai.pool, which D18 emptied for r01–r10 (stress then reached only ~40 units).
+var _stress_ids: Array = []
+var _stress_src := ""
+var stress_reach := {"ally_max": 0, "enemy_max": 0, "frames": 0, "frames_ally_at_cap": 0, "frames_enemy_at_cap": 0,
+	"frames_both_at_cap": 0, "first_both_at_cap_t": -1.0, "caps": {}, "source": ""}
+
+func _stress_roster(sim) -> Array:
+	var content = root.get_node_or_null("Content")
+	var ids: Array = []
+	if content and content.has_method("round_enemy_roster"):
+		for id in content.round_enemy_roster(sim.round_def):
+			var d: Dictionary = content.get_unit(str(id))
+			if not ((d.get("tags", []) as Array).has("boss") or bool(d.get("is_boss", false))):
+				ids.append(str(id))
+		_stress_src = "Content.round_enemy_roster (bosses excluded)"
+	if ids.is_empty():
+		ids = Array(sim.round_def.enemy_ai.get("pool", []))
+		_stress_src = "enemy_ai.pool (fallback)"
+	if ids.is_empty() and content:
+		for u in content.units.values():
+			if str(u.get("faction", "")) == "enemy" and not (u.get("tags", []) as Array).has("boss"):
+				ids.append(str(u.id))
+		_stress_src = "all non-boss enemy units (fallback)"
+	return ids
+
 func _stress(sim) -> void:
 	if sim.ended or sim.paused: return
+	if _stress_ids.is_empty():
+		_stress_ids = _stress_roster(sim)
+		stress_reach.source = _stress_src
+		stress_reach.roster = _stress_ids.duplicate()
 	sim.gold = sim.gold_max
 	for id in sim.card_ids:
 		sim.card_cd[id] = 0.0
 		sim.deploy(id)
-	if sim.army_count(-1) < sim.caps.enemy and not sim.round_def.enemy_ai.get("pool", []).is_empty():
-		sim._spawn_enemy(str(sim.round_def.enemy_ai.pool[_frames % sim.round_def.enemy_ai.pool.size()]))
+	if not _stress_ids.is_empty():
+		var guard := 0
+		while sim.army_count(-1) < sim.caps.enemy and guard < 4:   # up to 4 per frame: refills quickly, avoids a burst
+			sim._spawn_enemy(str(_stress_ids[(_frames + guard) % _stress_ids.size()]))
+			guard += 1
 	sim.player_base.hp = sim.player_base.hp_max
 	sim.enemy_base.hp = sim.enemy_base.hp_max
+
+func _stress_track(sim) -> void:
+	var a: int = sim.army_count(1)
+	var e: int = sim.army_count(-1)
+	stress_reach.caps = {"ally": int(sim.caps.ally), "enemy": int(sim.caps.enemy)}
+	stress_reach.frames += 1
+	stress_reach.ally_max = maxi(stress_reach.ally_max, a)
+	stress_reach.enemy_max = maxi(stress_reach.enemy_max, e)
+	var aa: bool = a >= int(sim.caps.ally)
+	var ee: bool = e >= int(sim.caps.enemy)
+	if aa: stress_reach.frames_ally_at_cap += 1
+	if ee: stress_reach.frames_enemy_at_cap += 1
+	if aa and ee:
+		stress_reach.frames_both_at_cap += 1
+		if stress_reach.first_both_at_cap_t < 0.0: stress_reach.first_both_at_cap_t = snappedf(_t, 0.01)
 
 ## R09-08-1 (09-research): simultaneous damage popups / fx / projectiles per frame vs caps, with the frame time of the
 ## busiest frame. Counted directly from the live sim pools (alive flags), not from Perf.counts.
@@ -211,6 +260,7 @@ func _finish(app) -> void:
 		"draw_calls": _idist(draw_calls), "primitives": _idist(prims), "units": _idist(units),
 		"frames_over_ms": over_budget_frames,
 		"readability_load": readability,
+		"stress_reach": stress_reach if stress else {},
 		"ab": {"target": ab_target, "frame_ms_shown": _dist(frame_visible), "frame_ms_hidden": _dist(frame_hidden),
 			"process_worst_per_s_shown": _dist(proc_visible), "process_worst_per_s_hidden": _dist(proc_hidden),
 			"note": "difference = CPU cost of the target (view = battle_view._draw, 02; ui = HUD/menus, 04 or 02 fallback)"} if ab_view else {},
@@ -230,4 +280,8 @@ func _finish(app) -> void:
 	print("[frame_probe] frames=%d frame_p95=%.2fms gpu_p95=%.2fms draw_calls_p95=%s units_max=%d tex=%.2fMiB -> %s" % [
 		frame_ms.size(), rep.frame_ms.get("p95", 0.0), rep.render_gpu_ms.get("p95", 0.0), str(rep.draw_calls.get("p95", 0)),
 		peak.units, peak.tex_mem / 1048576.0, out_path])
+	if stress:
+		print("[frame_probe] stress_reach ally_max=%d/%d enemy_max=%d/%d frames_both_at_cap=%d/%d first_both_at_cap_t=%.2f source=%s" % [
+			stress_reach.ally_max, int(stress_reach.caps.get("ally", -1)), stress_reach.enemy_max, int(stress_reach.caps.get("enemy", -1)),
+			stress_reach.frames_both_at_cap, stress_reach.frames, stress_reach.first_both_at_cap_t, stress_reach.source])
 	quit(0)

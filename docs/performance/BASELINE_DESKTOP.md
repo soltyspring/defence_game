@@ -164,3 +164,19 @@ The stress probe reached only 37–40 units (M1: 72–75) with at most 1 project
 P1 cost at caps is **not re-measured**. Cause of the lower unit count not yet investigated (open item).
 R09-08-1 readability counts in that run: max simultaneous damage popups 16/24, fx 8/48, projectiles 1/64, 0 frames at any cap.
 These do not cover a dense late-wave scene yet.
+
+### 7.4 Stress refill fix (08 bug) and cap-reach check (2026-10-31 17:0x, FUNCTIONAL CHECK ONLY — not a performance result)
+Cause of the ~40-unit stress scene (§7.3): `perf_frame_probe.gd _stress()` refilled enemies only from `round_def.enemy_ai.pool`, which D18
+emptied in r01–r10. Fixed: enemies now come from `Content.round_enemy_roster(round_def)` (bosses excluded; fallbacks: ai pool, then all
+non-boss enemies), up to 4 per frame. The probe now writes `stress_reach` (max living per side, frames at each cap, first time both at
+cap, roster source).
+Single windowed run: r06 autoplay with `--perf-stress`, 4 s warm-up + 12 s, `--screen 1` on `\\.\DISPLAY2`, window rect
+(-1608,299)-(-312,1058) verified, exit 0. Output: `build/perf/stress_reach_check.json`. Result: **ally 36/36 and enemy 36/36 in 721/721
+measured frames** (both at cap from t = 4.0 s); roster e_brute, e_grunt, e_spitter, e_swarm. Classification: CONTENDED_DESKTOP_PROXY (4
+foreign Godot processes at start, 9 seen during the run) and run on the shared working tree, which contains 02's uncommitted
+battle_sim.gd/battle.gd changes. The timings from it (frame p95 16.67 ms vsync, draw calls p95 191, texture 17.18 MiB) are **not used for any
+judgement**.
+New open item: in this run the battle sim did not step. The battle-loop time p50 was 0.013 ms (≈ 1 ms is expected at 72 units), and fx,
+projectiles and damage texts stayed at 0 for 16 s, so the armies never met. The cause is not determined: either the sim is paused or not
+stepping in this mode. A suspect is the working tree's uncommitted 02 changes, but this is unverified. The next stress run (C11) will use a
+`git archive` snapshot of HEAD and record sim.t/paused/ended at the end before any draw-cost number is taken.

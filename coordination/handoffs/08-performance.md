@@ -1,4 +1,20 @@
 # 08-performance handoff
+## M6 — 08 stress-refill bug fixed (2026-10-31 17:0x +09:00)
+- Coordinator review: 7e166dc/ab00170 accepted. **New rule: verify every commit right after publishing with `git show --stat <sha>`
+  and `git branch -r --contains <sha>` before writing its SHA anywhere** (9d989ed had recorded a non-existent SHA).
+- Fix: `tests/performance/perf_frame_probe.gd _stress()` refills enemies from `Content.round_enemy_roster(round_def)` (bosses
+  excluded; fallbacks: ai pool, then all non-boss enemies), up to 4 per frame. New `stress_reach` output records the max living per
+  side, frames at cap and the roster source.
+- Check (exactly one Godot run, windowed on \\.\DISPLAY2, r06, 4+12 s, exit 0): **ally 36/36, enemy 36/36 in 721/721 frames**
+  (both at cap from t=4.0 s). CONTENDED (4 foreign Godot processes at start, 9 during) and run on the shared working tree with 02's
+  uncommitted battle_sim/battle changes. **Functional check only, no performance judgement.**
+- New open item: the sim did not step in that run (battle-loop p50 0.013 ms; fx, projectiles and texts 0), so the armies never met.
+  Cause unknown (not investigated further, to keep to one Godot run). Next stress run: use a `git archive` HEAD snapshot and log
+  sim.t/paused/ended.
+- Next steps (exact): (1) Add sim-state logging (t, paused, ended, steps per frame) to the frame probe and verify it in the next allowed
+  Godot run. (2) In C11: the M3 A/B command, then the frame probe stress run from a HEAD snapshot for the H1/H2 baselines. (3) Run the
+  asset gate on every 03/05 asset commit.
+- M6 commit: recorded below only after `git show` verification.
 ## M5 — static hot-path code review (2026-10-31 16:4x +09:00, no Godot used)
 - Coordinator review: 9cbae83/3d07db5 accepted. C11 is still closed (01/02/03/04/05/07 working), so this milestone is Godot-free only.
 - Done: `docs/performance/CODE_REVIEW_HOTPATH.md`. Committed HEAD 0590e7a was exported with `git show`. The doc covers per-frame
