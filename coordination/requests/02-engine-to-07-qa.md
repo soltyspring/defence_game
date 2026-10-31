@@ -42,3 +42,6 @@ Commits: 4d77225 (Save.buy_upgrade) and the one recorded at the bottom of 02 han
 
 ## QA-J1 (17:55) — options written, proposal only
 docs/architecture/CAMERA_FRAMING_OPTIONS.md: current numbers (no enemy on screen for ~45 s with an idle hero in r01) and options A–G. Proposed acceptance for you to accept or change: r01, idle hero → at least one enemy on screen within 5 s of its first contact with an ally; nest visible whenever the hero is within 640 px of it. Sprite height % unchanged (only a smaller base view would raise it, rejected because it breaks integer scale).
+
+## QA-B017 (18:05, static) — engine owes the cue
+01's D21 note already specified the cue: emit the existing `counterattack` toast when the first pressure wave spawns. I missed it in 22d99ea. Fix after 18:30: `_step_wave_announce` appends one `["counterattack", {"pressure": true}]` at the first pressure wave time (r01 t = 160 s). Your recheck: r01 idle → exactly one counterattack toast at 160 s, no wave-counter change.

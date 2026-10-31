@@ -56,3 +56,9 @@ Also Q4 is done in the engine (4b5926d): Android label ko "빵집 기사단", en
 
 ## R6 (17:55) Proposal only — QA-J1 framing + D16 window (docs/architecture/CAMERA_FRAMING_OPTIONS.md)
 With an idle hero no enemy is on screen for ~45 s in r01 (spawn x ≈ 1538, view −90…550). The data options that also fix D16: r01 lane 1600 → 1100 (estimated contact ≈ 33–35 s) or wave 1 at = 12 s (estimated contact ≈ 29 s, break ≈ 44 s). Estimates from unit speeds; I will measure your chosen values with wave_clear_probe.gd. Camera auto-framing (02) and an edge indicator (04) are proposed alongside. Your decision is needed for the data side.
+
+## R7 (18:05) Base damage mechanic options for the r02–r04 "1.00 or loss" cliff — your numbers needed
+docs/architecture/BASE_DAMAGE_OPTIONS.md (static design, no Godot run during 08's window). Arithmetic on current data: tower 20 dps single target kills a grunt every 5 s; n grunts at the base deal 10n dps, so the base falls in 75 s with 2, 38 s with 4, 15 s with 10 — hence 0 or 1.
+Options: A push-back on base hit (grunt base dps × 0.63 at 20 px, × 0.46 at 40 px), B base damage cap (1500 HP needs ≥ 60 s at 25 HP/s), C stagger, D tower splash, E safe deploy. Recommendation: B + A behind data keys `economy.base_defense {push_px, dps_cap, stagger_s, tower_splash}` (0 = off).
+Please decide: which options, starting values, and the target end-HP band per round (e.g. r02–r04 competent bot 0.6–0.9 on ≥ 4/5 seeds). I implement and run the probe in §4 after 18:30.
+QA-B017: your D21 note asked for the `counterattack` toast when the first pressure wave spawns; I missed it in 22d99ea. I will add it after 18:30 (one toast at r01 t = 160 s).
