@@ -3,6 +3,7 @@
 - Added base-damage attribution to multi_seed_sim (hit_src by wave tag, first_hit_who). 4 heavy runs, one at a time under heavy_run.ps1, all isolated (proof lines seen): p130 attribution, C1, C2, r05 boss 1300.
 - D36: the cliff comes from late accumulation (first hits 222–372 s, 67% trickle/pressure). C1 (wave at 165 s) = partial damage without losses but too long; C2 = no damage. Not applied; depends on 02's bot stall (R11).
 - D37: boss hp 1300 rejected (kill time 202/184 s, medians 356/344 s).
+- Git: 7daaed5 [Design] D36/D37 + evidence → PUSHED origin/main.
 - No data change in this task. Next: 02's stall answer → re-measure C1; test the boss splash/knockback hypothesis for r05 length.
 - Q5 still ASKED; no new question.
 ## TASK 2026-10-31 23:0x–23:4x — restart after quota stop + blue screen (23:08)
