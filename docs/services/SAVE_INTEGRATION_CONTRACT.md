@@ -1,5 +1,5 @@
 # Game Save ↔ Services integration contract (owner: 06-services)
-Version: 1 (2026-10-31). Status: **BLOCKED — 02 has not answered S1/S2.** The game does not register `Services` and service state is not in the game save. All persistence evidence so far (M2/M3) is against mocks or `src/core/save.gd` **in isolation**. Nothing here is game-integration evidence until `test_services_integration.gd` exits 0.
+Version: 2 (2026-10-31). Status: **INTEGRATED (desktop headless evidence).** 02 registered `Services="*res://src/services/services.gd"` after `Save=` in project.godot (commit 141d226, 2026-10-31 09:18). Re-run 2026-10-31 ~15:45 KST: `test_services_integration.gd` exit 0, `verdict=PASS_INTEGRATED`, `binding=game`, I1–I4 PASS, I5 NOT_REQUIRED_YET, I6 PASS; every R/P row `binding=game`, `game_evidence=true`. Still not covered: Android device process death/storage, real SDK/store (mocks only), game grant sinks (S3, not needed while disabled).
 
 Monetization stays undecided (D9 DEFAULT). This contract does not enable real ads, billing, consent SDKs or analytics; services run in `disabled` mode after integration too.
 
@@ -20,17 +20,17 @@ tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://
 | Exit | Meaning |
 |---|---|
 | 0 | all checks pass AND I1–I4 pass on the game's own wiring → integration evidence |
-| 2 | no failures, integration BLOCKED (today) |
+| 2 | no failures, integration BLOCKED (was the result until 02 S1 landed) |
 | 1 | a failure (report lists it) |
 Report: `user://services_integration_report.json` (`verdict`, `integration.I1..I6`, `rows.<ID>.{status, binding, game_evidence}`, `blockers`).
 
 Integration checks:
 | ID | Check | Today |
 |---|---|---|
-| I1 | `Services` autoload registered after `Save` in project.godot | BLOCKED |
-| I2 | `/root/Services` store is persistent and is `Save.progress["services"]` | BLOCKED |
-| I3 | save epoch bound to `/root/Events` (grant-sink contract enforcement) | BLOCKED |
-| I4 | after `Save.load_progress()` the store is stale, and is rebound after ONE frame of `Services._process` | BLOCKED |
+| I1 | `Services` autoload registered after `Save` in project.godot | PASS (2026-10-31) |
+| I2 | `/root/Services` store is persistent and is `Save.progress["services"]` | PASS |
+| I3 | save epoch bound to `/root/Events` (grant-sink contract enforcement) | PASS |
+| I4 | after `Save.load_progress()` the store is stale, and is rebound after ONE frame of `Services._process` | PASS |
 | I5 | game grant sink present, required only when 01 enables a placement/product | NOT_REQUIRED_YET |
 | I6 | real `battle_uid` generator accepted by `reward_policy.gd`, unique per call | PASS |
 

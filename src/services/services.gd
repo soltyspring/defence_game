@@ -75,6 +75,9 @@ func _bind() -> bool:
 	var o := _options.duplicate()
 	o["store"] = st
 	setup(o)
+	# Launch reconciliation: deliver purchases completed while the app was not running.
+	# In disabled mode this returns "disabled" and does nothing.
+	purchases.reconcile()
 	return true
 
 ## Low-level: setup({"store": <ServiceStore>, ...}). Prefer attach_save().
@@ -112,3 +115,5 @@ func _notification(what: int) -> void:
 		return
 	if what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_CLOSE_REQUEST:
 		analytics.flush()
+	elif what == NOTIFICATION_APPLICATION_RESUMED:
+		purchases.reconcile()   # Play: re-query purchases on resume (pending -> purchased while away)

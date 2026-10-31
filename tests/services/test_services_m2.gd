@@ -119,7 +119,7 @@ func pump(svc, n: int = 30, dt: float = 0.0) -> void:
 	for i in n:
 		svc.tick(dt)
 
-const ADS_CFG := {"enabled": true, "load_timeout_s": 5.0, "show_timeout_s": 30.0,
+const ADS_CFG := {"enabled": true, "load_timeout_s": 5.0, "show_timeout_s": 30.0, "no_fill_cooldown_s": 0.0,
 	"placements": {"ad_double_gold": {"daily_cap": 1000, "reward": {"effect": "gold_mult_2", "where": "results_win"}},
 		"ad_base_repair": {"daily_cap": 3, "reward": {"effect": "player_base_heal_ratio_0_3", "where": "in_round_once_below_30pct"}}}}
 const IAP_CFG := {"enabled": true, "purchase_timeout_s": 10.0, "verify_timeout_s": 5.0,

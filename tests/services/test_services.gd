@@ -87,7 +87,7 @@ func eq(a: Variant, b: Variant, msg: String) -> void:
 
 # ---------------------------------------------------------------- helpers
 
-const ADS_CFG := {"enabled": true, "load_timeout_s": 5.0, "show_timeout_s": 30.0,
+const ADS_CFG := {"enabled": true, "load_timeout_s": 5.0, "show_timeout_s": 30.0, "no_fill_cooldown_s": 0.0,
 	"placements": {"ad_double_gold": {"daily_cap": 2, "reward": {"effect": "gold_mult_2"}},
 		"ad_base_repair": {"daily_cap": 3, "reward": {"effect": "player_base_heal_ratio_0_3"}}}}
 

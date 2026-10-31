@@ -13,6 +13,9 @@ const LIMITS := {"title": 30, "short": 80, "full": 4000}
 const BANNED_EN := ["#1", "best", "top", "popular", "award", "free", "% off", "discount", "sale",
 	"editor's choice", "editors' choice", "new", "no. 1", "number one", "ultimate", "google play", "trending"]
 const BANNED_KO := ["1위", "최고", "인기", "무료", "할인", "에디터", "추천", "신규", "수상", "베스트", "역대급", "구글 플레이"]
+## Third-party marks (09 R09-06-3): Devsisters' Cookie Run family and real bakery brands must not
+## appear in titles, IAP names or store text.
+const BANNED_BRANDS := ["쿠키", "쿠키런", "cookie", "cookierun", "devsisters", "데브시스터즈", "파리바게뜨", "paris baguette", "뚜레쥬르", "tous les jours", "성심당"]
 const STOP_EN := ["the", "and", "a", "an", "to", "of", "for", "your", "you", "or", "with", "from", "each", "any", "such", "as", "by", "in", "on", "no", "every", "then", "into", "after", "use", "up", "per"]
 
 var failures: PackedStringArray = []
@@ -128,6 +131,8 @@ func test_listing_wording() -> bool:
 				else:
 					hit = low.contains(w)
 				check(not hit, "%s: no ranking/promo/program wording '%s' in '%s'" % [lang, w, s.left(40)])
+			for w in BANNED_BRANDS:
+				check(not low.contains(w), "%s: no third-party brand '%s' in '%s'" % [lang, w, s.left(40)])
 			for w in BANNED_KO:
 				check(not s.contains(w), "%s: no ranking/promo wording '%s'" % [lang, w])
 			for m in re_word.search_all(s):

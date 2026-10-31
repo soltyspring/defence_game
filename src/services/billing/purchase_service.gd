@@ -130,6 +130,15 @@ func purchase(product_id: String) -> Dictionary:
 	return Result.make(Result.OK)
 
 func restore() -> Dictionary:
+	return _start_restore(false)
+
+## Silent reconciliation on app launch / resume (Play guidance: query purchases in onResume to
+## catch purchases completed while the app was not running, e.g. a crash after payment).
+## Same idempotent path as restore(); summary carries "auto": true. Never busy-fails a user flow.
+func reconcile() -> Dictionary:
+	return _start_restore(true)
+
+func _start_restore(auto: bool) -> Dictionary:
 	if not enabled:
 		return Result.make(Result.DISABLED)
 	if not provider.is_supported():
@@ -138,7 +147,7 @@ func restore() -> Dictionary:
 		return Result.make(Result.BUSY)
 	if network.is_known_offline():
 		return Result.make(Result.OFFLINE)
-	_restore = {"elapsed": 0.0, "queried": false, "waiting": {},
+	_restore = {"elapsed": 0.0, "queried": false, "waiting": {}, "auto": auto,
 		"summary": {"restored": 0, "already": 0, "invalid": 0, "unverified": 0, "revoked": 0, "pending": 0}}
 	_ack_inflight.clear()   # a restore is the retry point for acks that never answered
 	_update_state()
@@ -442,6 +451,7 @@ func _maybe_finish_restore() -> void:
 func _finish_restore(code: String) -> void:
 	var summary: Dictionary = _restore.get("summary", {}).duplicate()
 	summary["code"] = code
+	summary["auto"] = bool(_restore.get("auto", false))
 	_restore = {}
 	_update_state()
 	restore_finished.emit(summary)

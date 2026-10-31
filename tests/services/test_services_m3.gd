@@ -23,7 +23,9 @@ const MockConsent := preload("res://src/services/consent/mock_consent_provider.g
 const DisabledConsent := preload("res://src/services/consent/disabled_consent_provider.gd")
 const MockBilling := preload("res://src/services/billing/mock_billing_provider.gd")
 
-const BASE := "user://svc_m3_test"
+## Unique per run (pid): parallel runs by other roles (e.g. 07 regressions) must not wipe each
+## other's isolated save directories (seen 2026-10-31: flaky process_death marker loss).
+var BASE := "user://svc_m3_test_%d" % OS.get_process_id()
 const ADS := {"enabled": true, "placements": {"ad_double_gold": {"daily_cap": 1000, "reward": {"effect": "gold_mult_2", "where": "results_win"}}}}
 const IAP := {"enabled": true, "purchase_timeout_s": 10.0, "verify_timeout_s": 5.0,
 	"catalog": {"test.supporter": {"type": "non_consumable", "entitlement": "remove_ads"},

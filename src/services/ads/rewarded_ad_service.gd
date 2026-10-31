@@ -45,6 +45,9 @@ var grant_sink: Callable
 var enabled := false
 var placements := {}           # id -> {"daily_cap": int, "reward": Dictionary}
 var load_timeout_s := 15.0
+var no_fill_cooldown_s := 60.0
+var _unavailable_until := {}   # placement_id -> service time (s) until which offers are hidden
+var _clock_s := 0.0            # monotonic service time from tick(dt)
 var show_timeout_s := 120.0
 
 var state := IDLE
@@ -62,6 +65,7 @@ func _init(p_provider, p_consent, p_store, p_clock, p_network, config: Dictionar
 	placements = config.get("placements", {}).duplicate(true)
 	load_timeout_s = float(config.get("load_timeout_s", load_timeout_s))
 	show_timeout_s = float(config.get("show_timeout_s", show_timeout_s))
+	no_fill_cooldown_s = float(config.get("no_fill_cooldown_s", no_fill_cooldown_s))
 	provider.load_finished.connect(_on_load_finished)
 	provider.show_started.connect(_on_show_started)
 	provider.reward_earned.connect(_on_reward_earned)
@@ -89,6 +93,10 @@ func availability(placement_id: String, context_id: String) -> String:
 		return Result.OFFLINE
 	if _granted_today(placement_id) >= int(placements[placement_id].get("daily_cap", 0)):
 		return Result.CAP_REACHED
+	# After a no-fill/offline load, hide the offer for a while instead of showing a button
+	# that leads to another empty load (09 R09-06-2: no dead end).
+	if float(_unavailable_until.get(placement_id, -1.0)) > _clock_s:
+		return Result.NO_FILL
 	if state != IDLE:
 		return Result.BUSY
 	return Result.OK
@@ -133,6 +141,7 @@ func request(placement_id: String, context_id: String) -> Dictionary:
 
 ## Drive from _process (Services node) or tests. Delivers adapter callbacks and timeouts.
 func tick(dt: float) -> void:
+	_clock_s += dt
 	provider.poll()
 	if state == IDLE:
 		return
@@ -161,6 +170,7 @@ func _on_load_finished(placement_id: String, code: String) -> void:
 		_set_state(SHOWING)
 		provider.show_ad(placement_id)
 	elif code == Result.NO_FILL or code == Result.OFFLINE:
+		_unavailable_until[placement_id] = _clock_s + no_fill_cooldown_s
 		_finish(code)
 	else:
 		_finish(Result.ERROR)
