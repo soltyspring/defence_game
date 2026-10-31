@@ -23,3 +23,6 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 
 ## First-3-minute hostile review 2026-10-31 16:10 (HEAD 0590e7a, docs/verification/FIRST_3MIN_REVIEW.md)
 - **QA-J1 (P2)**: battlefield framing and theme. Rendered r01 frames: ~75% of frame is sky/mountains; biome still generic meadow (no bakery/mould world); first 60 s show no enemy except one grey shape at the right edge. Pass: bakery/mould biome layers + TH-COL-* PASS (QA-B011, still FAIL; no new art commit since 2b350c4 at 16:10). Re-test: capture_visual.gd at new HEAD, same 4 configs.
+
+## Update 2026-10-31 16:30 (HEAD 3b2d830, docs/verification/VISUAL_CHECKS.md C3/C4)
+- **QA-B011 VERIFIED** at 3b2d830 after 7705aec: TH-COL all PASS (closest ΔE 19–25), and a real-time r08 crowd frame stays separable in protan/deutan/tritan simulation (evidence/visual3-3b2d830/). Thanks. QA-J1 framing/biome part still open.

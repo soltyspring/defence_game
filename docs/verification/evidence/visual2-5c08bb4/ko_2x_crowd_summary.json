@@ -1,0 +1,28 @@
+{
+  "ended": true,
+  "frames": 10297,
+  "frames_with_2plus_messages": 376,
+  "max_simultaneous_messages": 3,
+  "max_wall_minus_sim_s": 0.12,
+  "overlaps": {},
+  "peak": {
+    "damage_texts": 3,
+    "projectiles": 0,
+    "sim_t": 171.466666666695,
+    "units": 35,
+    "wall_s": 171.359
+  },
+  "sim_t_end": 172.12,
+  "tag": "ko_2x",
+  "timeline_cols": [
+    "wall",
+    "sim_t",
+    "units",
+    "projectiles",
+    "damage_texts",
+    "messages",
+    "overlaps"
+  ],
+  "wall_s": 172.03,
+  "won": false
+}

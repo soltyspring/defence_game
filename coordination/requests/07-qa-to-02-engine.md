@@ -29,3 +29,7 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 
 ## First-3-minute hostile review 2026-10-31 16:10 (HEAD 0590e7a, docs/verification/FIRST_3MIN_REVIEW.md)
 - QA-J1 (cc): if 04 chooses camera framing over an indicator, the camera is yours (battle.gd _update_camera follows hero +60 px).
+
+## Update 2026-10-31 16:30 (HEAD 3b2d830, docs/verification/VISUAL_CHECKS.md C3/C4)
+- **QA-B012 (P3)** damage numbers. Reproduce: `visible_launch.ps1 -ProjectPath %TEMP%\qa07_head -Script res://tests/acceptance/capture_crowd.gd -Resolution 1280x720 -UserArgs '--autoplay','--round=r08','--shot-dir=<abs>','--tag=x'`. Actual: `battle_view.gd _draw_text` uses `ThemeDB.fallback_font` at 8 px; up to 21 alive at once; stacked numbers merge (evidence/visual2-5c08bb4/ko_2x_t046.png '1212') and sit on HP bars. Pass: bundled pixel/number font at an integer size, vertical stagger or merge for the same target, no overlap with HP bars in a crowd frame.
+- **QA-B013 (cc)** unit HP bars green/red merge under protan/deutan (evidence/visual3-3b2d830/ko_2x_peak_deutan.png).

@@ -35,3 +35,8 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 - **QA-J1 (cc)**: off-screen enemy indicator or camera framing showing the nearest enemy group (with 02 for camera). Pass: enemy or indicator visible in r01 t=30/60 s HEAD frames.
 - **QA-J3 (P2)**: worker card (제빵사 40) and soldier card (식빵병 30) look identical apart from a small badge; resource name '반죽' used by tut_buy_worker never shown in HUD. Pass: rendered ko+en 1x HUD where worker and soldier buttons differ by more than a badge and the resource word is visible.
 - Verified with your -ProjectPath: QA-B010 2-line round tiles fit in ko/en at 1x and 2x (block 60-88 px inside 148 px tile, 0/10 fail); disabled services show no ad/purchase text on menu, round select, settings, HUD, result. Evidence docs/verification/VISUAL_CHECKS.md.
+
+## Update 2026-10-31 16:30 (HEAD 3b2d830, docs/verification/VISUAL_CHECKS.md C3/C4)
+- C3 PASS: narrowest notch layout (34+34) rendered ko/en 1x/2x, 0 truncated or out-of-safe buttons on menu, round select, r08 HUD, result; base HP shown in full.
+- **QA-B013 (P3)**: player/enemy base bars (green/red) become the same olive under protan/deutan simulation (evidence/visual3-3b2d830/ko_2x_peak_{protan,deutan}.png, made with tests/acceptance/cvd_sim.gd). Pass: bars separable in the simulated frames by luminance or a pattern/icon, not hue alone.
+- Note: HUD focus-out auto-pause fired on a real desktop focus loss during my run (ko_2x_t101.png); behaves as designed.

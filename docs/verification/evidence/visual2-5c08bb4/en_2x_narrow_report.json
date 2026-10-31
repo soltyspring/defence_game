@@ -1,0 +1,564 @@
+{
+  "insets": [
+    34.0,
+    0.0,
+    34.0,
+    0.0
+  ],
+  "screens": {
+    "1_menu": {
+      "buttons": [
+        {
+          "drawn": "Continue",
+          "inside_safe": true,
+          "rect": [
+            223.0,
+            180.0,
+            194.0,
+            50.0
+          ],
+          "text": "Continue",
+          "truncated": false
+        },
+        {
+          "drawn": "Select Round",
+          "inside_safe": true,
+          "rect": [
+            223.0,
+            238.0,
+            94.0,
+            44.0
+          ],
+          "text": "Select Round",
+          "truncated": false
+        },
+        {
+          "drawn": "Settings",
+          "inside_safe": true,
+          "rect": [
+            323.0,
+            238.0,
+            94.0,
+            44.0
+          ],
+          "text": "Settings",
+          "truncated": false
+        }
+      ],
+      "problems": [],
+      "safe": [
+        34.0,
+        0.0,
+        572.0,
+        360.0
+      ]
+    },
+    "2_round_select": {
+      "buttons": [
+        {
+          "drawn": "Back",
+          "inside_safe": true,
+          "rect": [
+            38.0,
+            4.0,
+            72.0,
+            40.0
+          ],
+          "text": "Back",
+          "truncated": false
+        },
+        {
+          "drawn": "First Batch",
+          "inside_safe": true,
+          "rect": [
+            84.0,
+            52.0,
+            89.0,
+            148.0
+          ],
+          "text": "First Batch",
+          "truncated": false
+        },
+        {
+          "drawn": "Fruit Fly Raid",
+          "inside_safe": true,
+          "rect": [
+            179.0,
+            52.0,
+            89.0,
+            148.0
+          ],
+          "text": "Fruit Fly Raid",
+          "truncated": false
+        },
+        {
+          "drawn": "Spores Incoming",
+          "inside_safe": true,
+          "rect": [
+            274.0,
+            52.0,
+            89.0,
+            148.0
+          ],
+          "text": "Spores Incoming",
+          "truncated": false
+        },
+        {
+          "drawn": "Rotten Hooves",
+          "inside_safe": true,
+          "rect": [
+            369.0,
+            52.0,
+            89.0,
+            148.0
+          ],
+          "text": "Rotten Hooves",
+          "truncated": false
+        },
+        {
+          "drawn": "The Mold General",
+          "inside_safe": true,
+          "rect": [
+            464.0,
+            52.0,
+            89.0,
+            148.0
+          ],
+          "text": "The Mold General",
+          "truncated": false
+        },
+        {
+          "drawn": "Break the Mold Wall",
+          "inside_safe": true,
+          "rect": [
+            84.0,
+            206.0,
+            89.0,
+            148.0
+          ],
+          "text": "Break the Mold Wall",
+          "truncated": false
+        },
+        {
+          "drawn": "Rising Yeast",
+          "inside_safe": true,
+          "rect": [
+            179.0,
+            206.0,
+            89.0,
+            148.0
+          ],
+          "text": "Rising Yeast",
+          "truncated": false
+        },
+        {
+          "drawn": "Endless Flies",
+          "inside_safe": true,
+          "rect": [
+            274.0,
+            206.0,
+            89.0,
+            148.0
+          ],
+          "text": "Endless Flies",
+          "truncated": false
+        },
+        {
+          "drawn": "Mold Onslaught",
+          "inside_safe": true,
+          "rect": [
+            369.0,
+            206.0,
+            89.0,
+            148.0
+          ],
+          "text": "Mold Onslaught",
+          "truncated": false
+        },
+        {
+          "drawn": "The Rot Overlord",
+          "inside_safe": true,
+          "rect": [
+            464.0,
+            206.0,
+            89.0,
+            148.0
+          ],
+          "text": "The Rot Overlord",
+          "truncated": false
+        }
+      ],
+      "problems": [],
+      "safe": [
+        34.0,
+        0.0,
+        572.0,
+        360.0
+      ]
+    },
+    "3_r08_hud": {
+      "base_hp_drawn": {
+        "enemy": "2400/2400",
+        "player": "2000/2000"
+      },
+      "base_hp_full": {
+        "enemy": "2400/2400",
+        "player": "2000/2000"
+      },
+      "buttons": [
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            562.0,
+            4.0,
+            40.0,
+            40.0
+          ],
+          "text": "",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            38.0,
+            304.0,
+            52.0,
+            52.0
+          ],
+          "text": "",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            98.0,
+            304.0,
+            52.0,
+            52.0
+          ],
+          "text": "",
+          "truncated": false
+        },
+        {
+          "drawn": "Baker",
+          "inside_safe": true,
+          "rect": [
+            162.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "Baker",
+          "truncated": false
+        },
+        {
+          "drawn": "Toast",
+          "inside_safe": true,
+          "rect": [
+            209.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "Toast",
+          "truncated": false
+        },
+        {
+          "drawn": "Roll",
+          "inside_safe": true,
+          "rect": [
+            255.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "Roll",
+          "truncated": false
+        },
+        {
+          "drawn": "Loaf",
+          "inside_safe": true,
+          "rect": [
+            302.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "Loaf",
+          "truncated": false
+        },
+        {
+          "drawn": "Twist",
+          "inside_safe": true,
+          "rect": [
+            349.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "Twist",
+          "truncated": false
+        },
+        {
+          "drawn": "Oven",
+          "inside_safe": true,
+          "rect": [
+            395.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "Oven",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            450.0,
+            308.0,
+            48.0,
+            48.0
+          ],
+          "text": "Slam",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            502.0,
+            308.0,
+            48.0,
+            48.0
+          ],
+          "text": "Rally",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            554.0,
+            308.0,
+            48.0,
+            48.0
+          ],
+          "text": "Barrage",
+          "truncated": false
+        }
+      ],
+      "problems": [],
+      "safe": [
+        34.0,
+        0.0,
+        572.0,
+        360.0
+      ]
+    },
+    "4_r08_result": {
+      "base_hp_drawn": {
+        "enemy": "0/2400",
+        "player": "2000/2000"
+      },
+      "base_hp_full": {
+        "enemy": "0/2400",
+        "player": "2000/2000"
+      },
+      "buttons": [
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            562.0,
+            4.0,
+            40.0,
+            40.0
+          ],
+          "text": "",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            38.0,
+            304.0,
+            52.0,
+            52.0
+          ],
+          "text": "",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            98.0,
+            304.0,
+            52.0,
+            52.0
+          ],
+          "text": "",
+          "truncated": false
+        },
+        {
+          "drawn": "Baker",
+          "inside_safe": true,
+          "rect": [
+            162.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "Baker",
+          "truncated": false
+        },
+        {
+          "drawn": "Toast",
+          "inside_safe": true,
+          "rect": [
+            209.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "Toast",
+          "truncated": false
+        },
+        {
+          "drawn": "Roll",
+          "inside_safe": true,
+          "rect": [
+            255.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "Roll",
+          "truncated": false
+        },
+        {
+          "drawn": "Loaf",
+          "inside_safe": true,
+          "rect": [
+            302.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "Loaf",
+          "truncated": false
+        },
+        {
+          "drawn": "Twist",
+          "inside_safe": true,
+          "rect": [
+            349.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "Twist",
+          "truncated": false
+        },
+        {
+          "drawn": "Oven",
+          "inside_safe": true,
+          "rect": [
+            395.0,
+            300.0,
+            43.0,
+            56.0
+          ],
+          "text": "Oven",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            450.0,
+            308.0,
+            48.0,
+            48.0
+          ],
+          "text": "Slam",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            502.0,
+            308.0,
+            48.0,
+            48.0
+          ],
+          "text": "Rally",
+          "truncated": false
+        },
+        {
+          "drawn": "",
+          "inside_safe": true,
+          "rect": [
+            554.0,
+            308.0,
+            48.0,
+            48.0
+          ],
+          "text": "Barrage",
+          "truncated": false
+        },
+        {
+          "drawn": "Retry",
+          "inside_safe": true,
+          "rect": [
+            263.0,
+            258.0,
+            113.0,
+            40.0
+          ],
+          "text": "Retry",
+          "truncated": false
+        },
+        {
+          "drawn": "Next Round",
+          "inside_safe": true,
+          "rect": [
+            384.0,
+            258.0,
+            113.0,
+            40.0
+          ],
+          "text": "Next Round",
+          "truncated": false
+        },
+        {
+          "drawn": "Menu",
+          "inside_safe": true,
+          "rect": [
+            142.0,
+            258.0,
+            113.0,
+            40.0
+          ],
+          "text": "Menu",
+          "truncated": false
+        }
+      ],
+      "problems": [],
+      "safe": [
+        34.0,
+        0.0,
+        572.0,
+        360.0
+      ]
+    }
+  },
+  "total_problems": 0,
+  "view": "(640.0, 360.0)"
+}

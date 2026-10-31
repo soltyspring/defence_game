@@ -7,11 +7,8 @@ Updated 2026-10-31 09:18 +09:00. Scope: desktop headless Godot 4.7.2 on Windows.
 | **HEAD** | `.\tools\qa\run_acceptance.ps1 -Head` | clean `git archive` of committed HEAD in `%TEMP%\qa07_head` (own import, current tests overlaid) → **committed defect** |
 | **Workspace** | `.\tools\qa\run_acceptance.ps1` | shared tree with every worker's uncommitted WIP → only here = **work-tree contamination** |
 
-## Current: HEAD abe2303, run 20261031-154903
-PASS 143 · FAIL 2 · NOT_IMPLEMENTED 0 · NOT_TESTED 2 (AUD-03, PLAT-03) · BLOCKED 0; services suites exit 0. Summary: runs/head-abe2303.md. Theme A names are in committed text (14b01e2).
-| Check | Bug | Owner | Cause | Reproduce | Pass criterion |
-|---|---|---|---|---|---|
-| TH-COL-PROTAN, TH-COL-DEUTAN | QA-B011 P2 (proxy) | 03 | closest ally/enemy mean colour after CVD simulation: protan `siege` vs `e_brute` ΔE 1.96, deutan `siege` vs `boss_overlord` ΔE 1.75 | `-Head -Only theme` | ΔE ≥ 2.3, or a CVD-simulated HEAD battle frame showing the marker separates them |
+## Current: HEAD 3b2d830, run 20261031-162034
+PASS 145 · FAIL 0 · NOT_IMPLEMENTED 0 · NOT_TESTED 2 (AUD-03, PLAT-03) · BLOCKED 0; services suites exit 0. Summary: runs/head-3b2d830.md. Open visual findings outside the automated suite: QA-B012, QA-B013 (VISUAL_CHECKS C4), QA-J1..J3 (FIRST_3MIN_REVIEW).
 
 ## Verified fixed (same check IDs, HEAD condition)
 | Bug | Fix commit | Verified at | Checks |
@@ -28,6 +25,8 @@ PASS 143 · FAIL 2 · NOT_IMPLEMENTED 0 · NOT_TESTED 2 (AUD-03, PLAT-03) · BLO
 | QA-B009 EN card label clipping | 5a2099d / 14b01e2 (04/01) | abe2303 | TH-FIT-HUD-EN (KO also PASS) |
 | QA-B010 round name clipping | 5a2099d (04: 2-line tiles) | abe2303 | TH-FIT-ROUND-KO/EN (check mirrors `wrap_lines=2` via `UiStyle.fit_lines`; 3 KO and 7 EN names wrap; 2-line vertical fit not rendered by 07) |
 
+| QA-B011 CVD colour proxy | 7705aec (03) | 3b2d830 | TH-COL-NORMAL/PROTAN/DEUTAN/TRITAN |
+
 ## Work-tree contamination
 | Warning | Owner | Status |
 |---|---|---|
@@ -41,6 +40,7 @@ PASS 143 · FAIL 2 · NOT_IMPLEMENTED 0 · NOT_TESTED 2 (AUD-03, PLAT-03) · BLO
 - TH-FIT-HUD first measured skill names that the committed HUD does not draw (icon + cost on a < 54 px button) → check mirrors `TouchButton.show_name` and lists icon-only buttons in evidence.
 
 ## History
+- HEAD abe2303 (20261031-154903): 2 FAIL (TH-COL-PROTAN/DEUTAN).
 - HEAD 2884231 (20261031-153757): 6 FAIL; HEAD 231cfda (154410): 4 FAIL before 07 mirrored the 2-line tile rule.
 - HEAD 5426645 (20261031-091441): 6 FAIL (same IDs; QA-B011 pair archer vs boss_warlord).
 - HEAD 462991a (head-462991a): 12 FAIL. HEAD e9dfaa4 (20261031-083824/085129): same 12 FAIL.

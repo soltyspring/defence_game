@@ -1,6 +1,6 @@
 # Release evidence matrix (owner: 07-qa)
-Latest full run: **HEAD abe2303** (`-Head` clean snapshot, run 20261031-154903; Godot 4.7.2 headless, Windows desktop). Triage: [FAILURE_TRIAGE.md](FAILURE_TRIAGE.md). Theme guard: [THEME_CHANGE_CHECKS.md](THEME_CHANGE_CHECKS.md).
-Counts: PASS 143 · FAIL 2 · NOT_IMPLEMENTED 0 · NOT_TESTED 2 · BLOCKED 0; 06 services suites exit 0. Summary: [runs/head-abe2303.md](runs/head-abe2303.md). Hostile review: [HOSTILE_REVIEW.md](HOSTILE_REVIEW.md).
+Latest full run: **HEAD 3b2d830** (`-Head` clean snapshot, run 20261031-162034; Godot 4.7.2 headless, Windows desktop). Triage: [FAILURE_TRIAGE.md](FAILURE_TRIAGE.md). Visual: [VISUAL_CHECKS.md](VISUAL_CHECKS.md).
+Counts: PASS 145 · FAIL 0 · NOT_IMPLEMENTED 0 · NOT_TESTED 2 · BLOCKED 0; 06 services suites exit 0. Summary: [runs/head-3b2d830.md](runs/head-3b2d830.md). Zero automated FAILs is not release readiness: see open visual findings and PLAT-03.
 
 **Scope warning:** desktop headless acceptance only. This is NOT Android release certification.
 `adb devices` at run time listed `emulator-5580` (an emulator, not a phone); no APK install or
@@ -24,8 +24,10 @@ on-device test has been done by 07-qa.
 | Save type normalisation | PASS | SAVE-05, SAVE-06 (QA-B003 verified) |
 | Save fault tolerance (TP-01/02/06/13/14) | PASS | all 9 faults checks at e5bd4aa/5426645; QA-B004 P1 verified (fix 08ef082). Kill points rebuilt from file states, not yet via `Save._fault` |
 | Localised text for engine toasts | PASS | DATA-13/14, FLOW-04B (QA-B008 verified) |
-| Theme guard: label fit, names, colour separation | FAIL (proxy) | TH-TEXT-*, TH-FIT-HUD-*, TH-FIT-ROUND-* PASS with theme A names; TH-COL-PROTAN/DEUTAN FAIL (QA-B011) |
-| Visual baselines | STALE | 75 committed docs images predate 2b350c4 (runs/head-abe2303-stale-baselines.txt); no theme-era HEAD capture by 07 yet |
+| Theme guard: label fit, names, colour separation | PASS | TH-* all PASS at 3b2d830 (QA-B011 verified after 7705aec) |
+| Visual baselines | STALE (older images) | 123 committed docs images predate 7705aec; current HEAD captures: evidence/visual2-5c08bb4 (layout), evidence/visual3-3b2d830 (new art) |
+| Narrowest notch layout (rendered) | PASS | VISUAL_CHECKS C3: ko/en 1x/2x, 0 truncated/out-of-safe buttons, full base HP numbers |
+| Crowd readability / message overlap (real time) | PASS with P3 findings | VISUAL_CHECKS C4: 0 message overlaps; QA-B012 damage numbers, QA-B013 HP bars under CVD |
 | Image integration (atlases, P0 sprites/fx/biome/icons/bases, residency, release) | PASS | ART-01..11; resident battle pages ≤ 32 MiB estimate |
 | Audio assets | PASS | AUD-01 (31 file refs exist) |
 | Audio in game | PARTIAL | AUD-02 PASS at e9dfaa4 (`Audio` autoload registered). AUD-03 (cues fire on events, honour settings/pause) NOT_TESTED; nothing was listened to |
