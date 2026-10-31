@@ -83,3 +83,11 @@ Commit 9e0487d1011d407c42b91092fef4d55788502442 PUSHED (helper output; SHA copie
 - Store first-3 (Play KR, fetched 16:38): 7 listings. 6 of 7 show real battle within the first 3 images. Proposed our order: real lane battle → hero control → economy choice → roster → boss → result. Monetization excluded. No download/rank claims.
 - Correction before publish: the fetch time was wrongly written as 16:52 and was fixed to 16:38.
 - Validation: 5 listing URLs returned 200; JSON parses; diff --check clean; 09 paths only.
+
+## v15 (2026-10-31 ~17:55 KST): growth motivation
+Commit c6d0e9eda74825c850b27ecf84f2dc3962d43178 PUSHED (helper output; SHA copied after publish): SUCCESS_ANALYSIS §34; R09-01-14, R09-10-2, R09-04-11.
+- Sources: 7 YouTube storyboards (S1–S7, dates/URLs/±step in §34.1) and Play KR descriptions for MadArcher, Battle Cats KR, Cat War 2, Waggle Squad (fetched 17:47). No images or raw captions committed.
+- Findings [O]: the growth screen appears right after the first clear (1:30–4:40 into play) in all 4 games and reopens after nearly every stage (Cat War 2 player skipped it for L8–10 and still won). No defeat in any beginner video (10–25 min). The KR Battle Cats guide flags the chapter-1 end as the first spike and solves it with levels + tactic + unit swap.
+- Reading [I]: r10-only need sits where Battle Cats' first spike sits; the gap is entry habit and small repeat rewards. Counter-explanations (monetization coupling, skilled YouTubers, old/EN versions, idle model of 아처키우기) are recorded.
+- Basis update: D25 (a262640) committed r01 lane 1100; §33.2 basis superseded. D26 max-out ≈14 LOW / 9 HIGH r10 replays.
+- Validation: diff --check clean; 09 paths only.
