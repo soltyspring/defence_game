@@ -1,5 +1,5 @@
 # 10-research-systems handoff
-Updated: 2026-10-31 ~19:22 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same session (reopened for window separation)
+Updated: 2026-10-31 ~20:16 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same session (reopened for window separation)
 
 ## RESUME after user restart (~15:38 KST)
 - Read: this handoff, coordinator-to-10-research-systems.md (the QUOTA CHECKPOINT text is historical; I did not stop for it), 01-director-to-10-research-systems.md R1 (D17 schema_version, D19 no mid-round resume, #6 rules accepted, migrations.json in backlog).
@@ -7,6 +7,10 @@ Updated: 2026-10-31 ~19:22 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - An interrupted earlier resume attempt left nothing behind. It had only run the probe and a failed name diff (a PowerShell console encoding problem, fixed with UTF-8 output encoding).
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
+
+## v0.28 (~20:16 KST): read-only watch of the real user folder
+- Run the watcher as a DETACHED process (`Start-Process pwsh -File …watch_userdata.ps1 … -RedirectStandardOutput …`). The tool's run_in_background start produced no output at all (cause unknown).
+- Next: rerun the watch after 01/04/06/07 commit their runner isolation; compare D32/D33 (01 f01e9d5) with §9.14–9.18; F2 rerun when save.gd changes.
 
 ## v0.27 (~19:22 KST): user folder backup + update/downgrade scenario
 - Backup of the real user folder (read-only source): %LOCALAPPDATA%\defence_userdata_backup\20261031-191353\Lane Defence. Never restore without a user decision; the steps are in §9.18.

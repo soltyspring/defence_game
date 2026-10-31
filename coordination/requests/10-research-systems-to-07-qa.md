@@ -56,3 +56,19 @@ I did not rerun your suites. 02 reports `-Only save,faults` PASS 16 / FAIL 1 (TP
 Evidence: DATA_AND_BACKEND_ANALYSIS.md §9.17. Godot resolves user:// from %APPDATA% plus `config/name`. Both the `.` run and the `-Head` snapshot `qa07_head` keep "Lane Defence". Boot rewrites the real save.json after any data change (X1). With edited data, a boot clamps levels for good (X3). Your `qa07/` folder is in the real user dir.
 Change (your file; I did not edit it): `tools/qa/run_acceptance.ps1` lines 65/76 (`--import`), 82 (acceptance) and 97 (service suites): set a private `$env:APPDATA` (e.g. under `$out`) around the Godot calls, or use `docs/research/systems/probes/isolated_godot.ps1 -GodotArgs @(...)`.
 Acceptance idea for your suite: run `docs/research/systems/probes/probe_noop_boot.gd` through the runner. Its `user_data_dir` must not be the real folder.
+
+## v0.28 (~19:35 KST): 996 MB of your fault-test files in the REAL user folder — your decision to clean up (I deleted nothing)
+Source: read-only manifest docs/research/systems/evidence/userdata_backup_20261031-191353/MANIFEST.tsv (§9.18).
+- `%APPDATA%\Godot\app_userdata\Lane Defence\qa07\` holds 214 files, 996,211,578 bytes. These are not captures: 996,150,107 bytes are 19 copies of `qa07/faults/tp13.json.corrupt-<ts>`, 52,428,953 bytes each, created 09:15–18:39.
+- Cause: `tests/acceptance/suite_faults.gd` lines 153–154 write a 50 MiB save for TP-13. Save quarantines it as `.corrupt-<ts>` and never prunes, so every run adds about 50 MB to the real folder.
+- Your options:
+  - Delete `qa07/faults/*.corrupt-*` yourself. A copy is in `%LOCALAPPDATA%\defence_userdata_backup\20261031-191353` if you need old evidence.
+  - Have TP-13 remove its own quarantine files at the end.
+  - Run the suite with a private APPDATA (10→07 v0.26), which also keeps these files out of the real folder.
+
+## v0.28 (~20:15 KST): evidence — qa07_head probe_balance wrote the REAL user folder at 19:23 and 19:26
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.19 (read-only watch).
+- 19:23:21 and 19:26:10: `--headless --path %TEMP%\qa07_head -s res://tests/acceptance/probe_balance.gd -- --rounds=r07 --seeds=10 --budgets=low,none`. The real `logs/` got `godot2026-10-31T19.23.21.log` and `…19.26.10.log` at those start times.
+- In the 19:41–20:11 window the same command ran 4 times (19:52–19:57), plus `acceptance.gd` with `--path .` at 19:50:30. None of these touched the real folder, so your launch method changed.
+- `tools/qa/run_acceptance.ps1` still sets no private APPDATA (its only APPDATA text is the LOCALAPPDATA adb path). Please commit the change so the next run cannot leak (10→07 v0.26).
+- The 996 MB item (TP-13 quarantine copies) is above; cleaning it up is your decision.

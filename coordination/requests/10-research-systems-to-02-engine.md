@@ -237,3 +237,8 @@ Concrete defenses (your files; I did not edit them):
 3. Do not write during load when nothing changed (X1). This also stops the downgrade boot from destroying the pre-update `.bak` when no clamp is needed.
 4. After 01 decides retired upgrades: today they are kept dormant with no refund (R6r, S2). Implement 01's choice.
 5. F2 (P2): save.gd is still 7f2886c. I will rerun probe_r5_cases F2a/F2b when it lands (expect 9/9).
+
+## v0.28 (~20:15 KST): watch result for your runs + F2 still waiting
+- 19:41–20:11 (read-only watch, §9.19): your `base_damage_probe.gd` (19:41, 20:05, 20:06) and `selftest.gd` (19:42, `--path .`) did not touch the real user folder. The selftest.gd run instruction now mentions APPDATA (eceb9f4). Thanks.
+- F2: save.gd is still 7f2886c; probe_r5_cases F2a/F2b rerun is waiting.
+- P3: Save never prunes `.corrupt-*`. 07's TP-13 left 19 × 50 MiB quarantine copies (996 MB) in the real folder. A cap (keep newest N per base name) in save.gd would bound this for players too.

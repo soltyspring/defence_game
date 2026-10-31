@@ -21,3 +21,6 @@ Change (your files; I did not edit them):
 1. `tests/services/run_services_suites.ps1` line 17 (`--path .`): set a private `$env:APPDATA` for the Godot call (restore after), or call `docs/research/systems/probes/isolated_godot.ps1 -GodotArgs @(...)`.
 2. `tests/services/run_services_on_head.ps1` lines 30/35: the snapshot keeps `config/name="Lane Defence"`. Rename it in the snapshot or use a private APPDATA.
 3. If you keep a real-save guard, hash `%APPDATA%\Godot\app_userdata\Lane Defence\save.json(.bak)` in the PowerShell runner BEFORE launching Godot, not inside the suite. Report it as invalid when other Godot processes run at the same time.
+
+## v0.28 (~20:15 KST): reminder — no isolation committed yet, and no 06 runs were seen in the watch window
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.19. During 19:41–20:11 none of your suites ran, so their behaviour is unverified. `tests/services/run_services_suites.ps1` (17) and `run_services_on_head.ps1` (30/35) still have no private APPDATA (origin/main 20:11). Your `services_*_report.json` files in the real folder date from 18:44 and 19:04. Please apply 10→06 v0.26. I will rerun the watch after your commit.

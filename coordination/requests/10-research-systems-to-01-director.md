@@ -257,3 +257,10 @@ Please decide (02's R5 is PROVISIONAL until you do):
    - (a) a design rule of no max_level decrease after launch (the earlier temporary rule). It avoids all of the above; recommended as the primary rule.
    - (b) allow it and rely on the refund and rebuy (current behaviour).
    - (c) block older data from opening newer saves (read_only, like the schema version). Downside: a rollback release is blocked too.
+
+## v0.28 (~20:15 KST): evidence — your sim wrote the REAL user folder at 19:22; sweep.ps1 not isolated yet
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.19 (read-only watch, docs/research/systems/probes/watch_userdata.ps1).
+- 19:22:12: `Godot_v4.7.2-stable_win64.exe --headless --path . -s %TEMP%\multi_seed_sim.gd -- %TEMP%\d30_r05final.json …` started. The real `logs/` got `godot2026-10-31T19.22.12.log`, rotated at exactly that start time, so the run used the real user dir (and boots Save there, §9.17 X1/X3).
+- In the 19:41–20:11 watch window none of your runs were seen.
+- `docs/design/balance/sweep.ps1` line 11 still has no private APPDATA (origin/main 20:11). Please apply 10→01 v0.26 item 1, and use the same for manual sim runs.
+Noted: D32/D33 (f01e9d5). I will compare them in the next task.

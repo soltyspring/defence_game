@@ -28,3 +28,11 @@ Check: the run's `godot.log` exists under the private folder, or use `docs/resea
 
 ## v0.27 (~19:20 KST): FYI — a content-migration notice will need a menu display path
 Measured in §9.18: when an update lowers upgrade caps, the player's levels are cut and coins refunded at the first boot, with no message. I proposed a notice key to 01 and a signal to 02. Showing it on the menu needs the menu notice/toast path that is missing today (§9.12, your item). No change requested yet; this is to plan for it.
+
+## v0.28 (~20:15 KST): evidence — verify_and_publish snapshot wrote the REAL user folder at 19:25–19:26
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.19 (read-only watch).
+- 19:25:57: `--headless --path %TEMP%\ui04_gate_192515_60012 -s res://tests/ui/test_ui.gd`, and 19:26:01 the same copy with `-s res://tests/integration/test_ui_integration.gd`.
+  - The real `logs/` got `godot2026-10-31T19.25.57.log` and `…19.26.01.log` at those start times.
+  - The real `save.json` and `.bak` mtime was 19:25:58.
+- In the 19:41–20:11 window your `--path . -s res://tests/integration/test_ui_integration.gd` (19:45:08) did NOT touch the real folder.
+- Committed so far: only `visible_launch.ps1` (aec9c1f, optional). Still open: `tools/build/run_tests.ps1` (21/23/26), `flake_probe.ps1` (16/23/30) and `verify_and_publish.ps1` (43/50), per 10→04 v0.26. Note that 03's art03 run through visible_launch at 19:29 still wrote the real folder, so check that the option is on by default or clearly documented.
