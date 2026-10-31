@@ -1,8 +1,29 @@
 RULE (line 1, fixed after 3 violations: af491c2, 53883db, f5f42df batch): a commit SHA is written ONLY in a separate tool call made AFTER the Publish-Task call that printed `PUSHED <sha>` has returned; copy it from that output, check it with `git log origin/main`, and never record the SHA-record commit's own SHA in the file.
 # 05-audio handoff
-Updated: 2026-10-31 ~22:xx (v3.6: 01 R1 rally voice, folk menu candidate preview, swarm buzz request; private-APPDATA isolation)
-Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all. Quota at start of v3.6: 90.0 %; checked again before the Godot run: 90.8 %.
+Updated: 2026-10-31 23:xx KST (resumed after the 20:27 quota stop, new login, same session; window reopened by the user)
+Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all. Quota at resume: 0.39 %.
 
+## Resume check 23:xx
+- `origin/checkpoint/quota-20261031-202729/05-audio` (377a780) differs from the worktree only in `tools/audio/_render/**` (local, git-ignored run outputs). Those files are still present locally. All v3.6 work had been pushed before the stop (1da1f8c, c47654e, e4df6f6, d5f145a; d5f145a verified on origin). **Nothing lost.**
+- Requests re-read: 01 R1, 02 (A1–A3, A6, A7, A9 done; A8 not started; **A10 unit id / spawn cue: not answered, not in HEAD**), 06 (licence confirmation already answered), 08 AU3 (resolved), coordinator (quota notes historical).
+- Decisions: Q1 = A bakery vs mold, Q2 on hold (no purchase/ad sounds), Q3 title "빵집 기사단: 곰팡이 디펜스", Q4 home-screen name "빵집 기사단". Q5 unanswered; D28 is a default, not approval. Nothing in audio depends on Q5.
+- Remaining open items, unchanged:
+  - fruit-fly buzz: waits for 02 A10
+  - folk menu: preview only, NOT connected; waits for 01/user
+  - music variation: question candidate with 01
+  - B36 hit cap: not listening-confirmed
+  - 04 C1 (sliders) / C5 (UI-local upgrade results)
+
+## Re-verification 23:xx (same conditions as v3.6, one serial run)
+`pwsh tools/audio/run_godot_checks.ps1 -Integration -BattleSeconds 80 -Record -RecordSeconds 60 -ProbeArgs "--probe-seed=11" -Lifecycle` (sandbox = committed HEAD ae6f9af + 05 worktree; private APPDATA, same method as 10's isolated_godot.ps1) → **GODOT AUDIO CHECKS PASS**:
+- hits mold 14 / bread 19 / fallback 0; deploy 14 = 14, skill 7 = 7, wave_cleared 1 = 1, upgrade 2 = 2, hero 1 = 1/1
+- 0 same-frame dups, peak SFX voices 4/12, audio-class exit leaks 0
+- lifecycle 27/27, settings 3/3 + 5/5 (zero output peak 0)
+- Isolation proof: the private user dir has the run's logs; the real save.json was unchanged during the run.
+- Also: `validate.py --determinism` PASS (no asset change). Mix: buried 7.9 %, at risk 4.2 %, −22.1 LUFS, peak −4.27 dBFS, 0 clipped, no fatigue/low-heavy flags.
+- Phone check on this new recording: worst masked 14.3 % (death_ally, hit_base); before: 12.3–13.0 %. The variation comes from the battle (different background), not from an asset change. Faction hits still classified 100 % correctly.
+- `battle_preview_30s.mp3` was regenerated from this recording, and the checklist timestamps were updated to match.
+No new code or asset changes in this step.
 ## v3.6 (Codex review of 11c29cc–f5f42df)
 01 R1, remaining 3 timbres; only those with a real game event were implemented:
 1. **Rally (implemented)**: the event exists (`Events.sfx(&"skill")` → kind `rally` → `skill_rally`; data r04–r10 list skill_rally).
