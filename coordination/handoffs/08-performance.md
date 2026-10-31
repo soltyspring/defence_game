@@ -24,6 +24,11 @@
 - **Validation:** art_variant_ab exit 0 twice (the second is the valid one). 3 of 4 probe runs CLEAN, isolated, real save 614A1FAC
   unchanged, `ART_DRAFT32` unset afterwards, working-tree atlases unchanged. `test_asset_budget_check.py` 13/13 PASS. Runner parse 0
   errors, GDScript indentation tabs only. Every heavy step ran inside heavy_run (lock waits 842 s and 1347 s).
+- Commit: `1695e06386227b4db6c375d5fdcf56279cbf3b07` `[Test] 03 D1 32px 유닛 시안 출시 전 성능 미리보기(…)`, 9 files.
+  Publish-Task.ps1 printed `PUSHED 1695e06… origin/main` (1aec5fe..1695e06). Checked with `git cat-file -t` = commit and
+  `git branch -r --contains` = origin/main.
+- Next: when 02 commits H3 or P10, or 04 commits R8, run the matching locked A/B (M15 next steps). For a D1 adoption, re-gate the
+  real commit and run `art_variant_ab.ps1` style checks on a device once P10 exists.
 
 ## M15 — resume after the 23:09 blue screen; draw-call reduction plan with numbers (2026-10-31 22:58 – 2026-11-01 00:2x KST)
 - **Resume check:** the 20:29 checkpoint `checkpoint/quota-20261031-202729/08-performance` (db87912) has no file changes vs ae6f9af,
