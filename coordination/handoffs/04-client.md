@@ -1,5 +1,5 @@
 # 04-client handoff — FINAL CHECKPOINT (user-requested shutdown)
-Updated: 2026-10-31 09:25 +09:00
+Updated: 2026-10-31 15:50 +09:00
 Session: sess_a24d01e7-e535-413c-9ff6-d5258090820b (Kiro CLI, claude-opus-5.5, trust-all; same window throughout, resumed after two account changes).
 State at checkpoint: work stopped at a safe point. The owned working tree is CLEAN (all 04 work committed and pushed). No 04-started Godot or emulator process is running. Nothing was left unverified or uncommitted.
 
@@ -25,6 +25,14 @@ State at checkpoint: work stopped at a safe point. The owned working tree is CLE
 - Debug APK from an isolated HEAD copy (07e97ca): 59,106,028 B; no permissions; minSdk 24 / target 36; v2+v3 debug signature; 0 raw PNG/TTF/WAV; 10/10 atlas .ctex; 0 keys/passwords in the repo (build/qa/apk_head/).
 - Evidence images are in git-ignored build/qa/{real,real2,real3,real4,real5,screens}.
 
+## 15:50 resume (after the 09:25 checkpoint)
+- Loss check: checkpoint/quota-20261031-092323/04-client has 0 file differences from origin/main in 04 paths; e02ba03 is in main; the owned tree was clean. Nothing lost.
+- Theme A text (01 14b01e2) is in use: cards are 제빵사/식빵병/롤빵병/통식빵/프레첼 (Baker/Toast/Roll/Loaf/Twist). ui.title stays provisional per 01.
+- 5a2099d: fit_label cold-font bug (root cause of 07 QA-B009) fixed; round tiles wrap to 2 lines (QA-B010); `UiStyle.prewarm_fonts()` added (08 R5).
+- 231cfda: the `--safe=` harness option now uses live insets (an integer-scale 800×450 view had exposed a stale fixed rect).
+- 38b4d9d: tiles prefer a 12 px 2-line wrap over the 10 px cut. **This pushed a test file with a parse error** (I published without gating on the test result). Fixed in ad9b6fd. The HEAD snapshot then gave UI 3297/0 and integration 32/32.
+- Verified on DISPLAY2 against fresh HEAD snapshots (own import, so icons are correct): 1600×900 → 800×450 view, 0.0% irregular glyph runs at 1×/2×/2.5×, ko/en (build/qa/real6, real7). 07 theme+flow on HEAD: TH-FIT-HUD ko/en PASS; TH-FIT-ROUND fails only because 07 measures 1 line (asked 07 to use fit_lines); TH-COL = 03.
+- The shared tree currently has 02's uncommitted src/core/app.gd WIP (breaks App.boot), so run integration on HEAD snapshots until 02 commits.
 ## Unfinished / open (not done, do not claim)
 1. Theme-A labels: waiting for 01 to commit data/text. Then: run test_ui (typography gate) + worst-layout ko/en visible captures.
 2. 2.5× (non-integer) pixel text irregular (57–68% odd runs): waiting for 02 `scale_mode="integer"` (04 R9).

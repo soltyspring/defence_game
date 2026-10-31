@@ -1,5 +1,5 @@
 # Release readiness checklist — 04-client scope (Android pipeline, signing, privacy, UI/mobile QA)
-Updated: 2026-10-31 09:20 +09:00. TESTED = run with the evidence named here; UNTESTED = not run; BLOCKED = cannot run without the named dependency.
+Updated: 2026-10-31 15:50 +09:00. TESTED = run with the evidence named here; UNTESTED = not run; BLOCKED = cannot run without the named dependency.
 This is NOT a release-ready claim. First playable is an internal milestone. Store publication and paid accounts are user actions.
 
 ## A. Build artefact (debug APK from HEAD 07e97ca)
@@ -11,7 +11,7 @@ Command: `.\tools\build\build_android_debug.ps1`. It exports from a `git archive
 | A3 | No raw source images, fonts or audio shipped | TESTED | 0 `.png`, 0 `.ttf`, 0 raw wav/ogg; 10/10 atlas pages present as imported `.ctex` (incl. char_*_adv, char_boss_*), 3 fonts as `.fontdata` |
 | A4 | No tests/docs/tools/coordination/build files, scripts, keystores or .env in the APK | TESTED | inspect_apk.py: 0 FAIL |
 | A5 | Dev/mock code in the APK | FOUND (debug acceptable, release not) | Shipped: src/ui/mock/* + scenes/ui/ui_preview (04), src/core/diag/selftest + src/gameplay/bot_player (02), src/services mocks (06; may be intended runtime fallbacks). Request: release preset exclude list (02, 04 R12) |
-| A6 | OFL licence text shipped with the fonts | **FAIL (open)** | assets/fonts/OFL-Galmuri.txt is not in the APK; include_filter lacks `assets/fonts/*.txt` (02, requested in R9 and by 03 A2b). The in-game credits panel shows the credit and the file name |
+| A6 | OFL licence text shipped with the fonts | FIX CLAIMED by 02 (141d226), NOT re-verified in an APK by 04 | assets/fonts/OFL-Galmuri.txt is not in the APK; include_filter lacks `assets/fonts/*.txt` (02, requested in R9 and by 03 A2b). The in-game credits panel shows the credit and the file name |
 | A7 | Permissions | TESTED | `aapt2 dump permissions`: none. No INTERNET (no ads/IAP/analytics yet) |
 | A8 | SDK levels | TESTED | minSdk 24, targetSdk 36, compileSdk 36. Play's current target-API requirement must be re-checked on the release date (UNTESTED against policy text) |
 | A9 | Package / version | TESTED | com.soltyspring.lanedefence (PROVISIONAL, user may change), versionCode 1, versionName 0.1.0 |
@@ -27,9 +27,9 @@ Command: `.\tools\build\build_android_debug.ps1`. It exports from a `git archive
 | B1 | Real engine mounts 04 screens (not fallback) | TESTED | tests/integration 31/31 headless + visible |
 | B2 | Layout matrix incl. notches/integer-scale views; touch targets ≥ 40 logical | TESTED (math) | tests/ui 3000 configurations |
 | B3 | Bundled Korean font, no OS fallback, full glyph coverage | TESTED | docs/qa/TYPOGRAPHY_QA.md |
-| B4 | ko/en text fits the worst layout | TESTED | 0 ko and 0 en ellipsis (after 01 67bf9ca) |
+| B4 | ko/en text fits the worst layout (theme A names, 01 14b01e2) | TESTED | cards: 0 ellipsis ko/en (07 TH-FIT-HUD PASS); round tiles: 2-line wrap, 0 truncated at 83/97 px (07 TH-FIT-ROUND still measures 1 line, see 04→07 15:50) |
 | B5 | Pixel-regular text at 1× and 2× | TESTED | 1× capture build/qa/real4/{ko,en}_1x_*.png; 2× 0–5% odd runs |
-| B6 | Pixel-regular text at 2.5× (non-integer devices, e.g. 1600×900) | **FAIL (open)** | 57–68% odd runs; needs integer scale_mode (02 R9) |
+| B6 | Pixel-regular text at 2.5× (non-integer devices, e.g. 1600×900) | TESTED (desktop) | 02 141d226 integer scale: 1600×900 → 800×450 view, 0.0% irregular glyph runs in HUD/round select/result, ko+en (build/qa/real7) |
 | B7 | Base HP numbers, star met/unmet by shape, boss bar, tutorial hint, skill-name tip, credits | TESTED (desktop) | build/qa/real3, real4 |
 | B8 | UI atlas icons correct | TESTED in a fresh HEAD snapshot (desktop); dev tree still stale | build/qa/real5/headsnap_ko_3d_skilltip.png (own import): unit portraits + skill icons correct. The shared dev tree still needs 02 --import (vector fallbacks there). Android not checked (A13) |
 | B11 | Android back acts once per press; no HUD pause menu under the result | TESTED (07 flow suite on HEAD archive) | 0d8cc5b: FLOW-23/23B/13B PASS, flow 44/44 |
