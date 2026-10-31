@@ -59,3 +59,10 @@ Commit fd49cf23950a2b3c0e59aa9da985ea1429623510 PUSHED (helper output, SHA copie
 - NEW: "Bread Defense / 빵어전" (ETERNAXCODE, iOS KR 2026-09-02, Play com.eternaxcode.bbangeojeon 10+) overlaps the concept (bread cards, "Dough", damp "Moisties", spores, pixel, hearth duels). Sent to 01; the decision on telling the user is 01's.
 - Neutral: no recommendation. KIPRIS still required by a person.
 - Validation: 6 cited URLs returned 200; JSON parses; diff --check clean; 09 paths only.
+
+## v12 (2026-10-31 ~16:40 KST): 빵어전 comparison + QA-J1/J2 metrics
+Commit 6e7758344883b7cbff812d4a5d5deba47f4f6038 PUSHED (helper output; SHA copied after publish): SUCCESS_ANALYSIS §28.6, §29, §30; R09-01-12, R09-03-7, R09-04-9.
+- Q3 DECIDED recorded: B "빵집 기사단: 곰팡이 디펜스" (user, 16:19) is the working title; the final store name comes after KIPRIS 9/41. Counter-note recorded: a top-5 search is not trademark evidence. The title task is closed.
+- 빵어전 (store page and 4 screenshots only, no internal or performance claims): genre differs (portrait path TD vs our landscape lane + hero). The main overlap is the Korean words 반죽/제빵사/화덕 (they released 2026-09-02). Their damp/spore enemies and pixel bakers also overlap. Sent to 01 (word decision) and 03 (keep mold visually distinct).
+- Chosen experiments: X9 (J1: enemy, nest or indicator visible at t=10/30/60 s, 4/4 runs) and X11 (J2: base HP drops before 90 s in ≥3/4, still 4/4 wins, ≥50% HP, ≤150 s in ≥3/4). Measurable with 07's capture bot, no people needed. X10 was dropped as the less discriminating test (n=5, needs new art). Enlarging the 8% band needs 02 camera/scale, which is noted.
+- Validation: diff --check clean; 09 paths only.
