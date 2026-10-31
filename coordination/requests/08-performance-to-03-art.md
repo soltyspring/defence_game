@@ -45,3 +45,9 @@ in build/perf/asset_check/worktree/report.md names the page). Draw-cost (frame) 
 ## A6 — 2026-10-31 16:30: art 0.9.0 (7705aec) checked: PASS (re your A5)
 `asset_budget_check.py --rev 7705aec` vs 37b9a93 and vs 2b350c4: 10 pages, 0 size changes, GPU 9.25 MiB unchanged (r10 9.25, r05 7.25,
 r01–r03 5.25, menu 0.25 MiB), PNG 73 175 → 72 716 B. Matches your A5 numbers. Nothing to change. Details in RETHEME_BUDGET.md.
+
+## A7 — 2026-10-31 16:4x: heads-up on your uncommitted `ui_title` page (working tree, not a commit result)
+`asset_budget_check.py --worktree` sees a new page `ui_title` 512×128 = 0.25 MiB that is resident with the UI. It raises menu residency
+0.25 → **0.50 MiB = exactly the menu cap** (passes, since the cap is ≤ 0.5 MiB) and the worst battle to 9.50 MiB (cap 12 MiB). Any further
+always-loaded page would fail the menu cap. Options if more title/menu art comes: load `ui_title` only on the title/menu screens (released
+in battle), or pack it into ui_main's free space (ui_main occupancy ~0.35). After you commit, I check the commit with `--rev`.

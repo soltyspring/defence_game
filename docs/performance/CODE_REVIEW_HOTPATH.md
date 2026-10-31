@@ -57,3 +57,36 @@ duplicates (fdd4d86); `battle.gd` swaps the event buffer (P3); towers scan foes 
 2. After each 02 change: `ab_retest.ps1 -RequireQuiet` for sim items (H3, H4, H7, H8, H10, H11) and the frame probe for view items
    (H1, H2, H5, H6, H9, H13). Accept only VALID_QUIET runs.
 3. Device: none attached. The H1/H2 effects are expected to be larger on Mali-G52/Adreno 610 class GPUs and little cores.
+
+## 4. Status of H1–H13 after 02's 22d99ea (16:34; reviewed read-only with `git show`, **not timed**)
+| Item | 22d99ea change | 08 static assessment | Still to measure (C11) |
+|---|---|---|---|
+| H1 | `Atlas.anim_rec()` returns a cached `AnimRec`, `rec_index()` returns an int; units, workers, bases, projectiles and fx use it (`atlas.gd` new block after `_load_texture`; `battle_view.gd` `_blit_rec`) | Per-sprite Dictionary **allocation removed**. What remains per sprite is 2 lookups (`_rec_cache.get`, `per.has`) on persistent dicts. Biome layers (≤ 5/frame) and the base static fallback still build `frame()` dicts | frame-probe view A/B at caps |
+| H2 | hp bars queued and drawn after all sprites; flip via negative-width dest rect; bar colours const | Removes the per-sprite `draw_set_transform` and the hex parse. Bars now form one rect group. Draw-call reduction is **not yet measured**. The 3 typed bar arrays are cleared and refilled every frame (see H20) | draw calls p95 at caps |
+| H5 | cached `_by_lane_y` Callable | Lambda allocation per frame removed; the sort itself remains | part of view A/B |
+| caps | `Content.caps()` = one source (data), clamped to perf.gd ceilings; sim no longer has its own defaults | Resolves §1. D7 text still says 30/40 (01) | — |
+| pools | `_prealloc_pools()` in `setup` (64 + 48 + 24 + ally+enemy+8 units) | Mid-fight allocation of pooled objects removed; the ~216 objects per battle start are now created during loading | battle start time (load hitch) |
+| P2b | tie-break = lowest uid, whole tie group scanned | Behaviour equivalence reported by 02 with 08's `targeting_equivalence.gd` (EQUIVALENT 0/30); 08 has not re-run it yet | — |
+| H3, H4, H6, H8–H13 | not changed | still open | as §2 |
+New risk from 22d99ea:
+- **H19** `battle_sim.gd` (22d99ea) lines 707-718 and 731-741: the neighbour scan no longer stops after 4 candidates. It stops only when
+  `found >= 4 and d > best_d`, and it also walks past dying units without counting them. Stacked melee units at **identical x** (the
+  P2b ties) make the tie group the scan length. In heavy stacking at caps this could move the cost back toward the linear scan.
+  Measure: `perf_bench.gd` sections.units and the same-build `targeting_ab` in clash mode (which places units on 9 shared x offsets, so ties
+  exist). Compare with the linear switch in C11.
+- **H20** `battle_view.gd` `_hp_bar` / `_flush_bars`: `_bar_rects/_bar_fills/_bar_cols.append` per bar and `clear()` per frame. Typed-array
+  `clear()` can free the buffer, so up to ~80 × 3 appends may re-grow it every frame. Low; a fixed-size buffer with a count avoids it.
+
+## 5. 04 UI hot paths (committed HEAD files: hud.gd, hud_top.gd, touch_button.gd, ui_style.gd, upgrade_panel.gd at 6051b3c; banner 0590e7a)
+No `Tween` and no per-frame node creation in these files. `hud._process` (427-433) only fades the toast/banner `modulate.a`. Canvas
+commands are re-recorded only on `queue_redraw()`, so the cost is driven by **redraw frequency**:
+| # | Where (HEAD) | What | Frequency | Low-end concern | How to measure |
+|---|---|---|---|---|---|
+| H14 | `hud.gd:400-412` `_on_wave_cleared` → `show_banner(UiText.t("banner.first_wave_cleared"))` at FONT_L 24 bold (`hud.gd:95-96`) | First-time Korean string at Bold 24: cold glyph rasterisation in the frame that shows the D16 "peak moment" banner | once per battle, at the most important moment | FONT_COST.md: Bold 24 cold toast +6.6 ms desktop, ×4 ≈ 26 ms on a mid phone (≥ 1 dropped frame exactly at the peak) | font probe case with this string; frame-probe spike at the first wave clear |
+| H15 | `hud.gd:196-247` `_on_snapshot` | builds 2 Dictionaries (`by_id`, `skills_by`), and `queue_redraw()` on every card, skill, worker and move button + `top` even when nothing changed | 10 Hz (HudSnapshot) | ~12 controls re-record their whole `_draw` 10×/s | frame probe with the UI A/B (`--perf-ab-ui`) at caps; count redraws |
+| H16 | `ui_style.gd:188-195` `fit_text` ellipsis loop (one `get_string_size` per removed char, O(n²)), called from `hud_top.gd:118` (wave text, `%d` formatting) and `134` (boss name), `upgrade_panel.gd:262, 285` | string measuring + formatting in `_draw` | 10 Hz in battle (hud_top) | only when text is too long; boss names on narrow screens | micro-bench of `fit_text` with a 20-char Korean string at 12 px |
+| H17 | `ui_style.gd:322-327` `draw_number` draws every character twice (shadow + glyph) with per-char `get_char_size` | per redraw: gold, cap, income, base HP, army counts, card costs | 10 Hz | many small draw commands (same font texture, probably batched) | draw calls with the UI A/B |
+| H18 | `touch_button.gd:140` `fit_lines` (wrap + measure) in every button `_draw` | per button redraw | 10 Hz × ~11 buttons in battle (because of H15) | repeated text measuring | same as H15 |
+| H18b | `upgrade_panel.gd:154-167` `_layout` frees and recreates all buy buttons (`TouchButton.new`, `connect`); `_draw` 247-286 formats names and levels per row | on open, layout and page change only (menu screen) | low; not in battle | — |
+Main fixes: redraw a button or `hud_top` only when its displayed values changed (H15/H18); pre-warm the glyph cache incl. the banner string
+at 24 px bold (H14, extends 04 R5).

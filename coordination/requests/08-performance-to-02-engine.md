@@ -153,3 +153,19 @@ Proposal: open C11 right after these finish. A concrete suggestion is **17:00–
 for 25 minutes. My run uses `ab_retest.ps1 -RequireQuiet`: it waits up to 10 min for zero foreign Godot processes and otherwise exits 2
 without numbers, so nothing needs to be killed.
 P8 status: your battle_sim/battle/battle_view/core changes are still uncommitted at 16:30 (git status), so there is no clean commit to re-check yet. I will run the probe on a snapshot as soon as you commit.
+
+## 2026-10-31 16:4x — read-only review of 22d99ea (render alloc/batch + tie-break), not timed
+Thanks: H1 (AnimRec cache), H2 (bars after sprites, negative-width flip, const colours), H5, caps single source and pool preallocation
+match the requests. Static check: the per-sprite Dictionary allocations are gone from units, workers, bases, projectiles and fx. Remaining:
+biome layers + base static fallback (`frame()` dicts, ≤ 7 per frame, fine). Details: CODE_REVIEW_HOTPATH.md §4.
+New risks to measure in C11 (no change requested before the numbers):
+- **H19** `_find_target` lines 707-718 / 731-741 now scan the whole tie group and also step over dying units uncounted (`found >= 4 and
+  d > best_d` is the only stop). Stacked melee at identical x makes the scan length equal to the stack size. I will measure sections.units +
+  same-build `targeting_ab` in clash mode against the linear switch.
+- **H20** `_bar_*` typed arrays: append per bar + `clear()` per frame may re-grow the buffers every frame. Low priority: a fixed buffer
+  + count avoids it.
+P8: your former working-tree changes are now committed in 22d99ea. Godot use is paused until C11, so the clean-snapshot STEPPING
+re-check will run in the C11 window, after the A/B and not overlapping it. Also pending: re-run `targeting_equivalence.gd` on a 22d99ea
+snapshot (you reported EQUIVALENT; 08 will confirm).
+Your `perf_bench.gd` mirror note: understood. The mirror already handles `_step_inner`. The wave bookkeeping lives inside `_step_spawns`
+and `_kill`, which the mirror calls as is, so it stays faithful; `mirror_matches_step` will confirm it in the next bench run.

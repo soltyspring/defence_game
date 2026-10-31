@@ -1,4 +1,18 @@
 # 08-performance handoff
+## M9 — gate re-judgement, UI hot-path review, 22d99ea review (2026-10-31 16:4x +09:00, no Godot used)
+- (1) Re-ran the fixed gate (14f8edc) on every earlier judged commit (ccf3033, 2b350c4, 5930430, 686af29, 7705aec, 8c8635f, bfcce0e) and on
+  the M3 retheme_compare baseline. **0 verdict changes**: all recorded runs used an absolute out dir; only the unrecorded 16:25 relative
+  run was wrong. Table in RETHEME_BUDGET.md. WIP heads-up to 03 (A7): `ui_title` page puts menu residency exactly at the 0.5 MiB cap.
+- (2) UI review (04, committed 6051b3c/0590e7a): no Tween or per-frame node creation. New H14 (cold Bold 24 glyphs at the D16 banner =
+  likely hitch at the peak moment), H15/H18 (all HUD buttons redraw at 10 Hz even when unchanged), H16 (O(n²) ellipsis), H17, H18b.
+  Request R7 sent to 04.
+- (3) 02's WIP was committed meanwhile as **22d99ea (16:34)**, so I reviewed the commit with `git show` (read-only; nothing modified or
+  stashed). H1/H2/H5/caps/pools/P2b changed as requested (not timed). New risks H19 (tie-group scan length under stacking) and H20 (bar
+  buffers regrow per frame) noted in the 02 request. Line refs checked: 16/16 at HEAD 7461636.
+- Pending for C11 (17:00–17:25 proposal, `-RequireQuiet` only): A/B 02 target search (base = linear blob d4d7c13 → HEAD, now incl.
+  22d99ea); then, outside the A/B, frame probe on a clean HEAD snapshot (P8 STEPPING re-check + H1/H2/H15 draw-call/view/UI A/B) and
+  `targeting_equivalence.gd` on the snapshot.
+- M9 commit: recorded only after `git show` verification (below).
 ## M8 — 03 art 0.9.0 gate, P8 wait, C11 proposal (2026-10-31 16:30 +09:00)
 - User decisions recorded: **Q3 working title "빵집 기사단: 곰팡이 디펜스" (16:19 KST)**, **Q2 monetization on hold** (no ad/billing SDK).
 - (1) 7705aec (03, pixels only) → asset gate PASS vs 37b9a93 and vs 2b350c4. Page count 10→10, GPU 9.25 MiB unchanged, PNG −459 B.

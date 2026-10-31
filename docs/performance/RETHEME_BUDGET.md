@@ -90,3 +90,22 @@ User decision Q3 (16:19 KST): working title "빵집 기사단: 곰팡이 디펜�
 Gate fix in the same session: with a **relative** `--out`, the residency step wrote to a different directory and reported worst-battle/menu
 GPU as 0 MiB, which would have passed every cap silently (first 7705aec-vs-2b350c4 run, 16:25). Fixed: the out dir is made absolute, and a
 missing or empty residency is now an input error (exit 2). Two regression cases were added; the self-test passes 13/13.
+
+### 2026-10-31 16:4x — re-judging all earlier budget verdicts with the fixed gate (14f8edc)
+Question: did the relative-`--out` defect (silent 0 MiB residency) affect any verdict recorded in M3–M7? Every judged commit was
+re-run with the fixed tool, base 37b9a93, into a new out dir (`--out build/perf/asset_recheck`, relative on purpose).
+| Commit | Recorded verdict (old tool) | Re-run verdict (fixed tool) | Worst battle / menu GPU | PNG B | SFX PCM B | Changed metrics |
+|---|---|---|---|---|---|---|
+| ccf3033 | PASS | PASS | 9 699 328 / 262 144 | 74 040 | 801 074 | none |
+| 2b350c4 | PASS | PASS | 9 699 328 / 262 144 | 73 175 | 801 074 | none |
+| 5930430 | PASS | PASS | 9 699 328 / 262 144 | 73 175 | 801 074 | none |
+| 686af29 | PASS | PASS | 9 699 328 / 262 144 | 73 175 | 801 074 | none |
+| 7705aec | PASS | PASS | 9 699 328 / 262 144 | 72 716 | 801 074 | none |
+| 8c8635f (HEAD at 15:51) | PASS | PASS | 9 699 328 / 262 144 | 73 175 | 801 074 | none |
+| bfcce0e (HEAD at 15:53) | PASS | PASS | 9 699 328 / 262 144 | 73 175 | 801 074 | none |
+| M3 baseline via `retheme_compare.py` | caps=PASS | caps=PASS | 9.25 / 0.25 MiB | | | none |
+Result: **no verdict changes.** Why: every recorded run used the default absolute `--out`, and `retheme_compare.py`/`budget_inventory.py`
+run with cwd = workspace root, so they never had the defect. The only wrong run was the 16:25 7705aec-vs-2b350c4 comparison with a relative
+`--out`. It reported worst/menu 0 MiB, was caught before being recorded, and was redone. Requests to owners: none needed.
+Heads-up (working tree, uncommitted 03 WIP, `--worktree`): a new always-resident page `ui_title` 512×128 (0.25 MiB) raises **menu
+residency to 0.50 MiB = exactly the cap** (PASS at ≤) and the worst battle to 9.50 MiB. Any further always-loaded page would fail; sent to 03 (A7).

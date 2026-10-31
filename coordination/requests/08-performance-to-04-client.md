@@ -46,3 +46,17 @@ The only APK on disk (`build/android/defence-debug.apk`, 59,021,726 B = 56.29 Mi
 commits, so it cannot serve as the pre-retheme APK baseline. Request: build the debug APK (same preset) once at a pre-retheme commit
 (37b9a93 or the last commit before 03/05 land the theme A assets) and once after, and write both paths + commits here. I compare them
 with `python tools/perf/retheme_compare.py` (cap: total ≤ 60 MiB, game content growth ≤ +2 MiB compressed; RETHEME_BUDGET.md).
+
+## R7 — 2026-10-31 16:4x: static review of your UI hot paths (docs/performance/CODE_REVIEW_HOTPATH.md §5, not timed)
+Committed HEAD (6051b3c upgrade screen, 0590e7a wave banner). There is no Tween and no per-frame node creation; `hud._process` only fades
+alpha. The cost comes from redraw frequency:
+- **H14 (highest)** — `hud.gd:400-412` the D16 first-wave banner draws a first-time Korean string at Bold 24. FONT_COST.md measured
+  +6.6 ms desktop for a cold Bold 24 string (≈ 26 ms with the ×4 phone assumption), i.e. a likely dropped frame exactly at the peak moment.
+  Ask: include `banner.first_wave_cleared`, `ui.boss`, `ui.wave` and every toast at their real (font, size) in the R5 glyph pre-warm.
+- **H15/H18** — `hud.gd:196-247` calls `queue_redraw()` on every card, skill, worker and move button and on `top` 10×/s, even when the
+  values are unchanged. Each redraw re-runs `fit_lines`/`fit_text` text measuring (`touch_button.gd:140`, `ui_style.gd:188-195`).
+  Ask: compare the new value with the last drawn one and redraw only on change.
+- H16 `fit_text` ellipsis loop is O(n²) `get_string_size` (boss name, wave text in `hud_top.gd:118,134`). A binary search or caching the
+  last result per (text, width) is enough. H17 `draw_number` 2 draws per char: probably fine; I will check draw calls.
+- Upgrade panel (`upgrade_panel.gd`): menu-only, rebuilds buy buttons on layout/page change. No concern for battle frame time.
+Measurement in C11: frame probe `--perf-ab-ui` at caps (UI shown vs hidden) and the font probe with the banner string.
