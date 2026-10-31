@@ -19,7 +19,8 @@ const DUCK_ATTACK_DB_S := 60.0
 const DUCK_RELEASE_DB_S := 14.0
 const PAUSE_MUSIC_DB := -6.0
 const PAUSE_LOWPASS_HZ := 900.0
-const OFFSCREEN_MAX_ATTEN_DB := 9.0
+const OFFSCREEN_MAX_ATTEN_DB := 5.0      # v3.1: was 9.0; at -9 dB off-screen fights sank under the music (BOSS_ROUND_REPORT A/B)
+var offscreen_max_atten_db := OFFSCREEN_MAX_ATTEN_DB
 const OFFSCREEN_DROP_SCREENS := 2.0
 
 signal cue_played(cue: StringName, voice: int)
@@ -28,6 +29,7 @@ var cues: Dictionary = {}          # cue -> manifest entry (+ "streams": Array[A
 var music_defs: Dictionary = {}    # id -> manifest entry
 var skill_kind_cue: Dictionary = {}
 var projectile_cue: Dictionary = {}
+var upgrade_result_cue: Dictionary = {}
 var load_errors: PackedStringArray = []
 var enabled := true
 
@@ -151,6 +153,7 @@ func _load_manifest() -> void:
 	var m: Dictionary = j.data
 	skill_kind_cue = m.get("skill_kind_cue", {})
 	projectile_cue = m.get("projectile_cue", {})
+	upgrade_result_cue = m.get("upgrade_result_cue", {})
 	var pcm := 0
 	for cue in m.get("cues", {}):
 		var c: Dictionary = m.cues[cue].duplicate()
@@ -254,7 +257,7 @@ func play(cue: StringName, params: Dictionary = {}) -> bool:
 			stats.dropped_offscreen += 1
 			return false
 		if att < 0.0: stats.attenuated_offscreen += 1
-		vol += maxf(att, -OFFSCREEN_MAX_ATTEN_DB)
+		vol += maxf(att, -offscreen_max_atten_db)
 	var p: AudioStreamPlayer
 	if bus == "Music":
 		p = _stinger
@@ -314,7 +317,7 @@ func _offscreen_atten(x: float) -> float:
 	var d := absf(x - cam.global_position.x) - half
 	if d <= 0.0: return 0.0
 	if d > OFFSCREEN_DROP_SCREENS * half * 2.0: return -80.0
-	return -OFFSCREEN_MAX_ATTEN_DB * minf(1.0, d / half)
+	return -offscreen_max_atten_db * minf(1.0, d / half)
 
 func stop_all_sfx() -> void:
 	for p in _sfx + _ui:

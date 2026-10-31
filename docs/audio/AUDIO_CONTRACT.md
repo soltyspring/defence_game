@@ -1,5 +1,5 @@
 # AUDIO_CONTRACT.md — audio event contract, mixer and budgets (owner: 05-audio)
-Version 1.2 (2026-10-31; v1.1 = off-screen policy, alert category, prepare_quit; v1.2 = theme cues hit_bread/hit_mold/hit_base_mold, `target_side` hit param). Godot 4.7.2 / GDScript. Additive changes only without a version bump.
+Version 1.3 (2026-10-31; v1.1 = off-screen policy, alert category, prepare_quit; v1.2 = theme cues hit_bread/hit_mold/hit_base_mold, `target_side` hit param; v1.3 = wave_cleared cue, upgrade_result cues, off-screen max attenuation −5 dB). Godot 4.7.2 / GDScript. Additive changes only without a version bump.
 Reads: docs/contracts/ENGINE.md v1.0, INTERFACES.md v1.0. Nothing here changes 02/04 files; integration is requested in `coordination/requests/05-audio-to-*.md`.
 
 ## 1. Files
@@ -35,8 +35,9 @@ Anyone (02 gameplay, 04 UI) may emit. Audio is the only listener. `cue` is eithe
 | `&"base_hit"` | `side`: base that was damaged | player → `hit_base` (bakery tower), enemy → `hit_base_mold` (mold hive) |
 | `&"skill"` | `skill`: skill id | by `Content.skills[id].kind` via manifest `skill_kind_cue` (`aoe_damage`→`skill_slam`, `rally`→`skill_rally`, `meteor`→`skill_barrage`, `heal_allies`→`skill_heal`, `summon`/unknown→`skill_cast`) |
 | `&"explosion"` | `x` | `explosion` |
+| `&"upgrade_result"` | `code`: 04 upgrade_panel result code | manifest `upgrade_result_cue`: ok/already_applied → `ui_upgrade_ok`, not_enough_coins → `ui_upgrade_no_coins`, max_level → `ui_upgrade_max`, save_failed/read_only → `ui_upgrade_save_failed`, other → `ui_error` (v1.3; key name proposed to 04 as C5, not yet emitted) |
 
-Optional params for every cue: `x` (world px), `vol_db` (additive), `pitch` (multiplier). Off-screen policy (v1.1): 0 dB inside the camera view, linear down to −9 dB at half a screen past the edge, −9 dB beyond; only cues with priority < 5 more than 2 view widths away are dropped. v1.0 dropped everything past ~0.7 screens; in a real r02 battle that silenced all 30 combat cues because the frontline is usually off-screen while the camera follows the hero (fixed and retested: 22 audible, 0 dropped).
+Optional params for every cue: `x` (world px), `vol_db` (additive), `pitch` (multiplier). Off-screen policy (v1.1, v1.3 depth): 0 dB inside the camera view, linear down to −5 dB (v1.1–1.2: −9 dB; changed after the same-seed A/B in BOSS_ROUND_REPORT.md: buried windows 16.5 % → 7.4 %) at half a screen past the edge, −5 dB beyond; only cues with priority < 5 more than 2 view widths away are dropped. v1.0 dropped everything past ~0.7 screens; in a real r02 battle that silenced all 30 combat cues because the frontline is usually off-screen while the camera follows the hero (fixed and retested: 22 audible, 0 dropped).
 
 Emission volume: the manager rate-limits each cue (`gap`) and caps instances (`max`), so 02 can emit per hit. To keep `sim.events` allocations low, 02 may collapse to at most one `hit`/`shoot` per kind per frame.
 
@@ -45,6 +46,7 @@ Emission volume: the manager rate-limits each cue (`gap`) and caps instances (`m
 |---|---|
 | `screen_changed` `menu`/`round_select` | `music_menu` (cross-fade 0.8 s) |
 | `screen_changed` `battle`, `battle_started` | `music_battle` |
+| `wave_cleared(info)` (02 v1.4, 22d99ea) | `wave_cleared` once per event (every scripted wave; 04 shows its banner for wave 1 only). Category `milestone`; 1.0 s cue gap, so a later direct `Events.sfx(&"wave_cleared")` from 04 cannot double it |
 | `battle_ended(won)` | music fades out 0.25 s, `stinger_win` / `stinger_defeat` |
 | `battle_paused(p)` | SFX pause, music low-pass and −6 dB |
 | `toast` `wave_incoming` / `boss_incoming` / `counterattack` / `hero_dead` | `wave_incoming` / `boss_incoming` / `wave_incoming` pitch 0.85 / `hero_death` |

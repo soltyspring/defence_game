@@ -555,6 +555,81 @@
    "hf300_share": 0.945,
    "mix_level_db": -18.4
   },
+  "wave_cleared.wav": {
+   "cue": "wave_cleared",
+   "ch": 1,
+   "bits": 16,
+   "rate": 22050,
+   "seconds": 0.7,
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -16.37,
+   "clipped": 0,
+   "dc": 0.0,
+   "edge_first": 0.0,
+   "edge_last": 0.0,
+   "hf300_share": 0.999,
+   "mix_level_db": -23.4
+  },
+  "ui_upgrade_ok.wav": {
+   "cue": "ui_upgrade_ok",
+   "ch": 1,
+   "bits": 16,
+   "rate": 22050,
+   "seconds": 0.55,
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -15.67,
+   "clipped": 0,
+   "dc": 1e-05,
+   "edge_first": 0.0,
+   "edge_last": 0.0,
+   "hf300_share": 1.0,
+   "mix_level_db": -22.7
+  },
+  "ui_upgrade_no_coins.wav": {
+   "cue": "ui_upgrade_no_coins",
+   "ch": 1,
+   "bits": 16,
+   "rate": 22050,
+   "seconds": 0.25,
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -15.5,
+   "clipped": 0,
+   "dc": 0.0,
+   "edge_first": 0.0,
+   "edge_last": 0.0,
+   "hf300_share": 1.0,
+   "mix_level_db": -24.5
+  },
+  "ui_upgrade_max.wav": {
+   "cue": "ui_upgrade_max",
+   "ch": 1,
+   "bits": 16,
+   "rate": 22050,
+   "seconds": 0.4,
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -16.07,
+   "clipped": 0,
+   "dc": -7e-05,
+   "edge_first": 0.0,
+   "edge_last": 0.0,
+   "hf300_share": 1.0,
+   "mix_level_db": -25.1
+  },
+  "ui_upgrade_save_failed.wav": {
+   "cue": "ui_upgrade_save_failed",
+   "ch": 1,
+   "bits": 16,
+   "rate": 22050,
+   "seconds": 0.35,
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -9.97,
+   "clipped": 0,
+   "dc": -0.0001,
+   "edge_first": 0.0,
+   "edge_last": 0.0,
+   "hf300_share": 0.966,
+   "mix_level_db": -18.0
+  },
   "stinger_defeat.wav": {
    "cue": "stinger_defeat",
    "ch": 1,
@@ -562,13 +637,13 @@
    "rate": 22050,
    "seconds": 3.0,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -14.35,
+   "rms_dbfs": -14.2,
    "clipped": 0,
    "dc": 0.0,
    "edge_first": 0.0,
    "edge_last": 0.0,
-   "hf300_share": 0.749,
-   "mix_level_db": -17.3
+   "hf300_share": 0.751,
+   "mix_level_db": -17.2
   }
  },
  "music": {
@@ -612,16 +687,16 @@
   }
  },
  "budgets": {
-  "disk_bytes_total": 1460181,
+  "disk_bytes_total": 1559625,
   "disk_budget": 2500000,
-  "sfx_pcm_resident_bytes": 872956,
+  "sfx_pcm_resident_bytes": 972180,
   "sfx_pcm_budget": 2097152,
-  "worst_case_sfx_sum_db": 23.8,
+  "worst_case_sfx_sum_db": 24.9,
   "note": "worst case = every SFX/UI cue at max instances, peaks aligned; runtime voice caps (SFX pool 12, UI pool 3) plus Master limiter keep real output below this"
  },
  "failures": [],
  "determinism": {
-  "files": 41,
+  "files": 46,
   "differing": []
  },
  "pass": true

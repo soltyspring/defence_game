@@ -40,6 +40,14 @@ var _rec_t0_us := 0
 var _rec_state := "idle"       # idle | recording | saved
 var _cue_log: Array = []       # [t_s, cue, vol_db_param]
 var _gain_log: Array = []      # [t_s, music_bus_db, music_mute, master_mute]
+var _record_until_end := false # --record-until-end: stop 4.5 s after battle_ended (stinger is <= 3 s)
+var _ended_rec_ts := -1.0
+# --inject-end=win|loss --inject-at=SEC: sandbox-only test injection that ends the battle through the real
+# engine path (BattleSim._damage_base -> _end -> "ended" -> App result -> Events.battle_ended -> stinger),
+# so win/defeat stingers can be recorded in bounded time. Reported as injected in the report/meta.
+var _inject_end := ""
+var _inject_at := -1.0
+var _inject_done := false
 
 var rep := {
 	"cue_counts": {}, "same_frame_duplicates": [], "commands": {"deploy": 0, "deploy_unaffordable": 0, "worker": 0, "skill": 0},
@@ -65,6 +73,7 @@ func _ready() -> void:
 	E.battle_started.connect(_on_battle_started)
 	E.battle_ended.connect(_on_battle_ended)
 	E.hud_snapshot.connect(_on_hud)
+	if E.has_signal("wave_cleared"): E.wave_cleared.connect(_on_wave_cleared)
 	# sandbox save only (custom user dir): unlock r01-r03 so cmd_retry of the --round battle and
 	# cmd_start_round work like for a player who reached them
 	var save := get_node_or_null("/root/Save")
@@ -73,6 +82,15 @@ func _ready() -> void:
 		if a.begins_with("--quit-after="): _report_at = float(a.get_slice("=", 1)) - 0.5
 		if a == "--probe-mode=record": _record_mode = true
 		if a.begins_with("--record-seconds="): _record_seconds = float(a.get_slice("=", 1))
+		if a == "--record-until-end": _record_until_end = true
+		if a.begins_with("--inject-end="): _inject_end = a.get_slice("=", 1)
+		if a.begins_with("--inject-at="): _inject_at = float(a.get_slice("=", 1))
+		if a.begins_with("--probe-seed="):
+			seed(int(a.get_slice("=", 1)))   # App uses randi() for the battle seed outside autoplay: fix it for A/B runs
+			rep.probe_seed = int(a.get_slice("=", 1))
+		if a.begins_with("--offscreen-db=") and A != null:
+			A.offscreen_max_atten_db = float(a.get_slice("=", 1))
+			rep.offscreen_db = A.offscreen_max_atten_db
 	if _record_mode: _phase = "record"
 
 func _on_toast(k: String, _a: Dictionary) -> void:
@@ -81,7 +99,13 @@ func _on_toast(k: String, _a: Dictionary) -> void:
 func _on_screen(s: StringName, _p: Dictionary) -> void:
 	rep.screens.append(str(s))
 
+func _on_wave_cleared(info: Dictionary) -> void:
+	rep.wave_cleared_events = int(rep.get("wave_cleared_events", 0)) + 1
+	rep.wave_cleared_index = rep.get("wave_cleared_index", []) + [int(info.get("index", 0))]
+
 func _on_battle_ended(r: Dictionary) -> void:
+	if _rec_state == "recording" and _ended_rec_ts < 0.0:
+		_ended_rec_ts = (Time.get_ticks_usec() - _rec_t0_us) / 1e6
 	in_battle = false
 	rep.battles_ended += 1
 	rep.results.append({"won": r.get("won"), "time": r.get("time")})
@@ -195,8 +219,13 @@ func _process(delta: float) -> void:
 				_drive()
 				_maybe_inject_hero_death()
 		"record":
-			if in_battle: _drive()
-			_record_step()
+			if in_battle:
+				_drive()
+				if _inject_end != "" and not _inject_done and _inject_at >= 0.0 and bt >= _inject_at and _sim != null:
+					_inject_done = true
+					rep.end_injected = {"result": _inject_end, "at_battle_t": snappedf(bt, 0.01)}
+					_sim._damage_base(_sim.SIDE_ENEMY if _inject_end == "win" else _sim.SIDE_PLAYER, 1e9)
+			if in_battle or _rec_state == "recording": _record_step()
 
 ## Hero cue check: if the aggressive policy produced no natural hero death by battle3 + 4 s, set hero hp
 ## to 1 once (sandbox-only test injection, reported as such); the kill then goes through the real
@@ -230,7 +259,7 @@ func _hero_policy() -> void:
 func _record_step() -> void:
 	match _rec_state:
 		"idle":
-			if not in_battle or bt < 0.5: return
+			if bt < 0.5: return
 			for b in ["Master", "SFX", "UI", "Music"]:
 				var r := AudioEffectRecord.new()
 				r.format = AudioStreamWAV.FORMAT_16_BITS
@@ -245,7 +274,7 @@ func _record_step() -> void:
 			var mi := AudioServer.get_bus_index(&"Music")
 			_gain_log.append([snappedf(ts, 0.001), snappedf(AudioServer.get_bus_volume_db(mi), 0.01),
 				AudioServer.is_bus_mute(mi), AudioServer.is_bus_mute(0)])
-			if ts >= _record_seconds:
+			if ts >= _record_seconds or (_record_until_end and _ended_rec_ts >= 0.0 and ts >= _ended_rec_ts + 4.5):
 				for b in _rec: _rec[b].set_recording_active(false)
 				var files := {}
 				for b in _rec:
@@ -255,7 +284,7 @@ func _record_step() -> void:
 					files[b] = p if w else ""
 				var sfx_db := AudioServer.get_bus_volume_db(AudioServer.get_bus_index(&"SFX"))
 				var ui_db := AudioServer.get_bus_volume_db(AudioServer.get_bus_index(&"UI"))
-				var meta := {"seconds": ts, "mix_rate": AudioServer.get_mix_rate(), "files": files,
+				var meta := {"seconds": ts, "battle_ended_at": _ended_rec_ts, "results": rep.results, "end_injected": rep.get("end_injected", {}), "mix_rate": AudioServer.get_mix_rate(), "files": files,
 					"sfx_bus_db": sfx_db, "ui_bus_db": ui_db, "cues": _cue_log, "music_gain": _gain_log,
 					"limiter": AudioServer.get_bus_effect(0, 0).get_class() if AudioServer.get_bus_effect_count(0) > 0 else "",
 					"round": _round, "driver": "headless Dummy (software mix, real time)"}
@@ -268,6 +297,11 @@ func _record_step() -> void:
 					for e in range(AudioServer.get_bus_effect_count(bi) - 1, -1, -1):
 						if AudioServer.get_bus_effect(bi, e) == _rec[b]: AudioServer.remove_bus_effect(bi, e)
 				_rec.clear()
+				if _record_until_end:
+					# done early: write the report, release audio, quit after 0.5 s wall clock (prepare_quit rule)
+					_write_report()
+					A.prepare_quit()
+					get_tree().create_timer(0.5, true, false, true).timeout.connect(func(): get_tree().quit(0))
 
 func _drive() -> void:
 	bt += get_process_delta_time()

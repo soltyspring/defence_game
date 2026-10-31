@@ -70,3 +70,8 @@ _cue(&"hit", "melee:" + ts, {"kind": "melee", "x": tgt.x, "target_side": ts})
 ```
 (For base hits nothing changes: `base_hit` `side` already selects bakery tower vs mold hive.)
 Acceptance: `pwsh tools/audio/run_godot_checks.ps1 -Integration` → integration report `cue_counts` contains `hit_mold` and `hit_bread` and `hit_melee` drops to ~0. Without A9 the bridge falls back to the neutral `hit_melee`, so nothing breaks.
+
+## Status 2026-10-31 (after 22d99ea / up to ebe2910)
+- A9 (`target_side` on hit cues): NOT in HEAD (`battle_sim.gd` hit cues still send only `kind`, `x`). 05 is WAITING; the bridge keeps the neutral `hit_melee` fallback, so nothing is broken.
+- `wave_cleared` (v1.4) consumed: one `wave_cleared` cue per event, verified in sandbox r02 (events 1 = cues 1, 0 same-frame duplicates) and r05 (cue at ~54 s).
+- Note for A/B testing: App uses `randi()` for the battle seed outside `--autoplay`; 05's sandbox probe calls `seed(N)` to make A/B runs comparable. No change requested.

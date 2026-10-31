@@ -7,7 +7,7 @@
 #   pwsh tools/audio/run_godot_checks.ps1 -Integration  # + simulated 02 request A1 (Audio autoload, exact line),
 #                                                       #   02 global selftest, leak attribution, bounded real battle
 # Exit code 0 = all pass. Integration report: tools/audio/_render/integration/*.json (git-ignored via .gdignore dir)
-param([switch]$Integration, [int]$BattleSeconds = 95, [switch]$Record, [int]$RecordSeconds = 60, [switch]$EngineSelftest)
+param([switch]$Integration, [int]$BattleSeconds = 95, [switch]$Record, [int]$RecordSeconds = 60, [switch]$EngineSelftest, [string]$RecordRound = 'r02', [switch]$RecordUntilEnd, [string]$InjectEnd = '', [int]$InjectAt = -1, [string]$RecordTag = '', [switch]$SkipIntegrationBattle, [string]$ProbeArgs = '')
 if ($Record) { $Integration = $true }
 $ErrorActionPreference = 'Continue'   # Godot writes diagnostics to stderr; judge by exit codes
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
@@ -15,7 +15,12 @@ $godot = Join-Path $root 'tools\engine\Godot_v4.7.2-stable_win64_console.exe'
 if (-not (Test-Path $godot)) { Write-Error "Godot console not found: $godot"; exit 2 }
 $sb = Join-Path ([IO.Path]::GetTempPath()) 'defence_audio_sandbox'
 $userDir = Join-Path $env:APPDATA 'defence_audio_sandbox'
-foreach ($d in @($sb, $userDir)) { if (Test-Path $d) { Remove-Item -LiteralPath $d -Recurse -Force } }
+# Clean sandbox + its user dir. Files can be briefly held (antivirus/indexer, a previous run still exiting):
+# retry, and refuse to run on a dirty sandbox instead of silently mixing old and new files.
+foreach ($d in @($sb, $userDir)) {
+  for ($i = 0; $i -lt 20 -and (Test-Path $d); $i++) { Remove-Item -LiteralPath $d -Recurse -Force -ErrorAction SilentlyContinue; if (Test-Path $d) { Start-Sleep -Milliseconds 500 } }
+  if (Test-Path $d) { Write-Error "could not clean $d (files held open); not running on a dirty sandbox"; exit 2 }
+}
 New-Item -ItemType Directory -Path $sb | Out-Null
 $outDir = Join-Path $root 'tools\audio\_render\integration'
 New-Item -ItemType Directory -Path $outDir -Force | Out-Null
@@ -102,6 +107,7 @@ if ($Integration) {
     Copy-Item $rep (Join-Path $outDir 'engine_selftest_report.json')
   } else { "engine selftest produced no report (exit=$($r.code))"; $fail++ }
   }
+  if ($SkipIntegrationBattle) { "leak probes + integration battle SKIPPED (-SkipIntegrationBattle)" } else {
   # leak attribution: baseline vs audio vs repeated create/free
   foreach ($m in @('empty', 'audio', 'cycle', 'quit_direct', 'quit_prepared')) {
     $r = Run "leak_$m" @('--headless', '--path', $sb, '-s', 'res://tools/audio/leak_probe.gd', '--', "--mode=$m")
@@ -136,6 +142,9 @@ if ($Integration) {
     "battle combat cues=$combat kills=$($ij.engine_truth.kills) deploy cues=$($cc.deploy)/engine $($ij.engine_truth.deployed) skill cues=$([int]$cc.skill_slam + [int]$cc.skill_rally + [int]$cc.skill_barrage + [int]$cc.skill_heal + [int]$cc.skill_cast)/engine $($ij.engine_truth.skills_cast) dropped_offscreen=$($ij.audio_snapshot.dropped_offscreen) attenuated=$($ij.audio_snapshot.attenuated_offscreen)"
     if ($ij.events_has_sfx -and [int]$ij.engine_truth.kills -gt 0 -and $combat -eq 0) { $fail++; "  ^ combat happened but no combat cue was audible" }
     if ([int]$cc.deploy -ne [int]$ij.engine_truth.deployed) { $fail++; "  ^ deploy cue count != engine deployed" }
+    $wce = [int]$ij.wave_cleared_events; $wcc = [int]$cc.wave_cleared
+    "wave_cleared: events=$wce cues=$wcc indices=$(@($ij.wave_cleared_index) -join ',')"
+    if ($wcc -ne $wce) { $fail++; "  ^ wave_cleared cue count != wave_cleared events (missing or duplicated)" }
     $hd = [int]$ij.engine_truth.hero_deaths
     "hero: engine deaths=$hd (injected=$($ij.hero_death_injected)) hero_death cues=$([int]$cc.hero_death) hero_respawn cues=$([int]$cc.hero_respawn)"
     if ($hd -lt 1) { $fail++; "  ^ no hero death happened; hero cues unverified" }
@@ -143,12 +152,21 @@ if ($Integration) {
     if ($hd -ge 1 -and [int]$cc.hero_respawn -lt 1) { $fail++; "  ^ hero died but no hero_respawn cue (respawn may not have elapsed before quit)" }
   } else { "NO integration report"; $fail++ }
   $r.out | Select-String -Pattern 'SCRIPT ERROR|Parse Error|ERROR:' | Select-Object -First 15 | ForEach-Object { "battle log: $_" }
+  }
 }
 if ($Record) {
   # 60 s real-mix recording of one clean battle (no pause/focus/retry phases). Post-limiter Master + pre-fader stems.
   $q = $RecordSeconds + 4
-  $r = Run 'record' @('--headless', '--path', $sb, '--', "--round=r02", "--quit-after=$q", '--probe-mode=record', "--record-seconds=$RecordSeconds") ($q + 60)
-  $recOut = Join-Path $root 'tools\audio\_render\recording'
+  $ra = @('--headless', '--verbose', '--path', $sb, '--', "--round=$RecordRound", "--quit-after=$q", '--probe-mode=record', "--record-seconds=$RecordSeconds")
+  if ($RecordUntilEnd) { $ra += '--record-until-end' }
+  if ($InjectEnd -ne '' -and $InjectAt -ge 0) { $ra += "--inject-end=$InjectEnd"; $ra += "--inject-at=$InjectAt" }
+  if ($ProbeArgs) { $ra += ($ProbeArgs -split ' ' | Where-Object { $_ }) }
+  $r = Run 'record' $ra ($q + 60)
+  $recOut = Join-Path $root ('tools\audio\_render\recording' + $(if ($RecordTag) { "_$RecordTag" } else { '' }))
+  $rl = @($r.out | Select-String -Pattern 'Leaked instance: (\w+)' | ForEach-Object { $_.Matches[0].Groups[1].Value })
+  $ral = @($rl | Where-Object { $_ -match 'Audio|Ogg' })
+  "record exit leaks: audio_class=$($ral.Count) [$($ral -join ',')] foreign=$((@($rl | Where-Object { $_ -notmatch 'Audio|Ogg' }) | Sort-Object -Unique) -join ',')"
+  if ($ral.Count -gt 0) { $fail++; "  ^ audio objects leaked at exit in record run" }
   New-Item -ItemType Directory -Path $recOut -Force | Out-Null
   $n = 0
   foreach ($fn in @('rec_master.wav', 'rec_sfx.wav', 'rec_ui.wav', 'rec_music.wav', 'rec_meta.json', 'audio_integration_report.json')) {

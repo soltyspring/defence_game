@@ -722,6 +722,49 @@ def r3_stinger_defeat(rng):
     return out
 
 
+# --- flow / meta UI (v3.1) ----------------------------------------------------------------------
+def r31_wave_cleared(rng):
+    """A scripted wave is broken (Events.wave_cleared): short bakery triumph, 0.7 s.
+    Two quick bells up a fifth (C6 -> G6) + crust 'cheer' crackle. Distinct from wave_incoming (alarm
+    bell tolls, lower) and stinger_win (long fanfare), so it never reads as 'battle won'."""
+    out = np.zeros(n_samples(0.7, SR))
+    place(out, bell(midi_hz(84), 0.3, 0.1) * 0.55, 0)
+    place(out, bell(midi_hz(91), 0.55, 0.22) * 0.65, n_samples(0.09, SR))
+    place(out, crumbs(rng, 0.35, 28, 2500, 8000) * np.linspace(0.5, 0.0, n_samples(0.35, SR)), n_samples(0.1, SR))
+    place(out, thump(330, 220, 0.08, 0.025) * 0.25, n_samples(0.09, SR))
+    return out
+
+
+# Upgrade screen results (04 upgrade_panel codes). Meta upgrades are bought with gold EARNED in play;
+# these are not purchase/ad sounds (Q2 monetization is on hold: none were made).
+def r31_upgrade_ok(rng):
+    """Upgrade done: warm rising level-up (bell G5-B5-D6 + sparkle), 0.55 s."""
+    out = np.zeros(n_samples(0.55, SR))
+    for i, m in enumerate((79, 83, 86)):
+        place(out, bell(midi_hz(m), 0.35, 0.12) * (0.45 + 0.1 * i), n_samples(i * 0.07, SR))
+    n = n_samples(0.35, SR)
+    place(out, bandpass(noise(n, rng), 5000, 9000, SR) * env_adsr(n, SR, 0.05, 0.1, 0.3, 0.15) * 0.08, n_samples(0.12, SR))
+    return out
+
+
+def r31_upgrade_no_coins(rng):
+    """Not enough gold: two dull coin taps falling (soft, not alarming), 0.25 s."""
+    return seq([(0.0, blip(1320, 1250, 0.05, "tri", tau=0.018) * 0.6),
+                (0.09, blip(990, 900, 0.08, "tri", tau=0.03) * 0.6)], 0.25)
+
+
+def r31_upgrade_max(rng):
+    """Already at max level: neutral 'sealed' knock + one soft bell (informative, not an error), 0.4 s."""
+    return mix(thump(520, 400, 0.06, 0.018, drive=1.5) * 0.4, seq([(0.05, bell(midi_hz(76), 0.32, 0.1) * 0.45)], 0.4))
+
+
+def r31_upgrade_save_failed(rng):
+    """Save failed: clearly different from 'no coins' and ui_error — falling two-tone buzz (A#4 -> D#4) + crack, 0.35 s."""
+    a = lowpass(blip(466, 440, 0.12, "square", 0.5, tau=0.07), 3500, SR)
+    b = lowpass(blip(311, 294, 0.16, "square", 0.5, tau=0.09), 3500, SR)
+    return mix(seq([(0.0, a), (0.14, b)], 0.35), burst(rng, 0.04, 0.01, 1500, 6000) * 0.5)
+
+
 CUES = {
     # faction: bakery (player side), mold (enemy side), neutral (UI/flow). desc = sound design intent.
     "ui_tap":          dict(r=[r_ui_tap], bus="UI", vol_db=-8, max=2, gap=0.03, prio=6, pitch=0.03, faction="neutral", desc="short square tick"),
@@ -759,12 +802,21 @@ CUES = {
     "wave_incoming":   dict(r=[r3_wave_incoming], bus="SFX", vol_db=-7, max=1, gap=1.0, prio=8, pitch=0.0, duck=-4, faction="bakery", desc="bakery alarm bell tolls twice + drum roll"),
     "boss_incoming":   dict(r=[r3_boss_incoming], bus="SFX", vol_db=-4, max=1, gap=2.0, prio=10, pitch=0.0, duck=-8, faction="mold", desc="oozing tritone drone + squelch stomps + boiling bubbles"),
     "stinger_win":     dict(r=[r3_stinger_win], bus="Music", vol_db=-3, max=1, gap=1.0, prio=10, pitch=0.0, faction="bakery", desc="bouncy major fanfare + oven-bell ding"),
+    "wave_cleared":    dict(r=[r31_wave_cleared], bus="SFX", vol_db=-7, max=1, gap=1.0, prio=8, pitch=0.0, duck=-3, faction="bakery", desc="wave broken: two quick bells up a fifth + crust cheer"),
+    "ui_upgrade_ok":         dict(r=[r31_upgrade_ok], bus="UI", vol_db=-7, max=1, gap=0.2, prio=7, pitch=0.0, faction="neutral", desc="upgrade done: warm rising bells"),
+    "ui_upgrade_no_coins":   dict(r=[r31_upgrade_no_coins], bus="UI", vol_db=-9, max=1, gap=0.25, prio=6, pitch=0.0, faction="neutral", desc="not enough gold: two soft falling coin taps"),
+    "ui_upgrade_max":        dict(r=[r31_upgrade_max], bus="UI", vol_db=-9, max=1, gap=0.25, prio=6, pitch=0.0, faction="neutral", desc="max level: neutral knock + soft bell"),
+    "ui_upgrade_save_failed": dict(r=[r31_upgrade_save_failed], bus="UI", vol_db=-8, max=1, gap=0.25, prio=7, pitch=0.0, faction="neutral", desc="save failed: low two-tone buzz + crack"),
     "stinger_defeat":  dict(r=[r3_stinger_defeat], bus="Music", vol_db=-3, max=1, gap=1.0, prio=10, pitch=0.0, faction="mold", desc="tune sinks into a soggy wobble, bubbles take over"),
 }
 # Engine mapping hints consumed by the runtime bridge (data-driven, so 01 can add skills without code).
 SKILL_KIND_CUE = {"aoe_damage": "skill_slam", "rally": "skill_rally", "meteor": "skill_barrage",
                   "heal_allies": "skill_heal", "summon": "skill_cast"}
 PROJECTILE_CUE = {"arrow": "shoot_arrow", "rock": "shoot_rock", "spit": "shoot_spit"}
+# 04 upgrade_panel result codes -> cue (semantic Events.sfx &"upgrade_result" {"code": code}); key name requested from 04 (C5)
+UPGRADE_RESULT_CUE = {"ok": "ui_upgrade_ok", "already_applied": "ui_upgrade_ok", "not_enough_coins": "ui_upgrade_no_coins",
+                      "max_level": "ui_upgrade_max", "save_failed": "ui_upgrade_save_failed", "read_only": "ui_upgrade_save_failed",
+                      "locked": "ui_error", "unknown_id": "ui_error", "unavailable": "ui_error"}
 
 # ----------------------------------------------------------------------------------------------
 # Music: tiny pattern sequencer rendering seamless loops (all note tails wrap to the loop start)
@@ -992,6 +1044,7 @@ def main() -> int:
                   "neutral": "UI and fallback cues"},
         "sfx_format": {"codec": "pcm_s16le", "rate": SFX_SR, "channels": 1},
         "cues": {}, "music": {}, "skill_kind_cue": SKILL_KIND_CUE, "projectile_cue": PROJECTILE_CUE,
+        "upgrade_result_cue": UPGRADE_RESULT_CUE,
     }
     seed = 1000
     for cue, c in CUES.items():

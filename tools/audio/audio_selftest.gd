@@ -203,6 +203,22 @@ func _run() -> void:
 	_ok(br.resolve(&"base_hit", {"side": "player"}) == &"hit_base", "player base -> bakery tower")
 	for cue in [&"hit_mold", &"hit_bread", &"hit_base_mold"]:
 		_ok(A.cues.has(cue), "manifest missing %s" % cue)
+	# v3.1: upgrade results (04 codes) -> four distinct UI cues; unknown code -> ui_error
+	var up := {"ok": &"ui_upgrade_ok", "not_enough_coins": &"ui_upgrade_no_coins", "max_level": &"ui_upgrade_max",
+		"save_failed": &"ui_upgrade_save_failed", "zzz": &"ui_error"}
+	for code in up:
+		_ok(br.resolve(&"upgrade_result", {"code": code}) == up[code], "upgrade_result %s -> %s (got %s)" % [code, up[code], br.resolve(&"upgrade_result", {"code": code})])
+	var ufiles := {}
+	for code in ["ok", "not_enough_coins", "max_level", "save_failed"]:
+		ufiles[str(A.cues[up[code]].files[0])] = true
+	_ok(ufiles.size() == 4, "upgrade result cues must be 4 different files")
+	# v3.1: wave_cleared -> exactly one cue per event, a same-frame duplicate emit plays nothing
+	if E.has_signal("wave_cleared"):
+		A.advance(5.0)
+		var wc0 := int(A.stats.played)
+		E.wave_cleared.emit({"index": 1, "t": 30.0})
+		E.wave_cleared.emit({"index": 1, "t": 30.0})
+		_ok(int(A.stats.played) - wc0 == 1, "wave_cleared x2 same frame -> 1 cue (got %d)" % (int(A.stats.played) - wc0))
 	A.advance(5.0)
 	p0 = A.stats.played
 	E.emit_signal("sfx", &"skill", {"skill": "skill_slam"})

@@ -19,11 +19,12 @@ const CATEGORIES := {
 	"gold": [&"gold_tick"],
 	"hero": [&"hero_death", &"hero_respawn"],
 	"alert": [&"wave_incoming", &"boss_incoming"],
+	"milestone": [&"wave_cleared"],
 }
 
 var audio: Node
 var ev: Node
-var derived := {"ui": true, "command": true, "death": true, "base": true, "gold": true, "hero": true, "alert": true}
+var derived := {"ui": true, "command": true, "death": true, "base": true, "gold": true, "hero": true, "alert": true, "milestone": true}
 var screen: StringName = &""
 var in_battle := false
 var _pending: Array = []      # [cue, category]
@@ -52,6 +53,7 @@ func setup(p_audio: Node, p_events: Node) -> void:
 	_c(&"cmd_open_screen", func(s): _ui(&"ui_back" if StringName(s) == &"menu" else &"ui_tap"))
 	_c(&"cmd_set_paused", func(_p): _ui(&"ui_tap"))
 	_c(&"cmd_set_setting", _on_setting)
+	_c(&"wave_cleared", _on_wave_cleared)   # 02 v1.4 (22d99ea): once per scripted wave, never after a loss
 	_c(&"sfx", _on_direct)   # requested from 02 (AUDIO_CONTRACT §3.1); absent signal is fine
 
 func _c(sig: StringName, f: Callable) -> void:
@@ -89,6 +91,10 @@ func resolve(cue: StringName, params: Dictionary) -> StringName:
 			return &"hit_base"
 		&"skill":
 			return skill_cue(str(params.get("skill", "")))
+		&"upgrade_result":
+			# 04 upgrade_panel result code -> cue (manifest upgrade_result_cue); key name proposed to 04 (C5)
+			var m: Dictionary = audio.get("upgrade_result_cue") if audio.get("upgrade_result_cue") is Dictionary else {}
+			return StringName(m.get(str(params.get("code", "")), "ui_error"))
 	return cue
 
 func _on_direct(cue: StringName, params: Dictionary) -> void:
@@ -166,6 +172,11 @@ func _on_battle_ended(result: Dictionary) -> void:
 	audio.set_battle_paused(false)
 	audio.stop_music(0.25)
 	audio.play(&"stinger_win" if bool(result.get("won", false)) else &"stinger_defeat")
+
+## One cue per Events.wave_cleared (every wave; 04 shows its banner for wave 1 only). The 1.0 s cue gap and
+## the "milestone" category make a later direct Events.sfx(&"wave_cleared") from 04 replace this, not double it.
+func _on_wave_cleared(_info: Dictionary) -> void:
+	if derived.milestone and in_battle: audio.play(&"wave_cleared")
 
 func _on_battle_paused(p: bool) -> void:
 	audio.set_battle_paused(p)

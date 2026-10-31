@@ -1002,6 +1002,161 @@
     }
    ]
   },
+  "wave_cleared": {
+   "bus": "SFX",
+   "vol_db": -7,
+   "max": 1,
+   "gap": 1.0,
+   "prio": 8,
+   "pitch": 0.0,
+   "duck": -3,
+   "faction": "bakery",
+   "desc": "wave broken: two quick bells up a fifth + crust cheer",
+   "provenance": {
+    "recipes": [
+     "r31_wave_cleared"
+    ],
+    "seeds": [
+     1038
+    ]
+   },
+   "files": [
+    "res://assets/audio/sfx/wave_cleared.wav"
+   ],
+   "variants": [
+    {
+     "file": "wave_cleared.wav",
+     "seconds": 0.7,
+     "bytes": 30914,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -16.37
+    }
+   ]
+  },
+  "ui_upgrade_ok": {
+   "bus": "UI",
+   "vol_db": -7,
+   "max": 1,
+   "gap": 0.2,
+   "prio": 7,
+   "pitch": 0.0,
+   "faction": "neutral",
+   "desc": "upgrade done: warm rising bells",
+   "provenance": {
+    "recipes": [
+     "r31_upgrade_ok"
+    ],
+    "seeds": [
+     1039
+    ]
+   },
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/ui_upgrade_ok.wav"
+   ],
+   "variants": [
+    {
+     "file": "ui_upgrade_ok.wav",
+     "seconds": 0.55,
+     "bytes": 24300,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -15.67
+    }
+   ]
+  },
+  "ui_upgrade_no_coins": {
+   "bus": "UI",
+   "vol_db": -9,
+   "max": 1,
+   "gap": 0.25,
+   "prio": 6,
+   "pitch": 0.0,
+   "faction": "neutral",
+   "desc": "not enough gold: two soft falling coin taps",
+   "provenance": {
+    "recipes": [
+     "r31_upgrade_no_coins"
+    ],
+    "seeds": [
+     1040
+    ]
+   },
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/ui_upgrade_no_coins.wav"
+   ],
+   "variants": [
+    {
+     "file": "ui_upgrade_no_coins.wav",
+     "seconds": 0.25,
+     "bytes": 11068,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -15.49
+    }
+   ]
+  },
+  "ui_upgrade_max": {
+   "bus": "UI",
+   "vol_db": -9,
+   "max": 1,
+   "gap": 0.25,
+   "prio": 6,
+   "pitch": 0.0,
+   "faction": "neutral",
+   "desc": "max level: neutral knock + soft bell",
+   "provenance": {
+    "recipes": [
+     "r31_upgrade_max"
+    ],
+    "seeds": [
+     1041
+    ]
+   },
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/ui_upgrade_max.wav"
+   ],
+   "variants": [
+    {
+     "file": "ui_upgrade_max.wav",
+     "seconds": 0.4,
+     "bytes": 17684,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -16.07
+    }
+   ]
+  },
+  "ui_upgrade_save_failed": {
+   "bus": "UI",
+   "vol_db": -8,
+   "max": 1,
+   "gap": 0.25,
+   "prio": 7,
+   "pitch": 0.0,
+   "faction": "neutral",
+   "desc": "save failed: low two-tone buzz + crack",
+   "provenance": {
+    "recipes": [
+     "r31_upgrade_save_failed"
+    ],
+    "seeds": [
+     1042
+    ]
+   },
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/ui_upgrade_save_failed.wav"
+   ],
+   "variants": [
+    {
+     "file": "ui_upgrade_save_failed.wav",
+     "seconds": 0.35,
+     "bytes": 15478,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -9.97
+    }
+   ]
+  },
   "stinger_defeat": {
    "bus": "Music",
    "vol_db": -3,
@@ -1016,7 +1171,7 @@
      "r3_stinger_defeat"
     ],
     "seeds": [
-     1038
+     1043
     ]
    },
    "duck": 0,
@@ -1029,7 +1184,7 @@
      "seconds": 3.0,
      "bytes": 132344,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -14.35
+     "rms_dbfs": -14.2
     }
    ]
   }
@@ -1093,5 +1248,16 @@
   "arrow": "shoot_arrow",
   "rock": "shoot_rock",
   "spit": "shoot_spit"
+ },
+ "upgrade_result_cue": {
+  "ok": "ui_upgrade_ok",
+  "already_applied": "ui_upgrade_ok",
+  "not_enough_coins": "ui_upgrade_no_coins",
+  "max_level": "ui_upgrade_max",
+  "save_failed": "ui_upgrade_save_failed",
+  "read_only": "ui_upgrade_save_failed",
+  "locked": "ui_error",
+  "unknown_id": "ui_error",
+  "unavailable": "ui_error"
  }
 }

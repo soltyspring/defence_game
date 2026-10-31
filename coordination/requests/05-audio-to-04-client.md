@@ -16,3 +16,16 @@ Until then the audio bridge derives taps from `cmd_*` signals (start/retry/next/
 
 ## C4 (P3) Visible/device checks
 When you run device or secondary-monitor visible tests, please note whether audio is audible and whether menu ↔ battle music switches. 05 cannot listen; any human observation is useful evidence.
+
+## C5 (P2) Upgrade screen result sounds — key name request (prepare only; buttons stay disabled until 02 Save.buy_upgrade)
+05 made 4 distinct UI cues for `upgrade_panel.gd` result codes: `ui_upgrade_ok`, `ui_upgrade_no_coins`, `ui_upgrade_max`, `ui_upgrade_save_failed` (UI bus; not purchase/ad sounds — Q2 monetization is on hold and no such sounds were made).
+Proposed single call, where `_set_status(code, u)` already runs:
+```gdscript
+var ev := get_node_or_null("/root/Events")
+if ev and ev.has_signal("sfx"): ev.sfx.emit(&"upgrade_result", {"code": code})
+```
+The bridge maps codes (ok, already_applied, not_enough_coins, max_level, save_failed, read_only; anything else → `ui_error`). Please confirm the key name `&"upgrade_result"` + `code` or tell me your preferred name; I will alias it. Do not wire it before the buttons are enabled.
+Listen: `docs/audio/previews/listen/theme_showcase.mp3` 19.5–23.4 s.
+
+## C6 (info) First-wave banner and sound
+05 now plays `wave_cleared` on every `Events.wave_cleared`. Your banner (0590e7a) shows only for wave 1 and emits no sound, so there is no double playback (sandbox: events 1 = cues 1, 0 same-frame duplicates). If you ever add a banner sound, emit `Events.sfx(&"wave_cleared", {})` instead of a new cue; the bridge then stops its own derived cue.
