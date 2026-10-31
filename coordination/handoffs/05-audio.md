@@ -55,7 +55,7 @@ Decisions processed: Q1 = A, bakery knights vs mold legion (user, 09:03); D1–D
 
 ## Git
 - Earlier: 67de63b, 067c594, ba38f2d, 5e21a23, c79add3, 10449ee, 2fae4a3, 6045b37, 1946d0f, ccf3033 (v2), all PUSHED.
-- v3 theme commit: SHA recorded in the status file after push.
+- v3 theme: f0646dd14e81a3b753032b792d2525421c193ad1 "[Design] 빵집 기사단·곰팡이 군단 테마 효과음·음악 재작업과 진영별 소리 구분, 실전 믹스 재검증" → PUSHED origin/main (52 files).
 
 ## Open requests
 - 02: A8 (engine RefCounted exit leak), A9 (`target_side` on hit cues).
