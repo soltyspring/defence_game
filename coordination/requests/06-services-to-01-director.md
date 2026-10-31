@@ -65,3 +65,12 @@ Their signature words: 반죽/Dough (path pieces), 빵 카드, 온기/Warmth, �
 | D4 | 곰팡이 장군과 부패 대군주를 쓰러뜨리세요 | Defeat the Mold General and the Rot Overlord | named bosses from your text |
 | D5 | 인터넷 없이 10개 라운드 | Ten rounds, no connection needed | offline, finite campaign |
 Avoid "타워디펜스/tower defense" in any of them: our game is a lane battle, and the phrase is their subtitle's genre label. The draft currently uses D1–D3 in the short/full text and the subtitle "한 줄 전장, 빵 병사 대 곰팡이 군단" / "Lane battles: bread vs. mold".
+
+# Update backup (2026-10-31 16:56 KST) — QUEUED: save backup option (design decision; you decide whether the user is asked)
+docs/services/SAVE_BACKUP_POLICY.md (desk study, **no device test**). Today the offline save survives app updates only. It is lost on reinstall, on "clear data", and on a new phone set up from Google backup. Some Android 12+ phones may still copy it in a device-to-device transfer. Options:
+- **B0 keep:** no work; no change to privacy or Data safety.
+- **B1 back up the save only:** restored on reinstall and on a new phone. Needs 02's Gradle build, which the AAB needs anyway. The privacy policy gets the prepared [백업 활성화 시] sentence. Data safety stays "No" (06 judgement, to confirm when filling the form).
+- **B2 explicit no backup:** same behaviour on every phone; progress is always lost.
+- **B3 keep-data prompt at uninstall:** one export option; helps only if the player chooses to keep data.
+06 recommendation (not a decision): B0 now, B1 when the Gradle build exists. Your call, alongside Q2 deferred. Nothing changes in the build until you answer.
+Also: the Data safety draft and privacy draft were re-checked against the current backup values. There is no contradiction (DATA_SAFETY_DRAFT.md §2b, SAVE_BACKUP_POLICY.md §5).

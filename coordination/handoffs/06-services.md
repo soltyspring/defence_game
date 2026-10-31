@@ -1,5 +1,5 @@
 # 06-services handoff
-Updated: 2026-10-31 (Q3 follow-up complete; Q3 working title by user 16:19, Q2 DEFERRED 16:09)
+Updated: 2026-10-31 16:58 KST (backup/restore study complete; Q3 working title by user 16:19, Q2 DEFERRED 16:09)
 Status: **M8 COMPLETE. Game Save integration gate PASSES (exit 0, binding=game)** after 02 registered the Services autoload (141d226). Resume check: worktree for 06 paths clean, checkpoint branch checkpoint/quota-20261031-092323/06-services (726e22a) has no diff vs HEAD for 06 paths → nothing lost. No Godot processes left running by 06.
 Session ID: not exposed to the agent (same Kiro window throughout; never closed or restarted).
 Nothing is live: no ad SDK, billing library, consent SDK, server, account or key. All services run in `disabled` mode. No monetization decision exists; none was invented.
@@ -29,6 +29,7 @@ src/services/**, docs/services/**, tests/services/**, coordination/status/06-ser
 | M11 | Data safety "No" confirmed vs 04 A7/C1 + own aapt2 (APK SHA-256 09AF2E47…A6DE, HEAD 8ad912f delta checked); in-app privacy link + licences display proposal (OFL text, Godot MIT + Engine copyright info); Q2 options A/B/C work and test scope; legal_and_options lint 55 checks, 3 mutations caught | e5099bdd7b911bd703ae9866b125c28173fde197 |
 | M12 | Q2 deferred acknowledged; publishable disabled-mode privacy page (privacy_site/index.html, 6 placeholders = publish blockers), GitHub Pages hosting facts + H1–H4 choices + P1–P9 steps; content rating re-check for Q2 deferred; Families assessment T1–T3 aligned with 09 §25.3; lint privacy_site 41 + families 30 checks, 5 mutations caught | 98e757b15ce2e30dba6b2426715dd58115af22bb |
 | Q3 | Working title in STORE_LISTING_DRAFT (single title block ko 15 / en 28 chars), App Store subtitle ko 21 / en 28, short ko 44 / en 73, full text reworded by role (no 반죽/제빵사/dough) and aligned to 01's data/text names; §7 Bread Defense phrase list; lint: title = Q3 title, ≤30 and ≥2, subtitle ≤30, competitor_overlap (279), brands +빵어전/bread defense/eternaxcode, kipris_manual_check (222: 16 terms × class 9/41, results need date+searcher, name log stays NOT_CHECKED while open); KIPRIS_MANUAL_CHECK.md; NAME_SEARCH_LOG v2; OPEN_DECISIONS U9; 16 mutations caught | f0d80e0a27692cdb891ff5b56f5ea67afd3dc334 |
+| Backup | SAVE_BACKUP_POLICY.md: current values (allowBackup=false from Godot 4.7.2 template, no dataExtractionRules/fullBackupContent, hasFragileUserData=false, prebuilt template, user:// = getFilesDir, save.json/.bak/.tmp/.corrupt, ledger in same file), scenarios S1–S8 all NOT TESTED, options B0–B3 (rec. B0 now, B1 with Gradle), B1 rule XML, device test plan; DATA_SAFETY §2b; privacy [백업 활성화 시]/[IF BACKUP ENABLED]; test_services_android.gd (91 checks: preset permissions, APK binary-manifest + aapt2 AD_ID/BILLING/INTERNET/NETWORK_STATE absent, doc vs preset/save.gd/APK values, consistency), release_preset=WAITING; 12 mutations caught | 5fc46e1854460885150ce773a355d7bc0f0f892d, 082e9ca45def5f0255cdd707de1f74eda59886a1 |
 | Checkpoint | this handoff + status | see status file / `git log -- coordination/handoffs/06-services.md` |
 
 ## M7 details (this task)
@@ -65,10 +66,18 @@ User decision processed: Q2 DEFERRED 16:09 KST ("수익모델은 보류"): ads/b
 ## Q3 validation (actual)
 Runner OVERALL exit=0: 502/0, 130/0, 161/0, listing 1482/0, m8 26/0, m10 81/0, integration PASS_INTEGRATED 156/0 binding=game. Mutations (each exit 1 with the expected message, files restored from byte backups): ko/en title over 30, ko/en subtitle over 30, short ko over 80, 반죽 in full.ko, "warm bread" in short.en, "duels" (plural) in full.en, 빵어전 in subtitle, ads line without marker ko/en, "Free" in title, fake KIPRIS status in the name log, KIPRIS result without searcher, HITS_RECORDED without a record, missing class 41 row.
 Found on the way: 01's data/text (provisional_theme false) already uses 반죽/Dough, 제빵사, 화덕포, which are Bread Defense's words; store text now avoids them, the in-game names are routed to 01 (options keep / rename, 06-services-to-01-director.md Q3). 01's `ui.title` is still "레인 디펜스" (routed to 01). The old draft's unit names (바게트 투척병, 크루아상 방패병) no longer matched data/text; replaced by roles.
+## Backup study validation (actual)
+Runner OVERALL exit=0 incl. test_services_android 91/0 (2 APKs found: build/qa/apk_head 09AF2E47…, build/android 07:23 build; aapt2 36.1.0). Mutations (exit 1 with expected message): preset internet=true, preset custom AD_ID, retain_data_on_uninstall=true, release .aab export path, doc allowBackup=true, doc save path, S5 marked TESTED without evidence, .tmp in rule XML, "no device test" line removed, en backup conditional removed, Data safety deletion row changed, fake APK with AD_ID in build/release (removed after; dir did not exist before and was removed). Preset mutations used a temp copy (`-- --presets=`), not 02's file.
+Not verified: any device behaviour (S1–S8), maker-specific D2D, whether Play's Data safety treats system backup as "not collected" (06 judgement by analogy with the Drive FAQ).
+Seen, not acted on (not 06 scope): 03 A1/A2 note to 06 (working-title logos, adaptive icon layers for the export preset → 02/04).
 ## Exact next steps when resumed
 1. Read coordinator-to-06-services.md (latest section), DECISIONS.md, quota, replies to 06.
 2. `pwsh -File tests/services/run_services_suites.ps1` must stay OVERALL exit 0.
-3. When a person fills KIPRIS_MANUAL_CHECK.md §5/§6: update the KIPRIS rows of NAME_SEARCH_LOG.md from that record only, rerun the lint; if any live 동일/유사 mark, tell 01 (patent attorney step).
+3. When 01 answers the backup option: B1/B2 → wait for 02's Gradle build, then update SAVE_BACKUP_POLICY §1 values from the new APK and rerun test_services_android (it compares doc and APK). B1 → switch privacy draft/page and DATA_SAFETY §3 deletion row.
+4. When a release preset or build/release APK/AAB appears: the android check runs on it automatically; record its hash in DATA_SAFETY §2a.
+5. KIPRIS record filled by a person → update NAME_SEARCH_LOG KIPRIS rows from it only.
+6. 01's in-game names (반죽/제빵사/화덕포) or differentiation wording → STORE_LISTING §4/§5/§7 + COMPETITOR_* lists.
+## Older next steps (Q3, superseded): update the KIPRIS rows of NAME_SEARCH_LOG.md from that record only, rerun the lint; if any live 동일/유사 mark, tell 01 (patent attorney step).
 4. If 01 renames 반죽/제빵사/화덕포 or picks other differentiation wording: update STORE_LISTING_DRAFT §4/§5/§7 and COMPETITOR_* in the lint.
 5. When 03's re-themed art lands: revisit CONTENT_RATING_DRAFT.md violence/human-looking and disgust rows.
 6. Monetization work only after 01 records user decisions (OPEN_DECISIONS.md U1…).

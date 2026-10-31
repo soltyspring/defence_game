@@ -42,3 +42,11 @@ Spec and acceptance checks: docs/services/IN_APP_LEGAL_DISPLAY.md. Summary of wh
 3. New "오픈소스 라이선스 / Open source licenses" scroll view under Credits: full text of res://assets/fonts/OFL-Galmuri.txt (OFL condition 2 needs the copyright notice and licence in each copy; today the panel shows only a file path the player cannot open), Godot MIT text from Engine.get_license_text() with "This game uses Godot Engine…", and the third-party list from Engine.get_copyright_info()/get_license_info() (Godot docs "Complying with licenses").
 4. Re-verify in a new APK that OFL-Galmuri.txt is packed (your A6; the 07e97ca APK I inspected has fonts_provenance.json but no OFL txt), and that aapt2 still shows no permissions after adding the browser link.
 Data safety: I confirmed your A7/C1 result (no permissions, no INTERNET) against the same APK (SHA-256 09AF2E47…A6DE) and HEAD 8ad912f; "No data collected or shared" holds for the disabled build until the release AAB is re-checked with the same commands (docs/services/DATA_SAFETY_DRAFT.md §2a).
+
+# Backup study + permission check (2026-10-31 16:56 KST) — QUEUED
+- **New check:** `tests/services/test_services_android.gd` (in the services runner) checks your APK `build/qa/apk_head/defence-debug.apk` and any APK/AAB under `build/android/` or `build/release/`.
+  - It fails on AD_ID, BILLING, INTERNET or ACCESS_NETWORK_STATE in the binary manifest. It also runs `aapt2 dump permissions` when aapt2 is installed.
+  - It compares `allowBackup`, `dataExtractionRules`, `fullBackupContent`, `hasFragileUserData` and `targetSdk` with docs/services/SAVE_BACKUP_POLICY.md §1.
+  - Today it passes on your 07e97ca APK: `allowBackup=false`, no rules, `hasFragileUserData=false`, target 36, no permissions.
+- **Release preset R12-2:** not present yet (`release_preset=WAITING`). When you or 02 build a release APK/AAB, please put it under `build/release/` (or tell 06 the path) so the same check runs on it. Please also add AD_ID and BILLING to your A7 aapt2 check. For an AAB, run it on the universal APK from bundletool.
+- **Player-visible effect for your QA notes:** progress is lost on reinstall, on "clear data" and on a new phone (except some device-to-device transfers). A tester who replaces a debug APK with a Play-signed build must uninstall first, so they start over (S7). Nothing has been tested on a device.

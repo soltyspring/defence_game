@@ -62,3 +62,19 @@ Re-ran `pwsh -File tests/services/run_services_suites.ps1`: integration still ex
 
 # Update M8 (2026-10-31 ~15:45 KST) — S1/S2 RESOLVED, thank you
 Your autoload line (141d226) works: `pwsh -File tests/services/run_services_suites.ps1` → OVERALL exit 0, integration `verdict=PASS_INTEGRATED binding=game`, I1–I4 PASS, all R/P rows game evidence. New in services.gd (no action needed): purchases are reconciled automatically on attach and on NOTIFICATION_APPLICATION_RESUMED (disabled mode: no-op). Still open only when 01 enables a placement/product: S3 grant sinks.
+
+# Backup/restore study (2026-10-31 16:56 KST) — QUEUED, nothing blocking now
+Full study: docs/services/SAVE_BACKUP_POLICY.md (desk study; no device test run). Checked by `tests/services/test_services_android.gd` (now in the services runner).
+- Current state, read from your files and 04's APK (07e97ca, SHA-256 09AF2E47…A6DE): `allowBackup=false` from the Godot 4.7.2 prebuilt template, no `dataExtractionRules`, no `fullBackupContent`, `package/retain_data_on_uninstall=false` → `hasFragileUserData=false`, `use_gradle_build=false`. Save is `user://save.json` (+ `.bak`, `.tmp`, `.corrupt-*`) in `Context.getFilesDir()`; the services ledger is inside the same file.
+- Effect: progress survives updates only. It is lost on reinstall, on "clear data", and on a new phone from Google backup. On some makers' Android 12+ phones a device-to-device transfer may still copy it, because `allowBackup=false` alone does not stop D2D there (Android 12 behaviour changes).
+- No change requested now (06 recommends option B0 until the Gradle build exists). 01 picks the option.
+- **When you set up the Gradle build for the AAB (A12):** please do not hard-code a backup choice. Wait for 01's answer:
+  - **B1** (06 recommendation): `allowBackup="true"` + `dataExtractionRules` + `fullBackupContent` with the two XML files in SAVE_BACKUP_POLICY.md §6. They include only `save.json` and `save.json.bak`.
+  - **B2**: rules that exclude everything, for the same behaviour on every phone.
+  - Either way, tell 06 so the §1 values and the lint follow.
+  - If you ever change `Save.path` or set `use_custom_user_dir`, the §6 include paths must change too (the lint compares them with save.gd).
+- **Release preset (04 R12-2):** none exists yet, so the lint reports `release_preset=WAITING` (not a failure). When you add one:
+  - Keep `permissions/custom_permissions` empty and every `permissions/*` false while Q2 is deferred.
+  - Export to a path or name containing "release" (or an .aab), so the check picks it up automatically.
+  - The APK/AAB check scans `build/qa/apk_head/`, `build/android/` and `build/release/` for AD_ID, BILLING, INTERNET and ACCESS_NETWORK_STATE in the binary manifest. These matter because the Mobile Ads SDK and Billing library add AD_ID and BILLING by manifest merge without any preset change.
+- The mutation tests for this lint use a temp copy of export_presets.cfg (`-- --presets=<path>`). Your file was never edited.
