@@ -10,6 +10,7 @@ var rounds: Array = []           # [{id,index,name,biome}]
 var page := 0
 var tiles: Array = []            # TouchButton per visible slot
 var btn_back: Control
+var btn_upgrades: Control
 var btn_prev: Control
 var btn_next: Control
 var tile_rects: Array[Rect2] = []
@@ -17,6 +18,7 @@ var tile_rects: Array[Rect2] = []
 func _build() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	btn_back = make_button(UiText.t("ui.back"), _on_back)
+	btn_upgrades = make_button(UiText.t("ui.upgrades"), open_upgrades)
 	btn_back.glyph = &""
 	btn_prev = make_button("", func(): _set_page(page - 1))
 	btn_prev.glyph = &"left"
@@ -93,7 +95,7 @@ func _on_back() -> void:
 	emit_cmd(&"cmd_open_screen", [&"menu"])
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_GO_BACK_REQUEST and is_inside_tree() and btn_back != null and claim_back():
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST and is_inside_tree() and btn_back != null and not modal_open() and claim_back():
 		emit_cmd_deferred(&"cmd_open_screen", [&"menu"])
 
 func _layout() -> void:
@@ -101,6 +103,7 @@ func _layout() -> void:
 		return
 	var t := maxf(target, 40.0)
 	place(btn_back, Rect2(safe.position + Vector2(4, 4), Vector2(72, t)))
+	place(btn_upgrades, Rect2(Vector2(safe.end.x - 4 - 80, safe.position.y + 4), Vector2(80, t)))
 	var top := safe.position.y + t + 12
 	var bottom := safe.end.y - 6
 	var side := t + 10
@@ -123,9 +126,13 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, view), UiStyle.C_BG)
 	UiStyle.draw_text_centered(self, UiText.t("ui.select_round"), Vector2(safe.get_center().x, safe.position.y + 4 + maxf(target, 40.0) / 2), UiStyle.FONT_L)
 	var p := progress()
-	if not UiStyle.draw_ui_icon(self, "icon_gold", Vector2(safe.end.x - 70, safe.position.y + 24)):
-		UiStyle.draw_glyph(self, &"coin", Vector2(safe.end.x - 70, safe.position.y + 24), 5)
-	UiStyle.draw_number(self, str(int(p.get("coins", 0))), Vector2(safe.end.x - 59, safe.position.y + 24), UiStyle.FONT_M, UiStyle.C_GOLD, -1, &"bold")
+	# coins right-aligned just left of the upgrades button (where they are spent)
+	var cxr := safe.end.x - 4 - 80 - 8
+	var cs := str(int(p.get("coins", 0)))
+	UiStyle.draw_number(self, cs, Vector2(cxr, safe.position.y + 24), UiStyle.FONT_M, UiStyle.C_GOLD, 1, &"bold")
+	var cw := UiStyle.number_width(cs, UiStyle.FONT_M, &"bold")
+	if not UiStyle.draw_ui_icon(self, "icon_gold", Vector2(cxr - cw - 10, safe.position.y + 24)):
+		UiStyle.draw_glyph(self, &"coin", Vector2(cxr - cw - 10, safe.position.y + 24), 5)
 
 ## Overlay drawn on top of each tile (number + stars) via TouchButton.overlay.
 func _ready() -> void:

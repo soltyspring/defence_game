@@ -154,6 +154,19 @@ func _run() -> void:
 	if tile == 0:
 		check(not rs.tiles[0].disabled and rs.tiles[1].disabled, "fresh save: r01 open, r02 locked")
 	await shot("2_round_select")
+	# upgrades panel on the REAL engine: until 02 adds Save.buy_upgrade it must be inactive, not fake
+	tap(rs.btn_upgrades)
+	await _frames(2)
+	var up: Control = rs.upgrade_panel
+	check(up != null and up.visible, "round select → upgrades panel opens")
+	if up != null:
+		var real_api: bool = up.purchase_available()
+		var any_btn: bool = not up.buy_buttons.is_empty()
+		check(real_api or (any_btn and up.buy_buttons[0].disabled and up.status_text != ""), "upgrade buy %s (Save.buy_upgrade %s)" % ["active" if real_api else "inactive with notice", "present" if real_api else "missing"])
+		await shot("2b_upgrades")
+		tap(up.btn_close)
+		await _frames(2)
+		check(not up.visible, "upgrades panel closes")
 	tap(rs.tiles[tile])
 	await _frames(4)
 

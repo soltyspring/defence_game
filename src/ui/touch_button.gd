@@ -93,13 +93,18 @@ var last_text_truncated := false
 var last_line_count := 1
 ## Max name lines (round tiles use 2: long theme names wrap instead of ellipsizing, 07 QA-B010)
 var wrap_lines := 1
+## &"rect" (unit cards, default) or &"econ" (worker: octagon + dough band, 07 QA-J3)
+var shape: StringName = &"rect"
 
 func _draw() -> void:
 	var r := Rect2(Vector2.ZERO, size)
 	var f := fill if not disabled else UiStyle.C_DISABLED
 	if is_pressed:
 		f = f.darkened(0.25)
-	UiStyle.draw_pixel_box(self, r, f, is_pressed)
+	if shape == &"econ":
+		UiStyle.draw_pixel_octagon(self, r, f, UiStyle.C_GOLD if not disabled else UiStyle.C_TEXT_DIM, is_pressed)
+	else:
+		UiStyle.draw_pixel_box(self, r, f, is_pressed)
 	var off := Vector2(0, 1) if is_pressed else Vector2.ZERO
 	var has_sub := sub_text != ""
 	var has_visual := icon != null or glyph != &""

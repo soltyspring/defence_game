@@ -86,6 +86,7 @@ func _build() -> void:
 	btn_worker.glyph = &"worker"
 	btn_worker.icon = UiStyle.ui_icon("card_worker")
 	btn_worker.fill = Color(0.30, 0.26, 0.16, 0.95)
+	btn_worker.shape = &"econ"   # distinct silhouette from unit cards (07 QA-J3)
 
 	toast_label = _make_label(UiStyle.FONT_M)
 	tutorial_label = _make_label(UiStyle.FONT_M)

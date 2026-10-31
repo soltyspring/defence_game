@@ -329,6 +329,21 @@ static func draw_number(ci: CanvasItem, text: String, anchor: Vector2, size: int
 
 # ------------------------------------------------------------------ shapes
 
+## Economy (worker) button silhouette: octagon with cut corners + dough-coloured top band, so the
+## worker button differs from unit cards by SHAPE, not only by a badge (07 QA-J3).
+static func draw_pixel_octagon(ci: CanvasItem, r: Rect2, fill: Color, band: Color, pressed := false) -> void:
+	var c := 6.0
+	var outer := PackedVector2Array([r.position + Vector2(c, 0), Vector2(r.end.x - c, r.position.y), Vector2(r.end.x, r.position.y + c),
+		Vector2(r.end.x, r.end.y - c), Vector2(r.end.x - c, r.end.y), Vector2(r.position.x + c, r.end.y), Vector2(r.position.x, r.end.y - c), r.position + Vector2(0, c)])
+	ci.draw_colored_polygon(outer, C_EDGE)
+	var i := r.grow(-2)
+	var ci2 := c - 1.0
+	var inner := PackedVector2Array([i.position + Vector2(ci2, 0), Vector2(i.end.x - ci2, i.position.y), Vector2(i.end.x, i.position.y + ci2),
+		Vector2(i.end.x, i.end.y - ci2), Vector2(i.end.x - ci2, i.end.y), Vector2(i.position.x + ci2, i.end.y), Vector2(i.position.x, i.end.y - ci2), i.position + Vector2(0, ci2)])
+	ci.draw_colored_polygon(inner, fill.darkened(0.25) if pressed else fill)
+	if not pressed:
+		ci.draw_rect(Rect2(i.position.x + ci2, i.position.y, i.size.x - 2 * ci2, 3), band)
+
 ## Pixel-style bevelled box: dark edge, fill, 1px top highlight.
 static func draw_pixel_box(ci: CanvasItem, r: Rect2, fill: Color, pressed := false) -> void:
 	ci.draw_rect(r, C_EDGE)

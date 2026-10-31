@@ -54,6 +54,7 @@ func _run() -> void:
 	test_atlas_import_guard()
 	await test_back_once_and_result_pause()
 	await test_wave_cleared_banner()
+	await test_qaj3_and_upgrades()
 	for s in SECTIONS:
 		check(done.has(s), "section %s ran to completion (aborted by a script error otherwise)" % s)
 	print("[test_ui] passed=%d failed=%d" % [passes, failures.size()])
@@ -63,7 +64,7 @@ func _run() -> void:
 		print("  - " + f)
 	quit(1 if failures.size() > 0 else 0)
 
-const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard", "back_once", "wave_cleared"]
+const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard", "back_once", "wave_cleared", "upgrades"]
 var done := {}
 
 func test_compile_all(dir_path: String) -> void:
@@ -813,3 +814,104 @@ func test_wave_cleared_banner() -> void:
 	b2.queue_free()
 	await _frames()
 	done["wave_cleared"] = true
+
+# ---------------------------------------------------------------- 07 QA-J3 + upgrade panel
+
+class FakeSave extends Node:
+	var progress := {"coins": 100, "upgrades": {}, "unlocked_round": 3, "settings": {}}
+	var next_code := ""          # force a result code (e.g. save_failed)
+	var calls: Array = []
+	var costs := {}
+	func buy_upgrade(id: String, to_level: int) -> String:
+		calls.append([id, to_level])
+		if next_code != "":
+			return next_code
+		var lv := int(progress.upgrades.get(id, 1))
+		if to_level != lv + 1:
+			return "already_applied" if to_level == lv else "locked"
+		var cost := int(costs.get(id, 0))
+		if progress.coins < cost:
+			return "not_enough_coins"
+		progress.coins -= cost
+		progress.upgrades[id] = to_level
+		return "ok"
+
+func test_qaj3_and_upgrades() -> void:
+	# --- QA-J3: worker vs unit card shape, resource names visible in the narrowest HUD (ko + en)
+	for loc in ["ko", "en"]:
+		UiText.load_locale(loc)
+		SafeArea.override_view_size = Vector2(640, 360)
+		SafeArea.override_safe_rect = Rect2(34, 0, 572, 360)
+		var hud: Control = _mount("res://scenes/ui/hud.tscn")
+		bus.battle_started.emit(MockEngine.sample_info(5, 3))
+		var s := {"gold": 999, "gold_max": 999, "income": 12.5, "mana": 50.0, "mana_max": 100.0, "cards": [], "skills": []}
+		bus.hud_snapshot.emit(s)
+		await _frames(2)
+		check(hud.btn_worker.shape == &"econ" and hud.card_buttons[0].shape == &"rect", "[%s] worker button shape differs from unit cards" % loc)
+		check(hud.top.name_shown, "[%s] resource name '%s' shown in narrowest HUD" % [loc, UiText.t("res.supply")])
+		check(not hud.top.name_rect.intersects(hud.top.gold_slot_debug) and (hud.top.income_rect.size == Vector2.ZERO or not hud.top.income_rect.intersects(hud.top.gold_slot_debug)), "[%s] resource name / amount / income do not overlap" % loc)
+		hud.queue_free()
+		await _frames()
+	UiText.load_locale("ko")
+	SafeArea.override_safe_rect = Rect2(0, 0, 640, 360)
+	# --- upgrade panel with a fake Save implementing the proposed contract
+	var content := root.get_node_or_null("Content")
+	if content == null:
+		content = load("res://src/core/content.gd").new()
+		content.load_all()
+	var P := load("res://src/ui/upgrade_panel.gd")
+	var panel: Control = P.new()
+	var fs := FakeSave.new()
+	root.add_child(fs)
+	for u in content.meta.get("upgrades", []):
+		fs.costs[u.id] = int(u.costs[0])
+	panel.content = content
+	panel.save = fs
+	root.add_child(panel)
+	panel.open(Vector2(640, 360), Rect2(0, 0, 640, 360), 40.0)
+	await _frames(1)
+	var vis: Array = panel.visible_upgrades()
+	var ids := vis.map(func(u): return str(u.id))
+	check(ids.has("up_tank") and not ids.has("up_fast") and not ids.has("up_siege") and ids.has("up_hero"), "only unlocked unit targets shown at unlocked_round 3 (%s)" % [ids])
+	check(panel.purchase_available(), "fake Save → purchase available")
+	check(Rect2(0, 0, 640, 360).encloses(panel.panel_rect), "panel inside 640x360")
+	for i in panel.rows.size():
+		var b: Control = panel.buy_buttons[i]
+		check(b.size.y >= 40 and panel.panel_rect.encloses(b.get_rect()), "buy button %d target ok" % i)
+	# ok
+	var first: Dictionary = panel.rows[0]
+	var c0: int = fs.progress.coins
+	tap(panel.buy_buttons[0])
+	check(panel.status_code == "ok" and fs.calls.back() == [str(first.id), 2] and fs.progress.coins == c0 - fs.costs[first.id], "buy → ok, to_level 2, coins spent (%s %s)" % [panel.status_code, fs.calls.back()])
+	# not enough coins
+	fs.progress.coins = 0
+	tap(panel.buy_buttons[1])
+	await _frames(1)
+	check(panel.status_code == "not_enough_coins" and panel.status_text.contains(str(int(panel.rows[1].costs[0]))), "not enough coins → shows missing amount (%s)" % panel.status_text)
+	# save failed
+	fs.progress.coins = 9999
+	fs.next_code = "save_failed"
+	tap(panel.buy_buttons[1])
+	await _frames(1)
+	check(panel.status_code == "save_failed" and panel.status_text == UiText.t("ui.upgrade_save_failed") and panel.status_kind_drawn == "error", "save_failed → distinct error message")
+	# max level (UI-side, no call)
+	fs.next_code = ""
+	fs.progress.upgrades[str(panel.rows[2].id)] = int(panel.rows[2].max_level)
+	panel._refresh()
+	var n_calls: int = fs.calls.size()
+	tap(panel.buy_buttons[2])
+	check(panel.status_code == "max_level" and fs.calls.size() == n_calls and panel.buy_buttons[2].disabled, "max level → no purchase call, button disabled, distinct message")
+	var msgs := {}
+	for code in ["ok", "not_enough_coins", "max_level", "save_failed"]:
+		panel._set_status(code, panel.rows[0])
+		msgs[code] = [panel.status_text, P.STATUS_KIND.get(code)]
+	check(msgs.values().map(func(m): return m[0]).duplicate().size() == 4 and msgs.ok[0] != msgs.not_enough_coins[0] and msgs.max_level[0] != msgs.save_failed[0] and msgs.ok[1] != msgs.save_failed[1], "the four results have different text and kinds (%s)" % [msgs])
+	# inactive without the 02 contract
+	panel.save = Node.new()
+	panel.open(Vector2(640, 360), Rect2(0, 0, 640, 360), 40.0)
+	check(not panel.purchase_available() and panel.buy_buttons[0].disabled and panel.status_text == UiText.t("ui.upgrade_unavailable"), "no Save.buy_upgrade → inactive buttons + notice")
+	check(UiText.t("ui.upgrades").find("보석") < 0 and not panel.status_text.contains("광고"), "no premium currency / ad wording (Q2 보류)")
+	panel.queue_free()
+	fs.queue_free()
+	await _frames()
+	done["upgrades"] = true

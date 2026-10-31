@@ -4,6 +4,7 @@ extends "res://src/ui/ui_screen.gd"
 var btn_play: Control
 var btn_select: Control
 var btn_settings: Control
+var btn_upgrades: Control
 var settings_panel: Control
 var quit_layer: Control
 var quit_buttons: Array = []
@@ -15,6 +16,7 @@ func _build() -> void:
 	btn_play.fill = UiStyle.C_ACCENT.darkened(0.15)
 	btn_play.font_size = UiStyle.FONT_L
 	btn_select = make_button(UiText.t("ui.select_round"), _on_select)
+	btn_upgrades = make_button(UiText.t("ui.upgrades"), open_upgrades)
 	btn_settings = make_button(UiText.t("ui.settings"), _on_settings)
 	settings_panel = SettingsPanel.new()
 	settings_panel.hide()
@@ -79,20 +81,22 @@ func _on_settings() -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST and is_inside_tree() and quit_layer != null:
-		if settings_panel.visible or not claim_back():
+		if settings_panel.visible or modal_open() or not claim_back():
 			return   # panel handles it / press already used by the screen that navigated here
 		quit_layer.visible = not quit_layer.visible
 
 func _layout() -> void:
 	if btn_play == null:
 		return
-	var bw := clampf(safe.size.x * 0.34, 180.0, 240.0)
+	var bw := clampf(safe.size.x * 0.44, 252.0, 300.0)   # play + a row of three (select / upgrades / settings)
 	var bh := maxf(target, 44.0)
 	var cx := safe.get_center().x
 	var y := safe.position.y + safe.size.y * 0.50
 	place(btn_play, Rect2(cx - bw / 2, y, bw, bh + 6))
-	place(btn_select, Rect2(cx - bw / 2, y + bh + 14, bw / 2 - 3, bh))
-	place(btn_settings, Rect2(cx + 3, y + bh + 14, bw / 2 - 3, bh))
+	var w3 := floorf((bw - 12) / 3.0)
+	place(btn_select, Rect2(cx - bw / 2, y + bh + 14, w3, bh))
+	place(btn_upgrades, Rect2(cx - bw / 2 + w3 + 6, y + bh + 14, w3, bh))
+	place(btn_settings, Rect2(cx - bw / 2 + 2 * (w3 + 6), y + bh + 14, w3, bh))
 	place(quit_layer, Rect2(Vector2.ZERO, view))
 	quit_layer.title_y = safe.get_center().y - 30
 	for i in quit_buttons.size():

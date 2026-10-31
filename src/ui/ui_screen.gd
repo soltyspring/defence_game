@@ -10,6 +10,7 @@ const UiText := preload("res://src/ui/ui_text.gd")
 const SafeArea := preload("res://src/ui/safe_area.gd")
 const TouchButton := preload("res://src/ui/touch_button.gd")
 const SettingsPanel := preload("res://src/ui/settings_panel.gd")
+const UpgradePanel := preload("res://src/ui/upgrade_panel.gd")
 
 var bus: Node
 ## Test/mock hook: when non-empty, used instead of Save.progress.
@@ -116,6 +117,19 @@ func progress() -> Dictionary:
 	if s != null and s.get("progress") is Dictionary:
 		return s.progress
 	return {"version": 1, "unlocked_round": 1, "stars": {}, "coins": 0, "settings": {}}
+
+## Modal upgrade panel shared by menu / round select / result (created on first use).
+var upgrade_panel: Control
+func open_upgrades() -> void:
+	if upgrade_panel == null:
+		upgrade_panel = UpgradePanel.new()
+		upgrade_panel.closed.connect(func(): queue_redraw())
+		add_child(upgrade_panel)
+	move_child(upgrade_panel, -1)
+	upgrade_panel.open(view, safe, target)
+
+func modal_open() -> bool:
+	return upgrade_panel != null and upgrade_panel.visible
 
 func make_button(label: String, cb: Callable, mode := 0) -> Control:
 	var b: Control = TouchButton.new()

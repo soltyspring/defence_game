@@ -36,23 +36,49 @@ func _draw_resources(r: Rect2) -> void:
 	var y1 := r.position.y + 11
 	if not UiStyle.draw_ui_icon(self, "icon_supply", Vector2(r.position.x + 11, y1)):
 		UiStyle.draw_glyph(self, &"coin", Vector2(r.position.x + 11, y1), 5)
-	# Stable-width readout: current gold is right-aligned in a slot as wide as the cap's digits,
-	# so "/200" and the income never move while gold ticks (fixed digit cells, Galmuri11 Bold 12).
+	# resource NAME next to its icon (07 QA-J3: tutorials say "반죽"/"Dough"; the HUD must show the word)
+	var nx := r.position.x + 20
+	var sname := UiText.t("res.supply")
+	var ename := UiText.t("res.energy")
+	var name_w := maxf(UiStyle.text_width(sname, UiStyle.FONT_S), UiStyle.text_width(ename, UiStyle.FONT_S))
+	var income_txt := "+%.1f/s" % income
+	var income_w := UiStyle.number_width(income_txt, UiStyle.NUM_S)
+	# Stable-width readout: current gold right-aligned in a slot as wide as the cap's digits.
 	var digits := maxi(3, str(maxi(gmax, gold)).length())
 	var slot := UiStyle.digit_cell(UiStyle.FONT_M, &"bold") * digits
-	var gx := r.position.x + 20
+	var cap_txt := "/%d" % gmax if gmax > 0 else ""
+	var cap_w := UiStyle.number_width(cap_txt, UiStyle.NUM_S)
+	var avail := r.size.x - 20 - 6
+	# priority: amount > resource name > income rate (the name must stay visible, QA-J3)
+	var show_name := name_w + 4 + slot + cap_w <= avail
+	var show_income := slot + cap_w + 4 + income_w + (name_w + 4 if show_name else 0.0) <= avail
+	name_shown = show_name
+	if show_name:
+		UiStyle.draw_text_left(self, sname, Vector2(nx, y1), UiStyle.FONT_S, UiStyle.C_GOLD)
+		name_rect = Rect2(nx, y1 - 6, name_w, 12)
+		nx += name_w + 4
+	var gx := nx
 	UiStyle.draw_number(self, "%d" % gold, Vector2(gx + slot, y1), UiStyle.FONT_M, UiStyle.C_GOLD, 1, &"bold")
 	if gmax > 0:
-		UiStyle.draw_number(self, "/%d" % gmax, Vector2(gx + slot, y1), UiStyle.NUM_S, UiStyle.C_TEXT_DIM, -1)
-	UiStyle.draw_number(self, "+%.1f/s" % income, Vector2(r.end.x - 6, y1), UiStyle.NUM_S, UiStyle.C_TEXT_DIM, 1)
+		UiStyle.draw_number(self, cap_txt, Vector2(gx + slot, y1), UiStyle.NUM_S, UiStyle.C_TEXT_DIM, -1)
+	if show_income:
+		UiStyle.draw_number(self, income_txt, Vector2(r.end.x - 6, y1), UiStyle.NUM_S, UiStyle.C_TEXT_DIM, 1)
 	gold_slot_debug = Rect2(gx, y1 - 6, slot, 12)
+	income_rect = Rect2(r.end.x - 6 - income_w, y1 - 6, income_w, 12) if show_income else Rect2()
 	var mana := float(snap.get("mana", 0))
 	var mmax := maxf(1.0, float(snap.get("mana_max", 100)))
 	var y2 := r.position.y + 27
 	if not UiStyle.draw_ui_icon(self, "icon_energy", Vector2(r.position.x + 11, y2)):
 		UiStyle.draw_glyph(self, &"mana", Vector2(r.position.x + 11, y2), 5)
-	UiStyle.draw_bar(self, Rect2(r.position.x + 20, y2 - 4, r.size.x - 28, 8), mana / mmax, UiStyle.C_MANA)
+	var bx := r.position.x + 20
+	if show_name:
+		UiStyle.draw_text_left(self, ename, Vector2(bx, y2), UiStyle.FONT_S, UiStyle.C_MANA)
+		bx += name_w + 4
+	UiStyle.draw_bar(self, Rect2(bx, y2 - 4, r.end.x - 8 - bx, 8), mana / mmax, UiStyle.C_MANA)
 
+var name_shown := false
+var name_rect := Rect2()
+var income_rect := Rect2()
 func _draw_bases(r: Rect2, wr: Rect2) -> void:
 	var pb: Dictionary = snap.get("player_base", {})
 	var eb: Dictionary = snap.get("enemy_base", {})

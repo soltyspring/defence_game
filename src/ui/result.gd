@@ -6,6 +6,7 @@ var result: Dictionary = {}
 var btn_retry: Control
 var btn_next: Control
 var btn_menu: Control
+var btn_upgrades: Control
 var panel := Rect2()
 var _shown_t := 0.0
 
@@ -15,6 +16,7 @@ func _build() -> void:
 	btn_next = make_button(UiText.t("ui.next"), func(): emit_cmd(&"cmd_next_round"))
 	btn_next.fill = UiStyle.C_ACCENT.darkened(0.15)
 	btn_menu = make_button(UiText.t("ui.menu"), func(): emit_cmd(&"cmd_open_screen", [&"round_select"]))
+	btn_upgrades = make_button(UiText.t("ui.upgrades"), open_upgrades)
 	_apply()
 
 func _bus_links() -> Array:
@@ -49,7 +51,7 @@ func _apply() -> void:
 	queue_redraw()
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_GO_BACK_REQUEST and is_inside_tree() and btn_menu != null and claim_back():
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST and is_inside_tree() and btn_menu != null and not modal_open() and claim_back():
 		emit_cmd_deferred(&"cmd_open_screen", [&"round_select"])   # deferred: not inside the notification walk
 
 func _process(delta: float) -> void:
@@ -65,7 +67,7 @@ func _layout() -> void:
 	panel = Rect2((safe.get_center() - Vector2(w, h) / 2).round(), Vector2(w, h))
 	var bh := maxf(target, 40.0)
 	var y := panel.end.y - bh - 12
-	var buttons := [btn_menu, btn_retry]
+	var buttons := [btn_menu, btn_upgrades, btn_retry]
 	if btn_next.visible:
 		buttons.append(btn_next)
 	var bw := floorf((w - 24 - (buttons.size() - 1) * 8) / buttons.size())
