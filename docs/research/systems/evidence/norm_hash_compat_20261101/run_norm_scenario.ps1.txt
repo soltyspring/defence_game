@@ -1,0 +1,75 @@
+# Scratch driver (git-ignored), v0.31: compatibility attack cases for a NORMALISED content_version (strip byte 13 before
+# hashing), measured BEFORE 02 changes anything. The normalised content.gd exists ONLY inside throwaway snapshot copies;
+# 02's repository file is not touched. Real boots, private APPDATA only. Run ONLY inside coordination/heavy_run.ps1.
+# Variable names are prefixed p10 so nothing collides with heavy_run.ps1 internals.
+$ErrorActionPreference = 'Continue'
+$p10Root = (Resolve-Path "$PSScriptRoot\..\..\..\..").Path
+$p10Li = $PSScriptRoot
+$p10Wrap = Join-Path $p10Root 'docs\research\systems\probes\isolated_godot.ps1'
+$p10Cv = Join-Path $p10Root 'docs\research\systems\probes\content_version.py'
+$p10Base = Join-Path $p10Li 'norm_A_raw_crlf'
+$p10Iso = Join-Path $p10Li 'norm_iso'
+$p10U8 = New-Object Text.UTF8Encoding($false)
+$p10Real = Join-Path $env:APPDATA 'Godot\app_userdata\Lane Defence\save.json'
+$p10H0 = (Get-FileHash $p10Real).Hash.Substring(0, 16)
+Get-ChildItem $p10Li -Directory -Filter 'norm_*' | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+# --- build A: current code, CRLF data (= what an export from this PC carries) ---
+Push-Location $p10Root; $p10Sha = (git rev-parse HEAD).Trim(); New-Item -ItemType Directory $p10Base | Out-Null
+git -c core.autocrlf=true archive --format=zip -o "$p10Base.zip" HEAD; Pop-Location
+Expand-Archive "$p10Base.zip" -DestinationPath $p10Base; Remove-Item "$p10Base.zip"
+Copy-Item (Join-Path $p10Root 'docs\research\systems\probes\probe_update_scenario.gd') "$p10Base\docs\research\systems\probes\" -Force
+"snapshot $p10Sha"
+$r = & $p10Wrap -GodotArgs @('--headless', '--path', $p10Base, '--import', '--quit-after', '300') -WorkDir $p10Iso -Keep -TimeoutSec 300
+$r | Where-Object { $_ -like 'ISOLATED_GODOT*' }
+function P10Norm($dir) {   # temporary normalised hash, snapshot only
+  $f = Join-Path $dir 'src\core\content.gd'
+  $t = [IO.File]::ReadAllText($f)
+  $old = "`t`th.update(FileAccess.get_file_as_bytes(f))"
+  $new = "`t`tvar p10raw := FileAccess.get_file_as_bytes(f)`n`t`tvar p10out := PackedByteArray()`n`t`tfor p10c in p10raw:`n`t`t`tif p10c != 13: p10out.append(p10c)`n`t`th.update(p10out)"
+  if (-not $t.Contains($old)) { throw "content.gd hash line not found in $dir" }
+  [IO.File]::WriteAllText($f, $t.Replace($old, $new), $p10U8)
+}
+function P10Lf($dir) {      # replace data/ with an autocrlf=false export of the same commit
+  Remove-Item -Recurse -Force (Join-Path $dir 'data')
+  Push-Location $p10Root; git -c core.autocrlf=false archive --format=zip -o "$dir-d.zip" HEAD data; Pop-Location
+  Expand-Archive "$dir-d.zip" -DestinationPath $dir; Remove-Item "$dir-d.zip"
+}
+function P10Edit($dir, $rel, $old, $new) {   # byte-level text edit, keeps the line endings of the file
+  $f = Join-Path $dir $rel; $t = [IO.File]::ReadAllText($f)
+  if (-not $t.Contains($old)) { throw "edit target not found in $rel" }
+  [IO.File]::WriteAllText($f, $t.Replace($old, $new), $p10U8)
+}
+$p10DirB = Join-Path $p10Li 'norm_B_norm_crlf'; Copy-Item -Recurse $p10Base $p10DirB; P10Norm $p10DirB
+$p10DirC = Join-Path $p10Li 'norm_C_norm_lf'; Copy-Item -Recurse $p10DirB $p10DirC; P10Lf $p10DirC
+$p10DirD = Join-Path $p10Li 'norm_D_norm_lf_value'; Copy-Item -Recurse $p10DirC $p10DirD
+P10Edit $p10DirD 'data\rounds\r05.json' "`"hp`": 1.25,`n    `"atk`": 1.25" "`"hp`": 1.3,`n    `"atk`": 1.25"
+$p10DirE = Join-Path $p10Li 'norm_E_norm_lf_cap'; Copy-Item -Recurse $p10DirD $p10DirE
+P10Edit $p10DirE 'data\meta.json' "`"id`": `"up_melee_basic`",`n      `"target`": `"unit:melee_basic`",`n      `"name_key`": `"upgrade.unit`",`n      `"max_level`": 5,`n      `"costs`": [`n        60,`n        100,`n        160,`n        190`n      ]" "`"id`": `"up_melee_basic`",`n      `"target`": `"unit:melee_basic`",`n      `"name_key`": `"upgrade.unit`",`n      `"max_level`": 3,`n      `"costs`": [`n        60,`n        100`n      ]"
+$p10DirF = Join-Path $p10Li 'norm_F_norm_lf_reformat'; Copy-Item -Recurse $p10DirE $p10DirF
+python -c "import json,sys; p=sys.argv[1]; d=json.load(open(p,encoding='utf-8')); open(p,'w',encoding='utf-8',newline='\n').write(json.dumps(d,ensure_ascii=False,indent=1)+'\n')" (Join-Path $p10DirF 'data\meta.json')
+foreach ($p10x in $p10Base, $p10DirB, $p10DirC, $p10DirD, $p10DirE, $p10DirF) { "BYTES $(Split-Path $p10x -Leaf) " + (python $p10Cv --dir $p10x) }
+"PATCH " + ((Select-String -Path (Join-Path $p10DirB 'src\core\content.gd') -Pattern 'p10c != 13').Count)
+function P10Step($label, $proj, $mode) {
+  $r = & $p10Wrap -GodotArgs @('--headless', '--path', $proj, '-s', 'res://docs/research/systems/probes/probe_update_scenario.gd', '--quit-after', '600', '--', "--mode=$mode") -WorkDir $p10Iso -Keep -TimeoutSec 120
+  $ud = Join-Path $p10Iso 'appdata\Godot\app_userdata\Lane Defence'
+  $hm = if (Test-Path "$ud\save.json") { (Get-FileHash "$ud\save.json").Hash.Substring(0, 12) } else { '' }
+  $hb = if (Test-Path "$ud\save.json.bak") { (Get-FileHash "$ud\save.json.bak").Hash.Substring(0, 12) } else { '' }
+  $files = (Get-ChildItem $ud -File -Filter 'save*' | ForEach-Object Name) -join ','
+  "STEP $label main_sha=$hm bak_sha=$hb files=$files " + (($r | Where-Object { $_ -like 'PROBE10_UPDATE *' }) -replace '^PROBE10_UPDATE ', '')
+  ($r | Where-Object { $_ -like 'ISOLATED_GODOT*' })
+  $r | Where-Object { $_ -match 'SCRIPT ERROR|Parse Error|refund_unknown' }
+}
+P10Step 'N1_A_raw_crlf_make' $p10Base 'make'
+P10Step 'N2_B_first_update_norm' $p10DirB 'inspect'
+P10Step 'N3_B_next_boot' $p10DirB 'inspect'
+P10Step 'N4_C_line_endings_only' $p10DirC 'inspect'
+P10Step 'N5_D_value_change' $p10DirD 'inspect'
+P10Step 'N5b_D_next_boot' $p10DirD 'inspect'
+P10Step 'N6_E_cap_lowered' $p10DirE 'inspect'
+P10Step 'N7_E_next_boot' $p10DirE 'inspect'
+P10Step 'N8_F_reformat_only' $p10DirF 'inspect'
+P10Step 'N9_A_rollback_raw_build' $p10Base 'inspect'
+$p10H1 = (Get-FileHash $p10Real).Hash.Substring(0, 16)
+"REAL_SAVE before=$p10H0 after=$p10H1 unchanged=$($p10H0 -eq $p10H1)"
+Get-ChildItem $p10Li -Directory -Filter 'norm_*' | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+$global:LASTEXITCODE = 0

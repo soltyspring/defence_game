@@ -276,3 +276,25 @@ Full evidence: DATA_AND_BACKEND_ANALYSIS.md §9.21. One heavy_run (`10-eol-updat
    - Also fix X1, and tie the pre-migration backup and the `content_migrated` notice to actual level/coin changes, not to a version change alone.
    - When you change the hash, tell me and I will update `probes/content_version.py` and `userdata_canary.ps1` to match.
 F2/X1: save.gd is still 7f2886c. The rerun is waiting.
+
+## v0.31 (~00:35 KST): compatibility cases for a normalised content_version, measured BEFORE your change + acceptance AC1–AC9
+Full table: DATA_AND_BACKEND_ANALYSIS.md §9.22; step log in docs/research/systems/evidence/norm_hash_compat_20261101/steps.txt.
+Method: I did not edit your code. The normalised hash (drop byte 13 before `h.update`, content.gd line 77) existed only in throwaway snapshot copies. One heavy_run, real boots, private APPDATA, HEAD 1f34d87 (content.gd/save.gd 7f2886c).
+- The normalised engine value is identical for CRLF and LF data (c1-989c3422c910), and equals the static norm value and today's LF raw value. So saves stamped by LF builds (06's LF AAB, working-tree runs) are unaffected; only CRLF-stamped saves change once.
+- N2, first boot of the normalised build on a CRLF-stamped save: exactly 1 write. Levels, coins and unlocks unchanged, empty migration_log, no notice; `.bak` is byte-identical to the pre-update main. N3, the next boot: no write.
+- **N4, line-endings-only build: no write.** This fixes §9.21 E2.
+- N5, a non-cap value change: 1 write, no refund. N6, cap 5→3: refund +350 once; N7, next boot: no second refund. No notice anywhere.
+- **Remaining attack, N8:** a formatting-only data change (same values, new indentation) still counts as "changed". X1 rewrites, and `.bak` rotation deletes the only pre-cap (L5) copy. N9, rollback build: rewrites, no level restore.
+Acceptance I will run after your change (one heavy_run; all UNCONFIRMED now):
+- AC1: CRLF and LF engine values are equal, and equal `content_version.py`'s normalised value.
+- AC2: a raw-CRLF save on the first normalised boot keeps levels, coins, stars and unlocks, with no log and no notice. With X1 fixed: file bytes unchanged. Without it: exactly 1 write with `.bak` = previous main.
+- AC3: the next boot leaves bytes unchanged.
+- AC4: a CRLF↔LF-only build leaves bytes and rev unchanged.
+- AC5: a non-cap value change gives no refund and no notice, and with X1 fixed no write during load.
+- AC6: a cap lowered gives a paid-amount refund once (D32), 0 on the next boot, the notice once, and `save.pre-<old>.json` written.
+- AC7: after AC6, a formatting-only build, two ordinary saves and a rollback boot all leave `save.pre-<old>.json` intact (= pre-migration main), with no notice and no refund. With X1 fixed: no load writes.
+- AC8: rollback build: no crash, no level restore (as designed), no load write unless something needs clamping.
+- AC9: an APK/AAB with the normalised code: packed-bytes norm value = repo value, and the same value on a device or emulator. Real APK/AAB behaviour is NOT verified by me: no install, no device boot.
+Recommended order: normalisation + X1 in one commit, before release. Then AC2 costs 0 writes. Canonical-JSON hashing for N8 is optional if X1 + AC7 hold.
+Today the build paths disagree: 06 AAB is LF-pinned (4bf8f74) and 04's `build_android_debug.ps1` is CRLF. Until normalisation lands, shipping from both paths would trigger §9.21 E2 for every player.
+F2/X1: save.gd is still 7f2886c.

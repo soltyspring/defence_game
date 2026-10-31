@@ -1,0 +1,11 @@
+HRT H1 log_shadow FAIL caller_file=False shared_log_prior_kept=False
+HRT H2 eap_leak FAIL heavy_run: lock acquired for H2 after 0 s / EAP=Stop / [91mGet-Item: [91mCannot find path 'Z:\hrt\no\such\file' because it does not exist.[0m
+HRT H3 end_on_error FAIL end_lines=0
+HRT H4 stale_exit FAIL heavy_run: lock acquired for H4 after 0 s / code=3 | 2026-11-01T00:29:41 END H4 pid=35964 exit=3
+HEAVY_RUN_SCOPE_TEST {"target":"coordination/heavy_run.ps1","target_sha256":"DC0686C72877C548","pass":0,"checked":4,"results":{"log_shadow":false,"eap_leak":false,"end_on_error":false,"stale_exit":false}}
+
+HRT H1 log_shadow PASS caller_file=True shared_log_prior_kept=True
+HRT H2 eap_leak PASS heavy_run: lock acquired for H2 after 0 s / EAP=Continue / [91mGet-Item: [91mCannot find path 'Z:\hrt\no\such\file' because it does not exist.[0m / REACHED
+HRT H3 end_on_error PASS end_lines=1
+HRT H4 stale_exit PASS heavy_run: lock acquired for H4 after 0 s / code=0 | 2026-11-01T00:29:46 END H4 pid=15356 exit=0 status=ok
+HEAVY_RUN_SCOPE_TEST {"target":"C:\\Users\\aghose\\AppData\\Local\\Temp\\hrt_prop_target.ps1","target_sha256":"B1F261B066DD6E50","pass":4,"checked":4,"results":{"log_shadow":true,"eap_leak":true,"end_on_error":true,"stale_exit":true}}

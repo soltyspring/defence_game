@@ -30,3 +30,20 @@ Source: docs/research/systems/DATA_AND_BACKEND_ANALYSIS.md §9.20 (4).
 - My output has been copied to my own scratch file. You may delete my 13 lines at the top of the log.
 - Prevention on my side: unique variable names inside heavy_run blocks, and never write to a shared file name. Suggestion (your file): heavy_run.ps1 could use a less generic variable name, such as `$heavyLog`, so a caller's `$log` cannot collide.
 Also done (§9.21): the line-ending claim is now measured (engine values, APK bytes, update reproduction). The recommendation went to 02.
+
+## 2026-11-01 ~00:35 KST: root cause of the 23:43 heavy_run.log overwrite + 3 more hazards in heavy_run.ps1 — fix request (your file)
+Evidence: DATA_AND_BACKEND_ANALYSIS.md §9.23. Reproducible with `pwsh -NoProfile -File docs/research/systems/probes/heavy_run_scope_test.ps1` (a few seconds, no Godot; it uses a private copy with a test mutex, never the real lock or log). Results are in docs/research/systems/evidence/heavy_run_scope_20261101/scope_test_results.txt.
+- Cause: `& $Script` runs the caller's block in a CHILD scope of heavy_run.ps1, so heavy_run's script variables are visible inside it and shadow caller variables of the same name (PowerShell dynamic scoping).
+- Current file (sha256 DC0686C7…): **0/4 PASS**.
+  - H1: a caller's `$log` becomes the shared log path, so the block overwrites it. That is my 23:43 incident, reproduced. `$root`, `$start`, `$got` and even `$mutex` are also visible to the block.
+  - H2: `$ErrorActionPreference='Stop'` is inherited by every block, so an ordinary non-terminating error (e.g. `Get-Item` on a missing file) aborts the caller's run.
+  - H3: END is written only on success. Today's log has `23:53:41 START 04-numbers-capture` with no END; the next START came 9 s later. I did not establish the cause.
+  - H4: a block with only cmdlets reports the previous native exit code (test: END exit=3, script exit 3).
+- Also: `coordination/heavy_run.ps1` is untracked in git (`??`), so changes have no history.
+Fix request (your decision; I did not edit it): `docs/research/systems/evidence/heavy_run_scope_20261101/heavy_run_proposed.ps1.txt`. Same mutex name and same log, **4/4 PASS** on the same test.
+- Internal variables are `$private:hr*`.
+- No script-wide `$ErrorActionPreference`; `-ErrorAction Stop` is used per call. `$private:` does NOT hide preference variables (tested).
+- `$global:LASTEXITCODE = 0` is set before the block.
+- END is written in `finally` with `status=ok|exception`.
+- Please also commit heavy_run.ps1 so its changes are reviewable.
+Until then, caller rule (all workers): pass `-Script ({ … }.GetNewClosure())`, use unique variable names in the block, and never write to a shared file name. 10 follows this from v0.31 on.

@@ -1,0 +1,23 @@
+# 10-research-systems v0.31: normalised content_version compatibility cases (DATA_AND_BACKEND_ANALYSIS.md §9.22).
+# One heavy_run '10-norm-hash-compat-rerun' 2026-11-01 00:25-00:26 KST, HEAD 1f34d87 (data 4882771), private APPDATA. Summary only; no save contents.
+# norm = content.gd patched IN THE SNAPSHOT ONLY to drop byte 13 before hashing (02's file not modified).
+snapshot 1f34d874bfd71ecbd98b022765039d04de27793c
+PATCH 1
+REAL_SAVE before=614A1FAC560FBB78 after=614A1FAC560FBB78 unchanged=True
+bytes norm_A_raw_crlf cr=2758 lf=2758 static_raw=c1-40bde75d24c2 static_norm=c1-989c3422c910
+bytes norm_B_norm_crlf cr=2758 lf=2758 static_raw=c1-40bde75d24c2 static_norm=c1-989c3422c910
+bytes norm_C_norm_lf cr=0 lf=2758 static_raw=c1-989c3422c910 static_norm=c1-989c3422c910
+bytes norm_D_norm_lf_value cr=0 lf=2758 static_raw=c1-dc5be06f314d static_norm=c1-dc5be06f314d
+bytes norm_E_norm_lf_cap cr=0 lf=2756 static_raw=c1-754e6a16b123 static_norm=c1-754e6a16b123
+bytes norm_F_norm_lf_reformat cr=0 lf=2756 static_raw=c1-26f19e8f9efd static_norm=c1-26f19e8f9efd
+N1_A_raw_crlf_make: main_sha12=BD5623851E6C bak_sha12=859F6F661681 engine_cv=c1-40bde75d24c2 boot_log=[] main_rev=11 main_cv=c1-40bde75d24c2 coins=750 melee_L=5 bak_rev=10 bak_cv=c1-40bde75d24c2 bak_coins=930 toasts=0
+N2_B_first_update_norm: main_sha12=7465494A29BB bak_sha12=BD5623851E6C engine_cv=c1-989c3422c910 boot_log=[] main_rev=12 main_cv=c1-989c3422c910 coins=750 melee_L=5 bak_rev=11 bak_cv=c1-40bde75d24c2 bak_coins=750 toasts=0
+N3_B_next_boot: main_sha12=7465494A29BB bak_sha12=BD5623851E6C engine_cv=c1-989c3422c910 boot_log=[] main_rev=12 main_cv=c1-989c3422c910 coins=750 melee_L=5 bak_rev=11 bak_cv=c1-40bde75d24c2 bak_coins=750 toasts=0
+N4_C_line_endings_only: main_sha12=7465494A29BB bak_sha12=BD5623851E6C engine_cv=c1-989c3422c910 boot_log=[] main_rev=12 main_cv=c1-989c3422c910 coins=750 melee_L=5 bak_rev=11 bak_cv=c1-40bde75d24c2 bak_coins=750 toasts=0
+N5_D_value_change: main_sha12=AAB05DCA8867 bak_sha12=7465494A29BB engine_cv=c1-dc5be06f314d boot_log=[] main_rev=13 main_cv=c1-dc5be06f314d coins=750 melee_L=5 bak_rev=12 bak_cv=c1-989c3422c910 bak_coins=750 toasts=0
+N5b_D_next_boot: main_sha12=AAB05DCA8867 bak_sha12=7465494A29BB engine_cv=c1-dc5be06f314d boot_log=[] main_rev=13 main_cv=c1-dc5be06f314d coins=750 melee_L=5 bak_rev=12 bak_cv=c1-989c3422c910 bak_coins=750 toasts=0
+N6_E_cap_lowered: main_sha12=E96719880411 bak_sha12=AAB05DCA8867 engine_cv=c1-754e6a16b123 boot_log=[refund up_melee_basic L5->L3 +350] main_rev=14 main_cv=c1-754e6a16b123 coins=1100 melee_L=3 bak_rev=13 bak_cv=c1-dc5be06f314d bak_coins=750 toasts=0
+N7_E_next_boot: main_sha12=E96719880411 bak_sha12=AAB05DCA8867 engine_cv=c1-754e6a16b123 boot_log=[] main_rev=14 main_cv=c1-754e6a16b123 coins=1100 melee_L=3 bak_rev=13 bak_cv=c1-dc5be06f314d bak_coins=750 toasts=0
+N8_F_reformat_only: main_sha12=9CF49BC95A47 bak_sha12=E96719880411 engine_cv=c1-26f19e8f9efd boot_log=[] main_rev=15 main_cv=c1-26f19e8f9efd coins=1100 melee_L=3 bak_rev=14 bak_cv=c1-754e6a16b123 bak_coins=1100 toasts=0
+N9_A_rollback_raw_build: main_sha12=B5E5CE1BCDC2 bak_sha12=9CF49BC95A47 engine_cv=c1-40bde75d24c2 boot_log=[] main_rev=16 main_cv=c1-40bde75d24c2 coins=1100 melee_L=3 bak_rev=15 bak_cv=c1-26f19e8f9efd bak_coins=1100 toasts=0
+isolated/real_changed per run: True/False True/False True/False True/False True/False True/False True/False True/False True/False True/False True/False
