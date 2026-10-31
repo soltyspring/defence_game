@@ -269,7 +269,7 @@ func test_policy() -> bool:
 	for m in ["[IF ADS ENABLED]", "[IF PURCHASES ENABLED]", "[LEGAL REVIEW]"]:
 		check(en.contains(m), "en marks %s" % m)
 	# Same number of conditional blocks in ko and en (translation drift guard).
-	for pair in [["[광고 활성화 시]", "[IF ADS ENABLED]"], ["[결제 활성화 시]", "[IF PURCHASES ENABLED]"], ["[분석 활성화 시]", "[IF ANALYTICS ENABLED]"]]:
+	for pair in [["[광고 활성화 시]", "[IF ADS ENABLED]"], ["[결제 활성화 시]", "[IF PURCHASES ENABLED]"], ["[분석 활성화 시]", "[IF ANALYTICS ENABLED]"], ["[백업 활성화 시]", "[IF BACKUP ENABLED]"]]:
 		check(ko.count(pair[0]) == en.count(pair[1]), "ko/en same count of %s / %s (%d vs %d)" % [pair[0], pair[1], ko.count(pair[0]), en.count(pair[1])])
 	# Placeholders match between ko and en.
 	var re := RegEx.create_from_string("\\{\\{[A-Z_]+\\}\\}")
