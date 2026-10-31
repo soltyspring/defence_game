@@ -1,5 +1,17 @@
 # 06-services status
-Updated: 2026-10-31 ~17:45 KST (Play technical requirements, static; no Godot run)
+Updated: 2026-10-31 ~17:52 KST (02 4b5926d label settings checked; config/name impact)
+Status: COMPLETE.
+- 02's launcher-name format works with 06's check: package/name "Bakery Knights" + name_localized en/ko.
+- 06 fixed only its own items: the doc line now cites the export settings, the "Q4 waits" check was removed (Q4 is answered), and a debug APK no longer counts as release proof.
+- Label status: launcher_label=VERIFIED_DEBUG_ONLY (build/android 17:37 APK OK; apk_head 09:03 still OLD); release_label=WAITING.
+- "Lane Defence" still shows in the PC window title, the Project Manager and the fallback menu; impact table and options sent to 02/04.
+- Q2 DEFERRED. Nothing published.
+Current task: none. Next: see handoff.
+Validation: services runner at 17:46:49–17:47:10 OVERALL exit=0 (listing 1825/0, android 189/0); release_label proof with a temporary build/release copy at 17:48 (VERIFIED, removed after; that run's 2 failures were the expected release_preset doc mismatch for a fake release APK). Last Godot run ended 17:48:47, before the 18:00–18:30 quiet window.
+Commits: 31dc7b0b0226dbad1ecebdc18eb2e5f8cc4670fb [Test], fa5661b58269ec54f13b28f8973f5877f953151f [Docs] PUSHED.
+Previous: 0f3dfc8 (Play tech requirements).
+--- History (older entries, not current) ---
+(Play tech entry) Updated: 2026-10-31 ~17:45 KST (Play technical requirements, static; no Godot run)
 Status: COMPLETE. PLAY_TECH_REQUIREMENTS.md: API 36 (since 2026-08-31) PASS, 64-bit PASS, 16 KB ELF LOAD 0x4000 + RELRO PASS and zipalign -P 16 PASS on the 07e97ca debug APK; AAB (required for new apps) FAIL = no Gradle/AAB preset (02/04 A12); 16 KB zip alignment of a future AAB UNKNOWN (expected with AGP 8.6.1, not measured). No device test, no Play upload. Requests to 02/04. Q2 DEFERRED. Nothing published.
 Current task: none. Next: see handoff.
 Validation: docs-only change; services runner NOT rerun (coordinator: no Godot runs, quiet window 18:00–18:30 for 08). Last full run OVERALL exit=0 at 2193dcb.

@@ -1,5 +1,11 @@
 # 06-services handoff
-Updated: 2026-10-31 ~17:45 KST (Play technical requirements, static, no Godot; Q4 launcher name before)
+Updated: 2026-10-31 ~17:52 KST (02 label settings checked; config/name impact; Play tech requirements before)
+## Label settings check (17:45–17:52)
+- **What 02 changed (4b5926d, read only):** package/name "Bakery Knights", name_localized en "Bakery Knights" / ko "빵집 기사단". config/name stays "Lane Defence" to keep the desktop user:// path.
+- **Debug APKs:** 02's debug APKs (build/android 17:37, build/qa/apk_q4probe 17:36) carry the right labels. Note: apk_q4probe is not in the scanned dirs.
+- **First runner run:** OVERALL exit 1. 06's own lint still expected the old doc line, and the "Q4 waits" check was stale. Both fixed and rerun: exit 0.
+- **Proof of release_label=VERIFIED:** done with a temporary copy in build/release, which was removed. It showed release_preset=PRESENT, and the doc mismatch that follows from that, as the 2 expected failures.
+- **Next:** when a real release APK/AAB lands in build/release, expect release_label=VERIFIED and release_preset=PRESENT, then update SAVE_BACKUP_POLICY §1/§8 and DATA_SAFETY §2a for that build. **No Godot runs between 18:00 and 18:30.**
 ## Play tech requirements (2026-10-31 ~17:45, static)
 - No Godot, editor or emulator was run (coordinator: 18:00–18:30 quiet window for 08, and this task was to be done without Godot).
 - Tools used: zipalign -c and a PowerShell read of ELF64 program headers from the APK zip entries (p_align, GNU_RELRO vaddr+memsz vs the LOAD segments).
@@ -38,6 +44,7 @@ src/services/**, docs/services/**, tests/services/**, coordination/status/06-ser
 | D25/Q4 | Store text on 01 D25 words; §7 split blocked vs allowed generic (제빵사, 화덕); lint game_text_overlap (data/text ko/en vs block list, ui.title = working title, store names resource/worker/hero); privacy preview with working title + KIPRIS banner (make_privacy_preview.ps1, lint privacy_preview reverse-transform); §2b launcher name vs store title with Play sources, label unchanged (`Lane Defence`, 02); lint launcher_label_note; 10 mutations caught | 78318a24d4ff5393b7135ad7b778660e17d9adc8 |
 | Q4 | Launcher name decision recorded (§2b launcher blocks, NAME_SEARCH_LOG, OPEN_DECISIONS U10, KIPRIS search-first note); lint: launcher = store title before ":", brand/Bread Defense clean, KIPRIS §3 rows + no-space forms, name-log rows; android launcher_label: aapt2 badging (UTF-8 via temp file) OLD=WAITING / OK=VERIFIED / else FAIL, preset package/name + name_localized checks | c0218449596086c29a3fecd91078e5930effcfb6, 2193dcb6a87598fa00c4eca62f33999df83a3a2e |
 | Play tech | PLAY_TECH_REQUIREMENTS.md: P1 API 36, P2 64-bit, P3 16 KB (ELF LOAD, RELRO own-segment rule, zip alignment), P4 AAB; preset + Godot 4.7.2 config.gradle (AGP 8.6.1, NDK r29, target 36/min 24) + debug APK ELF header read; verdicts PASS/PASS/PASS(APK)/UNKNOWN(AAB zip)/FAIL(AAB); requests to 02 (release Gradle/AAB preset) and 04 (bundletool PAGE_ALIGNMENT_16K etc.). Static only, no Godot run | (this commit, see status) |
+| Label fmt | 4b5926d read only; listing lint cites export settings; android launcher_label VERIFIED_DEBUG_ONLY vs release_label (build/release only); config/name "Lane Defence" impact table (PC title, Project Manager, fallback menu) + options to 02/04 | 31dc7b0b0226dbad1ecebdc18eb2e5f8cc4670fb, fa5661b58269ec54f13b28f8973f5877f953151f |
 | Checkpoint | this handoff + status | see status file / `git log -- coordination/handoffs/06-services.md` |
 
 ## M7 details (this task)
