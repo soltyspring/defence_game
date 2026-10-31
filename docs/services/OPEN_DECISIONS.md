@@ -4,10 +4,10 @@ Version: 1 (2026-10-31). 06 does not ask the user. 01 asks these **one at a time
 ## User decisions (business, account, legal)
 | Order | Question for the user | Why it matters (RELEASE_READINESS_SERVICES.md IDs) | Skip if |
 |---|---|---|---|
-| U1 | Business model: paid app / free + rewarded ads / free + one-time purchases / both (01's Q2, options in ECONOMY.md §4) | Decides whether any of B1–B9 or A1–A6 apply | — |
+| U1 | **DEFERRED by user 2026-10-31 16:09 KST ("수익모델은 보류").** Business model: paid app / free + rewarded ads / free + one-time purchases / both (01's Q2, options in ECONOMY.md §4) | Decides whether any of B1–B9 or A1–A6 apply | — |
 | U2 | Play developer account: personal or organisation? | Personal (created after 2023-11-13) needs a 12-tester, 14-day closed test (C2); organisation needs a D-U-N-S number (C3); the named entity must appear in the privacy policy (V2) | — |
-| U3 | Who is the privacy contact and where is the privacy policy hosted (public URL)? | Required for every release, even with no data collected (V1, V2, V5) | — |
-| U4 | Target audience: does the game target children, or can children see it? (01's Q5) | Families rules for ads (A5), consent and personalised ads (A2) | U1 has no ads |
+| U3 | Who is the privacy contact and where is the privacy policy hosted (public URL)? Hosting choices H1–H4 and steps: PRIVACY_POLICY_HOSTING.md | Required for every release, even with no data collected (V1, V2, V5) | — |
+| U4 | Target audience: does the game target children, or can children see it? (01's Q5) Options T1–T3 with Families consequences: FAMILIES_ASSESSMENT.md | Families rules for ads (A5), consent and personalised ads (A2) | U1 has no ads |
 | U5 | Ads only: which ad network, and is serving ads in the EEA/UK/Switzerland acceptable (needs certified CMP)? | A2, A3, A6, Data safety answers | U1 has no ads |
 | U6 | Purchases only: product list (01's Q4) and purchase verification approach — (A) keep purchases off until a server exists, (B) own verification server with hosting cost, (C) client-side check only, labelled tamperable, low-value items only; minimum bar and risks for C: NO_SERVER_MINIMUM.md; sandbox test steps: BILLING_SANDBOX_TEST_PLAN.md | B4–B6 need a server; without one nothing can be verified or revoked reliably | U1 has no purchases |
 | U7 | Remote analytics at launch: none / own minimal endpoint / vendor SDK (routed in M3) | Data safety (V1), consent | — |

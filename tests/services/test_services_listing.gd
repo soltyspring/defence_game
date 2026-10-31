@@ -33,6 +33,8 @@ func _initialize() -> void:
 	_group("data_safety_draft", test_data_safety)
 	_group("billing_docs", test_billing_docs)
 	_group("legal_and_options_docs", test_legal_options)
+	_group("privacy_site", test_privacy_site)
+	_group("families_and_rating_q2", test_families_rating)
 	report.passes = passes
 	report.failures = Array(failures)
 	var f := FileAccess.open("user://services_listing_report.json", FileAccess.WRITE)
@@ -283,7 +285,8 @@ func test_content_rating() -> bool:
 	if not check(FileAccess.file_exists(RATING), "CONTENT_RATING_DRAFT.md exists"):
 		return true
 	var t := FileAccess.get_file_as_string(RATING)
-	var s2 := t.substr(t.find("## 2."), t.find("## 3.") - t.find("## 2."))
+	var s2_end := t.find("## 2a.") if t.find("## 2a.") > 0 else t.find("## 3.")   # §2a (Q2 re-check) has its own format
+	var s2 := t.substr(t.find("## 2."), s2_end - t.find("## 2."))
 	var topics := ["Category", "Violence", "Blood / gore", "Fear / horror", "Sexual content", "Language", "Controlled substances", "Gambling", "Users interact", "Shares location", "Unrestricted internet", "Digital purchases", "Ads"]
 	for topic in topics:
 		var found := false
@@ -451,4 +454,86 @@ func test_legal_options() -> bool:
 	check(RegEx.create_from_string("SHA-256 `[0-9A-F]{64}`").search(st) != null, "Data safety confirmation records the APK SHA-256")
 	check(st.contains("A7 TESTED") and st.contains("C1 TESTED"), "Data safety confirmation cites 04 A7 and C1")
 	check(st.contains("release AAB"), "confirmation requires release AAB re-check")
+	return true
+
+# ------------------------------------------------------------------ M12: publishable privacy page, Families, Q2 deferred
+
+const SITE := "res://docs/services/privacy_site/index.html"
+const HOSTING := "res://docs/services/PRIVACY_POLICY_HOSTING.md"
+const FAMILIES := "res://docs/services/FAMILIES_ASSESSMENT.md"
+const DISABLED_PLACEHOLDERS := ["{{APP_NAME}}", "{{CHILD_AUDIENCE_STATEMENT}}", "{{CONTACT_EMAIL}}", "{{DEVELOPER_NAME}}", "{{EFFECTIVE_DATE}}", "{{PRIVACY_OFFICER}}"]
+
+static func strip_comments(html: String) -> String:
+	return RegEx.create_from_string("(?s)<!--.*?-->").sub(html, "", true)
+
+## The page matches the draft's disabled-mode text: same section titles in both languages, no
+## monetization blocks, no visible reviewer markers, only disabled-mode placeholders. Remaining
+## placeholders are reported as publish blockers (not failures: values are user data).
+func test_privacy_site() -> bool:
+	for p in [SITE, HOSTING, POLICY]:
+		if not check(FileAccess.file_exists(p), "%s exists" % p):
+			return true
+	var raw := FileAccess.get_file_as_string(SITE)
+	var visible := strip_comments(raw)
+	var draft := FileAccess.get_file_as_string(POLICY)
+	for lang in ["ko", "en"]:
+		var block_text := block(draft, "policy." + lang)
+		var titles_found := 0
+		for line in block_text.split("\n"):
+			if line.begins_with("## "):
+				var title := line.substr(3).strip_edges()
+				check(visible.contains("<h2>%s</h2>" % title), "site has %s section '%s'" % [lang, title])
+				titles_found += 1
+		check(titles_found == 9, "draft %s has 9 sections (%d)" % [lang, titles_found])
+	check(visible.contains("<h1>개인정보처리방침</h1>") and visible.contains("<h1>Privacy Policy</h1>"), "page titled as privacy policy in ko and en")
+	check(visible.contains("<title>개인정보처리방침 / Privacy Policy"), "HTML title names the privacy policy")
+	for m in ["활성화 시]", "[IF ", "[법률 확인 필요]", "[LEGAL REVIEW]", "[수익화", "[CHANGES"]:
+		check(not visible.contains(m), "no visible draft marker '%s' on the page" % m)
+	for kw in ["광고 사업자", "인앱 결제", "ad provider", "In-app purchases"]:
+		check(not visible.contains(kw), "disabled-mode page does not mention '%s'" % kw)
+	check(visible.contains("현재 게임은 이용자의 개인정보를 수집하거나 외부로 전송하지 않습니다"), "ko states no data collected (disabled mode)")
+	check(visible.contains("does not collect personal information"), "en states no data collected")
+	var found := {}
+	for m in RegEx.create_from_string("\\{\\{[A-Z_]+\\}\\}").search_all(visible):
+		found[m.get_string()] = true
+	var keys: Array = found.keys()
+	keys.sort()
+	check(keys.all(func(k): return DISABLED_PLACEHOLDERS.has(k)), "only disabled-mode placeholders on the page (%s)" % str(keys))
+	report["privacy_site_publish_blockers"] = keys
+	print("  privacy_site publish blockers (unfilled placeholders): %d %s" % [keys.size(), str(keys)])
+	var ht := FileAccess.get_file_as_string(HOSTING)
+	check(ht.contains("**PREPARATION ONLY. Nothing is published and no hosting is chosen.**"), "hosting doc marked preparation only")
+	check(ht.count("**[USER]**") >= 4, "hosting steps mark user-only actions (%d)" % ht.count("**[USER]**"))
+	check(ht.contains("https://docs.github.com/en/pages/"), "hosting facts cite GitHub docs")
+	return true
+
+func test_families_rating() -> bool:
+	for p in [FAMILIES, RATING]:
+		if not check(FileAccess.file_exists(p), "%s exists" % p):
+			return true
+	var ft := FileAccess.get_file_as_string(FAMILIES)
+	for id in ["F1", "F2", "F3", "F4", "F5", "F6", "F7"]:
+		var ok := false
+		for line in ft.split("\n"):
+			if line.begins_with("| %s |" % id):
+				ok = line.contains("https://")
+		check(ok, "families rule %s has a source" % id)
+	for opt in ["T1", "T2", "T3"]:
+		check(ft.contains("| %s |" % opt), "families option %s present" % opt)
+	check(ft.contains("not a decision"), "families doc marked not a decision")
+	check(ft.contains("SUCCESS_ANALYSIS.md §25.3"), "families doc aligned with 09 §25.3")
+	var rt := FileAccess.get_file_as_string(RATING)
+	var s2a := rt.substr(rt.find("## 2a."), rt.find("## 3.") - rt.find("## 2a."))
+	for topic in ["Ads", "Digital purchases", "Users interact", "Shares location", "Unrestricted internet"]:
+		var ok2 := false
+		for line in s2a.split("\n"):
+			if line.begins_with("| " + topic):
+				ok2 = line.split("|")[2].strip_edges() == "No"
+		check(ok2, "Q2-deferred re-check answers No for %s" % topic)
+	# The "No" answers must match the repo right now.
+	var d: Dictionary = load("res://src/services/services_factory.gd").create({})
+	check(load("res://src/services/service_diagnostics.gd").snapshot(d).live.values().all(func(v): return v == false), "nothing live in default services")
+	check(not DirAccess.dir_exists_absolute("res://addons"), "no addons/ (no ad or billing plugin)")
+	var od := FileAccess.get_file_as_string("res://docs/services/OPEN_DECISIONS.md")
+	check(od.contains("DEFERRED by user 2026-10-31 16:09 KST"), "U1 marked deferred by user")
 	return true

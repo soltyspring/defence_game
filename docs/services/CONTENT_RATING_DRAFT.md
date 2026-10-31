@@ -31,6 +31,17 @@ Content was rephrased for compliance with licensing restrictions.
 
 Expected outcome (estimate, not a rating): with non-human fantasy characters only, an all-ages or low rating such as PEGI 3/7, ESRB Everyone, GRAC 전체이용가 is plausible. If human-looking characters take hits, PEGI 12 / IARC 12+ is possible. The actual rating comes only from the submitted questionnaire.
 
+## 2a. Re-check under Q2 deferred (2026-10-31 16:09 KST, user: "수익모델은 보류")
+| Topic | Answer | Evidence (re-checked) |
+|---|---|---|
+| Ads (Play "Contains ads" declaration) | No | no ad SDK; services `disabled` (integration gate D1–D6 PASS); APK has no INTERNET permission (DATA_SAFETY_DRAFT.md §2a) |
+| Digital purchases | No | no billing library, no `addons/` plugin; default verifier `unavailable`; `data/meta.json` iap disabled |
+| Users interact / UGC | No | no network code in src/, no chat or sharing; APK permissions: none |
+| Shares location | No | no location permission |
+| Unrestricted internet | No | no INTERNET permission, no web view; a future privacy-policy button opens the system browser outside the app |
+| Gambling / random paid items | No | no purchases at all |
+Result: §2 answers stay valid for the deferred-monetization build. Still open and unaffected by Q2: violence against human-looking characters, and disgust/horror imagery from mold enemies (answer from 03's final art). Target audience (children) is a separate declaration: FAMILIES_ASSESSMENT.md.
+
 ## 3. When answers must change
 | Change | Questionnaire / declaration effect | Also update |
 |---|---|---|
