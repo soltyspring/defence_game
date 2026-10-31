@@ -103,9 +103,14 @@ func run(q, tree) -> void:
 	var e2 = _mk("tp13", false)
 	e2.load_progress()
 	var st: Dictionary = e2.progress.stars if e2.progress.stars is Dictionary else {}
-	var clamp_ok: bool = int(e2.progress.unlocked_round) <= Array(tree.root.get_node("Content").round_order).size() + 1 and int(e2.progress.coins) <= 999999 and (not st.has("r02") or int(st.r02) <= 3) and (not st.has("r01") or typeof(st.r01) != TYPE_STRING)
-	q.check("TP-13a", "out-of-range values clamped (unlocked <= rounds+1, coins <= meta cap 999999, stars 0..3 ints)", clamp_ok,
-		"unlocked=%s coins=%s stars=%s" % [e2.progress.unlocked_round, e2.progress.coins, st])
+	var coin_cap := 999999
+	var meta = Q.read_json("res://data/meta.json")
+	if meta is Dictionary:
+		for cur in meta.get("currencies", []):
+			if cur is Dictionary and str(cur.get("id", "")) == "gold": coin_cap = int(cur.get("max", coin_cap))
+	var clamp_ok: bool = int(e2.progress.unlocked_round) <= Array(tree.root.get_node("Content").round_order).size() + 1 and int(e2.progress.coins) <= coin_cap and (not st.has("r02") or int(st.r02) <= 3) and (not st.has("r01") or typeof(st.r01) != TYPE_STRING)
+	q.check("TP-13a", "out-of-range values clamped (unlocked <= rounds+1, coins <= data/meta.json gold max, stars 0..3 ints)", clamp_ok,
+		"unlocked=%s coins=%s (cap %d) stars=%s" % [e2.progress.unlocked_round, e2.progress.coins, coin_cap, st])
 	var deep := "1"
 	for i in 600: deep = "[" + deep + "]"
 	Q.write_text(e.path, Q.save_envelope({"version": 1, "unlocked_round": 2, "junk": JSON.parse_string(deep)}) if JSON.parse_string(deep) != null else "{}")

@@ -89,6 +89,21 @@ try {
         if ($scode -ne 0 -and $code -eq 0) { $code = 1 }
     }
     Add-Content -Path (Join-Path $out 'env.txt') -Value ("services: " + ($svc -join '; '))
+    # Stale visual baselines: committed docs/**/*.png older than the newest commit touching the art
+    # atlases, fonts or display text (e.g. the Q1 theme switch). Informational; not counted in exit code.
+    $ErrorActionPreference = 'Continue'
+    $base_c = (& git log -1 --format='%ct %h' -- assets/atlases assets/fonts data/text 2>$null)
+    if ($base_c) {
+        $bt = [long]($base_c.Split(' ')[0])
+        $stale = @()
+        foreach ($img in (& git ls-files 'docs/*.png' 2>$null)) {
+            $ct = (& git log -1 --format='%ct' -- $img 2>$null)
+            if ($ct -and [long]$ct -lt $bt) { $stale += $img }
+        }
+        @("baseline_commit=$($base_c.Split(' ')[1]) (newest change to assets/atlases|assets/fonts|data/text)", "stale_images=$($stale.Count)") + $stale | Set-Content (Join-Path $out 'stale_baselines.txt') -Encoding utf8
+        Write-Host "[baselines] $($stale.Count) committed docs images predate visual baseline $($base_c.Split(' ')[1])"
+    }
+    $ErrorActionPreference = $prev
     Write-Host "script_errors_in_log=$errs  exit=$code  report=$out"
     Set-Content -Path (Join-Path $base 'latest.txt') -Value $out -Encoding utf8
     exit $code
