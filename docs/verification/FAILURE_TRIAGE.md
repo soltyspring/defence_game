@@ -7,7 +7,13 @@ Updated 2026-10-31 09:18 +09:00. Scope: desktop headless Godot 4.7.2 on Windows.
 | **HEAD** | `.\tools\qa\run_acceptance.ps1 -Head` | clean `git archive` of committed HEAD in `%TEMP%\qa07_head` (own import, current tests overlaid) → **committed defect** |
 | **Workspace** | `.\tools\qa\run_acceptance.ps1` | shared tree with every worker's uncommitted WIP → only here = **work-tree contamination** |
 
-## Current: HEAD 3e355a8, run 20261031-234416 (import guard 0 missing, private APPDATA proven)
+## Current: HEAD 278d52b, run 20261101-012951 (import guard 0 missing, private APPDATA proven, inside heavy_run.ps1)
+PASS 156 · FAIL 0 · NOT_TESTED 2 (AUD-03, PLAT-03) · BLOCKED 0; services exit 0; runner exit 0. Summary: [runs/head-278d52b.md](runs/head-278d52b.md).
+- The 3 FAILs of 3e355a8 are gone on the same checks. DATA-13/14 (QA-B019) were fixed by 01 4882771 and 04 1850c3f. BD-SPLASH was a 07 test defect (QA-T002), fixed in 98e4f49.
+- 02 52f9fa3 (save D32/F2/X1, QA-B012) did not regress save, faults, purchase or flow: all PASS. TP-13c now loads in 17 ms, because 02's size guard refuses the 50 MB file.
+- No FAIL is left to request. NOT_TESTED stays: AUD-03 (cue playback check not automated by 07) and PLAT-03 (no device run). Neither is a FAIL.
+
+## Previous: HEAD 3e355a8, run 20261031-234416 (import guard 0 missing, private APPDATA proven)
 PASS 153 · FAIL 3 · NOT_TESTED 2 (AUD-03, PLAT-03) · BLOCKED 0; services exit 0. Summary: [runs/head-3e355a8.md](runs/head-3e355a8.md).
 | FAIL | Owner | Cause | Same-scenario check | Expected |
 |---|---|---|---|---|

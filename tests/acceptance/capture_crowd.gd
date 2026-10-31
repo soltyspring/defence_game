@@ -22,6 +22,7 @@ var _next_shot := 1.0
 var _t0 := 0
 var num_overlaps := 0        # QA-B012 pairwise damage-number rect intersections, summed over frames
 var num_max := 0
+var num_drawn := 0           # damage numbers drawn, summed over frames (denominator for damage_numbers_dropped)
 var focus_log := []          # window focus changes + HUD auto-pauses (harness resumes, logged)
 var resume_after_pause := true
 
@@ -99,6 +100,7 @@ func _run() -> void:
 		# QA-B012: rectangles battle_view actually used for damage numbers in the last draw
 		var placed = app.battle.view.get("_placed_text") if app.battle.view else null
 		if placed is Array:
+			num_drawn += placed.size()
 			for i in placed.size():
 				for j in range(i + 1, placed.size()):
 					if (placed[i] as Rect2).intersects(placed[j]): num_overlaps += 1
@@ -121,9 +123,11 @@ func _run() -> void:
 		max_msgs = maxi(max_msgs, int(row[5]))
 		if int(row[5]) >= 2: frames_2 += 1
 		drift = maxf(drift, absf(float(row[0]) - float(row[1])))
+	var dropped = app.battle.view.get("texts_dropped") if app.battle and app.battle.view else null   # 02 52f9fa3: numbers skipped for lack of a free slot
 	var rep := {"tag": tag, "frames": timeline.size(), "wall_s": timeline.back()[0] if timeline.size() > 0 else 0,
 		"sim_t_end": timeline.back()[1] if timeline.size() > 0 else 0, "max_wall_minus_sim_s": snappedf(drift, 0.01),
-		"max_simultaneous_messages": max_msgs, "damage_number_overlaps": num_overlaps, "damage_numbers_max_drawn": num_max, "focus_log": focus_log, "pauses": focus_log.filter(func(e): return e.event == "battle_paused" and e.paused).size(), "frames_with_2plus_messages": frames_2, "overlaps": overlaps, "peak": peak,
+		"max_simultaneous_messages": max_msgs, "damage_number_overlaps": num_overlaps, "damage_numbers_max_drawn": num_max,
+		"damage_number_frames_drawn": num_drawn, "damage_numbers_dropped": dropped, "focus_log": focus_log, "pauses": focus_log.filter(func(e): return e.event == "battle_paused" and e.paused).size(), "frames_with_2plus_messages": frames_2, "overlaps": overlaps, "peak": peak,
 		"ended": app.battle != null and app.battle.sim != null and app.battle.sim.ended,
 		"won": app.battle.sim.won if app.battle and app.battle.sim else null, "timeline_cols": ["wall", "sim_t", "units", "projectiles", "damage_texts", "messages", "overlaps"], "timeline": timeline}
 	if shot_dir != "":

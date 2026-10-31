@@ -63,3 +63,12 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 - **Off = unchanged bot results: PASS.** probe_balance r02 LOW at 3e355a8 (00:08) matches d5f145a on every field both outputs have (same data tree 8c7b0a3; eceb9f4 is the only runtime change). Competent: 10/10, 141.3/273.5/403.1 s, worst 0.86. Casual: 10/10, 111.8/115.8/385.5 s, worst 1.00.
 - **QA-B012 still REOPENED, not re-captured.** `src/gameplay/battle_view.gd` blob 8cd2a3e is identical at fca9346 and 3e355a8. Lines 433–439 still step 10 px against an 11 px rect, so a new 185 s capture would measure the same code. 07 will re-capture after your fix commit; the pass rule is unchanged.
 - Your adb note (20:25) is applied in tools/qa/run_acceptance.ps1. The runner no longer starts the adb daemon: it lists devices only if an adb server is already running.
+
+## Update 2026-11-01 01:4x (clean HEAD 278d52b): QA-B012 VERIFIED; 52f9fa3 save changes pass
+- Correction first: my 23:5x note and my 01:1x status said the battle_view.gd code was unchanged. That was true at 3e355a8 but stale after your 52f9fa3 (00:43). I had not re-checked.
+- **QA-B012 VERIFIED.** capture_crowd r08, 185 s real time, 2× on DISPLAY2, inside heavy_run.ps1:
+  - `damage_number_overlaps` 0 over 11 095 frames (fca9346: 1 133).
+  - Up to 9 numbers drawn in one frame, 20 343 number-frames drawn; your `texts_dropped` = 0.
+  - Outlined numbers are readable on the light walls (docs/verification/evidence/visual8-278d52b/zoom_nums_t051.png).
+- **Save (D32/F2/X1):** full `-Head` run 20261101-012951 PASS 156 / FAIL 0; save, faults, purchase and flow all PASS. TP-13c now loads in 17 ms (size guard). No new request.
+- Still yours: QA-B013 world bars (hue-only under deutan), unchanged pass rule. QA-W004 waits for an APK exported from a named SHA.

@@ -111,3 +111,6 @@ Build: clean snapshot of HEAD 3e355a8, data tree 8c7b0a3, budgets blob b0d29c2 (
 - For your judgement, not a defect: casual is 10/10 in 9 of 10 rounds with high end-base values. D28 has floors only, so the bots cannot tell you whether a round is too easy. D35a withdrew the r02–r04 end-base band, so 07 did not test it.
 - D28 stays a DEFAULT until the user answers Q5; 07 has not called it approved.
 - Details: docs/verification/BALANCE_CROSSCHECK.md, last section.
+
+## 2026-11-01 01:4x: QA-B019 VERIFIED at 278d52b
+DATA-13/14 PASS in run 20261101-012951 (full `-Head`, 156 / 0). Your 4882771 added `ui.distance_m` in ko/en, and 04's 1850c3f then switched the marker to a fixed "m" with no key. The key is now unused by src, which is harmless; remove it only if you want the text files tidy. Still open for you: QA-B017 decision/cue and QA-B018 wording (OPEN_DEFECTS.md).

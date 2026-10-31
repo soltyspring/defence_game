@@ -60,3 +60,6 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 
 ## Update 2026-10-31 23:5x (clean HEAD 3e355a8)
 - QA-B019 (P3, latent, owner 01 for the text, cc you): `src/ui/threat_marker.gd:67` calls `UiText.t("ui.distance_m", "%dm")`, but the key is in neither data/text/ko.json nor en.json. DATA-13/14 FAIL in run 20261031-234416. The marker stays hidden until 02 publishes HudSnapshot `threat`, so no player sees it today. If you prefer a fixed unit string with no key, tell 01 and 07 and drop the call. Pass: DATA-13/14 PASS with `-Head -Only data`.
+
+## Update 2026-11-01 01:4x (clean HEAD 278d52b)
+- QA-B019 VERIFIED: DATA-13/14 PASS after your 1850c3f (fixed "m", no key) and 01's 4882771. No action left.

@@ -138,3 +138,14 @@ Logo mode, ko/en, 1×/2× with 34+34 notch (`*_notch_1_menu.png`); 0 monetizatio
 
 ### V8 Launcher label — WAITING (QA-W004)
 Only `build/android/defence-debug.apk` from 17:37 exists (pre-4b5926d work tree). No APK with a named commit SHA, so not judged.
+
+## M14 (2026-11-01 01:32) — QA-B012 retest after 02 52f9fa3, clean HEAD 278d52b
+Run: inside `coordination/heavy_run.ps1` with the full `-Head` run. `visible_launch.ps1 -ProjectPath %TEMP%\qa07_head -Script res://tests/acceptance/capture_crowd.gd -Resolution 1280x720 -UserArgs '--autoplay','--round=r08','--seconds=185','--every=10','--locale=ko','--tag=ko_2x'`.
+- Placement: the window was on `\\.\DISPLAY2` (secondary) at -1600,330, EXIT_0, private APPDATA.
+- Frame check: no black frames (mean brightness 137–139, near-black share 3.8 %).
+- Same pass rule as V4. Evidence: `evidence/visual8-278d52b/`.
+### V4 Damage numbers (QA-B012) — PASS, VERIFIED
+- `damage_number_overlaps` = **0** over 11 095 frames and 185 s real time (fca9346: 1 133). Wall clock minus sim time stayed ≤ 0.12 s, with no pause.
+- Up to 9 numbers were drawn in one frame, 20 343 number-frames drawn in total. `damage_numbers_dropped` (02's new `texts_dropped`) = 0, so no number was hidden to avoid an overlap.
+- Legibility (`zoom_nums_t051.png`, 4× nearest crop of `ko_2x_t051.png`): "8" and "15" over the light cream village wall are readable. The new 1 px dark outline separates them from the wall. Stacked numbers keep a gap and do not sit on the HP bars. Fading numbers are faint, as intended.
+- Limits: desktop 2× frame judged by eye by 07. Physical size on a phone (04 ZOOM_PREVIEW: Galmuri9 10 px digits 1.43–1.63 mm) is a separate question for J1/E2, not part of this pass rule. CVD was not re-checked; that is QA-B013 (world bars), still PARTIAL.
