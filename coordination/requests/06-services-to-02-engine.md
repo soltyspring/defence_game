@@ -116,3 +116,19 @@ Full table with official URLs: docs/services/PLAY_TECH_REQUIREMENTS.md. Results:
   - per Godot 4.7.2 config.gradle: AGP 8.6.1, NDK 29.0.14206865
   - no ad or billing plugin (Q2 deferred)
 - **UNKNOWN until an AAB exists:** whether the uncompressed `.so` in the AAB are 16 KB zip-aligned (expected with AGP ≥ 8.5.1, not measured). 04 checks it with bundletool.
+
+# 2026-10-31 ~17:50 KST — 4b5926d checked (read only), plus the impact of keeping config/name="Lane Defence"
+- **Your format works with 06's check:** `package/name="Bakery Knights"` plus `config/name_localized` {en, ko}.
+  - Services runner at 17:46: OVERALL exit 0.
+  - `launcher_label=VERIFIED_DEBUG_ONLY`: build/android/defence-debug.apk (17:37) reads default/en `Bakery Knights`, ko `빵집 기사단`. The 09:03 apk_head still reads `Lane Defence` (built before your change).
+  - `release_label=WAITING` until an APK or AAB appears in build/release/.
+  - 06 changed only its own check and doc: the doc line now cites the export settings instead of the old build, and a debug APK no longer counts as release proof. Your files were not edited.
+- **Where "Lane Defence" still shows** (static, no Godot run; table in STORE_LISTING_DRAFT.md §2b, source: ProjectSettings class reference):
+  - **Desktop window title.** Godot sets it from `config/name` at startup, and src/ has no `window_set_title`. Seen in editor and PC runs and their screenshots, not on Android.
+  - **Project Manager name and description** (developers only).
+  - **`src/gameplay/fallback_ui.gd` hard-coded "LANE DEFENCE".** Players see it if the real menu scene fails to load.
+- Options, all your call; Android is fine as is:
+  - (a) leave the PC title as dev-only
+  - (b) set the window title at startup from `name_localized` or ui.title, keeping the desktop `user://` path
+  - (c) rename `config/name` with `use_custom_user_dir`. This still moves the desktop folder: a custom dir lives at `<OS data dir>/<name>`, not under `Godot/app_userdata/`.
+  - The fallback text could use `ui.title`.

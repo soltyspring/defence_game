@@ -52,9 +52,24 @@ Bakery Knights
 
 Relation checked by the lint (`launcher_label_note`): each launcher name equals the store title up to its ":" ("빵집 기사단" + ": 곰팡이 디펜스", "Bakery Knights" + ": Mold Defense"). Both are KIPRIS terms (T2/T3, T11/T12), and both pass the same banned-word, brand and Bread Defense checks as the store text. The APK check (`tests/services/test_services_android.gd` group `launcher_label`) reads the real label with aapt2 once 02 rebuilds.
 
-Current launcher name in the build: `Lane Defence` (export_presets.cfg `package/name`, project.godot `config/name`; the 07e97ca APK shows `application-label:'Lane Defence'` in every locale, aapt2 dump badging). **06 does not change it** (02 owns these files and applies Q4). It must not ship, because it matches neither the store title nor the in-game title (`ui.title`).
+Current launcher name in the export settings: `Bakery Knights` (02 4b5926d: export_presets.cfg `package/name="Bakery Knights"`; project.godot `config/name_localized` en "Bakery Knights", ko "빵집 기사단"; `config/name` stays "Lane Defence" to keep desktop `user://`). The two existing APKs were built before 4b5926d and still show `application-label:'Lane Defence'` (aapt2 dump badging), so the APK check reports WAITING until a rebuild. 06 does not edit these files.
 
-What Play's rules say (official pages, checked 2026-10-31):
+### Where `config/name="Lane Defence"` still shows (static check, 2026-10-31 ~17:50; no Godot run)
+Godot's class reference (https://docs.godotengine.org/en/stable/classes/class_projectsettings.html) says `config/name` is used by the Project Manager and by exporters, and that the window title is set to it on startup. On desktop it also names the `user://` folder unless `use_custom_user_dir` is on. `config/name_localized` translates the app name on Android, iOS and macOS. Content was rephrased for compliance with licensing restrictions.
+| Place | Shows | Who sees it | Evidence |
+|---|---|---|---|
+| Android launcher label (default / ko / en) | Bakery Knights / 빵집 기사단 / Bakery Knights | players | 02's probe and debug APKs (17:36, 17:37) `aapt2 dump badging`; 06 lint `launcher_label=VERIFIED_DEBUG_ONLY` |
+| Android app info / recent apps | same app label (inferred: Android shows the application label there) | players | inference, not checked on a device |
+| Android `user://` | unchanged (files dir is per package) | — | SAVE_BACKUP_POLICY.md §1a |
+| Desktop window title (editor runs, any PC export) | **Lane Defence** | developers and QA; screenshots and recordings of PC runs | class reference; no `window_set_title` call in src/ (grep) |
+| Desktop `user://` folder | `%APPDATA%/Godot/app_userdata/Lane Defence` (kept on purpose) | developers and QA | class reference note on config/name |
+| Godot Project Manager list and tooltip | Lane Defence, "Pixel-art lane defence (working title)" | developers | class reference (`config/name`, `config/description`) |
+| Engine fallback menu text | **LANE DEFENCE** (hard-coded in src/gameplay/fallback_ui.gd) | players only if the real menu scene fails to load | grep of src/ |
+| Store listing | full working title, set in Play Console | players | §2 |
+A mobile release has no PC window, so players should not see "Lane Defence" except through the fallback menu. Options for the PC title, all 02's call:
+- (a) leave it, since it is dev-only;
+- (b) set the window title at startup from the localized name, which keeps the desktop `user://` path;
+- (c) rename `config/name` and set `use_custom_user_dir`. Note that (c) still moves the desktop path, because a custom dir lives at `<OS data dir>/<name>`, not under `Godot/app_userdata`.
 | Rule (paraphrased) | Source |
 |---|---|
 | The store "App name" is the app's name on Google Play, ≤ 30 characters, one localized name per language | https://support.google.com/googleplay/android-developer/answer/9859152 |

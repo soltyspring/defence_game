@@ -65,3 +65,12 @@ Details and URLs: docs/services/PLAY_TECH_REQUIREMENTS.md. Your 07e97ca debug AP
    - `aapt2 dump badging` → targetSdkVersion 36 and the Q4 label
 3. After the user's first internal-track upload: the 16 KB and 64-bit status in Play Console's app bundle explorer (user action).
 06's test_services_android also re-reads permissions and labels from APKs under build/release/.
+
+# 2026-10-31 ~17:50 KST — FYI for screenshots and QA after 02 4b5926d (static check, no Godot run)
+- **Android launcher label is correct** in the debug APKs built at 17:36 and 17:37: default/en "Bakery Knights", ko "빵집 기사단". 06's check reports `VERIFIED_DEBUG_ONLY`, and the release label is WAITING until build/release has an APK or AAB.
+- **"Lane Defence" can still appear in:**
+  - the desktop window title (Godot sets it from `config/name`, which 02 kept to protect desktop `user://`)
+  - the Godot Project Manager
+  - the engine fallback menu (src/gameplay/fallback_ui.gd "LANE DEFENCE", shown only if scenes/ui fails)
+- For store screenshots, capture on Android or crop the PC window frame, so the old title is not in the image.
+- Full table: STORE_LISTING_DRAFT.md §2b.
