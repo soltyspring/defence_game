@@ -170,9 +170,9 @@ def icon48_fg() -> Canvas:
     cv = Canvas(48, 48)
     fg = Canvas(48, 48)
     # chef hat (puffy) + crust helmet band
-    fg.ellipse(19, 10.5, 7, 4.0, c("W"))
-    fg.ellipse(14, 12, 3.5, 3, c("W"))
-    fg.ellipse(24, 12, 3.5, 3, c("W"))
+    fg.ellipse(19, 10.5, 8, 4.5, c("W"))            # ui-art 1.3 (06): hat 1 px wider/taller (B2 hero area at 48/36 dp)
+    fg.ellipse(13.5, 12, 4, 3.2, c("W"))
+    fg.ellipse(24.5, 12, 4, 3.2, c("W"))
     fg.ellipse(17, 9, 3, 1.8, c("x"))
     fg.rect(12, 14, 15, 4, c("o"))
     fg.hline(12, 26, 14, c("T"))
@@ -186,11 +186,11 @@ def icon48_fg() -> Canvas:
     fg.hline(20, 23, 24, c("w"))                      # determined mouth
     # jam-red cape behind the body (matches the sprite; art 0.12.3: also widens the logo to >= 48 dp)
     for y in range(28, 37):
-        x0 = 10 - (y - 28) // 3 if y < 34 else 9
+        x0 = 9 - (y - 28) // 3 if y < 34 else 8          # ui-art 1.3: cape 1 px wider (B2)
         fg.hline(x0, 12, y, c("R"))
         fg.put(x0, y, c("r"))
     # body (art 0.12.2, matches the sprite): white chef jacket, egg-wash apron with a loaf emblem
-    fg.rect(12, 27, 15, 11, c("W"))
+    fg.rect(11, 27, 16, 11, c("W"))                 # ui-art 1.3: jacket 1 px wider
     fg.vline(12, 27, 37, c("x"))
     fg.rect(15, 29, 9, 8, c("Y"))
     fg.hline(15, 23, 29, c("Z"))
@@ -209,10 +209,10 @@ def icon48_fg() -> Canvas:
         fg.rect(hx, hy - 1, 3, 3, c("O")); fg.put(hx + 1, hy - 1, c("o"))
     fg.rect(26, 30, 3, 2, c("U"))                     # hand
     # mould blob peeking lower right
-    fg.ellipse(33.6, 33.8, 5.6, 5.2, c("t"))         # light mould body; 0.12.2: 1 px smaller so the outline stays in the 66 dp circle
-    fg.ellipse(33, 32.5, 3.5, 2.6, c("z"))
-    fg.hline(30, 36, 38, c("l"))
-    fg.put(31, 31, c("z")); fg.put(36, 37, c("z")); fg.put(38, 32, c("z"))
+    fg.ellipse(33.6, 33.8, 5.6, 5.2, c("q"))         # ui-art 1.3: blue-mould teal (was sage t): hero vs mould protan >= 20
+    fg.ellipse(33, 32.5, 3.5, 2.6, c("Q"))
+    fg.hline(30, 36, 38, c("d"))
+    fg.put(31, 31, c("Q")); fg.put(36, 37, c("Q")); fg.put(38, 32, c("z"))
     fg.rect(30, 34, 2, 2, c("K")); fg.rect(33, 34, 2, 2, c("K"))   # eyes looking at the hero
     fg.put(30, 33, c("E"))
     fg.shift(0, 1)                                    # keep content inside the 32x32 safe zone

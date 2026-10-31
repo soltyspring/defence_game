@@ -67,7 +67,7 @@ def main():
     fg = rgba(os.path.join(S, "assets/branding/launcher_adaptive_foreground_432.png")).astype(float)
     bg = rgba(os.path.join(S, "assets/branding/launcher_adaptive_background_432.png")).astype(float)
     mono = rgba(os.path.join(S, "assets/branding/launcher_adaptive_monochrome_432.png")).astype(float)
-    rep = {"src": os.path.relpath(S, ROOT) if S != ROOT else "working tree"}
+    rep = {"src": "working tree" if os.path.abspath(S) == ROOT else "clean HEAD copy (" + os.path.basename(os.path.abspath(S)) + ")"}
     # B1 safe circle 66 dp (r = 33 dp = 132 px) on the 432 canvas
     yy, xx = np.mgrid[0:432, 0:432]
     out = (fg[..., 3] > 0) & (((xx - 215.5) ** 2 + (yy - 215.5) ** 2) > 132 ** 2)
@@ -75,7 +75,9 @@ def main():
     clipped = {k: int((fgm & ~m).sum()) for k, m in masks(288).items()}
     rep["B1"] = {"fg_outside_66dp_px": int(out.sum()), "mask_clipped_px": clipped, "pass": int(out.sum()) == 0 and max(clipped.values()) == 0}
     # B2 silhouette at 48 / 36 dp (mdpi px): hero = fg pixels that are not mould greys (palette t, l, z, D)
-    mould_cols = np.array([[0x84, 0xa0, 0x8c], [0x4b, 0x60, 0x5d], [0xdc, 0xe8, 0xdf], [0x1e, 0x2b, 0x30]], float)
+    # mould blob colours: sage ramp (t l z D) up to ui-art 1.2, blue-mould teal (q Q d) from ui-art 1.3; same object either way
+    mould_cols = np.array([[0x84, 0xa0, 0x8c], [0x4b, 0x60, 0x5d], [0xdc, 0xe8, 0xdf], [0x1e, 0x2b, 0x30],
+                           [0x2a, 0x7f, 0x9e], [0x4f, 0xe3, 0xe0], [0x23, 0x48, 0x5a]], float)
     fv = fg[72:360, 72:360]
     is_m = np.zeros(fv.shape[:2], bool)
     for c in mould_cols:

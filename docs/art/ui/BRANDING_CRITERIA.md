@@ -36,3 +36,25 @@
 
 다음: B2를 위해 주인공을 키우고(면적 ≥ 25 %) 곰팡이 덩어리 색을 protan에서도 갈리게 바꾼 뒤 같은 도구로 전후 비교한다.
 T1–T3은 `title_block.gd`의 슬롯·정수배 규칙으로 계산하는 방식으로 바꿔 다시 잰다. 실제 런처·폰 확인은 하지 않았다.
+
+## 다시 그린 뒤 (2026-11-01 08:3x KST) — 깨끗한 HEAD 복사본(f0c1879)에서 `launcher_icons.py` 실행, `branding_after.json`
+바꾼 것(`tools/art/branding.py` `icon48_fg`): 요리모자 1 px 넓고 높게, 재킷 1 px 넓게, 망토 1 px 넓게, 곰팡이 덩어리를 세이지(t/z/l)에서
+청곰팡이 청록(q/Q/d)으로. 감사 도구는 곰팡이 덩어리를 찾는 색 목록에 q/Q/d를 더했다(같은 물체를 찾기 위한 것, 기준은 그대로).
+
+| ID | 전 | 후 | 판정 |
+|---|---|---|---|
+| B1 | 원 밖 0, 잘림 0 | 원 밖 0, 잘림 0 | PASS |
+| B2 48 dp | 면적 23.7 %, ΔL* 33.4, protan 18.5 | 면적 25.1 %, ΔL* 34.7, 주인공 대 곰팡이 53.8 / protan 39.8 / deutan 50.5 | **PASS** |
+| B2 36 dp | 24.2 %, 30.7, protan 18.2 | 25.7 %, 32.0, 50.3 / 37.6 / 47.6 | **PASS** |
+| B3 | 밝은 5.93–6.66, 어두운 2.16–2.43 | 같음(배경 층 그대로) | PASS |
+| B4 | 27.3 %, 1덩어리 | 28.8 %, 1덩어리 | PASS |
+| B5 | ΔE 24.7–44.4, 패턴 22.2–29.0 | ΔE 22.9–42.2, 패턴 21.8–29.1 | PASS |
+| B6 | 512 RGBA 알파 255, 그래픽 1024×500 RGB | 같은 그림에서 다시 생성됨(같은 크기·형식) | PASS |
+| T1–T3 | 측정 방식 수정 필요 | 아직 안 함 | 미정 |
+
+- 커밋한 것: `assets/branding/launcher_adaptive_foreground_432.png`, `launcher_adaptive_monochrome_432.png`, `launcher_main_192.png`
+  (배경 층은 바뀌지 않음). 전후 그림: `docs/art/evidence/ui_art/branding/`.
+- 커밋하지 않은 것: `launcher_icons.py`가 같이 다시 쓰는 `docs/art/branding/**`(스토어 512·그래픽 이미지·미리보기)와
+  `docs/art/evidence/branding/launcher_metrics.json`. OWNERSHIP.md의 06 목록에 없는 경로라 담당 확인을 요청한다. 깨끗한 복사본에서는
+  같은 그림에서 생성됨을 확인했다(B6).
+- 바뀐 PNG는 Godot import를 다시 해야 기기에 반영된다(빌드 파이프라인의 `--import`). 실제 런처·실제 폰 확인은 하지 않았다.
