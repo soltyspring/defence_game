@@ -8,6 +8,21 @@ Updated: 2026-11-01 ~07:45 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
+## v0.35 (in progress, ~07:55 KST): re-lock fix prep, ID unlock design, shader limit, AAB on emulator
+- Done and pushed in the first v0.35 commit (SHA is recorded later in this entry):
+  - `ID_UNLOCK_SAVE_DESIGN.md` (options A/B'/C, readers list, migration rule, U6, compat table).
+  - `probes/unlock_options_model.py` (static: CUR 12 FAIL, B' 3 FAIL, A 0 FAIL of 25 cases).
+  - `probes/relock_cases.json` (25 cases with expectations and f606801 predictions).
+  - `probes/relock_suite_job.ps1`: target SHA = first non-comment line of `probes/relock_target.txt`.
+  - `probes/relock_eval.py <out dir>`.
+  - New variants in `relock_variants.py`. release_guard now also checks the new player (k=0).
+- Queued once each: `10-emu-aab` (07:38, `.local_inspect/job_emu_aab.ps1`) and `10-relock-suite` (07:43, f606801).
+- If stopped before they finish:
+  - Poll `build/heavy/10-emu-aab-20261101-073845.log` and `10-relock-suite-20261101-074357.log` for HEAVY_JOB_DONE. Do not requeue.
+  - Then run `python docs/research/systems/probes/relock_eval.py docs/research/systems/.local_inspect/rs_out_f606801`.
+  - Write §9.27, and send the 08/04 shader note and the 06 AAB note.
+- When 02's fix lands: put its SHA in `relock_target.txt`, queue `10-relock-suite` once, run relock_eval.py on `rs_out_<sha7>`.
+
 ## v0.34 (~07:45 KST): round re-lock cause, AC9 emulator part, git archive CRLF table (§9.26)
 - **Pushed: 5ae9d764d88fe486dc9aae1269326f0989ba9022** (origin/main, checked with `git ls-remote` after the push).
 - BSOD 03:55: my jobs queued at 03:52/03:55 never started. Files were intact. After 06:57 I queued each once again.

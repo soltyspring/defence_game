@@ -8,6 +8,7 @@ extends SceneTree
 ##                          up_melee_basic L2 and up_fast L2 (fast unlocks at round 4) -> unlocked_round 6
 ##   --mode=make_complete   fresh save; win r01..r10 (stars 2 each) -> unlocked_round 11 (= rounds + 1)
 ##   --mode=make_incons     fresh save; unlocked_round 6 but stars only r01, r02 (the v0.33 L1 shape), saved normally
+##   --mode=make_new        fresh save written before any clear (unlocked_round 1, has content_version) (v0.35)
 ##   --mode=report          only report (the boot already migrated)
 ## Output: "PROBE10_RELOCK <json>". Exit 0. Visual appearance is not judged.
 
@@ -48,7 +49,11 @@ func _run() -> void:
 			save.progress.unlocked_round = 6
 			save.progress.stars = {"r01": 3, "r02": 3}
 			codes.append("saved:%s" % save.save_progress())
+		elif mode == "make_new":   # v0.35: a save written on the old build before any clear (unlocked 1)
+			codes.append("saved:%s" % save.save_progress())
 	out["codes"] = codes
+	var mig = content.get("migrations")
+	out["round_renames"] = (mig.get("round_renames", {}) if mig is Dictionary else {})
 	var p: Dictionary = save.progress
 	var order: Array = content.round_order
 	var open := []

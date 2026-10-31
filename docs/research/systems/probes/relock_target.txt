@@ -1,0 +1,2 @@
+# Target commit for relock_suite_job.ps1 (10-research-systems). Replace the line below with 02's fix commit.
+f606801bbe115f92a8adaf6be6ee932e7a1c4a1d

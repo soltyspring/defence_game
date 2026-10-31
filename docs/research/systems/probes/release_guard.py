@@ -49,9 +49,9 @@ def open_prefix(order, stars):
 
 
 def relock_cases(bo, ho, renames):
-    """Players who cleared bo[:k] in order (k = 1..len-1; real play can only produce such saves)."""
+    """Players who cleared bo[:k] in order (k = 0..len-1; real play can only produce such saves)."""
     out = []
-    for k in range(1, len(bo)):
+    for k in range(0, len(bo)):
         stars = {renames.get(r, r) for r in bo[:k]}
         before = [renames.get(r, r) for r in bo[:k + 1]]   # unlocked_round = k + 1 -> cleared rounds + the next one
         after = ho[:open_prefix(ho, stars)]
@@ -100,13 +100,14 @@ def main():
     renames = {str(k): str(v) for k, v in ((mig or {}).get("round_renames") or {}).items()}
     for k, lost in relock_cases(bo, ho, renames):
         cleared = {renames.get(r, r) for r in bo[:k]}
+        who = f"player who cleared {k} round(s)" + (f" (up to {bo[k - 1]})" if k else " (new player)")
         lc = [r for r in lost if r in cleared]
         lf = [r for r in lost if r not in cleared]
         if lc:
-            out.append(("ERROR", "ROUND_RELOCK", f"player who cleared {k} round(s) (up to {bo[k - 1]}) loses CLEARED {','.join(lc)}"
+            out.append(("ERROR", "ROUND_RELOCK", f"{who} loses CLEARED {','.join(lc)}"
                         + (f" and next {','.join(lf)}" if lf else "")))
         else:
-            out.append(("WARN", "ROUND_FRONTIER_MOVED", f"player who cleared {k} round(s) (up to {bo[k - 1]}): next round {','.join(lf)} closed"))
+            out.append(("WARN", "ROUND_FRONTIER_MOVED", f"{who}: next round {','.join(lf)} closed"))
     for lvl, code, msg in out:
         print("RG", lvl, code, msg)
     n_err = sum(1 for o in out if o[0] == "ERROR")
