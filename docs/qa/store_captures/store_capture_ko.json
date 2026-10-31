@@ -1,0 +1,54 @@
+{
+  "frames": [
+    {
+      "dark_pct": 0.0,
+      "err": 0,
+      "n": 1,
+      "path": "Z:/.solty/dev/appintoss/defence/build/qa/store_try3/store_01_battle_ko.png",
+      "scene": "battle",
+      "t": 43.5333333333321
+    },
+    {
+      "dark_pct": 0.0122549019607843,
+      "err": 0,
+      "n": 2,
+      "path": "Z:/.solty/dev/appintoss/defence/build/qa/store_try3/store_02_hero_skill_ko.png",
+      "scene": "hero_skill",
+      "t": 46.9666666666653
+    },
+    {
+      "dark_pct": 0.0,
+      "err": 0,
+      "n": 3,
+      "path": "Z:/.solty/dev/appintoss/defence/build/qa/store_try3/store_03_economy_ko.png",
+      "scene": "economy",
+      "t": 15.6833333333337
+    },
+    {
+      "dark_pct": 0.0,
+      "err": 0,
+      "n": 4,
+      "path": "Z:/.solty/dev/appintoss/defence/build/qa/store_try3/store_04_roster_ko.png",
+      "scene": "roster",
+      "t": 9.76666666666673
+    },
+    {
+      "dark_pct": 0.0,
+      "err": 0,
+      "n": 5,
+      "path": "Z:/.solty/dev/appintoss/defence/build/qa/store_try3/store_05_boss_ko.png",
+      "scene": "boss",
+      "t": 26.9166666666664
+    },
+    {
+      "dark_pct": 3.44362745098039,
+      "err": 0,
+      "n": 6,
+      "path": "Z:/.solty/dev/appintoss/defence/build/qa/store_try3/store_06_result_ko.png",
+      "scene": "result",
+      "t": 43.8999999999988
+    }
+  ],
+  "locale": "ko",
+  "problems": []
+}

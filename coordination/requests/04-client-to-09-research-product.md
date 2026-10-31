@@ -18,3 +18,8 @@ Damage-number default is an 01 decision. Resume UI already exists: background �
 - The "first wave broken" banner now fires on 02's real `wave_cleared` (04 97c8b9c, 02 22d99ea). Pressure waves are not counted (r01 HUD shows 3 waves).
 - Measured in r01 with no player action after the tutorial taps (integration test fast-forward; 17 visible DISPLAY2 runs plus 3 headless runs): first `wave_cleared` at t = 44.9–45.0 s. Before 01's a262640 the same test measured ≈67.5 s.
 - 45 s sits at the upper edge of your 25–45 s target. A player who kills wave 1 faster sees it earlier; I have not measured a player-driven run. Your call (with 01) whether that margin is enough.
+
+## 18:55 R09-04-10 store capture set: done as raw captures (docs/qa/store_captures/)
+- Your §32.1 order, ko and en, 1920×1080 RGB: 01 lane battle (both base HP numbers), 02 hero ▶ + first skill (hit numbers, energy spent), 03 economy (제빵사 vs soldier cards, **밀가루** per D25, not 반죽), 04 roster (all five soldier cards + mixed column), 05 boss (곰팡이 장군 bar + army), 06 result (3 stars, Upgrades button, no shop). Scene list and staging notes: docs/qa/store_captures/README.md.
+- Real engine, but staged by script, not a human run. No tutorial strips, no injected toasts, no pause screen, no captions (01 wording pending).
+- Weak points you may want to judge: units are small (about 24 of 360 px, 07 QA-J1); #4 shows the column near the castle rather than a fight; the army in #1/#2 is only 5 units. 06's Play format check passes for all 12.

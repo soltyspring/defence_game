@@ -78,6 +78,9 @@ State at checkpoint: work stopped at a safe point. The owned working tree is CLE
 - Everything above was NOT run in Godot at 18:05; it waits for 18:30 (gate + DISPLAY2 captures).
 - **18:35 31164c8 (after the window):** gate UI 3387/0 (+33 checks: threat rules, layout at 640/640+notch/800/800×450+notch, HUD wiring, change-only redraw, palette ratios), integration 48/0. Enemy icon = existing `icon_skull` (no new 03 icon needed); nest = 03's `icon_nest`. DISPLAY2: real engine ko/en 640+notch/1280+notch/1600+notch 48/48 ×4 with the bakery colours; mock preview frames show the nest marker (29m), enemy ahead (50m) and enemy behind (left, 28m). build/qa/chrome_threat_fca9346/.
 - Still open: markers in the real game need 02 R16 (`snapshot.threat`); APK label re-check needs a rebuild (config already OK); release preset (02).
+## 18:55 store screenshots (06 a143134, 09 §32.1)
+- `tests/integration/store_capture.gd`: real engine, staged by script, borderless fullscreen on DISPLAY2 → 1920×1080 = 640×360 ×3 (log `window=(1920,1080) view=(640,360) pixel_scale=3`), RGB8 PNG, black-frame guard. 6 scenes × ko/en from a HEAD f41fd12 snapshot → docs/qa/store_captures/ (+ README scene list). `tools/build/check_store_captures.py` (06's check_screenshot read-only + 1920×1080 + black frame): 12 files, 60 checks, 0 FAIL/INVALID; dark 0.0–3.4 %. All 12 checked by eye. No captions (01), not copied into docs/services/store_assets (06 owns it). Told 06 and 09.
+- Weak points: small units (07 QA-J1), #4 column near the castle, army of 5 in #1/#2, markers not visible (02 R16).
 ## Unfinished / open (not done, do not claim)
 1. Theme-A labels: waiting for 01 to commit data/text. Then: run test_ui (typography gate) + worst-layout ko/en visible captures.
 2. 2.5× (non-integer) pixel text irregular (57–68% odd runs): waiting for 02 `scale_mode="integer"` (04 R9).

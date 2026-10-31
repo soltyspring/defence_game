@@ -1,0 +1,378 @@
+{
+ "files": [
+  "docs/qa/store_captures/store_01_battle_en.png",
+  "docs/qa/store_captures/store_01_battle_ko.png",
+  "docs/qa/store_captures/store_02_hero_skill_en.png",
+  "docs/qa/store_captures/store_02_hero_skill_ko.png",
+  "docs/qa/store_captures/store_03_economy_en.png",
+  "docs/qa/store_captures/store_03_economy_ko.png",
+  "docs/qa/store_captures/store_04_roster_en.png",
+  "docs/qa/store_captures/store_04_roster_ko.png",
+  "docs/qa/store_captures/store_05_boss_en.png",
+  "docs/qa/store_captures/store_05_boss_ko.png",
+  "docs/qa/store_captures/store_06_result_en.png",
+  "docs/qa/store_captures/store_06_result_ko.png"
+ ],
+ "results": [
+  {
+   "asset": "docs/qa/store_captures/store_01_battle_en.png",
+   "rule": "Screenshot JPEG or 24-bit PNG (no alpha)",
+   "verdict": "PASS",
+   "detail": "PNG RGB"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_01_battle_en.png",
+   "rule": "Screenshot 320..3840 px, long side <= 2x short side",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_01_battle_en.png",
+   "rule": "Game recommendation format: 16:9 landscape >= 1920x1080 (or 9:16 >= 1080x1920)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_01_battle_en.png",
+   "rule": "04: exactly 1920x1080 (640x360 view x3)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_01_battle_en.png",
+   "rule": "04: not a black frame (locked PC / not presented)",
+   "verdict": "PASS",
+   "detail": "0.0% dark samples"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_01_battle_ko.png",
+   "rule": "Screenshot JPEG or 24-bit PNG (no alpha)",
+   "verdict": "PASS",
+   "detail": "PNG RGB"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_01_battle_ko.png",
+   "rule": "Screenshot 320..3840 px, long side <= 2x short side",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_01_battle_ko.png",
+   "rule": "Game recommendation format: 16:9 landscape >= 1920x1080 (or 9:16 >= 1080x1920)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_01_battle_ko.png",
+   "rule": "04: exactly 1920x1080 (640x360 view x3)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_01_battle_ko.png",
+   "rule": "04: not a black frame (locked PC / not presented)",
+   "verdict": "PASS",
+   "detail": "0.0% dark samples"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_02_hero_skill_en.png",
+   "rule": "Screenshot JPEG or 24-bit PNG (no alpha)",
+   "verdict": "PASS",
+   "detail": "PNG RGB"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_02_hero_skill_en.png",
+   "rule": "Screenshot 320..3840 px, long side <= 2x short side",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_02_hero_skill_en.png",
+   "rule": "Game recommendation format: 16:9 landscape >= 1920x1080 (or 9:16 >= 1080x1920)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_02_hero_skill_en.png",
+   "rule": "04: exactly 1920x1080 (640x360 view x3)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_02_hero_skill_en.png",
+   "rule": "04: not a black frame (locked PC / not presented)",
+   "verdict": "PASS",
+   "detail": "0.0% dark samples"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_02_hero_skill_ko.png",
+   "rule": "Screenshot JPEG or 24-bit PNG (no alpha)",
+   "verdict": "PASS",
+   "detail": "PNG RGB"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_02_hero_skill_ko.png",
+   "rule": "Screenshot 320..3840 px, long side <= 2x short side",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_02_hero_skill_ko.png",
+   "rule": "Game recommendation format: 16:9 landscape >= 1920x1080 (or 9:16 >= 1080x1920)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_02_hero_skill_ko.png",
+   "rule": "04: exactly 1920x1080 (640x360 view x3)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_02_hero_skill_ko.png",
+   "rule": "04: not a black frame (locked PC / not presented)",
+   "verdict": "PASS",
+   "detail": "0.0% dark samples"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_03_economy_en.png",
+   "rule": "Screenshot JPEG or 24-bit PNG (no alpha)",
+   "verdict": "PASS",
+   "detail": "PNG RGB"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_03_economy_en.png",
+   "rule": "Screenshot 320..3840 px, long side <= 2x short side",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_03_economy_en.png",
+   "rule": "Game recommendation format: 16:9 landscape >= 1920x1080 (or 9:16 >= 1080x1920)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_03_economy_en.png",
+   "rule": "04: exactly 1920x1080 (640x360 view x3)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_03_economy_en.png",
+   "rule": "04: not a black frame (locked PC / not presented)",
+   "verdict": "PASS",
+   "detail": "0.0% dark samples"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_03_economy_ko.png",
+   "rule": "Screenshot JPEG or 24-bit PNG (no alpha)",
+   "verdict": "PASS",
+   "detail": "PNG RGB"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_03_economy_ko.png",
+   "rule": "Screenshot 320..3840 px, long side <= 2x short side",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_03_economy_ko.png",
+   "rule": "Game recommendation format: 16:9 landscape >= 1920x1080 (or 9:16 >= 1080x1920)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_03_economy_ko.png",
+   "rule": "04: exactly 1920x1080 (640x360 view x3)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_03_economy_ko.png",
+   "rule": "04: not a black frame (locked PC / not presented)",
+   "verdict": "PASS",
+   "detail": "0.0% dark samples"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_04_roster_en.png",
+   "rule": "Screenshot JPEG or 24-bit PNG (no alpha)",
+   "verdict": "PASS",
+   "detail": "PNG RGB"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_04_roster_en.png",
+   "rule": "Screenshot 320..3840 px, long side <= 2x short side",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_04_roster_en.png",
+   "rule": "Game recommendation format: 16:9 landscape >= 1920x1080 (or 9:16 >= 1080x1920)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_04_roster_en.png",
+   "rule": "04: exactly 1920x1080 (640x360 view x3)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_04_roster_en.png",
+   "rule": "04: not a black frame (locked PC / not presented)",
+   "verdict": "PASS",
+   "detail": "0.0% dark samples"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_04_roster_ko.png",
+   "rule": "Screenshot JPEG or 24-bit PNG (no alpha)",
+   "verdict": "PASS",
+   "detail": "PNG RGB"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_04_roster_ko.png",
+   "rule": "Screenshot 320..3840 px, long side <= 2x short side",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_04_roster_ko.png",
+   "rule": "Game recommendation format: 16:9 landscape >= 1920x1080 (or 9:16 >= 1080x1920)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_04_roster_ko.png",
+   "rule": "04: exactly 1920x1080 (640x360 view x3)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_04_roster_ko.png",
+   "rule": "04: not a black frame (locked PC / not presented)",
+   "verdict": "PASS",
+   "detail": "0.0% dark samples"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_05_boss_en.png",
+   "rule": "Screenshot JPEG or 24-bit PNG (no alpha)",
+   "verdict": "PASS",
+   "detail": "PNG RGB"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_05_boss_en.png",
+   "rule": "Screenshot 320..3840 px, long side <= 2x short side",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_05_boss_en.png",
+   "rule": "Game recommendation format: 16:9 landscape >= 1920x1080 (or 9:16 >= 1080x1920)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_05_boss_en.png",
+   "rule": "04: exactly 1920x1080 (640x360 view x3)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_05_boss_en.png",
+   "rule": "04: not a black frame (locked PC / not presented)",
+   "verdict": "PASS",
+   "detail": "0.0% dark samples"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_05_boss_ko.png",
+   "rule": "Screenshot JPEG or 24-bit PNG (no alpha)",
+   "verdict": "PASS",
+   "detail": "PNG RGB"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_05_boss_ko.png",
+   "rule": "Screenshot 320..3840 px, long side <= 2x short side",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_05_boss_ko.png",
+   "rule": "Game recommendation format: 16:9 landscape >= 1920x1080 (or 9:16 >= 1080x1920)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_05_boss_ko.png",
+   "rule": "04: exactly 1920x1080 (640x360 view x3)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_05_boss_ko.png",
+   "rule": "04: not a black frame (locked PC / not presented)",
+   "verdict": "PASS",
+   "detail": "0.0% dark samples"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_06_result_en.png",
+   "rule": "Screenshot JPEG or 24-bit PNG (no alpha)",
+   "verdict": "PASS",
+   "detail": "PNG RGB"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_06_result_en.png",
+   "rule": "Screenshot 320..3840 px, long side <= 2x short side",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_06_result_en.png",
+   "rule": "Game recommendation format: 16:9 landscape >= 1920x1080 (or 9:16 >= 1080x1920)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_06_result_en.png",
+   "rule": "04: exactly 1920x1080 (640x360 view x3)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_06_result_en.png",
+   "rule": "04: not a black frame (locked PC / not presented)",
+   "verdict": "PASS",
+   "detail": "3.1% dark samples"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_06_result_ko.png",
+   "rule": "Screenshot JPEG or 24-bit PNG (no alpha)",
+   "verdict": "PASS",
+   "detail": "PNG RGB"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_06_result_ko.png",
+   "rule": "Screenshot 320..3840 px, long side <= 2x short side",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_06_result_ko.png",
+   "rule": "Game recommendation format: 16:9 landscape >= 1920x1080 (or 9:16 >= 1080x1920)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_06_result_ko.png",
+   "rule": "04: exactly 1920x1080 (640x360 view x3)",
+   "verdict": "PASS",
+   "detail": "1920x1080"
+  },
+  {
+   "asset": "docs/qa/store_captures/store_06_result_ko.png",
+   "rule": "04: not a black frame (locked PC / not presented)",
+   "verdict": "PASS",
+   "detail": "3.4% dark samples"
+  }
+ ]
+}
