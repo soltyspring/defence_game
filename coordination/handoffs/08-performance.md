@@ -1,6 +1,6 @@
 # 08-performance handoff
 Updated: 2026-10-31 09:25 +09:00
-Status: **M2 verified locally, publishing** (SHA recorded below after Publish-Task.ps1). M1 pushed earlier (3c1719a, 65fa163); the
+Status: **M2 verified and pushed (c635ce8, origin/main).** M1 pushed earlier (3c1719a, 65fa163); the
 07:32 account-change checkpoint was pushed as e7cc8ba. Session resumed on the new account at 07:37 and again at 08:06 and 08:38
 (the 08:21–08:22 requests failed on authExpiryRetry; no work was lost, since every file below was on disk).
 Session ID: not exposed to this agent. Model claude-opus-5.5, trust-all. HISTORICAL QUOTA CHECKPOINT lines in coordinator-to-08 belong to
@@ -54,7 +54,7 @@ correction; no bitmap font needed for memory). 04: R5 glyph pre-warm at boot/loa
 5. Device runs with android_capture.ps1 once a phone is attached (01 queued the question).
 
 ## Commits / push (M2)
-(filled after Publish-Task.ps1)
+- `c635ce8eb20abdb4ca932ca3c02b9c231ef4a027` `[Test] 글꼴 캐시·첫 사용 지연 측정, 엔진 수정 A/B 재측정과 채택 기준 엄격 모드 추가` — 20 owned files; helper output `PUSHED c635ce8... origin/main` (c635fa8..c635ce8); `git branch -r --contains c635ce8` → origin/main. This SHA line is a follow-up [Docs] commit.
 ## M1 history (07:25, kept for reference)
 M1 delivered and pushed (3c1719a): harness, inventory, desktop proxy baseline, phone procedures, owner requests.
 Evidence classes: STATIC (files), DESKTOP_PROXY / CONTENDED_DESKTOP_PROXY (this PC, debug editor binary), DEVICE (none yet), EMULATOR (not phone evidence).

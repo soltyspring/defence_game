@@ -1,6 +1,6 @@
 # 08-performance status
 Updated: 2026-10-31 09:25 +09:00
-Status: M2 (font cost benchmark, A/B retests of committed engine fixes, adopted/provisional strict mode) VERIFIED LOCALLY, publishing.
+Status: M2 (font cost benchmark, A/B retests of committed engine fixes, adopted/provisional strict mode) VERIFIED and PUSHED (c635ce8, origin/main).
 All timings are CONTENDED_DESKTOP_PROXY (0–8 other Godot processes, debug editor binary). No phone evidence exists (no device attached).
 
 Current task: publish M2; next = re-run targeting equivalence when 02 answers P2b; font pre-warm case when 04 answers R5; investigate why the
