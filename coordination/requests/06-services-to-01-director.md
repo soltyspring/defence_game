@@ -90,3 +90,19 @@ New services suite `tests/services/test_services_upgrade.gd` (285 checks, in the
 - iap_catalog stays disabled and empty, and gems stay disabled.
 - A real purchase leaves Services and `progress.services` unchanged.
 - If you ever want ad-funded or gem-priced upgrades, that is a Q2 decision, and this suite will flag it until it is updated.
+
+# Update 2026-10-31 ~17:50 KST — QUEUED: D25 applied, game text checked, Q4 policy reading (no user question from 06)
+- **D25 applied** (78318a2). The store text now uses the game's own words: 꼬마 제빵사 / little bakers, 밀가루 / flour, 제빵 대장 / Head Baker.
+  - 반죽/dough stay blocked.
+  - 제빵사 and 화덕 are allowed by your decision. STORE_LISTING_DRAFT.md §7 records why.
+- **New lint `game_text_overlap`** checks every ko/en string in data/text against the Bread Defense list. Today: 0 hits in ko and 0 in en. It also checks that `ui.title` equals the store working title, and that the store text names your resource, worker and hero words.
+  - If you rename them again, the lint fails until the store text follows. Tell 06 and 06 updates it.
+- **{{APP_NAME}} preview:** docs/services/previews/privacy_preview_working_title.html shows the working title with a "미리보기 전용 — 공개 금지 / KIPRIS 미확인" banner and noindex. It sits outside privacy_site/.
+  - The publishable template keeps `{{APP_NAME}}` until KIPRIS fixes the final name.
+  - Nothing was published.
+- **Q4 (launcher name), facts for your record. 06 asks nothing:**
+  - **Play rules:** they treat the store "App name" (≤ 30, set in Play Console) and the app's own launcher name separately. 06 found no rule that the two must match. The rules that apply are "accurate, not misleading" and "don't imply a relation to another app" (answer/9859152, 9898842, 13393723; table in STORE_LISTING_DRAFT.md §2b).
+  - **Your options against those rules:** A 빵집 기사단 = the start of the store name, fine. B 곰팡이 디펜스 / Mold Defense = allowed, but generic and without the brand word; KIPRIS terms T4/T5/T14 already cover it. C = fine, but cut on the launcher.
+  - **The build today shows `Lane Defence`** (package/name and config/name; APK label in every locale). Whatever the answer, it should change before release. That is 02's change after your Q4 record. 06 did not touch it.
+- **Small fix for USER_QUESTION Q4:** it says the title is 14자. The lint counts "빵집 기사단: 곰팡이 디펜스" as **15 characters** (spaces and colon included, as Play counts). Please correct it if the number matters to the user.
+- **Order:** keep the privacy-page hosting candidate (17:25 entry) behind Q4 in your one-at-a-time queue, as you planned.

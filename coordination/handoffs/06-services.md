@@ -1,5 +1,5 @@
 # 06-services handoff
-Updated: 2026-10-31 17:30 KST (.uid audit, upgrade isolation, hosting question; backup study before)
+Updated: 2026-10-31 ~17:50 KST (D25 terms, game-text check, privacy preview, Q4 launcher note; .uid audit before)
 Status: **M8 COMPLETE. Game Save integration gate PASSES (exit 0, binding=game)** after 02 registered the Services autoload (141d226). Resume check: worktree for 06 paths clean, checkpoint branch checkpoint/quota-20261031-092323/06-services (726e22a) has no diff vs HEAD for 06 paths → nothing lost. No Godot processes left running by 06.
 Session ID: not exposed to the agent (same Kiro window throughout; never closed or restarted).
 Nothing is live: no ad SDK, billing library, consent SDK, server, account or key. All services run in `disabled` mode. No monetization decision exists; none was invented.
@@ -31,6 +31,7 @@ src/services/**, docs/services/**, tests/services/**, coordination/status/06-ser
 | Q3 | Working title in STORE_LISTING_DRAFT (single title block ko 15 / en 28 chars), App Store subtitle ko 21 / en 28, short ko 44 / en 73, full text reworded by role (no 반죽/제빵사/dough) and aligned to 01's data/text names; §7 Bread Defense phrase list; lint: title = Q3 title, ≤30 and ≥2, subtitle ≤30, competitor_overlap (279), brands +빵어전/bread defense/eternaxcode, kipris_manual_check (222: 16 terms × class 9/41, results need date+searcher, name log stays NOT_CHECKED while open); KIPRIS_MANUAL_CHECK.md; NAME_SEARCH_LOG v2; OPEN_DECISIONS U9; 16 mutations caught | f0d80e0a27692cdb891ff5b56f5ea67afd3dc334 |
 | Backup | SAVE_BACKUP_POLICY.md: current values (allowBackup=false from Godot 4.7.2 template, no dataExtractionRules/fullBackupContent, hasFragileUserData=false, prebuilt template, user:// = getFilesDir, save.json/.bak/.tmp/.corrupt, ledger in same file), scenarios S1–S8 all NOT TESTED, options B0–B3 (rec. B0 now, B1 with Gradle), B1 rule XML, device test plan; DATA_SAFETY §2b; privacy [백업 활성화 시]/[IF BACKUP ENABLED]; test_services_android.gd (91 checks: preset permissions, APK binary-manifest + aapt2 AD_ID/BILLING/INTERNET/NETWORK_STATE absent, doc vs preset/save.gd/APK values, consistency), release_preset=WAITING; 12 mutations caught | 5fc46e1854460885150ce773a355d7bc0f0f892d, 082e9ca45def5f0255cdd707de1f74eda59886a1 |
 | UID/upgrade | GODOT_UID_AUDIT.md (Godot 4.4+ rule: commit .uid; 19 untracked at start → 10 committed 4, 06 committed 4, 12 left for 02/04/07 via requests); godot_uid_tracked group in test_services_android; test_services_upgrade.gd (static scan of save.gd buy_upgrade/app.gd/04 panel, meta.json coin-only upgrades + iap disabled + gems disabled, runtime direct + App path: Services diagnostics and progress.services unchanged, result keys only id/to_level/code/coins/level); 8 mutations on temp copies (no other role's file edited); 01 hosting question candidate (not executed); SAVE_BACKUP_POLICY 10 cross-check | f59587cc763c4bc7fdaf8c9b8c35101d3e9fd7a8, 8f58a1c22c53253883a43dc5d570517afd0076db |
+| D25/Q4 | Store text on 01 D25 words; §7 split blocked vs allowed generic (제빵사, 화덕); lint game_text_overlap (data/text ko/en vs block list, ui.title = working title, store names resource/worker/hero); privacy preview with working title + KIPRIS banner (make_privacy_preview.ps1, lint privacy_preview reverse-transform); §2b launcher name vs store title with Play sources, label unchanged (`Lane Defence`, 02); lint launcher_label_note; 10 mutations caught | 78318a24d4ff5393b7135ad7b778660e17d9adc8 |
 | Checkpoint | this handoff + status | see status file / `git log -- coordination/handoffs/06-services.md` |
 
 ## M7 details (this task)
@@ -75,9 +76,17 @@ Seen, not acted on (not 06 scope): 03 A1/A2 note to 06 (working-title logos, ada
 Runner 9 suites OVERALL exit=0 (android 176/0, upgrade 285/0). godot_uid_tracked failed (3) before the 06 .uid commit and passed after: check proven both ways. Upgrade-suite mutations (exit 1 with expected message, temp copies via --save-gd/--app-gd/--meta/--panel; hashes of the originals unchanged): Services call in buy_upgrade, gems instead of coins, receipt field in upgrade_result, App bypassing Save.buy_upgrade, product_id in meta upgrades, iap_catalog enabled, show_ad in panel, services data touched at runtime (--selfcheck-touch-services). Test artifact fixed on the way: JSON reload turns 1 into 1.0, so the disk comparison uses the same round trip on both sides.
 .uid for test_services_upgrade.gd was written with ResourceUID.create_id() (same "uid://…\n" form as the editor) because Godot -s runs do not create one for a new script. 10's v0.18 note (no fsync on Android user://; B1 rules fine) acknowledged in SAVE_BACKUP_POLICY §4.
 Privacy hosting: nothing created or published. One question candidate in 06-services-to-01-director.md (hosting approval; values asked later).
+## D25/preview/Q4 validation (actual)
+Runner OVERALL exit=0 (listing 1775/0). Mutations (exit 1 with expected message): 반죽 back in res.supply and "Warmth" in an en string (temp copies via `--text-dir=`), en ui.title "Lane Defence", store text without the resource word, "dough" in store text, 제빵사 exception note removed, preview banner "KIPRIS 미확인" removed, preview body drift vs template, {{APP_NAME}} filled in the template, §2b claiming the label changed. 3 mutation set-ups were wrong on the first run (expected-message text, one mutation left the second 밀가루) and were fixed in the script, not in the lint.
+Found: USER_QUESTION Q4 says the title is 14자; lint counts 15 (sent to 01). 04's 97c8b9c (panel wired to cmd_buy_upgrade) still passes test_services_upgrade.
 ## Exact next steps when resumed
 1. Read coordinator-to-06-services.md (latest section), DECISIONS.md, quota, replies to 06.
-2. `pwsh -File tests/services/run_services_suites.ps1` must stay OVERALL exit 0 (9 suites).
+2. Runner must stay OVERALL exit 0 (9 suites).
+3. Q4 answered and 02 changes the label → update STORE_LISTING_DRAFT §2b current label (lint launcher_label_note enforces).
+4. 01 renames game words again → store text §4/§5 and COMPETITOR_*/ALLOWED_GENERIC_KO follow (lint game_text_overlap enforces).
+5. privacy_site/index.html edited → rerun `pwsh -File tests/services/make_privacy_preview.ps1` (lint privacy_preview enforces).
+6. KIPRIS done by a person → final name; then fill {{APP_NAME}} in the template (P3) and drop the preview.
+## Older next steps (.uid / upgrade)
 3. When adding a new 06 script: run it once, then commit `<script>.gd.uid` with it (godot_uid_tracked fails otherwise).
 4. If 01 approves hosting: the user creates the repo (P4/P5); 06 then fills placeholders (P3) only with values the user gave.
 5. Backup option answer from 01 → SAVE_BACKUP_POLICY steps (see older list below).

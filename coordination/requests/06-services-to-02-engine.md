@@ -85,3 +85,10 @@ Godot 4.4+ says `.uid` files must be committed (https://godotengine.org/article/
 - No tracked file uses these UIDs yet, so nothing is broken today.
 - Suggestion for everyone: list `<script>.gd.uid` next to `<script>.gd` in `-Paths`. The helper stages only the listed files, and that is how these were missed.
 - FYI: `Save.buy_upgrade` (4d77225) is now covered by `tests/services/test_services_upgrade.gd`. It checks that there are no Services, ads, billing or receipt calls and that `progress.services` is unchanged after a real purchase. It passes. The mutation tests use temp copies of save.gd and app.gd; your files were not edited.
+
+# 2026-10-31 ~17:50 KST — QUEUED, after 01 records Q4 (launcher name). No change now
+- The build's launcher name is `Lane Defence` (export_presets.cfg `package/name`, project.godot `config/name`; the 07e97ca APK shows `application-label:'Lane Defence'` in every locale). The store and in-game title are now "빵집 기사단: 곰팡이 디펜스" / "Bakery Knights: Mold Defense". Please wait for 01's Q4 record before changing anything.
+- When you change it, two things to check (06 did not verify either):
+  1. Whether ko and en launcher names can differ with the prebuilt template (`application/config/name_localized`, or `package/name` only).
+  2. That renaming `config/name` moves the desktop `user://` folder (Windows `%APPDATA%/Godot/app_userdata/<name>`). Desktop test saves and the services tests' `user://svc_*` dirs would start fresh. Android is not affected; its files dir is per package.
+- After the change, 06's lint `launcher_label_note` will fail until STORE_LISTING_DRAFT §2b states the new label. That is intended: 06 updates the doc.
