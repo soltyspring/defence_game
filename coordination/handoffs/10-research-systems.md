@@ -17,6 +17,7 @@ Updated: 2026-11-01 ~07:45 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
   - `probes/relock_eval.py <out dir>`.
   - New variants in `relock_variants.py`. release_guard now also checks the new player (k=0).
 - Queued once each: `10-emu-aab` (07:38, `.local_inspect/job_emu_aab.ps1`) and `10-relock-suite` (07:43, f606801).
+- `10-emu-aab` finished at 08:26. The install and asset pack were verified (split_assetPackInstallTime.apk holds 21 LF data files, c1-989c3422c910). The launch steps did not run because of MY script bug (two lines joined), now fixed. Requeued once as `10-emu-aab-r2` at 08:28 (log `build/heavy/10-emu-aab-r2-20261101-082834.log`).
 - Second unit (§9.27 (2)(3) + 08/04 shader notes) is written. Its SHA is in the status file once pushed.
 - If stopped before they finish:
   - Poll `build/heavy/10-emu-aab-20261101-073845.log` and `10-relock-suite-20261101-074357.log` for HEAVY_JOB_DONE. Do not requeue.

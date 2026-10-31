@@ -1822,7 +1822,12 @@ HEAD 40382b0 결과(`-Rev HEAD`, exit 0, 업그레이드 총비용 5,595). "카�
 **(4) AAB 에뮬레이터 설치**
 - 로컬에 도구가 있다: `%LOCALAPPDATA%\svc06_tools\bundletool-all-1.18.3.jar`, JDK 17, 디버그 키스토어, v0.33의 eb8d5c4 AAB.
 - 작업 `.local_inspect/job_emu_aab.ps1`: `bundletool build-apks --connected-device` 다음 `install-apks`로 설치하고, 설치된 분할 APK마다 data 바이트의 content_version을 잰다. 그 뒤 첫 실행과 E1·E3 시드를 돌린다. 에뮬레이터는 `-no-window`, SwiftShader, 포트 5596이다.
-- 07:38에 대기열에 넣었고, 이 판 작성 시점에 아직 잠금을 기다리는 중이다. **결과는 아직 없다.**
+- 1회차(`10-emu-aab`, 08:24:14~08:26:39, 잠금 대기 약 45분): **설치 경로 확인(에뮬레이터, 실기기 미검증).**
+  - bundletool이 이 기기용으로 APK 5개를 만들었다: `base-master`·`base-en`·`base-x86_64`·`base-xhdpi`와 `asset-slices/assetPackInstallTime-master`.
+  - `install-apks`로 설치하자 기기에 분할 5개가 생겼다: base.apk, split_assetPackInstallTime.apk, split_config.en/x86_64/xhdpi.
+  - 기기에서 다시 가져온 **split_assetPackInstallTime.apk**(2,689,443 B)에 data JSON 21개가 있었다. CR 0 / LF 2,758, **c1-989c3422c910**으로 v0.33의 APK·AAB 값과 같다. 나머지 분할에는 data가 없다.
+- 1회차의 실행 단계(첫 실행 content_version, E1 환불·백업·안내, E3)는 돌지 않았다. **10의 작업 스크립트 결함**이었다. APK 작업에서 AAB 작업을 만들 때 두 줄이 한 줄로 붙었다. 고친 뒤 `10-emu-aab-r2`로 한 번 다시 넣었다(08:28). 결과는 아직 없다.
+- 증거: `evidence/emu_aab_20261101/results_run1.txt`.
 
 ## 10. 출처 (모두 2026-10-31 KST 접근)
 | ID | 출처 | URL | 한계 |

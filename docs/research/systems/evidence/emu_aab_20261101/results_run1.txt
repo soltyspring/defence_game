@@ -1,0 +1,25 @@
+# 10 v0.35 AAB install on the emulator, run 1 (job 10-emu-aab, build/heavy/10-emu-aab-20261101-073845.log). EMULATOR ONLY.
+# Install + asset-pack check completed; the launch steps did not run because of a script-construction bug in the job (two lines joined), fixed for run 2.
+
+HEAVY_JOB_QUEUED 2026-11-01T07:38:47 label=10-emu-aab pid=43776 script=Z:\.solty\dev\appintoss\defence\docs\research\systems\.local_inspect\job_emu_aab.ps1
+P10 job start 2026-11-01T08:24:14 aab_sha16=D2B7548EA6C3017C
+P10 no foreign emulator (waited 0s)
+P10 emulator started pid=45644 serial=emulator-5596 gpu=swiftshader_indirect (software; no host GPU after two BSODs)
+P10 booted=True after 62s
+P10 device sdk_gphone64_x86_64 / Android 16 / API 36 / x86_64
+P10 removed an earlier install on this read-only instance
+P10 bundletool build-apks
+P10 set.apks exists=True entries=asset-slices/assetPackInstallTime-master.apk,splits/base-en.apk,splits/base-master.apk,splits/base-x86_64.apk,splits/base-xhdpi.apk
+P10 bundletool install-apks The APKs have been extracted in the directory: C:\Users\aghose\AppData\Local\Temp\7987430406231679028
+P10 installed_paths /data/app/~~Tg08FfmCu7z2QIkcxlHOng==/com.soltyspring.lanedefence-MSII0OMwg2Sv_BY7VPkKHg==/base.apk ; /data/app/~~Tg08FfmCu7z2QIkcxlHOng==/com.soltyspring.lanedefence-MSII0OMwg2Sv_BY7VPkKHg==/split_assetPackInstallTime.apk ; /data/app/~~Tg08FfmCu7z2QIkcxlHOng==/com.soltyspring.lanedefence-MSII0OMwg2Sv_BY7VPkKHg==/split_config.en.apk ; /data/app/~~Tg08FfmCu7z2QIkcxlHOng==/com.soltyspring.lanedefence-MSII0OMwg2Sv_BY7VPkKHg==/split_config.x86_64.apk ; /data/app/~~Tg08FfmCu7z2QIkcxlHOng==/com.soltyspring.lanedefence-MSII0OMwg2Sv_BY7VPkKHg==/split_config.xhdpi.apk
+P10 SPLIT base.apk bytes=6185108 sha16=8ECCE79F3115C009 cv=[expected exactly one assets/data/ location in Z:\.solty\dev\appintoss\defence\docs\research\systems\.local_inspect\emu_aab\pulled\base.apk, found []]
+P10 SPLIT split_assetPackInstallTime.apk bytes=2689443 sha16=CF8C96EA4CFFB01E cv=[FILES_CONTENT_VERSION {"source": "apk:Z:\\.solty\\dev\\appintoss\\defence\\docs\\research\\systems\\.local_inspect\\emu_aab\\pulled\\split_assetPackInstallTime.apk", "files": 21, "cr": 0, "lf": 2758, "crlf_files": 0, "as_packed": "c1-989c3422c910", "if_lf": "c1-989c3422c910"}]
+P10 SPLIT split_config.en.apk bytes=8538 sha16=692FF7E0048A6E99 cv=[expected exactly one assets/data/ location in Z:\.solty\dev\appintoss\defence\docs\research\systems\.local_inspect\emu_aab\pulled\split_config.en.apk, found []]
+P10 SPLIT split_config.x86_64.apk bytes=82555315 sha16=DD2771A84E119194 cv=[expected exactly one assets/data/ location in Z:\.solty\dev\appintoss\defence\docs\research\systems\.local_inspect\emu_aab\pulled\split_config.x86_64.apk, found []]
+P10 SPLIT split_config.xhdpi.apk bytes=13140 sha16=54DC2928E7704047 cv=[expected exactly one assets/data/ location in Z:\.solty\dev\appintoss\defence\docs\research\systems\.local_inspect\emu_aab\pulled\split_config.xhdpi.apk, found []]
+P10 ERROR A positional parameter cannot be found that accepts argument '$null'.
+P10 emulator stopped (adb emu kill)
+P10 qemu_left=0 devices=List of devices attached
+P10 adb server stopped (this job started it)
+P10 job end 2026-11-01T08:26:39
+HEAVY_JOB_DONE exit=0 at 2026-11-01T08:26:39
