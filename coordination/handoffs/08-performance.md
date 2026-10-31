@@ -1,4 +1,20 @@
 # 08-performance handoff
+## M5 — static hot-path code review (2026-10-31 16:4x +09:00, no Godot used)
+- Coordinator review: 9cbae83/3d07db5 accepted. C11 is still closed (01/02/03/04/05/07 working), so this milestone is Godot-free only.
+- Done: `docs/performance/CODE_REVIEW_HOTPATH.md`. Committed HEAD 0590e7a was exported with `git show`. The doc covers per-frame
+  allocations, caps vs D7 vs pools, and full scans, ranked H1–H13 with line numbers and a measurement method each. **24/24 cited line
+  numbers were checked programmatically** against the committed files. Request P7 sent to 02 (top items: H1 per-sprite Dictionary
+  allocation via Atlas.anim_frame ≈ 200 per frame at caps; H2 batch breaks from hp bars, draw_set_transform and hex Color parsing; H3
+  per-unit def lookups; H4 `_cue` allocating before coalescing; caps single source of truth; lazy pools). 01 got an FYI: D7 30/40 is not
+  what runs (effective 36/36/64/48/24).
+- Root cause of the stress-scene unit drop (~40 units), found by reading the code: D18 set `enemy_ai.pool=[]`, and
+  `perf_frame_probe.gd _stress()` refills enemies only from that pool. **Not fixed yet** (the fix needs a Godot check run; do it before the
+  C11 window: refill from `Content.round_enemy_roster(sim.round_def)`).
+- Asset gate re-run: `asset_budget_check.py --range 37b9a93..HEAD` → PASS (no new asset commits), exit 0.
+- Next steps (exact): (1) Fix the `_stress()` enemy refill in tests/performance/perf_frame_probe.gd and parse-check it when Godot use is
+  allowed. (2) In C11: the M3 A/B command, then `run_perf.ps1 -Frame` for H1/H2 baselines (draw calls, view A/B). (3) Re-run the asset
+  gate on every 03/05 asset commit. (4) Re-measure each P7 item after 02 commits it (A/B `-RequireQuiet` / frame probe).
+- M5 commit: `6e5e5d968e3f3ce4a2fe6fe0ce1ddab64b39b5ca` [Docs] (6 owned files). Helper printed `PUSHED 6e5e5d9... origin/main` (21e6066..6e5e5d9), and `git branch -r --contains` shows origin/main.
 ## M4 — static per-commit asset budget gate (2026-10-31 16:1x +09:00)
 - Coordinator review 16:0x: c58c59e/480f815 accepted. C11 quiet window is NOT open yet, because 02/03/04/05/07 are working; the coordinator
   will open it later. Until then, do Godot-free work only. This milestone used **no Godot**.
