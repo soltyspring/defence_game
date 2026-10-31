@@ -11,7 +11,7 @@
 #   for each tag, 393 dp condition; ko_1x also with --anim unless -NoAnim (UI-only commits).
 # Default out: build\qa07\art_compare\<short>. Default baseline: docs\verification\evidence\art-baseline-ad47eda.
 param([Parameter(Mandatory)][string]$Sha, [string[]]$Tags = @('ko_1x'), [switch]$Report, [string]$Out = '', [switch]$NoAnim,
-      [string]$Baseline = '')
+      [string]$Baseline = '', [string]$BaseSha = '')   # -BaseSha: compare with another captured commit (e.g. the art commit's parent after a gameplay change)
 $ErrorActionPreference = 'Stop'
 $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 Set-Location $Root
@@ -27,11 +27,26 @@ if ($Report) {
     $py = 'python'
     & $py (Join-Path $Root 'tools\qa\art_metrics.py') --dir $cap --tags ($Tags -join ',') --out (Join-Path $Out 'art_metrics.json') --sheets (Join-Path $Out 'anim_sheets') | Out-Null
     if ($LASTEXITCODE -ne 0) { Write-Host 'art_metrics.py failed'; exit 1 }
-    & $py (Join-Path $Root 'tools\qa\art_compare.py') --new (Join-Path $Out 'art_metrics.json') --base (Join-Path $Baseline 'art_metrics.json') `
-        --sha $short --out-md (Join-Path $Out 'table.md') --out-json (Join-Path $Out 'compare.json') --new-dir $cap --base-dir $Baseline
+    $baseMetrics = Join-Path $Baseline 'art_metrics.json'; $baseDir = $Baseline
+    if ($BaseSha) {
+        $bs = (& git rev-parse --short=7 "$BaseSha^{commit}" 2>$null)
+        $bo = Join-Path $Root "build\qa07\art_compare\$bs"
+        if (-not (Test-Path (Join-Path $bo 'art_metrics.json'))) { Write-Host "no report for base $bs; run -Sha $bs then -Report first"; exit 2 }
+        $baseMetrics = Join-Path $bo 'art_metrics.json'; $baseDir = Join-Path $bo 'cap'
+    }
+    & $py (Join-Path $Root 'tools\qa\art_compare.py') --new (Join-Path $Out 'art_metrics.json') --base $baseMetrics `
+        --sha $short --out-md (Join-Path $Out 'table.md') --out-json (Join-Path $Out 'compare.json') --new-dir $cap --base-dir $baseDir --base-label $(if ($BaseSha) { $BaseSha } else { 'baseline ad47eda' })
     exit $LASTEXITCODE
 }
 New-Item -ItemType Directory -Force $cap | Out-Null
+# one job per SHA: refuse if a job with the same label is still queued or running (any role may call this script)
+foreach ($lg in Get-ChildItem (Join-Path $Root 'build\heavy') -Filter "07-art-compare-$short-*.log" -ErrorAction SilentlyContinue) {
+    $txt = Get-Content $lg.FullName -Raw
+    if ($txt -match 'HEAVY_JOB_DONE') { continue }
+    if ($txt -match 'HEAVY_JOB_QUEUED \S+ label=\S+ pid=(\d+)' -and (Get-Process -Id ([int]$Matches[1]) -ErrorAction SilentlyContinue)) {
+        Write-Host "ALREADY QUEUED: $($lg.Name) (pid $($Matches[1]) alive). Not queuing a second job for $short; poll that log."; exit 0
+    }
+}
 $job = Join-Path $Out 'job.ps1'
 $tagList = ($Tags | ForEach-Object { "'$_'" }) -join ','
 @"

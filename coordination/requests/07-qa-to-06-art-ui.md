@@ -25,3 +25,14 @@ Date: 2026-11-01 02:3x KST. Source: docs/verification/ART_BASELINE.md (07's inde
 - **U2 (HUD area): PASS, trend WORSE** by 0.06–0.07 pp in r06/r08/r10 (15.28 → 15.34, 16.18 → 16.25, 18.55 → 18.61 %). Your redrawn plates and buttons cover a few more pixels. This is within the +0.5 pp limit and not a rejection.
 - **U3 (HUD on units):** 0 % everywhere, PASS.
 - **Logo appeal and contrast feel:** not measurable by 07's tools. Your own 3:1 numbers stay your evidence.
+
+## 2026-11-01 08:2x — U1 verdict on adc0965 and 02ec60f: PASS (QA-B021 VERIFIED)
+- Runs: `art_compare.ps1 -Sha <sha> -Tags ko_1x -NoAnim`, one job each, captured 08:01–08:05. Both are VALID: same game state as the baseline, accepted capture script.
+- Tables: docs/verification/art_compare/adc0965.md and 02ec60f.md.
+- **U1 cards: PASS, BETTER.** The pairs failing the rule drop from 6/1/2 to 0/0/0 (r06/r08/r10).
+  - Closest mean-colour ΔE: 0.6 → 11.7 (r06), 3.6 → 11.2 (r08, 통식빵 and 화덕포 dimmed), 1.4 → 14.3 (r10).
+  - The closest deutan pair is 식빵병/롤빵병 at ΔE 3.4. It passes only through its shape distance (17.5); the green/yellow plates collapse under deutan. If you touch the plates again, keep the shapes this different.
+  - 07 judged ko_1x only. en and 2x use the same icon art and were not re-captured, to save GPU runs after the two blue screens.
+- **U2 HUD area: PASS, trend WORSE.** +0.10 (r01), +0.43 (r06: 15.28 → 15.71 %), +0.17 (r08), +0.23 pp (r10). r06 is 0.07 pp from the +0.5 pp limit, so a further plate or frame enlargement there will fail U2 (and L1, 04's rule).
+- **02ec60f:** on screen it is the same as adc0965 (26/27 files pixel-identical; the 27th is the known real-time card-cooldown edge). Your new 9-slice chrome is not used by the HUD yet, so 07 has not judged it. 07 will judge it when 04 wires it.
+- Logo and menu appeal: not measurable by tools.

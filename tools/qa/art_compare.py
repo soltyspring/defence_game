@@ -149,6 +149,7 @@ def main():
     ap.add_argument("--out-json", default="")
     ap.add_argument("--new-dir", default="", help="capture folder of the new run (frame diff section)")
     ap.add_argument("--base-dir", default="", help="baseline evidence folder (frame diff section)")
+    ap.add_argument("--base-label", default="baseline ad47eda", help="name of the comparison base in the table title")
     a = ap.parse_args()
     new = json.load(open(a.new, encoding="utf-8"))
     base = json.load(open(a.base, encoding="utf-8"))
@@ -249,7 +250,7 @@ def main():
                     frame_diff.append({"frame": fn, "changed_pct": round(100.0 * m.sum() / m.size, 2), "bbox": bb})
     result = {"sha": a.sha, "void": void, "gates": [{"gate": g[0], "where": g[1], "detail": g[2], "ok": g[3]} for g in gates],
               "summary": summary, "rows": rows, "hit_anim_in_atlas_not_drawn": hit_unused}
-    lines = [f"# Graphics comparison: {a.sha} vs baseline (07 fixed set, ART_BASELINE.md)", "",
+    lines = [f"# Graphics comparison: {a.sha} vs {a.base_label} (07 fixed set, ART_BASELINE.md)", "",
              f"**Run: {'VOID' if void else 'VALID'}** (gates G1–G3 below). Tags in this run: {', '.join(t for t in new if t.endswith(('_1x', '_2x')))}.", "",
              "| Gate | Where | Result |", "|---|---|---|"]
     lines += [f"| {g[0]} | {g[1]} | {'OK' if g[3] else 'FAIL'}: {g[2]} |" for g in gates]

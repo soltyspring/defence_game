@@ -126,6 +126,14 @@ How to read the rules:
    - The table holds the gates (G1–G3; any FAIL = VOID), PASS/FAIL per rule, and BETTER/SAME/WORSE against the baseline per scene and per unit.
    - 07 commits the table of every art commit it judges under `docs/verification/art_compare/<sha>.md`.
 4. A before/after claim built from other frames or other conditions is not accepted by 07.
+5. **When gameplay changed in between** (a bot, sim or data commit between the baseline and the art commit), G2 makes the run VOID against ad47eda. This first happened with 02's 780c30a. In that case 07 captures the art commit's parent once and compares with it:
+```
+.\tools\qa\art_compare.ps1 -Sha <art commit>^ -Tags ko_1x [-NoAnim]   # one job, if no capture of a render-equal parent exists yet
+.\tools\qa\art_compare.ps1 -Sha <art commit> -Report -Tags ko_1x -BaseSha <parent>
+```
+   - The absolute rules are unchanged. BETTER/SAME/WORSE then describe that one commit.
+   - A capture can serve as the parent of a later commit only if no render-affecting path (src, data, scenes, assets, project.godot) changed in between.
+6. `art_compare.ps1` refuses to queue a second job for a SHA while one is queued or running, whoever started it. Two roles queued 92a1718 at 07:29 and 07:35; the second job found the `.capture_done` mark and exited without Godot.
 
 **Shared roots:** C3 (hero), C5 (boss) and W1 depend on both 03 and 09. 07 rejects whichever change makes them worse. The rule passes only when the combined result passes.
 
@@ -174,3 +182,6 @@ These rules judge what the game draws on screen. 03's atlas Q5–Q8 measure the 
 | 700692d | 06-art-ui | ko/en × 1x/2x, VALID (G1–G3 OK) | UI changed where 06 said: menu logo (3.1 % ko / 4.1 % en of the frame), move buttons and skill plates (0.43–0.69 %). U1 unchanged (card badges are not built into ui_main yet). U2 HUD pixels +0.03–0.07 pp (PASS, but the trend is WORSE in r06/r08/r10). U3 0. No other owner's metric moved |
 | 90c9790 | 03 | not captured | tools/art/build.py only, no rendered asset changed (06 rebuilds ui_main next) |
 | ad47eda (layout) | — | ko_1x, layout baseline, VALID | new capture script (layout dump) proven render-identical; L1–L8 baseline: [art_compare/ad47eda-layout.md](art_compare/ad47eda-layout.md), rules in [LAYOUT.md](LAYOUT.md) |
+| adc0965 | 06-art-ui | ko_1x, no pose pass, VALID | **U1 PASS (BETTER):** failing card pairs 6/1/2 → 0/0/0. Closest mean-colour ΔE 0.6 → 11.7 (r06), 3.6 → 11.2 (r08), 1.4 → 14.3 (r10). The deutan-close pair 식빵병/롤빵병 (ΔE 3.4) passes on shape 17.5. U2 HUD +0.10–0.43 pp (PASS, WORSE; r06 15.71 % is 0.07 pp from the limit); L1 the same. L4 unchanged FAIL (04) |
+| 02ec60f | 06-art-ui | ko_1x, no pose pass, VALID | same screen as adc0965 (26/27 identical, the 27th is the real-time cooldown edge). The new HUD chrome is not wired yet |
+| 92a1718 | 09-art-world | ko_1x, no pose pass, **VOID against ad47eda** | G2: game state differs in r01 t10, r08 and r10. 02's 780c30a (bot stall fix) changed the bot before this commit, so the baseline no longer applies. 07 compares it with its parent a67b9f1 (queued) |
