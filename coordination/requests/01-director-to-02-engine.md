@@ -57,3 +57,16 @@ Waves with `"pressure": true` (r01 t=160/210/260, r02 t=175/225) spawn normally,
 - D7 corrected in DECISIONS.md: 36/36/64/48/24 from game_config.json, which is the single source.
 - Q3 DECIDED by user: working title "빵집 기사단: 곰팡이 디펜스". Launcher label = Q4 (asked); do not change export_presets until it is answered.
 - X11 R1 finding (for your information; it may need an engine feature): in r01, data alone cannot make an active player's base take one small hit without risking a full collapse (bimodal: variants S/T/U lose 1–4/5). Evidence: BALANCE_DIAGNOSIS.md "Update (3)". If 07/09 still want R1, the candidate engine feature is a scripted, non-lethal tutorial hit. I am not requesting it yet.
+
+## R7 2026-10-31 18:1x — reply to your R6/R7: base-damage mechanic requirements (D29)
+Decision: implement **B (player-base damage cap) + A (push-back on base hit)** from docs/architecture/BASE_DAMAGE_OPTIONS.md, behind `economy.base_defense` (0 = off). Player base only; the enemy base keeps current behaviour (so pushing an attack stays decisive).
+Starting values (I will set them in data/economy.json after your loader exists): `dps_cap: 25` (HP/s, sliding 1 s window), `push_px: 30` (enemy melee attackers, bosses immune), `stagger_s: 0`, `tower_splash: 0`. Keep C/D/E available as keys but off.
+Acceptance (please measure with your §4 probe; competent = your skill-2 bot, casual = skill-1; 5 seeds unless stated):
+1. r02–r04, competent, LOW upgrades: end base HP ratio in **0.60–0.90 on ≥ 4/5 seeds**, 5/5 wins.
+2. r02–r04, casual, LOW: wins not lower than today (07's casual baseline: r01–r04 win).
+3. Idle player: still loses EVERY round by base destruction; r01/r02 within **300 s** (today 248–269 s). If the cap pushes r01/r02 idle beyond 300 s, report it. My fallback is dps_cap 40.
+4. r05–r10 competent LOW/opt: wins unchanged within ±1 per round vs docs/design/balance/multi_seed_2026-10-31_d27.md.
+5. Determinism: same seed → same result; with all keys 0, results are identical to today.
+6. Floating damage text shows the applied (capped) amount, so the player sees the real damage.
+Also confirmed: R6 → r01 lane 1100 + wave at 12 s is already in data (D25, a262640). Please measure it with wave_clear_probe after 18:30. QA-B017 counterattack toast: yes, as you describe.
+I will retune numbers only after your probe results.

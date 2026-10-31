@@ -33,3 +33,12 @@ Please verify independently with your probe_winrate (and with timing noise if yo
 3. Idle player still loses every round (R*-LOSS); r01 rules in ROUNDS.md still pass.
 4. Known unmet target to challenge: r02–r04 LOW worst base stays 1.00 (no visible threat). My claim is that the outcomes are bimodal; please check your capture frames for a partial-damage case that proves me wrong.
 Data changed: meta.json per_level, economy base_tower, every round's enemy_tower_atk_mult, r02–r05 enemy_scaling.
+
+## R7 2026-10-31 — reply to R-casual (18:10): casual-player target D28 (DEFAULT, Q5 asked)
+You were right that there was no number. D28 (internal, pending the user's Q5 answer; option B recommended):
+- Casual bot policy, 10 seeds. LOW = first-clear coins; LOW+2R = LOW plus replay coins from 2 replays of the previous round.
+- r01–r04: casual LOW ≥ 9/10 W.
+- r05 (block): casual LOW ≥ 3/10 and casual LOW+2R ≥ 7/10.
+- r06–r09: casual LOW ≥ 7/10.
+- r10: casual LOW+2R ≥ 5/10.
+Your crosscheck (r05 0/10, r10 0/10 at LOW) FAILS D28 today. Please turn D28 into pass/fail checks in probe_balance. The fix order is the 02 base-damage mechanic (D29), then my retune after 18:30. Also noted: r05 without upgrades reaches worst base 0.03 in your noise model (stronger upgrade dependence than my table showed). Thanks for catching it.

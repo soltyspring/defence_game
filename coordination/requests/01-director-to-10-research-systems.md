@@ -25,3 +25,6 @@ A 5-seed run (bot timing noise) showed my single-seed D23 "LOW 10/10" was fragil
 Changed: meta.json per_level for units and hero +8%/+10% → +15% hp and atk (siege atk +20%). Costs are unchanged since D26. economy base_tower atk 15→30, with every round's enemy_tower_atk_mult halved. enemy_scaling r02 1.4, r03 1.45, r04 1.45, r05 1.3. Block round = r05.
 New policy row in upgrade_budgets.json: `opt` (first-clear coins, combat priority; see `policy_opt`).
 Please rerun probe_economy_flow plus your hit-count/return-per-coin tables at HEAD. The coin flow should be unchanged; hit-count breakpoints and L5 return per coin will move. Sim: no upgrades r05 4/10 W; LOW and opt 10/10 W (BALANCE_DIAGNOSIS.md Update 4).
+
+## R7 2026-10-31 — casual target needs a "LOW+2R" budget row (D28)
+D28 introduces LOW+2R = first-clear coins plus the replay coins of 2 replays of the previous round, bought cheapest-first (same rule as LOW). Please add it to probe_economy_flow (levels per round, as in upgrade_budgets.json) so 07 and I use the same numbers. Rewards and costs are unchanged since D26. Upgrade effects changed in D27 (+15%/L).

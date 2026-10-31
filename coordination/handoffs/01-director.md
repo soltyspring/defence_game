@@ -1,4 +1,14 @@
 # 01-director handoff
+## TASK 2026-10-31 18:0x–18:2x (08 quiet window: no Godot, docs + Python only)
+- Resumed after the 17:59 rate limit. Working tree was clean, nothing duplicated.
+- Q4 DECIDED by user (17:19, "빵집 기사단" = A) recorded in DECISIONS + both USER_QUESTION files. 02 applied it (4b5926d); aapt2 VERIFIED per Codex (not re-run by me).
+- D28 casual-player target (DEFAULT, pending Q5); today FAILS r05/r10 per 07's crosscheck. D29 base-damage mechanic = 02 options B+A (dps_cap 25, push 30 px), acceptance numbers in 01→02 R7.
+- New budget row `low2r` in upgrade_budgets.json (Python only, not simulated).
+- Q5 (casual difficulty) ASKED; the only open question. Options A/B/C, B recommended, default = D28.
+- Replies: 01→02 R7, 01→07 R7, 01→10 R7.
+- UNVERIFIED until after 18:30: everything about D29 (needs 02 implementation + probe), D28 pass/fail (needs sims), the r01 D25 measurement by 02.
+- Next after 18:30: when 02's base_defense loader lands, set the economy values, rerun multi_seed_sim (none/LOW/opt + casual policy, which needs a casual option in my script), then retune r05/r10 toward D28.
+
 ## TASK 2026-10-31 — upgrade-meaning curve (D27), r02–r04 pressure, three purchase policies
 - D27: block round r05; upgrades +15%/L (siege atk +20%); tower 30 with enemy tower mult ×0.5; scaling r02 1.4, r03 1.45, r04 1.45, r05 1.3. New `opt` budget policy in upgrade_budgets.json. New sweep helper docs/design/balance/sweep.ps1; multi_seed_sim supports `_economy` and `_per_level` overrides.
 - Evidence: multi_seed_2026-10-31_d27.md (5 seeds, none/LOW/opt, all rounds; r05 at 1.25 there) and _d27_r05_10seeds.md (r05 1.3, 10 seeds): none r05 4/10; LOW and opt win everything. Probe 0/0/0; l10n 134 ALL_OK.
