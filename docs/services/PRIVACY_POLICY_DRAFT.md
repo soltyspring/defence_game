@@ -6,6 +6,7 @@ How to read the markers:
 - `[광고 활성화 시]` / `[IF ADS ENABLED]` = block to add or rewrite when ads are approved.
 - `[결제 활성화 시]` / `[IF PURCHASES ENABLED]` = block to add or rewrite when in-app purchases are approved.
 - `[분석 활성화 시]` / `[IF ANALYTICS ENABLED]` = block for remote analytics (not planned).
+- `[백업 활성화 시]` / `[IF BACKUP ENABLED]` = sentence to add if Android backup of the save is turned on (SAVE_BACKUP_POLICY.md options B1/B3). Not on the published page while backup is off.
 - `[법률 확인 필요]` / `[LEGAL REVIEW]` = wording or item list that a qualified person must confirm (Korean PIPA text was not verified by tool, see RELEASE_READINESS_SERVICES.md V5).
 
 Google Play requirements this template follows (User Data policy, checked 2026-10-31, https://support.google.com/googleplay/android-developer/answer/10144311?hl=en): link in Play Console and inside the app; titled as a privacy policy; names the developer/app; gives a privacy contact; lists data accessed, collected, used and shared and with whom; describes secure handling; states retention and deletion; public, non-geofenced, non-PDF URL; required even when no personal data is accessed. Content was rephrased for compliance with licensing restrictions.
@@ -41,6 +42,7 @@ Google Play requirements this template follows (User Data policy, checked 2026-1
 
 ## 4. 보유 기간 및 파기
 기기에 저장된 게임 진행 정보는 이용자가 게임을 삭제하거나 앱 데이터를 지우면 함께 삭제됩니다. 개발자는 이 정보를 따로 보관하지 않습니다.
+[백업 활성화 시] 이용자가 기기의 백업을 켜 두었다면 Android가 게임 진행 파일의 사본을 이용자의 Google 계정 백업에 저장하고, 게임을 다시 설치하거나 새 기기로 옮길 때 복원할 수 있습니다. 개발자는 이 사본에 접근할 수 없으며, 사본은 기기와 Google 계정의 백업 설정에서 관리하거나 삭제할 수 있습니다. [법률 확인 필요]
 [결제 활성화 시] 구매 기록의 보관 기간: {{RETENTION_PERIOD}} [법률 확인 필요: 전자상거래 관련 법령의 보관 의무]
 
 ## 5. 이용자의 권리
@@ -94,6 +96,7 @@ We do not share personal information with anyone today.
 
 ## 4. Retention and deletion
 Game progress on your device is deleted when you uninstall the Game or clear its app data. We keep no copy.
+[IF BACKUP ENABLED] If you have device backup turned on, Android may store a copy of the game progress file in your Google account backup and restore it when you reinstall the Game or move to a new device. We cannot access this copy; you can manage or delete it in your device and Google account backup settings. [LEGAL REVIEW]
 [IF PURCHASES ENABLED] Purchase records are kept for {{RETENTION_PERIOD}}. [LEGAL REVIEW]
 
 ## 5. Your choices
