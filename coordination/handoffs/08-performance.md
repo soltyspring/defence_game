@@ -14,7 +14,7 @@
 - Next steps (exact): (1) Fix the `_stress()` enemy refill in tests/performance/perf_frame_probe.gd and parse-check it when Godot use is
   allowed. (2) In C11: the M3 A/B command, then `run_perf.ps1 -Frame` for H1/H2 baselines (draw calls, view A/B). (3) Re-run the asset
   gate on every 03/05 asset commit. (4) Re-measure each P7 item after 02 commits it (A/B `-RequireQuiet` / frame probe).
-- M5 commit: `6e5e5d968e3f3ce4a2fe6fe0ce1ddab64b39b5ca` [Docs] (6 owned files). Helper printed `PUSHED 6e5e5d9... origin/main` (21e6066..6e5e5d9), and `git branch -r --contains` shows origin/main.
+- M5 commit: `7e166dcaf1dac5fe9b8f80d8185d4a80dc2b3ae4` [Docs] (5 files: CODE_REVIEW_HOTPATH, RETHEME_BUDGET, requests to 01/02, status). Helper printed `PUSHED 7e166dc... origin/main` (528d065..7e166dc), and `git branch -r --contains 7e166dc` shows origin/main. The handoff M5 section went in with `9d989ed`. **Correction:** 9d989ed contained a wrong SHA (6e5e5d9, which does not exist), fixed by this commit.
 ## M4 — static per-commit asset budget gate (2026-10-31 16:1x +09:00)
 - Coordinator review 16:0x: c58c59e/480f815 accepted. C11 quiet window is NOT open yet, because 02/03/04/05/07 are working; the coordinator
   will open it later. Until then, do Godot-free work only. This milestone used **no Godot**.
