@@ -29,6 +29,7 @@ var pause_layer: Control
 var pause_buttons: Array = []
 var settings_panel: Control
 
+var _battle_over := false         # after battle_ended: ignore pause state from snapshots (07 QA-B002)
 var _held: Array[int] = []       # stack of held hero directions
 var _toast_left := 0.0
 var _banner_left := 0.0
@@ -134,6 +135,7 @@ func _on_battle_started(p_info: Dictionary) -> void:
 	snap = {}
 	_held.clear()
 	_last_wave = -1
+	_battle_over = false
 	_on_tutorial_step("")
 	paused = false
 	pause_layer.hide()
@@ -230,7 +232,7 @@ func _on_snapshot(s: Dictionary) -> void:
 	if wi != _last_wave and _last_wave != -1 and wi > 0:
 		show_banner(UiText.t("ui.boss") if bool(wave.get("boss", false)) else UiText.t("ui.wave") % [wi, int(wave.get("total", 0))])
 	_last_wave = wi
-	if s.has("paused") and bool(s.paused) != paused:
+	if not _battle_over and s.has("paused") and bool(s.paused) != paused:
 		_on_paused(bool(s.paused))
 
 func _on_toast(key: String, _args: Dictionary) -> void:
@@ -242,6 +244,8 @@ func _on_toast(key: String, _args: Dictionary) -> void:
 		show_banner(UiText.t("ui.boss"))
 
 func _on_paused(p: bool) -> void:
+	if _battle_over and p:
+		return   # App pauses the sim behind the result panel; never show the HUD pause menu there
 	paused = p
 	if p:
 		_release_all_holds()
@@ -262,6 +266,7 @@ func _on_tutorial_step(key: String) -> void:
 	_fit_label(tutorial_label, layout.get("tutorial", Rect2()))
 
 func _on_battle_ended(_result: Dictionary) -> void:
+	_battle_over = true
 	_on_tutorial_step("")
 	_release_all_holds()
 	pause_layer.hide()
@@ -349,6 +354,8 @@ func _notification(what: int) -> void:
 		NOTIFICATION_WM_GO_BACK_REQUEST:
 			if settings_panel != null and settings_panel.visible:
 				return  # panel handles it
+			if _battle_over or not claim_back():
+				return  # result screen owns back after the battle; one press = one action
 			if paused:
 				_on_resume()
 			elif not info.is_empty():

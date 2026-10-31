@@ -92,8 +92,8 @@ func _on_back() -> void:
 	emit_cmd(&"cmd_open_screen", [&"menu"])
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_GO_BACK_REQUEST and is_inside_tree() and btn_back != null:
-		_on_back()
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST and is_inside_tree() and btn_back != null and claim_back():
+		emit_cmd_deferred(&"cmd_open_screen", [&"menu"])
 
 func _layout() -> void:
 	if btn_back == null:

@@ -133,7 +133,7 @@ func _apply_mode() -> void:
 	queue_redraw()
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_GO_BACK_REQUEST and visible:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST and visible and preload("res://src/ui/ui_screen.gd").claim_back():
 		_on_close()
 
 func _draw() -> void:

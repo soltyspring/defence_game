@@ -79,8 +79,8 @@ func _on_settings() -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST and is_inside_tree() and quit_layer != null:
-		if settings_panel.visible:
-			return
+		if settings_panel.visible or not claim_back():
+			return   # panel handles it / press already used by the screen that navigated here
 		quit_layer.visible = not quit_layer.visible
 
 func _layout() -> void:

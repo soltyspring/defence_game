@@ -18,6 +18,26 @@ var safe := Rect2()
 var view := Vector2(640, 360)
 var target := 40.0
 
+## Android back: one physical press must act exactly once (07 QA-B001). Godot 4.7.2 delivers the same
+## WM_GO_BACK_REQUEST to nodes mounted DURING the walk, so a screen that navigates synchronously would
+## see the new screen also handle the same press. Every 04 back handler calls claim_back() first:
+## the first handler in a frame wins, the rest ignore it; navigation is additionally deferred.
+static var _back_frame := -1
+
+static func claim_back() -> bool:
+	var f := Engine.get_process_frames()
+	if f == _back_frame:
+		return false
+	_back_frame = f
+	return true
+
+## Test hook: forget the claim (e.g. to simulate a second press in the same synthetic frame).
+static func reset_back_claim() -> void:
+	_back_frame = -1
+
+func emit_cmd_deferred(sig: StringName, args: Array = []) -> void:
+	emit_cmd.call_deferred(sig, args)
+
 func _enter_tree() -> void:
 	if bus == null:
 		bus = get_node_or_null("/root/Events")

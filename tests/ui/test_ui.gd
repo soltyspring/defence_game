@@ -52,6 +52,7 @@ func _run() -> void:
 	await test_menu_and_settings()
 	await test_korean_text_fit()
 	test_atlas_import_guard()
+	await test_back_once_and_result_pause()
 	for s in SECTIONS:
 		check(done.has(s), "section %s ran to completion (aborted by a script error otherwise)" % s)
 	print("[test_ui] passed=%d failed=%d" % [passes, failures.size()])
@@ -61,7 +62,7 @@ func _run() -> void:
 		print("  - " + f)
 	quit(1 if failures.size() > 0 else 0)
 
-const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard"]
+const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard", "back_once"]
 var done := {}
 
 func test_compile_all(dir_path: String) -> void:
@@ -114,6 +115,11 @@ func _mount(path: String, progress := {}) -> Control:
 	scr.progress_override = progress
 	root.add_child(scr)
 	return scr
+
+## One physical Android back press (separate press → clear the once-per-frame claim first).
+func back(n: Node) -> void:
+	load("res://src/ui/ui_screen.gd").reset_back_claim()
+	n.propagate_notification(Node.NOTIFICATION_WM_GO_BACK_REQUEST)
 
 func touch(index: int, pos: Vector2, pressed: bool) -> void:
 	var e := InputEventScreenTouch.new()
@@ -350,9 +356,9 @@ func test_hud_pause_lifecycle() -> void:
 	# engine-driven pause (lifecycle) shows overlay; Android back toggles
 	bus.battle_paused.emit(false)
 	check(not hud.pause_layer.visible, "engine unpause hides overlay")
-	hud.propagate_notification(Node.NOTIFICATION_WM_GO_BACK_REQUEST)
+	back(hud)
 	check(hud.pause_layer.visible and last() == [&"cmd_set_paused", true], "back button pauses")
-	hud.propagate_notification(Node.NOTIFICATION_WM_GO_BACK_REQUEST)
+	back(hud)
 	check(not hud.pause_layer.visible and last() == [&"cmd_set_paused", false], "back again resumes")
 	# pause menu buttons
 	tap(hud.btn_pause)
@@ -447,7 +453,7 @@ func test_menu_and_settings() -> void:
 	tap(row1[1])
 	check(last() == [&"cmd_set_setting", "sfx", 0.0], "settings sfx off")
 	check(SettingsPanel.option_matches("music", 0.5, 0.8) and not SettingsPanel.option_matches("music", 0.0, 0.8), "volume on/off matching")
-	m.propagate_notification(Node.NOTIFICATION_WM_GO_BACK_REQUEST)
+	back(m)
 	check(not m.settings_panel.visible, "back closes settings")
 	# credits view (OFL font credit). Galmuri11 12 only; wrapped lines fit the panel.
 	tap(m.btn_settings)
@@ -462,11 +468,11 @@ func test_menu_and_settings() -> void:
 	var fnt: Font = UiStyle_.font()
 	check(sp.panel_rect.position.y + 19 - fnt.get_height(24) / 2.0 >= sp.panel_rect.position.y + 2, "panel title (24 px) starts inside the 2 px border")
 	check(sp._rows[sp._rows.size() - 1].buttons[0].get_rect().end.y < sp._close.position.y and sp.panel_rect.encloses(sp._close.get_rect()), "rows above close, close inside panel")
-	m.propagate_notification(Node.NOTIFICATION_WM_GO_BACK_REQUEST)
+	back(m)
 	check(sp.visible and not sp.showing_credits and sp._rows[0].buttons[0].visible, "back from credits returns to settings rows")
-	m.propagate_notification(Node.NOTIFICATION_WM_GO_BACK_REQUEST)
+	back(m)
 	check(not m.settings_panel.visible, "back again closes settings")
-	m.propagate_notification(Node.NOTIFICATION_WM_GO_BACK_REQUEST)
+	back(m)
 	check(m.quit_layer.visible, "back on menu asks to quit (not instant exit)")
 	m.quit_layer.hide()
 	# play / continue chooses first round without stars (no Content autoload → falls back to round select)
@@ -667,3 +673,73 @@ func test_atlas_import_guard() -> void:
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(png + ".import"))
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(rec_path))
 	done["atlas_guard"] = true
+
+# ---------------------------------------------------------------- 07 QA-B001 / QA-B002 regressions
+
+## Same delivery order as Godot 4.7.2 Window::_propagate_window_notification: children walked by LIVE
+## index, so a node added during the walk also receives the notification (07 suite_flow._window_notify).
+func _window_walk(parent: Node, what: int) -> void:
+	var i := 0
+	while i < parent.get_child_count():
+		parent.get_child(i).propagate_notification(what)
+		i += 1
+
+func test_back_once_and_result_pause() -> void:
+	var host := Control.new()
+	root.add_child(host)
+	var nav: Array = []
+	var mount := func(screen: StringName) -> void:
+		nav.append(screen)
+		for ch in host.get_children():
+			host.remove_child(ch)
+			ch.queue_free()
+		var path: String = {&"menu": "res://scenes/ui/main_menu.tscn", &"round_select": "res://scenes/ui/round_select.tscn"}[screen]
+		var s: Control = load(path).instantiate()
+		s.bus = bus
+		s.progress_override = {"version": 1, "unlocked_round": 1, "stars": {}, "coins": 0, "settings": {}}
+		host.add_child(s)       # synchronous, like App.show_screen
+	bus.cmd_open_screen.connect(mount)
+	# A: result → one back press → exactly one navigation to round_select
+	var r: Control = load("res://scenes/ui/result.tscn").instantiate()
+	r.bus = bus
+	host.add_child(r)
+	r.set_result({"round_id": "r01", "won": true, "stars": 1, "time": 10.0, "kills": 1, "coins": 1, "first_clear": false, "next_round_id": ""})
+	await _frames(2)
+	load("res://src/ui/ui_screen.gd").reset_back_claim()
+	_window_walk(host, Node.NOTIFICATION_WM_GO_BACK_REQUEST)
+	await _frames(3)
+	check(nav == [&"round_select"], "QA-B001 A: one back on result → exactly [round_select] (got %s)" % [nav])
+	# B: round select → one back press → menu, quit dialog NOT opened by the same press
+	nav.clear()
+	load("res://src/ui/ui_screen.gd").reset_back_claim()
+	_window_walk(host, Node.NOTIFICATION_WM_GO_BACK_REQUEST)
+	await _frames(3)
+	var menu: Control = host.get_child(host.get_child_count() - 1)
+	check(nav == [&"menu"] and menu.get("quit_layer") != null and not menu.quit_layer.visible, "QA-B001 B: one back on round select → menu once, quit dialog closed (nav %s, quit %s)" % [nav, menu.quit_layer.visible if menu.get("quit_layer") else "?"])
+	# a SECOND, separate press on the menu still opens the quit dialog (latch is per press, not permanent)
+	load("res://src/ui/ui_screen.gd").reset_back_claim()
+	_window_walk(host, Node.NOTIFICATION_WM_GO_BACK_REQUEST)
+	check(menu.quit_layer.visible, "next separate back press on menu opens quit dialog")
+	bus.cmd_open_screen.disconnect(mount)
+	host.queue_free()
+	await _frames()
+	# QA-B002: after battle_ended, snapshot/engine pause must not show the HUD pause menu under the result
+	var hud: Control = _mount("res://scenes/ui/hud.tscn")
+	bus.battle_started.emit(MockEngine.sample_info(2, 1))
+	await _frames()
+	bus.battle_ended.emit({"round_id": "r01", "won": true, "stars": 1, "time": 5.0})
+	var s := {"paused": true, "gold": 0, "cards": [], "skills": []}
+	bus.hud_snapshot.emit(s)
+	bus.battle_paused.emit(true)
+	await _frames()
+	check(not hud.pause_layer.visible, "QA-B002: no HUD pause menu under the result (snapshot.paused + battle_paused after end)")
+	load("res://src/ui/ui_screen.gd").reset_back_claim()
+	back(hud)
+	check(not hud.pause_layer.visible, "back after battle end does not open the HUD pause menu")
+	bus.battle_started.emit(MockEngine.sample_info(2, 1))
+	await _frames()
+	tap(hud.btn_pause)
+	check(hud.pause_layer.visible, "next battle: pause works again")
+	hud.queue_free()
+	await _frames()
+	done["back_once"] = true

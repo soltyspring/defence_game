@@ -10,6 +10,7 @@
 #   .\tools\build\visible_launch.ps1 -Scene res://scenes/ui/ui_preview.tscn -UserArgs '--capture=build/qa/screens','--tag=sub'
 #   .\tools\build\visible_launch.ps1 -UserArgs '--round=r01','--shots=2,6','--shot-dir=build/qa/visible','--quit-after=8'
 #   .\tools\build\visible_launch.ps1 -ListOnly
+#   .\tools\build\visible_launch.ps1 -ProjectPath $env:TEMP\qa07_head -Script res://tests/integration/test_ui_integration.gd -UserArgs '--shot-dir=C:/tmp/shots','--tag=head','--tile=4','--locale=ko','--safe=34,0,34,0'
 param(
     [string]$Scene = '',                  # empty = project main scene (real game)
     [string]$Script = '',                 # optional: run a SceneTree script (-s res://...) visibly, e.g. the real-engine UI integration test
@@ -19,7 +20,8 @@ param(
     [switch]$ListOnly,
     [switch]$NoWait,
     [double[]]$ScreenCaptureAt = @(),   # seconds after placement: OS-level grab of the window rect on the secondary display
-    [string]$EvidenceDir = ''
+    [string]$EvidenceDir = '',
+    [string]$ProjectPath = ''           # Godot project dir to run (default: this workspace). 07 QA-R5: clean HEAD snapshot, e.g. %TEMP%\qa07_head
 )
 . "$PSScriptRoot\common.ps1"
 $ErrorActionPreference = 'Stop'
@@ -99,12 +101,15 @@ $x = [int]($work[0] + ($ww - $w) / 2); $y = [int]($work[1] + [math]::Max(32, ($w
 # order, same as $mons) so the window is created on the secondary display; exact rect fixed below.
 $screenIdx = [array]::IndexOf(@($mons | ForEach-Object { $_.Device }), $sec.Device)
 $logFile = Join-Path $EvidenceDir "godot_$stamp.log"   # GUI exe has no console: keep stdout/stderr as evidence
-$gargs = @('--path', $Root, '--screen', "$screenIdx", '--resolution', "${w}x${h}", '--log-file', $logFile)
+$proj = if ($ProjectPath) { [IO.Path]::GetFullPath($ProjectPath) } else { $Root }
+if (-not (Test-Path (Join-Path $proj 'project.godot'))) { throw "not a Godot project: $proj" }
+$evidence.project = $proj
+$gargs = @('--path', $proj, '--screen', "$screenIdx", '--resolution', "${w}x${h}", '--log-file', $logFile)
 if ($Script) { $gargs += @('-s', $Script) }
 if ($Scene) { $gargs += $Scene }
 if ($UserArgs.Count -gt 0) { $gargs += '--'; $gargs += $UserArgs }
 Write-Host "launch: $GodotGui $($gargs -join ' ')"
-$p = Start-Process -FilePath $GodotGui -ArgumentList ($gargs | ForEach-Object { if ($_ -match '\s') { '"' + $_ + '"' } else { $_ } }) -PassThru -WorkingDirectory $Root
+$p = Start-Process -FilePath $GodotGui -ArgumentList ($gargs | ForEach-Object { if ($_ -match '\s') { '"' + $_ + '"' } else { $_ } }) -PassThru -WorkingDirectory $proj
 
 # find the game's top-level visible window by PID
 $hwnd = [IntPtr]::Zero

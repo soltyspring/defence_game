@@ -49,8 +49,8 @@ func _apply() -> void:
 	queue_redraw()
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_GO_BACK_REQUEST and is_inside_tree() and btn_menu != null:
-		emit_cmd(&"cmd_open_screen", [&"round_select"])
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST and is_inside_tree() and btn_menu != null and claim_back():
+		emit_cmd_deferred(&"cmd_open_screen", [&"round_select"])   # deferred: not inside the notification walk
 
 func _process(delta: float) -> void:
 	if _shown_t < 1.0:
