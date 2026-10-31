@@ -1,52 +1,51 @@
-# 05-audio handoff
-Updated: 2026-10-31 ~08:55 (M3 integration + leak regression: validated, committing)
-Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635 (resumed on the new account; same session, no window restart, no duplicate worker). Model claude-opus-5.5, trust-all.
-Quota at resume: 434.55/10000 (4.3 %). The "QUOTA CHECKPOINT" sections in coordinator-to-05-audio.md are HISTORICAL (previous account), per the user's 08:3x instruction.
+# 05-audio handoff — USER CHECKPOINT (stop requested)
+Updated: 2026-10-31 (stopped at a safe point on user instruction; no new work started)
+Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all. Same session, no window restart.
+Processes: none of mine running. The Godot processes PID 49528/43864 are 06's `tests/services/test_services_integration.gd` and were left untouched.
 
 ## Ownership
-assets/audio/**, src/audio/**, tools/audio/**, docs/audio/**, own status/handoff, requests 05-audio-to-*. No engine/core/UI/project.godot edits.
+assets/audio/**, src/audio/**, tools/audio/**, docs/audio/**, own status/handoff, requests 05-audio-to-*.
 
-## Read receipts / last processed
-handoff (checkpoint c79add3), coordinator-to-05-audio.md (C08 item, quota checkpoint = historical), QUOTA_POLICY.md, DECISIONS.md D1–D12 + Q1 PENDING (theme). 02 commit e9dfaa4 (A2 signal sfx + A3 battle cues) and the project.godot Audio autoload (A1), both read only.
+## Task in progress (from the reviewer: 10449ee/2fae4a3 reviewed)
+(1) Hero death/respawn cue verification in the probe. (2) Reduce the "nobody has listened" gap: record 60 s of a real-mix battle, measure loudness, clipping, masking, low-frequency content and repetition fatigue, and prepare a 30 s preview for the user.
 
-## M3 result (actually run: `pwsh tools/audio/run_godot_checks.ps1 -Integration -BattleSeconds 75` → GODOT AUDIO CHECKS PASS)
-The sandbox is a temp copy with its own user dir (`defence_audio_sandbox`), so the shared save is never touched. It uses the real project.godot, which now includes the 02 Audio autoload, plus a sandbox-only AudioProbe autoload.
-- Import OK; 5 audio scripts parse; AUDIO SELFTEST PASS with the real autoload (`audio_autoload: true`), 0 exit leaks.
-- 02 global selftest: exit 0, 65/65 scripts, audio failures 0. C08 ("audio_manager.gd failed to compile") is NOT reproduced at HEAD.
-- Real battle (r02, 75 s, real Events commands, HUD-style decisions):
-  - 7 battle builds (retry teardown plus 10 rapid menu↔battle switches); audio child count constant at 19.
-  - Command cues match the engine exactly: deploy 13 = sim deployed 13; skill cues 5 = skills_cast 5; worker 1 = 1.
-  - 22 combat cues from 02's `Events.sfx`; 0 same-frame duplicates; peak SFX voices 3/12; music players ≤ 2 during crossfade and 1 after settling.
-  - Pause blocks SFX and allows UI; focus out mutes Master, focus in unmutes, and the battle stays paused until resume; load errors 0.
-  - Derived categories switched off automatically once direct cues arrived (command, death, alert). The ui, base, gold and hero categories are still derived.
-- Leak regression (`leak_probe.gd`):
-  - empty 0, audio 0, cycle 0 (25 create/free, object delta −9/−10, bus and effect counts constant), quit_prepared 0 (5/5 runs).
-  - quit_direct = 4–6 objects as the expected control: quitting while music plays without `prepare_quit` (02 A7).
-  - In the battle run, audio-class leaks = 0. The remaining 4–6 GDScript/RefCounted objects reproduce WITHOUT the Audio autoload, using only deploys; reported to 02 as A8.
+## Done and validated (committed in this checkpoint)
+- `tools/audio/integration_probe.gd`: aggressive hero policy (advance while hp > 40 %). If no natural hero death happens, a sandbox-only injection sets hero hp to 1 and walks the hero in, so the kill goes through the real damage → `_kill` → `hero_dead` → `Events.sfx` path; reported as `hero_death_injected`. Record mode (`--probe-mode=record`) runs one clean battle: AudioEffectRecord on Master (post-limiter) plus SFX/UI/Music stems, cue onset log, Music bus gain log.
+- `tools/audio/run_godot_checks.ps1`: hero gates (deaths ≥ 1, hero_death cues = engine deaths, respawn cue ≥ 1) and `-Record [-RecordSeconds 60]`.
+  - Validation: `pwsh tools/audio/run_godot_checks.ps1 -Integration -BattleSeconds 80` → GODOT AUDIO CHECKS PASS. hero: engine deaths 1 (injected) = hero_death cues 1, hero_respawn cues 1. Combat cues 73 / kills 8, deploy 14 = 14, skill 7 = 7, 0 same-frame duplicates, peak SFX voices 4, audio-class exit leaks 0, engine selftest 66/66.
+  - Honesty note: the hero death was injected (hp = 1); natural deaths in 75–80 s were 0.
+- `-Record` run (r02, 60 s, project autoload + 02 emitters): recording OK, 134 cues logged.
+- `tools/audio/mix_report.py` → `docs/audio/MIX_REPORT.md`, `docs/audio/previews/mix_timeline.png`, `docs/audio/previews/listen/battle_mix_60s.wav` (exact engine Master output, 10.5 MB), `docs/audio/previews/listen/battle_preview_30s.mp3` (22–52 s, 10 cue kinds / 95 cues, 192 kbps, 0.3 s fades only; for the user to listen to), plus `listen/.gdignore`.
+- Measured findings (CURRENT committed assets, v1):
+  - Integrated −21.4 LUFS; peak −3.39 dBFS; true peak −3.23 dBTP; 0 clipped samples; limiter never engaged.
+  - SFX buried under music (≤ 0 dB) in 127/326 = 39 % of active windows, plus 21 % at risk; with a 300 Hz high-pass (phone proxy) 28 % buried. Median SFX − music is +1.2 dB full band.
+  - LOW-HEAVY (> 50 % of energy below 300 Hz): hit_melee 1–3, wave_incoming 78 %, music_battle 70 %, shoot_rock, boss_incoming, stinger_defeat. The whole mix loses 3.6 dB under a 300 Hz high-pass.
+  - Fatigue: hit_melee 70/min, max 5 in 1 s, 12 gaps < 150 ms, 9 plays per file per 10 s, only 3 variants.
+  - Caveat: aligning the cue log to the audio matched only 59/134 cues within 30 ms, so the "which cues were buried" list is approximate. Level, clipping and masking-percentage figures come from the audio itself and do not depend on that alignment.
 
-## Defects found and fixed this milestone (same scenario retested)
-1. **Audio objects leaked at teardown**: players freed or quit while playing kept AudioStreamPlayback* alive. `_exit_tree` now stops every player and clears its stream; added `prepare_quit()` (disables new cues and music). The wait before quit must be wall-clock (~0.3 s), because frame-count waits were flaky.
-2. **Off-screen culling silenced the whole frontline (found in the real battle)**: v1.0 dropped 30/30 combat cues because the camera follows the hero. The new policy attenuates linearly to −9 dB and drops only priority < 5 cues more than 2 screens away. Retest: 22 audible, 0 dropped, 22 attenuated.
-3. **Bridge double-play risk**: added an `alert` category (wave/boss), since 02 now emits these directly as well as toasts. Queued optimistic command cues re-check their category at flush time.
-4. **Probe self-leaks**: the probe held a BattleSim reference; it is now released when the report is written.
-5. **Runner**: a battle that never starts is now INVALID (during 02's mid-edit, compile errors had produced a fake pass). New gates: deploy cue count = engine deployed; combat with kills must produce at least one combat cue; voice and player bounds.
+## NOT validated — left in the worktree (do not commit as-is)
+- `tools/audio/synth.py` (v2 fixes for the findings, NOT regenerated or measured yet):
+  - hit_melee: 5 variants, body moved above 300 Hz plus a 220 Hz high-pass, vol −9 → −7, max 3 → 2, gap 0.045 → 0.26.
+  - wave_incoming: drum and horn raised in pitch.
+  - shoot_rock: high-passed.
+  - battle music: bass 0.42 → 0.26, kick 0.6 → 0.42.
+  - GENERATOR_VERSION 2.
+- `docs/audio/mix_summary_before.json` (v1 baseline numbers for the before/after comparison) and `tools/audio/_render/baseline_v1/` (local copy, never committed).
+- `docs/audio/VALIDATION_REPORT.json` (rewritten by a run without `--determinism`; do not commit this weaker report).
 
-## Files in this milestone
-src/audio/audio_manager.gd, src/audio/audio_event_bridge.gd, tools/audio/{run_godot_checks.ps1, integration_probe.gd(+.uid), leak_probe.gd, audio_selftest.gd}, docs/audio/AUDIO_CONTRACT.md (v1.1), docs/audio/previews/*.png.import, coordination/requests/05-audio-to-02-engine.md (status + A7 quit path + A8 engine leak), this handoff, status. `tools/audio/_render/` is never committed (local reports: `_render/integration/*.json|log`). Audio assets are unchanged (validate.py PASS).
+## Exact next steps
+1. `python tools/audio/synth.py` then `python tools/audio/validate.py --determinism` (must PASS; check that hit_melee_4/5 exist and that the manifest has 5 hit_melee files).
+2. `python tools/audio/preview.py` (LOUDNESS.md), then `pwsh tools/audio/run_godot_checks.ps1 -Integration -BattleSeconds 80 -Record`, then `python tools/audio/mix_report.py`.
+3. Compare against `docs/audio/mix_summary_before.json`. Targets (internal): buried < 15 %, no LOW-HEAVY combat cue, hit_melee max ≤ 4/s and no gaps < 150 ms, still 0 clipping. Move the new numbers into MIX_REPORT.md under a "before → after" section and keep the v1 numbers.
+4. Improve the cue alignment in mix_report.py: log the audio-clock time (`AudioServer.get_time_since_last_mix()` + mixed frames) in the probe instead of wall clock.
+5. Publish, then ask 01 (one question at a time) to have the user listen to `docs/audio/previews/listen/battle_preview_30s.mp3`.
 
 ## Git
-- Earlier: 67de63b, 067c594, ba38f2d, 5e21a23, c79add3, all PUSHED.
-- M3: 10449eed6971f50595c6f937675dab159ec0c676 "[Fix] 실전 통합 검증: 화면 밖 전투음 소거 버그와 종료 시 오디오 누수 수정, 통합 하네스 추가" → PUSHED origin/main (13 files).
+- Earlier: 67de63b, 067c594, ba38f2d, 5e21a23, c79add3, 10449ee, 2fae4a3, all PUSHED.
+- Checkpoint commit: see push output / status file. If the push fails, mark PUSH_PENDING.
+
+## Open requests
+02: A7 (`prepare_quit` on the quit path), A8 (engine RefCounted exit leak, not audio). 04: C1 sliders, C2 UI cues. Q1 theme pending (01).
 
 ## Strongest remaining reasons a reviewer could reject the audio
-- Nobody has listened. Audible quality, fatigue and mix balance against real music are unjudged; the agent cannot listen.
-- No Android device evidence: playback, audio focus (calls, other apps), output latency, speaker loudness. Desktop headless uses the Dummy driver.
-- Quit-path leak until 02 applies A7 (exit-only).
-- 04 C1 (volume sliders; settings are still on/off) and C2 (direct UI tap cues; buttons with no command remain silent) are not done.
-- The theme (Q1) is pending, so the timbres are theme-neutral placeholders.
-
-## Next task (05)
-1. When 02 applies A7: rerun `-Integration` and expect `battle audio_class_leaks=0` without the probe's prepare_quit. Then make the probe stop calling it, so the real path is what gets tested.
-2. Hero cues (hero_death/respawn) were not exercised (hero_deaths 0 in 75 s). Add a probe phase that walks the hero into enemies, and check hit_base.
-3. After 04 C1/C2: check slider persistence through Save in the sandbox and that UI cues are not doubled.
-4. A human listening pass, via 01 (one question at a time) when the queue allows.
+Nobody has listened yet (the preview now exists for that). Measured masking is 39 % with low-heavy combat sounds in the shipped v1 assets (fix drafted, not verified). No Android device evidence.

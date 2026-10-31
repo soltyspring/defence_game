@@ -7,7 +7,8 @@
 #   pwsh tools/audio/run_godot_checks.ps1 -Integration  # + simulated 02 request A1 (Audio autoload, exact line),
 #                                                       #   02 global selftest, leak attribution, bounded real battle
 # Exit code 0 = all pass. Integration report: tools/audio/_render/integration/*.json (git-ignored via .gdignore dir)
-param([switch]$Integration, [int]$BattleSeconds = 95)
+param([switch]$Integration, [int]$BattleSeconds = 95, [switch]$Record, [int]$RecordSeconds = 60)
+if ($Record) { $Integration = $true }
 $ErrorActionPreference = 'Continue'   # Godot writes diagnostics to stderr; judge by exit codes
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 $godot = Join-Path $root 'tools\engine\Godot_v4.7.2-stable_win64_console.exe'
@@ -105,8 +106,27 @@ if ($Integration) {
     "battle combat cues=$combat kills=$($ij.engine_truth.kills) deploy cues=$($cc.deploy)/engine $($ij.engine_truth.deployed) skill cues=$([int]$cc.skill_slam + [int]$cc.skill_rally + [int]$cc.skill_barrage + [int]$cc.skill_heal + [int]$cc.skill_cast)/engine $($ij.engine_truth.skills_cast) dropped_offscreen=$($ij.audio_snapshot.dropped_offscreen) attenuated=$($ij.audio_snapshot.attenuated_offscreen)"
     if ($ij.events_has_sfx -and [int]$ij.engine_truth.kills -gt 0 -and $combat -eq 0) { $fail++; "  ^ combat happened but no combat cue was audible" }
     if ([int]$cc.deploy -ne [int]$ij.engine_truth.deployed) { $fail++; "  ^ deploy cue count != engine deployed" }
+    $hd = [int]$ij.engine_truth.hero_deaths
+    "hero: engine deaths=$hd (injected=$($ij.hero_death_injected)) hero_death cues=$([int]$cc.hero_death) hero_respawn cues=$([int]$cc.hero_respawn)"
+    if ($hd -lt 1) { $fail++; "  ^ no hero death happened; hero cues unverified" }
+    elseif ([int]$cc.hero_death -ne $hd) { $fail++; "  ^ hero_death cues != engine hero deaths" }
+    if ($hd -ge 1 -and [int]$cc.hero_respawn -lt 1) { $fail++; "  ^ hero died but no hero_respawn cue (respawn may not have elapsed before quit)" }
   } else { "NO integration report"; $fail++ }
   $r.out | Select-String -Pattern 'SCRIPT ERROR|Parse Error|ERROR:' | Select-Object -First 15 | ForEach-Object { "battle log: $_" }
+}
+if ($Record) {
+  # 60 s real-mix recording of one clean battle (no pause/focus/retry phases). Post-limiter Master + pre-fader stems.
+  $q = $RecordSeconds + 4
+  $r = Run 'record' @('--headless', '--path', $sb, '--', "--round=r02", "--quit-after=$q", '--probe-mode=record', "--record-seconds=$RecordSeconds")
+  $recOut = Join-Path $root 'tools\audio\_render\recording'
+  New-Item -ItemType Directory -Path $recOut -Force | Out-Null
+  $n = 0
+  foreach ($fn in @('rec_master.wav', 'rec_sfx.wav', 'rec_ui.wav', 'rec_music.wav', 'rec_meta.json', 'audio_integration_report.json')) {
+    $src = Join-Path $userDir $fn
+    if (Test-Path $src) { Copy-Item $src $recOut -Force; $n++ }
+  }
+  "record exit=$($r.code) files_copied=$n -> $recOut"
+  if ($n -lt 5) { $fail++; "  ^ recording missing" }
 }
 "GODOT AUDIO CHECKS " + $(if ($fail -eq 0) { 'PASS' } else { "FAIL ($fail)" })
 exit $fail

@@ -29,6 +29,17 @@ var _frame := -1
 var _round := "r02"
 var _report_at := -1.0
 var _reported := false
+# --- hero policy (aggressive player: advance while hp > 40 %, retreat below) + hero cue checks
+var _hero_dir := 0
+var _hero_inject_done := false
+# --- record mode (--probe-mode=record): one clean battle, no pause/focus/retry/switch phases
+var _record_mode := false
+var _record_seconds := 60.0
+var _rec := {}                 # bus name -> AudioEffectRecord
+var _rec_t0_us := 0
+var _rec_state := "idle"       # idle | recording | saved
+var _cue_log: Array = []       # [t_s, cue, vol_db_param]
+var _gain_log: Array = []      # [t_s, music_bus_db, music_mute, master_mute]
 
 var rep := {
 	"cue_counts": {}, "same_frame_duplicates": [], "commands": {"deploy": 0, "deploy_unaffordable": 0, "worker": 0, "skill": 0},
@@ -60,6 +71,9 @@ func _ready() -> void:
 	if save: save.progress.unlocked_round = maxi(int(save.progress.unlocked_round), 3)
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--quit-after="): _report_at = float(a.get_slice("=", 1)) - 0.5
+		if a == "--probe-mode=record": _record_mode = true
+		if a.begins_with("--record-seconds="): _record_seconds = float(a.get_slice("=", 1))
+	if _record_mode: _phase = "record"
 
 func _on_toast(k: String, _a: Dictionary) -> void:
 	rep.toasts[k] = int(rep.toasts.get(k, 0)) + 1
@@ -85,11 +99,14 @@ func _on_cue(cue: StringName, _voice: int) -> void:
 	if _frame_cues.has(c):
 		rep.same_frame_duplicates.append({"cue": c, "t": snappedf(t, 0.01)})
 	_frame_cues[c] = true
+	if _rec_state == "recording":
+		_cue_log.append([snappedf((Time.get_ticks_usec() - _rec_t0_us) / 1e6, 0.001), c])
 
 func _on_battle_started(info: Dictionary) -> void:
 	in_battle = true
 	bt = 0.0
 	_next_cmd = 1.0
+	_hero_dir = 0
 	rep.battles_started += 1
 	cards = []
 	for c in info.get("cards", []): cards.append(str(c.id))
@@ -165,10 +182,90 @@ func _process(delta: float) -> void:
 					"in_battle_screen": in_battle, "children": A.get_child_count()}
 				_set_phase("battle3")
 		"battle3":
+			if in_battle:
+				_drive()
+				_maybe_inject_hero_death()
+		"record":
 			if in_battle: _drive()
+			_record_step()
+
+## Hero cue check: if the aggressive policy produced no natural hero death by battle3 + 4 s, set hero hp
+## to 1 once (sandbox-only test injection, reported as such); the kill then goes through the real
+## damage -> _kill -> "hero_dead" event -> Events.sfx path.
+func _maybe_inject_hero_death() -> void:
+	if _hero_inject_done or _phase_t < 1.0 or _sim == null: return
+	_hero_inject_done = true
+	if int(_sim.stats.get("hero_deaths", 0)) > 0 or int(rep.engine_truth.hero_deaths) > 0:
+		rep.hero_death_injected = false
+		return
+	_sim.hero.hp = 1.0
+	rep.hero_death_injected = true
+
+func _hero_policy() -> void:
+	var h: Dictionary = hud.get("hero", {})
+	if h.is_empty(): return
+	var want := 0
+	if rep.get("hero_death_injected", false) and int(rep.engine_truth.hero_deaths) == 0 and _sim and int(_sim.stats.get("hero_deaths", 0)) == 0:
+		want = 1   # walk the 1-hp hero into the enemy line so the real damage path kills it
+		if want != _hero_dir:
+			_hero_dir = want
+			E.cmd_hero_move.emit(want)
+		return
+	if bool(h.get("alive", true)):
+		want = 1 if float(h.get("hp", 1)) > 0.4 * float(h.get("hp_max", 1)) else -1
+	if want != _hero_dir:
+		_hero_dir = want
+		E.cmd_hero_move.emit(want)
+
+# ------------------------------------------------------------------ recording
+func _record_step() -> void:
+	match _rec_state:
+		"idle":
+			if not in_battle or bt < 0.5: return
+			for b in ["Master", "SFX", "UI", "Music"]:
+				var r := AudioEffectRecord.new()
+				r.format = AudioStreamWAV.FORMAT_16_BITS
+				var bi := AudioServer.get_bus_index(b)
+				AudioServer.add_bus_effect(bi, r)        # appended last: Master = post-limiter, stems = pre-fader
+				_rec[b] = r
+			for b in _rec: _rec[b].set_recording_active(true)
+			_rec_t0_us = Time.get_ticks_usec()
+			_rec_state = "recording"
+		"recording":
+			var ts := (Time.get_ticks_usec() - _rec_t0_us) / 1e6
+			var mi := AudioServer.get_bus_index(&"Music")
+			_gain_log.append([snappedf(ts, 0.001), snappedf(AudioServer.get_bus_volume_db(mi), 0.01),
+				AudioServer.is_bus_mute(mi), AudioServer.is_bus_mute(0)])
+			if ts >= _record_seconds:
+				for b in _rec: _rec[b].set_recording_active(false)
+				var files := {}
+				for b in _rec:
+					var w: AudioStreamWAV = _rec[b].get_recording()
+					var p := "user://rec_%s.wav" % b.to_lower()
+					if w: w.save_to_wav(p)
+					files[b] = p if w else ""
+				var sfx_db := AudioServer.get_bus_volume_db(AudioServer.get_bus_index(&"SFX"))
+				var ui_db := AudioServer.get_bus_volume_db(AudioServer.get_bus_index(&"UI"))
+				var meta := {"seconds": ts, "mix_rate": AudioServer.get_mix_rate(), "files": files,
+					"sfx_bus_db": sfx_db, "ui_bus_db": ui_db, "cues": _cue_log, "music_gain": _gain_log,
+					"limiter": AudioServer.get_bus_effect(0, 0).get_class() if AudioServer.get_bus_effect_count(0) > 0 else "",
+					"round": _round, "driver": "headless Dummy (software mix, real time)"}
+				var f := FileAccess.open("user://rec_meta.json", FileAccess.WRITE)
+				if f: f.store_string(JSON.stringify(meta))
+				_rec_state = "saved"
+				rep.recording = {"seconds": snappedf(ts, 0.01), "cues": _cue_log.size()}
+				for b in _rec:
+					var bi := AudioServer.get_bus_index(b)
+					for e in range(AudioServer.get_bus_effect_count(bi) - 1, -1, -1):
+						if AudioServer.get_bus_effect(bi, e) == _rec[b]: AudioServer.remove_bus_effect(bi, e)
+				_rec.clear()
 
 func _drive() -> void:
 	bt += get_process_delta_time()
+	_hero_policy()
+	if _record_mode:
+		_paused_done = true
+		_focus_done = true
 	if not _paused_done and bt >= 10.0:
 		_paused_done = true
 		E.cmd_set_paused.emit(true)
