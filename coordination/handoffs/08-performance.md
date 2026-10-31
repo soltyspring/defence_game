@@ -1,4 +1,23 @@
 # 08-performance handoff
+## M4 — static per-commit asset budget gate (2026-10-31 16:1x +09:00)
+- Coordinator review 16:0x: c58c59e/480f815 accepted. C11 quiet window is NOT open yet, because 02/03/04/05/07 are working; the coordinator
+  will open it later. Until then, do Godot-free work only. This milestone used **no Godot**.
+- Done (verified): `tools/perf/asset_budget_check.py`. It compares the base commit (37b9a93) with a commit / `--worktree` / `--range` /
+  `--tree`, using git trees via `git archive`. It reports PNG size and GPU estimate from .import (lossless 4 B/px, VRAM 1 B/px, mipmaps +1/3),
+  per-round residency, WAV decoded PCM, OGG duration and decoded size, and optional APK totals. **Exit 1 when a cap is exceeded**
+  (`--report-only` = always 0). Self-test `tests/performance/test_asset_budget_check.py` uses synthetic over-cap trees under
+  build/perf/asset_selftest and never touches assets/.
+- Results: `--range 37b9a93..HEAD` → PASS for ccf3033 (05), **2b350c4 (03 theme A redraw: 0 page size changes, GPU identical 9.25 MiB,
+  PNG −0.8 KiB)**, and 5930430; HEAD bfcce0e PASS; working-tree preview (05 WIP: 38 SFX, 0.83 MiB PCM) PASS. Recorded in RETHEME_BUDGET.md §5.
+  03 notified (A5), 05 notified (AU2: music must stay streamed, 7.69 MiB if decoded).
+- Validation: self-test 11/11 PASS (exit 0); gate HEAD exit 0; `--worktree` exit 0; `--range` exit 0; APK rows with the same file →
+  "n/a, same APK file: not evidence".
+- Still open: C11 quiet A/B re-measure (waiting on the coordinator); fresh before/after APK (04 R6); frame cost of the new art (needs C11 /
+  Godot); 02 P2b; 04 R5; stress unit-drop; device data.
+- Next steps (exact): (1) Whenever 03/05 commit assets: `python tools/perf/asset_budget_check.py --range 37b9a93..HEAD` and add a row to
+  RETHEME_BUDGET §5. On FAIL, notify the owner with the report's file line. (2) When 04 posts APKs:
+  `--apk-before <a> --apk-after <b>`. (3) When C11 is granted: the command in the M3 section below.
+- Commit: see "M4 commit" line below (filled after the helper).
 ## M3 — resumed 2026-10-31 15:35 (user restart), updated 15:55 +09:00
 - Recovery check: owned paths showed no diff between HEAD and `checkpoint/quota-20261031-092323/08-performance` (86c00f7), and the owned
   working tree was clean, so no work was lost. The HISTORICAL QUOTA CHECKPOINT text was ignored as instructed. Session ID: not exposed.

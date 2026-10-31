@@ -51,6 +51,22 @@ GPU numbers stay identical. Any page size change, new page or new load group: te
    `build/perf/retheme_after/retheme_compare.json`. If the APK file is unchanged the tool prints that the APK rows are not evidence.
 3. 08 records the after-numbers in §5 and re-runs the frame probe for draw cost (the new art may change occupancy and placeholder use).
 
-## 5. After-numbers
-Not measured yet (re-theme assets not committed at 15:50). A check at 15:4x on the shared working tree (03/05 WIP) gave caps=PASS
-with unchanged page sizes and 2 extra SFX (hit_melee_4/5); this is WIP, not a result.
+## 5. After-numbers (per commit, `python tools/perf/asset_budget_check.py`)
+Gate added 16:1x: `tools/perf/asset_budget_check.py` reads git trees with `git archive` (no WIP leakage). It measures PNG size and GPU
+estimate from the .import settings (lossless 4 B/px, VRAM-compressed 1 B/px, +1/3 for mipmaps), WAV decoded PCM, OGG duration and
+decoded size, and optional APK totals. It **exits 1 when any cap in §3 is exceeded**. `--range 37b9a93..HEAD` checks every commit that
+touched assets/ or data/. Self-test: `python tests/performance/test_asset_budget_check.py` (11 cases, synthetic over-cap trees).
+
+| Commit (time) | What | Verdict | Atlas worst battle / all / menu | PNG disk | SFX count / PCM | Music |
+|---|---|---|---|---|---|---|
+| 37b9a93 (baseline) | pre-retheme | — | 9.25 / 9.25 / 0.25 MiB | 72.3 KiB | 29 / 0.76 MiB | 2 / 0.53 MiB |
+| ccf3033 (15:46, 05) | hit SFX low-end + 2 variants | PASS | unchanged | 72.3 KiB | 31 / 0.76 MiB | 2 / 0.54 MiB |
+| 2b350c4 (15:50, 03) | **theme A redraw, all pages** | PASS | 9.25 / 9.25 / 0.25 MiB (identical; 0 page size changes) | 71.5 KiB (−0.8 KiB) | 31 / 0.76 MiB | 2 / 0.54 MiB |
+| 5930430 (15:50, 01) | data | PASS | unchanged | 71.5 KiB | 31 / 0.76 MiB | 2 / 0.54 MiB |
+| HEAD bfcce0e (16:1x) | — | PASS | 9.25 / 9.25 / 0.25 MiB | 71.5 KiB | 31 / 0.76 MiB | 2 / 0.54 MiB |
+| working tree (16:1x, 05 WIP) | preview only, not a commit | PASS | unchanged | 71.5 KiB | 38 / 0.83 MiB | 2 / 0.55 MiB |
+Per-round residency after 03's redraw is identical to the baseline (r01–r03 5.25, r05 7.25, r10 9.25 MiB).
+Information for 05: if the music were imported as non-streamed or decoded (e.g. a WAV conversion), it would cost **7.69 MiB** of PCM
+(44.1 kHz stereo, 27.4 s battle track + menu track). It must stay a streamed OGG.
+APK: still only the stale 07:23 APK, so the APK rows report "same APK file: not evidence". A fresh before/after build from 04 is pending (R6).
+Contended or not does not matter here: these are file measurements, not timings.
