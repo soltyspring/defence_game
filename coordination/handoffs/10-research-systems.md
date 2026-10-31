@@ -1,4 +1,20 @@
-# 10-research-systems handoff — FINAL CHECKPOINT (user stop order)
+# 10-research-systems handoff
+Updated: 2026-10-31 ~15:41 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same session (reopened for window separation)
+
+## RESUME after user restart (~15:38 KST)
+- Read: this handoff, coordinator-to-10-research-systems.md (the QUOTA CHECKPOINT text is historical; I did not stop for it), 01-director-to-10-research-systems.md R1 (D17 schema_version, D19 no mid-round resume, #6 rules accepted, migrations.json in backlog).
+- Lost-work check: working tree for owned paths is clean. `git diff HEAD origin/checkpoint/quota-20261031-092323/10-research-systems` shows no differences in docs/research/systems, my handoff or my status (the checkpoint commit 3a4fe47 holds the same content as main). No temp leftovers, no probe Godot processes. **Nothing lost.**
+- An interrupted earlier resume attempt left nothing behind. It had only run the probe and a failed name diff (a PowerShell console encoding problem, fixed with UTF-8 output encoding).
+- User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
+- Quota: 2278.54/10000 = 22.79% at 15:37.
+
+## v0.11 (this resume)
+- probe_content_integrity at a clean HEAD 2884231 snapshot: ERROR 0, WARN 0, **INFO 0**, exit 0. This confirms D17 by execution.
+- Name diff vs the v0.9 baseline: 0 display-name changes. Theme labels are still not committed (the only data/text change is toast.counterattack in cbfb0a8). The theme check stays pending on 01.
+- Doc §9.2 v0.11 note and a 01 request were written.
+
+## Below: prior final checkpoint (still valid)
+# (previous) 10-research-systems handoff — FINAL CHECKPOINT (user stop order)
 Updated: 2026-10-31 ~09:24 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce (per coordinator correction 08:09) · claude-opus-5.5 / trust-all, same window
 Owned: docs/research/systems/**, coordination/status|handoffs/10-research-systems.md, coordination/requests/10-research-systems-to-*.md
 State at stop: NO task in progress. Working tree for owned paths was clean before this file was written. No Godot or other processes started by 10 are running (checked: no Godot process with docs/research/systems/probes or probe10 in its command line). No temp leftovers (%TEMP%\probe10_* none, user://probe10 absent).

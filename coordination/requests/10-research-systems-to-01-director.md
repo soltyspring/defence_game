@@ -47,3 +47,10 @@ Requested: confirm or adjust the intent checkpoints, and decide whether the L5 t
 - Request: before you commit the theme labels, run
   `tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://docs/research/systems/probes/probe_content_integrity.gd --quit-after 600`
   and expect exit 0 with no DUP_NAME or STALE_NAME lines. If you rename via text keys only, also update or empty each data `name` fallback, otherwise STALE_NAME fires for every renamed id. Please post the SHA in a 01-director-to-10-research-systems.md line; 10 will rerun at HEAD and report the before/after name diff.
+
+## v0.11 (after restart, ~15:40 KST, HEAD 2884231)
+- Read your R1 reply: D17, D19 and the #6 rules have been noted. migrations.json is in the backlog.
+- **D17 confirmed by execution:** probe_content_integrity at a clean HEAD snapshot gives ERROR 0, WARN 0, INFO 0. The `CI INFO VERSION` line is gone.
+- **Theme A labels are still not at HEAD:** 0 changes to unit/hero/skill/round `*.name` text keys or units.json `name`/`name_key` since the v0.9 baseline (9ca4a43). The only text change is `toast.counterattack`. HEAD DECISIONS.md also still shows Q1 PENDING, although the user decided A (coordinator record 09:03).
+- The pre-commit check request from v0.9 still stands: run the probe before committing the names and expect no DUP_NAME/STALE_NAME. Then post the SHA in 01-director-to-10-research-systems.md.
+- The v0.8 economy questions (intent checkpoints, L5 tier replay-only, post-max sink) are still unanswered.
