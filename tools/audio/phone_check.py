@@ -14,6 +14,7 @@ Faction readability: leave-one-out nearest-centroid classification of the 3 hit_
 using octave-band energy profiles (315 Hz - 8 kHz) and an envelope "graininess" feature, full band vs phone.
 These are proxies; they do not replace listening on a real phone.
 Usage: python tools/audio/phone_check.py [--rec=tools/audio/_render/recording] [--label=v3.5] [--report=docs/audio/PHONE_SPEAKER_CHECK.md]
+       [--history=docs/audio/phone_check_history.json]
 """
 from __future__ import annotations
 
@@ -34,6 +35,8 @@ ARGS = {a.split("=", 1)[0]: a.split("=", 1)[1] for a in sys.argv[1:] if "=" in a
 REC = ROOT / ARGS.get("--rec", "tools/audio/_render/recording")
 LABEL = ARGS.get("--label", "latest")
 REPORT = ROOT / ARGS.get("--report", "docs/audio/PHONE_SPEAKER_CHECK.md")
+# v3.8: --history=<json> keeps a run family (e.g. 9 anomaly-check recordings) out of the main history/report
+HISTORY = ROOT / ARGS.get("--history", "docs/audio/phone_check_history.json")
 MAN = json.loads((ROOT / "assets/audio/audio_manifest.json").read_text(encoding="utf-8"))
 SR = 22050
 HP = butter(4, 300, "highpass", fs=SR, output="sos")
@@ -155,7 +158,7 @@ def main() -> int:
     out = {"label": LABEL, "rec": str(REC.relative_to(ROOT)).replace("\\", "/"), "rows": rows,
            "faction_loo_accuracy_full": acc_full, "faction_loo_accuracy_phone": acc_ph, "faction_separation_phone": round(sep, 2),
            "grain_bread_phone": round(float(cb[-1] * 5), 2), "grain_mold_phone": round(float(cm[-1] * 5), 2)}
-    hist_p = ROOT / "docs/audio/phone_check_history.json"
+    hist_p = HISTORY
     hist = json.loads(hist_p.read_text(encoding="utf-8")) if hist_p.exists() else {}
     hist[LABEL] = out
     hist_p.write_text(json.dumps(hist, indent=1) + "\n", encoding="utf-8")

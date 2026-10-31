@@ -152,7 +152,7 @@ func _on_battle_ended(r: Dictionary) -> void:
 func _on_hud(s: Dictionary) -> void:
 	hud = s
 
-func _on_cue(cue: StringName, _voice: int) -> void:
+func _on_cue(cue: StringName, _voice: int) -> void:   # _voice = index in A._sfx (-1 for UI/stinger)
 	var c := str(cue)
 	rep.cue_counts[c] = int(rep.cue_counts.get(c, 0)) + 1
 	var f := Engine.get_process_frames()
@@ -163,7 +163,11 @@ func _on_cue(cue: StringName, _voice: int) -> void:
 		rep.same_frame_duplicates.append({"cue": c, "t": snappedf(t, 0.01)})
 	_frame_cues[c] = true
 	if _rec_state == "recording":
-		_cue_log.append([snappedf((Time.get_ticks_usec() - _rec_t0_us) / 1e6, 0.001), c])
+		# v3.8: also log WHICH file (variant index), pitch and volume, for repetition analysis
+		var vi := int(A._last_variant.get(cue, 0))
+		var pl: AudioStreamPlayer = A._sfx[_voice] if _voice >= 0 and _voice < A._sfx.size() else null
+		_cue_log.append([snappedf((Time.get_ticks_usec() - _rec_t0_us) / 1e6, 0.001), c, vi,
+			snappedf(pl.pitch_scale, 0.0001) if pl else 1.0, snappedf(pl.volume_db, 0.01) if pl else 0.0])
 
 func _on_battle_started(info: Dictionary) -> void:
 	in_battle = true

@@ -261,6 +261,22 @@ func _run() -> void:
 	A.advance(gg)
 	E.emit_signal("sfx", &"hit", {"kind": "melee", "target_side": "player", "x": 0.0})
 	_ok(int(A.stats.played) - g0 == 2, "hit after the shared gap must play")
+	# v3.8: repetition: shoot_spit has 3 files, never the same file twice in a row, level within +-vol_jitter
+	_ok((A.cues[&"shoot_spit"].files as Array).size() == 3, "shoot_spit must have 3 variants")
+	var vj := float(A.cues[&"shoot_spit"].get("vol_jitter", 0.0))
+	_ok(vj > 0.0 and vj <= 1.5, "shoot_spit vol_jitter in (0, 1.5] dB")
+	var prev_v := -1
+	var vols := []
+	for i in 12:
+		A.advance(1.0)
+		A.cue_played.connect(grab)
+		A.play(&"shoot_spit")
+		A.cue_played.disconnect(grab)
+		var v_now := int(A._last_variant.get(&"shoot_spit", -1))
+		_ok(v_now != prev_v, "shoot_spit repeated variant %d twice in a row" % v_now)
+		prev_v = v_now
+		vols.append(A._sfx[last.voice].volume_db - float(A.cues[&"shoot_spit"].vol_db))
+	_ok(vols.max() <= vj + 0.001 and vols.min() >= -vj - 0.001 and vols.max() - vols.min() > 0.05, "vol jitter range %s" % str([vols.min(), vols.max()]))
 	# v3.7: danger-cue SFX duck: hit_base (duck_sfx -6, below prio 5) lowers playing + new lower-prio SFX
 	A.advance(5.0)
 	A.play(&"explosion")                       # prio 5 -> must NOT be ducked by hit_base (below 5 only)

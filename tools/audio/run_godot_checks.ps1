@@ -7,7 +7,7 @@
 #   pwsh tools/audio/run_godot_checks.ps1 -Integration  # + simulated 02 request A1 (Audio autoload, exact line),
 #                                                       #   02 global selftest, leak attribution, bounded real battle
 # Exit code 0 = all pass. Integration report: tools/audio/_render/integration/*.json (git-ignored via .gdignore dir)
-param([switch]$Integration, [int]$BattleSeconds = 95, [switch]$Record, [int]$RecordSeconds = 60, [switch]$EngineSelftest, [string]$RecordRound = 'r02', [switch]$RecordUntilEnd, [string]$InjectEnd = '', [int]$InjectAt = -1, [string]$RecordTag = '', [switch]$SkipIntegrationBattle, [string]$ProbeArgs = '', [switch]$Lifecycle, [string]$RecordSeeds = '')
+param([switch]$Integration, [int]$BattleSeconds = 95, [switch]$Record, [int]$RecordSeconds = 60, [switch]$EngineSelftest, [string]$RecordRound = 'r02', [switch]$RecordUntilEnd, [string]$InjectEnd = '', [int]$InjectAt = -1, [string]$RecordTag = '', [switch]$SkipIntegrationBattle, [string]$ProbeArgs = '', [switch]$Lifecycle, [string]$RecordSeeds = '', [string]$RecordRounds = '')
 if ($Record) { $Integration = $true }
 $ErrorActionPreference = 'Continue'   # Godot writes diagnostics to stderr; judge by exit codes
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
@@ -89,6 +89,16 @@ function Run([string]$label, [string[]]$a, [int]$timeoutSec = 180) {
 }
 $r = Run 'import' @('--headless', '--path', $sb, '--import') 300
 "import exit=$($r.code)"
+# New WAV/OGG files in 05 paths without a committed .import: copy the .import Godot just generated in the sandbox
+# (same res:// layout), so the repo keeps .wav = .wav.import parity without importing the shared checkout.
+foreach ($w in Get-ChildItem (Join-Path $root 'assets\audio') -Recurse -File -Include *.wav, *.ogg) {
+  $imp = $w.FullName + '.import'
+  if (-not (Test-Path $imp)) {
+    $rel = $w.FullName.Substring($root.Length + 1)
+    $sbImp = Join-Path $sb ($rel + '.import')
+    if (Test-Path $sbImp) { Copy-Item $sbImp $imp; "import file added from sandbox: $rel.import" } else { "  ^ no .import generated for $rel"; $fail++ }
+  }
+}
 foreach ($s in @('res://src/audio/audio_manager.gd', 'res://src/audio/audio_event_bridge.gd', 'res://tools/audio/audio_selftest.gd', 'res://tools/audio/integration_probe.gd', 'res://tools/audio/leak_probe.gd', 'res://tools/audio/lifecycle_probe.gd')) {
   $r = Run ('parse_' + [IO.Path]::GetFileNameWithoutExtension($s)) @('--headless', '--path', $sb, '--check-only', '--script', $s)
   if ($r.code -ne 0) { $fail++; "PARSE FAIL $s"; $r.out | Select-Object -Last 10 } else { "PARSE OK $s" }
@@ -176,6 +186,9 @@ if ($Record) {
   # -RecordSeeds "11,23,37": several seeded recordings in the SAME sandbox (one import), strictly one after another;
   # outputs go to tools/audio/_render/recording_<RecordTag>_s<seed>.
   $seedList = @(if ($RecordSeeds) { $RecordSeeds -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ } } else { '' })
+  $roundList = @(if ($RecordRounds) { $RecordRounds -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ } } else { $RecordRound })
+  foreach ($rnd in $roundList) {
+  $RecordRound = $rnd
   foreach ($sd in $seedList) {
   $q = $RecordSeconds + 4
   $ra = @('--headless', '--verbose', '--path', $sb, '--', "--round=$RecordRound", "--quit-after=$q", '--probe-mode=record', "--record-seconds=$RecordSeconds")
@@ -184,12 +197,12 @@ if ($Record) {
   if ($ProbeArgs) { $ra += ($ProbeArgs -split ' ' | Where-Object { $_ }) }
   if ($sd -ne '') { $ra += "--probe-seed=$sd" }
   foreach ($fn in @('rec_master.wav', 'rec_sfx.wav', 'rec_ui.wav', 'rec_music.wav', 'rec_meta.json', 'audio_integration_report.json')) { Remove-Item (Join-Path $userDir $fn) -ErrorAction SilentlyContinue }
-  $r = Run ('record' + $(if ($sd) { "_s$sd" } else { '' })) $ra ($q + 60)
-  $tag = $RecordTag + $(if ($sd) { $(if ($RecordTag) { "_s$sd" } else { "s$sd" }) } else { '' })
+  $r = Run ('record' + $(if ($RecordRounds) { "_$rnd" } else { '' }) + $(if ($sd) { "_s$sd" } else { '' })) $ra ($q + 60)
+  $tag = $RecordTag + $(if ($RecordRounds) { "_$rnd" } else { '' }) + $(if ($sd) { $(if ($RecordTag -or $RecordRounds) { "_s$sd" } else { "s$sd" }) } else { '' })
   $recOut = Join-Path $root ('tools\audio\_render\recording' + $(if ($tag) { "_$tag" } else { '' }))
   $rl = @($r.out | Select-String -Pattern 'Leaked instance: (\w+)' | ForEach-Object { $_.Matches[0].Groups[1].Value })
   $ral = @($rl | Where-Object { $_ -match 'Audio|Ogg' })
-  "record$(if ($sd) { " seed $sd" }) exit leaks: audio_class=$($ral.Count) [$($ral -join ',')] foreign=$((@($rl | Where-Object { $_ -notmatch 'Audio|Ogg' }) | Sort-Object -Unique) -join ',')"
+  "record $RecordRound$(if ($sd) { " seed $sd" }) exit leaks: audio_class=$($ral.Count) [$($ral -join ',')] foreign=$((@($rl | Where-Object { $_ -notmatch 'Audio|Ogg' }) | Sort-Object -Unique) -join ',')"
   if ($ral.Count -gt 0) { $fail++; "  ^ audio objects leaked at exit in record run" }
   New-Item -ItemType Directory -Path $recOut -Force | Out-Null
   $n = 0
@@ -200,6 +213,7 @@ if ($Record) {
   if ($r.timeout) { $fail++; "  ^ record run TIMED OUT" }
   "record exit=$($r.code) files_copied=$n -> $recOut"
   if ($n -lt 5) { $fail++; "  ^ recording missing" }
+  }
   }
 }
 if ($Lifecycle) {
