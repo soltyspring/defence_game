@@ -12,7 +12,7 @@
 - Pending for C11 (17:00–17:25 proposal, `-RequireQuiet` only): A/B 02 target search (base = linear blob d4d7c13 → HEAD, now incl.
   22d99ea); then, outside the A/B, frame probe on a clean HEAD snapshot (P8 STEPPING re-check + H1/H2/H15 draw-call/view/UI A/B) and
   `targeting_equivalence.gd` on the snapshot.
-- M9 commit: recorded only after `git show` verification (below).
+- M9 commit: `cb7385f43874d5f493968c697d15703f11818c1c` [Docs], 16:41:32. Verified with `git show --stat` (7 files), and `git branch -r --contains` shows origin/main. The "16:4x" labels in M9 mean 16:35–16:41 (commit time 16:41:32).
 ## M8 — 03 art 0.9.0 gate, P8 wait, C11 proposal (2026-10-31 16:30 +09:00)
 - User decisions recorded: **Q3 working title "빵집 기사단: 곰팡이 디펜스" (16:19 KST)**, **Q2 monetization on hold** (no ad/billing SDK).
 - (1) 7705aec (03, pixels only) → asset gate PASS vs 37b9a93 and vs 2b350c4. Page count 10→10, GPU 9.25 MiB unchanged, PNG −459 B.
