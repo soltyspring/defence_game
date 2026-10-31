@@ -30,7 +30,7 @@ State at checkpoint: work stopped at a safe point. The owned working tree is CLE
 - Theme A text (01 14b01e2) is in use: cards are 제빵사/식빵병/롤빵병/통식빵/프레첼 (Baker/Toast/Roll/Loaf/Twist). ui.title stays provisional per 01.
 - 5a2099d: fit_label cold-font bug (root cause of 07 QA-B009) fixed; round tiles wrap to 2 lines (QA-B010); `UiStyle.prewarm_fonts()` added (08 R5).
 - 231cfda: the `--safe=` harness option now uses live insets (an integer-scale 800×450 view had exposed a stale fixed rect).
-- 38b4d9d: tiles prefer a 12 px 2-line wrap over the 10 px cut. **This pushed a test file with a parse error** (I published without gating on the test result). Fixed in ad9b6fd. The HEAD snapshot then gave UI 3297/0 and integration 32/32.
+- 38b4d9d: tiles prefer a 12 px 2-line wrap over the 10 px cut. **This pushed a test file with a parse error** (I published without gating on the test result). Fixed in abe2303. The HEAD snapshot then gave UI 3297/0 and integration 32/32.
 - Verified on DISPLAY2 against fresh HEAD snapshots (own import, so icons are correct): 1600×900 → 800×450 view, 0.0% irregular glyph runs at 1×/2×/2.5×, ko/en (build/qa/real6, real7). 07 theme+flow on HEAD: TH-FIT-HUD ko/en PASS; TH-FIT-ROUND fails only because 07 measures 1 line (asked 07 to use fit_lines); TH-COL = 03.
 - The shared tree currently has 02's uncommitted src/core/app.gd WIP (breaks App.boot), so run integration on HEAD snapshots until 02 commits.
 ## Unfinished / open (not done, do not claim)
