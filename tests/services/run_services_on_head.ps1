@@ -11,6 +11,8 @@ $Root = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 Set-Location $Root
 $G = Join-Path $Root 'tools\engine\Godot_v4.7.2-stable_win64_console.exe'
 if (-not (Test-Path $G)) { Write-Output "Godot console binary not found at $G"; exit 1 }
+. (Join-Path $PSScriptRoot 'svc06_isolation.ps1')
+Enter-SvcIsolation 'head'   # private APPDATA for the import and every suite (10 v0.26); the snapshot keeps config/name
 $sha = (git rev-parse --short $Ref).Trim()
 $snap = Join-Path $env:TEMP "svc06_head_$sha"
 Remove-Item $snap -Recurse -Force -ErrorAction SilentlyContinue
@@ -31,6 +33,7 @@ foreach ($d in @('build\qa\apk_head', 'build\android', 'build\release')) {
 Write-Output ("snapshot {0} ({1}) at {2}; import exit {3}" -f $sha, $Ref, $snap, $LASTEXITCODE)
 $suites = @('test_services', 'test_services_m2', 'test_services_m3', 'test_services_listing', 'test_services_m8', 'test_services_m10', 'test_services_android', 'test_services_upgrade', 'test_services_integration')
 $worst = 0
+try {
 foreach ($s in $suites) {
   $out = & $G --headless --path $snap -s "res://tests/services/$s.gd" 2>&1 | ForEach-Object { "$_" -replace '\x1b\[[0-9;]*m', '' }
   $code = $LASTEXITCODE
@@ -40,6 +43,10 @@ foreach ($s in $suites) {
   if ($code -eq 1 -or ($code -ne 0 -and $code -ne 2)) { $worst = 1 }
   elseif ($code -eq 2 -and $worst -eq 0) { $worst = 2 }
 }
+} finally {
+  $isolated = Exit-SvcIsolation
+}
+if (-not $isolated) { Write-Output 'ISOLATION NOT PROVEN: treating the run as FAIL'; $worst = 1 }
 Write-Output ("OVERALL exit={0} ({1}) on {2}" -f $worst, @('PASS_INTEGRATED', 'FAIL', 'BLOCKED_NOT_INTEGRATED')[$worst], $sha)
 if (-not $Keep) { Remove-Item $snap -Recurse -Force -ErrorAction SilentlyContinue }
 exit $worst

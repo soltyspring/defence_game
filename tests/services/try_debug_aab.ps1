@@ -9,6 +9,9 @@ $ErrorActionPreference = 'Continue'
 $Root = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 Set-Location $Root
 $G = Join-Path $Root 'tools\engine\Godot_v4.7.2-stable_win64_console.exe'
+. (Join-Path $PSScriptRoot 'svc06_isolation.ps1')
+Enter-SvcIsolation 'aab'   # private APPDATA for every Godot call (10 v0.26); Gradle/JDK do not use APPDATA
+$scriptStart = Get-Date
 $sha = (git rev-parse --short $Ref).Trim()
 $snap = Join-Path $env:TEMP "svc06_aab_$sha"
 Remove-Item $snap -Recurse -Force -ErrorAction SilentlyContinue
@@ -89,5 +92,11 @@ if ((Test-Path $aab) -and $Bundletool -ne '' -and $JavaHome -ne '') {
   Expand-Archive $apks -DestinationPath (Join-Path $out 'split') -Force
   "bundletool done; outputs in $out" | Out-File $log -Append
 }
+$null = Exit-SvcIsolation
+# Stop only the Gradle 8.11.1 Java processes this run started (daemon may outlive the build).
+Get-CimInstance Win32_Process -Filter "Name='java.exe'" -ErrorAction SilentlyContinue |
+  Where-Object { $_.CommandLine -match 'gradle-8\.11\.1' -and $_.CreationDate -ge $scriptStart } |
+  ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue; "stopped gradle java $($_.ProcessId)" | Out-File $log -Append }
 Write-Output "snapshot: $snap"
+if (Test-Path (Join-Path $out 'universal_badging.txt')) { Write-Output '== universal_badging.txt'; Get-Content (Join-Path $out 'universal_badging.txt') }
 Get-Content $log | Select-String -Pattern 'exit|TIMEOUT|AAB present|ERROR|error:|FAILURE|What went wrong|Unsupported|major version|Java|JDK|Gradle|NDK|license|BUILD' | Select-Object -First 40 | ForEach-Object { $_.Line.Trim() }

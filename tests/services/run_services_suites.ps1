@@ -4,13 +4,18 @@
 #       2 = all pass, integration BLOCKED (02 S1/S2 not done)  <- expected until 02 integrates
 #       1 = any failure
 # Runs Godot sequentially (no parallel engines). Mocks only; nothing contacts a network.
-param([switch]$SimulateIntegration)
+# Isolation (10 v0.26): every Godot run gets a private APPDATA (svc06_isolation.ps1), so user:// is never
+# the real player folder. A missing isolation proof makes OVERALL fail (exit 1).
+param([switch]$SimulateIntegration, [switch]$KeepIsolation)
 $ErrorActionPreference = 'Continue'   # Godot writes warnings to stderr; 'Stop' would abort the run
 Set-Location (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent)
+. (Join-Path $PSScriptRoot 'svc06_isolation.ps1')
 $G = '.\tools\engine\Godot_v4.7.2-stable_win64_console.exe'
 if (-not (Test-Path $G)) { Write-Output "Godot console binary not found at $G"; exit 1 }
 $suites = @('test_services', 'test_services_m2', 'test_services_m3', 'test_services_listing', 'test_services_m8', 'test_services_m10', 'test_services_android', 'test_services_upgrade', 'test_services_integration')
 $worst = 0
+Enter-SvcIsolation 'suites'
+try {
 foreach ($s in $suites) {
   $extra = @()
   if ($s -eq 'test_services_integration' -and $SimulateIntegration) { $extra = @('--', '--simulate-integration') }
@@ -22,5 +27,9 @@ foreach ($s in $suites) {
   if ($code -eq 1 -or ($code -ne 0 -and $code -ne 2)) { $worst = 1 }
   elseif ($code -eq 2 -and $worst -eq 0) { $worst = 2 }
 }
+} finally {
+  $isolated = Exit-SvcIsolation -Keep:$KeepIsolation
+}
+if (-not $isolated) { Write-Output 'ISOLATION NOT PROVEN: treating the run as FAIL'; $worst = 1 }
 Write-Output ("OVERALL exit={0} ({1})" -f $worst, @('PASS_INTEGRATED', 'FAIL', 'BLOCKED_NOT_INTEGRATED')[$worst])
 exit $worst
