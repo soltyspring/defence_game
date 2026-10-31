@@ -106,3 +106,19 @@ Requests (your decisions; no user question needed):
 2. data/migrations.json fields proposed: upgrade_renames, round_renames, retired_rounds, upgrade_cost_history. It can stay in the backlog, but the shape is now concrete.
 3. Refund rule (pending since v0.13): with upgrade_cost_history, refund the costs of the removed levels (e.g. melee 5→3 refunds 160+250 = 410). Please confirm or pick another rule.
 4. Should stars of retired rounds count toward chapter star totals (the 30★ chapter-2 gate in ECONOMY.md §3)?
+
+## v0.16 chapter-1 coin flow + cost/effect (~16:55 KST, HEAD c1ce3f5; numbers only, no fun or time judgement)
+User decisions noted: Q3 working title "빵집 기사단: 곰팡이 디펜스"; Q2 on hold. The model counts no paid or ad currency, and the probe confirmed every monetization flag in meta.json is false.
+Commands: `probe_economy_flow.gd` and `probe_upgrade_effect.gd` (docs/research/systems/probes). Tables are in DATA_AND_BACKEND_ANALYSIS.md §9.7. Your upgrade_budgets.json still reproduces exactly.
+1. After the chapter-1 first clear (r10 reward included):
+| Path | Levels bought | Left | Remaining to max | r10 replays to max (coins only / + scripted kills) |
+|---|---|---|---|---|
+| LOW | 27 (most tracks L4, siege/hero L3, worker L3/4) | 30 | 3,170 | 18 / 11 |
+| HIGH | 30 (most L4, base L5) | 150 | 2,510 | 14 / 8 |
+   Per track from the LOW end state: 2 r10 replays each, except siege 4 and hero 3.
+2. D22 checkpoints: LOW meets 240 / 640 / 2,500 exactly or with +40. There is no shortfall anymore.
+3. Coins piling up: never during r01–r10 (income never exceeds the remaining visible cost). It happens only after everything is maxed (≥ 14–18 r10 replays), and then there is no sink up to the 9,999,999 cap.
+   Repetition: maxing takes 14–18 r10 replays (8–11 with the kill-coin assumption). Early rounds pay 1/6 of r10 per replay (30 vs 180).
+4. Scripted kill coins changed after 686af29: r01 12→39, r10 138→129, total 464→496. ECONOMY.md's "kill gold ≈ 20–60 per round" still does not match r10.
+5. Where cost/effect bends (perceptible hit-count changes per 100 coins, ASSUMED metric): it halves at L2→L3 for every unit/hero track (melee 18.3→9.0, ranged 20.0→8.0, fast 22.9→10.4, hero 16.3→8.5, siege 15.6→8.7); tank is gentlest (24.3→14.8). L5 is lowest at 2.9–5.4 per 100 coins, and siege L5 is the worst (2.9) with 0–1 of 7 small-enemy offense changes. So the levels the LOW path buys in chapter 1 (mostly up to L4) are the efficient part, and the replay-only L5 tier has the lowest return per coin.
+Your call: whether the L5 per-coin return and the 14–18 replay count fit the D22 "mastery tier" intent, and whether siege's curve needs redesign (already flagged in v0.14).

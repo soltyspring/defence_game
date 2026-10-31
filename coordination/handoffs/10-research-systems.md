@@ -8,6 +8,12 @@ Updated: 2026-10-31 ~15:41 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
+## v0.16 (~16:56 KST): chapter-1 coin flow + cost/effect bend
+- User decisions: Q3 working title "빵집 기사단: 곰팡이 디펜스" (16:19). Q2 on hold, so there is no paid or ad currency in the model.
+- Wait check: 22d99ea is in HEAD. No buy_upgrade/content_version in src, so C1–C5 and R5 are still pending.
+- probe_economy_flow extended: chapter-1 end state, per-track r10 replays to max, monetization flag check, intent constant updated to D22 640. probe_upgrade_effect rerun (data unchanged since ea16a8e).
+- Results: LOW end 27 levels / 3,170 to max / 18 r10 replays; HIGH 30 / 2,510 / 14. No coin pile-up during r01–r10. Cost/effect per 100 coins halves at L2→L3; L5 is lowest (2.9–5.4); siege L5 is worst. 01 request with tables sent. Doc §9.7.
+
 ## v0.15 (~16:41 KST): content version change vs existing saves
 - New probe docs/research/systems/probes/probe_content_migration.gd plus driver run_content_migration.ps1. It works in throwaway HEAD a9223df snapshot copies with mutated data and a %TEMP% legacy save fixture.
 - Results: M1 round removal skips ahead (r08 unlocked) and drops chapter stars 14→12. M2 insert locks r07. M3 swap has no effect here. M4 max_level 5→3 keeps L5 (hp 1.32), no refund. M5a unit rename is safe. M5b upgrade rename orphans the level and loses the bonus. Coins are never changed; unknown keys are kept.

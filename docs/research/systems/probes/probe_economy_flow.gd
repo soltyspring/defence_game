@@ -13,7 +13,7 @@ extends SceneTree
 ##   ASSUME = an assumption chosen here (named in each block).
 ##   INTENT = a design intention quoted from docs/design/ECONOMY.md text (not a data file).
 
-const INTENT_CHECKPOINTS := {"r03": 240, "r05": 660, "r10": 2500}   # ECONOMY.md §2 "Intended spend checkpoints: before R3 ≈ 240, before R5 ≈ 660, before R10 ≈ 2,500"
+const INTENT_CHECKPOINTS := {"r03": 240, "r05": 640, "r10": 2500}   # ECONOMY.md §2 after 01 D22: before R3 ≈ 240, before R5 ≈ 640 (was 660), before R10 ≈ 2,500
 
 var units := {}
 var skills := {}
@@ -65,7 +65,8 @@ func _greedy(with_star: bool, extra_per_round: Dictionary) -> Dictionary:
 	var bal := 0
 	var spent_levels := 0
 	var out := {}
-	for k in range(1, order.size() + 1):
+	# k = order.size()+1 is the state right after the first clear of the last round (v0.16: chapter-1 end)
+	for k in range(1, order.size() + 2):
 		if k >= 2:
 			var prev: Dictionary = rounds[str(order[k - 2])].get("reward", {})
 			bal += int(prev.get("first_clear_coins", prev.get("coins", 0)))
@@ -89,7 +90,8 @@ func _greedy(with_star: bool, extra_per_round: Dictionary) -> Dictionary:
 		var lv_out := {}
 		for id in level:
 			if level[id] > 1: lv_out[id] = level[id]
-		out[str(order[k - 1])] = {"levels": lv_out, "spent_levels": spent_levels, "leftover": bal}
+		var key := str(order[k - 1]) if k <= order.size() else "after_" + str(order[-1])
+		out[key] = {"levels": lv_out, "spent_levels": spent_levels, "leftover": bal}
 	return out
 
 func _visible_remaining(k: int, level: Dictionary) -> int:
@@ -210,6 +212,7 @@ func _initialize() -> void:
 	if budgets is Dictionary:
 		for scen_name in ["low", "high"]:
 			for rid in mine[scen_name]:
+				if str(rid).begins_with("after_"): continue
 				var a: Dictionary = mine[scen_name][rid]
 				var b = budgets.get(scen_name, {}).get(rid)
 				if b == null:
@@ -224,6 +227,32 @@ func _initialize() -> void:
 	# what the greedy budgets look like if scripted kill coins are added (ASSUME kills)
 	var with_kills := _greedy(true, kill_by_round)
 	_emit("budgets_high_plus_kills_r10", with_kills[str(order[-1])])
+
+	# ---- 7 (v0.16). chapter-1 end state (after the first clear of the last round) and replays to max per track ----
+	var endk := "after_" + str(order[-1])
+	var chap := {}
+	for scen_name in ["low", "high"]:
+		var st: Dictionary = mine[scen_name][endk]
+		var per_track: Array = []
+		var rem_total := 0
+		for up in meta.get("upgrades", []):
+			var id := str(up.id)
+			var lv := int(st.levels.get(id, 1))
+			var rem := 0
+			for i in range(lv - 1, int(up.max_level) - 1): rem += int(up.costs[i])
+			rem_total += rem
+			per_track.append({"id": id, "level": lv, "max": int(up.max_level), "remaining_cost": rem,
+				"r10_replays_coins_only": ceili(float(rem) / last_rp)})
+		chap[scen_name] = {"spent_levels": st.spent_levels, "leftover": st.leftover, "tracks": per_track,
+			"remaining_total": rem_total, "r10_replays_to_max_all_coins_only": ceili(float(maxi(0, rem_total - int(st.leftover))) / last_rp),
+			"r10_replays_to_max_all_with_scripted_kills_ASSUME": ceili(float(maxi(0, rem_total - int(st.leftover))) / (last_rp + last_kc))}
+	_emit("chapter1_end", chap)
+	# monetization hooks must stay out of the model (user Q2 = on hold): report their flags
+	var rh: Dictionary = meta.get("retention_hooks", {})
+	_emit("monetization_flags", {"gems_enabled": (meta.currencies[1].get("enabled", true) if meta.currencies.size() > 1 else null),
+		"rewarded_ads": rh.get("rewarded_ads", {}).get("enabled", null), "daily_first_win": rh.get("daily_first_win_gold_mult", {}).get("enabled", null),
+		"offline_income": rh.get("offline_income", {}).get("enabled", null), "iap": meta.get("iap_catalog", {}).get("enabled", null),
+		"counted_in_model": false})
 
 	print("PROBE10_ECONOMY_FLOW ", JSON.stringify({"total_cost": total_cost, "income_low": cum_low, "income_high": cum_high,
 		"kill_scripted_sum": kill_sum, "budgets_match": diffs.is_empty()}))
