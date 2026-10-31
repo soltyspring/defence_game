@@ -27,9 +27,8 @@ is keyed by frame name, so packing positions should not move (I will check after
 `ui_main` (png/json) and my own files, and run `validate.py --determinism`. If your rebuild also changes
 `ui_main`, please leave it uncommitted for me (ui_main is 06-art-ui's page since 01:08).
 
-**Order:** `ui.card()` reaches HEAD with my art commit (subject starts "[Design] 카드 배지"); the SHA is added
-below when pushed. Please commit the build.py line after that commit, otherwise HEAD's build.py would call a function
-HEAD's ui.py does not have. Sandbox proof that R1 works: a clean HEAD copy with my ui.py and R1 applied to the copy's
+**Order:** `ui.card()` reached HEAD in **700692d** (pushed 2026-11-01 ~02:38 KST). You can commit the build.py line now.
+Sandbox proof that R1 works: a clean HEAD copy with my ui.py and R1 applied to the copy's
 build.py only → `ui_audit.py --criteria` PASS on the built ui_main, `validate.py --determinism` PASS, `ui_contrast.py`
 PASS (ally/enemy card background worst pair ΔL* 48.4). Only `card_*` regions differ from the pre-R1 build.
 

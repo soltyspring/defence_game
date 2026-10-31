@@ -8,7 +8,7 @@ UI art: audit → criteria → redraw → build → captures → review requests
 ## Done
 - 1d359bc: audit tool `tools/art/ui_art/ui_audit.py`, `docs/art/ui/UI_ART_AUDIT.md`, `UI_ART_CRITERIA.md`, before evidence,
   requests to 03 (R1) and 04.
-- Art commit (SHA in status after push): `tools/art/ui.py` (`card()`, `CARD_STYLE`, `CARD_CROP`, `badge_mask()`, skill plates,
+- 700692d (pushed origin/main): `tools/art/ui.py` (`card()`, `CARD_STYLE`, `CARD_CROP`, `badge_mask()`, skill plates,
   `icon_star_empty`, `move_button`), `tools/art/branding.py` (CRUST/MOULD ramps), `tools/art/ui_contrast.py` (card background
   read for shaped badges, worst pair), previews `card_preview.py`, `logo_preview.py`, capture runner `ui_capture.ps1`,
   `capture_compare.py`; rebuilt `ui_main`, `ui_title_ko`, `ui_title_en`, `manifest.json`, `ATLAS_BUDGET.md`, atlas_ui_* previews.
