@@ -1,7 +1,7 @@
 {
  "version": 1,
  "generator": "tools/audio/synth.py",
- "generator_version": 1,
+ "generator_version": 2,
  "technique": "deterministic numpy synthesis (oscillators/noise/envelopes/filters); no samples, no AI services",
  "license": "original work for this project",
  "sfx_format": {
@@ -159,16 +159,18 @@
   },
   "hit_melee": {
    "bus": "SFX",
-   "vol_db": -9,
-   "max": 3,
-   "gap": 0.045,
+   "vol_db": -7,
+   "max": 2,
+   "gap": 0.26,
    "prio": 1,
    "pitch": 0.08,
    "duck": 0,
    "files": [
     "res://assets/audio/sfx/hit_melee_1.wav",
     "res://assets/audio/sfx/hit_melee_2.wav",
-    "res://assets/audio/sfx/hit_melee_3.wav"
+    "res://assets/audio/sfx/hit_melee_3.wav",
+    "res://assets/audio/sfx/hit_melee_4.wav",
+    "res://assets/audio/sfx/hit_melee_5.wav"
    ],
    "variants": [
     {
@@ -176,21 +178,35 @@
      "seconds": 0.1,
      "bytes": 4454,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -14.98
+     "rms_dbfs": -17.39
     },
     {
      "file": "hit_melee_2.wav",
      "seconds": 0.1,
      "bytes": 4454,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -16.15
+     "rms_dbfs": -16.84
     },
     {
      "file": "hit_melee_3.wav",
      "seconds": 0.1,
      "bytes": 4454,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -15.9
+     "rms_dbfs": -17.53
+    },
+    {
+     "file": "hit_melee_4.wav",
+     "seconds": 0.1,
+     "bytes": 4454,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -16.48
+    },
+    {
+     "file": "hit_melee_5.wav",
+     "seconds": 0.1,
+     "bytes": 4454,
+     "peak_dbfs": -1.0,
+     "rms_dbfs": -15.68
     }
    ]
   },
@@ -211,7 +227,7 @@
      "seconds": 0.08,
      "bytes": 3572,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -13.79
+     "rms_dbfs": -14.22
     }
    ]
   },
@@ -232,7 +248,7 @@
      "seconds": 0.12,
      "bytes": 5336,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -15.9
+     "rms_dbfs": -15.02
     }
    ]
   },
@@ -253,7 +269,7 @@
      "seconds": 0.16,
      "bytes": 7100,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -15.21
+     "rms_dbfs": -17.12
     }
    ]
   },
@@ -274,7 +290,7 @@
      "seconds": 0.13,
      "bytes": 5776,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -11.75
+     "rms_dbfs": -11.8
     }
    ]
   },
@@ -295,7 +311,7 @@
      "seconds": 0.38,
      "bytes": 16802,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -18.1
+     "rms_dbfs": -18.91
     }
    ]
   },
@@ -316,7 +332,7 @@
      "seconds": 0.7,
      "bytes": 30914,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -17.81
+     "rms_dbfs": -18.74
     }
    ]
   },
@@ -337,7 +353,7 @@
      "seconds": 0.22,
      "bytes": 9746,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -14.5
+     "rms_dbfs": -14.16
     }
    ]
   },
@@ -358,7 +374,7 @@
      "seconds": 0.22,
      "bytes": 9746,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -13.53
+     "rms_dbfs": -12.71
     }
    ]
   },
@@ -400,7 +416,7 @@
      "seconds": 0.6,
      "bytes": 26504,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -13.1
+     "rms_dbfs": -13.09
     }
    ]
   },
@@ -421,7 +437,7 @@
      "seconds": 0.6,
      "bytes": 26504,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -19.74
+     "rms_dbfs": -19.69
     }
    ]
   },
@@ -463,7 +479,7 @@
      "seconds": 1.6,
      "bytes": 70604,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -18.15
+     "rms_dbfs": -19.82
     }
    ]
   },
@@ -526,7 +542,7 @@
      "seconds": 0.9,
      "bytes": 39734,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -14.74
+     "rms_dbfs": -13.35
     }
    ]
   },
@@ -547,7 +563,7 @@
      "seconds": 1.8,
      "bytes": 79424,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -14.66
+     "rms_dbfs": -14.75
     }
    ]
   },
@@ -568,7 +584,7 @@
      "seconds": 2.8,
      "bytes": 123524,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -15.4
+     "rms_dbfs": -15.48
     }
    ]
   },
@@ -607,9 +623,9 @@
    "seconds": 27.429,
    "samples_per_beat": 18900,
    "encoded": true,
-   "bytes": 347602,
+   "bytes": 355862,
    "peak_dbfs": -3.0,
-   "rms_dbfs": -12.82
+   "rms_dbfs": -13.9
   },
   "music_menu": {
    "file": "res://assets/audio/music/music_menu.ogg",

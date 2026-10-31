@@ -1,0 +1,63 @@
+{
+ "v1": {
+  "integrated_lufs": -21.4,
+  "peak_dbfs": -3.39,
+  "clipped": 0,
+  "buried_pct": 39.0,
+  "at_risk_pct": 21.2,
+  "buried_hp300_pct": 27.6,
+  "median_sfx_minus_music_db": 1.2,
+  "mix_hp300_loss_db": 3.6,
+  "low_heavy": [
+   "hit_melee_1.wav",
+   "hit_melee_2.wav",
+   "hit_melee_3.wav",
+   "shoot_rock.wav",
+   "wave_incoming.wav",
+   "boss_incoming.wav",
+   "stinger_defeat.wav",
+   "music_battle.ogg"
+  ],
+  "fatigue": [
+   "hit_melee"
+  ],
+  "top_repeat": {
+   "hit_melee": {
+    "per_min": 70,
+    "max_1s": 5,
+    "gaps_lt_150ms": 12
+   }
+  },
+  "disk_bytes": 1348388,
+  "align": "59/134 (30 ms)"
+ },
+ "v2": {
+  "integrated_lufs": -21.2,
+  "peak_dbfs": -3.03,
+  "clipped": 0,
+  "buried_pct": 30.3,
+  "at_risk_pct": 20.7,
+  "buried_hp300_pct": 14.7,
+  "median_sfx_minus_music_db": 2.9,
+  "mix_hp300_loss_db": 2.0,
+  "low_heavy": [
+   "boss_incoming.wav",
+   "stinger_defeat.wav"
+  ],
+  "fatigue": [],
+  "top_repeat": {
+   "hit_melee": {
+    "per_min": 46,
+    "max_1s": 3,
+    "gaps_lt_150ms": 0
+   },
+   "death_enemy": {
+    "per_min": 12,
+    "max_1s": 1,
+    "gaps_lt_150ms": 0
+   }
+  },
+  "disk_bytes": 1365556,
+  "align": "42/111"
+ }
+}

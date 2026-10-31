@@ -106,12 +106,15 @@ def main() -> int:
     cue_t = np.array([c[0] for c in meta["cues"]])
     cue_n = [c[1] for c in meta["cues"]]
     on = onsets(sfx + ui, sr)
+    # The Dummy driver mixes slightly slower than wall clock (audio length < wall length), so search a
+    # linear drift (scale) and an offset; tolerance 40 ms (10 ms onset frames + mix chunking).
     best = (-1, 0.0, 1.0)
-    for scale in (1.0, dur / wall):
-        for off in np.arange(-1.0, 1.0, 0.005):
-            tt = cue_t * scale + off
-            hits = sum(1 for v in tt if len(on) and np.min(np.abs(on - v)) < 0.03)
-            if hits > best[0]: best = (hits, float(off), float(scale))
+    if len(on):
+        for scale in np.linspace(min(1.0, dur / wall) - 0.004, 1.0005, 30):
+            for off in np.arange(-0.6, 0.6, 0.004):
+                tt = cue_t * scale + off
+                hits = int(np.sum(np.min(np.abs(on[None, :] - tt[:, None]), axis=1) < 0.04))
+                if hits > best[0]: best = (hits, float(off), float(scale))
     hits, off, scale = best
     cue_a = cue_t * scale + off
     # --- music bus gain(t) (incl. ducking), mapped to the audio clock
@@ -226,7 +229,7 @@ def main() -> int:
          f"Source: `pwsh tools/audio/run_godot_checks.ps1 -Record` — real headless battle {meta['round']} with the project's Audio autoload, "
          f"02's `Events.sfx` emitters and a scripted player (sandbox AudioProbe). Engine mix via `AudioEffectRecord` on Master after the "
          f"{meta['limiter']} (driver: {meta['driver']}). Settings at defaults: music 0.8, sfx 1.0.",
-         f"Length {dur:.2f} s of audio for {wall:.2f} s wall clock. Cue log aligned to audio by onset matching: {hits}/{len(cue_t)} cues within 30 ms "
+         f"Length {dur:.2f} s of audio for {wall:.2f} s wall clock. Cue log aligned to audio by onset matching: {hits}/{len(cue_t)} cues within 40 ms "
          f"(offset {off:+.3f} s, scale {scale:.4f}).", "",
          "Files for listening: `previews/listen/battle_mix_60s.wav` (exact engine output, 16-bit 44.1 kHz stereo) and "
          f"`previews/listen/battle_preview_30s.mp3` ({best_w:.0f}–{best_w + 30:.0f} s, the 30 s with the most distinct cues: "
@@ -265,6 +268,27 @@ def main() -> int:
           "- Headless Dummy driver mix: same AudioServer mixing code path as devices, but no device output stage, OS mixer, speaker EQ or latency.",
           "- One scripted battle (one round, one seed policy); busier late rounds may differ.",
           "- Masking is a loudness proxy (no psychoacoustic model). Nobody has listened yet; the preview file exists for that."]
+    label = next((a.split("=", 1)[1] for a in sys.argv[1:] if a.startswith("--label=")), "latest")
+    hist_p = ROOT / "docs/audio/mix_history.json"
+    hist = json.loads(hist_p.read_text(encoding="utf-8")) if hist_p.exists() else {}
+    hist[label] = {"integrated_lufs": round(il, 1), "peak_dbfs": round(db(pk), 2), "clipped": clipped,
+                   "buried_pct": round(100 * buried.sum() / max(active.sum(), 1), 1),
+                   "at_risk_pct": round(100 * risk.sum() / max(active.sum(), 1), 1),
+                   "buried_hp300_pct": round(100 * buried_hp.sum() / max(active.sum(), 1), 1),
+                   "median_sfx_minus_music_db": round(float(np.nanmedian(np.where(active, ratio, np.nan))), 1),
+                   "mix_hp300_loss_db": round(mix_loss, 1),
+                   "low_heavy": [r[0] for r in low_rows if r[2] > LOW_SHARE_FLAG],
+                   "fatigue": [r["cue"] for r in fatigue],
+                   "top_repeat": {r["cue"]: {"per_min": round(r["per_min"]), "max_1s": r["max_1s"], "gaps_lt_150ms": r["ioi_lt_150ms"]} for r in rep_rows[:2]},
+                   "disk_bytes": sum(p.stat().st_size for p in (ROOT / "assets/audio").rglob("*") if p.suffix in (".wav", ".ogg")),
+                   "align": f"{hits}/{len(cue_t)}"}
+    hist_p.write_text(json.dumps(hist, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    L += ["", "## 6. History (same harness, same round/policy; one run each)", "",
+          "| Version | Integrated LUFS | Peak dBFS | Clipped | Buried % | At risk % | Buried ≥300 Hz % | Median SFX−music dB | Mix lost by 300 Hz HP dB | Low-heavy | Fatigue flags | Audio disk B |",
+          "|---|---|---|---|---|---|---|---|---|---|---|---|"]
+    for k, h in hist.items():
+        L.append(f"| {k} | {h['integrated_lufs']} | {h['peak_dbfs']} | {h['clipped']} | {h['buried_pct']} | {h['at_risk_pct']} | {h['buried_hp300_pct']} | "
+                 f"{h['median_sfx_minus_music_db']} | {h['mix_hp300_loss_db']} | {', '.join(h['low_heavy']) or 'none'} | {', '.join(h['fatigue']) or 'none'} | {h.get('disk_bytes', '')} |")
     out = ROOT / "docs/audio/MIX_REPORT.md"
     out.write_text("\n".join(L) + "\n", encoding="utf-8")
     summary = {"integrated_lufs": round(il, 1), "peak_dbfs": round(db(pk), 2), "true_peak_dbtp": round(db(tp), 2), "clipped": clipped,

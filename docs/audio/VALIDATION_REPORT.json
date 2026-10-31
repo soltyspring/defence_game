@@ -112,13 +112,13 @@
    "rate": 22050,
    "seconds": 0.1,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -14.98,
+   "rms_dbfs": -17.39,
    "clipped": 0,
-   "dc": 0.00016,
+   "dc": 9e-05,
    "edge_first": 0.0,
    "edge_last": 0.0,
-   "hf300_share": 0.283,
-   "mix_level_db": -24.0
+   "hf300_share": 0.999,
+   "mix_level_db": -24.4
   },
   "hit_melee_2.wav": {
    "cue": "hit_melee",
@@ -127,13 +127,13 @@
    "rate": 22050,
    "seconds": 0.1,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -16.15,
+   "rms_dbfs": -16.84,
    "clipped": 0,
-   "dc": -0.00016,
+   "dc": -0.00011,
    "edge_first": 0.0,
    "edge_last": 0.0,
-   "hf300_share": 0.284,
-   "mix_level_db": -25.2
+   "hf300_share": 0.991,
+   "mix_level_db": -23.8
   },
   "hit_melee_3.wav": {
    "cue": "hit_melee",
@@ -142,13 +142,43 @@
    "rate": 22050,
    "seconds": 0.1,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -15.9,
+   "rms_dbfs": -17.53,
    "clipped": 0,
-   "dc": 0.00018,
+   "dc": 0.00013,
    "edge_first": 0.0,
    "edge_last": 0.0,
-   "hf300_share": 0.306,
-   "mix_level_db": -24.9
+   "hf300_share": 0.999,
+   "mix_level_db": -24.5
+  },
+  "hit_melee_4.wav": {
+   "cue": "hit_melee",
+   "ch": 1,
+   "bits": 16,
+   "rate": 22050,
+   "seconds": 0.1,
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -16.48,
+   "clipped": 0,
+   "dc": -4e-05,
+   "edge_first": 0.0,
+   "edge_last": 0.0,
+   "hf300_share": 0.997,
+   "mix_level_db": -23.5
+  },
+  "hit_melee_5.wav": {
+   "cue": "hit_melee",
+   "ch": 1,
+   "bits": 16,
+   "rate": 22050,
+   "seconds": 0.1,
+   "peak_dbfs": -1.0,
+   "rms_dbfs": -15.68,
+   "clipped": 0,
+   "dc": 2e-05,
+   "edge_first": 0.0,
+   "edge_last": 0.0,
+   "hf300_share": 0.999,
+   "mix_level_db": -22.7
   },
   "hit_arrow.wav": {
    "cue": "hit_arrow",
@@ -157,13 +187,13 @@
    "rate": 22050,
    "seconds": 0.08,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -13.8,
+   "rms_dbfs": -14.22,
    "clipped": 0,
-   "dc": 0.0,
+   "dc": 7e-05,
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 0.869,
-   "mix_level_db": -23.8
+   "mix_level_db": -24.2
   },
   "shoot_arrow.wav": {
    "cue": "shoot_arrow",
@@ -172,13 +202,13 @@
    "rate": 22050,
    "seconds": 0.12,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -15.9,
+   "rms_dbfs": -15.02,
    "clipped": 0,
-   "dc": 0.00021,
+   "dc": 0.00023,
    "edge_first": 0.0,
    "edge_last": 0.0,
-   "hf300_share": 1.0,
-   "mix_level_db": -27.9
+   "hf300_share": 0.999,
+   "mix_level_db": -27.0
   },
   "shoot_rock.wav": {
    "cue": "shoot_rock",
@@ -187,13 +217,13 @@
    "rate": 22050,
    "seconds": 0.16,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -15.21,
+   "rms_dbfs": -17.12,
    "clipped": 0,
-   "dc": -0.0012,
+   "dc": -0.00057,
    "edge_first": 0.0,
    "edge_last": 0.0,
-   "hf300_share": 0.35,
-   "mix_level_db": -25.2
+   "hf300_share": 0.768,
+   "mix_level_db": -27.1
   },
   "shoot_spit.wav": {
    "cue": "shoot_spit",
@@ -202,13 +232,13 @@
    "rate": 22050,
    "seconds": 0.13,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -11.75,
+   "rms_dbfs": -11.8,
    "clipped": 0,
-   "dc": -0.00057,
+   "dc": -0.00061,
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 1.0,
-   "mix_level_db": -22.7
+   "mix_level_db": -22.8
   },
   "hit_base.wav": {
    "cue": "hit_base",
@@ -217,13 +247,13 @@
    "rate": 22050,
    "seconds": 0.38,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -18.1,
+   "rms_dbfs": -18.91,
    "clipped": 0,
-   "dc": -0.00052,
+   "dc": -0.00028,
    "edge_first": 0.0,
    "edge_last": 0.0,
-   "hf300_share": 0.262,
-   "mix_level_db": -27.1
+   "hf300_share": 0.263,
+   "mix_level_db": -27.9
   },
   "explosion.wav": {
    "cue": "explosion",
@@ -232,13 +262,13 @@
    "rate": 22050,
    "seconds": 0.7,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -17.81,
+   "rms_dbfs": -18.75,
    "clipped": 0,
-   "dc": -0.00022,
+   "dc": -0.00013,
    "edge_first": 0.0,
    "edge_last": 0.0,
-   "hf300_share": 0.272,
-   "mix_level_db": -25.8
+   "hf300_share": 0.281,
+   "mix_level_db": -26.7
   },
   "death_ally.wav": {
    "cue": "death_ally",
@@ -247,13 +277,13 @@
    "rate": 22050,
    "seconds": 0.22,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -14.5,
+   "rms_dbfs": -14.16,
    "clipped": 0,
-   "dc": 0.00046,
+   "dc": 0.0003,
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 0.995,
-   "mix_level_db": -26.5
+   "mix_level_db": -26.2
   },
   "death_enemy.wav": {
    "cue": "death_enemy",
@@ -262,13 +292,13 @@
    "rate": 22050,
    "seconds": 0.22,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -13.53,
+   "rms_dbfs": -12.71,
    "clipped": 0,
-   "dc": 0.00023,
+   "dc": 3e-05,
    "edge_first": 0.0,
    "edge_last": 0.0,
-   "hf300_share": 0.66,
-   "mix_level_db": -25.5
+   "hf300_share": 0.665,
+   "mix_level_db": -24.7
   },
   "hero_death.wav": {
    "cue": "hero_death",
@@ -277,9 +307,9 @@
    "rate": 22050,
    "seconds": 1.0,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -11.63,
+   "rms_dbfs": -11.62,
    "clipped": 0,
-   "dc": -0.0,
+   "dc": 1e-05,
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 0.553,
@@ -307,12 +337,12 @@
    "rate": 22050,
    "seconds": 0.6,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -19.74,
+   "rms_dbfs": -19.69,
    "clipped": 0,
-   "dc": -2e-05,
+   "dc": -1e-05,
    "edge_first": 0.0,
    "edge_last": 0.0,
-   "hf300_share": 0.33,
+   "hf300_share": 0.328,
    "mix_level_db": -23.7
   },
   "skill_rally.wav": {
@@ -337,13 +367,13 @@
    "rate": 22050,
    "seconds": 1.6,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -18.15,
+   "rms_dbfs": -19.82,
    "clipped": 0,
    "dc": -0.0,
    "edge_first": 0.0,
    "edge_last": 0.0,
-   "hf300_share": 0.43,
-   "mix_level_db": -22.2
+   "hf300_share": 0.431,
+   "mix_level_db": -23.8
   },
   "skill_heal.wav": {
    "cue": "skill_heal",
@@ -382,13 +412,13 @@
    "rate": 22050,
    "seconds": 0.9,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -14.74,
+   "rms_dbfs": -13.35,
    "clipped": 0,
-   "dc": -0.00036,
+   "dc": -0.0003,
    "edge_first": 0.0,
    "edge_last": 0.0,
-   "hf300_share": 0.432,
-   "mix_level_db": -20.7
+   "hf300_share": 0.969,
+   "mix_level_db": -19.4
   },
   "boss_incoming.wav": {
    "cue": "boss_incoming",
@@ -397,13 +427,13 @@
    "rate": 22050,
    "seconds": 1.8,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -14.66,
+   "rms_dbfs": -14.75,
    "clipped": 0,
-   "dc": -5e-05,
+   "dc": -6e-05,
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 0.479,
-   "mix_level_db": -18.7
+   "mix_level_db": -18.8
   },
   "stinger_win.wav": {
    "cue": "stinger_win",
@@ -412,13 +442,13 @@
    "rate": 22050,
    "seconds": 2.8,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -15.4,
+   "rms_dbfs": -15.48,
    "clipped": 0,
    "dc": -0.0,
    "edge_first": 0.0,
    "edge_last": 0.0,
-   "hf300_share": 0.833,
-   "mix_level_db": -18.4
+   "hf300_share": 0.834,
+   "mix_level_db": -18.5
   },
   "stinger_defeat.wav": {
    "cue": "stinger_defeat",
@@ -438,7 +468,7 @@
  },
  "music": {
   "music_battle": {
-   "bytes": 347602,
+   "bytes": 355862,
    "header": {
     "codec_name": "vorbis",
     "sample_rate": "44100",
@@ -446,15 +476,15 @@
    },
    "decoded_samples": 1209600,
    "manifest_loop_samples": 1209600,
-   "decoded_peak_dbfs": -2.46,
-   "seam_jump": 0.00294,
-   "p999_step": 0.25642,
-   "seam_energy_step_db": 9.96,
+   "decoded_peak_dbfs": -2.41,
+   "seam_jump": 0.01305,
+   "p999_step": 0.29069,
+   "seam_energy_step_db": 11.75,
    "bar_energy_step_db_range": [
-    5.49,
-    9.79
+    4.83,
+    11.52
    ],
-   "kbps": 101.4
+   "kbps": 103.8
   },
   "music_menu": {
    "bytes": 207256,
@@ -477,16 +507,16 @@
   }
  },
  "budgets": {
-  "disk_bytes_total": 1348388,
+  "disk_bytes_total": 1365556,
   "disk_budget": 2500000,
-  "sfx_pcm_resident_bytes": 792254,
+  "sfx_pcm_resident_bytes": 801074,
   "sfx_pcm_budget": 2097152,
-  "worst_case_sfx_sum_db": 22.8,
+  "worst_case_sfx_sum_db": 22.7,
   "note": "worst case = every SFX/UI cue at max instances, peaks aligned; runtime voice caps (SFX pool 12, UI pool 3) plus Master limiter keep real output below this"
  },
  "failures": [],
  "determinism": {
-  "files": 32,
+  "files": 34,
   "differing": []
  },
  "pass": true
