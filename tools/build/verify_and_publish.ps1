@@ -23,7 +23,23 @@ foreach ($p in $Paths) {
     elseif (Test-Path $dst) { Remove-Item $dst }   # deleted in the working tree
 }
 $ErrorActionPreference = 'Continue'
-& $GodotConsole --headless --path $snap --import *> $null
+# Import must be COMPLETE before testing: the one unexplained 14-failure run (1215516) was reproduced
+# exactly by skipping --import (fonts fall back). Verify every font/atlas import output exists; retry.
+function Test-Imported([string]$dir) {
+    $missing = @()
+    foreach ($imp in Get-ChildItem (Join-Path $dir 'assets') -Recurse -Filter '*.import' | Where-Object { $_.Name -match '\.(ttf|png)\.import$' }) {
+        $p = (Select-String -Path $imp.FullName -Pattern '^path="res://(.+)"' | Select-Object -First 1)
+        if ($p) { $dest = Join-Path $dir ($p.Matches[0].Groups[1].Value -replace '/', '\'); if (-not (Test-Path $dest)) { $missing += $imp.Name } }
+    }
+    return $missing
+}
+$miss = @('not run')
+for ($attempt = 1; $attempt -le 3 -and $miss.Count -gt 0; $attempt++) {
+    & $GodotConsole --headless --path $snap --import *> (Join-Path $snap "import_$attempt.log")
+    $miss = @(Test-Imported $snap)
+    Write-Host ("gate import attempt {0}: exit={1} missing={2}" -f $attempt, $LASTEXITCODE, $miss.Count)
+}
+if ($miss.Count -gt 0) { Write-Host "GATE FAILED: import incomplete ($($miss -join ', ')) — environment, not a test result."; exit 2 }
 $ok = $true
 foreach ($suite in @(@('ui', 'res://tests/ui/test_ui.gd', '\[test_ui\] passed=(\d+) failed=(\d+)'), @('integration', 'res://tests/integration/test_ui_integration.gd', '\[ui_integration\] passed=(\d+) failed=(\d+)'))) {
     $out = & $GodotConsole --headless --path $snap -s $suite[1] 2>&1 | Out-String

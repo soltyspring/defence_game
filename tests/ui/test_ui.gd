@@ -41,6 +41,12 @@ func _run() -> void:
 	# Gate: a script that fails to compile makes Godot skip code silently (runtime errors do not
 	# throw), which previously let this suite pass while hud.gd was broken. Fail loudly instead.
 	UiText.load_locale("ko")   # deterministic regardless of host locale
+	# Environment gate: an un-imported project makes every font check fail (14 FAILs seen once at 1215516
+	# when the gate's --import had not completed). Report that cause explicitly.
+	var imported := ResourceLoader.exists("res://assets/fonts/Galmuri11.ttf") and load("res://assets/fonts/Galmuri11.ttf") is FontFile
+	if not imported:
+		print("ENV_NOT_IMPORTED: res://assets/fonts/Galmuri11.ttf has no import; run Godot --import first. Font checks below will fail for that reason.")
+	check(imported, "project assets imported (bundled font loadable)")
 	test_compile_all("res://src/ui")
 	test_layout_matrix()
 	_new_bus()
@@ -646,7 +652,7 @@ func test_korean_text_fit() -> void:
 ## record (exported builds). Uses throw-away files under user:// only.
 func test_atlas_import_guard() -> void:
 	var UiStyle := load("res://src/ui/ui_style.gd")
-	var dir := "user://atlas_guard_test"
+	var dir := "user://atlas_guard_test_%d" % OS.get_process_id()   # per process: user:// is shared by every run of this project (parallel-run race, flake_probe 16:40)
 	DirAccess.make_dir_recursive_absolute(dir)
 	var png := dir.path_join("probe.png")
 	var img := Image.create(4, 4, false, Image.FORMAT_RGBA8)
@@ -708,6 +714,7 @@ func test_atlas_import_guard() -> void:
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(png))
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(png + ".import"))
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(rec_path))
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(dir))
 	done["atlas_guard"] = true
 
 # ---------------------------------------------------------------- 07 QA-B001 / QA-B002 regressions

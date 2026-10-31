@@ -15,7 +15,7 @@ const EXPECT := {
 	&"hud": "res://src/ui/hud.gd",
 	&"result": "res://src/ui/result.gd",
 }
-const TEST_SAVE := "user://test_ui_integration_save.json"
+var TEST_SAVE := "user://test_ui_integration_save_%d.json" % OS.get_process_id()   # per process (shared user:// dir)
 
 var failures := PackedStringArray()
 var passes := 0
