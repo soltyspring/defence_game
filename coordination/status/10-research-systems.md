@@ -21,4 +21,4 @@ Status: v0.34 DONE (§9.26). Resumed after the 03:55 BSOD: my two queued jobs ne
   - Requests sent to the owners. .gitattributes has no owner in Publish-Task (coordinator).
 - Canary 07:00/07:24: no change (614A1FAC560FBB78).
 User decisions: Q1 = A; Q2 = 보류; Q3 = "빵집 기사단: 곰팡이 디펜스"; Q4 = "빵집 기사단"; Q5 unanswered (D28 is a default only).
-Pushed: … v0.32 7f45b5f8e8ad0e606bda63e80569a6983a8767e1 (+67ddd04), v0.33 277b36eca242af8380f2f257d3503ac6d776b5e5 (+f606801); v0.34 SHA in the handoff after push.
+Pushed: … v0.32 7f45b5f8e8ad0e606bda63e80569a6983a8767e1 (+67ddd04), v0.33 277b36eca242af8380f2f257d3503ac6d776b5e5 (+f606801), v0.34 5ae9d764d88fe486dc9aae1269326f0989ba9022.

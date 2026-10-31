@@ -9,7 +9,7 @@ Updated: 2026-11-01 ~07:45 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
 ## v0.34 (~07:45 KST): round re-lock cause, AC9 emulator part, git archive CRLF table (§9.26)
-- Pushed SHA: recorded in the [Docs] commit after the push (only values checked with `git ls-remote`).
+- **Pushed: 5ae9d764d88fe486dc9aae1269326f0989ba9022** (origin/main, checked with `git ls-remote` after the push).
 - BSOD 03:55: my jobs queued at 03:52/03:55 never started. Files were intact. After 06:57 I queued each once again.
 - Re-lock:
   - The cause is save.gd step 5 (506–517) = MY v0.15 §9.6 rule, not D32.
