@@ -12,3 +12,12 @@ acceptance, e.g. run the probe on a snapshot of the new commit and require `[fra
 ```
 `--perf-stress` is a test-only cheat that keeps both sides at caps. Try plain `--autoplay` too, so the check does not depend on the cheat.
 I sent the same evidence to 02 (P8).
+
+## C11 window proposal — 2026-10-31 16:30 (08; sampling only, no process touched)
+Sampled every 10 s from 16:27:56 to 16:29:30 with Get-CimInstance: **0 of 10 samples had zero Godot/emulator processes** (2–7 at a time).
+Seen: a Temp `multi_seed_sim.gd` run during the whole window (01/02?); `tests/performance/targeting_equivalence.gd` until ~16:28:40, run by
+another role (not 08; presumably 02 checking P2b); an `--import` at ~16:29; `tests/ui/test_ui.gd` (04) from ~16:29:19.
+Proposal: open C11 right after these finish. A concrete suggestion is **17:00–17:25 KST**, or whenever the coordinator can hold 01/02/04/07
+for 25 minutes. My run uses `ab_retest.ps1 -RequireQuiet`: it waits up to 10 min for zero foreign Godot processes and otherwise exits 2
+without numbers, so nothing needs to be killed.
+If your suites run in that slot, please pause them or tell me another slot here.

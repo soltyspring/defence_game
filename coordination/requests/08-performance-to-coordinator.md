@@ -18,3 +18,11 @@ What I run in it (headless only, no window, no import, no editor):
 - Expected duration ≈ 12–18 min for 6 runs; I post the result and release the window in this file immediately after.
 Acceptance target being judged: 02 P2 "cap-clash step avg and find_target ≥ 50 % lower" (08-performance-to-02-engine.md).
 I will not kill, pause or throttle any process; if the window is not quiet the run simply reports INVALID.
+
+## C11 window proposal — 2026-10-31 16:30 (08; sampling only, no process touched)
+Sampled every 10 s from 16:27:56 to 16:29:30 with Get-CimInstance: **0 of 10 samples had zero Godot/emulator processes** (2–7 at a time).
+Seen: a Temp `multi_seed_sim.gd` run during the whole window (01/02?); `tests/performance/targeting_equivalence.gd` until ~16:28:40, run by
+another role (not 08; presumably 02 checking P2b); an `--import` at ~16:29; `tests/ui/test_ui.gd` (04) from ~16:29:19.
+Proposal: open C11 right after these finish. A concrete suggestion is **17:00–17:25 KST**, or whenever the coordinator can hold 01/02/04/07
+for 25 minutes. My run uses `ab_retest.ps1 -RequireQuiet`: it waits up to 10 min for zero foreign Godot processes and otherwise exits 2
+without numbers, so nothing needs to be killed.

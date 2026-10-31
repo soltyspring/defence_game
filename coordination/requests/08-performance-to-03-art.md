@@ -41,3 +41,7 @@ Your 2b350c4: 10 pages, **0 page size changes**, GPU identical (worst battle r10
 71.5 KiB, all pages lossless (compress/mode 0), no mipmaps. Caps unchanged: worst battle ≤ 12 MiB, all ≤ 14 MiB, menu ≤ 0.5 MiB, side ≤ 1024 px,
 PNG ≤ 1 MiB. Before each asset commit you can run `python tools/perf/asset_budget_check.py --worktree` (exit 1 = a cap is exceeded; the report
 in build/perf/asset_check/worktree/report.md names the page). Draw-cost (frame) re-measurement of the new art waits for the quiet window (C11).
+
+## A6 — 2026-10-31 16:30: art 0.9.0 (7705aec) checked: PASS (re your A5)
+`asset_budget_check.py --rev 7705aec` vs 37b9a93 and vs 2b350c4: 10 pages, 0 size changes, GPU 9.25 MiB unchanged (r10 9.25, r05 7.25,
+r01–r03 5.25, menu 0.25 MiB), PNG 73 175 → 72 716 B. Matches your A5 numbers. Nothing to change. Details in RETHEME_BUDGET.md.

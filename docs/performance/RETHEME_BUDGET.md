@@ -73,3 +73,20 @@ Contended or not does not matter here: these are file measurements, not timings.
 
 Re-check 16:04 (`python tools/perf/asset_budget_check.py --range 37b9a93..HEAD`, HEAD 0590e7a): ccf3033, 2b350c4, 5930430 → PASS
 (no new asset commits since 15:54). Exit 0.
+
+### 2026-10-31 16:30 — 03 art 0.9.0 (7705aec, "이름표 기준 재작화", pixels only) and title decision
+User decision Q3 (16:19 KST): working title "빵집 기사단: 곰팡이 디펜스". It is a text/branding change only and has no memory effect.
+`python tools/perf/asset_budget_check.py --rev 7705aec` (base 37b9a93) and `--rev 7705aec --base 2b350c4` (previous asset commit) → **PASS**, exit 0.
+| Metric | 2b350c4 (previous) | 7705aec | Δ |
+|---|---|---|---|
+| Atlas pages | 10 | 10 | 0 |
+| Atlas GPU, all pages | 9.25 MiB | 9.25 MiB | 0 |
+| Atlas GPU, worst battle (r10) / r05 / r01–r03 / menu | 9.25 / 7.25 / 5.25 / 0.25 MiB | same | 0 |
+| Atlas PNG disk | 71.5 KiB (73 175 B) | 71.0 KiB (72 716 B) | −459 B |
+| Changed pages (size unchanged, all lossless, no mipmaps) | | char_enemy 5071→5001 B, char_enemy_adv 5079→4743, char_player 11937→11893, char_player_adv 5398→5461, fx_combat 4432→4440, ui_main 5544→5464 | |
+| SFX / music | 31 / 0.76 MiB · 2 / 0.54 MiB | unchanged | 0 |
+| APK | — | not rebuilt (stale 07:23 APK only) | not evidence |
+686af29 (01 data, 16:11) also PASS. No cap is exceeded, so there is no request to 03/02.
+Gate fix in the same session: with a **relative** `--out`, the residency step wrote to a different directory and reported worst-battle/menu
+GPU as 0 MiB, which would have passed every cap silently (first 7705aec-vs-2b350c4 run, 16:25). Fixed: the out dir is made absolute, and a
+missing or empty residency is now an input error (exit 2). Two regression cases were added; the self-test passes 13/13.

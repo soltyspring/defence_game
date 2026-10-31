@@ -217,7 +217,10 @@ def measure_tree(tree: str, label: str, work: str) -> dict:
         menu = sum(gpu_of.get(p, 0) for p in inv["residency"]["menu_pages"])
         missing_art = sorted({s for v in inv["residency"]["anim_sets_without_art"].values() for s in v})
     else:
-        missing_art = ["(inventory failed: " + (r.stderr or r.stdout)[-200:] + ")"]
+        # Never report a silent 0 MiB residency (it would PASS every cap): treat as an input error.
+        raise RuntimeError(f"{label}: residency inventory failed (exit {r.returncode}): " + (r.stderr or r.stdout)[-300:])
+    if not rounds:
+        raise RuntimeError(f"{label}: residency inventory produced no rounds")
     sfx = [v for v in audio.values() if v["kind"] == "wav"]
     music = [v for v in audio.values() if v["kind"] == "ogg"]
     present = [p for p in pages.values() if p["exists"]]
@@ -374,7 +377,7 @@ def main() -> int:
     ap.add_argument("--report-only", action="store_true")
     ap.add_argument("--out", default=os.path.join(ROOT, "build", "perf", "asset_check"))
     args = ap.parse_args()
-    work = args.out
+    work = os.path.abspath(args.out)   # the inventory subprocess runs with cwd=<tree>; a relative path would point elsewhere
     os.makedirs(work, exist_ok=True)
     try:
         base_sha = git("rev-parse", "--short", args.base)
@@ -404,7 +407,7 @@ def main() -> int:
             tree = os.path.join(work, "_trees", sha)
             extract_commit(sha, tree)
             all_fails += run_one(base_tree, base_sha, tree, sha, f"commit {sha}", work, apk_b, apk_a)
-    except (subprocess.CalledProcessError, FileNotFoundError, ValueError, zipfile.BadZipFile) as e:
+    except (subprocess.CalledProcessError, FileNotFoundError, ValueError, RuntimeError, zipfile.BadZipFile) as e:
         print(f"ASSET_CHECK error: {e}", file=sys.stderr)
         return 2
     print(f"ASSET_CHECK_SUMMARY verdict={'PASS' if not all_fails else 'FAIL'} fails={len(all_fails)} report_only={args.report_only}")

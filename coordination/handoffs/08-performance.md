@@ -1,4 +1,18 @@
 # 08-performance handoff
+## M8 — 03 art 0.9.0 gate, P8 wait, C11 proposal (2026-10-31 16:30 +09:00)
+- User decisions recorded: **Q3 working title "빵집 기사단: 곰팡이 디펜스" (16:19 KST)**, **Q2 monetization on hold** (no ad/billing SDK).
+- (1) 7705aec (03, pixels only) → asset gate PASS vs 37b9a93 and vs 2b350c4. Page count 10→10, GPU 9.25 MiB unchanged, PNG −459 B.
+  Recorded in RETHEME_BUDGET.md; 03 informed (A6). No cap exceeded, so no request to 03/02.
+  **Gate bug found and fixed:** a relative `--out` made residency read 0 MiB, which would silently PASS. Now the out dir is absolute and a
+  failed or empty residency is exit 2. Self-test 13/13 PASS (2 new regression cases).
+- (2) 02 has NOT committed the battle_sim/battle/battle_view/core WIP yet (git log aac831c..HEAD -- src/gameplay src/core: none; git status: still
+  modified). P8 re-check is waiting. No Godot was run in M8.
+- (3) C11: 0/10 quiet samples 16:27:56–16:29:30 (2–7 foreign Godot processes). Proposed 17:00–17:25 KST to the coordinator/02/07, using
+  `-RequireQuiet`. Observation: another role ran 08's `targeting_equivalence.gd` at ~16:28 (probably 02 on P2b).
+- Next steps (exact): (1) When 02 commits the WIP: `git archive` snapshot of that commit + `.godot` cache copy, run perf_frame_probe once
+  (secondary monitor, CONTENDED label) and require STEPPING. (2) When C11 is granted: the M3 A/B command (`-RequireQuiet`), then the H1/H2
+  frame baselines on a HEAD snapshot. (3) Run the asset gate on every new 03/05 asset commit.
+- M8 commit: recorded only after `git show` verification (below).
 ## M7 — "sim did not step" diagnosed (2026-10-31 16:18 +09:00)
 - User decision received: **Q2 monetization = hold** ("수익모델은 보류", 16:09 KST). Ads and billing stay disabled; there is no
   monetization UI. Effect on 08: no ad/billing SDK in APK/memory budgets; nothing to measure there.

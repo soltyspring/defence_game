@@ -108,6 +108,20 @@ with wave.open(os.path.join(BASE, "assets", "audio", "sfx", "ui_tap.wav")) as w:
     frames = w.getnframes() * w.getnchannels() * w.getsampwidth()
 check("wav_parse", wi["pcm_bytes"] == frames, f"{wi['pcm_bytes']} vs {frames}")
 
+# 9 relative --out (regression 2026-10-31 16:25: residency silently 0 MiB with a relative out dir)
+rel_out = os.path.relpath(os.path.join(WORK, "rel_out"), ROOT)
+r = subprocess.run([sys.executable, TOOL, "--tree", os.path.join(WORK, "same"), "--out", rel_out], cwd=ROOT, capture_output=True, text=True)
+rp = os.path.join(ROOT, rel_out, "same", "report.json")
+rr = json.load(open(rp, encoding="utf-8")) if os.path.isfile(rp) else {}
+wb = next((x for x in rr.get("rows", []) if x["metric"] == "atlas_worst_battle_gpu"), {})
+check("relative_out_residency_nonzero", r.returncode == 0 and (wb.get("target") or 0) > 0 and (wb.get("base") or 0) > 0, f"exit={r.returncode} worst={wb}")
+
+# 10 broken data (no rounds) must be an input error (exit 2), never a silent PASS
+d = variant("no_rounds")
+shutil.rmtree(os.path.join(d, "data", "rounds"))
+code, rep, log = run_tree(d)
+check("missing_rounds_is_error", code == 2, f"exit={code}")
+
 bad = [n for n, ok in results if not ok]
 print(f"[asset_selftest] {'ALL PASS' if not bad else 'FAILED: ' + ', '.join(bad)} ({len(results) - len(bad)}/{len(results)})")
 sys.exit(0 if not bad else 1)

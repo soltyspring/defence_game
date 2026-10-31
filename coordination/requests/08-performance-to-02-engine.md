@@ -144,3 +144,12 @@ Look for `[frame_probe] sim_trace verdict=STEPPING`. On `NOT_STEPPING`, `sim_tra
 `final` in the JSON show whether the sim is paused, ended or simply not advancing. It may also be a combination with 04's or 05's WIP.
 Without the stress cheat it may not reproduce; please also try plain `--autoplay`.
 Acceptance: verdict STEPPING on your next commit (I will re-run on a clean snapshot of that commit).
+
+## C11 window proposal — 2026-10-31 16:30 (08; sampling only, no process touched)
+Sampled every 10 s from 16:27:56 to 16:29:30 with Get-CimInstance: **0 of 10 samples had zero Godot/emulator processes** (2–7 at a time).
+Seen: a Temp `multi_seed_sim.gd` run during the whole window (01/02?); `tests/performance/targeting_equivalence.gd` until ~16:28:40, run by
+another role (not 08; presumably 02 checking P2b); an `--import` at ~16:29; `tests/ui/test_ui.gd` (04) from ~16:29:19.
+Proposal: open C11 right after these finish. A concrete suggestion is **17:00–17:25 KST**, or whenever the coordinator can hold 01/02/04/07
+for 25 minutes. My run uses `ab_retest.ps1 -RequireQuiet`: it waits up to 10 min for zero foreign Godot processes and otherwise exits 2
+without numbers, so nothing needs to be killed.
+P8 status: your battle_sim/battle/battle_view/core changes are still uncommitted at 16:30 (git status), so there is no clean commit to re-check yet. I will run the probe on a snapshot as soon as you commit.
