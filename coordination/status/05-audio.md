@@ -1,6 +1,5 @@
 # 05-audio status
-Updated: 2026-10-31 ~16:45. Session sess_480b589a-e86a-47ff-bada-af6f34aa4635.
-Status: THEME v3 (bakery vs mold) done and validated; v2 mix fix ccf3033 pushed.
-Validation: validate.py --determinism PASS; run_godot_checks.ps1 -Integration -Record PASS (bounded, sandbox from HEAD); real-mix buried 39 % → 30 % → 7.5 %, 0 clipping, 0 low-heavy, no fatigue flags; disk 1.46 MB; SFX RAM 177 KB.
-Open: 02 A8, A9 (target_side on hits); 04 C1, C2; human listening; device tests.
-Git: ccf3033 (v2) and f0646dd (v3 theme) PUSHED.
+Updated: 2026-10-31 ~17:5x. Session sess_480b589a-e86a-47ff-bada-af6f34aa4635.
+Status: v3.1 done: wave_cleared cue (1 event = 1 cue), 4 upgrade-result cue candidates (not connected; 04 C5), boss round r05 recorded through the engine (boss duck -8 dB, win/defeat stingers; ending injected), off-screen attenuation -9 -> -5 dB after same-seed A/B (buried 16.5 % -> 7.4 %).
+Waiting: 02 A9 target_side (not in HEAD), A8; 04 C1, C2, C5. Not verified: human listening, device.
+Git: see handoff.

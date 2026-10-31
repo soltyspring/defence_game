@@ -1,7 +1,32 @@
 # 05-audio handoff
-Updated: 2026-10-31 ~16:45 (theme v3 milestone: validated, committing)
-Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Same session resumed after the user restart and the window split. Model claude-opus-5.5, trust-all.
+Updated: 2026-10-31 ~17:5x (v3.1: wave_cleared, upgrade result cues, boss-round engine recordings, off-screen −5 dB)
+Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all.
+## v3.1 (Codex review of f0646dd/e551fa9, tasks 1–4)
+Decisions read: Q3 working title "빵집 기사단: 곰팡이 디펜스" (user, 16:19; the final store name waits for a KIPRIS check). Q2 monetization ON HOLD: no purchase or ad-reward sounds were made.
+1. **wave_cleared**: new cue `wave_cleared` (two quick bells up a fifth + crust cheer, 0.7 s, prio 8, gap 1.0, duck −3). The bridge connects to `Events.wave_cleared` (02 22d99ea), category `milestone`.
+   - Sandbox (committed HEAD) r02 integration: events 1 = cues 1, 0 same-frame duplicates. 04's banner (0590e7a) emits no sound, so it cannot double.
+   - Selftest: two same-frame emits → 1 cue.
+   - New runner gate: wave_cleared cues = events.
+2. **Upgrade results**: `ui_upgrade_ok`, `ui_upgrade_no_coins`, `ui_upgrade_max`, `ui_upgrade_save_failed`; 4 different files (selftest-checked). Semantic `Events.sfx(&"upgrade_result", {"code"})` with the manifest `upgrade_result_cue` map.
+   - Not connected: 04's buttons are disabled. The key name was requested from 04 (C5).
+3. **Boss round through the engine** (r05; boss wave at 95 s), headless with hard timeouts. The ending was a sandbox injection at battle t = 115 s through the real `_damage_base → _end → battle_ended` path, reported as injected.
+   - Win run: boss_incoming 95.31 s, music ducked −8.0 dB (manifest −8), wave_cleared 54.19 s, stinger_win 115.85 s (+6.8 dB over the battle mix). 30 s window −21.4 LUFS, peak −4.5 dBFS, 0 clipped.
+   - Loss run: boss 94.88 s, duck −8.0, stinger_defeat 115.76 s (+8.7 dB). 30 s window −21.6 LUFS, peak −2.38 dBFS, 0 clipped.
+   - Both runs: audio-class exit leaks 0, 0 duplicates, peak SFX 4–5/12.
+   - New finding: with a different random seed the fight stayed off-screen and 56 % of SFX windows were buried under the music (off-screen −9 dB). A same-seed A/B (probe `seed(7)`) gave −9 dB: 16.5 % buried vs −5 dB: 7.4 %. **Default changed to −5 dB.**
+   - r02 re-recorded with v3.1: buried 7.8 %, 0 clipped, 0 low-heavy, no fatigue flags.
+   - Report: `docs/audio/BOSS_ROUND_REPORT.md`. Listening files: `previews/listen/boss_to_victory_30s.mp3`, `boss_to_defeat_30s.mp3`, `battle_preview_30s.mp3` (v3.1), `theme_showcase.mp3` (now also wave_cleared plus the 4 upgrade cues).
+4. **A9 target_side**: NOT in HEAD (checked in battle_sim.gd). Recorded as WAITING in 05-audio-to-02-engine.md.
 
+Harness changes:
+- `-RecordRound`, `-RecordUntilEnd`, `-InjectEnd/-InjectAt`, `-RecordTag`, `-ProbeArgs` (seed, off-screen dB), `-SkipIntegrationBattle`.
+- Verbose record runs with leak classification.
+- Sandbox cleanup with retries, refusing to run on a dirty sandbox. One run had hit "files held"; it was rerun clean.
+
+Validation: `validate.py --determinism` PASS (43 SFX + 2 loops). Last full `run_godot_checks.ps1 -Integration -BattleSeconds 80 -Record …` → PASS (selftest PASS with 0 leaks; deploy 14 = 14, skill 7 = 7, hero 1 = 1/1, wave_cleared 1 = 1, 0 dups, audio-class exit leaks 0).
+Not verified: human listening, Android device, an earned (non-injected) boss win or loss.
+Note: inserting the new cues before stinger_defeat in the cue table shifted its noise seed, so stinger_defeat.wav was regenerated (same recipe; validated).
+Git v3.1: cc5dbb8bb391976f3f2e5298e01b3b191fb599b8 [Feat] PUSHED; evidence commit [Design] below.
 ## Resume check (09:23 checkpoint)
 Compared the worktree with `origin/checkpoint/quota-20261031-092323/05-audio` (d24c7f2). synth.py and VALIDATION_REPORT.json were byte-identical, and the local recordings and baseline were present. Nothing was lost. "HISTORICAL QUOTA CHECKPOINT" sections were ignored as instructed.
 Decisions processed: Q1 = A, bakery knights vs mold legion (user, 09:03); D1–D19. Requests: coordinator-to-05-audio including the theme note.

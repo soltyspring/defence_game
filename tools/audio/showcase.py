@@ -33,6 +33,11 @@ ORDER = [  # (label, cue, variant index)
     ("MOLD    boss incoming", "boss_incoming", 0),
     ("BAKERY  victory", "stinger_win", 0),
     ("MOLD    defeat", "stinger_defeat", 0),
+    ("BAKERY  wave cleared", "wave_cleared", 0),
+    ("UI      upgrade done", "ui_upgrade_ok", 0),
+    ("UI      upgrade: not enough gold", "ui_upgrade_no_coins", 0),
+    ("UI      upgrade: max level", "ui_upgrade_max", 0),
+    ("UI      upgrade: save failed", "ui_upgrade_save_failed", 0),
 ]
 
 
