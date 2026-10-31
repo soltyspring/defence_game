@@ -1,4 +1,17 @@
 # 08-performance handoff
+## FINAL CHECKPOINT (user stop order, 2026-10-31 09:18 +09:00 by system clock)
+- Stopped at a safe point: there is no measurement or implementation in progress. No new work was started.
+- Processes: I left no Godot or emulator processes running. The three Godot processes running at 09:18 belong to 06-services
+  (`tests/services/test_services_m3.gd`, `m3_child.gd`), so I did not touch them. I never started an emulator.
+- Session ID: not exposed to this agent (no ID visible in the CLI context). Model claude-opus-5.5, trust-all.
+- Commit/push: M2 `c635ce8eb20abdb4ca932ca3c02b9c231ef4a027` and SHA record `ae311efcd22934a3d7d632853a19b454a3bb0415`, both pushed and
+  confirmed on origin/main. This checkpoint is committed only as a handoff update (SHA in the result report below; on helper failure: PUSH_PENDING).
+- Unverified/uncommitted work: none. No owned file except this handoff has changes outside git.
+- Time correction: the "09:20/09:25" timestamps in this file, the status file and the M2 docs were estimates. By the system clock, M2
+  finished before 09:18. The numbers themselves are unchanged.
+- Exact next steps after restart: "Next steps (exact)" below, in order 1–5 (re-run equivalence after the 02 P2b tie-break fix, find the
+  cause of the stress unit-count drop, then redo the P1 cap A/B and the R09 r08 dense run, add the 04 R5 pre-warm case, run device capture once a phone is attached).
+  Before running Godot, check that `build/.godot-import.lock` is free and how many other Godot processes are running. Call Publish-Task.ps1 without `2>&1 |`.
 Updated: 2026-10-31 09:25 +09:00
 Status: **M2 verified and pushed (c635ce8, origin/main).** M1 pushed earlier (3c1719a, 65fa163); the
 07:32 account-change checkpoint was pushed as e7cc8ba. Session resumed on the new account at 07:37 and again at 08:06 and 08:38
@@ -54,7 +67,8 @@ correction; no bitmap font needed for memory). 04: R5 glyph pre-warm at boot/loa
 5. Device runs with android_capture.ps1 once a phone is attached (01 queued the question).
 
 ## Commits / push (M2)
-- `c635ce8eb20abdb4ca932ca3c02b9c231ef4a027` `[Test] 글꼴 캐시·첫 사용 지연 측정, 엔진 수정 A/B 재측정과 채택 기준 엄격 모드 추가` — 20 owned files; helper output `PUSHED c635ce8... origin/main` (c635fa8..c635ce8); `git branch -r --contains c635ce8` → origin/main. This SHA line is a follow-up [Docs] commit.
+- `c635ce8eb20abdb4ca932ca3c02b9c231ef4a027` `[Test] 글꼴 캐시·첫 사용 지연 측정, 엔진 수정 A/B 재측정과 채택 기준 엄격 모드 추가` — 20 owned files; helper output `PUSHED c635ce8... origin/main` (c635fa8..c635ce8); `git branch -r --contains c635ce8` → origin/main. This SHA line was pushed as `ae311ef` ([Docs], origin/main confirmed by fetch).
+- Helper note: calling Publish-Task.ps1 with `2>&1 |` makes git fetch's stderr a terminating error (ErrorActionPreference=Stop) and the call aborts before staging. Call it without stderr redirection.
 ## M1 history (07:25, kept for reference)
 M1 delivered and pushed (3c1719a): harness, inventory, desktop proxy baseline, phone procedures, owner requests.
 Evidence classes: STATIC (files), DESKTOP_PROXY / CONTENDED_DESKTOP_PROXY (this PC, debug editor binary), DEVICE (none yet), EMULATOR (not phone evidence).
