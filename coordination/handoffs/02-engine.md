@@ -1,6 +1,6 @@
 # 02-engine handoff
 Updated: 2026-11-01 00:50 +09:00
-Status: ACTIVE. Save migration (10 F2/X1, 01 D32, 10 v0.27/v0.28) and the QA-B012 layout fix are verified; the commit SHA is in the status file after the push.
+Status: ACTIVE. Save migration (10 F2/X1, 01 D32, 10 v0.27/v0.28) and the QA-B012 layout fix: verified and PUSHED 52f9fa3.
 Resumed twice: 23:00 KST (quota login) and 23:2x KST (blue screen 0x50 at 23:08:55). The checkpoint branch checkpoint/quota-20261031-202729/02-engine
 held only a generated icon.svg.import, so no 02 work was lost. After the crash, my 5 edited files had no NUL bytes and were not truncated (diff reviewed).
 Model claude-opus-5.5, trust-all. Session ID: not exposed inside the session.
@@ -40,7 +40,7 @@ Q1 theme A "빵집 기사단 vs 곰팡이 군단" (data IDs unchanged). Q2 monet
   until the 300 s timeout. Fixed (deferred start + frame bound).
 
 ## Commits (PUSHED, origin/main verified)
-… 7f2886c, 4d5a53c, eceb9f4 (D29 + R8 probe), c6fbf1f (docs). This round: [Feat] save migration + QA-B012 (SHA in status after push).
+… 7f2886c, 4d5a53c, eceb9f4 (D29 + R8 probe), c6fbf1f (docs), **52f9fa3** (save migration D32/F2/X1/backups + QA-B012), pushed 00:5x KST, origin/main verified.
 
 ## Next
 1. React to re-verification from 10 (probe_r5_cases/run_content_migration on HEAD, v0.27 S1–S4b), 07 (`-Head`, capture_crowd QA-B012),
