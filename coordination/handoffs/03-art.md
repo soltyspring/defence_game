@@ -57,6 +57,7 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - Checks: Godot title renders 1/2/3x pixel-exact, all fit 352 px (run_godot_title.ps1, branding_check.py). Icon lines PASS after one fix (first draft dL* 14.4/20.4). validate --determinism PASS; PCK 11/11; CVD >= 16.4 dE; readability unchanged; 08 budget check PASS (menu 0.50 MiB at cap).
 - In-game (16:34, secondary monitor): white seams gone (02 141d226). Theme/icons NOT visible in the real game because the main-tree import is stale -> UNVERIFIED until 02 re-imports.
 - Requests: 02 A11, 04 A8, 06 A1 (new file), 07 A3, 08 A6.
+- Commit 19245a5 [Design]: PUSHED origin/main (verified with git branch -r --contains).
 
 ## Exact next steps on resume
 1. Read coordinator-to-03-art.md, DECISIONS.md (Q1 first: re-theme takes priority), and incoming *-to-03-art.md.
