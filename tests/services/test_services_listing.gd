@@ -800,14 +800,14 @@ func test_launcher_label() -> bool:
 	if not check(cfg.load("res://export_presets.cfg") == OK, "export_presets.cfg loads"):
 		return true
 	var label := str(cfg.get_value("preset.0.options", "package/name", ""))
-	check(label != "" and s2b.contains("Current launcher name in the build: `%s`" % label), "§2b states the real launcher name '%s'" % label)
+	check(label != "" and s2b.contains("Current launcher name in the export settings: `%s`" % label), "§2b states the real launcher name '%s'" % label)
 	for url in ["https://support.google.com/googleplay/android-developer/answer/9859152", "https://support.google.com/googleplay/android-developer/answer/9898842", "https://support.google.com/googleplay/android-developer/answer/13393723"]:
 		check(s2b.contains(url), "§2b cites %s" % url)
 	for opt in ["| A |", "| B |", "| C |"]:
 		check(s2b.contains(opt), "§2b covers Q4 option %s" % opt)
 	var uq := FileAccess.get_file_as_string("res://coordination/requests/USER_QUESTION.md")
 	if uq.contains("## Q4") and uq.substr(uq.find("## Q4")).contains("WAITING FOR USER ANSWER"):
-		check(s2b.contains("**06 does not change it**"), "§2b says the label is not changed while Q4 waits")
+		check(s2b.contains("06 does not edit these files"), "§2b says 06 does not edit the label settings (02's files)")
 	# Q4 (user 2026-10-31 17:19 KST): launcher name = the store title up to its ":".
 	check(s2b.contains("2026-10-31 17:19 KST") and s2b.contains("\"빵집 기사단\""), "§2b records the Q4 decision with time and original words")
 	var kip := FileAccess.get_file_as_string(KIPRIS)

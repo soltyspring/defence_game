@@ -32,6 +32,7 @@ var release_preset := "WAITING"
 var apks_checked := 0
 var aapt2 := ""
 var launcher_status := "WAITING"
+var release_label := "WAITING"
 
 func _initialize() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -49,7 +50,7 @@ func _initialize() -> void:
 	report.release_preset = release_preset
 	report.apks_checked = apks_checked
 	report.aapt2 = aapt2 if aapt2 != "" else "not found"
-	print("[test_services_android] passes=%d failures=%d release_preset=%s apks_checked=%d aapt2=%s launcher_label=%s" % [passes, failures.size(), release_preset, apks_checked, "yes" if aapt2 != "" else "no", launcher_status])
+	print("[test_services_android] passes=%d failures=%d release_preset=%s apks_checked=%d aapt2=%s launcher_label=%s release_label=%s" % [passes, failures.size(), release_preset, apks_checked, "yes" if aapt2 != "" else "no", launcher_status, release_label])
 	for g in report.groups:
 		print("  %-28s %s" % [g, report.groups[g]])
 	quit(0 if failures.is_empty() else 1)
@@ -438,5 +439,13 @@ func test_launcher_label() -> bool:
 	launcher_status = "VERIFIED" if verdicts.values().has("OK") else "WAITING"
 	if verdicts.values().has("MISMATCH") or verdicts.values().has("NONE"):
 		launcher_status = "FAIL"
-	print("  launcher_label: %s (preset %s, apks %s)" % [launcher_status, preset_state, str(verdicts)])
+	# Release packages are judged separately: a correct debug APK does not prove the release AAB.
+	var rel_ok := false
+	for p in verdicts:
+		if str(p).contains("/build/release/") and verdicts[p] == "OK":
+			rel_ok = true
+	release_label = "VERIFIED" if rel_ok else "WAITING"
+	if launcher_status == "VERIFIED" and not rel_ok:
+		launcher_status = "VERIFIED_DEBUG_ONLY"
+	print("  launcher_label: %s, release_label: %s (preset %s, apks %s)" % [launcher_status, release_label, preset_state, str(verdicts)])
 	return true
