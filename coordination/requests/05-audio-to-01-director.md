@@ -13,3 +13,8 @@ Affected: 05 (synth + bridge), 08 (CPU if C), 07 (listening/acceptance). No chan
 ## R1 (theme timbre direction) — status
 Covered: bakery warm/dry palette (oven/shop bells, crust crunch, wooden knocks), mold squelch/fizz/wet pops, spore-burst explosion (yeast bomber), boss low bubbling drone, rolling-pin slam, restrained (no gore).
 Not yet covered (05 backlog, not started): fruit-fly buzz for e_swarm (needs a per-unit hint in the death/hit cue or a new `swarm` cue), Rally = cheer + oven whoosh (now a brass-like horn), Barrage = crumb-shell volley (now whistle + 3 impacts), UI confirm as tray-bell/whisk (now a square chime), bright folk menu motif (now a music-box bell melody — close but not folk). I will do these after the current verification task unless you reprioritise.
+
+## R1 status update (2026-10-31, v3.4)
+- Done: UI confirm = whisk swish + small tray bell (`ui_confirm`); Barrage = crumb-shell volley (5 oven-cannon launches, impacts rain from 0.8 s matching `skill_barrage.delay`). Both pass validate.py and the Godot selftest/harness; audio size +5,292 B. Not listened to yet (theme_showcase.mp3 23.4–26.6 s).
+- Still open: fruit-fly buzz (e_swarm), Rally cheer + oven whoosh, folk menu motif.
+- Also: hit density is now capped (shared 0.36 s gap; 83 → 49 hits/min in a same-seed A/B). This is the measured default, not a listening-confirmed choice; a blind A/B is in LISTENING_CHECKLIST.md §4.

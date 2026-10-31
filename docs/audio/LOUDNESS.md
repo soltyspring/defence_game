@@ -6,7 +6,7 @@ M = max momentary K-weighted loudness over 100 ms (BS.1770 K filter; short SFX a
 |---|---|---|---|---|---|---|---|
 | ui_tap | ui_tap.wav | UI | -8 | -13.2 | -21.2 | -3.0 | 6 |
 | ui_back | ui_back.wav | UI | -8 | -10.9 | -18.9 | -0.7 | 6 |
-| ui_confirm | ui_confirm.wav | UI | -7 | -8.5 | -15.5 | +2.7 | 7 |
+| ui_confirm | ui_confirm.wav | UI | -8 | -9.4 | -17.4 | +0.8 | 7 |
 | ui_error | ui_error.wav | UI | -9 | -8.5 | -17.5 | +0.7 | 6 |
 | deploy | deploy.wav | SFX | -7 | -7.8 | -14.8 | +5.6 | 7 |
 | worker_buy | worker_buy.wav | SFX | -9 | -8.9 | -17.9 | +2.5 | 7 |
@@ -35,7 +35,7 @@ M = max momentary K-weighted loudness over 100 ms (BS.1770 K filter; short SFX a
 | hero_respawn | hero_respawn.wav | SFX | -8 | -9.8 | -17.8 | +2.6 | 8 |
 | skill_slam | skill_slam.wav | SFX | -4 | -11.0 | -15.0 | +5.4 | 9 |
 | skill_rally | skill_rally.wav | SFX | -6 | -10.8 | -16.8 | +3.6 | 9 |
-| skill_barrage | skill_barrage.wav | SFX | -4 | -11.7 | -15.7 | +4.7 | 9 |
+| skill_barrage | skill_barrage.wav | SFX | -5 | -14.6 | -19.6 | +0.8 | 9 |
 | skill_heal | skill_heal.wav | SFX | -7 | -9.9 | -16.9 | +3.5 | 9 |
 | skill_cast | skill_cast.wav | SFX | -7 | -9.0 | -16.0 | +4.4 | 8 |
 | wave_incoming | wave_incoming.wav | SFX | -7 | -9.5 | -16.5 | +3.9 | 8 |

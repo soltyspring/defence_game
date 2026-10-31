@@ -1,6 +1,29 @@
 # 05-audio handoff
-Updated: 2026-10-31 ~18:5x (v3.3 verified after 08's quiet window)
+Updated: 2026-10-31 ~20:xx (v3.4: shared hit cap A/B, tray-bell/whisk UI confirm, crumb-shell barrage)
 Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all.
+
+## v3.4 (Codex review of 91eeb25–f41fd12: "86 hits/min may be noise density")
+1. **Shared hit cap**: cue groups in audio_manager.gd (manifest `groups`, cue `group`, stat `dropped_group`); group `hit` = hit_bread/hit_mold/hit_melee/hit_arrow.
+   - Same-seed A/B (probe `seed(11)`, r02, 60 s; engine hit events 113–117 and kills 13–14 in every run):
+
+     | Variant | Hits/min | Buried |
+     |---|---|---|
+     | A (no shared cap) | 83 | 5.6 % |
+     | B24 | 60 | 6.0 % |
+     | B28 | 58 | 7.0 % |
+     | **B36 (default)** | **49** | 9.5 % |
+
+   - All variants: 0 clipped. Bread share played 0.47–0.53 in all variants (engine 0.59–0.63), so both factions stay audible.
+   - The default 0.36 s is chosen on the numbers and is NOT listening-confirmed. Blind A/B files `ab_hits_X/Y_30s.mp3`, questions in LISTENING_CHECKLIST.md §4, key folded at the bottom of HIT_DENSITY_AB.md.
+   - Default random-seed r02 run: buried 6.8 %, 0 clipped.
+2. **01 R1 timbres (2 of 5)**: `ui_confirm` = whisk + tray bell; `skill_barrage` = crumb-shell volley (impacts from 0.8 s = data delay). Size +5,292 B (two WAVs; other WAVs unchanged).
+3. Validation:
+   - `validate.py --determinism` PASS.
+   - `run_godot_checks.ps1 -Integration -BattleSeconds 80 -Record` PASS (hits mold 11 / bread 23 / fallback 0; deploy 14 = 14, skill 7 = 7, wave_cleared 1 = 1, upgrade 2 = 2, hero 1 = 1/1; 0 dups; audio-class exit leaks 0).
+   - Selftest PASS including a new shared-gap assertion. No own Godot left running.
+4. Music variation: still only a question candidate (not implemented).
+Not verified: human listening, Android device.
+Git v3.4 (SHAs copied from push output): 65502e837a2ab0ef5b1106640b52cbee41e153e4 [Feat] PUSHED; 48fa978f836b511aff220a6427464fc1ab46d705 [Test] PUSHED; docs commit SHA is recorded in the next status/handoff commit.
 ## v3.3 verification (after 18:30)
 1. The WIP from the quiet window (bridge ranged/siege pitch offsets + runner target_side gate) was verified with `pwsh tools/audio/run_godot_checks.ps1 -Integration -BattleSeconds 80 -Record -RecordSeconds 60` (sandbox from HEAD b4b33a7) → **GODOT AUDIO CHECKS PASS**:
    - hits: hit_mold 23, hit_bread 32, fallback hit_melee 0, hit_arrow 0
