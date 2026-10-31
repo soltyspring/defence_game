@@ -130,23 +130,41 @@ def logos():
 # raised; a mould blob peeks from the lower right. No gingerbread silhouette, no crown+shield.
 # ---------------------------------------------------------------------------------------
 def icon48(background_only=False) -> Canvas:
-    cv = Canvas(48, 48)
-    # background rounded square with warm vertical ramp
-    for y in range(48):
-        k = "o" if y < 16 else "O" if y < 34 else "w"     # dark warm ramp: light hero + mould both pop (dL)
-        for x in range(48):
-            r = 9
-            dx = max(r - x, x - (47 - r), 0)
-            dy = max(r - y, y - (47 - r), 0)
-            if dx * dx + dy * dy <= r * r:
-                cv.a[y, x] = IDX[k]
-    # sun-burst stripes behind the hero (subtle)
-    for x in range(48):
-        for y in range(48):
-            if cv.a[y, x] and ((x - y) // 4) % 3 == 0 and y < 30:
-                cv.a[y, x] = IDX["T" if y < 16 else "o"]
+    """48 px legacy icon = rounded-square background + icon48_fg() (single source for every icon size)."""
+    cv = icon48_bg()
     if background_only:
         return _border(cv)
+    cv.stamp(__import__("pixel").Sprite(icon48_fg().a), 0, 0)
+    return _border(cv)
+
+
+def icon48_bg(full_bleed=False, size=48, off=0) -> Canvas:
+    """Warm ramp + sun-burst stripes. full_bleed=True: square, no rounded corners (adaptive/store layers);
+    size/off extend the same pattern to a larger canvas whose 48 px icon area starts at (off, off)."""
+    cv = Canvas(size, size)
+    for y in range(size):
+        yy = y - off
+        k = "o" if yy < 16 else "O" if yy < 34 else "w"
+        for x in range(size):
+            xx = x - off
+            if not full_bleed:
+                r = 9
+                dx = max(r - xx, xx - (47 - r), 0)
+                dy = max(r - yy, yy - (47 - r), 0)
+                if dx * dx + dy * dy > r * r:
+                    continue
+            cv.a[y, x] = IDX[k]
+    for x in range(size):
+        for y in range(size):
+            xx, yy = x - off, y - off
+            if cv.a[y, x] and ((xx - yy) // 4) % 3 == 0 and yy < 30:
+                cv.a[y, x] = IDX["T" if yy < 16 else "o"]
+    return cv
+
+
+def icon48_fg() -> Canvas:
+    """Hero + rolling pin + mould blob on a transparent 48x48 canvas (outline included)."""
+    cv = Canvas(48, 48)
     fg = Canvas(48, 48)
     # chef hat (puffy) + crust helmet band
     fg.ellipse(19, 10.5, 7, 4.0, c("W"))
@@ -163,11 +181,14 @@ def icon48(background_only=False) -> Canvas:
     fg.rect(21, 20, 2, 3, c("K"))                     # eye (facing right)
     fg.put(24, 23, c("e"))                            # cheek
     fg.hline(20, 23, 24, c("w"))                      # determined mouth
-    # body: gold tabard with jam cross
-    fg.rect(12, 27, 15, 11, c("Y"))
-    fg.rect(12, 27, 15, 2, c("Z"))
-    fg.vline(19, 29, 36, c("R")); fg.hline(16, 22, 31, c("R"))
-    fg.rect(12, 36, 15, 2, c("o"))
+    # body (art 0.12.2, matches the sprite): white chef jacket, egg-wash apron with a loaf emblem
+    fg.rect(12, 27, 15, 11, c("W"))
+    fg.vline(12, 27, 37, c("x"))
+    fg.rect(15, 29, 9, 8, c("Y"))
+    fg.hline(15, 23, 29, c("Z"))
+    fg.rect(16, 31, 7, 3, c("T")); fg.hline(16, 22, 31, c("o")); fg.put(16, 33, c("o")); fg.put(22, 33, c("o"))
+    fg.put(18, 32, c("U")); fg.put(20, 32, c("U"))
+    fg.rect(12, 36, 15, 2, c("y"))
     # crust pauldron (armour cue, 09 R09-03) + arm reaching to the pin
     fg.ellipse(14, 28, 4, 3, c("o")); fg.ellipse(13.5, 27, 2.5, 1.5, c("T"))
     fg.thick_line(23, 29, 26, 31, c("Y"), t=3)
@@ -180,16 +201,15 @@ def icon48(background_only=False) -> Canvas:
         fg.rect(hx, hy - 1, 3, 3, c("O")); fg.put(hx + 1, hy - 1, c("o"))
     fg.rect(26, 30, 3, 2, c("U"))                     # hand
     # mould blob peeking lower right
-    fg.ellipse(34, 34, 6, 5.5, c("t"))               # light mould body (dL vs the dark warm bg)
+    fg.ellipse(33.6, 33.8, 5.6, 5.2, c("t"))         # light mould body; 0.12.2: 1 px smaller so the outline stays in the 66 dp circle
     fg.ellipse(33, 32.5, 3.5, 2.6, c("z"))
-    fg.hline(30, 38, 38, c("l"))
+    fg.hline(30, 36, 38, c("l"))
     fg.put(31, 31, c("z")); fg.put(36, 37, c("z")); fg.put(38, 32, c("z"))
     fg.rect(30, 34, 2, 2, c("K")); fg.rect(33, 34, 2, 2, c("K"))   # eyes looking at the hero
     fg.put(30, 33, c("E"))
     fg.shift(0, 1)                                    # keep content inside the 32x32 safe zone
     fg.outline(c("K"))
-    cv.stamp(__import__("pixel").Sprite(fg.a), 0, 0)
-    return _border(cv)
+    return fg
 
 
 def _border(cv):

@@ -1,5 +1,5 @@
 # 03-art handoff
-Updated: 2026-10-31 18:45 +09:00 (real time from Get-Date). Q1 = A DECIDED; Q3 working title 빵집 기사단: 곰팡이 디펜스 (store name pending KIPRIS); Q2 business model DEFERRED (no ad/purchase UI). Art version 0.12.1.
+Updated: 2026-10-31 18:59 +09:00 (real time from Get-Date). Q1 = A DECIDED; Q3 working title 빵집 기사단: 곰팡이 디펜스 (store name pending KIPRIS); Q2 business model DEFERRED (no ad/purchase UI). Art version 0.12.2.
 
 ## Session
 - Kiro CLI session ID: not visible from inside the session, so I cannot record it. Codex should read it from coordination/.runtime/quota/sessions.json / the launcher.
@@ -101,7 +101,13 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - No failure to fix.
 - Commit b5ce778 [Test]: PUSHED origin/main (verified with git branch -r --contains at 18:45). 07 A8 re-verify request after the push.
 
+## Milestone 15 (this session): launcher icon set, store graphics, hero apron
+- tools/art/launcher_icons.py (new) + branding.icon48_fg/icon48_bg refactor. Runtime assets/branding/*.png (+ Godot .import from snapshot %TEMP%\art03_v0122). Store docs/art/branding/store/. Previews docs/art/branding/launcher_previews/. Metrics docs/art/evidence/branding/launcher_metrics.json.
+- 06's check_store_graphics.py: store icon all PASS; adaptive safe circle PASS (after shrinking the blob 1 px), logo 46.5 x 51 dp PASS, monochrome PRESENT; feature graphic not seen by their script (it reads docs/services/store_assets/).
+- A26 apron emblem 6x3. Real-game capture DISPLAY2 EXIT_0 (docs/art/evidence/ingame_v0122/). PCK 12/12.
+- Requests: 02 A14 (preset keys), 06 A4.
+
 ## Exact next steps on resume
-1. A26 for the remaining allies (tank 통식빵, fast 프레첼, siege 화덕포), same contract; the hero's apron emblem is too small at 1x (consider a larger loaf mark).
-2. Read incoming *-to-03-art.md (04 edge indicator wiring with icon_nest, 08 menu model, 07/09 results).
-3. After 02 re-imports: validate.py --import-cache in the main tree.
+1. After 02 sets the preset keys and 06 rebuilds: check the APK icon layers with 06.
+2. A26 for tank / fast / siege.
+3. Read incoming *-to-03-art.md.

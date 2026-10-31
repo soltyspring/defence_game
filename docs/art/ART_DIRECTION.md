@@ -1,5 +1,5 @@
 # ART_DIRECTION.md — visual identity and asset contract (owner: 03-art)
-Art version 0.12.1 · 2026-10-31 · Status: **theme DECIDED by the user (Q1 = A "빵집 기사단 vs 곰팡이 군단", 2026-10-31)**. Art 0.8.0 applies it as a palette-level retheme (tools/art/theme.py). Silhouettes, frame sizes, pivots, hit/spawn frames and frame names are unchanged. A bread-specific detail pass (crust scoring, loaf-shaped helmets) is still open.
+Art version 0.12.2 · 2026-10-31 · Status: **theme DECIDED by the user (Q1 = A "빵집 기사단 vs 곰팡이 군단", 2026-10-31)**. Art 0.8.0 applies it as a palette-level retheme (tools/art/theme.py). Silhouettes, frame sizes, pivots, hit/spawn frames and frame names are unchanged. A bread-specific detail pass (crust scoring, loaf-shaped helmets) is still open.
 
 ## 1. How the art is made (provenance)
 - Tool inventory on this machine: Python 3.11.9, Pillow 11.2.1, numpy 2.2.4. There are **no** image-generation, Aseprite or ImageMagick tools. Godot 4.7.2 is in tools/engine (owned by 02).
@@ -89,4 +89,5 @@ Meadow layout (kept for reference). Layers (back to front) with view_y and paral
 - Title pages (art 0.11.0, menu-budget option B): `ui_title_ko` 512x64 (`logo_title_ko`, `logo_title_ko_2line`) and `ui_title_en` 256x128 (`logo_title_en`, `logo_title_en_2line`), group `title`, load_policy `menu`, 0.125 MiB each. Frame names, sizes, pivots and pixels are the same as the old `ui_title` page. Load only the current locale's page. Show logos at integer scale only. Pivot = centre.
 - App icon candidate (not a runtime asset): `docs/art/branding/app_icon_candidate_{48,96,192}.png`.
 - Android adaptive icon (art 0.10.1): `docs/art/branding/adaptive/ic_launcher_{foreground,background}_432.png`, 108 dp at xxxhdpi (4 px/dp), art at 5 px per art pixel, foreground inside the 66 dp safe circle (0 px clipped by circle/squircle/teardrop masks). Generator: `tools/art/adaptive_icon.py`. Real launcher untested.
+- **Launcher icon set (art 0.12.2, runtime):** `res://assets/branding/launcher_main_192.png`, `launcher_adaptive_foreground_432.png`, `launcher_adaptive_background_432.png`, `launcher_adaptive_monochrome_432.png` (generator tools/art/launcher_icons.py). Store graphics (not exported): docs/art/branding/store/ (512 icon, 1024x500 feature graphic with a separate title layer).
 - Business model is on hold (Q2): no ad/shop/purchase UI art is made.

@@ -1,6 +1,6 @@
 # 03-art status
-Updated: 2026-10-31 18:45 +09:00
-Status: MILESTONE 14 DELIVERED (commit b5ce778, PUSHED origin/main, verified with git branch -r --contains). Deferred Godot checks done on a HEAD 31164c8 snapshot: readability render, PCK 12/12, real-game captures incl. the mould nest at the right edge (all 03 lines pass). No art failure found.
-Current task: done. Next = A26 for the other allies.
-Validation: validate.py --determinism PASS; Godot readability v0121; exported PCK 12/12 + 3 fonts; real-game captures on the secondary monitor.
-Open with other owners: 02 A12/A13 (re-import, camera), 04 A11/A12 (edge indicator), 08 A8/A9, A23 crowd (02).
+Updated: 2026-10-31 18:59 +09:00
+Status: MILESTONE 15 DELIVERED (commit SHA in coordination/handoffs/03-art.md). Launcher icon set in assets/branding (192, adaptive fg/bg/mono 432; 0 px outside the safe circle, 0 clipped by 4 masks), store icon 512 and 1024x500 feature graphic with a separate title layer, hero apron emblem 6x3. APK wiring waits for 02 (A14).
+Current task: done. Next = APK icon check with 06 after 02's preset change; A26 for the other allies.
+Validation: validate.py --determinism PASS; launcher_icons.py byte-identical rerun; 06 check_store_graphics.py PASS for icon/adaptive; exported PCK 12/12; real-game capture on DISPLAY2.
+Open with other owners: 02 A12-A14 (re-import, camera, preset keys), 04 A11/A12, 06 A4, 08 A8/A9.

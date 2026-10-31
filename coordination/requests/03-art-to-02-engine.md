@@ -79,3 +79,11 @@ Redrawn to match 01's names: e_swarm (flies), e_bomber (yeast puff), e_brute (bo
 ## A13 2026-10-31 17:49 +09:00 — bases page changed (re-import), nest off screen at t = 10 s (QUEUED)
 - bases.png pixels changed (mould nest, art 0.12.0; sizes and rects unchanged). The main-tree cache is stale for bases only (validate.py). Please re-import after 08's quiet window.
 - FYI for QA-J1 / 09 X9: in r01 the nest's left edge (x 1012) enters a 640-px view only at cam_x >= 692. Any camera/framing change that shows the nest earlier is yours; 04 is asked about an edge indicator (04 A11).
+
+## A14 2026-10-31 18:59 +09:00 — launcher icon paths for export_presets.cfg (you own the file; 03 did not edit it) (QUEUED)
+06 confirmed the APK uses icon.svg because the Android preset has no `launcher_icons/*` keys. Please set, in the Android preset options:
+- `launcher_icons/main_192x192="res://assets/branding/launcher_main_192.png"`
+- `launcher_icons/adaptive_foreground_432x432="res://assets/branding/launcher_adaptive_foreground_432.png"`
+- `launcher_icons/adaptive_background_432x432="res://assets/branding/launcher_adaptive_background_432.png"`
+- `launcher_icons/adaptive_monochrome_432x432="res://assets/branding/launcher_adaptive_monochrome_432.png"` (optional, themed icons)
+The files are committed with Godot-generated `.import` files (imported in a HEAD snapshot) and are inside the export filter (all_resources; docs/ and tools/ are excluded, which is why they are under assets/). Sizes are exact (192x192, 432x432). Optionally also point `application/config/icon` at the 192 file so the desktop window icon matches. 06 will check the rebuilt APK's icon_foreground/icon_background against these layers. Also still pending: main-tree re-import (A12/A13).

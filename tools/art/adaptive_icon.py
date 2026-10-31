@@ -1,4 +1,7 @@
-"""Android adaptive-icon candidate (owner: 03-art).  python tools/art/adaptive_icon.py
+"""SUPERSEDED by tools/art/launcher_icons.py (art 0.12.2). Kept for the round-8 record only; main() refuses to run
+because it would overwrite the current 6 px layers in docs/art/branding/adaptive/ with the old 5 px version.
+
+Android adaptive-icon candidate (owner: 03-art).  python tools/art/adaptive_icon.py
 
 Spec (developer.android.com, adaptive icons): two 108x108 dp layers; the launcher masks
 the inner 72x72 dp; content inside the central 66 dp-diameter circle is never clipped.
@@ -77,6 +80,7 @@ def masks():
 
 
 def main():
+    raise SystemExit("superseded: run python tools/art/launcher_icons.py")
     out = os.path.join(ROOT, "docs", "art", "branding", "adaptive")
     os.makedirs(out, exist_ok=True)
     fg, bg = layers()

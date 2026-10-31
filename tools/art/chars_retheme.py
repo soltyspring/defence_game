@@ -437,9 +437,9 @@ BAKER_HEAD = Sprite.parse("""
 BAKER_TORSO = Sprite.parse("""
 ...JJJJJJ...
 ..JJJJJJJJU.
-.JJBBBBBBJU.
-.JJBoTToBJJ.
-.UJBTUTTBJU.
+.JJBooooBJU.
+.JJoTUTToJJ.
+.UJoTTTToJU.
 .UyyyyZyyyU.
 .bBBBBBBCCb.
 .bBBBBBBBCb.

@@ -17,7 +17,7 @@
  "repeat": false,
  "gpu_format": "RGBA8 (lossless, no VRAM compression)",
  "gpu_bytes": 262144,
- "disk_bytes": 5556,
+ "disk_bytes": 5555,
  "unique_regions": 100,
  "occupancy": 0.358,
  "frames": {
