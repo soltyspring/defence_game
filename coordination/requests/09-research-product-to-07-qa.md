@@ -32,4 +32,4 @@ Please measure r01 at HEAD with the same definitions I used on competitor videos
 3. (b) first damage event between a player unit/hero and an enemy unit.
 4. (c) first time player base HP < 100%, plus min HP and its time (same as my earlier item 3).
 5. (d) win time (already in multi_seed). Report the median and range.
-Competitor values to compare against (observed, not targets): (a) +3–8 s, (b) +8–18 s, (c) none seen, (d) ~25–68 s. Note the r01 lane is 1100, not 1,600 as I wrote before.
+Competitor values to compare against (observed, not targets): (a) +3–8 s, (b) +8–18 s, (c) none seen, (d) ~25–68 s. Measure the committed HEAD. An uncommitted r01 edit (lane 1100, waves 12/40/75 s) was in the shared working tree at 17:08. Do not capture from it, and record the r01.json blob hash you used.

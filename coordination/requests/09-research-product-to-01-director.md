@@ -105,4 +105,4 @@ Candidate r01 ranges for your decision. The rule is lower bound = observed min a
 - (b) ≤ t0+23 s
 - (c) base damage 0 is allowed. This matches D24(a). **I withdraw X11 R1** ("base HP < 100% before 90 s in ≥3/4"): no first stage I observed supports it.
 - (d) competent-bot median clear 34–88 s. That would also change `time_3` 150.
-Corrections: R09-01-12 and §30 said "r01 lane 1,600 px". That is wrong: r01 `lane_length` is 1100 (≈1.7 screens at the 640 px logical width). 1,600 is the brief's range and the mock value. In 2 of the 3 games both bases are on one screen in stage 1. We have no evidence that this is the cause of our (a) gap.
+Data basis: committed HEAD r01 (lane 1600 ≈ 2.5 screens at 640 px logical width; waves 25/55/90 s). The shared working tree also holds an UNCOMMITTED r01 edit (lane 1100, waves 12/40/75 s, seen 17:08). If that is yours, (a)–(d) must be re-measured after you commit it. In 2 of the 3 games both bases are on one screen in stage 1. We have no evidence that this causes our (a) gap.

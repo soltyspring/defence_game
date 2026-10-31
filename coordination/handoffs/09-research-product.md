@@ -1,7 +1,17 @@
 # 09-research-product handoff
-Updated: 2026-10-31 (resumed after the 09:18–09:19 user checkpoint; window reopened once mid-resume)
+Updated: 2026-10-31 ~17:10 KST
 Session ID: sess_6ce8ebb1-4e45-454d-a561-e0bad09a8be5 · claude-opus-5.5 / trust-all
-Status: MILESTONE DONE — waiting for 01/02/04/07 replies
+Status: MILESTONE DONE (v14) — waiting for 01 (R09-01-13) and 07 (first-stage timing items)
+
+## Latest (v14, 17:00–17:10 KST)
+- 175ddc0d88c1cc890818b4f40606fc5352048e38 PUSHED: SUCCESS_ANALYSIS §33, first-stage timing from YouTube public storyboards.
+  - Battle Cats KR st.1 (adRHiLSa2Os): (a) +3–4 s, (b) +18 s, (c) none seen, (d) ~68 s.
+  - Cat War 2 st.1 (dzR0IMIFxvU): +8 s, +12–16 s, unreadable, ~62 s. A second video (2pZm2OXNEeU) runs >100 s.
+  - Waggle Squad st.1 (M3kjYM0UIsw): +6 s, +8–14 s, none seen, ~34–38 s. dMlfFTrUx20 gives ~25 s ±5.
+  - 몽글뭉치: no video or guide found.
+- R09-01-13 gives candidate ranges: (a) ≤10 s, (b) ≤23 s, (c) 0 allowed, (d) 34–88 s. The rule is observed max × 1.3, an arbitrary 09 choice. X11 R1 is withdrawn. The 07 request adds the (a)–(d) measurement items.
+- A follow-up commit corrects the data basis. The committed HEAD r01 has lane 1600 and waves 25/55/90. An uncommitted r01.json edit (lane 1100, waves 12/40/75) sits in the shared working tree. Its owner is unknown and 09 did not touch it.
+- Local working files (not committed): %TEMP%\r09\fs\ (sb_*.png, zoom_*.png, sb_meta.json, yt.json, ys2.py).
 Read on resume: this handoff, coordinator-to-09-research-product.md (incl. 09:03 USER DECISION Q1 = theme A; the QUOTA CHECKPOINT/HISTORICAL notes are past records, not a stop), replies 01-director-to-09 (D16), 04-client-to-09, 08-performance-to-09.
 
 ## Checkpoint comparison (no work lost)
