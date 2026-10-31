@@ -99,6 +99,7 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - HEAD 31164c8 snapshot (%TEMP%\art03_v0121, import only there). Readability v0121: Godot = composite, only crowd fails (A23, 02). PCK 12/12 + 3 fonts, no raw PNG, 1,263,084 B.
 - Real game (DISPLAY2, EXIT_0, no black or paused frames): logo, bakery buttons, 제빵 대장, 식빵병, village visible. Nest captured with tools/art/godot_check/nest_cam.gd (camera pan like a drag): dL* 28.5-39.0, min dE76 28.5-43.8, all pass. Evidence docs/art/evidence/ingame_v0121/.
 - No failure to fix.
+- Commit b5ce778 [Test]: PUSHED origin/main (verified with git branch -r --contains at 18:45). 07 A8 re-verify request after the push.
 
 ## Exact next steps on resume
 1. A26 for the remaining allies (tank 통식빵, fast 프레첼, siege 화덕포), same contract; the hero's apron emblem is too small at 1x (consider a larger loaf mark).

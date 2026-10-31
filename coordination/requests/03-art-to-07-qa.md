@@ -37,3 +37,9 @@
 ## A7 2026-10-31 18:04 +09:00 — A26 bread detail + icon_nest (commit 6949499), re-verify after 18:30 (QUEUED)
 - 식빵병: toast-helmet crumb pores + toast-slice cuirass; 제빵 대장: loaf emblem on the apron + flour dust on the rolling pin; `icon_nest` added to ui_main. Pixels only for the units (frame contract unchanged).
 - 03 Python composite numbers (docs/art/evidence/a26/a26_metrics.json): silhouette min melee 64.9 %, hero 67.7 % (unchanged); closest enemy dE76 protan melee 26.1, hero 17.6 (was 29.8 / 18.6). Godot render and real-game capture NOT done yet (08 quiet window); please include both units in your next ART-03..08 / name-to-unit pick run with a HEAD snapshot import.
+
+## A8 2026-10-31 18:45 +09:00 — deferred Godot checks done (commit b5ce778); please re-verify (QUEUED)
+- HEAD 31164c8 snapshot (includes 03's 6949499 and 04's 31164c8), import only in %TEMP%; main-tree .godot untouched. Secondary monitor, all runs EXIT_0, no black frames, no pause-menu frames.
+- Godot readability v0121: Godot output = composite in all 9 scenes; only crowd fails (A23, 02). Exported PCK 12/12 pages + 3 fonts, no raw PNG.
+- Real game: logo on the KO menu, bakery buttons, 제빵 대장 and 식빵병 in front of the village (docs/art/evidence/ingame_v0121/). Mould nest at the right edge, captured by panning the camera like a drag (tools/art/godot_check/nest_cam.gd): dL* vs the street 28.5-39.0, min dE76 (protan) 28.5-43.8 for 24/40/96 px visible. 03 judgement: the hero's apron loaf emblem is too small to read at 1x.
+- Please re-run your X9 (M1 / M3), QA-J1, TH-COL and the name-to-unit pick test on a HEAD snapshot. In autoplay the nest is never on screen (camera follows the hero), so M3 depends on 04's edge indicator / 02's camera.
