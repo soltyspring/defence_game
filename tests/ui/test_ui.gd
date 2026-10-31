@@ -53,6 +53,7 @@ func _run() -> void:
 	await test_korean_text_fit()
 	test_atlas_import_guard()
 	await test_back_once_and_result_pause()
+	await test_wave_cleared_banner()
 	for s in SECTIONS:
 		check(done.has(s), "section %s ran to completion (aborted by a script error otherwise)" % s)
 	print("[test_ui] passed=%d failed=%d" % [passes, failures.size()])
@@ -62,7 +63,7 @@ func _run() -> void:
 		print("  - " + f)
 	quit(1 if failures.size() > 0 else 0)
 
-const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard", "back_once"]
+const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard", "back_once", "wave_cleared"]
 var done := {}
 
 func test_compile_all(dir_path: String) -> void:
@@ -766,3 +767,38 @@ func test_back_once_and_result_pause() -> void:
 	hud.queue_free()
 	await _frames()
 	done["back_once"] = true
+
+# ---------------------------------------------------------------- 09 R09-04-7 first-wave-broken banner
+
+func test_wave_cleared_banner() -> void:
+	# the real Events has no wave_cleared yet (02 pending) → simulate the proposed contract on a test bus
+	var b2: Node = EventsScript.new()
+	b2.add_user_signal("wave_cleared", [{"name": "info", "type": TYPE_DICTIONARY}])
+	root.add_child(b2)
+	var hud: Control = load("res://scenes/ui/hud.tscn").instantiate()
+	hud.bus = b2
+	root.add_child(hud)
+	b2.battle_started.emit(MockEngine.sample_info(5, 3))
+	await _frames(2)
+	b2.emit_signal("wave_cleared", {"index": 2, "t": 50.0})
+	check(not hud.wave_cleared_shown, "wave 2 cleared → no banner (index 1 only)")
+	b2.emit_signal("wave_cleared", {"index": 1, "t": 33.0})
+	await _frames(1)
+	check(hud.wave_cleared_shown and hud.banner_label.text == UiText.t("banner.first_wave_cleared") and hud.banner_label.modulate.a > 0.9, "wave 1 cleared → banner '%s'" % hud.banner_label.text)
+	check(hud.BANNER_SECONDS <= 2.0, "banner duration ≤ 2 s (%.1f)" % hud.BANNER_SECONDS)
+	var br: Rect2 = hud.banner_label.get_rect()
+	var clash := []
+	for r in [hud.layout.bases, hud.layout.resources, hud.layout.boss] + hud.layout.cards + hud.layout.skills + [hud.layout.worker, hud.layout.move_left, hud.layout.move_right]:
+		if br.intersects(r):
+			clash.append(r)
+	check(clash.is_empty(), "banner %s covers no base HP bar / card / control (%s)" % [br, clash])
+	hud.banner_label.text = "x"
+	b2.emit_signal("wave_cleared", {"index": 1, "t": 40.0})
+	check(hud.banner_label.text == "x", "first-wave banner shown once per battle")
+	b2.battle_started.emit(MockEngine.sample_info(5, 3))
+	await _frames(1)
+	check(not hud.wave_cleared_shown, "flag resets on the next battle")
+	hud.queue_free()
+	b2.queue_free()
+	await _frames()
+	done["wave_cleared"] = true

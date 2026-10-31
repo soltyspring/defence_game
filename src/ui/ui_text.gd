@@ -61,11 +61,13 @@ const FALLBACK_KO := {
 	"toast.boss_incoming": "강력한 보스가 다가옵니다!",
 	"toast.worker_max": "일꾼이 최대입니다",
 	"toast.counterattack": "적이 반격합니다!",
+	"banner.first_wave_cleared": "첫 웨이브 격파!",
 }
 
 ## English UI fallbacks for keys not yet in data/text/en.json (01 asked to add them; data wins).
 const FALLBACK_EN := {
 	"toast.counterattack": "Enemy counterattack!",
+	"banner.first_wave_cleared": "First wave broken!",
 	"ui.star_win": "Win",
 	"ui.star_base_hp": "Base HP %d%%+",
 	"ui.star_base_hp_any": "Keep your base healthy",

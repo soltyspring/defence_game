@@ -6,6 +6,7 @@ extends "res://src/ui/ui_screen.gd"
 
 const HudLayout := preload("res://src/ui/hud_layout.gd")
 const TOAST_SECONDS := 1.6
+const BANNER_SECONDS := 1.8          # 09 R09-04-7: ≤ 2 s
 
 var info: Dictionary = {}
 var snap: Dictionary = {}
@@ -49,6 +50,9 @@ func _bus_links() -> Array:
 		[&"battle_paused", _on_paused],
 		[&"battle_ended", _on_battle_ended],
 		[&"tutorial_step", _on_tutorial_step],
+		# 09 R09-04-7 / 01 D16+D21: connected only once 02 adds signal wave_cleared(info: Dictionary) to Events
+		# (info: index:int = scripted wave index, pressure waves excluded; t:float). Until then: inert.
+		[&"wave_cleared", _on_wave_cleared],
 	]
 
 func ui_setup(params: Dictionary) -> void:
@@ -137,6 +141,7 @@ func _on_battle_started(p_info: Dictionary) -> void:
 	_held.clear()
 	_last_wave = -1
 	_battle_over = false
+	wave_cleared_shown = false
 	_on_tutorial_step("")
 	paused = false
 	pause_layer.hide()
@@ -379,10 +384,19 @@ func show_toast(text: String) -> void:
 	_toast_left = TOAST_SECONDS
 	_fit_label(toast_label, layout.get("toast", Rect2()))
 
+## First wave broken (D16 peak moment): one short large banner for wave index 1 only, once per battle.
+## The single banner label replaces any wave/boss banner instead of stacking (09 acceptance).
+var wave_cleared_shown := false   # QA
+func _on_wave_cleared(info: Dictionary) -> void:
+	if _battle_over or wave_cleared_shown or int(info.get("index", 0)) != 1:
+		return
+	wave_cleared_shown = true
+	show_banner(UiText.t("banner.first_wave_cleared"))
+
 func show_banner(text: String) -> void:
 	banner_label.text = text
 	banner_label.modulate.a = 1.0
-	_banner_left = 1.8
+	_banner_left = BANNER_SECONDS
 	_fit_label(banner_label, layout.get("banner", Rect2()))
 
 ## Centre the label in `area`, sized to its text (+ stylebox margins) so the dark strip hugs the text.
