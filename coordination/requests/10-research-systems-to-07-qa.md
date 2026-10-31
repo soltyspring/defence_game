@@ -77,3 +77,18 @@ Source: DATA_AND_BACKEND_ANALYSIS.md §9.19 (read-only watch).
 - At origin/main 07b90c5, `tools/qa/run_acceptance.ps1` was last changed 17:26 and sets no private APPDATA. 01 (b06c1f3), 04 (be2abb3), 06 (29d31be), 05 and 08 have committed theirs.
 - Your recent runs look isolated in practice. The read-only check at 23:29 found no run started in the real folder after 19:36:56, including your `qa07_head` acceptance at 23:08–23:09. But the next default run of the script can still leak. Please commit the change (10→07 v0.26). Under the new rule, run it inside `coordination/heavy_run.ps1`.
 - The TP-13 quarantine copies (996 MB) are still in the real folder. Cleanup is your or the coordinator's decision.
+
+## v0.34 (~07:40 KST 11-01): acceptance `-Head` snapshot is CRLF on this PC; add re-lock cases to TP-05
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.26 (3) and (1).
+- `tools/qa/run_acceptance.ps1:89` runs `git archive --format=zip ... HEAD` with no line-ending flags.
+  - This PC has `core.autocrlf=true` (system gitconfig) and no .gitattributes, so the snapshot's data is CRLF. Its content_version (e.g. c1-40bde75d24c2 at eb8d5c4) then differs from the APK/AAB (c1-989c3422c910, measured).
+  - Any acceptance check on backup names, refund keys or notice from/to sees values players never get.
+  - Fix (your file): `git -c core.autocrlf=false -c core.eol=lf archive ...`, as in 04/06's build scripts.
+  - `tools/qa/art_compare.ps1:45` has the same call. It is low risk (pictures only), but the same flag keeps snapshots identical.
+- TP-05 (content migration): the M1–M3 cases missed the re-lock defect. Proposed extra cases, all reproducible with `probes/relock_variants.py` variants and judged by `probes/probe_relock.gd` (`cleared_but_locked` must be []):
+  - `insert2`: two rounds after r02.
+  - `insert1` then `insert1b`: two updates.
+  - `move_r03_end`.
+  - `rename2` without migrations.json.
+  - An all-cleared save with `bytes_only`: no write expected.
+  - Today these FAIL on f606801 (02 asked to fix). The seeds are in `docs/research/systems/evidence/relock_20261101/`.

@@ -16,7 +16,7 @@ if (Test-Path $root) { Remove-Item -Recurse -Force $root }
 New-Item -ItemType Directory $root | Out-Null
 $base = Join-Path $root 'base'
 New-Item -ItemType Directory $base | Out-Null
-git archive --format=zip -o "$root/head.zip" HEAD
+git -c core.autocrlf=false -c core.eol=lf archive --format=zip -o "$root/head.zip" HEAD   # v0.34: LF = committed bytes (§9.26 (3))
 Expand-Archive "$root/head.zip" -DestinationPath $base
 Remove-Item "$root/head.zip"
 $pg = [IO.File]::ReadAllText("$base/project.godot") -replace 'config/name="[^"]*"', 'config/name="Probe10 Snapshot"'

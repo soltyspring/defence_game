@@ -1,0 +1,42 @@
+--------- beginning of main
+10-31 22:20:14.775  3364  3732 I godot   : Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+10-31 22:20:17.388  3364  3732 I godot   : 1:
+10-31 22:20:17.390  3364  3732 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+10-31 22:20:17.390  3364  3732 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+10-31 22:20:17.390  3364  3732 E godot   :
+10-31 22:20:17.390  3364  3732 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+10-31 22:20:17.390  3364  3732 E godot   : ERROR: Method/function failed.
+10-31 22:20:17.390  3364  3732 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+10-31 22:20:17.448  3364  3732 I godot   : 1:
+10-31 22:20:17.448  3364  3732 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+10-31 22:20:17.448  3364  3732 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+10-31 22:20:17.448  3364  3732 E godot   :
+10-31 22:20:17.448  3364  3732 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+10-31 22:20:17.448  3364  3732 E godot   : ERROR: Method/function failed.
+10-31 22:20:17.448  3364  3732 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+10-31 22:20:17.480  3364  3732 I godot   : 1:
+10-31 22:20:17.480  3364  3732 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+10-31 22:20:17.480  3364  3732 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+10-31 22:20:17.480  3364  3732 E godot   :
+10-31 22:20:17.480  3364  3732 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+10-31 22:20:17.480  3364  3732 E godot   : ERROR: Method/function failed.
+10-31 22:20:17.480  3364  3732 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+10-31 22:20:17.489  3364  3732 I godot   : 1:
+10-31 22:20:17.489  3364  3732 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+10-31 22:20:17.489  3364  3732 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+10-31 22:20:17.489  3364  3732 E godot   :
+10-31 22:20:17.489  3364  3732 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+10-31 22:20:17.489  3364  3732 E godot   : ERROR: Method/function failed.
+10-31 22:20:17.489  3364  3732 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+10-31 22:20:17.523  3364  3732 E godot   : WARNING: shader failed to compile, unable to bind shader.
+10-31 22:20:17.523  3364  3732 E godot   :    at: _version_bind_shader (./drivers/gles3/shader_gles3.h:215)
+10-31 22:20:17.529  3364  3732 I godot   : OpenGL API OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1) - Compatibility - Using Device: Google (Google Inc.) - Android Emulator OpenGL ES Translator (Google SwiftShader)
+10-31 22:20:17.801  3364  3732 I godot   :
+10-31 22:20:23.128  3364  3732 I godot   : [App] boot ok platform=Android renderer=Android Emulator OpenGL ES Translator (Google SwiftShader) view=(800.0, 360.0) window=(1600, 720) title=Bakery Knights: Mold Defense screen=menu ui_source={"menu":"scenes/ui"} atlas={"pages":[{"gpu_bytes":262144,"h":256,"id":"ui_main","refs":1,"source":"import","w":256}],"resident_gpu_bytes":262144} save_recovered=false
+10-31 22:20:23.241  3364  3732 I godot   : 1:
+10-31 22:20:23.241  3364  3732 E godot   : ERROR: CanvasShaderGLES3: Program linking failed:
+10-31 22:20:23.241  3364  3732 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+10-31 22:20:23.241  3364  3732 E godot   :
+10-31 22:20:23.241  3364  3732 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+10-31 22:20:23.241  3364  3732 E godot   : ERROR: Method/function failed.
+10-31 22:20:23.241  3364  3732 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)

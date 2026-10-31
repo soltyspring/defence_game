@@ -17,7 +17,7 @@ $env:APPDATA = Join-Path $tmp 'appdata'
 New-Item -ItemType Directory -Force $env:APPDATA | Out-Null
 try {
   if ($Rev) {
-    Push-Location $root; git archive --format=zip -o "$tmp\d.zip" $Rev data; Pop-Location
+    Push-Location $root; git -c core.autocrlf=false -c core.eol=lf archive --format=zip -o "$tmp\d.zip" $Rev data; Pop-Location   # v0.34: LF
     Expand-Archive "$tmp\d.zip" -DestinationPath $tmp; Remove-Item "$tmp\d.zip"
     $label = "rev $Rev"
   } else {

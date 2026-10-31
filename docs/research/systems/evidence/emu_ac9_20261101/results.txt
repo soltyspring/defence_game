@@ -1,0 +1,60 @@
+# 10 v0.34 AC9 emulator part (job 10-emu-ac9, build/heavy/10-emu-ac9-20261101-070022.log). EMULATOR ONLY, not a real phone.
+# AVD build/avd LaneDefence_Phone started by this job: -no-window -read-only -no-snapshot-save -no-snapshot-load -gpu swiftshader_indirect, port 5594;
+# stopped with adb emu kill. APK = docs/research/systems/.local_inspect/pkg_eb8d5c4/apk/defence-debug.apk (eb8d5c4, measured in v0.33).
+# Seeds E1-E3 are synthetic saves pushed with run-as; DEVICE lines read files/save.json back from the device after each step.
+
+HEAVY_JOB_QUEUED 2026-11-01T07:00:23 label=10-emu-ac9 pid=29888 script=Z:\.solty\dev\appintoss\defence\docs\research\systems\.local_inspect\job_emu_ac9.ps1
+P10 job start 2026-11-01T07:18:03 apk_sha16=5E4B0D07D1044D72
+P10 no foreign emulator (waited 0s)
+P10 emulator started pid=37184 serial=emulator-5594 gpu=swiftshader_indirect (software; no host GPU after two BSODs)
+P10 booted=True after 69s
+P10 device sdk_gphone64_x86_64 / Android 16 / API 36 / x86_64
+P10 removed an earlier install on this read-only instance
+P10 install Serving... All files should be loaded. Notifying the device. Performing Incremental Install Success Install command complete in 33068 ms
+P10 installed_apk_sha16=5E4B0D07D1044D72 local_apk_sha16=5E4B0D07D1044D72
+P10 LAUNCH D0_first_launch pid=3364 app_fatal_or_anr=0 boot=[[App] boot ok platform=Android renderer=Android Emulator OpenGL ES Translator (Google SwiftShader) view=(800.0, 360.0) window=(1600, 720) title=Bakery Knights: Mold Defense screen=menu ui_source={"menu":"scenes/ui"}]
+P10 LOG D0_first_launch | 10-31 22:20:17.390  3364  3732 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+P10 LOG D0_first_launch | 10-31 22:20:17.448  3364  3732 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+P10 LOG D0_first_launch | 10-31 22:20:17.480  3364  3732 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+P10 DEVICE {"tag":"D0_after_home","sha16":"C8055B2BB183345E","revision":2,"content_version":"c1-989c3422c910","coins":0,"unlocked_round":1,"melee":null,"migration_notice":null,"migrations_applied":null,"snapshot_version":"c1-989c3422c910","files":"save.json:1712 save.json.bak:1712"}
+P10 SEED E1 sha16=DB4893796BBDFAC4 cv=c1-0000000000e1 files=save.json:832
+P10 LAUNCH E1_update_boot pid=4265 app_fatal_or_anr=0 boot=[[App] boot ok platform=Android renderer=Android Emulator OpenGL ES Translator (Google SwiftShader) view=(800.0, 360.0) window=(1600, 720) title=Bakery Knights: Mold Defense screen=menu ui_source={"menu":"scenes/ui"}]
+P10 LOG E1_update_boot | 10-31 22:20:42.994  4265  4304 E godot   : WARNING: Failed to load cached shader, recompiling.
+P10 LOG E1_update_boot | 10-31 22:20:43.317  4265  4304 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+P10 LOG E1_update_boot | 10-31 22:20:43.318  4265  4304 E godot   : WARNING: shader failed to compile, unable to bind shader.
+P10 LOG E1_update_boot | 10-31 22:20:46.004  4265  4304 E godot   : ERROR: CanvasShaderGLES3: Program linking failed:
+P10 DEVICE {"tag":"E1_after_boot","sha16":"893B2AAF7F0622C1","revision":8,"content_version":"c1-989c3422c910","coins":1250,"unlocked_round":6,"melee":5,"migration_notice":{"coins":250,"from":"c1-0000000000e1","levels":1,"to":"c1-989c3422c910"},"migrations_applied":["refund:c1-989c3422c910:up_melee_basic"],"snapshot_version":"c1-989c3422c910","files":"save.json:1862 save.json.bak:832 save.pre-c1-0000000000e1.json:832"}
+P10 E1 pre_backup_sha16=DB4893796BBDFAC4 seed_sha16=DB4893796BBDFAC4
+P10 LAUNCH E1b_restart_before_ack pid=4427 app_fatal_or_anr=0 boot=[[App] boot ok platform=Android renderer=Android Emulator OpenGL ES Translator (Google SwiftShader) view=(800.0, 360.0) window=(1600, 720) title=Bakery Knights: Mold Defense screen=menu ui_source={"menu":"scenes/ui"}]
+P10 LOG E1b_restart_before_ack | 10-31 22:21:13.604  4427  4475 E godot   : WARNING: Failed to load cached shader, recompiling.
+P10 LOG E1b_restart_before_ack | 10-31 22:21:14.089  4427  4475 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+P10 LOG E1b_restart_before_ack | 10-31 22:21:14.090  4427  4475 E godot   : WARNING: shader failed to compile, unable to bind shader.
+P10 LOG E1b_restart_before_ack | 10-31 22:21:16.784  4427  4475 E godot   : ERROR: CanvasShaderGLES3: Program linking failed:
+P10 DEVICE {"tag":"E1b_after_restart","sha16":"893B2AAF7F0622C1","revision":8,"content_version":"c1-989c3422c910","coins":1250,"unlocked_round":6,"melee":5,"migration_notice":{"coins":250,"from":"c1-0000000000e1","levels":1,"to":"c1-989c3422c910"},"migrations_applied":["refund:c1-989c3422c910:up_melee_basic"],"snapshot_version":"c1-989c3422c910","files":"save.json:1862 save.json.bak:832 save.pre-c1-0000000000e1.json:832"}
+P10 DEVICE {"tag":"E1c_after_back_ack","sha16":"509C635027995508","revision":9,"content_version":"c1-989c3422c910","coins":1250,"unlocked_round":6,"melee":5,"migration_notice":null,"migrations_applied":["refund:c1-989c3422c910:up_melee_basic"],"snapshot_version":"c1-989c3422c910","files":"save.json:1912 save.json.bak:1862 save.pre-c1-0000000000e1.json:832"}
+P10 LAUNCH E1d_restart_after_ack pid=4584 app_fatal_or_anr=0 boot=[[App] boot ok platform=Android renderer=Android Emulator OpenGL ES Translator (Google SwiftShader) view=(800.0, 360.0) window=(1600, 720) title=Bakery Knights: Mold Defense screen=menu ui_source={"menu":"scenes/ui"}]
+P10 LOG E1d_restart_after_ack | 10-31 22:21:46.378  4584  4610 E godot   : WARNING: Failed to load cached shader, recompiling.
+P10 LOG E1d_restart_after_ack | 10-31 22:21:46.785  4584  4610 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+P10 LOG E1d_restart_after_ack | 10-31 22:21:46.786  4584  4610 E godot   : WARNING: shader failed to compile, unable to bind shader.
+P10 LOG E1d_restart_after_ack | 10-31 22:21:48.904  4584  4610 E godot   : ERROR: CanvasShaderGLES3: Program linking failed:
+P10 DEVICE {"tag":"E1d_after_restart","sha16":"509C635027995508","revision":9,"content_version":"c1-989c3422c910","coins":1250,"unlocked_round":6,"melee":5,"migration_notice":null,"migrations_applied":["refund:c1-989c3422c910:up_melee_basic"],"snapshot_version":"c1-989c3422c910","files":"save.json:1912 save.json.bak:1862 save.pre-c1-0000000000e1.json:832"}
+P10 SEED E2 sha16=70B8426DCED33422 cv=c1-0000000000e2 files=save.json:791
+P10 LAUNCH E2_update_boot pid=4704 app_fatal_or_anr=0 boot=[[App] boot ok platform=Android renderer=Android Emulator OpenGL ES Translator (Google SwiftShader) view=(800.0, 360.0) window=(1600, 720) title=Bakery Knights: Mold Defense screen=menu ui_source={"menu":"scenes/ui"}]
+P10 LOG E2_update_boot | 10-31 22:22:21.894  4704  4735 E godot   : WARNING: Failed to load cached shader, recompiling.
+P10 LOG E2_update_boot | 10-31 22:22:22.529  4704  4735 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+P10 LOG E2_update_boot | 10-31 22:22:22.530  4704  4735 E godot   : WARNING: shader failed to compile, unable to bind shader.
+P10 LOG E2_update_boot | 10-31 22:22:27.420  4704  4735 E godot   : ERROR: CanvasShaderGLES3: Program linking failed:
+P10 DEVICE {"tag":"E2_after_boot","sha16":"08EE77B7ED5BD850","revision":31,"content_version":"c1-989c3422c910","coins":500,"unlocked_round":10,"melee":null,"migration_notice":null,"migrations_applied":[],"snapshot_version":"c1-989c3422c910","files":"save.json:1688 save.json.bak:791 save.pre-c1-0000000000e2.json:791"}
+P10 SEED E3 sha16=D2906418D3D94F8A cv=c1-0000000000e3 files=save.json:450
+P10 LAUNCH E3_update_boot pid=4815 app_fatal_or_anr=0 boot=[[App] boot ok platform=Android renderer=Android Emulator OpenGL ES Translator (Google SwiftShader) view=(800.0, 360.0) window=(1600, 720) title=Bakery Knights: Mold Defense screen=menu ui_source={"menu":"scenes/ui"}]
+P10 LOG E3_update_boot | 10-31 22:22:51.819  4815  4862 E godot   : WARNING: Failed to load cached shader, recompiling.
+P10 LOG E3_update_boot | 10-31 22:22:52.307  4815  4862 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+P10 LOG E3_update_boot | 10-31 22:22:52.307  4815  4862 E godot   : WARNING: shader failed to compile, unable to bind shader.
+P10 LOG E3_update_boot | 10-31 22:22:55.826  4815  4862 E godot   : WARNING: [Save] content/refund_unknown up_melee_basic levels [6] (no recorded price)
+P10 LOG E3_update_boot | 10-31 22:22:56.007  4815  4862 E godot   : ERROR: CanvasShaderGLES3: Program linking failed:
+P10 DEVICE {"tag":"E3_after_boot","sha16":"44467A79E28EA1C9","revision":4,"content_version":"c1-989c3422c910","coins":400,"unlocked_round":3,"melee":5,"migration_notice":{"coins":0,"from":"c1-0000000000e3","levels":1,"to":"c1-989c3422c910"},"migrations_applied":["refund:c1-989c3422c910:up_melee_basic"],"snapshot_version":"c1-989c3422c910","files":"save.json:1770 save.json.bak:450 save.pre-c1-0000000000e3.json:450"}
+P10 emulator stopped (adb emu kill)
+P10 qemu_left=0 devices=List of devices attached
+P10 adb server stopped (this job started it)
+P10 job end 2026-11-01T07:23:28
+HEAVY_JOB_DONE exit=0 at 2026-11-01T07:23:28

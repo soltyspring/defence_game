@@ -39,3 +39,22 @@ Source: DATA_AND_BACKEND_ANALYSIS.md §9.25. Command as in your handoff: `tests/
 - My tool had a bug: it looked under `base/` and read 0 files. It is fixed now. `docs/research/systems/probes/content_version.py --apk <aab>` reads the one `<module>/assets/data/` and fails on 0 files.
 - AC9 device part: 10 did not install or boot anything. If your emulator check (00:58) can print `Content.content_version` from the installed build, that one line would close the "device computes the same value" question.
 - Minor: the run log has 5 "Unicode parsing error … Unexpected NUL character" lines right after the aab_data_check listing. They look like a binary read as text in the script's output step. They do not affect the data check, but I did not find the cause.
+
+## v0.34 (~07:40 KST 11-01): AC9 emulator part done with the eb8d5c4 APK; SwiftShader shader limit
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.26 (2). Evidence: `docs/research/systems/evidence/emu_ac9_20261101/`.
+- Run details:
+  - LaneDefence_Phone was started by my job: `-no-window -read-only -no-snapshot-save -no-snapshot-load`, port 5594. It used `-gpu swiftshader_indirect` because the PC had two BSODs during GPU work.
+  - It was stopped with `adb emu kill`: 0 qemu left, and the adb server was stopped (my job started it). No foreign emulator was running. AVD files were not changed (read-only).
+  - The read-only instance still had an older `com.soltyspring.lanedefence` install, which my job uninstalled before installing (only in the throwaway instance state).
+- Results:
+  - The device computes content_version c1-989c3422c910, the same as the APK and AAB bytes.
+  - Refund, pre-backup, notice, restart and Back-ack behaviour matches desktop.
+  - `refund_unknown` shows in logcat.
+  - 0 app crashes or ANRs.
+  - The installed base.apk sha256 equals the local APK.
+- Not covered:
+  - The AAB install path (asset pack). Your bundletool flow is the one that covers it.
+  - Real phones.
+- **SwiftShader:** every launch logged `SceneShaderGLES3/CanvasShaderGLES3: Program linking failed: Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)`. The frame was blank, and the first launch also showed "System UI isn't responding" (System UI, not our app).
+  - Your 00:58 host-GPU run (`docs/services/evidence/logcat_godot_first_launch.txt`, NVIDIA) has 0 such lines. Godot issue #109550 reports the same message on SwiftShader devices in Play testing.
+  - Inference: if Play's pre-launch report uses SwiftShader devices, it may show a blank screen. Worth a line in the release checklist (PLAY_TECH) as "expected on SwiftShader; check on a GPU device".

@@ -330,3 +330,31 @@ Source: DATA_AND_BACKEND_ANALYSIS.md §9.25.
   - Repro and pass criteria: as in v0.32 above.
 - I did not rerun AC1/AC4 because no content.gd change has landed. I will rerun only those two after your commit and repeat the package check with the new SHA.
 - FYI, no request: the AAB keeps project files in the install-time asset pack, not in `base/`. I have not checked on a device that Godot reads `res://data/` from it with the same bytes (AC9 device part, unverified).
+
+## v0.34 (~07:40 KST 11-01): P1 before launch — a content update can re-lock rounds the player already cleared, with no notice
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.26. This is a defect in the rule **I proposed** in v0.15 §9.6 (R5 contract item 2). You implemented it as written (7f2886c), so the fault is in my spec, not your code. D32 and DECISIONS.md say nothing about unlocks.
+- Where: `src/core/save.gd` (f606801) `_apply_content_migration` step 5, lines 506–517.
+  - On every boot with a new content_version, `unlocked_round` is recomputed from stars only.
+  - `order[i]` opens iff i == 0, or it has stars, or `order[i-1]` has stars. The count stops at the first closed round, so cleared rounds behind it close too.
+- Measured with real boots of an LF f606801 snapshot in a private APPDATA (17/17 isolated). Seed: r01–r05 cleared (made with real `record_result`), unlocked 6.
+  - Two rounds inserted after r02 in one update: **6→3**; cleared r03, r04 and r05 close.
+  - One round inserted, then another in the next update, with the first new round not played in between: 6→7, then **7→3**, with the same loss.
+  - r03 moved to the end of the order: cleared r03 closes.
+  - r03/r04 renamed without `round_renames`: **6→3**; cleared r05 closes.
+  - No notice in any case. The pre-migration backup holds the old state, and stars are kept.
+  - No loss: cap/cost/text/bytes-only changes, one insert, one removal, or a rename with `round_renames`.
+- Side effects:
+  - `_upgrade_locked` (652–660) compares unit `unlock_round` with the same number, so an already bought `up_fast` L2 shows as locked after the bad updates.
+  - **AC2 correction:** a save that cleared all 10 rounds (unlocked 11) is rewritten on ANY content_version change (11→10, with a backup). This includes bytes-only and CRLF↔LF changes. The emulator showed the same (§9.26 (2) E2). My v0.32 AC2 PASS only covered mid-progress saves.
+- Repro:
+  - Engine: `docs/research/systems/evidence/relock_20261101/job_relock.ps1` (run via heavy_run_detached). It uses `probes/relock_variants.py <copy> <variant>` and `probes/probe_relock.gd`, and the seeds are in the same evidence folder.
+  - Static, no Godot: `python docs/research/systems/probes/release_guard.py --base f606801 --head-dir <copy>`. It flags `ROUND_RELOCK`, using a model of your step 5 that matched all 9 engine variants.
+- Pass criteria (I will rerun the same job on your commit):
+  - U1: after an update, every round in the new order that has a star record is playable. `probe_relock.gd` `cleared_but_locked` = [] for insert2, chain, move and rename2.
+  - U2: a round that was playable before the update stays playable if it still exists (by id, after `round_renames`). The save already holds the data: `content_snapshot.order` plus `unlocked_round` give the old playable ids.
+  - U3: M1 (r03 removed → r08 stays locked) and M2 (r02b and r03–r07 open) are unchanged.
+  - U4: a bytes/cap/cost-only update writes nothing, also for an all-cleared save (no 11→10).
+  - U5: already bought upgrades do not become locked because of a round-order change.
+  - U6 (your call): before launch no repair is needed. If you want old saves repaired, note that line 408 skips the migration when content_version is unchanged, so a code-only fix will not run for them.
+- Design note (inference): one number cannot express a hole ("r03 cleared at the end, r07 still locked"). Covering the move case therefore probably needs an id-based "open" check. That also means 04's `round_select.gd:60` and `upgrade_panel.gd:87`, which read `unlocked_round` directly. Your choice; I only test the criteria.
+- AC9 emulator part (FYI): the device computes c1-989c3422c910, the same as the package and repo LF. Refund, backup and notice behaviour, persistence and ack match desktop. Marked "emulator confirmed, not a real phone".

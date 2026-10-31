@@ -1,5 +1,5 @@
 # 데이터·백엔드 분석: 성공한 디펜스 게임의 온라인 기능과 우리 게임의 최소 설계
-작성: 10-research-systems · 버전 v0.33 (v0.33 §9.25 04 APK·06 AAB 패키지 data 바이트 같음(eb8d5c4, LF c1-989c3422c910), 앞선 줄 끝 주장의 사실·추론 구분, 04 이전 안내 시험 검토·실제 재부팅 보완 탐침(연속 업데이트·일시정지·환불 0), v0.32 §9.24 02 52f9fa3 재검증: F2 9/9, 업데이트 시나리오, 마이그레이션, AC1~AC9, 카나리 해시 기준 전환, v0.31 §9.22 정규화 해시 도입 전 호환성 공격 사례·02 수용 기준, heavy_run 덮어쓰기 원인, v0.30 §9.21 줄 끝과 content_version: 엔진 실측·APK 바이트·업데이트 재현·정규화 위치 추천, v0.29 §9.20 재개 후 손실 점검, D32/D33 대조와 출시 가드, HEAD 재실행, 재개 시간대 감시, v0.28 §9.19 실제 사용자 폴더 감시 30분·담당별 쓰기 증거·qa07 996 MB 원인, v0.27 §9.18 실제 사용자 폴더 백업, 업데이트·다운그레이드 실측, D26 결정 요청과 이전 전 백업 방어안, v0.26 §9.17 실제 사용자 폴더 오염 경로 전수 조사와 공통 격리 방법, v0.25 §9.16 01 opt 정책 구현·대조, 원거리 L5 역전 원인과 수정안, R5 수용 실행·F2 발견, v0.24 §9.15 D27 데이터 경제표·효과표 재실행·F1 독립 재실행·09 코인 흐름 회신, v0.23 §9.14 환불 근거 두 방식의 JSON 형식·장단점·테스트, v0.22 §9.13 경쟁작 공식 문서의 밸런스 변경·업데이트·오지급 처리와 D26 대조, v0.21 §9.12 정책별 경제 기준표·메뉴 토스트 미표시, v0.20 §9.11 a262640 재계산·업그레이드 화면 확인, v0.19 §9.10 buy_upgrade C1~C13, v0.18 §9.9 엔진 저장 내구성 판정·경쟁작 기기 변경 정책, v0.17 §9.8 저장 원자성 점검, v0.16 §9.7 챕터 1 코인 흐름·비용 대비 효과, v0.15 §9.6 데이터 버전 변경과 세이브, v0.14 §9.5 업그레이드 효과 곡선, v0.13 §9.4 업그레이드 트랜잭션·content_version, … v0.11 재시작 후 무결성 재실행: D17 확인, v0.12 테마 A 이름표 검사 통과·세이브 재확인) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
+작성: 10-research-systems · 버전 v0.34 (v0.34 §9.26 업데이트 뒤 라운드 재잠금 원인 확정(save.gd 5단계, 10의 §9.6 규칙)·재현 표·release_guard 재잠금 검사, AC9 에뮬레이터 확인(실기기 미검증), git archive 줄 끝 위험 표, §9.24 AC2 정정(모두 깬 세이브), v0.33 §9.25 04 APK·06 AAB 패키지 data 바이트 같음(eb8d5c4, LF c1-989c3422c910), 앞선 줄 끝 주장의 사실·추론 구분, 04 이전 안내 시험 검토·실제 재부팅 보완 탐침(연속 업데이트·일시정지·환불 0), v0.32 §9.24 02 52f9fa3 재검증: F2 9/9, 업데이트 시나리오, 마이그레이션, AC1~AC9, 카나리 해시 기준 전환, v0.31 §9.22 정규화 해시 도입 전 호환성 공격 사례·02 수용 기준, heavy_run 덮어쓰기 원인, v0.30 §9.21 줄 끝과 content_version: 엔진 실측·APK 바이트·업데이트 재현·정규화 위치 추천, v0.29 §9.20 재개 후 손실 점검, D32/D33 대조와 출시 가드, HEAD 재실행, 재개 시간대 감시, v0.28 §9.19 실제 사용자 폴더 감시 30분·담당별 쓰기 증거·qa07 996 MB 원인, v0.27 §9.18 실제 사용자 폴더 백업, 업데이트·다운그레이드 실측, D26 결정 요청과 이전 전 백업 방어안, v0.26 §9.17 실제 사용자 폴더 오염 경로 전수 조사와 공통 격리 방법, v0.25 §9.16 01 opt 정책 구현·대조, 원거리 L5 역전 원인과 수정안, R5 수용 실행·F2 발견, v0.24 §9.15 D27 데이터 경제표·효과표 재실행·F1 독립 재실행·09 코인 흐름 회신, v0.23 §9.14 환불 근거 두 방식의 JSON 형식·장단점·테스트, v0.22 §9.13 경쟁작 공식 문서의 밸런스 변경·업데이트·오지급 처리와 D26 대조, v0.21 §9.12 정책별 경제 기준표·메뉴 토스트 미표시, v0.20 §9.11 a262640 재계산·업그레이드 화면 확인, v0.19 §9.10 buy_upgrade C1~C13, v0.18 §9.9 엔진 저장 내구성 판정·경쟁작 기기 변경 정책, v0.17 §9.8 저장 원자성 점검, v0.16 §9.7 챕터 1 코인 흐름·비용 대비 효과, v0.15 §9.6 데이터 버전 변경과 세이브, v0.14 §9.5 업그레이드 효과 곡선, v0.13 §9.4 업그레이드 트랜잭션·content_version, … v0.11 재시작 후 무결성 재실행: D17 확인, v0.12 테마 A 이름표 검사 통과·세이브 재확인) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
 범위: 경쟁작에서 **관찰되는** 온라인 기능, 그 기능의 **공개 문서화된** 기술, **UNKNOWN**, 우리 오프라인 우선 Godot 게임에 필요한 최소 콘텐츠 DB·세이브·거래 계약. 런타임 코드는 수정하지 않았다. 내부 DB나 비공개 구현에 접근한 적 없다. 게임을 직접 플레이하지 않았다(스토어 텍스트·공개 스크린샷만 확인).
 
 ## 0. 현재 판단 (요약)
@@ -665,7 +665,7 @@ v0.9 기준선(9ca4a43) → HEAD 43b4692 이름 변화(ko / en, 대체값 = ko):
    - `content_version: String`: Content가 `load_all` 때 계산한다. 값은 `"c1-" + sha256(정렬된 data/**/*.json 경로+내용)[:12]`이다. 성공한 저장마다 기록한다.
    - `migrations_applied: Array[String]`: 적용한 마이그레이션 키. 키 형식은 `mig:<from_cv>:<to_cv>`, `refund:<to_cv>:<upgrade_id>`다. 한 번만 적용되게 하는 장부다.
    - `unlocked_round`는 호환용으로 남기되, 진실의 원천은 아래 2의 ID 기반 규칙이다.
-2. 해금 규칙(ID 기반, R8 해결): `order[i]`는 다음 중 하나면 열린다. i == 0이거나, 그 라운드 자체를 클리어했거나(`stars`에 있음), 바로 앞 라운드(`order[i-1]`)를 클리어했을 때. 이 규칙이면 M1에서 r08이 잠기고(앞의 r07 미클리어) M2에서 r07이 열린다(앞의 r06 클리어. 이미 깬 r03~r06은 그대로 열림). `unlocked_round`는 이 규칙으로 다시 계산해 저장한다.
+2. 해금 규칙(ID 기반, R8 해결): `order[i]`는 다음 중 하나면 열린다. i == 0이거나, 그 라운드 자체를 클리어했거나(`stars`에 있음), 바로 앞 라운드(`order[i-1]`)를 클리어했을 때. 이 규칙이면 M1에서 r08이 잠기고(앞의 r07 미클리어) M2에서 r07이 열린다(앞의 r06 클리어. 이미 깬 r03~r06은 그대로 열림). `unlocked_round`는 이 규칙으로 다시 계산해 저장한다. **(v0.34 정정: 이 규칙이 이미 깬 라운드를 다시 잠그는 원인이다. 라운드 2개 이상 연속 삽입, `round_renames` 없는 이름 변경, 깬 라운드 이동에서 생긴다. §9.26)**
 3. 마이그레이션 표 `data/migrations.json`(01 소유, 현재 백로그):
 ```json
 { "schema_version": 1,
@@ -1598,7 +1598,7 @@ HEAD 40382b0 결과(`-Rev HEAD`, exit 0, 업그레이드 총비용 5,595). "카�
 | AC | 판정 | 측정 |
 |---|---|---|
 | AC1 같은 커밋 CRLF·LF의 엔진 값 동일 | **FAIL** | CRLF `c1-40bde75d24c2` ≠ LF `c1-989c3422c910`. `content.gd`가 7f2886c 그대로라 정규화가 구현되지 않았다 |
-| AC2 줄 끝만 다른 빌드의 첫 부팅에서 진행 보존·무기록 | **PASS**(대체 측정) | 정규화 빌드가 없어서, 가장 가까운 전환(CRLF→LF 빌드)으로 쟀다. main 바이트 불변, 로그·안내 없음. X1 덕분이다 |
+| AC2 줄 끝만 다른 빌드의 첫 부팅에서 진행 보존·무기록 | **PASS**(대체 측정) → **v0.34 정정: 모두 깬 세이브(unlocked 11)는 FAIL**(11→10 쓰기, §9.26) | 정규화 빌드가 없어서, 가장 가까운 전환(CRLF→LF 빌드)으로 쟀다. main 바이트 불변, 로그·안내 없음. X1 덕분이다 |
 | AC3 다음 부팅 무기록 | **PASS** | 바이트 불변 |
 | AC4 CRLF→LF→CRLF 빌드 | **PASS** | 세 번 모두 main 바이트·rev 11 불변. §9.21 E2 재기록은 X1로 사라졌다 |
 | AC5 상한과 무관한 값 변경 | **PASS** | 쓰기·환불·안내 없음 |
@@ -1685,6 +1685,106 @@ HEAD 40382b0 결과(`-Rev HEAD`, exit 0, 업그레이드 총비용 5,595). "카�
 
 **(3) 02 정규화**: eb8d5c4..origin/main(03:4x 확인)에 `src/core/content.gd` 변경이 없다. 77행은 여전히 `h.update(FileAccess.get_file_as_bytes(f))`다. 그래서 AC1·AC4 재실행과 (1) 반복은 하지 않았다. AC1은 계속 FAIL이다(§9.24).
 
+### 9.26 업데이트 뒤 라운드 재잠금의 원인, 에뮬레이터 AC9, `git archive` 줄 끝 위험 표 (v0.34)
+**실행 조건**
+- 03:55 블루스크린(0x3B) 때 내 작업 두 개(`10-emu-ac9` 03:52, `10-relock-repro` 03:55)는 대기열에만 있었다. heavy_run.log에 START가 없고, `10-relock-repro` 로그는 161바이트가 모두 NUL이다. 남은 결과가 없으므로 버릴 것도 없다. 크래시 직전에 쓰던 파일 4개(`probe_relock.gd`, `relock_variants.py`, `job_relock.ps1`, `job_emu_ac9.ps1`)는 NUL 0, UTF-8 정상, 끝까지 있었다.
+- 06:57 재개 뒤 두 작업을 한 번씩만 다시 넣었다. 블루스크린 두 번이 GPU 작업 중에 났으므로 이렇게 줄였다.
+  - 재잠금 작업: 헤드리스 import 1회, 그 뒤는 data만 바꾼 사본(JSON은 FileAccess로 읽으므로 다시 import하지 않음). 고친 코드 쪽 비교는 뺐다.
+  - 에뮬레이터: `-no-window`, `-gpu swiftshader_indirect`(호스트 GPU를 쓰지 않음).
+- `10-relock-repro` 07:14:58~07:18:03(잠금 대기 880초), `10-emu-ac9` 07:18:03~07:23:28(대기 1,060초).
+- Godot 부팅 17회 모두 `isolated=true`, `real_save_changed_during_run=false`. 카나리 07:00:17·07:24:22: save.json·.bak과 다른 파일 변경 0(614A1FAC560FBB78).
+- 증거: `evidence/relock_20261101/`(results.txt, 시험용 시드 세이브 3개, 작업 사본), `evidence/emu_ac9_20261101/`(results.txt, logcat 3개, 화면 2장, 작업 사본). 플레이어 세이브는 없다.
+
+**(1) unlocked_round 하락의 원인: 확정**
+- 코드: `src/core/save.gd`(f606801) `_apply_content_migration` 5단계, **506~517행**.
+  - content_version이 바뀐 첫 부팅마다(세이브에 이전 content_version이 있을 때) unlocked_round를 별 기록만으로 다시 계산한다.
+  - `order[i]`는 i == 0이거나, 그 라운드에 별이 있거나, `order[i-1]`에 별이 있을 때만 열린다. unlocked_round는 열린 앞부분의 길이다.
+  - 처음으로 닫힌 라운드에서 계산을 멈추므로, 그 뒤에 있는 이미 깬 라운드도 함께 닫힌다.
+  - 7f2886c(10-31 18:43)에서 들어왔고, 52f9fa3이 로그 줄 `unlocked_round a->b`를 붙였다.
+- **규칙의 출처는 D32가 아니다.** DECISIONS.md D32는 업그레이드 환불·폐지·안내 문구·상한 하향 금지만 다루고, 해금 규칙은 DECISIONS.md 어디에도 없다.
+  - 이 규칙은 **10이 v0.15 §9.6 "R5 최소 구현 계약" 2번으로 제안한 것**이고, 02는 그대로 구현했다.
+  - 나는 라운드 1개를 끼워 넣는 경우(M2)만 확인했고, 연속 삽입·이름 변경·이동은 시험하지 않았다. 결함의 원인은 10의 명세다.
+- v0.33 L2(6→3)의 원인: 내 시험 세이브가 unlocked 6인데 별은 r01·r02뿐이었다. 이런 세이브는 data가 어떻게 바뀌든 첫 부팅에서 6→3이 된다. en.json에 줄바꿈 1바이트만 더해도 그렇다(아래 I1).
+  - 실제 플레이로는 이런 세이브가 생기지 않는다. unlocked_round를 올리는 곳은 `record_result`(327~345행)뿐이고, 이긴 라운드의 별도 같은 저장에서 기록한다. `git grep`로 다른 쓰기 경로를 찾지 못했다.
+
+시드 세이브는 실제 `Save.record_result`와 `buy_upgrade`로 만들었다. 중간 진행 세이브(M)는 r01~r05의 별이 3/3/2/3/1이고 unlocked 6, 근접 L2, 빠른 유닛 L2다. 모든 업데이트는 같은 시드에서 첫 부팅이다.
+
+| 업데이트(data만 바꾼 사본) | 이전 기록 | 뒤 unlocked | 열린 라운드 | **이미 깼는데 닫힌 라운드** | 안내 |
+|---|---|---|---|---|---|
+| 변경 없음 | — | 6 | r01~r06 | — | — |
+| 근접 상한 5→4 | 없음(쓰기 없음) | 6 | r01~r06 | — | — |
+| en.json 끝에 줄바꿈 1개(바이트만) | 없음(쓰기 없음) | 6 | r01~r06 | — | — |
+| r03 삭제 | 6→5 | 5 | r01,r02,r04~r06 | — | 없음 |
+| r02 뒤에 r02x 1개 삽입 | 6→7 | 7 | r01,r02,r02x,r03~r06 | — | 없음 |
+| **r02 뒤에 r02x·r02y 2개 삽입** | **6→3** | 3 | r01,r02,r02x | **r03,r04,r05** (다음 라운드 r06도 닫힘) | **없음** |
+| **r02x 1개 삽입 → 다음 업데이트에서 r02y 1개 더**(사이에 r02x를 깨지 않음) | 6→7, **7→3** | 3 | r01,r02,r02x | **r03,r04,r05** | 없음 |
+| **r03을 순서 맨 뒤로 이동** | 6→5 | 5 | r01,r02,r04~r06 | **r03** | 없음 |
+| **r03→r03n, r04→r04n 이름 변경, migrations.json 없음** | **6→3** | 3 | r01,r02,r03n | **r05**(r06도 닫힘). r03·r04의 별은 고아가 됨 | 없음 |
+| 같은 이름 변경 + `round_renames` | 기록만(쓰기·백업) | 6 | r01,r02,r03n,r04n,r05,r06 | — | 없음 |
+| 모두 깬 세이브(r01~r10 별 2, unlocked 11) + 바이트만 | **11→10**, 쓰기·백업 | 10 | 모두 | — | 없음 |
+| I1 일관되지 않은 세이브(unlocked 6, 별 r01·r02) + 바이트만 | 6→3 | 3 | r01~r03 | — | 없음 |
+| I2 같은 세이브 + 근접 상한 4 | 6→3 | 3 | r01~r03 | — | 없음 |
+- 재잠금된 경우마다 이전 전 백업 `save.pre-c1-989c3422c910.json`이 시작 세이브와 바이트 동일하다(9e26138fb715). 별도 그대로 남는다. 그래서 순서를 되돌리거나 규칙을 고친 data 업데이트가 오면 다시 열린다(추론, 5단계가 별에서 다시 계산하므로).
+  - 다만 408행 `if prev_cv == cur_cv: return` 때문에, 코드만 고치고 data를 그대로 두면 이미 잠긴 세이브는 고쳐지지 않는다(추론, 코드 읽기).
+- 부수 영향: 업그레이드 잠금도 unlocked_round 숫자로 정한다(652~660행 `_upgrade_locked`: 유닛의 `unlock_round` > unlocked_round). 2개 삽입·이름 변경 뒤에는 이미 L2를 산 `up_fast`가 잠김이 된다. r03 삭제·이동 뒤에는 `up_siege`(L1)가 잠긴다.
+- 모두 깬 세이브의 11→10은 라운드를 잃지는 않는다. 그러나 바이트만 바뀐 업데이트에도 쓰기와 백업이 생긴다. **§9.24 AC2 "줄 끝만 다른 빌드에서 무기록" PASS는 중간 진행 세이브에만 맞고, 모두 깬 세이브에서는 FAIL이다(정정).** 원인은 같은 5단계다. 라운드가 n개면 열린 앞부분은 최대 n인데, record_result는 마지막 라운드를 깨면 n+1을 저장한다.
+- 정적 모델: `probes/release_guard.py`에 두 검사를 넣었다. 5단계 규칙을 그대로 옮겨 "기본 순서대로 k개를 깬 플레이어" 모두에 적용한다.
+  - `ROUND_RELOCK`(ERROR): 깬 라운드가 닫힌다.
+  - `ROUND_FRONTIER_MOVED`(WARN): 아직 안 깬 다음 라운드만 닫힌다.
+  - 9개 변이에서 k=5 결과가 엔진과 모두 같았다. ERROR 수: 2개 삽입 7, 연속 삽입(원본 기준) 7, 이동 6, 이름 변경 5. 1개 삽입은 WARN 1이다(r02까지 깬 플레이어는 r03 대신 새 r02x를 먼저 해야 한다). 상한·바이트·삭제·`round_renames` 있는 이름 변경은 0이다. e42f809→f606801은 0건(기존 검사 회귀 없음).
+  - 한계: 순서대로 깬 플레이어만 본다. 앞선 업데이트가 남긴 구멍(r02x를 안 깬 채 진행)은 그 이전 출시본을 `--base`로 따로 비교해야 잡힌다. 바로 앞 출시본과만 비교하면 연속 삽입 2단계는 0건이다.
+- **판정: 결함이다(출시 전 수정, P1).** 실제 플레이로 만든 세이브도 다음 업데이트에서 이미 깬 라운드를 안내 없이 잃는다.
+  - 라운드를 2개 이상 연속으로 끼워 넣을 때. 업데이트 두 번에 걸쳐 끼워 넣고 그 사이에 새 라운드를 깨지 않은 경우도 같다.
+  - `round_renames` 없이 연속된 라운드 2개 이상의 이름을 바꿀 때.
+  - 깬 라운드를 순서 뒤쪽으로 옮길 때.
+  - 상한·비용·문구·바이트만 바뀌거나 라운드 1개를 삽입·삭제하는 업데이트로는 잃지 않는다.
+
+**(2) AC9 기기 부분: 에뮬레이터 확인, 실기기 미검증**
+- 기기는 `build/avd` LaneDefence_Phone이다. 이 작업이 직접 띄웠고(`-no-window -read-only -no-snapshot-save -no-snapshot-load -gpu swiftshader_indirect`, 포트 5594), 끝에 `adb emu kill`로 껐다. 남은 qemu는 0이고, 이 작업이 띄운 adb 서버도 껐다. 그 전에 돌던 다른 에뮬레이터는 없었다.
+- sdk_gphone64_x86_64, Android 16, API 36, x86_64이고 부팅에 69초 걸렸다. 설치된 base.apk의 sha256은 로컬 eb8d5c4 APK와 같다(5E4B0D07D1044D72). AAB는 이 작업에서 설치하지 않았다.
+- 세이브는 `run-as`로 `files/save.json`에 넣고 다시 읽었다. 시드 E1~E3은 시험용이다.
+
+| 단계 | 기기에서 읽은 결과 |
+|---|---|
+| D0 새로 설치, 첫 실행 → HOME(App이 일시정지 때 저장) | content_version **c1-989c3422c910** = v0.33의 APK·AAB 바이트 값 = 저장소 LF 값. `content_snapshot.version` 같음 |
+| E1 이전 버전 세이브(근접 상한 6, L6 지불 250) → 실행 | 환불 250: 코인 1,000→1,250, 근접 6→5. `migration_notice {levels 1, coins 250, from c1-0000000000e1, to c1-989c3422c910}`, 키 `refund:c1-989c3422c910:up_melee_basic`. `save.pre-c1-0000000000e1.json`이 넣은 세이브와 바이트 동일(DB4893796BBDFAC4) |
+| E1b ack 전에 강제 종료 → 재실행 | 안내 남음, 파일 바이트 불변 |
+| E1c Android 뒤로가기 | 안내 지워짐(rev 8→9) |
+| E1d 재실행 | 안내 없음, 바이트 불변 |
+| E2 모두 깬 세이브(unlocked 11) | 11→10, 쓰기·백업. 데스크톱 결과와 같다 |
+| E3 지불 기록·스냅샷 없는 L6 | logcat `WARNING: [Save] content/refund_unknown up_melee_basic levels [6]`, 안내 coins 0 |
+- 6번 실행 모두 `[App] boot ok`였고, 앱 프로세스의 크래시·ANR은 0이었다.
+- 판정: content_version 계산, 이전 처리, 안내 저장·ack가 기기 안에서도 패키지 값·데스크톱 결과와 같다(**에뮬레이터 확인, 실기기 미검증**). AAB 설치 경로(설치 시 애셋 팩)는 이 작업에서 확인하지 않았다.
+- **화면은 판정할 수 없다.** SwiftShader에서 매 실행 `SceneShaderGLES3`/`CanvasShaderGLES3: Program linking failed: Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)`이 2~5건 났다. 게임 화면은 빈 남색이었고, 첫 실행에는 시스템 UI 응답 없음 창이 떴다(앱이 아니라 System UI).
+  - 06이 호스트 GPU로 돌린 기록(`docs/services/evidence/logcat_godot_first_launch.txt`, NVIDIA)에는 이 오류가 0건이다. Godot 공개 이슈 #109550에도 같은 메시지가 SwiftShader 기기에서 보고됐다(S33).
+  - 그래서 렌더러 한도 문제로 보이고, 게임 로직 결함은 아니다(추론). 실기기 GPU의 한도는 확인하지 않았다. Play 사전 출시 보고서가 SwiftShader 기기를 쓰면 같은 빈 화면이 나올 수 있다(추론).
+- 화면이 그려지지 않아도 뒤로가기 입력은 처리됐다(E1c).
+
+**(3) 저장소 안의 `git archive`·내보내기 호출 (f606801, 주석·문서 제외)**
+- 이 PC의 줄 끝 설정: `core.autocrlf=true`가 시스템 gitconfig(`C:/Program Files/Git/etc/gitconfig`)에서 오고, `core.eol`은 없으며, `.gitattributes`도 없다(`git check-attr`: text·eol unspecified). 그래서 `-c core.autocrlf=false` 없는 `git archive`는 텍스트 파일을 CRLF로 낸다(§9.21 측정). 이 PC에서 새로 클론한 작업 트리도 CRLF가 된다(추론).
+
+| 파일:줄 | 소유 | 용도 | 줄 끝 옵션 | data 포함·Godot 실행 | 위험 |
+|---|---|---|---|---|---|
+| tools/build/build_android_debug.ps1:25 | 04 | 디버그 APK(출시 경로) | **LF 고정** | 예 | 없음(v0.33 측정). CRLF 차단은 없음 |
+| tests/services/try_debug_aab.ps1:20 | 06 | AAB(출시 경로) | **LF 고정**, CRLF면 exit 5 | 예 | 없음(v0.33 측정) |
+| tools/build/verify_and_publish.ps1:21 | 04 | 게시 전 검사 | **LF 고정** | 예 | 없음 |
+| tests/services/run_services_on_head.ps1:21 | 06 | 서비스 시험 | **LF 고정** | 예 | 없음 |
+| tools/art/ui_art/ui_capture.ps1:38 | 06-art-ui | UI 캡처 | `core.autocrlf=false`만 | 예 | 지금은 LF(.gitattributes 없음). `core.eol=lf`도 붙이면 다른 경로와 같아짐(낮음) |
+| tools/qa/run_acceptance.ps1:89 | 07 | 수용 시험 `-Head` | **없음** | 예(세이브·이전 시험 포함) | **중간**: 수용 시험이 출시물과 다른 content_version으로 돈다. 백업 이름·환불 키·안내 from/to를 비교하는 시험은 출시물과 다른 값을 본다 |
+| tools/qa/art_compare.ps1:45 | 07 | 그래픽 비교 | 없음 | 예 | 낮음(그림만 비교) |
+| tools/build/flake_probe.ps1:17 | 04 | 불안정 시험 탐지 | 없음 | 예 | 낮음 |
+| tools/audio/run_godot_checks.ps1:42 | 05 | 소리 검사 | 없음(`git -C`) | 예 | 낮음 |
+| tools/perf/ab_retest.ps1:36 | 08 | 성능 A/B | 없음 | 예 | 낮음(JSON 파싱량이 CR만큼 늘 뿐) |
+| tools/perf/art_variant_ab.ps1:42 | 08 | 그림 변형 A/B | 없음 | 예 | 낮음 |
+| tools/perf/drawcall_run.ps1:53 | 08 | 드로우콜 측정 | 없음 | 예 | 낮음 |
+| tools/perf/c11_window.ps1:87 | 08 | 창 측정 | 없음 | 예 | 낮음 |
+| tools/perf/asset_budget_check.py:78 | 08 | 용량 예산 | 없음 | data 포함, Godot 없음 | 낮음: 텍스트 파일만 줄 수만큼 커진다(data 66,187 B에 CR 2,758 B). 이미지·소리 무관 |
+| docs/research/systems/probes/run_content_migration.ps1:19 | 10 | 콘텐츠 이전 시험 | 없음 → **v0.34에서 LF 고정** | 예 | 고침, 재실행 안 함 |
+| docs/research/systems/probes/run_economy_policies.ps1:20 | 10 | 경제 정책 시험 | 없음 → **v0.34에서 LF 고정** | 예 | 고침, 재실행 안 함 |
+- Godot 내보내기는 세 곳이다. `build_android_debug.ps1:49`와 `try_debug_aab.ps1:55`(`--export-debug`)는 LF로 고정한 사본에서 내보낸다. `tools/art/run_godot_pack_check.ps1:22`(`--export-pack`)는 작업 트리의 그림 파일 사본만 쓰고 data가 없어 content_version과 무관하다.
+- 작업 트리(`--path .`)에서 내보내는 스크립트와 `--export-release` 스크립트는 아직 없다. 앞으로 만들 출시 빌드 스크립트가 남은 가장 큰 위험이다. 06 경로처럼 LF 고정과 CRLF 차단을 같이 넣거나, 02가 AC1(해시 정규화)을 고치면 이 위험이 없어진다.
+- `.gitattributes`(`data/** text eol=lf`)는 위생 조치다. 그러나 `Publish-Task.ps1`의 소유 규칙에 이 파일의 담당이 없다(02의 루트 허용 목록에도 없음).
+
 ## 10. 출처 (모두 2026-10-31 KST 접근)
 | ID | 출처 | URL | 한계 |
 |---|---|---|---|
@@ -1720,3 +1820,4 @@ HEAD 40382b0 결과(`-Rev HEAD`, exit 0, 업그레이드 총비용 5,595). "카�
 | S30 | Play "새로운 기능": 랜덤다이스(업데이트 2026-02-11), 아처키우기(업데이트 2026-09-17) | https://play.google.com/store/apps/details?id=com.percent.royaldice&hl=ko · https://play.google.com/store/apps/details?id=com.GameDuo.MadArcher&hl=ko | 최신 노트 하나만 보임. 이전 노트 기록 없음 |
 | S31 | 게임듀오 자사 게임 페이지 "아처키우기" | https://gameduo.net/game/archer-forest | 게시일 없음. 공지 채널 링크 없음 |
 | S32 | Godot 4.7.2-stable 소스: platform/windows/os_windows.cpp(get_config_path·get_data_path·get_user_data_dir, 2417~2425·2508행), core/os/os.cpp(OS::get_user_data_dir, 338~353행) | https://github.com/godotengine/godot/blob/4.7.2-stable/platform/windows/os_windows.cpp · https://github.com/godotengine/godot/blob/4.7.2-stable/core/os/os.cpp | 소스 읽기와 비공개 APPDATA 실험 X1~X3으로 확인. Android 경로와는 무관 |
+| S33 | Godot 이슈 #109550 "Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS"(2025-08, 4.5 beta5, SwiftShader 기기의 Play 내부 테스트 보고) | https://github.com/godotengine/godot/issues/109550 | 2026-11-01 접근. 우리 4.7.2와 판이 다름. 원인·수정 여부는 확인하지 않음 |

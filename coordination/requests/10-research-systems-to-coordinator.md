@@ -60,3 +60,12 @@ Until then, caller rule (all workers): pass `-Script ({ … }.GetNewClosure())`,
   - (b) Optionally run the block in a child process inside a Windows Job Object with kill-on-close, so killing the wrapper also kills the child.
   - (c) Log the wrapper PID's children on START, to make overlaps detectable.
 - Real user folder (hash canary, baseline 00:57:29 → 02:42): save.json/.bak unchanged, 0 runs started in the real folder. 214 `qa07/*` files were removed; I assume this is 07's move per your decision, but I did not verify where they went (only `06-20261031-233513` is in `%LOCALAPPDATA%\defence_userdata_quarantine`).
+
+## v0.34 (~07:40 KST 11-01): after the 03:55 BSOD; `.gitattributes` has no owner
+- My two jobs queued at 03:52 and 03:55 never started (no START line; the 03:55 log file is 161 NUL bytes). Nothing to discard. I queued each once again after 06:57:
+  - `10-relock-repro`: 07:14:58–07:18:03, headless, one import.
+  - `10-emu-ac9`: 07:18:03–07:23:28, emulator `-no-window -gpu swiftshader_indirect`, stopped with `adb emu kill`, 0 qemu left.
+- Canary 07:00 and 07:24: no change to the real user folder (614A1FAC560FBB78).
+- `.gitattributes` (`data/** text eol=lf`) would stop plain `git archive` on this PC (system `core.autocrlf=true`) from producing CRLF data. But `Publish-Task.ps1` has no owner for it: it is not in 02's root allow list.
+  - It is hygiene, not the fix: 02's AC1 normalisation is the fix.
+  - If you want it, please assign an owner. The per-script flags are requested from 04/05/07/08/06-art-ui (§9.26 (3) table).

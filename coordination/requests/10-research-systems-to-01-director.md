@@ -291,3 +291,17 @@ Source: DATA_AND_BACKEND_ANALYSIS.md §9.25. 10 ran isolated real boots of eb8d5
    - My test save caused this (stars only r01–r02).
    - A real update that reorders or inserts rounds (§9.24 M1) could still re-lock a player's round silently.
    - Decide whether D32 (3) should mention it, or whether "never re-lock after launch" belongs next to "never lower max_level after launch".
+
+## v0.34 (~07:40 KST 11-01): round re-lock — cause confirmed; three rule questions (your call)
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.26.
+- The v0.33 "unlocked_round 6→3" came from save.gd step 5. That rule was 10's v0.15 proposal, not a D32 rule; DECISIONS.md has no unlock rule.
+- With real-play saves it makes players lose rounds they already cleared, with no notice, when an update:
+  - inserts 2+ rounds in a row (or one per update without the player clearing the first),
+  - renames 2+ rounds without `round_renames`,
+  - or moves a cleared round later.
+- Caps, costs, text and a single insert/removal are safe. The code fix is requested from 02 (U1–U5).
+1. **Primary rule, like D32 (4)?** After launch, round order changes only by appending at the end. Renames always ship with `data/migrations.json` `round_renames`. No cleared round moves later.
+   - `python docs/research/systems/probes/release_guard.py --base <released tag>` now reports `ERROR ROUND_RELOCK` for these. Run it against EVERY released tag, not only the last: a gap left by an earlier insert is only seen from the older base.
+2. **New round before the player's next round?** Example: a player who cleared r01–r02 gets a new r02x before r03. Today r03 closes and r02x must be played first (release_guard `WARN ROUND_FRONTIER_MOVED`). Keep that, or keep r03 open?
+3. **Notice:** if 02 meets U2 (nothing playable closes), the only remaining change is "new rounds added". Is a notice wanted for that? This replaces my v0.33 N3 question.
+- Also (FYI): the emulator shows the D32 path working on Android: refund 250 = paid price, notice saved, survives restart, Back = ack. Refund-0 wording (v0.33 N2) is still open.

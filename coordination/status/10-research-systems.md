@@ -1,22 +1,24 @@
 # 10-research-systems status
-Updated: 2026-11-01 ~03:55 KST · sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce
-Status: v0.33 DONE (release-path bytes and migration-notice UI path, §9.25).
-- (1) One pinned commit, eb8d5c4, was built by 04 `build_android_debug.ps1` (APK) and 06 `try_debug_aab.ps1` (AAB) in one detached heavy job (`10-pkg-bytes`, no install).
-  - Both packages hold 21 data JSON with 0 CR / 2,758 LF, byte-identical to each other and to the git blobs.
-  - Both give content_version **c1-989c3422c910** = repo LF. **Verdict: the two paths are the same.** CRLF would be c1-40bde75d24c2.
-  - The AAB keeps data in `assetPackInstallTime/assets/data/`. 10's content_version.py looked in `base/` and read 0 files at first; fixed and re-read.
-  - The earlier claims are now split into measured and inferred: "APK/AAB = CRLF" held only for the old scripts. AC9 device part is still UNVERIFIED (no install, no device boot).
-- (2) 04 test_migration_notice.gd: run once with a private APPDATA, 16/16 ok. It uses the real App and menu and reads the real file. The data change is emulated in memory, and its relaunch is in-process.
-  - 10's real-boot probe (`10-notice-cases`) checked:
-    - Two updates before an ack add up (2 levels / 350, from first, to last).
-    - Pause keeps the notice.
-    - A real restart shows it again.
-    - Close clears it from the file.
-    - A refund-0 update says "0 골드를 돌려드렸습니다".
-  - Findings sent:
-    - 04: leftover `.pre-*.json` per run, no CRLF gate in inspect_apk.py, capture request.
-    - 01: refund-0 wording; round re-lock not in the notice.
-- (3) No content.gd normalisation up to 02ec60f, so the AC1/AC4 rerun was skipped. AC1 is still FAIL.
-- Canary 02:49:27 → 03:36:33: no change (save 614A1FAC560FBB78). All 11 10-run Godot boots isolated.
+Updated: 2026-11-01 ~07:45 KST · sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce
+Status: v0.34 DONE (§9.26). Resumed after the 03:55 BSOD: my two queued jobs never started (nothing to discard), files intact, each job queued once again.
+- (1) Round re-lock cause confirmed:
+  - The cause is save.gd step 5 (lines 506–517) recomputing unlocked_round from stars on every content_version change. The rule is 10's own v0.15 §9.6 proposal, not D32 (DECISIONS.md has no unlock rule).
+  - Real boots, isolated 17/17. A real-play save (r01–r05 cleared, unlocked 6) loses cleared rounds with no notice when an update:
+    - inserts 2 rounds (6→3), or 1+1 across two updates (7→3),
+    - moves a cleared round to the end,
+    - or renames 2 rounds without round_renames (6→3).
+  - Safe: cap/cost/bytes changes, one insert, one removal, rename with map.
+  - The v0.33 L2 6→3 came from my inconsistent test save. Correction: an all-cleared save is rewritten on any content change (11→10), so §9.24 AC2 is FAIL for that save.
+  - release_guard.py now flags ROUND_RELOCK. P1 request to 02 with U1–U5; rule questions to 01; TP-05 cases to 07.
+- (2) AC9: emulator confirmed, not verified on a real phone. Ran LaneDefence_Phone with -no-window and SwiftShader, and installed the eb8d5c4 APK.
+  - The device computes c1-989c3422c910, the same as the package and repo LF.
+  - Refund 250, pre-backup, notice, restart and Back-ack all match desktop. refund_unknown shows in logcat. 0 app crashes.
+  - The screen could not be judged: SwiftShader failed to link the GLES3 shaders (uniform limit 261), so the frame was blank. AAB install not tested.
+- (3) git archive table: 16 code calls.
+  - 4 LF-pinned (including both release paths), 1 autocrlf=false only, and 9 with no flags in 07/04/05/08 files.
+  - 2 of mine had no flags and are now LF-pinned (not rerun).
+  - No working-tree or release export script exists yet.
+  - Requests sent to the owners. .gitattributes has no owner in Publish-Task (coordinator).
+- Canary 07:00/07:24: no change (614A1FAC560FBB78).
 User decisions: Q1 = A; Q2 = 보류; Q3 = "빵집 기사단: 곰팡이 디펜스"; Q4 = "빵집 기사단"; Q5 unanswered (D28 is a default only).
-Pushed: … f8a2b44, v0.32 7f45b5f8e8ad0e606bda63e80569a6983a8767e1 (+67ddd04), v0.33 277b36eca242af8380f2f257d3503ac6d776b5e5.
+Pushed: … v0.32 7f45b5f8e8ad0e606bda63e80569a6983a8767e1 (+67ddd04), v0.33 277b36eca242af8380f2f257d3503ac6d776b5e5 (+f606801); v0.34 SHA in the handoff after push.

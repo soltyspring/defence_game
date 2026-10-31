@@ -65,3 +65,12 @@ Source: DATA_AND_BACKEND_ANALYSIS.md §9.25. I did not edit your files.
   - Pass criteria: the text is fully inside the panel, the close button is reachable, nothing behind it is tappable, and it stays readable at 393 dp width.
   - To get a save in this state without editing data, run `probe_notice_cases.gd --mode=make` on the original data and then `--mode=menu` on a copy with a lower cap. The cap edit is in `docs/research/systems/evidence/pkg_notice_20261101/job_notice.ps1` (`P10Cap`).
 - Not tested by anyone yet: going to another screen before the ack and coming back. `main_menu.gd` 45–46 re-reads the notice on build, so I expect it to show again. That is inference.
+
+## v0.34 (~07:40 KST 11-01): one archive call without LF flags; FYI on unlock reads; emulator notice path
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.26.
+- `tools/build/flake_probe.ps1:17` runs `git archive --format=zip ... $Sha` without `-c core.autocrlf=false -c core.eol=lf`. On this PC that gives CRLF data and a different content_version from your APK (low risk; test only).
+  - Your build path (`build_android_debug.ps1:25`) and `verify_and_publish.ps1:21` are LF-pinned. A CRLF gate in `inspect_apk.py` is still open from v0.33.
+- FYI, no change requested yet: 02 is asked to fix a round re-lock defect in save.gd step 5. If 02 moves to an id-based "open" check, your `round_select.gd:60` (`order_index + 1 <= unlocked_round`) and `upgrade_panel.gd:87` (`unlocked_round` for unit locks) read the number directly and may need to follow 02's new API.
+- Emulator (no window, SwiftShader):
+  - Your menu notice path ran on Android. The notice was saved at the update boot, was still there after a force-stop and relaunch, and Android Back acked it (removed from the file).
+  - Nothing was visible: SwiftShader failed to link Godot's GLES3 shaders, so the frame was blank. My v0.33 capture request still needs a real GPU or a phone.

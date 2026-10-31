@@ -1,5 +1,5 @@
 # 10-research-systems handoff
-Updated: 2026-11-01 ~03:55 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same session (reopened for window separation)
+Updated: 2026-11-01 ~07:45 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same session (reopened after the 03:55 BSOD)
 
 ## RESUME after user restart (~15:38 KST)
 - Read: this handoff, coordinator-to-10-research-systems.md (the QUOTA CHECKPOINT text is historical; I did not stop for it), 01-director-to-10-research-systems.md R1 (D17 schema_version, D19 no mid-round resume, #6 rules accepted, migrations.json in backlog).
@@ -7,6 +7,31 @@ Updated: 2026-11-01 ~03:55 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - An interrupted earlier resume attempt left nothing behind. It had only run the probe and a failed name diff (a PowerShell console encoding problem, fixed with UTF-8 output encoding).
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
+
+## v0.34 (~07:45 KST): round re-lock cause, AC9 emulator part, git archive CRLF table (§9.26)
+- Pushed SHA: recorded in the [Docs] commit after the push (only values checked with `git ls-remote`).
+- BSOD 03:55: my jobs queued at 03:52/03:55 never started. Files were intact. After 06:57 I queued each once again.
+- Re-lock:
+  - The cause is save.gd step 5 (506–517) = MY v0.15 §9.6 rule, not D32.
+  - Repro job: `evidence/relock_20261101/job_relock.ps1`. It uses `probes/relock_variants.py <copy> <variant>` (variants cap4, bytes_only, remove_r03, insert1, insert1b, insert2, move_r03_end, rename2, rename2_map; patch_save is unused) and `probes/probe_relock.gd` (+ .uid uid://c2t4b4ahl4a4s; modes make_mid, make_complete, make_incons, report).
+  - Pass = `cleared_but_locked` [] and no 11→10 write.
+  - When 02 lands a fix: change `$p10Sha` and rerun once (headless). Also run M1–M3 (run_content_migration.ps1, now LF-pinned).
+- release_guard.py:
+  - New checks: `ROUND_RELOCK` (ERROR) and `ROUND_FRONTIER_MOVED` (WARN).
+  - New option: `--head-dir <copy>`.
+  - It models step 5 for in-order players and matched the engine on 9 variants. Run it against every released tag.
+- Emulator:
+  - Run `.local_inspect/job_emu_ac9.ps1` (copy in `evidence/emu_ac9_20261101/`; the APK path is relative to .local_inspect). It waits for a foreign emulator and never stops one.
+  - It starts LaneDefence_Phone on port 5594 with `-no-window -read-only -gpu swiftshader_indirect` and stops it with `adb emu kill`. It also stops adb if it started it.
+  - The game frame is blank on SwiftShader (shader uniform limit 261), so it gives data/logcat evidence only.
+  - The APK is in `.local_inspect/pkg_eb8d5c4/` (git-ignored, keep for reruns).
+- Open:
+  - 02: U1–U5 re-lock fix, AC1.
+  - 01: append-only round rule, frontier choice, notice.
+  - 07/04/05/08/06-art-ui: archive flags.
+  - Coordinator: .gitattributes owner.
+  - AC9: AAB on the emulator, real phone.
+  - The v0.33 items stay open.
 
 ## v0.33 (~03:55 KST): release-path bytes (04 APK vs 06 AAB) and the migration-notice UI path (§9.25)
 - **Pushed: 277b36eca242af8380f2f257d3503ac6d776b5e5** (origin/main, checked with `git ls-remote` after the push).
