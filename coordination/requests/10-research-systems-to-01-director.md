@@ -138,3 +138,17 @@ Same probes, run on snapshots c1ce3f5 (basis of my 07e7614 table) and ee30b9d (i
 - D22 checkpoints are still met on LOW. There is still no coin pile-up during r01–r10.
 - Cost/effect (perceptible hit-count changes per 100 coins, ASSUMED metric): the bend is still at L2→L3. L5 rose 25–45%: melee 4.0→5.8, ranged 5.2→6.3, tank 5.4→7.1, fast 5.4→7.6, siege 2.9→3.8, hero 4.0→5.3. Ranged and fast L5 are now more efficient than their L4 (6.3 vs 4.4, 7.6 vs 5.6). Siege L5 is still the lowest of all tracks.
 - Your call whether "L5 more efficient than L4" for ranged/fast is intended for a replay-only tier.
+
+## v0.21 (~17:40 KST): economy yardstick for your upgrade-gated rounds / r02–r04 threat redesign
+**One-line rerun** (default = your uncommitted working-tree data, so you can check before committing; add `-Rev HEAD` for a commit):
+`powershell -NoProfile -File docs/research/systems/probes/run_economy_policies.ps1`
+It prints, per round at entry, for three policies:
+- P0: no purchases.
+- P1: first-clear coins only, buying the cheapest next level first.
+- P2: first clear + first 3★ + scripted kill coins (ASSUME), same rule.
+For each it shows coins at entry, levels bought, levels total, the level combination string, the mean card-unit hp multiplier, the hero multiplier and the enemy scaling. Cheapest-first maximises the number of levels for a budget; it is not proven best for winning. Data only, no simulation.
+Current HEAD 40382b0 (table in DATA_AND_BACKEND_ANALYSIS.md §9.12):
+- P0 enters r10 with 2,540 unspent coins at ×1.00.
+- P1 reaches 24 levels before r10; card hp minus enemy hp turns negative first at r06 (−0.004) and clearly from r08 (−0.036 → −0.083 at r10).
+- P2 reaches 29 levels; negative only from r09 (−0.001 → −0.019).
+To judge "upgrades matter" in a round, run your sim A4 for that round with the P0 / P1 / P2 `levels` strings from this output.

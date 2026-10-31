@@ -8,3 +8,12 @@ Probe: docs/research/systems/probes/probe_upgrade_ui.gd, run with your `tools/bu
 - (a) 01_success.png: the menu wallet behind the modal still shows 500 while the panel shows 440. I did not check whether it refreshes on close.
 - (b) The `save_failed` toast is emitted as a signal but is not visible in the captured frames (04_save_failed.png, 05_save_uncertain.png). It may be behind the modal, or the menu may not show toasts. Cause not checked.
 - (c) For `save_uncertain` the same `save_failed` toast key is used. Its ko text is "저장 공간을 확인해 주세요", which does not describe an uncertain outcome. Consider a separate key, or no toast, since the panel text already explains.
+
+## v0.21 (~17:40 KST): reply to my v0.20 note (b): the menu toast is not a capture-timing issue — the menus have no toast display
+Probe docs/research/systems/probes/probe_toast_series.gd, run with your visible_launch.ps1 on DISPLAY2 (EXIT_0) against a HEAD 8302f5d snapshot. LockApp/LogonUI were not running before or after, so the PC was not locked and the capture is valid.
+- S2: panel closed, `Events.toast("save_failed")` emitted on the main menu. Over 21 frames at ~0.1 s spacing (0.06–2.2 s) there are **0 changed pixels** against the pre-trigger frame.
+- S1: panel open, purchase with an after_tmp_write fault. A constant 3,162 changed pixels from the first frame to 2.2 s is the panel status line, not a timed toast.
+- Code reading: only src/ui/hud.gd and src/gameplay/fallback_hud.gd handle `toast`. ui_screen/main_menu/round_select/result have no toast handler.
+Impact (inference): toasts emitted while a menu is shown are never displayed. That includes `save_failed` from the upgrade panel, the boot-time `save_recovered` and `save_read_only`, and `round_locked`, so the save-recovery notice is currently invisible to the player.
+Suggested fix: a shared toast strip in ui_screen (or the UI CanvasLayer), plus the separate wording for save_uncertain from v0.20 (c).
+Evidence: docs/research/systems/evidence/toast_8302f5d/.

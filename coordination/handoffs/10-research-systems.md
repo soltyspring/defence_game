@@ -8,6 +8,11 @@ Updated: 2026-10-31 ~15:41 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
+## v0.21 (~17:41 KST): economy yardstick + menu toast recheck
+- probe_economy_policies.gd + run_economy_policies.ps1 (default: working-tree data; `-Rev HEAD`). At HEAD 40382b0: P0 2,540 unspent before r10; P1 24 levels, card−enemy negative from r06/r08; P2 29 levels, negative from r09. One-line command written in the 01 request.
+- probe_toast_series.gd via visible_launch on DISPLAY2 (HEAD 8302f5d, not locked): a menu toast changes 0 px over 2.2 s; only hud.gd/fallback_hud handle toasts. Verdict: a missing display path, not timing. Reported to 04. Corrected my §6.4 claim that the recovery toast notifies the user.
+- F1 still waiting.
+
 ## v0.20 (~17:36 KST): a262640 recompute + upgrade panel screen check
 - Economy before (c1ce3f5) vs after (ee30b9d): cost 6,280→5,595, LOW/HIGH r10 replays 18/14→14/10. L5 per-100-coin efficiency 2.9–5.4 → 3.8–7.6; ranged/fast L5 now beat L4. 01 request sent.
 - probe_upgrade_ui.gd run via 04 visible_launch on DISPLAY2 (HEAD 8104970 snapshot): 5 cases, text and coins match Save. P3 notes (stale menu wallet behind the modal, save_failed toast not visible, uncertain reuses the save_failed toast) sent to 04. Evidence in docs/research/systems/evidence/upgrade_ui_8104970/.
