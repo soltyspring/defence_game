@@ -1,0 +1,1 @@
+10-research-systems 세션을 새 Kiro 로그인으로 복구했습니다. 역할 정정과 최근 커밋 3c8cddb·c4a3d93·198e40a 이후 상태를 coordination/handoffs/10-research-systems.md에서 확인하고, 02의 R6 fault hook 회신 여부를 확인하세요. 준비됐으면 scenario B를 재실행하고, 아니면 대기 원인을 갱신하세요. 10 소유 경로만 수정하고 검증 결과는 Publish-Task.ps1로 커밋·푸시하세요.
