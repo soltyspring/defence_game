@@ -11,4 +11,4 @@ Status: v0.30 DONE.
 - Coordinator decision noted: 06 and 07 move leftovers to %LOCALAPPDATA%\defence_userdata_quarantine; 10 does not delete or move anything.
 - F2/X1: waiting (save.gd 7f2886c).
 User decisions: Q1 = A; Q2 = 보류; Q3 = "빵집 기사단: 곰팡이 디펜스"; Q4 = "빵집 기사단"; Q5 unanswered (D28 is a default only).
-Pushed: … 36e2a9e, 91237d4. v0.30: next commit.
+Pushed: … 36e2a9e, 91237d4, v0.30 a045a663a15c4a246c7b3f93824a3467f11305a3.

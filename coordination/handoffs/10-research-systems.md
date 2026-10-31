@@ -9,6 +9,7 @@ Updated: 2026-10-31 ~23:56 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
 ## v0.30 (~23:56 KST): line endings vs content_version (§9.21)
+- **Pushed: a045a663a15c4a246c7b3f93824a3467f11305a3** (origin/main). The SHA record itself is a separate [Docs] commit.
 - Tools: probes/content_version.py now has `--dir <project>` and `--apk <file>` modes (it reports CR/LF counts, the packed value and the LF value). The scratch driver .local_inspect/run_eol_scenario.ps1 must be run only inside heavy_run.
 - **Lesson:** inside `heavy_run.ps1 -Script { }` never use `$log` or other generic names. heavy_run's own `$log` is visible there, and Tee-Object overwrote the shared heavy_run.log at 23:43 (reported to the coordinator). Use `$p10Out` and literal paths.
 - Next: when 02 changes the hash, update content_version.py and userdata_canary.ps1 to the same normalisation. When save.gd changes, run the F2/X1 reruns (v0.29 list).
