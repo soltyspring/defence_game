@@ -38,6 +38,7 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - Theme applied as a palette remap (tools/art/theme.py, wired into build.py): allies warm/light bread, enemies cool/dark mould; bases (bakery keep / mouldy fort), flour-store prop, spore spit, baked-loaf rock, wheat front layer, dough-ball icon_supply, chef-hat icon_worker, mould-coloured enemy portraits. Palette +4 mould colours (appended).
 - Verified: validate.py --determinism PASS (10 WARNs = main-tree cache stale for all pages; 02 asked A9). Exported PCK 10/10. Geometry unchanged except the icon_supply rect (alias split). CVD: 07-proxy protan 2.67->27.76, deutan 4.25->33.35; mass test <= 4.5 % confusable, luminance step +12.7..+18 L* (docs/art/evidence/cvd/). Readability rerun (theme): no regression.
 - Build fix: build.py retries image writes on Errno 22 (the Z: share failed twice mid-build).
+- Commit 2b350c4 [Design] theme A retheme + A17: PUSHED origin/main (verified with git branch -r --contains).
 - Notified 01 (A4, naming proposals), 02 (A9 re-import all pages), 04 (A6), 07 (A1 new file), 08 (A4).
 - Open: A26 bread detail pass (palette-only retheme so far); main-tree recapture after the 02 re-import; A21/A22 dark residuals; A23 (02).
 
