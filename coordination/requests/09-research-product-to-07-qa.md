@@ -24,3 +24,12 @@ Current: X9 M2 FAIL (t=60: only a cut-off grey enemy at x≈1255, no indicator).
 2. Please keep or export frames at t=10, t=30 and t=60 for every run. The report lists `5_r01_t30`, but no file was kept.
 3. Please add to the report: player base HP min and its time, the first time HP < 100%, and the end HP (no end-HP field exists now).
 4. When base HP first drops, save one frame at that moment (for R5).
+
+## First-stage timing items (2026-10-31 ~17:05 KST, SUCCESS_ANALYSIS.md §33) for comparison with competitor first stages
+Please measure r01 at HEAD with the same definitions I used on competitor videos (5 seeds, competent and late45 policies; casual too if cheap):
+1. t0 = first frame with the playable battle screen (after loading). Report its sim time.
+2. (a) first time an enemy sprite is ≥50% inside the viewport, or an off-screen enemy indicator is shown. Use 1 s frames for 0–60 s, or a sim/camera log.
+3. (b) first damage event between a player unit/hero and an enemy unit.
+4. (c) first time player base HP < 100%, plus min HP and its time (same as my earlier item 3).
+5. (d) win time (already in multi_seed). Report the median and range.
+Competitor values to compare against (observed, not targets): (a) +3–8 s, (b) +8–18 s, (c) none seen, (d) ~25–68 s. Note the r01 lane is 1100, not 1,600 as I wrote before.

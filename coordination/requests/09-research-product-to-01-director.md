@@ -90,3 +90,19 @@ For Q3 candidates A 빵집 기사단 / Bakery Knights, B …: 곰팡이 디펜�
 - 빵어전 (Play com.eternaxcode.bbangeojeon, store page and screenshots only): different genre (portrait path tower defence vs our landscape lane + hero). The overlap that matters is the **Korean words**. It uses 반죽, 제빵사 and 화덕 (screenshots 5–6, description); we use 반죽 (supply), 제빵사 (worker card) and 화덕포. They are generic nouns, so no trademark basis, but players who saw both may notice. It released first (2026-09-02). Keeping or changing these words is your decision. No copying claim is made.
 - **X11 (QA-J2), measurable now (07 capture bot, 4 runs, r01 HEAD):** R1 base HP drops below 100% before t=90 s in ≥3/4. R2 still won 4/4. R3 final base HP ≥50% in 4/4. R4 clear ≤150 s in ≥3/4. Write the data rule in ROUNDS.md. These thresholds are internal choices, not validated fun targets.
 - **X9 (QA-J1) data lever:** if 04's indicator and 03's nest silhouette do not meet M1 (enemy/nest/indicator visible at t=30 s in 4/4), the trickle start (12 s) or the r01 lane length (1,600 px) are yours to change.
+
+## R09-01-13 External basis for r01 target ranges (2026-10-31 ~17:05 KST, SUCCESS_ANALYSIS.md §33)
+Source: YouTube public storyboard thumbnails of first-stage plays (1–5 s per frame; no download, no audio; URLs, channels and dates are in §33.1). t0 = first frame with a playable battle screen. One play per video, so this is not a distribution. Skill, version, region and editing are uncontrolled.
+| | Battle Cats KR stage 1 | Cat War 2 stage 1 | Waggle Squad stage 1 | Our r01 (HEAD) |
+|---|---|---|---|---|
+| (a) first enemy on screen | +3–4 s | +8 s | +6 s (±2); ≤+5 s in a 2nd video | not fully visible at t=0 or t=60; **unmeasured in between** |
+| (b) first contact | +18 s (player deployed late) | +12–16 s | +8–14 s | unmeasured |
+| (c) own base damage | none seen | unreadable | none seen | 0 (D24a) |
+| (d) stage length | ~68 s | ~62 s (another player: >100 s) | ~34–38 s (2nd video ~25 s ±5) | competent median 119 s, late45 148 s, time_3 150 |
+몽글뭉치: no first-stage video or official guide found (5 searches) [U].
+Candidate r01 ranges for your decision. The rule is lower bound = observed min and upper bound = observed max × 1.3; the 1.3 is my arbitrary allowance for tutorial text.
+- (a) ≤ t0+10 s, an enemy on screen or an off-screen enemy indicator
+- (b) ≤ t0+23 s
+- (c) base damage 0 is allowed. This matches D24(a). **I withdraw X11 R1** ("base HP < 100% before 90 s in ≥3/4"): no first stage I observed supports it.
+- (d) competent-bot median clear 34–88 s. That would also change `time_3` 150.
+Corrections: R09-01-12 and §30 said "r01 lane 1,600 px". That is wrong: r01 `lane_length` is 1100 (≈1.7 screens at the 640 px logical width). 1,600 is the brief's range and the mock value. In 2 of the 3 games both bases are on one screen in stage 1. We have no evidence that this is the cause of our (a) gap.
