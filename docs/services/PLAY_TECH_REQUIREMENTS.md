@@ -137,3 +137,16 @@ Largest single item: the engine library. Reduction candidates (requests to 02/08
 2. Release, not debug, templates. This test was a debug build; release templates are smaller but were not measured.
 3. Drop x86_64 from the release preset. Play serves per ABI, so it does not change phone downloads; it only shrinks the AAB.
 4. Smaller fonts (subset Galmuri to the used glyphs) and music bitrate (05/03), together about 1.6 MB uncompressed.
+
+## 8. Committed script rerun with isolation (2026-10-31 23:01–23:07 KST, HEAD 29d31be)
+One command: `pwsh -NoProfile -File tests/services/try_debug_aab.ps1 -Ref 29d31be -TimeoutSec 900 -JavaHome … -Bundletool …`. Every Godot call ran with a private APPDATA: `SVC06_ISOLATION isolated=true`, 0 new files in the real user folder, real save unchanged.
+| Check | Result |
+|---|---|
+| AAB | 59,213,224 B, SHA-256 B88CC674…310BEE (different commit from §6/§7, so a different hash is expected) |
+| Gradle | BUILD SUCCESSFUL (1 m 55 s), copyAndRenameBinary BUILD SUCCESSFUL |
+| PAGE_ALIGNMENT_16K | yes |
+| `out/universal_badging.txt` (the fixed step) | targetSdkVersion 36; application-label `Bakery Knights`, en `Bakery Knights`, ko `빵집 기사단`; native-code `arm64-v8a` `x86_64`; no uses-permission lines |
+| Download size arm64-v8a | 30,404,872–30,416,554 B (SDK 24–27 / 28 / 29+) |
+| Download size x86_64 | 33,190,973–33,202,655 B |
+| Leftovers | no Gradle 8.11.1 / svc06_tools Java process running afterwards; %TEMP%\svc06_aab_29d31be deleted |
+The §7 gap (universal-APK step not re-read) is closed. Install and run on the emulator is still **NOT DONE**: `adb devices` was empty at 23:07, and 02 has not announced LaneDefence_Phone.

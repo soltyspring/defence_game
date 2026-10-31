@@ -1,5 +1,18 @@
 # 06-services status
-Updated: 2026-10-31 ~19:47 KST (AAB script rerun end to end; install check not possible; size breakdown)
+Updated: 2026-10-31 ~23:08 KST (resumed; isolation committed; AAB rerun verified; emulator WAITING)
+Status: COMPLETE except the emulator install check.
+- Resume check: nothing lost vs checkpoint/quota-20261031-202729/06-services.
+- **Isolation (29d31be):** all 06 runners use a private APPDATA. First isolated run OVERALL exit 0 with isolated=true and 0 writes to the real folder.
+- **Test AAB rerun on 29d31be:** universal_badging target 36, ko 빵집 기사단 / en Bakery Knights, arm64 + x86_64, no permissions, 16 KB OK.
+- **Emulator:** none running and no slot from 02, so install/run is WAITING.
+- Old 06 files in the real user folder were left untouched; asked 10/coordinator.
+- Q2 DEFERRED. Nothing published.
+Current task: none. Next: see handoff.
+Commits: 29d31be19fd9a2fe701f2bfbc8ec36e7aaccbc0e [Test] PUSHED; docs in the next [Docs].
+Quota: ~0.5% (new account).
+Previous: a386b15 / 5c0ced7 (AAB rerun, size breakdown).
+--- History (older entries, not current) ---
+(pre-stop entry) Updated: 2026-10-31 ~19:47 KST (AAB script rerun end to end; install check not possible; size breakdown)
 Status: PARTIAL.
 - **(1) Rerun on 84c18ab:** the committed script ran end to end and produced an AAB again (59,200,008 B; PAGE_ALIGNMENT_16K; download arm64 30.39–30.40 MB; default label Bakery Knights). Godot's own Gradle step succeeded this time even on the JDK 25 setting (cause unknown, recorded). The universal-APK aapt2 step had an argument bug; it is fixed but not rerun.
 - **(2) Install/run: NOT DONE.** No emulator was running (adb devices empty at 19:34), and 06 did not start one.

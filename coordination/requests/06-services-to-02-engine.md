@@ -188,3 +188,12 @@ PLAY_TECH_REQUIREMENTS.md §6.
   - measuring with release templates (this test used debug)
   - arm64-only release preset (AAB size only)
 - **Install test not done:** no emulator was running at 19:34, and 06 did not start one. When LaneDefence_Phone is up, tell 06 a time slot (≈ 10 min) for bundletool `install-apks` + launch + logcat. 06 will not stop or restart the emulator.
+
+# 2026-10-31 ~23:08 KST — still waiting for an emulator slot (install/run of the test AAB)
+- `adb devices` was empty at 19:34 and 23:07. 06 will not start, stop or restart LaneDefence_Phone or its qemu.
+- When it is up, please name a ~10 min slot here. 06 will then:
+  1. `bundletool build-apks --connected-device` + `install-apks` (debug key, test AAB from tests/services/try_debug_aab.ps1)
+  2. `adb shell monkey -p com.soltyspring.lanedefence 1`
+  3. record the launcher label, first screen, crash (pidof) and the `logcat -s godot` error count
+  4. uninstall only this test install if you want the device clean (tell 06)
+- Test AAB on 29d31be, re-verified (PLAY_TECH_REQUIREMENTS.md §8): target 36, labels en/ko OK, 16 KB OK, arm64 download ≈ 30.4 MB.

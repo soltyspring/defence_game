@@ -1,7 +1,31 @@
 # 06-services handoff
-Updated: 2026-10-31 ~19:47 KST (AAB rerun, size breakdown; install check pending an emulator; quota ~92%)
+Updated: 2026-10-31 ~23:08 KST (resumed after the 97% stop at 20:27; new account, quota ~0.4% at 22:57)
+## Resume check (22:57)
+- **Nothing lost.** Branch `checkpoint/quota-20261031-202729/06-services` (fede276) is an empty WIP commit; `git diff` vs the working tree for 06 paths is empty; the 06 worktree was clean.
+- **Decisions in force:** Q1 theme A, Q2 deferred (ads/billing disabled), Q3 title "빵집 기사단: 곰팡이 디펜스", Q4 launcher "빵집 기사단". Q5 difficulty is unanswered; D28 is a default, not an approval.
+## Done this session (real SHAs)
+| What | Commit |
+|---|---|
+| Isolation: `tests/services/svc06_isolation.ps1`, used by `run_services_suites.ps1`, `run_services_on_head.ps1` and `try_debug_aab.ps1`. Private APPDATA; real save hashed before/after; proof line `SVC06_ISOLATION`; no proof → OVERALL 1 | 29d31be19fd9a2fe701f2bfbc8ec36e7aaccbc0e |
+| Docs: PLAY_TECH §8 (AAB rerun results), requests 02/10, this handoff and status | see status file (next [Docs] commit) |
+## Validation (actual)
+- `pwsh -NoProfile -File tests/services/run_services_suites.ps1`, 23:00:34–23:01:04, shared tree, 4 other Godot processes:
+  - 502/0, 130/0, 161/0, listing 1831/0, m8 26/0, m10 81/0
+  - android 189/0 (launcher_label=VERIFIED_DEBUG_ONLY, release_label=WAITING)
+  - upgrade 927/0, integration PASS_INTEGRATED 156/0
+  - OVERALL exit 0
+  - SVC06_ISOLATION isolated=true, private_logs=5, 0 new reports and 0 new godot logs in the real folder, real save unchanged
+- `try_debug_aab.ps1 -Ref 29d31be -JavaHome <svc06 jdk17> -Bundletool <jar>`, 23:01–23:07, end to end:
+  - AAB 59,213,224 B, PAGE_ALIGNMENT_16K
+  - universal_badging: target 36, labels en/default Bakery Knights, ko 빵집 기사단, native-code arm64-v8a + x86_64, no permissions
+  - arm64 download 30.40–30.42 MB
+  - isolated=true; no Java leftovers; scratch deleted
+## Open
+1. **Emulator install/run: WAITING.** `adb devices` empty at 23:07; 02 has not announced LaneDefence_Phone (request appended 23:08). Procedure unchanged (below). Never stop qemu.
+2. **Leftover 06 files in the real user folder** (7 `services_*_report.json` from 18:44/19:04, `m3dbg1~3`): not deleted, because that would be a write there. Asked 10/coordinator.
+3. A single suite run directly with `godot -s` still uses the real folder. Use the runners.
 ## Next steps when resumed (newest first)
-1. Rerun `try_debug_aab.ps1` once more to confirm the fixed universal step writes `out/universal_badging.txt` (ko label, target 36, native-code). Delete %TEMP%\svc06_aab_* and stop Gradle 8.11.1 Java processes afterwards.
+1. (done 23:07) Rerun `try_debug_aab.ps1` to confirm `out/universal_badging.txt`.
 2. When 02 announces LaneDefence_Phone is running, in an agreed time slot and without stopping qemu:
    - `java -jar bundletool build-apks --connected-device --bundle=<aab> --output=x.apks --ks=<debug ks> …`
    - `install-apks --apks=x.apks`
