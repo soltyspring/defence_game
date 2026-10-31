@@ -6,17 +6,20 @@ Runs named `head-<sha>` / made with `run_acceptance.ps1 -Head` test a clean `git
 
 | ID | Sev | Owner | Status | Check | Summary |
 |---|---|---|---|---|---|
-| QA-B001 | P2 | 04 (cc 02) | OPEN | FLOW-23, FLOW-23B | One Android back press is handled again by the screen mounted during the same notification walk |
-| QA-B002 | P3 | 04 (cc 02) | OPEN | FLOW-13B | HUD pause menu is shown underneath the result panel |
-| QA-B003 | P2 | 02 | OPEN | SAVE-05/06 | Save migration keeps wrong-typed `stars`/`best_time`; next `record_result` hits a script error and the result is not saved |
-| QA-B004 | **P1** | 02 | OPEN | TP-02a, TP-02b | After one recovery from `.bak`, the next save rotates the corrupt main into `.bak` and deletes the only good copy; a kill during that save resets progress to fresh with `recovered=false` |
-| QA-B005 | P2 | 02 (cc 04) | OPEN | TP-14b | A failed save (storage full / unwritable) is silent: `save_progress` returns false, only `last_error` is set, no toast/signal |
-| QA-B006 | P3 | 02 | OPEN | TP-06 | A save from a newer build (version 99) is rewritten as version 1 on the next save (replaces QA-O003) |
-| QA-B007 | P3 | 02 | OPEN | TP-13a/c | No range clamp on load (`unlocked_round`=1e12 unlocks everything, coins 9 999 999 999, stars "x"/99 kept); no size guard (50 MB save parsed in 6.8 s on desktop) |
-| QA-B008 | P2 | 01 (cc 04) | OPEN | DATA-13/14, FLOW-04B | Engine toast keys `counterattack`, `save_recovered`, `round_locked` have no `toast.*` text in ko/en; HUD shows the raw id "counterattack" in battle (r01 triggers it at 50% enemy base hp) |
+| QA-B001 | P2 | 04 (cc 02) | VERIFIED e5bd4aa (FLOW-23/23B PASS, run 20261031-090937) | FLOW-23, FLOW-23B | One Android back press is handled again by the screen mounted during the same notification walk |
+| QA-B002 | P3 | 04 (cc 02) | VERIFIED e5bd4aa (FLOW-13B PASS) | FLOW-13B | HUD pause menu is shown underneath the result panel |
+| QA-B003 | P2 | 02 | VERIFIED e5bd4aa (SAVE-05/06 PASS) | SAVE-05/06 | Save migration keeps wrong-typed `stars`/`best_time`; next `record_result` hits a script error and the result is not saved |
+| QA-B004 | **P1** | 02 | VERIFIED e5bd4aa (TP-02a/b PASS, fix 08ef082) | TP-02a, TP-02b | After one recovery from `.bak`, the next save rotates the corrupt main into `.bak` and deletes the only good copy; a kill during that save resets progress to fresh with `recovered=false` |
+| QA-B005 | P2 | 02 (cc 04) | VERIFIED e5bd4aa (TP-14b PASS) | TP-14b | A failed save (storage full / unwritable) is silent: `save_progress` returns false, only `last_error` is set, no toast/signal |
+| QA-B006 | P3 | 02 | VERIFIED e5bd4aa (TP-06 PASS) | TP-06 | A save from a newer build (version 99) is rewritten as version 1 on the next save (replaces QA-O003) |
+| QA-B007 | P3 | 02 | VERIFIED e5bd4aa (TP-13a PASS after 07 check fix, run 20261031-091123) | TP-13a/c | No range clamp on load (`unlocked_round`=1e12 unlocks everything, coins 9 999 999 999, stars "x"/99 kept); no size guard (50 MB save parsed in 6.8 s on desktop) |
+| QA-B008 | P2 | 01 (cc 04) | OPEN (5 toast keys at e5bd4aa) | DATA-13/14, FLOW-04B | Engine toast keys `counterattack`, `save_recovered`, `round_locked` have no `toast.*` text in ko/en; HUD shows the raw id "counterattack" in battle (r01 triggers it at 50% enemy base hp) |
+| QA-B009 | P2 | 04 (cc 01) | OPEN | TH-FIT-HUD-EN | English card labels ellipsised at the narrowest HUD (36.7 px slot, r08–r10) |
+| QA-B010 | P2 | 04 (cc 01) | OPEN | TH-FIT-ROUND-EN | 7/10 English round names ellipsised in round select (83 px tile) |
+| QA-B011 | P2 (proxy) | 03 | OPEN | TH-COL-PROTAN/DEUTAN | Archer vs Warlord mean colour ΔE 1.18 (protan), 2.24 (deutan) < 2.3 JND |
 | QA-W001 | P2 | 01 | WARNING (uncommitted WIP) | R1-LOSS, R2-LOSS | Workspace run 20261031-074155 only: with 01's uncommitted round edits (enemy_ai disabled), an idle player in r01/r02 no longer loses (base 1310/1500, 1365/1500 at the 900 s limit). Committed HEAD 462991a passes R1/R2-LOSS. Blocks commit of that data change unless intended |
 | QA-W002 | — | 02 | RESOLVED 2026-10-31 (e9dfaa4) | FLOW-03 | Uncommitted `_cue()` call broke battle.gd compile in workspace run 20261031-080624. 02 committed the audio cue integration in e9dfaa4; battles start at HEAD and in workspace; AUD-02 PASS |
-| QA-W003 | P2 at HEAD | 01 (cc 04) | OPEN (commit ordering) | DATA-13/14 | Committed result.gd (183e4a6) uses `ui.star_win/star_base_hp/star_base_hp_any/star_time/star_time_any`; the text exists only in 01's uncommitted ko/en edits, so HEAD shows raw ids |
+| QA-W003 | P2 at HEAD | 01 (cc 04) | RESOLVED (ui.star_* committed) | DATA-13/14 | Committed result.gd (183e4a6) uses `ui.star_win/star_base_hp/star_base_hp_any/star_time/star_time_any`; the text exists only in 01's uncommitted ko/en edits, so HEAD shows raw ids |
 
 ## QA-B001 — Android back is consumed twice (P2, owner 04, cc 02)
 - Repro (run 20261031-072353): finish any round → result screen → press Android back once. Or: open round select → press back once.

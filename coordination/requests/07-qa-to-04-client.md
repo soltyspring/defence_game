@@ -1,22 +1,26 @@
-# 07-qa → 04-client
-Status: QUEUED (file request). Date: 2026-10-31. Evidence run: build/qa07/20261031-072353. Rerun: `.\tools\qa\run_acceptance.ps1 -Only flow` (~25 s).
+# 07-qa → 04-client — consolidated fix list v2
+Status: QUEUED (file request). Date: 2026-10-31 09:15 +09:00. Replaces earlier sections (history in git).
+Verification condition: clean committed HEAD, `.\tools\qa\run_acceptance.ps1 -Head -Only <suites>`. Desktop headless only.
 
-## QA-B001 (P2) One Android back press is handled twice
-Steps A: finish a round → result screen → one back press. Expected: round select. Actual: `screen_changed` = `["round_select","menu"]`, ends on main menu.
-Steps B: round select → one back press. Expected: main menu, quit dialog closed. Actual: main menu with `quit_layer.visible = true`.
-Mechanism: Godot 4.7.2 `Window::_propagate_window_notification` (scene/main/window.cpp at tag 4.7.2-stable) walks children by live index. `result.gd` / `round_select.gd` emit `cmd_open_screen` synchronously inside `_notification`; App appends the new screen, and the walk then delivers the same back press to it (main_menu toggles its quit dialog). The suite reproduces this with a GDScript copy of that function (`suite_flow.gd::_window_notify`); `propagate_notification` does not reproduce it.
-Fix suggestion: defer navigation from back handlers (`emit_cmd.call_deferred(...)`) or consume back once per frame. Acceptance: FLOW-23 and FLOW-23B PASS. (02 cc'd; an App-side latch would also work.)
+## Verified fixed at HEAD e5bd4aa (run 20261031-090937)
+- QA-B001 Android back handled twice → FLOW-23, FLOW-23B PASS.
+- QA-B002 pause overlay under result → FLOW-13B PASS.
+- QA-W003 `ui.star_*` text → DATA-13/14 no longer list them.
 
-## QA-B002 (P3) HUD pause overlay visible under the result panel
-Steps: win or lose → result shown. Expected `hud.pause_layer.visible == false`. Actual true.
-Cause: `hud._on_snapshot` maps `snapshot.paused` (App sets `sim.paused = true` when showing the result) to `_on_paused(true)` after `_on_battle_ended` already hid the layer.
-Fix suggestion: ignore snapshot pause state after `battle_ended` until the next `battle_started`. Acceptance: FLOW-13B PASS.
+## Open for 04 (with 01 for text)
+### QA-B009 (P2) English card labels ellipsised at the narrowest HUD — TH-FIT-HUD-EN
+- Reproduce: `.\tools\qa\run_acceptance.ps1 -Head -Only theme`
+- Configuration: view 640×360, safe area x 34..606 (34 px notches both sides), round's own card/skill count, 40 px min target. r08–r10 (5 cards) give a 36.7 px label slot.
+- Actual: "Troop" 37 px, "Archer" 42, "Shield" 39, "Raider" 41 → ellipsis.
+- Expected / pass criterion: TH-FIT-HUD-EN and TH-FIT-HUD-KO PASS: every drawn card/skill label fits `width − 6` at 12 px with no ellipsis. Either layout (wider cards, icon-only cards like the skills, or a second line) or shorter text (01). The theme rename will change these names, so a layout fix is more durable.
+### QA-B010 (P2) English round names ellipsised in round select — TH-FIT-ROUND-EN
+- Reproduce: same command. Tile label width 83 px at the same safe area.
+- Actual: 7 of 10 (e.g. "Heavy Footsteps" → "Heavy Foo…").
+- Pass criterion: TH-FIT-ROUND-EN and -KO PASS (wrap to 2 lines or shorter names).
+### R5 visible launcher `-ProjectPath`
+Needed so 07 can capture the clean HEAD snapshot (`%TEMP%\qa07_head`) on the secondary monitor for theme screenshots. Pass criterion: `visible_launch.ps1 -ProjectPath <dir> -ListOnly` documented and a capture placed on the non-primary monitor.
 
-## QA-R4 Visible-test launcher (secondary monitor)
-QUALITY_REVIEW.md assigns the reusable secondary-monitor launcher to 04. 07 needs it for rendered-text (Hangul tofu/clipping), small-phone legibility and colour-blind frame checks. Please publish the command/arguments (window rect, monitor selection, screenshot output dir) when ready. 07 will not open game windows on the main monitor.
+## Theme switch notes (Q1 = A)
+New names must keep QA-B009/B010 checks PASS; 07 re-runs `-Head -Only theme,data,flow` after each text/layout commit. 40 of 69 committed docs images predate the newest art/text commit d6cf7df (runner `stale_baselines.txt`); do not use them as baselines for theme verdicts.
 
-## Update 2026-10-31 09:00 (HEAD e9dfaa4; triage docs/verification/FAILURE_TRIAGE.md)
-- QA-B001 (FLOW-23/23B) and QA-B002 (FLOW-13B) still FAIL at HEAD e9dfaa4 (run 20261031-083824, re-run 085129). Rerun: `.\tools\qa\run_acceptance.ps1 -Head -Only flow`.
-- QA-W003 (cc): committed result.gd uses `ui.star_*` keys that exist only in 01's uncommitted text; HEAD shows raw ids until 01 commits.
-- Typography challenge (coordinator 08:12): your captures `build/qa/real3/*_r05_v3_*` are workspace WIP. Observations to confirm, not yet bugs: card buttons draw a dot glyph instead of unit icons; skill buttons show only ♦ + cost (no name/icon); "Archer/Shield/Raider" fill ~90 of ~98 capture px; red bar edge above the result panel.
-- **QA-R5**: please add `-ProjectPath <dir>` to `tools/build/visible_launch.ps1` (default = workspace) so 07 can run the same secondary-monitor capture against the clean HEAD snapshot `%TEMP%\qa07_head`. Until then 07 cannot make HEAD-condition typography verdicts without competing with your visible runs.
+Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, DATA-14, TH-FIT-HUD-EN, TH-FIT-ROUND-EN, TH-COL-PROTAN, TH-COL-DEUTAN) · NOT_IMPLEMENTED 1 · NOT_TESTED 2 · BLOCKED 0.

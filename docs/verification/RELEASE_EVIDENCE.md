@@ -1,6 +1,6 @@
 # Release evidence matrix (owner: 07-qa)
-Latest full run: **HEAD e9dfaa4** (`-Head` clean snapshot; runs 20261031-083824 + flow re-run 20261031-085129; Godot 4.7.2 headless, Windows desktop). Triage: [FAILURE_TRIAGE.md](FAILURE_TRIAGE.md).
-Counts: PASS 120 · FAIL 12 · NOT_IMPLEMENTED 1 · NOT_TESTED 2 · BLOCKED 1; 06 services suites exit 0. Previous: [runs/head-462991a.md](runs/head-462991a.md). Hostile review: [HOSTILE_REVIEW.md](HOSTILE_REVIEW.md).
+Latest full run: **HEAD 5426645** (`-Head` clean snapshot, run 20261031-091441; Godot 4.7.2 headless, Windows desktop). Triage: [FAILURE_TRIAGE.md](FAILURE_TRIAGE.md). Theme guard: [THEME_CHANGE_CHECKS.md](THEME_CHANGE_CHECKS.md).
+Counts: PASS 137 · FAIL 6 · NOT_IMPLEMENTED 1 · NOT_TESTED 2 · BLOCKED 0; 06 services suites exit 0. Summary: [runs/head-5426645.md](runs/head-5426645.md). Hostile review: [HOSTILE_REVIEW.md](HOSTILE_REVIEW.md).
 
 **Scope warning:** desktop headless acceptance only. This is NOT Android release certification.
 `adb devices` at run time listed `emulator-5580` (an emulator, not a phone); no APK install or
@@ -13,17 +13,19 @@ on-device test has been done by 07-qa.
 | P0 winnable / losable | PASS | R*-WIN (bot ≥2/3 seeds), R*-LOSS (idle player loses by base destruction); bot win rates in QA-O001 |
 | Full UI flow menu → r01 → r02 → r03 via real touches | PASS | FLOW-01..22 |
 | Win / loss / retry / next / round select | PASS | FLOW-13..21 |
-| Result screen presentation | FAIL | QA-B002 (FLOW-13B) |
+| Result screen presentation | PASS | FLOW-13B (QA-B002 verified e5bd4aa) |
 | Touch: card, worker, hold-move + 2nd finger | PASS | FLOW-05..07 |
 | Touch targets ≥ 40 logical px, in safe area, no overlap (menu, HUD r01–r03, result, round select) | PASS | TOUCH-*, SAFE-R1-*, SAFE-R3-* (16:9, 19.5:9 notch, 20:9 notch+gesture, 21:9, 4:3) |
 | App background / resume / pause | PASS | FLOW-08..11 (simulated notifications, desktop) |
 | Android back: battle | PASS | FLOW-12 |
-| Android back: result, round select | FAIL | QA-B001 (FLOW-23, FLOW-23B) |
+| Android back: result, round select | PASS | FLOW-23, FLOW-23B (QA-B001 verified e5bd4aa) |
 | Android back: main menu shows quit dialog | PASS | FLOW-25 |
 | Save corruption / recovery / semantics | PASS (6/8) | SAVE-01..04, 07, 08; recovery notice on menu FLOW-24 |
-| Save type normalisation | FAIL | QA-B003 (SAVE-05), SAVE-06 BLOCKED |
-| Save fault tolerance (TP-01/02/06/13/14) | FAIL (**P1**) | TP-01 PASS, TP-13b/c PASS, TP-14a PASS; TP-02a/b FAIL QA-B004 (data loss), TP-14b QA-B005, TP-06 QA-B006, TP-13a QA-B007 |
-| Localised text for engine toasts | FAIL | DATA-13/14, FLOW-04B (QA-B008); ko/en placeholder parity PASS (DATA-12) |
+| Save type normalisation | PASS | SAVE-05, SAVE-06 (QA-B003 verified) |
+| Save fault tolerance (TP-01/02/06/13/14) | PASS | all 9 faults checks at e5bd4aa/5426645; QA-B004 P1 verified (fix 08ef082). Kill points rebuilt from file states, not yet via `Save._fault` |
+| Localised text for engine toasts | FAIL | DATA-13/14: 5 `toast.*` keys missing in data/text (QA-B008); FLOW-04B PASS |
+| Theme guard: label fit, names, colour separation | FAIL | TH-FIT-HUD-EN (QA-B009), TH-FIT-ROUND-EN (QA-B010), TH-COL-PROTAN/DEUTAN proxy (QA-B011); TH-TEXT-*, TH-FIT-*-KO, TH-COL-NORMAL/TRITAN PASS |
+| Visual baselines | STALE | 40 of 69 committed docs images predate d6cf7df (runs/head-5426645-stale-baselines.txt); no theme-era capture at HEAD yet |
 | Image integration (atlases, P0 sprites/fx/biome/icons/bases, residency, release) | PASS | ART-01..11; resident battle pages ≤ 32 MiB estimate |
 | Audio assets | PASS | AUD-01 (31 file refs exist) |
 | Audio in game | PARTIAL | AUD-02 PASS at e9dfaa4 (`Audio` autoload registered). AUD-03 (cues fire on events, honour settings/pause) NOT_TESTED; nothing was listened to |

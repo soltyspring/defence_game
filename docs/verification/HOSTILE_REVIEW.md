@@ -45,3 +45,5 @@ Rendered Hangul text (tofu/clipping), colour-blind readability, peak-crowd frame
 | Date | Item | Result |
 |---|---|---|
 | 2026-10-31 08:08 | QA-B001/B002/B003 same scenarios at head-462991a | still FAIL (no fix claimed yet) |
+| 2026-10-31 08:52 | all 12 committed FAILs at HEAD e9dfaa4 | still FAIL; R4 partly withdrawn: AUD-02 PASS (Audio autoload wired), AUD-03 audible behaviour unverified |
+| 2026-10-31 09:14 | HEAD 5426645 (run 20261031-091441) | R1 withdrawn (QA-B004/B005 verified), R3 withdrawn (B001), R11 withdrawn (B002), R12 withdrawn for types/clamp/downgrade (B003/B006/B007; checksum still unkeyed). R5 partly: FLOW-04B PASS, DATA-13/14 FAIL. New theme-era items: QA-B009/B010 label clipping, QA-B011 CVD colour proxy |

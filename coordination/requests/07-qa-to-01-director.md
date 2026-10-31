@@ -1,21 +1,26 @@
-# 07-qa → 01-director
-Status: QUEUED (file request). Date: 2026-10-31.
+# 07-qa → 01-director — consolidated fix list v2
+Status: QUEUED (file request). Date: 2026-10-31 09:15 +09:00. Replaces earlier sections (history in git).
+Verification condition: clean committed HEAD, `.\tools\qa\run_acceptance.ps1 -Head -Only <suites>`. Desktop headless only.
 
-## QA-O001 Difficulty step at r03 (observation, not a defect)
-`tests/acceptance/probe_winrate.gd -- --seeds=20` with the 02 scripted bot, current data:
-r01 casual 17/20, competent 17/20 · r02 20/20, 20/20 · r03 casual 10/20, competent 11/20.
-The competent bot wins r01 later than the casual one (≈155 s vs ≈118 s median). Bots are not players; please treat this as a hypothesis for the r03 difficulty step and the worker-vs-army trade-off, not as a balance verdict. Re-run after data changes and send me the numbers you expect.
+## D0 Record the theme decision
+The coordinator relayed Q1 = A "빵집 기사단 vs 곰팡이 군단" and the instruction "모두 고치라". `docs/design/DECISIONS.md` at HEAD still shows Q1 PENDING. Please record the literal answer and implications so other roles can cite it.
 
-## Ack of 01-director-to-07-qa R1
-Read. Current coverage: ko/en key parity for every referenced name/desc/tutorial key (DATA-07..09 PASS). Not yet done: placeholder parity and `ui.*`/`toast.*` literal coverage scan (next milestone), rendered tofu/clipping and colour-blind frame checks (need the 04 secondary-monitor launcher), independent re-run of 02 R3 sims (when published), reward edge cases (double reward on result re-entry, mid-battle retry forfeits, best_stars never decreases). Partial evidence today: SAVE-07 shows best stars and best time never decrease and a loss does not award stars or unlock.
+## Open for 01
+### QA-B008 (P2) toast keys without text — DATA-13, DATA-14, FLOW-04B
+- Reproduce: `.\tools\qa\run_acceptance.ps1 -Head -Only data,flow`
+- Missing in both ko.json and en.json at HEAD 5426645 (run 20261031-091441; FLOW-04B now PASS, DATA-13/14 still FAIL): `toast.counterattack` (battle.gd, shown raw in battle), `toast.save_recovered`, `toast.round_locked`, `toast.save_failed`, `toast.save_read_only` (app.gd / save.gd).
+- Pass criterion: DATA-13, DATA-14 PASS (FLOW-04B must stay PASS).
+### QA-B009/B010 (P2, with 04) English labels too long — TH-FIT-HUD-EN, TH-FIT-ROUND-EN
+- Card slot at r08–r10 worst layout is 36.7 px; round tile 83 px (details in 07-qa-to-04-client.md). When writing theme names, keep EN card names ≤ 36 px and round names ≤ 83 px at 12 px in the bundled font, or agree a layout change with 04.
+- Pass criterion: all TH-FIT-* PASS.
+### Theme rename guard
+After renaming, TH-TEXT-KO/EN must stay PASS: every card/skill/round/hero/enemy name exists in both locales, non-empty, not equal to its key or id. Run `-Head -Only theme,data`.
 
-## Update 2026-10-31 08:10
-### QA-B008 (P2) raw "counterattack" shown in battle; 3 toast keys have no text
-Engine emits `toast("counterattack")` (battle.gd, r01 enemy base < 50%), `toast("save_recovered")`, `toast("round_locked")` (app.gd). None has `toast.*` text in data/text/ko.json or en.json; FLOW-04B shows the HUD label reads `counterattack`. Request: add `toast.counterattack`, `toast.save_recovered`, `toast.round_locked` in both locales (and `toast.save_failed` if 02 adopts QA-B005). Acceptance: DATA-13, DATA-14, FLOW-04B PASS. Evidence: build/qa07/head-462991a.
-### QA-W001 (warning on your uncommitted round edits)
-Workspace run 20261031-074155 with your uncommitted r01–r10 edits (enemy_ai disabled): an idle player in r01/r02 no longer loses; the 900 s time limit ends the battle (base 1310/1500, 1365/1500). Committed HEAD passes. If a passive player should still lose (INTERFACES §2.4 loss = base hp 0), please recheck before committing: `.\tools\qa\run_acceptance.ps1 -Only sim`.
-### R1 progress: placeholder parity ko/en PASS (DATA-12, 109 keys); `ui.*`/`toast.*` literal coverage now checked (DATA-13/14).
+## Warnings (work tree only, not product bugs)
+- QA-W001: your uncommitted round edits (enemy AI disabled) make an idle player in r01/r02 survive to the 900 s time limit (R1-LOSS, R2-LOSS FAIL in workspace runs; HEAD PASS). Before committing: `.\tools\qa\run_acceptance.ps1 -Only sim` must keep R*-LOSS PASS, or change the loss rule explicitly in INTERFACES/DATA_SCHEMA.
+- QA-W003 resolved (ui.star_* keys committed).
 
-## Update 2026-10-31 08:55 (HEAD e9dfaa4, triage docs/verification/FAILURE_TRIAGE.md)
-- QA-B008 still FAIL at HEAD. **QA-W003**: committed result.gd (04, 183e4a6) uses `ui.star_win`, `ui.star_base_hp`, `ui.star_base_hp_any`, `ui.star_time`, `ui.star_time_any`; these exist only in your uncommitted ko/en files, so committed HEAD shows raw ids on the result screen. Please commit the text keys (plus the 3 `toast.*` keys). Acceptance: `.\tools\qa\run_acceptance.ps1 -Head -Only data,flow` → DATA-13/14, FLOW-04B PASS.
-- QA-W001 still present in the workspace (R1/R2-LOSS FAIL with your uncommitted round data); HEAD passes.
+## Observation
+QA-O001 bot win rate at HEAD e9dfaa4 (20 seeds, casual/competent): r01 18/15, r02 20/20, r03 14/10.
+
+Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, DATA-14, TH-FIT-HUD-EN, TH-FIT-ROUND-EN, TH-COL-PROTAN, TH-COL-DEUTAN) · NOT_IMPLEMENTED 1 · NOT_TESTED 2 · BLOCKED 0.
