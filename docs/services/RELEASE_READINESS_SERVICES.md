@@ -37,7 +37,7 @@ Status: `MET` = implemented and tested (mock level), `PARTIAL` = state machine o
 
 | ID | Status | What exists now (evidence) | What is missing | Owner |
 |---|---|---|---|---|
-| B1 | MISSING | `billing_provider.gd` interface + mock + disabled adapters only | Billing plugin with library ≥ 8 (9.x preferred), real `play_billing_provider.gd` | 04 plugin/export, 06 adapter; after user decision |
+| B1 | MISSING | `billing_provider.gd` interface + mock + disabled adapters only. Candidates checked 2026-10-31 both ship Billing 9.1.0 (BILLING_PLUGIN_CANDIDATES.md) — not installed | Install the chosen plugin, real `play_billing_provider.gd`, verify merged manifest | 04 plugin/export, 06 adapter; after user decision |
 | B2 | MET (mock) | Pending never granted, unknown/unspecified state never granted, pending cancel → nothing recorded (`test_services` purchase_flows, `test_services_m3` billing_transitions) | Same checks against the real plugin's states | 06 |
 | B3 | PARTIAL | Ack/consume only after a verified grant and commit; ack retried on restore; with no trusted verifier nothing is acknowledged, so Play auto-refunds (fail-safe) (`purchase_service.gd`, `test_services` purchase_restore) | Real acknowledge/consume calls; user notification before ack (B8); a verifier, or IAP stays unusable | 06, server owner TBD |
 | B4 | MISSING | `unavailable_receipt_verifier.gd` always answers verification_unavailable; ledger keyed by token hash (same uniqueness idea) | Verification server with Play Developer API service account (never in app/repo) | user decision (cost) → server owner |
@@ -45,7 +45,7 @@ Status: `MET` = implemented and tested (mock level), `PARTIAL` = state machine o
 | B6 | PARTIAL | Restore revokes an entitlement the store no longer reports (`test_services` purchase_restore) | Voided Purchases API / RTDN on a server; offline players keep entitlements until next successful restore | server, 06 |
 | B7 | PARTIAL | Refund revokes only that item (09 guardrail R09-06-1), no account penalty | Text for refund/consumer notices (01/04) | 01, 04 |
 | B8 | MISSING | Signals `purchase_finished`, `consumable_granted`, `entitlement_changed` | Purchase-received UI at a non-action moment | 04 |
-| B9 | MISSING | `export_presets.cfg:25 gradle_build/use_gradle_build=false` (read-only check) | Gradle build + plugin in addons/ | 04 / 02 |
+| B9 | MISSING | `export_presets.cfg:25 gradle_build/use_gradle_build=false` (read-only check). Plugin versions now known (P-A 3.3.0 / P-B v2.2, both Billing 9.1.0) | Gradle build + plugin in addons/; real-device runs per BILLING_SANDBOX_TEST_PLAN.md | 04 / 02 |
 | A1 | PARTIAL | Explicit request only (`ads.request`/`request_for`), fail-closed offer policy, reward once per occasion (R1–R16) | Disclosure/opt-in UI (04). **Conflict to resolve:** a reward callback that arrives after the ad closed is currently dropped (REWARD_STATE_TABLE R11); the policy requires delivering a promised reward on completion. Routed to 01 as a design decision | 01 decide, 06 implement, 04 UI |
 | A2 | PARTIAL | `consent/consent_flow.gd` state machine (required / not_required / obtained / error / offline / timeout / dismissed / withdraw / privacy options) with mock and disabled providers (`test_services_m3` consent_flow) | UMP (or certified CMP) adapter, AdMob app ID in export config, privacy-options button | 04 plugin/UI, 06 adapter; after decision |
 | A3 | N/A-YET | INTERNET off (`export_presets.cfg:65`), no ad SDK | AD_ID declaration comes with the SDK; verify merged manifest | 04 |

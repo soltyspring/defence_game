@@ -31,6 +31,7 @@ func _initialize() -> void:
 	_group("name_search_log", test_name_search_log)
 	_group("content_rating_draft", test_content_rating)
 	_group("data_safety_draft", test_data_safety)
+	_group("billing_docs", test_billing_docs)
 	report.passes = passes
 	report.failures = Array(failures)
 	var f := FileAccess.open("user://services_listing_report.json", FileAccess.WRITE)
@@ -324,4 +325,82 @@ func test_data_safety() -> bool:
 	for f in ["Rewarded ads", "In-app purchases", "Verification server", "Remote analytics", "Accounts"]:
 		check(s4.contains(f), "data safety change table covers '%s'" % f)
 	check(t.contains("{{PRIVACY_POLICY_URL}}"), "privacy policy URL required even with No")
+	return true
+
+# ------------------------------------------------------------------ M9: billing preparation docs
+
+const PLUGINS := "res://docs/services/BILLING_PLUGIN_CANDIDATES.md"
+const SANDBOX := "res://docs/services/BILLING_SANDBOX_TEST_PLAN.md"
+const NOSERVER := "res://docs/services/NO_SERVER_MINIMUM.md"
+
+## Plugin table: every candidate has a Billing Library ≥ 8 claim, a source URL and a release date;
+## nothing installed in the project. Sandbox plan: every setup step has an owner tag, every test
+## case names an expected service result code that really exists. No-server doc: every risk has a
+## mitigation and residual; missing items stay marked Missing.
+func test_billing_docs() -> bool:
+	for p in [PLUGINS, SANDBOX, NOSERVER]:
+		if not check(FileAccess.file_exists(p), "%s exists" % p):
+			return true
+	var pt := FileAccess.get_file_as_string(PLUGINS)
+	var rows := 0
+	for line in pt.split("\n"):
+		var c := line.split("|")
+		if c.size() > 9 and RegEx.create_from_string("^ P-[A-Z] $").search(c[1]) != null:
+			rows += 1
+			var ver := RegEx.create_from_string("(\\d+)\\.(\\d+)\\.(\\d+)").search(c[4])
+			check(ver != null and int(ver.get_string(1)) >= 8, "plugin %s billing library ≥ 8 (%s)" % [c[1].strip_edges(), c[4].strip_edges()])
+			check(c[5].strip_edges().begins_with("YES"), "plugin %s meets B1" % c[1].strip_edges())
+			check(RegEx.create_from_string("\\(2026-\\d\\d-\\d\\d\\)").search(c[3]) != null, "plugin %s release date" % c[1].strip_edges())
+			check(c[8].contains("https://"), "plugin %s official source" % c[1].strip_edges())
+	check(rows >= 2, "at least 2 plugin candidates (%d)" % rows)
+	check(pt.contains("**Nothing is installed.**"), "plugin doc states nothing installed")
+	check(not DirAccess.dir_exists_absolute("res://addons/GodotGooglePlayBilling") and not DirAccess.dir_exists_absolute("res://addons/AndroidIAPP"), "no billing plugin installed in addons/")
+	var st := FileAccess.get_file_as_string(SANDBOX)
+	var R := load("res://src/services/service_result.gd")
+	var codes := {}
+	for k in R.get_script_constant_map():
+		var v = R.get_script_constant_map()[k]
+		if v is String:
+			codes[v] = true
+	var setup := 0
+	var cases := 0
+	for line in st.split("\n"):
+		var c := line.split("|")
+		if c.size() < 6:
+			continue
+		var id := c[1].strip_edges()
+		if RegEx.create_from_string("^S\\d+$").search(id) != null:
+			setup += 1
+			check(RegEx.create_from_string("\\[(USER|04|06|07)\\]").search(c[2]) != null, "setup %s has an owner tag" % id)
+		elif RegEx.create_from_string("^T\\d+$").search(id) != null:
+			cases += 1
+			var found := false
+			for m in RegEx.create_from_string("`([a-z_]+)[^`]*`").search_all(c[4]):
+				if codes.has(m.get_string(1)) or ["restore_finished", "purchase_finished", "entitlement_changed", "consumable_granted"].has(m.get_string(1)):
+					found = true
+			check(found, "test case %s names a real service result code" % id)
+			check(c[6].strip_edges() != "", "test case %s maps to a requirement/row" % id)
+	check(setup >= 8, "sandbox plan has setup steps (%d)" % setup)
+	check(cases >= 12, "sandbox plan has test cases (%d)" % cases)
+	check(st.contains("**PLAN ONLY. Nothing here has been run.**"), "sandbox plan marked not run")
+	check(st.count("**[USER]**") >= 5, "user-only steps marked (%d)" % st.count("**[USER]**"))
+	var ns := FileAccess.get_file_as_string(NOSERVER)
+	var risks := 0
+	var s4 := ns.substr(ns.find("## 4."), ns.find("## 5.") - ns.find("## 4."))
+	for line in s4.split("\n"):
+		var c := line.split("|")
+		if c.size() >= 7 and not line.begins_with("| Risk") and not line.begins_with("|---"):
+			risks += 1
+			check(c[4].strip_edges() != "" and c[5].strip_edges() != "", "risk '%s' has mitigation and residual" % c[1].strip_edges().left(30))
+	check(risks >= 6, "no-server doc lists risks (%d)" % risks)
+	for m in ["R7", "R8", "R9"]:
+		var line_ok := false
+		for line in ns.split("\n"):
+			if line.begins_with("| %s |" % m):
+				line_ok = line.contains("**Missing:**")
+		check(line_ok, "no-server %s still marked Missing" % m)
+	# The code still refuses real purchases without a trusted verifier.
+	var d: Dictionary = load("res://src/services/services_factory.gd").create({})
+	check(d.verifier.kind() == "unavailable", "default verifier is still 'unavailable' (no client-side verifier shipped)")
+	check(not FileAccess.file_exists("res://src/services/billing/client_side_verifier.gd"), "no client-side verifier without user decision U6")
 	return true
