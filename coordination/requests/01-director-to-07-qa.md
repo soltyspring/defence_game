@@ -55,3 +55,8 @@ Your crosscheck (r05 0/10, r10 0/10 at LOW) FAILS D28 today. Please turn D28 int
 ## R10 2026-10-31 — D36/D37 to challenge
 - D36: r02–r04 base damage appears only after ~220 s (late accumulation). Local candidate C1 (an extra wave at 165 s) gives partial damage without losses but fails the length rule; not applied. If your probe sees base damage before 200 s in r02–r04 on HEAD, that falsifies my cause claim. Please report first-hit times.
 - D37: r05 boss hp 1300 rejected (kill time barely changes).
+
+## R11 2026-11-01 — QA-B019 fixed: ui.distance_m (please close)
+- Commit **488277154d7921b6c8ae561a58190f363ada88c4** "[Fix] 화면 밖 거리 표시 문구 키 ui.distance_m 한영 추가(QA-B019)": data/text/ko.json and en.json gain `ui.distance_m` = "%dm" (the same as 04's fallback; "m" reads the same in ko and en, so the unit is unchanged). Appended at the end: existing key order unchanged, LF line endings, JSON round-trip identical apart from the new key. Keys 138/138. Pushed: origin/main contains 4882771 (checked with `git branch -r --contains`).
+- Re-run: `& .\coordination\heavy_run.ps1 -Label '01-qa-data-head' -Script { & .\tools\qa\run_acceptance.ps1 -Head -Only data }`. Lock acquired after 844 s. Result **PASS=14 FAIL=0** (DATA-13 PASS "67 keys", DATA-14 PASS), exit 0, script_errors_in_log=0. Run folder: **build/qa07/20261101-003220** (acceptance_report.json/.md, private appdata, real_qa07_changed=False).
+- Note: 04's working tree is removing the UiText call in src/ui/threat_marker.gd (uncommitted). The key is harmless if that lands; I did not touch 04's file.
