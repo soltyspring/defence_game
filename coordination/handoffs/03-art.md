@@ -93,6 +93,7 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - Python composite (no Godot, 08 quiet window): silhouette min melee 64.9 -> 64.9 %, hero 67.7 -> 67.7 %; closest enemy dE76 protan melee 29.8 -> 26.1, hero 18.6 -> 17.6. docs/art/evidence/a26/.
 - validate.py --determinism PASS (3 WARN: main-tree cache stale for char_player, bases, ui_main); 08 asset_budget_check --worktree PASS (menu 0.50 in 08's conservative model, battle 9.25).
 - NOT verified for this change: Godot readability render, exported-PCK check, real-game capture (after 18:30).
+- Commit 6949499 [Design]: PUSHED origin/main (verified with git branch -r --contains at 18:04). 07 A7 re-verify request written after the push.
 
 ## Exact next steps on resume
 1. After 18:30: `pwsh tools/art/run_godot_pack_check.ps1`, `run_godot_readability.ps1 -Tag v0121`, and a HEAD-snapshot capture on the secondary monitor (nest on screen, toast knight + hero close up). Record results in ART_AUDIT round 11.

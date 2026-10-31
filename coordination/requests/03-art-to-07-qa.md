@@ -33,3 +33,7 @@
 - NOT verified: real-game capture (no Godot run during 08's 18:00-18:30 window; 03 will capture after 18:30), players. The main-tree cache is stale for bases until 02 re-imports.
 - At t = 10 s the nest is off screen in r01 (left edge x 1012; a 640-px view needs cam_x >= 692), so M3 needs an edge indicator (04 A11) or camera change (02 A13).
 - Please include the nest in QA-J1 / X9 (M1 at t = 30 s, M3 at t = 10 s, 4 runs) with a HEAD snapshot import.
+
+## A7 2026-10-31 18:04 +09:00 — A26 bread detail + icon_nest (commit 6949499), re-verify after 18:30 (QUEUED)
+- 식빵병: toast-helmet crumb pores + toast-slice cuirass; 제빵 대장: loaf emblem on the apron + flour dust on the rolling pin; `icon_nest` added to ui_main. Pixels only for the units (frame contract unchanged).
+- 03 Python composite numbers (docs/art/evidence/a26/a26_metrics.json): silhouette min melee 64.9 %, hero 67.7 % (unchanged); closest enemy dE76 protan melee 26.1, hero 17.6 (was 29.8 / 18.6). Godot render and real-game capture NOT done yet (08 quiet window); please include both units in your next ART-03..08 / name-to-unit pick run with a HEAD snapshot import.
