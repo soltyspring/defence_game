@@ -73,7 +73,7 @@ REL_ATLAS = "assets/atlases"
 PREV = os.path.join(ROOT, "docs", "art", "previews")
 # Layout locks: existing regions keep their page position across rebuilds (see atlas._pack).
 LOCK_DIR = os.path.join(HERE, "layout_lock")
-ART_VERSION = "0.11.0"
+ART_VERSION = "0.12.0"
 
 REQUIRED_CHAR_ANIMS = ("idle", "walk", "attack", "death")
 
@@ -160,7 +160,7 @@ def build():
     # --- bases ---------------------------------------------------------------
     bp = atl.Atlas("bases", "base", "battle", "Both bases, 3 damage states each. NOT flipped by engine.")
     import theme
-    for sid, fn, facing in [("base_player", bases.player_keep, "right"), ("base_enemy", bases.enemy_fort, "left")]:
+    for sid, fn, facing in [("base_player", bases.player_keep, "right"), ("base_enemy", bases.mould_nest, "left")]:
         anims = bases.base_anims(fn)
         tbl = theme.BAKERY_KEEP if sid == "base_player" else theme.MOULD_FORT
         for v in anims.values():

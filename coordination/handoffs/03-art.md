@@ -1,5 +1,5 @@
 # 03-art handoff
-Updated: 2026-10-31 17:36 +09:00 (real time from Get-Date; the 17:38 written in commit 11ceacb was ahead of the clock). Q1 = A DECIDED; Q3 working title 빵집 기사단: 곰팡이 디펜스 (store name pending KIPRIS); Q2 business model DEFERRED (no ad/purchase UI). Art version 0.11.0.
+Updated: 2026-10-31 17:49 +09:00 (real time from Get-Date). Q1 = A DECIDED; Q3 working title 빵집 기사단: 곰팡이 디펜스 (store name pending KIPRIS); Q2 business model DEFERRED (no ad/purchase UI). Art version 0.12.0.
 
 ## Session
 - Kiro CLI session ID: not visible from inside the session, so I cannot record it. Codex should read it from coordination/.runtime/quota/sessions.json / the launcher.
@@ -81,8 +81,14 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - Commit 11ceacb [Design]: PUSHED origin/main (verified with git branch -r --contains at 17:36).
 - Processes: snapshot Godot runs all exited. Other roles' Godot processes were not touched.
 
+## Milestone 12 (this session): mould nest (09 X9)
+- tools/art/bases.py mould_nest() (build.py uses it for base_enemy). contract_diff vs HEAD: 0 changes. tools/art/nest_check.py (Python composite, 1x/2x, left 24/40/96 px visible): nest dL* 30.4-32.6, silhouette 99.6-99.8 %, min dE76 vs bg 29.3, closer to the enemy mean in all sims; old fort dL* 18.1-21.6 (failed). Evidence docs/art/evidence/nest_x9/.
+- t = 10 s visibility is camera/indicator (04 A11, 02 A13). Real-game capture NOT done (08 quiet window 18:00-18:30; no Godot run after 17:42).
+- Validation: validate.py --determinism PASS (1 WARN: main-tree bases cache stale); exported PCK at 17:42 on this build 12/12 pages, 15 loads, raw PNG absent, 1,262,684 B; 08 asset_budget_check --worktree PASS.
+- A26 not started. 07 / 09 re-verify requests follow the push.
+
 ## Exact next steps on resume
-1. Read coordinator-to-03-art.md and incoming *-to-03-art.md. Check whether 04 changed title_block.gd (then recapture the menu in the main tree or a snapshot).
-2. X9 (09 R09-03-7): mould-nest silhouette readable at the right edge (bases page, keep the base frame contract). Then store-capture readiness (R09-03-8).
-3. A26 bread detail pass; A27 boar occlusion (02 A23).
-4. After 02 re-imports: `python tools/art/validate.py --import-cache` (expect 0 stale), main-tree capture on the secondary monitor.
+1. After 18:30: HEAD-snapshot capture of r01/r03 on the secondary monitor when the nest is on screen (e.g. r03 autoplay late, or after the hero walks right); check the left-edge read.
+2. A26 bread detail on the two largest allies on screen (tank 통식빵, siege 화덕포 or hero), same frame contract.
+3. If 04 wants it: icon_nest 16x16 for an edge indicator.
+4. Read incoming *-to-03-art.md (04 title_block line, 08 menu model).

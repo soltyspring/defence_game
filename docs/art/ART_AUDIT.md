@@ -119,3 +119,18 @@ Same attacks re-run on this build:
 - **Flour icon:** `icon_supply` = flour sack with a wheat mark (01 R4 / D25 "밀가루").
 - **Capture caveat:** in r01 --autoplay the pause menu was open at 20 s (also at 12 s in round 8). The frame is kept as `ko_r01_autoplay_20s_PAUSE_MENU.png` and not used as battle evidence. Likely the game's focus-loss auto-pause; not verified.
 - Not tested: a real Android device, and players (all lines above are 03's internal lines).
+
+## Round 10 (2026-10-31 17:49) — mould nest (09 X9, art 0.12.0)
+- **A32:** base_enemy redrawn from the grey bramble palisade to a 곰팡이 둥지: fuzzy dark mould mound, mould colonies (rings with spore-white centres), a cave mouth facing left with mould strands and two glowing eyes, glowing spore pods, and four sporangium stalks. The tallest stalk stands on the LEFT edge (x 6, up to y 6) because the left part enters the screen first. Drawn in mould keys only (D/l/t/z/q/Q/a). Frame contract unchanged (contract_diff vs HEAD: 0 changes, 0 moved rects; 96x128, pivot (48,127), idle/damaged/ruined x2, no_flip).
+- **Python composite only** (tools/art/nest_check.py; no Godot run because of 08's 18:00-18:30 quiet window). Village background, ground_y 295, only the left 24 / 40 / 96 px of the frame on screen, 1x and 2x (docs/art/evidence/nest_x9/). Lines fixed before measuring: dL* >= 25, silhouette >= 60 %, dE76 vs background >= 20 in all four simulations, nest mean closer to the enemy faction mean than to the ally mean.
+  | case | dL* vs bg | silhouette | min dE76 vs bg (sim) | dE to enemy / ally (protan) |
+  |---|---|---|---|---|
+  | nest, 24 px visible | **32.6** | 99.7 % | 32.5 (protan) | 12.6 / 40.5 |
+  | nest, 40 px | **31.1** | 99.8 % | 29.3 (protan) | 8.0 / 36.3 |
+  | nest, full | **30.4** | 99.6 % | 31.2 (protan) | 9.3 / 37.1 |
+  | old fort, 24 px | 19.0 (fail) | 100 % | 25.3 | 5.8 / 41.4 |
+  | old fort, 40 px | 18.1 (fail) | 100 % | 20.6 | 7.2 / 40.3 |
+  The new nest passes every line; the old fort failed the dL* line on the village street.
+- **Not solved by art: t = 10 s.** r01 enemy base x = 1100 - 40 = 1060, frame left edge 1012. A 640-px view shows it only when cam_x >= 692 (800-px view: >= 612). The camera follows the hero, which is near the start at 10 s, so 09's M3 needs an edge indicator (04) or a camera change (02). Requests 04 A11 / 02 A13.
+- **Not verified:** real-game capture of the nest (deferred until after 18:30, no Godot run); the exported-PCK check ran at 17:42 on this build (12/12 pages, 15 loads, no raw PNG) and nothing in assets changed after it except docs; players.
+- A26 (bread detail for the two largest allies) not started in this change.

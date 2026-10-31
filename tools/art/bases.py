@@ -280,6 +280,104 @@ def enemy_fort(state: str, phase: int) -> Canvas:
     return cv
 
 
+# ---------------------------------------------------------------------------
+# art 0.12.0 (09 X9): 곰팡이 둥지 / Mold Nest replaces the bramble fort. Same frame contract
+# (96x128, pivot (48,127), anims idle/damaged/ruined x2, no_flip, gate side LEFT).
+# The identity sits on the LEFT edge, which is what enters the screen first: a tall spore
+# stalk with a round sporangium head, a dark cave mouth with mould strands and a fuzzy
+# dark mound. Drawn directly in mould keys (D/l/t/z/q/a), which theme.ENEMY leaves alone.
+# ---------------------------------------------------------------------------
+NEST_BLOBS = [(52, 104, 42, 30), (24, 110, 20, 20), (78, 100, 18, 30), (60, 78, 24, 20),
+              (36, 86, 18, 16), (14, 100, 10, 24)]
+
+
+def _sporangium(cv, x, top, base, r, phase, rng):
+    cv.vline(x, top + r, base, c("l"))
+    cv.vline(x + 1, top + r, base, c("D"))
+    for y in range(top + r, base, 5):
+        cv.put(x - 1, y, c("t"))                       # little side hairs
+    cy = top + r
+    cv.ellipse(x + 0.5, cy, r, r * 0.9, c("D"))
+    cv.ellipse(x - 0.2, cy - 0.6, r - 1.2, r * 0.9 - 1.2, c("l"))
+    cv.ellipse(x - 1.0, cy - 1.4, r * 0.45, r * 0.4, c("t"))
+    for k in range(int(r * 2)):                         # spore dots on the cap
+        dx, dy = int(rng.integers(-r + 1, r)), int(rng.integers(-r + 1, 1))
+        if (dx * dx + dy * dy) < (r - 1) ** 2:
+            cv.put(x + dx, cy + dy, c("z" if (k + phase) % 3 == 0 else "t"))
+
+
+def mould_nest(state: str, phase: int) -> Canvas:
+    rng = np.random.default_rng(2003)
+    cv = Canvas(W, H)
+    g = H - 1
+    cv.ellipse(50, g + 2, 47, 7, c("D"))               # mould stain on the ground
+    for (cx, cy, rx, ry) in NEST_BLOBS:                # lumpy mound
+        cv.ellipse(cx, cy, rx, ry, c("D"))
+    for (cx, cy, rx, ry) in NEST_BLOBS:                # light from the upper left
+        cv.ellipse(cx - rx * 0.18, cy - ry * 0.2, rx * 0.72, ry * 0.68, c("l"))
+    for (cx, cy, rx, ry) in NEST_BLOBS[:5]:
+        cv.ellipse(cx - rx * 0.35, cy - ry * 0.45, rx * 0.3, ry * 0.22, c("t"))
+    # fuzzy rim: hairs on every top edge pixel of the mound
+    for x in range(W):
+        ys = [y for y in range(H) if cv.get(x, y)]
+        if not ys:
+            continue
+        t = ys[0]
+        n = 1 + (x * 7 + 3) % 3
+        for k in range(1, n + 1):
+            if (x + k) % 2 == 0:
+                cv.put(x, t - k, c("l" if k < 3 else "t"))
+    # mould colonies: rings with a spore-white centre
+    for _ in range(16):
+        x, y = int(rng.integers(20, 92)), int(rng.integers(74, 120))
+        if cv.get(x, y) and cv.get(x + 3, y + 2):
+            r = float(rng.uniform(1.6, 3.0))
+            for yy in range(int(y - r) - 1, int(y + r) + 2):
+                for xx in range(int(x - r) - 1, int(x + r) + 2):
+                    d = ((xx - x) ** 2 + (yy - y) ** 2) ** 0.5
+                    if abs(d - r) < 0.6 and cv.get(xx, yy):
+                        cv.put(xx, yy, c("t"))
+            cv.put(x, y, c("z"))
+    # cave mouth facing LEFT (the gate units spawn from)
+    for y in range(92, g):
+        dy = y - 92
+        hw = min(11, 3 + dy)
+        for x in range(17 - hw, 17 + hw + 1):
+            cv.put(x, y, c("K" if abs(x - 17) < hw - 1 else "a"))
+    for (x, y0, y1) in [(10, 97, 104), (14, 94, 101), (20, 95, 108), (24, 99, 104)]:   # mould strands
+        cv.vline(x, y0, y1, c("l"))
+        cv.put(x, y1 + 1, c("t"))
+    for (x, y) in [(13, 112), (21, 116)]:                                             # eyes in the dark
+        cv.put(x, y, c("Q" if phase == 0 else "q")); cv.put(x + 1, y, c("Q" if phase == 0 else "q"))
+    # spore stalks: the tallest on the LEFT edge (first thing on screen), more over the mound
+    _sporangium(cv, 6, 6, 104, 5, phase, rng)
+    _sporangium(cv, 40, 40, 74, 4, phase + 1, rng)
+    _sporangium(cv, 70, 30, 72, 4, phase, rng)
+    _sporangium(cv, 86, 52, 76, 3, phase + 1, rng)
+    # glowing spore pods (pulse)
+    for (x, y) in [(46, 96), (66, 88), (82, 108), (30, 82)]:
+        cv.ellipse(x, y, 2.6, 2.2, c("q"))
+        cv.put(x, y, c("z" if phase == 0 else "Q"))
+        cv.put(x - 1, y - 1, c("Q"))
+    # drifting spores
+    for k, (x, y) in enumerate([(4, 2), (18, 14), (30, 24), (54, 20), (78, 14), (92, 30)]):
+        cv.put(x + (phase if k % 2 else -phase), y + (0 if k % 2 else phase), c("z"))
+    if state in ("damaged", "ruined"):
+        damage_holes(cv, rng, (24, 70, 92, 118), 8, col="a", inner="K")
+        for (x, y) in [(52, 74), (74, 68), (40, 92)]:
+            cv.line(x, y, x + 5, y + 9, c("K"))
+    if state == "ruined":
+        ruin_cut(cv, rng, 100)
+        rubble(cv, rng, 4, 92, g, cols=("D", "l", "a", "t"))
+    cv.outline(c("K"))
+    if state == "damaged":
+        fire(cv, 64, 70, phase, 2)
+        fire(cv, 30, 80, phase + 1, 1)
+    if state == "ruined":
+        fire(cv, 50, 104, phase, 2)
+    return cv
+
+
 def base_anims(fn):
     return {
         "idle": dict(frames=[fn("intact", 0), fn("intact", 1)], fps=3, loop=True),

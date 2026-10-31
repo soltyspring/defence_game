@@ -1,6 +1,6 @@
 {
  "version": 1,
- "art_version": "0.11.0",
+ "art_version": "0.12.0",
  "schema": "INTERFACES.md §5.1 (02-engine) + additive keys",
  "pixel_scale": 1,
  "reference_view": [
@@ -171,7 +171,7 @@
     512,
     512
    ],
-   "disk_bytes": 10209,
+   "disk_bytes": 10835,
    "gpu_bytes": 1048576,
    "biome": "",
    "anim_sets": [
@@ -547,7 +547,7 @@
   "license": "Original work created for this project; owned by the project owner. No third-party assets included."
  },
  "totals": {
-  "disk_bytes": 83672,
+  "disk_bytes": 84298,
   "gpu_bytes_all_pages": 9961472,
   "note": "GPU = w*h*4 (RGBA8, lossless import, no mipmaps). See docs/art/ATLAS_BUDGET.md"
  }

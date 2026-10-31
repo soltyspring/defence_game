@@ -1,5 +1,5 @@
 # ART_DIRECTION.md — visual identity and asset contract (owner: 03-art)
-Art version 0.11.0 · 2026-10-31 · Status: **theme DECIDED by the user (Q1 = A "빵집 기사단 vs 곰팡이 군단", 2026-10-31)**. Art 0.8.0 applies it as a palette-level retheme (tools/art/theme.py). Silhouettes, frame sizes, pivots, hit/spawn frames and frame names are unchanged. A bread-specific detail pass (crust scoring, loaf-shaped helmets) is still open.
+Art version 0.12.0 · 2026-10-31 · Status: **theme DECIDED by the user (Q1 = A "빵집 기사단 vs 곰팡이 군단", 2026-10-31)**. Art 0.8.0 applies it as a palette-level retheme (tools/art/theme.py). Silhouettes, frame sizes, pivots, hit/spawn frames and frame names are unchanged. A bread-specific detail pass (crust scoring, loaf-shaped helmets) is still open.
 
 ## 1. How the art is made (provenance)
 - Tool inventory on this machine: Python 3.11.9, Pillow 11.2.1, numpy 2.2.4. There are **no** image-generation, Aseprite or ImageMagick tools. Godot 4.7.2 is in tools/engine (owned by 02).
@@ -23,6 +23,7 @@ Art version 0.11.0 · 2026-10-31 · Status: **theme DECIDED by the user (Q1 = A 
 
 ## 4. Frame and pivot conventions (matches INTERFACES.md §5.2)
 - Characters: `pivot = [px, H−1]` = the ground point under the feet. The feet outline is on row H−1. Units, projectiles and FX are drawn **facing right**. The engine mirrors the enemy faction with `flip_h`, and the mirrored pivot_x is `W − pivot_x`.
+- Enemy base (art 0.12.0) = 곰팡이 둥지 / Mold Nest: fuzzy mould mound, cave mouth on the left, spore stalks (tallest on the left edge so a partly visible nest still reads as mould), spore pods. Edge metrics: tools/art/nest_check.py.
 - Bases are pre-oriented: `base_player` gate faces right, `base_enemy` gate faces left. Their `anim_sets_meta.no_flip=true`, so do not flip them.
 - FX/projectiles: pivot is the centre unless the atlas JSON says otherwise. Ground FX (`skill_slam`, `skill_rally`, `skill_barrage`, `spawn`, `heal`, `fire`) use bottom-centre.
 - `hit_frame` is the frame where damage applies. `events` holds other named frames (`release` for hero cast). `points.projectile_spawn` is a frame-space offset (archer, spitter).
