@@ -7,7 +7,11 @@ Status: art-world 1 COMMITTED. 07 art_compare judgement queued (detached heavy j
 
 ## Commits (SHA checked with `git ls-remote origin refs/heads/main` right after the push)
 - **92a1718287a75a83baca8fc3bb977d0d5170f8c1** [Design] art-world 1: pages, sources, tools, WORLD_AUDIT, evidence, W1 requests to 02/03/06/07, status. `git ls-remote` returned this SHA for refs/heads/main; a clean `git archive 92a1718` passes `validate.py` (0 warnings).
-- The status/handoff commit that carries this file: SHA in the next resume note (the file cannot contain its own SHA).
+- The status/handoff commit that first carried this file: **87a024da4074cf49419a538fae2ecac34b885d00** (ls-remote checked). Duplicate-job note to 07: **25b60626569047da8976b14fc60d3717c2283565** (ls-remote checked). This update's own SHA goes in the next note.
+
+## 07 judgement (pending)
+- Queued 07:29: `tools/qa/art_compare.ps1 -Sha 92a1718 -NoAnim` → pid 41756, log build\heavy\07-art-compare-92a1718-20261101-072926.log (ko_1x only, no pose pass: characters unchanged; one GPU run). At 07:57 it was still waiting for the lock behind 01, 04, two other 07 compares and 04.
+- A second job for the same SHA was queued at 07:35 by someone else (pid 4360, log ...-073552.log, same job.ps1). NOTE line in heavy_run.log 07:50 and W2 to 07. Not killed, not re-queued.
 
 ## art-world 1 (01:05–07:30 KST, two blue screens at 23:08 and 03:55)
 - Causes, pass lines (fixed first), redraw and results: docs/art/world/WORLD_AUDIT.md §3–§7. Evidence: docs/art/world/evidence/{baseline,after,captures}/.
