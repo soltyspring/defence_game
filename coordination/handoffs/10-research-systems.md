@@ -9,6 +9,7 @@ Updated: 2026-11-01 ~00:36 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
 ## v0.31 (~00:36 KST): normalised-hash compatibility cases + heavy_run scoping root cause
+- **Pushed: 4dcb3f6e2eff2da0b8f5a4c3a5cf6338857ba837** (origin/main). The SHA record itself is a separate [Docs] commit.
 - Driver: .local_inspect/run_norm_scenario.ps1 (a copy is in evidence/norm_hash_compat_20261101/run_norm_scenario.ps1.txt). Run it via `& .\coordination\heavy_run.ps1 -Label '10-…' -Script ({ … }.GetNewClosure())`.
 - **Lessons:** PowerShell variables are case-insensitive (`$D` = `$d`), so use `p10` prefixes everywhere. heavy_run's own variables leak into blocks, so use GetNewClosure and never write to shared file names.
 - New tool: probes/heavy_run_scope_test.ps1 (`-Target <heavy_run file>`). Rerun it when the coordinator changes heavy_run.ps1; expect 4/4.
