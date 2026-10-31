@@ -134,3 +134,14 @@ Cause (p130 data, 12 base-hit cases): first base hit at 222–372 s; damage 67% 
 | C2 C1 + late softening | r04 | 0/5 · 5/5 W | 1.00,1.00,1.00,1.00,1.00 | 235 | 5/5 | 1.00 | 184 |
 Reading: damage exists only in rounds that last past ~220 s. C1 turns some long rounds into partial damage without losses (milder cliff than global scaling), but lengthens them. C2's late softening removes the damage, which confirms that the late phase is the source.
 r05 boss hp 1300 (10 seeds): kill time 202/184 s (was 217/202), medians 356/344 s; not enough (D37).
+## Update 2026-11-01 (9) — r05 length vs boss splash/knockback (D38)
+Same 2 bots, seeds 1–10, budgets none/LOW, isolated, one run per variant under heavy_run.ps1 (c ran partly unlocked after a tool time-out, see heavy_run.log NOTE; results are deterministic in sim time). Criteria: LOW median ≤ 325 s, casual LOW ≥ 7/10, none 0/10.
+| variant | casual LOW wins | competent LOW wins | none wins (casual / competent) | LOW median t casual / competent (s) | boss dead median LOW (s) | meets all 3 |
+|---|---|---|---|---|---|---|
+| (a) current splash 40 / knockback 40 | 7/10 | 8/10 | 0/10 / 0/10 | 368 / 370 | 305 | no |
+| (b) splash 20 | 10/10 | 10/10 | 6/10 / 10/10 | 358 / 338 | 276 | no |
+| (c) knockback 20 | 10/10 | 10/10 | 9/10 / 10/10 | 379 / 371 | 304 | no |
+| (d) splash 20 + knockback 20 | 10/10 | 10/10 | 9/10 / 10/10 | 397 / 236 | 284 | no |
+| (e) extra: boss speed 18→30 | 10/10 | 10/10 | 7/10 / 9/10 | 350 / 322 | 265 | no |
+Reading: splash and knockback are what make r05 a block. Halving either one lets the no-upgrade bots win (b: 6/10 and 10/10; c: 9/10 and 10/10). They do not set the length: the boss dies at ~260–320 s and LOW medians stay 322–397 s in every variant (D37 showed the same for boss HP). A faster boss (e) also removes the block (none 7/10, 9/10). No variant meets all three criteria.
+Cause (D38): r05's length is set by the round structure (boss spawn at 95 s, then the wave at 150 s, the HP triggers and the push to the enemy base), not by boss combat values. The block and the length pull against each other through the same boss values.

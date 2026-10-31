@@ -1,0 +1,1174 @@
+{
+ "rows": [
+  {
+   "base_dmg": 786.0,
+   "boss_dead_t": 269.7,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 220.2,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_brute@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@other",
+    "enemy_base=1.00"
+   ],
+   "hit_src": {
+    "other": 264.0,
+    "wave3": 118.715277777778,
+    "wave4": 403.534722222222
+   },
+   "kind": "competent",
+   "pbase": 0.56,
+   "round": "r05",
+   "seed": 1,
+   "stars": 2,
+   "t": 358.8,
+   "wave1_cleared_t": 64.6,
+   "won": true
+  },
+  {
+   "base_dmg": 885.0,
+   "boss_dead_t": 267.3,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 224.4,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@other",
+    "enemy_base=1.00"
+   ],
+   "hit_src": {
+    "other": 380.994002525253,
+    "wave3": 141.56755050505,
+    "wave4": 362.438446969697
+   },
+   "kind": "competent",
+   "pbase": 0.51,
+   "round": "r05",
+   "seed": 2,
+   "stars": 2,
+   "t": 357.6,
+   "wave1_cleared_t": 63.9,
+   "won": true
+  },
+  {
+   "base_dmg": 950.0,
+   "boss_dead_t": 274.4,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 224.2,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_brute@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_brute@w4",
+    "e_spitter@other",
+    "enemy_base=1.00"
+   ],
+   "hit_src": {
+    "other": 412.657918470418,
+    "wave3": 116.736246392496,
+    "wave4": 420.605835137085
+   },
+   "kind": "competent",
+   "pbase": 0.47,
+   "round": "r05",
+   "seed": 3,
+   "stars": 2,
+   "t": 364.0,
+   "wave1_cleared_t": 62.2,
+   "won": true
+  },
+  {
+   "base_dmg": 1094.0,
+   "boss_dead_t": 277.6,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 227.0,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_brute@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_brute@w4",
+    "e_spitter@other",
+    "e_swarm@other",
+    "enemy_base=1.00"
+   ],
+   "hit_src": {
+    "other": 483.084595959596,
+    "wave3": 136.268308080808,
+    "wave4": 474.397095959596
+   },
+   "kind": "competent",
+   "pbase": 0.39,
+   "round": "r05",
+   "seed": 4,
+   "stars": 1,
+   "t": 372.3,
+   "wave1_cleared_t": 62.1,
+   "won": true
+  },
+  {
+   "base_dmg": 1051.0,
+   "boss_dead_t": 279.5,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 218.3,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "enemy_base=1.00"
+   ],
+   "hit_src": {
+    "other": 418.231646825397,
+    "wave3": 135.567956349206,
+    "wave4": 497.450396825397
+   },
+   "kind": "competent",
+   "pbase": 0.42,
+   "round": "r05",
+   "seed": 5,
+   "stars": 2,
+   "t": 367.5,
+   "wave1_cleared_t": 65.3,
+   "won": true
+  },
+  {
+   "base_dmg": 845.0,
+   "boss_dead_t": 272.6,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 216.7,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "enemy_base=1.00"
+   ],
+   "hit_src": {
+    "other": 328.856646825397,
+    "wave3": 160.255456349206,
+    "wave4": 355.887896825397
+   },
+   "kind": "competent",
+   "pbase": 0.53,
+   "round": "r05",
+   "seed": 6,
+   "stars": 2,
+   "t": 358.4,
+   "wave1_cleared_t": 64.9,
+   "won": true
+  },
+  {
+   "base_dmg": 755.0,
+   "boss_dead_t": 269.7,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 213.8,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "enemy_base=1.00"
+   ],
+   "hit_src": {
+    "other": 337.284090909091,
+    "wave3": 98.2651515151515,
+    "wave4": 319.450757575757
+   },
+   "kind": "competent",
+   "pbase": 0.58,
+   "round": "r05",
+   "seed": 7,
+   "stars": 2,
+   "t": 362.6,
+   "wave1_cleared_t": 64.4,
+   "won": true
+  },
+  {
+   "base_dmg": 1133.0,
+   "boss_dead_t": 270.3,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 214.8,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "enemy_base=1.00"
+   ],
+   "hit_src": {
+    "other": 546.721726190476,
+    "wave3": 133.014880952381,
+    "wave4": 452.763392857143
+   },
+   "kind": "competent",
+   "pbase": 0.37,
+   "round": "r05",
+   "seed": 8,
+   "stars": 1,
+   "t": 361.1,
+   "wave1_cleared_t": 66.4,
+   "won": true
+  },
+  {
+   "base_dmg": 1800.0,
+   "boss_dead_t": -1.0,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 217.5,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "enemy_base=1.00"
+   ],
+   "hit_src": {
+    "other": 766.821969696968,
+    "wave3": 210.040088383838,
+    "wave4": 823.13794191919
+   },
+   "kind": "competent",
+   "pbase": 0.0,
+   "round": "r05",
+   "seed": 9,
+   "stars": 0,
+   "t": 268.0,
+   "wave1_cleared_t": 63.6,
+   "won": false
+  },
+  {
+   "base_dmg": 414.0,
+   "boss_dead_t": 252.7,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 191.3,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "enemy_base=1.00"
+   ],
+   "hit_src": {
+    "other": 146.3125,
+    "wave3": 136.28125,
+    "wave4": 131.15625
+   },
+   "kind": "competent",
+   "pbase": 0.77,
+   "round": "r05",
+   "seed": 10,
+   "stars": 2,
+   "t": 342.5,
+   "wave1_cleared_t": 90.4,
+   "won": true
+  },
+  {
+   "base_dmg": 1800.0,
+   "boss_dead_t": -1.0,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 195.5,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_brute@other",
+    "e_spitter@other",
+    "e_spitter@other",
+    "enemy_base=0.34"
+   ],
+   "hit_src": {
+    "other": 790.741071428571,
+    "wave3": 372.090773809524,
+    "wave4": 637.168154761905
+   },
+   "kind": "casual",
+   "pbase": 0.0,
+   "round": "r05",
+   "seed": 1,
+   "stars": 0,
+   "t": 283.0,
+   "wave1_cleared_t": 44.6,
+   "won": false
+  },
+  {
+   "base_dmg": 1800.0,
+   "boss_dead_t": -1.0,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 202.4,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_brute@other",
+    "e_spitter@other",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_swarm@other",
+    "enemy_base=0.37"
+   ],
+   "hit_src": {
+    "other": 816.068452380952,
+    "wave3": 353.144345238095,
+    "wave4": 630.787202380952
+   },
+   "kind": "casual",
+   "pbase": 0.0,
+   "round": "r05",
+   "seed": 2,
+   "stars": 0,
+   "t": 283.4,
+   "wave1_cleared_t": 55.7,
+   "won": false
+  },
+  {
+   "base_dmg": 1800.0,
+   "boss_dead_t": -1.0,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 224.3,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_brute@w4",
+    "e_brute@w4",
+    "e_spitter@other",
+    "enemy_base=1.00"
+   ],
+   "hit_src": {
+    "other": 914.583333333333,
+    "wave3": 416.770833333333,
+    "wave4": 468.645833333333
+   },
+   "kind": "casual",
+   "pbase": 0.0,
+   "round": "r05",
+   "seed": 3,
+   "stars": 0,
+   "t": 300.7,
+   "wave1_cleared_t": 59.3,
+   "won": false
+  },
+  {
+   "base_dmg": 861.0,
+   "boss_dead_t": 292.6,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 222.2,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_brute@w4",
+    "e_brute@w4",
+    "e_spitter@other",
+    "enemy_base=0.52"
+   ],
+   "hit_src": {
+    "other": 395.375,
+    "wave3": 223.208333333333,
+    "wave4": 242.666666666667
+   },
+   "kind": "casual",
+   "pbase": 0.52,
+   "round": "r05",
+   "seed": 4,
+   "stars": 2,
+   "t": 406.4,
+   "wave1_cleared_t": 52.6,
+   "won": true
+  },
+  {
+   "base_dmg": 1270.0,
+   "boss_dead_t": 297.1,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 214.1,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "enemy_base=0.46"
+   ],
+   "hit_src": {
+    "other": 558.197916666667,
+    "wave3": 293.190972222222,
+    "wave4": 418.611111111111
+   },
+   "kind": "casual",
+   "pbase": 0.29,
+   "round": "r05",
+   "seed": 5,
+   "stars": 1,
+   "t": 438.7,
+   "wave1_cleared_t": 54.8,
+   "won": true
+  },
+  {
+   "base_dmg": 1448.0,
+   "boss_dead_t": 298.0,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 223.2,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_brute@w4",
+    "e_brute@w4",
+    "e_spitter@other",
+    "enemy_base=0.83"
+   ],
+   "hit_src": {
+    "other": 643.958333333334,
+    "wave3": 362.041666666667,
+    "wave4": 441.5
+   },
+   "kind": "casual",
+   "pbase": 0.2,
+   "round": "r05",
+   "seed": 6,
+   "stars": 1,
+   "t": 398.6,
+   "wave1_cleared_t": 57.1,
+   "won": true
+  },
+  {
+   "base_dmg": 819.0,
+   "boss_dead_t": 298.3,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 233.4,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_brute@w4",
+    "e_spitter@other",
+    "e_grunt@other",
+    "e_swarm@other",
+    "enemy_base=0.69"
+   ],
+   "hit_src": {
+    "other": 454.770833333334,
+    "wave3": 212.020833333333,
+    "wave4": 151.958333333333
+   },
+   "kind": "casual",
+   "pbase": 0.55,
+   "round": "r05",
+   "seed": 7,
+   "stars": 2,
+   "t": 435.0,
+   "wave1_cleared_t": 56.6,
+   "won": true
+  },
+  {
+   "base_dmg": 1345.0,
+   "boss_dead_t": 295.3,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 222.9,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_brute@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_brute@w4",
+    "e_spitter@other",
+    "enemy_base=0.63"
+   ],
+   "hit_src": {
+    "other": 694.916666666667,
+    "wave3": 276.9375,
+    "wave4": 373.145833333333
+   },
+   "kind": "casual",
+   "pbase": 0.25,
+   "round": "r05",
+   "seed": 8,
+   "stars": 1,
+   "t": 411.0,
+   "wave1_cleared_t": 52.8,
+   "won": true
+  },
+  {
+   "base_dmg": 1276.0,
+   "boss_dead_t": 295.5,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 209.7,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_grunt@other",
+    "enemy_base=0.34"
+   ],
+   "hit_src": {
+    "other": 604.8125,
+    "wave3": 329.979166666667,
+    "wave4": 341.458333333333
+   },
+   "kind": "casual",
+   "pbase": 0.29,
+   "round": "r05",
+   "seed": 9,
+   "stars": 1,
+   "t": 358.2,
+   "wave1_cleared_t": 53.4,
+   "won": true
+  },
+  {
+   "base_dmg": 908.0,
+   "boss_dead_t": 291.4,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 227.3,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "enemy_base=0.82"
+   ],
+   "hit_src": {
+    "other": 475.020833333334,
+    "wave3": 301.270833333333,
+    "wave4": 131.208333333333
+   },
+   "kind": "casual",
+   "pbase": 0.5,
+   "round": "r05",
+   "seed": 10,
+   "stars": 2,
+   "t": 398.6,
+   "wave1_cleared_t": 54.6,
+   "won": true
+  },
+  {
+   "base_dmg": 401.0,
+   "boss_dead_t": 232.6,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": 217.8,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "enemy_base=1.00"
+   ],
+   "hit_src": {
+    "other": 138.333333333333,
+    "wave3": 44.5833333333333,
+    "wave4": 218.333333333333
+   },
+   "kind": "competent",
+   "pbase": 0.8,
+   "round": "r05",
+   "seed": 1,
+   "stars": 2,
+   "t": 317.3,
+   "wave1_cleared_t": 63.0,
+   "won": true
+  },
+  {
+   "base_dmg": 655.0,
+   "boss_dead_t": 250.2,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": 232.1,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_brute@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_brute@w4",
+    "e_spitter@other",
+    "e_grunt@other",
+    "e_swarm@other",
+    "enemy_base=0.79"
+   ],
+   "hit_src": {
+    "other": 286.512987012987,
+    "wave3": 61.474025974026,
+    "wave4": 307.012987012987
+   },
+   "kind": "competent",
+   "pbase": 0.67,
+   "round": "r05",
+   "seed": 2,
+   "stars": 2,
+   "t": 330.7,
+   "wave1_cleared_t": 58.5,
+   "won": true
+  },
+  {
+   "base_dmg": 126.0,
+   "boss_dead_t": 254.5,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": 234.1,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_brute@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_brute@w4",
+    "e_spitter@other",
+    "e_grunt@other",
+    "enemy_base=1.00"
+   ],
+   "hit_src": {
+    "other": 47.3888888888889,
+    "wave3": 13.3055555555556,
+    "wave4": 65.5555555555556
+   },
+   "kind": "competent",
+   "pbase": 0.94,
+   "round": "r05",
+   "seed": 3,
+   "stars": 2,
+   "t": 332.9,
+   "wave1_cleared_t": 60.0,
+   "won": true
+  },
+  {
+   "base_dmg": 285.0,
+   "boss_dead_t": 249.6,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": 237.7,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_brute@w4",
+    "e_spitter@other",
+    "e_grunt@other",
+    "enemy_base=1.00"
+   ],
+   "hit_src": {
+    "other": 120.677083333333,
+    "wave3": 32.8645833333333,
+    "wave4": 131.458333333333
+   },
+   "kind": "competent",
+   "pbase": 0.86,
+   "round": "r05",
+   "seed": 4,
+   "stars": 2,
+   "t": 333.0,
+   "wave1_cleared_t": 60.3,
+   "won": true
+  },
+  {
+   "base_dmg": 59.0,
+   "boss_dead_t": 228.2,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": 227.5,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@other",
+    "e_swarm@other",
+    "enemy_base=1.00"
+   ],
+   "hit_src": {
+    "other": 22.8125,
+    "wave3": 0.78125,
+    "wave4": 35.15625
+   },
+   "kind": "competent",
+   "pbase": 0.97,
+   "round": "r05",
+   "seed": 5,
+   "stars": 2,
+   "t": 320.7,
+   "wave1_cleared_t": 61.6,
+   "won": true
+  },
+  {
+   "base_dmg": 0.0,
+   "boss_dead_t": 223.7,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": -1.0,
+   "first_hit_who": [],
+   "hit_src": {},
+   "kind": "competent",
+   "pbase": 1.0,
+   "round": "r05",
+   "seed": 6,
+   "stars": 2,
+   "t": 326.6,
+   "wave1_cleared_t": 60.4,
+   "won": true
+  },
+  {
+   "base_dmg": 0.0,
+   "boss_dead_t": 214.8,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": -1.0,
+   "first_hit_who": [],
+   "hit_src": {},
+   "kind": "competent",
+   "pbase": 1.0,
+   "round": "r05",
+   "seed": 7,
+   "stars": 2,
+   "t": 311.7,
+   "wave1_cleared_t": 62.0,
+   "won": true
+  },
+  {
+   "base_dmg": 356.0,
+   "boss_dead_t": 232.4,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": 224.5,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_brute@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_brute@w4",
+    "e_spitter@other",
+    "enemy_base=1.00"
+   ],
+   "hit_src": {
+    "other": 124.630952380952,
+    "wave3": 40.2103174603175,
+    "wave4": 191.40873015873
+   },
+   "kind": "competent",
+   "pbase": 0.82,
+   "round": "r05",
+   "seed": 8,
+   "stars": 2,
+   "t": 313.9,
+   "wave1_cleared_t": 63.2,
+   "won": true
+  },
+  {
+   "base_dmg": 669.0,
+   "boss_dead_t": 240.3,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": 230.0,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@other",
+    "enemy_base=1.00"
+   ],
+   "hit_src": {
+    "other": 270.247159090909,
+    "wave3": 61.0265151515152,
+    "wave4": 337.476325757576
+   },
+   "kind": "competent",
+   "pbase": 0.66,
+   "round": "r05",
+   "seed": 9,
+   "stars": 2,
+   "t": 320.6,
+   "wave1_cleared_t": 58.9,
+   "won": true
+  },
+  {
+   "base_dmg": 705.0,
+   "boss_dead_t": 247.8,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": 234.1,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_brute@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_brute@w4",
+    "e_spitter@other",
+    "enemy_base=0.49"
+   ],
+   "hit_src": {
+    "other": 260.208333333333,
+    "wave3": 74.4965277777778,
+    "wave4": 370.295138888889
+   },
+   "kind": "competent",
+   "pbase": 0.64,
+   "round": "r05",
+   "seed": 10,
+   "stars": 2,
+   "t": 324.0,
+   "wave1_cleared_t": 65.6,
+   "won": true
+  },
+  {
+   "base_dmg": 243.0,
+   "boss_dead_t": 292.6,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": 237.5,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_brute@w4",
+    "e_brute@w4",
+    "e_grunt@other",
+    "enemy_base=0.36"
+   ],
+   "hit_src": {
+    "other": 134.166666666667,
+    "wave3": 74.5833333333333,
+    "wave4": 33.75
+   },
+   "kind": "casual",
+   "pbase": 0.88,
+   "round": "r05",
+   "seed": 1,
+   "stars": 2,
+   "t": 351.7,
+   "wave1_cleared_t": 49.4,
+   "won": true
+  },
+  {
+   "base_dmg": 586.0,
+   "boss_dead_t": 290.9,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": 227.5,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_brute@w4",
+    "e_brute@w4",
+    "e_spitter@other",
+    "e_swarm@other",
+    "enemy_base=0.34"
+   ],
+   "hit_src": {
+    "other": 288.4375,
+    "wave3": 145.3125,
+    "wave4": 152.5
+   },
+   "kind": "casual",
+   "pbase": 0.7,
+   "round": "r05",
+   "seed": 2,
+   "stars": 2,
+   "t": 349.0,
+   "wave1_cleared_t": 51.3,
+   "won": true
+  },
+  {
+   "base_dmg": 358.0,
+   "boss_dead_t": 286.9,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": 241.2,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_brute@w4",
+    "e_spitter@other",
+    "enemy_base=0.38"
+   ],
+   "hit_src": {
+    "other": 209.270833333333,
+    "wave3": 89.2708333333333,
+    "wave4": 58.9583333333333
+   },
+   "kind": "casual",
+   "pbase": 0.82,
+   "round": "r05",
+   "seed": 3,
+   "stars": 2,
+   "t": 343.6,
+   "wave1_cleared_t": 53.9,
+   "won": true
+  },
+  {
+   "base_dmg": 179.0,
+   "boss_dead_t": 280.2,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": 256.4,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "enemy_base=0.35"
+   ],
+   "hit_src": {
+    "other": 133.645833333333,
+    "wave3": 45.1041666666667
+   },
+   "kind": "casual",
+   "pbase": 0.91,
+   "round": "r05",
+   "seed": 4,
+   "stars": 2,
+   "t": 343.1,
+   "wave1_cleared_t": 51.2,
+   "won": true
+  },
+  {
+   "base_dmg": 881.0,
+   "boss_dead_t": 290.6,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": 230.9,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_brute@w4",
+    "e_spitter@w4",
+    "e_brute@w4",
+    "e_spitter@other",
+    "enemy_base=0.39"
+   ],
+   "hit_src": {
+    "other": 339.3125,
+    "wave3": 169.520833333333,
+    "wave4": 372.416666666667
+   },
+   "kind": "casual",
+   "pbase": 0.55,
+   "round": "r05",
+   "seed": 5,
+   "stars": 2,
+   "t": 350.1,
+   "wave1_cleared_t": 50.9,
+   "won": true
+  },
+  {
+   "base_dmg": 825.0,
+   "boss_dead_t": 292.6,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": 226.2,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_brute@w4",
+    "e_brute@w4",
+    "e_spitter@other",
+    "enemy_base=0.34"
+   ],
+   "hit_src": {
+    "other": 402.458333333333,
+    "wave3": 235.791666666667,
+    "wave4": 186.75
+   },
+   "kind": "casual",
+   "pbase": 0.58,
+   "round": "r05",
+   "seed": 6,
+   "stars": 2,
+   "t": 353.5,
+   "wave1_cleared_t": 55.3,
+   "won": true
+  },
+  {
+   "base_dmg": 1190.0,
+   "boss_dead_t": 293.6,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": 229.6,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_spitter@other",
+    "e_spitter@other",
+    "e_spitter@w4",
+    "e_brute@w4",
+    "e_spitter@w4",
+    "e_spitter@w4",
+    "e_brute@w4",
+    "e_spitter@other",
+    "enemy_base=0.31"
+   ],
+   "hit_src": {
+    "other": 490.319128787879,
+    "wave3": 156.934659090909,
+    "wave4": 542.746212121212
+   },
+   "kind": "casual",
+   "pbase": 0.4,
+   "round": "r05",
+   "seed": 7,
+   "stars": 1,
+   "t": 351.2,
+   "wave1_cleared_t": 49.3,
+   "won": true
+  },
+  {
+   "base_dmg": 373.0,
+   "boss_dead_t": 279.5,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": 238.7,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_brute@w4",
+    "e_grunt@other",
+    "enemy_base=0.30"
+   ],
+   "hit_src": {
+    "other": 81.6666666666667,
+    "wave3": 160.625,
+    "wave4": 130.208333333333
+   },
+   "kind": "casual",
+   "pbase": 0.81,
+   "round": "r05",
+   "seed": 8,
+   "stars": 2,
+   "t": 338.6,
+   "wave1_cleared_t": 49.8,
+   "won": true
+  },
+  {
+   "base_dmg": 904.0,
+   "boss_dead_t": 294.7,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": 226.4,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_brute@w4",
+    "e_brute@w4",
+    "e_spitter@other",
+    "enemy_base=0.35"
+   ],
+   "hit_src": {
+    "other": 475.604166666667,
+    "wave3": 239.125,
+    "wave4": 189.020833333333
+   },
+   "kind": "casual",
+   "pbase": 0.54,
+   "round": "r05",
+   "seed": 9,
+   "stars": 2,
+   "t": 358.4,
+   "wave1_cleared_t": 45.0,
+   "won": true
+  },
+  {
+   "base_dmg": 310.0,
+   "boss_dead_t": 275.1,
+   "boss_spawn_t": 95.0,
+   "budget": "low",
+   "first_base_hit_t": 234.6,
+   "first_hit_who": [
+    "boss_warlord@w3",
+    "e_brute@w4",
+    "e_brute@w4",
+    "e_spitter@other",
+    "enemy_base=0.32"
+   ],
+   "hit_src": {
+    "other": 120.9375,
+    "wave3": 85.5208333333333,
+    "wave4": 103.541666666667
+   },
+   "kind": "casual",
+   "pbase": 0.84,
+   "round": "r05",
+   "seed": 10,
+   "stars": 2,
+   "t": 333.1,
+   "wave1_cleared_t": 51.2,
+   "won": true
+  },
+  {
+   "base_dmg": 1800.0,
+   "boss_dead_t": -1.0,
+   "boss_spawn_t": 95.0,
+   "budget": "none",
+   "first_base_hit_t": 89.9,
+   "first_hit_who": [
+    "e_spitter@w1",
+    "e_spitter@w1",
+    "e_grunt@other",
+    "e_grunt@other",
+    "e_swarm@w2",
+    "e_swarm@other",
+    "enemy_base=1.00"
+   ],
+   "hit_src": {
+    "other": 1013.125,
+    "wave1": 150.416666666667,
+    "wave2": 131.875,
+    "wave3": 504.583333333333
+   },
+   "kind": "idle",
+   "pbase": 0.0,
+   "round": "r05",
+   "seed": 5,
+   "stars": 0,
+   "t": 162.2,
+   "wave1_cleared_t": 107.1,
+   "won": false
+  }
+ ],
+ "seeds": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10
+ ],
+ "warnings": []
+}

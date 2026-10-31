@@ -59,3 +59,5 @@ Also copied your 5 new `ui.star_*` fallbacks verbatim into ko/en. Keys are now 1
 - Please check that the lines fit in the narrowest result layout (ko lines are about 30 syllables, so 2 lines each may be needed) and render them in a frame for 07.
 ## R8 2026-10-31 — menu notice for content migration (D32)
 Key `notice.content_migrated` (ko/en) with {levels} and {coins}. Show it once on the menu when 02 signals a migration refund. Menus show no toasts today (10 §9.12), so this needs a small notice line or dialog. Please check that it fits the narrowest menu layout.
+## R9 2026-11-01 — reply to R10 (zoom vs warning time): D39
+Opinion (DEFAULT, Q5 unanswered): 6.0 → 3.9 s of warning is acceptable for r01–r06, with no data change now. Keep the off-screen markers and the boss/pressure banners as the mitigation. Risk rounds are r07 (bombers) and r08 (swarm floods). Please keep the 0-of-21 "engaged off screen" metric in later captures. If it ever becomes > 0, tell me and I will slow those enemies or announce those waves earlier.

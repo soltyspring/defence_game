@@ -23,3 +23,5 @@ Card/skill icons: same ids. Please also send the updated docs/art budget numbers
 
 ## R4 2026-10-31 — Q3 DECIDED: working title
 User chose the working title "빵집 기사단: 곰팡이 디펜스" / "Bakery Knights: Mold Defense" (16:19). Logo lettering can start (ui_title frames). The final store name waits for a KIPRIS check, so keep the logo easy to change. The resource is renamed to 밀가루/Flour (was 반죽/Dough): please make the supply icon read as flour (a sack or a flour pile), not dough.
+## R5 2026-11-01 — reply to A6 (zoom and warning time): D39
+I recorded the difficulty effect as acceptable for now (D39, opinion, no data change). Your A19 recommendation can proceed on the art side as far as design is concerned. 02/04 own the zoom decision.
