@@ -1,5 +1,5 @@
 # 04-client handoff — FINAL CHECKPOINT (user-requested shutdown)
-Updated: 2026-10-31 16:45 +09:00
+Updated: 2026-10-31 17:05 +09:00
 Session: sess_a24d01e7-e535-413c-9ff6-d5258090820b (Kiro CLI, claude-opus-5.5, trust-all; same window throughout, resumed after two account changes).
 State at checkpoint: work stopped at a safe point. The owned working tree is CLEAN (all 04 work committed and pushed). No 04-started Godot or emulator process is running. Nothing was left unverified or uncommitted.
 
@@ -45,8 +45,14 @@ State at checkpoint: work stopped at a safe point. The owned working tree is CLE
 - Waiting: 02 R13 (wave_cleared), R14 (buy_upgrade); 01 R5/R6 texts; 07 re-verification (16:05, 16:25).
 ## 16:45 milestone: flake root cause, working title (Q3), Android label proposal
 - Flake: reproduced the 14 FAILs exactly by running without a completed import. Also found a parallel-run race on shared user://. Fixed in 3aed626 (per-process paths, explicit ENV_NOT_IMPORTED check, the gate verifies imports with 3 retries). 5 sequential + 5 parallel UI runs and 3 parallel integration runs are now clean (tools/build/flake_probe.ps1, logs build/qa/flake/).
-- Title: src/ui/title_block.gd (7461636, 2177a45). The 03 logo is used if present, else text in 1 line or 2 lines split after ":". Stale "레인 디펜스" is replaced by the working-title fallback until 01 updates ui.title (R7). Captured ko/en 1×/2× on DISPLAY2 (build/qa/title). Q2 = 보류 (no monetization UI). Q3 working title only, final name after a human KIPRIS check.
+- Title: src/ui/title_block.gd (7461636, 2177a45). The 03 logo (committed 19245a5) is used, else text in 1 line or 2 lines split after ":". English "Bakery Knights: Mold Defense" is the working English title (Q3 counterpart, same as 06 store copy). Stale "레인 디펜스" is replaced by the working-title fallback until 01 updates ui.title (R7). Captured ko/en 1×/2× on DISPLAY2 (build/qa/title). Q2 = 보류 (no monetization UI). Q3 working title only, final name after a human KIPRIS check.
 - Android label: proposal sent to 01 (R7), not decided (A: "빵집 기사단"/"Bakery Knights").
+## 17:05 milestone (08 H14/H15/H16, 07 QA-B013, logo check)
+- 1d1e4e3: change-only redraw. Redraws per snapshot: identical 12 → 0; changing 12 → 1.55 (tests/ui/redraw_probe.gd, before = c15e43a). Exact-string prewarm (banner Bold 24 etc.); binary-search ellipsis; enemy/boss bar stripes for colour-blind players.
+- 5eab876: plate under the HP digits. **Its subject's cause ("8 read as 3") was my misreading.** The data says 1300 (c15e43a); corrected in a code comment (e4c48b9) and in the 04→07 note.
+- Gate hardening: a fixed %TEMP%\ui04_gate dir was half-deleted while another process held a file, so tests were "File not found" (17:01; nothing was published). The gate now uses a unique dir per run and checks the snapshot is complete (environment failure = exit 2, distinct from test failure).
+- Logo (19245a5) verified at integer scale on DISPLAY2 ko/en 1×/2×; CVD sims via 07's cvd_sim.gd (build/qa/logo_cvd).
+- Waiting: 02 R13/R14; 01 R5–R7; 07/08 re-verification.
 ## Unfinished / open (not done, do not claim)
 1. Theme-A labels: waiting for 01 to commit data/text. Then: run test_ui (typography gate) + worst-layout ko/en visible captures.
 2. 2.5× (non-integer) pixel text irregular (57–68% odd runs): waiting for 02 `scale_mode="integer"` (04 R9).

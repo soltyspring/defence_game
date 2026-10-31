@@ -1,4 +1,4 @@
 # 04-client status
-Updated: 2026-10-31 16:45 +09:00
-Status: ACTIVE. Gate flake explained and fixed (missing import + shared user://). Working title shown on the menu (logo or text fallback). Android label proposal sent to 01 (not decided).
-Waiting: 02 R13 wave_cleared, R14 buy_upgrade; 01 R5–R7; 07 re-verification.
+Updated: 2026-10-31 17:05 +09:00
+Status: ACTIVE. HUD redraws only on change (12 → 0 per identical snapshot), exact-string font prewarm, striped enemy HP bars (CVD), logo verified. Corrected the false "8→3" cause noted in 5eab876.
+Waiting: 02 R13 wave_cleared, R14 buy_upgrade; 01 R5–R7; 07/08 re-verification.
