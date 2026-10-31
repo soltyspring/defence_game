@@ -15,7 +15,8 @@
 # Output: build/perf/phonefill_<sha>_<stamp>/ (git-ignored): run_*.json/.log, ui_*/, ui_diff.json, summary.json, summary.md.
 # Exit 0 ran / 1 error / 3 isolation not proven / 4 not inside heavy_run.
 param([Parameter(Mandatory)][string]$Rev, [string]$PreRev = '', [string]$Draft = 'D1FULL', [string[]]$Windows = @('2400x1080', '2340x1080'),
-      [double]$Zoom = 1.3333333, [string]$Round = 'r08', [double]$Warmup = 35, [double]$Phase = 3, [int]$Cycles = 5)
+      [double]$Zoom = 1.3333333, [string]$Round = 'r08', [double]$Warmup = 35, [double]$Phase = 3, [int]$Cycles = 5,
+      [switch]$SkipDraft)   # -SkipDraft: base (+ pre) only, e.g. 04's HUD re-layout check; no D1 build, no zoom runs
 $ErrorActionPreference = 'Stop'
 $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 Set-Location $Root
@@ -31,7 +32,8 @@ New-Item -ItemType Directory -Force $Out | Out-Null
 # snapshots on the LOCAL disk: Z: is a network share, and a --import there stalled for 15 min on 2026-11-01 02:41 (idle Godot after
 # writing its .ctex files); %TEMP% is local and is what 04/06 use for HEAD copies
 $snapRoot = Join-Path $env:TEMP "perf08_phonefill_$sha"
-$dirs = [ordered]@{ base = (Join-Path $snapRoot 'base'); draft = (Join-Path $snapRoot "draft_$Draft") }
+$dirs = [ordered]@{ base = (Join-Path $snapRoot 'base') }
+if (-not $SkipDraft) { $dirs.draft = Join-Path $snapRoot "draft_$Draft" }
 if ($preSha) { $dirs.pre = Join-Path $snapRoot "pre_$preSha" }
 $revOf = @{ base = $sha; draft = $sha; pre = $preSha }
 $pa = New-PerfAppData $Root 'phone_fill'
@@ -61,6 +63,7 @@ foreach ($k in $dirs.Keys) {
 }
 Log "snapshots: base/draft=$sha pre=$preSha"
 $hashBefore = (Get-ChildItem (Join-Path $Root 'assets\atlases') -File | Get-FileHash | ForEach-Object { $_.Hash }) -join ''
+if (-not $SkipDraft) {
 $prevDraft = $env:ART_DRAFT32; $env:ART_DRAFT32 = $Draft
 $ErrorActionPreference = 'Continue'
 try { $bo = & python (Join-Path $dirs.draft 'tools\art\build.py') 2>&1 | Out-String; $bcode = $LASTEXITCODE } finally { $env:ART_DRAFT32 = $prevDraft; $ErrorActionPreference = 'Stop' }
@@ -68,10 +71,11 @@ Set-Content -LiteralPath (Join-Path $Out 'draft_build.log') -Value $bo -Encoding
 $shippedUnchanged = $hashBefore -eq ((Get-ChildItem (Join-Path $Root 'assets\atlases') -File | Get-FileHash | ForEach-Object { $_.Hash }) -join '')
 Log "draft build ART_DRAFT32=$Draft exit=$bcode; working-tree atlases unchanged=$shippedUnchanged"
 if ($bcode -ne 0 -or -not $shippedUnchanged) { throw 'draft build failed or touched the working tree' }
+}
 
 # ---- 2. gate ----
 $gate = [ordered]@{}
-foreach ($k in @('base', 'draft')) {
+foreach ($k in @($dirs.Keys | Where-Object { $_ -in @('base', 'draft') })) {
     $ErrorActionPreference = 'Continue'
     $gl = & python (Join-Path $Root 'tools\perf\asset_budget_check.py') --tree $dirs[$k] --base $sha --out (Join-Path $Out "gate_$k") 2>&1 | Out-String
     $ErrorActionPreference = 'Stop'
@@ -128,7 +132,10 @@ $idx = [array]::IndexOf($screens, $secondary)
 
 # ---- 3. timing matrix ----
 $plan = @()
-foreach ($w in $Windows) { $plan += @{ b = 'base'; w = $w; z = 1.0 }, @{ b = 'draft'; w = $w; z = 1.0 }, @{ b = 'draft'; w = $w; z = $Zoom } }
+foreach ($w in $Windows) {
+    $plan += @{ b = 'base'; w = $w; z = 1.0 }
+    if (-not $SkipDraft) { $plan += @{ b = 'draft'; w = $w; z = 1.0 }, @{ b = 'draft'; w = $w; z = $Zoom } }
+}
 $plan += @{ b = 'base'; w = $Windows[0]; z = 1.0; tag = 'drift' }
 if ($preSha) { $plan += @{ b = 'pre'; w = $Windows[0]; z = 1.0 } }
 $probeRuns = @()

@@ -1,4 +1,29 @@
 # 08-performance handoff
+## M18 — one-shot phone kit and all-in static budget (2026-11-01 07:1x – 07:5x KST; no Godot, no emulator)
+- **Phone kit:** new `tools/perf/device_session.ps1`, `device_scenes.json` (r01, r08 `--perf-caps`, r10, each with zoom off and
+  `--world-zoom-plus-one`; 18-min soak) and `device_criteria.json` (pass lines with sources; 4 marked ASSUMPTION). The script
+  stops with exit 2 for 0 or 2+ devices, an unauthorised device, an emulator, the release package id or a missing APK. Real
+  sessions need the heavy-run lock. Per scene it collects SurfaceFlinger presents (Godot frames), gfxinfo framestats, meminfo,
+  battery (temperature, level, current, power source), thermal state, CPU and the game's `[perf08]` lines. It also has a
+  soak mode with 2-min windows and battery drain judged only on battery power. Runbook and criteria: docs/performance/DEVICE_SESSION.md.
+- **Self-test without a phone:** `tests/performance/test_device_session.ps1` with the fake adb in
+  `tests/performance/fixtures/device_fake/fake_adb.ps1` (fixed hand-made samples): **36/36 PASS**. The real adb with no phone
+  gives `NOT_ONE_DEVICE: 0`, exit 2. **No device result exists.**
+- **All-in static budget** (`tools/perf/allin_static_budget.ps1`, a67b9f1 + 03 D1FULL build in a copy + 09-art-world's working-tree
+  pages; 06's HUD frames are already in a67b9f1): worst battle 10.75 / all pages 11.00 / menu 0.50 MiB, all PASS, with the
+  menu exactly at its cap. APK atlas +15.5 KiB (D1 ctex +13.8 KiB). With mipmaps it would go over all three caps; VRAM
+  compression would give ×1/4 but is rejected for pixel art. 06's four proposed frames fit `ui_main` by estimate (2032 px
+  needed of 42 074 px free). docs/performance/ALLIN_BUDGET.md.
+- Found while checking: the −8 KiB atlas JSON difference was this machine's `git archive` adding CRLF (core.autocrlf); the git
+  blob is LF. The script now counts LF bytes.
+- `phone_fill_matrix.ps1` gained `-SkipDraft` (base + pre only) for 04's re-layout check.
+- **Requests:** 02 P12 (exact P10 contract: `.perf` package id, debuggable, `user://perf_args.txt` + ack line, `--perf-caps`,
+  the `[perf08]` per-second line fields, output path; mipmap guard; assumptions to confirm), 03 A14 (all-in PASS, mipmap guard),
+  06-art-ui U8-1 (menu at cap, `ui_main` must stay 256×256, the 4 frames fit), 09-art-world W8-1 (pages PASS, no GPU change;
+  mark the opaque sky so 02 can drop the redundant clear rect), 04 R9 (re-layout check table: 9 rows with pass lines,
+  today's values and the one-job command).
+- Not done / blocked: any phone number (needs 02 P10 + a phone); P11 clear-rect change (02); real vendor dumpsys formats.
+
 ## M17 — phone-resolution GPU fill (shipped / D1FULL / D1FULL + zoom 4/3) and R8 at scale 3 (2026-11-01 02:02 – 07:2x KST)
 - **Resume after the 03:55 blue screen (0x3B):** my job `08-phone-fill` had already finished (heavy_run.log START 03:34:29, END
   03:53:21 exit 0; HEAVY_JOB_DONE exit=0), so its results are kept and nothing was re-queued. My 5 open files were intact: no NUL,

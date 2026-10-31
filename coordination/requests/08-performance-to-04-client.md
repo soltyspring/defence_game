@@ -138,3 +138,31 @@ borderless **2400×1080 window at canvas scale 3** (view 800×360), desktop prox
   arrow glyph is now drawn before the vector enemy stand-in, so 40 px where they overlap swapped colour. The "%dm" text is
   unchanged, and the stand-in only appears without the ui_main icon. No number regression.
 - Requests from this run go to 02 (redundant background clear rect, one full screen of fill) and 03 (trimmed D1 frames).
+
+## R9 — 2026-11-01 07:4x: what 08 will check when your UI re-layout lands (numbers and commands written down in advance)
+Send me the SHA of the re-layout commit and the commit before it. I run **one** detached job, base + pre only (no art variants):
+```
+build\heavy\08-hud-relayout-job.ps1:
+  & .\tools\perf\phone_fill_matrix.ps1 -Rev <after> -PreRev <before> -SkipDraft -Windows @('1600x720')
+& .\coordination\heavy_run_detached.ps1 -Label '08-hud-relayout' -ScriptFile build\heavy\08-hud-relayout-job.ps1
+```
+1600×720 is canvas scale 2, the case that fails today (129). If the layout changes the top panel or the card row, I add a second job
+later at 2400×1080 (scale 3; 58 today), one window per job.
+
+| # | What | Pass line | Today (before your re-layout) | Basis |
+|---|---|---|---|---|
+| 1 | whole-frame draw calls, r08 caps, scale 2 | ≤ 100 | 129 (your 07:0x, 1280×720) | BUDGETS.md §2 |
+| 2 | whole-frame draw calls, scale 3 | ≤ 100 | 58 (PHONE_FILL.md §4) | same |
+| 3 | `hud_top` draw calls (hiding it alone) | ≤ 10 | 53 at 2×, 7 at 3× | R8 acceptance |
+| 4 | card button draw calls (each) | ≤ 5 | 5 idle, 6 on cooldown at 3× | R8 acceptance |
+| 5 | any other HUD child | not more than before your commit | breakdown_base.json at 3× | 07 UI_LAYOUT_REFERENCE L8 |
+| 6 | HUD pixel share of the screen | ≤ baseline + 0.5 pp in every scene | 10.05 / 10.12 / 15.28 / 16.18 / 18.55 % | 07 U2 / L7 (07's `tools/qa/art_compare.ps1 -Sha`) |
+| 7 | HUD over unit pixels | 0 % | 0 % | 07 U3 |
+| 8 | number readability: mock UI capture before vs after | HUD screen pixel-identical unless the change is intended; numbers stay Galmuri11 12 | identical for R8 (80 px threat-marker stacking only) | `ui_preview.tscn --capture` diff in the job; 07 L9 |
+| 9 | GPU / render CPU / frame p95 on the desktop | report only; not judged | inside the 0.017 ms drift | desktop cannot judge fill (PHONE_FILL.md §3) |
+- Fill: the HUD is 0.26–0.48 Mpx of blended pixels at 2400×1080, against ≈ 7.8 Mpx of background. So for the GPU the HUD's
+  draw-call count matters, not its area; the area is limited by 07's U2 instead.
+- On a phone (once 02's P10 APK exists) `tools/perf/device_session.ps1` judges rows 1–2 from the game's own `dc=` line
+  (criteria `draw_calls_2x` / `draw_calls_3x`).
+- Your `oversampling = 1.0` test is still the fix for row 1. Please include in its commit message whether text pixels are
+  identical at 2×.

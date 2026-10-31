@@ -141,3 +141,15 @@ in-game per drawn frame at 2400×1080.
   rect under it is wasted fill (one full screen per frame). If you mark opaque full-view layers in the manifest (e.g.
   `"opaque": true`), 02 can skip the rect (02 P11 ask A). far is 75 % opaque, mid 92 %, ground 100 %, front 6.5 %.
 - Desktop GPU differences were within noise (PHONE_FILL.md §3). These are pixel counts, not phone timings.
+
+## A14 — 2026-11-01 07:4x: all pending art together stays inside the caps (STATIC; docs/performance/ALLIN_BUDGET.md)
+Copies of a67b9f1, built with your `ART_DRAFT32=D1FULL` in a copy only (working-tree atlases unchanged), with 09-art-world's
+working-tree pages copied in. 06's HUD frames are already in a67b9f1.
+- D1 alone and D1 + 09 world: worst battle **10.75 MiB** (cap 12), all pages **11.00** (cap 14), menu **0.50** (cap 0.5,
+  no room left), page side 1024. Gate PASS. Only `char_player` changes size (1024×512 → 1024×1024, +2.0 MiB).
+- APK: atlas PNG +15.5 KiB (D1 +14.2, 09 +1.3). The ctex for D1 grows by 13.8 KiB in an imported copy. The atlas JSON content is
+  unchanged. This is negligible against the 2 MiB content-growth cap.
+- **Guard:** keep mipmaps off and lossless. With mipmaps the all-in set is 14.33 / 14.67 / 0.67 MiB (over all three caps).
+  `"mipmaps": false` is in your JSON; please keep the `.import` files the same (02 imports).
+- Nothing is over a cap, so nothing is required from you now. If D1 is adopted, re-gate the real commit with
+  `asset_budget_check.py --rev <sha>`.

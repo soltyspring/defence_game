@@ -286,3 +286,32 @@ windows were 2400×1080 and 2340×1080 at integer scale 3. r08 caps, same round 
 - My test-only zoom moves the camera like 04's preview, not like your future flag. When you add the flag, I re-run with it.
 - Still needed for a real answer: P10 (perf APK with `--autoplay --round=r08`) and a low-end phone at 1080 and 720 high. The
   HUD at scale 3 is 58 draw calls (≤ 100 met); at scale 2 it is 129 (04's glyph-page finding).
+
+## P12 — 2026-11-01 07:4x: exact P10 contract so one phone session finishes everything (docs/performance/DEVICE_SESSION.md)
+08 built `tools/perf/device_session.ps1`. It runs only when exactly one phone is attached and was checked with a fake adb only
+(36/36; no phone, no Godot). It needs these 6 things from your perf APK. Everything stays out of release builds behind a
+feature tag (e.g. `perf`):
+1. **Own package id** `com.soltyspring.lanedefence.perf` (label e.g. "빵집 기사단 PERF"). The script refuses the release id, so
+   that a player's save on the test phone is never touched.
+2. **Debuggable**, so that `run-as` can write the args file.
+3. **Args file:** at boot, if `OS.get_user_data_dir() + "/perf_args.txt"` exists (one arg per line), treat the lines as extra user
+   args, then print once: `[perf08] args applied: <args joined by spaces>`. The script writes it via `/data/local/tmp` →
+   `run-as <pkg> cp ... files/perf_args.txt`. If your user dir on Android is not `files/`, tell me the path.
+4. **Scene args:** `--autoplay --round=r01|r08|r10` (exists), `--perf-caps` (hold both armies at caps for the whole round,
+   like 08's desktop stress cheat: round roster refill, bosses excluded, base HP reset) and `--world-zoom-plus-one`
+   (your `game/camera/world_zoom_plus_one`; I expect camera zoom (k+1)/k).
+5. **Once per second**, one log line (Godot `print` → logcat tag `godot`):
+   `[perf08] t=<s> fps=<Engine.get_frames_per_second()> frame_ms=<mean process delta> dc=<RENDER_TOTAL_DRAW_CALLS_IN_FRAME>
+   gpu_ms=<viewport_get_measured_render_time_gpu> rcpu_ms=<render cpu + frame setup> tex_mib=<RENDER_TEXTURE_MEM_USED / 2^20>
+   scale=<root canvas scale> zoom=<world camera zoom> units=<players+enemies>`. This needs
+   `RenderingServer.viewport_set_measure_render_time(root_vp, true)` in perf builds. Key=value pairs separated by spaces; missing
+   keys are fine.
+6. Output path `build/android/defence-perf.apk` (arm64-v8a is enough).
+- Pass lines are fixed before measuring in `tools/perf/device_criteria.json`. The sources are your ENGINE.md §7, BUDGETS.md and
+  BUILD_PLAN.md §5. Four lines have no project source and are marked ASSUMPTION: GPU ms p95 ≤ half a frame, soak temperature
+  rise ≤ 8 °C, last-window fps ≥ 90 %, last-window p95 ≤ 1.15×. Please correct them if ENGINE.md should own other numbers.
+- **Import guard (yours with 03):** keep `mipmaps` off on every atlas `.import`. With mipmaps, even today's pages would be
+  11.67 / 12.00 / 0.67 MiB (worst battle / all / menu), so the menu is over its 0.5 MiB cap. With all pending art (03 D1 + 09
+  world) they would be 14.33 / 14.67 / 0.67, over all three caps (docs/performance/ALLIN_BUDGET.md §3).
+- P11 (redundant clear rect, −2.6 Mpx/frame at 2400×1080) is still open. 09-art-world now owns the biome pages and can mark the
+  opaque sky layer in the data (I asked them).

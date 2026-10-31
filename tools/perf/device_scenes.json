@@ -1,0 +1,14 @@
+{
+  "schema": "defence.perf.device_scenes/1",
+  "note": "Fixed scenes for tools/perf/device_session.ps1. 'args' are written one per line to the perf APK's user://perf_args.txt (02 P10 contract, 08-performance-to-02-engine.md). seconds = measured time after settle_s. Same round seed every time (autoplay uses the data's deterministic seed). zoom_on scenes set 02's project flag game/camera/world_zoom_plus_one through the perf arg --world-zoom-plus-one; the expected camera zoom is (k+1)/k with k = the device's canvas scale (4/3 on 1080-high, 3/2 on 720-high phones). If the game reports another zoom the scene is marked ZOOM_NOT_APPLIED.",
+  "settle_s": 20,
+  "scenes": [
+    {"id": "r01_zoom_off", "args": ["--autoplay", "--round=r01"], "seconds": 90, "zoom": 1.0},
+    {"id": "r01_zoom_on", "args": ["--autoplay", "--round=r01", "--world-zoom-plus-one"], "seconds": 90, "zoom": "plus_one"},
+    {"id": "r08_caps_zoom_off", "args": ["--autoplay", "--round=r08", "--perf-caps"], "seconds": 120, "zoom": 1.0},
+    {"id": "r08_caps_zoom_on", "args": ["--autoplay", "--round=r08", "--perf-caps", "--world-zoom-plus-one"], "seconds": 120, "zoom": "plus_one"},
+    {"id": "r10_zoom_off", "args": ["--autoplay", "--round=r10"], "seconds": 120, "zoom": 1.0},
+    {"id": "r10_zoom_on", "args": ["--autoplay", "--round=r10", "--world-zoom-plus-one"], "seconds": 120, "zoom": "plus_one"}
+  ],
+  "soak": {"scene": "r08_caps_zoom_off", "minutes": 18, "interval_s": 10, "window_s": 120}
+}
