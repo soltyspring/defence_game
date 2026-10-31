@@ -17,7 +17,18 @@ $sha = (git rev-parse --short $Ref).Trim()
 $snap = Join-Path $env:TEMP "svc06_aab_$sha"
 Remove-Item $snap -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory $snap | Out-Null
-git archive --format=zip -o "$snap.zip" $Ref; Expand-Archive "$snap.zip" -DestinationPath $snap -Force; Remove-Item "$snap.zip"
+git -c core.autocrlf=false -c core.eol=lf archive --format=zip -o "$snap.zip" $Ref; Expand-Archive "$snap.zip" -DestinationPath $snap -Force; Remove-Item "$snap.zip"
+# Line-ending gate (10's content_version finding): the build copy must carry the committed LF bytes.
+. (Join-Path $PSScriptRoot 'svc06_content_version.ps1')
+$crlfFiles = @(Get-ChildItem (Join-Path $snap 'data') -Recurse -Filter *.json -File | Where-Object { (Get-SvcEol ([IO.File]::ReadAllBytes($_.FullName))).crlf -gt 0 })
+$dataCount = @(Get-ChildItem (Join-Path $snap 'data') -Recurse -Filter *.json -File).Count
+if ($crlfFiles.Count -gt 0 -or $dataCount -eq 0) {
+  Write-Output ("REFUSED: snapshot data has CRLF in {0} of {1} json files ({2}); build not started" -f $crlfFiles.Count, $dataCount, (($crlfFiles | Select-Object -First 3 | ForEach-Object { $_.Name }) -join ', '))
+  $null = Exit-SvcIsolation
+  Remove-Item $snap -Recurse -Force -ErrorAction SilentlyContinue
+  exit 5
+}
+Write-Output ("eol gate: snapshot data json {0} files, CRLF 0" -f $dataCount)
 $ep = Join-Path $snap 'export_presets.cfg'
 $t = [IO.File]::ReadAllText($ep)
 $t = $t -replace '(?m)^gradle_build/use_gradle_build=.*$', 'gradle_build/use_gradle_build=true'
@@ -93,6 +104,35 @@ if ((Test-Path $aab) -and $Bundletool -ne '' -and $JavaHome -ne '') {
   Expand-Archive $apks -DestinationPath (Join-Path $out 'split') -Force
   "bundletool done; outputs in $out" | Out-File $log -Append
 }
+# Data bytes inside the AAB: line endings per file and content_version vs the committed (LF) data.
+if (Test-Path $aab) {
+  Add-Type -AssemblyName System.IO.Compression.FileSystem
+  $z = [IO.Compression.ZipFile]::OpenRead($aab)
+  $aabData = [ordered]@{}
+  $rows = @()
+  foreach ($e in ($z.Entries | Where-Object { $_.FullName -match '/assets/data/.+\.json$' })) {
+    $rel = $e.FullName.Substring($e.FullName.IndexOf('/assets/data/') + '/assets/data'.Length)
+    $st = $e.Open(); $ms = New-Object IO.MemoryStream; $st.CopyTo($ms); $st.Dispose()
+    $b = $ms.ToArray(); $aabData[$rel] = $b
+    $c = Get-SvcEol $b
+    $rows += ("{0} | {1} | crlf={2} lf={3}" -f $e.FullName, $b.Length, $c.crlf, $c.lf)
+  }
+  $z.Dispose()
+  $blob = Get-SvcBlobDataFiles $Ref
+  $cvAab = Get-SvcContentVersion $aabData
+  $cvBlob = Get-SvcContentVersion $blob
+  $crlfIn = @($rows | Where-Object { $_ -notmatch 'crlf=0 ' }).Count
+  $chk = @("AAB data json files: $($aabData.Count) (committed: $($blob.Count)); files with CRLF: $crlfIn",
+    "content_version from AAB bytes: $cvAab", "content_version from committed blobs ($Ref): $cvBlob", "match: $($cvAab -eq $cvBlob)") + $rows
+  # Godot's own value on the LF build copy (same heavy run; isolated APPDATA; scratch script only).
+  $cvScript = "extends SceneTree`nfunc _initialize() -> void:`n`t_go.call_deferred()`nfunc _go() -> void:`n`tvar c = root.get_node_or_null(`"Content`")`n`tprint(`"SVC06_CV `", c.content_version if c else `"no Content`")`n`tquit(0)`n"
+  [IO.File]::WriteAllText((Join-Path $snap 'svc06_cv.gd'), $cvScript)
+  $cp = Start-Process -FilePath $G -ArgumentList @('--headless', '--path', $snap, '-s', 'res://svc06_cv.gd') -NoNewWindow -PassThru -RedirectStandardOutput (Join-Path $snap 'cv_stdout.log') -RedirectStandardError (Join-Path $snap 'cv_stderr.log')
+  $null = $cp.Handle
+  if (-not $cp.WaitForExit(120000)) { $cp.Kill($true); $chk += 'content_version from Godot: TIMEOUT' }
+  else { $g = (Select-String -Path (Join-Path $snap 'cv_stdout.log') -Pattern '^SVC06_CV (.+)$' | Select-Object -First 1); $cvGodot = if ($g) { $g.Matches[0].Groups[1].Value.Trim() } else { 'not printed' }; $chk += "content_version from Godot on the build copy: $cvGodot (match blobs: $($cvGodot -eq $cvBlob))" }
+  $chk | Out-File (Join-Path $out 'aab_data_check.txt') -Encoding utf8
+}
 $null = Exit-SvcIsolation
 # Stop only the Gradle 8.11.1 Java processes this run started (daemon may outlive the build).
 Get-CimInstance Win32_Process -Filter "Name='java.exe'" -ErrorAction SilentlyContinue |
@@ -100,4 +140,5 @@ Get-CimInstance Win32_Process -Filter "Name='java.exe'" -ErrorAction SilentlyCon
   ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue; "stopped gradle java $($_.ProcessId)" | Out-File $log -Append }
 Write-Output "snapshot: $snap"
 if (Test-Path (Join-Path $out 'universal_badging.txt')) { Write-Output '== universal_badging.txt'; Get-Content (Join-Path $out 'universal_badging.txt') }
+if (Test-Path (Join-Path $out 'aab_data_check.txt')) { Write-Output '== aab_data_check.txt (first 5 lines)'; Get-Content (Join-Path $out 'aab_data_check.txt') | Select-Object -First 5 }
 Get-Content $log | Select-String -Pattern 'exit|TIMEOUT|AAB present|ERROR|error:|FAILURE|What went wrong|Unsupported|major version|Java|JDK|Gradle|NDK|license|BUILD' | Select-Object -First 40 | ForEach-Object { $_.Line.Trim() }

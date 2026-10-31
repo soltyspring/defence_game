@@ -18,10 +18,17 @@ $sha = (git rev-parse --short $Ref).Trim()
 $snap = Join-Path $env:TEMP "svc06_head_$sha"
 Remove-Item $snap -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory $snap | Out-Null
-git archive --format=zip -o "$snap.zip" $Ref
+git -c core.autocrlf=false -c core.eol=lf archive --format=zip -o "$snap.zip" $Ref
 if ($LASTEXITCODE -ne 0) { Write-Output 'git archive failed'; exit 1 }
 Expand-Archive "$snap.zip" -DestinationPath $snap -Force
 Remove-Item "$snap.zip" -Force
+# Line-ending gate: the snapshot must hold the committed LF data bytes (content_version depends on them).
+. (Join-Path $PSScriptRoot 'svc06_content_version.ps1')
+$crlfData = @(Get-ChildItem (Join-Path $snap 'data') -Recurse -Filter *.json -File | Where-Object { (Get-SvcEol ([IO.File]::ReadAllBytes($_.FullName))).crlf -gt 0 })
+if ($crlfData.Count -gt 0) {
+  Write-Output ("REFUSED: snapshot data has CRLF in {0} json files; not running" -f $crlfData.Count)
+  $null = Exit-SvcIsolation; Remove-Item $snap -Recurse -Force -ErrorAction SilentlyContinue; exit 5
+}
 foreach ($d in @('build\qa\apk_head', 'build\android', 'build\release')) {
   $src = Join-Path $Root $d
   if (Test-Path $src) {
