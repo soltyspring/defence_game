@@ -15,3 +15,15 @@ Exported-build playback remains 07's check (Q8-2); not verified by 05.
 - Runtime cost: no new voices and no new players. The pool is still SFX 12 + UI 3; `vol_jitter` is one random number per play.
 - 05 will not add another SFX file without your agreement. If one is needed, 05 will propose a file to remove or merge.
 Exported-build playback remains 07's check; not verified by 05.
+
+## v3.9 note (2026-11-01 ~03:4x): app size of the v3.8 variants; v3.9 adds no files
+- The 5 v3.8 variant WAVs total **44,762 B** of source WAV:
+  - death_enemy_v2 18,566
+  - gold_tick_v2 5,336
+  - shoot_arrow_v2 4,896
+  - shoot_spit_v2 7,982
+  - shoot_spit_v3 7,982
+- Their `.import` text files add 2,572 B to the repository. They are not exported.
+- `validate.py` disk total: 1,568,005 B at 64a95c6 → 1,612,767 B now (+44,762 B).
+- What ships is Godot's imported QOA data. Measured as `resident_sfx_bytes` in the same harness: **199,464 → 208,584 B (+9,120 B)**, from the recordings `rb_r02_s11` (64a95c6 assets) and `rd_r02_s11` (current). The exported APK/AAB was not built or measured by 05.
+- v3.9 (onset-cluster limit, docs/audio/ONSET_PEAK_CHECK.md) adds **0 files and 0 bytes**: it is a runtime rule plus a manifest policy entry. SFX files stay at 48 = your cap.

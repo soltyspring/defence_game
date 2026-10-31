@@ -1,7 +1,21 @@
-RULE (line 1, fixed after 3 violations: af491c2, 53883db, f5f42df batch): a commit SHA is written ONLY in a separate tool call made AFTER the Publish-Task call that printed `PUSHED <sha>` has returned; copy it from that output, check it with `git log origin/main`, and never record the SHA-record commit's own SHA in the file.
+RULE (line 1, fixed after 3 violations: af491c2, 53883db, f5f42df batch): a commit SHA is written ONLY in a separate tool call made AFTER the Publish-Task call that printed `PUSHED <sha>` has returned; copy it from that output, confirm it with `git ls-remote origin refs/heads/main` (and `git merge-base --is-ancestor <sha> origin/main` after a fetch), and never record the SHA-record commit's own SHA in the file.
 # 05-audio handoff
-Updated: 2026-11-01 03:1x KST (v3.8 repetition fatigue: criteria first, variants + vol jitter, re-judge)
-Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all. Quota 49 %. Godot only via heavy_run.ps1, now started DETACHED (`tools/audio/heavy_detached.ps1`, hidden window), because the agent tool's 30-min limit killed a waiting wrapper once (heavy_run.log NOTE 01:47). Lock waits are now 1133–1671 s. Private APPDATA.
+Updated: 2026-11-01 08:5x KST (v3.9 onset peak: cause found and reproducible; rule implemented but kept OFF)
+Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all. Quota 91 %. Heavy runs only via `coordination/heavy_run_detached.ps1` (headless; lock waits 1000–2500 s). Private APPDATA.
+
+## v3.9 onset peak (coordinator task coordination/prompts/05-peak-cause.txt). Details: docs/audio/ONSET_PEAK_CHECK.md
+- Blue screen 03:55: the 03:31 job had never started (no START), so nothing was lost. Post-crash integrity scan of all modified 05 files: OK.
+- Cause of "real −0.50 vs re-render −3.7 dBFS":
+  1. Wall-time cue placement. Godot starts voices at the next 4096-frame mix block, so 5 cues started on one sample.
+  2. A fixed −444-frame clock offset.
+  3. Godot plays QOA data, not the WAV: noisy transients have up to 3.2 dB lower sample peaks.
+  With audio-clock starts, the offset and decoded QOA (new tools/audio/qoa.py), the re-render matches all 9 new before-recordings (pb) within **0.67 dB** at the top-5 peaks (P5 PASS).
+- Job 1 (pb, rule off, 07:23–07:34): exit 0, selftest/parse PASS, Master peaks −4.34…−2.32 dBFS. No bad cluster this time (alignment is timing luck).
+- Rule (manifest `onset_cluster`, audio_manager `_onset_cluster_rule`): from the 4th SFX start within 0.1 s, prio < 3 cues start 6 dB lower; exempt cues lower one earlier low-prio voice instead. Nothing is dropped or delayed, and prio ≥ 3 is never changed.
+- Job 2 `05-peak-after-9rec` (08:26:39, HEAVY_JOB_DONE exit 0): P1/P2/P3/P4/P6-G1/P7 PASS. **P5 after FAIL as written** (1 of 45 peaks 2.58 dB; one cue logged one 512-frame chunk late). **G2 FAIL** (hit_bread/hit_mold +5.4 points in one A/B battle, because the rule lowers prio-1 hits). No peak in 18 new recordings needed the rule (all ≤ −2.02 dBFS). **Rule stays OFF**; options (a) keep off, (b) softer variant: coordinator decision. Table: ONSET_PEAK_CHECK.md §5.
+- Manifest has no `onset_cluster` (synth.py `ONSET_CLUSTER_ON = False`). Enabling it changes no audio bytes.
+- Pass criteria P1–P7: ONSET_PEAK_CHECK.md §3, written before the change.
+Not verified: human listening, real phone.
 
 ## v3.8 repetition fatigue (coordinator task). Details: docs/audio/REPETITION_CHECK.md, PHONE_SPEAKER_CHECK.md "v3.8 re-judge"
 1. Coordinator decision recorded in PHONE_SPEAKER_CHECK.md criteria: G2 is judged by the same-background A/B; real recordings are for anomaly detection only.

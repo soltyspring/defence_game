@@ -1,7 +1,9 @@
 # 05-audio status
-Updated: 2026-11-01 03:1x KST. Session sess_480b589a-e86a-47ff-bada-af6f34aa4635.
-Status: v3.8 repetition fatigue. Criteria R1–R4 were written first. Before: 13 failing cue-recordings out of r02/r06/r08 × 3 seeds. After the change (variants + ±1 dB vol jitter, SFX 48 = 08 cap): 0 failures.
-- Same-background A/B: D1/D2/G1/G2 PASS (G2 max +1.9).
-- Real recordings: D1/D2 PASS, G2 no anomaly. G1 peak FAIL as written in 1 of 9 (−0.50 dBFS at a 5-cue cluster, 0 clipped, not reproduced in the re-render); open question for the coordinator/01.
+Updated: 2026-11-01 08:5x KST. Session sess_480b589a-e86a-47ff-bada-af6f34aa4635.
+Status: v3.9 onset peak. Cause of "real −0.50 vs re-render −3.7 dBFS" found:
+- 5 cues started on one sample (4096-frame mix blocks);
+- the re-render placed them at wall time;
+- plus a fixed −444-frame clock offset, and Godot plays QOA, not the WAV.
+The new log + rerender.py + qoa.py match 9 new recordings within 0.67 dB (P5 PASS). The onset-cluster rule is implemented but stays OFF. After-run (08:26–08:4x): P1/P2/P3/P4/P7 PASS; G2 FAIL (hit_bread/hit_mold +5.4 points); P5 after FAIL in 1 of 45 peaks. No new recording needed the rule (≤ −2.02 dBFS). Coordinator decision needed: keep off or try a softer variant.
 Not verified: human listening, real phone.
-Git: 28d6827 [Feat], ab86f27 [Test], 45e384a [Docs] PUSHED (verified on origin).
+Git: pending; SHAs are written in a separate step after PUSHED and git ls-remote.
