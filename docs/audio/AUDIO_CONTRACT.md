@@ -29,7 +29,7 @@ Anyone (02 gameplay, 04 UI) may emit. Audio is the only listener. `cue` is eithe
 
 | Semantic cue | params | Resolves to |
 |---|---|---|
-| `&"hit"` | `kind`: `melee`/`ranged`/`siege`, `x`, **`target_side`**: `player`/`enemy` (v1.2, requested A9) | victim decides the material: `target_side` enemy → `hit_mold`, player → `hit_bread`; without it `hit_arrow` (ranged) else `hit_melee` |
+| `&"hit"` | `kind`: `melee`/`ranged`/`siege`, `x`, **`target_side`**: `player`/`enemy` = victim side (v1.2; delivered by 02 in 09508b1 — sandbox run on HEAD 180d770: hit_mold 21, hit_bread 30, hit_melee 0) | victim decides the material: `target_side` enemy → `hit_mold`, player → `hit_bread`; without it `hit_arrow` (ranged) else `hit_melee` |
 | `&"shoot"` | `projectile`: `arrow`/`rock`/`spit`, `x` | manifest `projectile_cue` (default `shoot_arrow`) |
 | `&"death"` | `side`: `player`/`enemy`, `x`, `boss` | `death_ally` / `death_enemy` |
 | `&"base_hit"` | `side`: base that was damaged | player → `hit_base` (bakery tower), enemy → `hit_base_mold` (mold hive) |

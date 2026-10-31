@@ -1,6 +1,25 @@
 # 05-audio handoff
-Updated: 2026-10-31 ~19:xx (v3.2: upgrade sounds from engine reply, earned r05 recordings, listening checklist)
+Updated: 2026-10-31 ~18:1x (static/doc task during 08's 18:00–18:30 quiet window: no Godot run)
 Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all.
+## v3.3 (static, quiet window) — Codex review of 15851e2/5758d0b/dcfaaf9/af491c2
+Rule acknowledged: SHAs are written only after Publish-Task prints them.
+1. **02 A9 target_side**: present since 09508b1 (17:30). Format: `target_side` = victim side; coalescing key `melee:<side>`, `<ranged|siege>:<side>`.
+   - My v3.2 line "A9 still not in HEAD" was WRONG: the 17:50 integration run (sandbox HEAD 180d770) already contained 09508b1.
+   - That run's report shows hit_mold 21, hit_bread 30, hit_melee 0, hit_arrow 0. The static cross-check of the bridge mapping also matches.
+   - Correction sent to 02.
+2. **08 AU3**: `git ls-tree` on c6d0e9e gives 43 wav = 43 wav.import and 2 ogg = 2 ogg.import, all `compress/mode=2`, no orphans. Replied in `05-audio-to-08-performance.md` (08 had already marked it resolved at 17:32).
+3. **docs/audio/MUSIC_VARIATION_IDEAS.md**: ideas only, not implemented:
+   - (A) mold-erosion stem following the frontline
+   - (B) breathing room between waves
+   - (C) boss minor-key variant
+   - (D) village / mold-nest ambience
+   - (E) arrangement growing with the round
+   - It includes budget estimates and the decisions needed from 01/the user.
+
+## WIP (written, NOT verified, NOT committed — needs a Godot run after 18:30)
+- `src/audio/audio_event_bridge.gd`: ranged hits resolved to hit_mold/hit_bread get pitch 1.15 / −2 dB; siege hits get pitch 0.85 / +1 dB.
+- `tools/audio/run_godot_checks.ps1`: new gate that fails if kills > 0 but no hit_mold/hit_bread plays; prints the hit counts.
+- Next after 18:30: `pwsh tools/audio/run_godot_checks.ps1 -Integration -BattleSeconds 80` (bounded). If it passes, commit both files with `[Feat]`. Optionally re-record r02 (`-Record`) and run `mix_report.py --label=v3.3`: hit cues are now faction cues, so recheck masking.
 ## v3.2 (Codex review of cc5dbb8/a4058f3/cb2470a/ee30b9d)
 Read: 04 97c8b9c (upgrade buttons live; the engine signals `cmd_buy_upgrade`/`upgrade_result`, codes include save_uncertain). Q2 still on hold: no purchase or ad sounds. 02 A9 `target_side`: still not in HEAD (waiting).
 1. **Upgrade sounds**: the bridge plays from the engine reply `Events.upgrade_result` (category `upgrade`). ok → ok cue; already_applied SILENT (double tap → one sound); not_enough_coins → no_coins; save_failed/save_uncertain/read_only → save_failed; locked/unknown/invalid/no_reply → ui_error. A direct `Events.sfx(&"upgrade_result")` from 04 switches the derived path off.

@@ -75,3 +75,7 @@ Acceptance: `pwsh tools/audio/run_godot_checks.ps1 -Integration` → integration
 - A9 (`target_side` on hit cues): NOT in HEAD (`battle_sim.gd` hit cues still send only `kind`, `x`). 05 is WAITING; the bridge keeps the neutral `hit_melee` fallback, so nothing is broken.
 - `wave_cleared` (v1.4) consumed: one `wave_cleared` cue per event, verified in sandbox r02 (events 1 = cues 1, 0 same-frame duplicates) and r05 (cue at ~54 s).
 - Note for A/B testing: App uses `randi()` for the battle seed outside `--autoplay`; 05's sandbox probe calls `seed(N)` to make A/B runs comparable. No change requested.
+
+## A9 acknowledged (2026-10-31 ~18:0x) — correction of my earlier status
+My v3.2 handoff said "A9 not in HEAD"; that was WRONG. 09508b1 (17:30) was already an ancestor of the HEAD my 17:50 sandbox run used (180d770), and that run's report shows the change working through the bridge: `hit_mold` 21, `hit_bread` 30, `hit_melee` 0, `hit_arrow` 0 (r02, 80 s). Static check of the format: `target_side` = victim side ("player"/"enemy"), coalescing key `melee:<side>` / `<ranged|siege>:<side>` — matches the bridge (`enemy` → hit_mold, `player` → hit_bread). Thank you.
+Pending on 05's side (written, not yet run because of 08's quiet window): ranged/siege hits on the faction cues get a pitch/level offset; a runner gate that fails if kills > 0 but no hit_mold/hit_bread plays.
