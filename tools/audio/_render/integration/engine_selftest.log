@@ -1,0 +1,31 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+  r01 competent 3/3 [129.9, 129.9, 129.9] | casual W | passive lost@258.1s
+  r02 competent 3/3 [115.4, 115.4, 115.4] | casual W | passive lost@258.3s
+  r03 competent 3/3 [259.8, 259.8, 259.8] | casual W | passive lost@154.3s
+  r04 competent 0/3 [325.0, 325.0, 325.0] | casual L | passive lost@148.9s
+  r05 competent 0/3 [249.9, 249.9, 249.9] | casual L | passive lost@140.9s
+  r06 competent 0/3 [183.6, 183.6, 183.6] | casual L | passive lost@126.4s
+  r07 competent 0/3 [204.1, 204.1, 204.1] | casual L | passive lost@103.4s
+  r08 competent 0/3 [229.6, 229.6, 229.6] | casual L | passive lost@117.9s
+  r09 competent 0/3 [152.4, 152.4, 152.4] | casual L | passive lost@104.1s
+  r10 competent 0/3 [164.9, 164.9, 164.9] | casual L | passive lost@103.7s
+cap_test {"alive_enemy":2,"alive_player":36,"max_projectiles":26,"max_units_seen":97,"pool_free":59,"refused_deploys":962,"step_ms_avg_desktop":0.394,"step_ms_p99_desktop":0.956,"worst_step_ms_desktop":1.185}
+save_tests {"corruption_recovery":true,"migration":1,"roundtrip":true,"tamper_rejected":true}
+save_faults {"b004_double_fault":{"first_recovered":true,"first_source":"bak","recovered":true,"recovered_value":5,"source":"bak","unlocked_after_second_fault":5},"clamp":{"coins":9999999,"stars":{"r02":3},"unlocked":1000},"fault_points":{"after_recovery/after_bak_rename":{"fired":"after_bak_rename","recovered":true,"save_ok":false,"source":"tmp","unlocked":7},"after_recovery/after_tmp_write":{"fired":"after_tmp_write","recovered":true,"save_ok":false,"source":"tmp","unlocked":7},"after_recovery/before_final_rename":{"fired":"before_final_rename","recovered":true,"save_ok":false,"source":"tmp","unlocked":7},"after_recovery/torn_tmp":{"fired":"torn_tmp","recovered":true,"save_ok":false,"source":"bak","unlocked":5},"normal/after_bak_rename":{"fired":"after_bak_rename","recovered":true,"save_ok":false,"source":"tmp","unlocked":7},"normal/after_tmp_write":{"fired":"after_tmp_write","recovered":false,"save_ok":false,"source":"main","unlocked":6},"normal/before_final_rename":{"fired":"before_final_rename","recovered":true,"save_ok":false,"source":"tmp","unlocked":7},"normal/torn_tmp":{"fired":"torn_tmp","recovered":false,"save_ok":false,"source":"main","unlocked":6}},"hostile":{"coins":5,"record_ok":true,"types_ok":true,"unknown_kept":true,"unlocked":2},"newer":{"byte_identical":true,"read_only":true,"save_ok":false},"r3":{"after_reload":false,"clears":1,"coins":50,"first":true,"second":false},"rollback":{"coins_in_memory":10,"ok":false,"uid_recorded":false}}
+find_target {"checked":2221,"mismatches":0}
+rules {"r01_enemy_roster":["e_grunt"],"same_tick_both_bases_player_win":true,"skills_by_round":{"r01":[],"r02":["skill_slam"],"r03":["skill_slam"],"r04":["skill_slam","skill_rally"],"r05":["skill_slam","skill_rally"],"r06":["skill_slam","skill_rally"],"r07":["skill_slam","skill_rally"],"r08":["skill_slam","skill_rally","skill_barrage"],"r09":["skill_slam","skill_rally","skill_barrage"],"r10":["skill_slam","skill_rally","skill_barrage"]}}
+tutorial {"cues":{"base_hit":45,"death":39,"hit":312},"done":["tut_move_hero","tut_deploy_unit","tut_buy_worker","tut_destroy_base"],"round":"r01","shown":[["tut_move_hero",0.0],["tut_deploy_unit",0.1],["tut_buy_worker",2.5],["tut_destroy_base",18.5]],"steps":["tut_move_hero","tut_deploy_unit","tut_buy_worker","tut_destroy_base"]}
+scripts ok 66/66, scenes 7, foreign errors []
+BALANCE: round r04: competent bot won 0/3
+BALANCE: round r05: competent bot won 0/3
+BALANCE: round r06: competent bot won 0/3
+BALANCE: round r07: competent bot won 0/3
+BALANCE: round r08: competent bot won 0/3
+BALANCE: round r09: competent bot won 0/3
+BALANCE: round r10: competent bot won 0/3
+report: C:/Users/aghose/AppData/Roaming/defence_audio_sandbox/selftest_report.json
+SELFTEST PASS
+AUDIO_INTEGRATION_REPORT {"audio_children":[19,19],"audio_snapshot":{"active_sfx":0,"active_ui":0,"attenuated_offscreen":0,"dropped_gap":0,"dropped_max":0,"dropped_offscreen":0,"dropped_voices":0,"duck_db":0.0,"load_errors":[],"load_ms":54,"missing":0,"music":"","paused":false,"peak_voices":0,"played":0,"resident_sfx_bytes":160960,"stolen":0,"volumes":{"master":1.0,"music":0.8,"sfx":1.0}},"battles_ended":0,"battles_started":0,"bridge_derived":{"alert":true,"base":true,"command":true,"death":true,"gold":true,"hero":true,"ui":true},"commands":{"deploy":0,"deploy_unaffordable":0,"skill":0,"worker":0},"cue_counts":{},"engine_truth":{"deployed":0,"hero_deaths":0,"kills":0,"skills_cast":0,"workers_bought":0},"errors":[],"events_has_sfx":true,"focus":{},"max_active_sfx":0,"max_active_ui":0,"max_music_playing":0,"music_timeline":[{"m":"","t":0.1}],"pause":{},"phases":[],"results":[],"same_frame_duplicates":[],"screens":[],"switch_check":{},"t":0.1,"toasts":{}}
+WARNING: 6 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

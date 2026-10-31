@@ -485,9 +485,5 @@
   "note": "worst case = every SFX/UI cue at max instances, peaks aligned; runtime voice caps (SFX pool 12, UI pool 3) plus Master limiter keep real output below this"
  },
  "failures": [],
- "determinism": {
-  "files": 32,
-  "differing": []
- },
  "pass": true
 }

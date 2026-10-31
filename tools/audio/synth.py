@@ -35,7 +35,7 @@ SFX_SR = 22050          # mono 16-bit PCM; chip-style SFX do not need >11 kHz ba
 MUSIC_SR = 44100        # stereo, encoded to Ogg Vorbis (streamed, not decompressed into RAM)
 SFX_PEAK = 10 ** (-1.0 / 20)    # -1 dBFS sample peak ceiling
 MUSIC_PEAK = 10 ** (-3.0 / 20)  # -3 dBFS before lossy encode (leaves inter-sample/encoder headroom)
-GENERATOR_VERSION = 1
+GENERATOR_VERSION = 2
 
 # ----------------------------------------------------------------------------------------------
 # DSP primitives
@@ -291,10 +291,12 @@ def r_gold_tick(rng):
 
 
 def r_hit_melee(rng, var):
-    p = [1.0, 0.88, 1.12][var]
-    crack = burst(rng, 0.07, 0.02, 900 * p, 5000 * p)
-    body = thump(260 * p, 120 * p, 0.08, 0.025) * 0.45
-    return seq([(0, crack), (0.003, body)], 0.1)
+    # v2 (MIX_REPORT): body moved above 300 Hz and thinner, crack carries the hit; 5 variants
+    p = [1.0, 0.88, 1.12, 0.94, 1.06][var]
+    lo = [900, 1100, 800, 1300, 1000][var]
+    crack = burst(rng, 0.07, 0.02, lo * p, 5500 * p)
+    body = thump(520 * p, 300 * p, 0.06, 0.02) * 0.22
+    return highpass(seq([(0, crack), (0.003, body)], 0.1), 220, SR)
 
 
 def r_hit_arrow(rng):
@@ -311,7 +313,7 @@ def r_shoot_arrow(rng):
 
 
 def r_shoot_rock(rng):
-    return seq([(0, thump(160, 110, 0.15, 0.05) * 0.4), (0.0, crunch_layer(rng, 0.12, 0.04, 0.9))], 0.16)
+    return highpass(seq([(0, thump(200, 140, 0.15, 0.05) * 0.25), (0.0, crunch_layer(rng, 0.12, 0.04, 1.0))], 0.16), 200, SR)
 
 
 def r_shoot_spit(rng):
@@ -413,11 +415,11 @@ def r_skill_cast(rng):
 
 
 def r_wave_incoming(rng):
-    drum = mix(thump(150, 60, 0.18, 0.06), burst(rng, 0.1, 0.03, 200, 1500) * 0.4)
+    drum = mix(thump(220, 120, 0.18, 0.06) * 0.45, burst(rng, 0.1, 0.03, 500, 2500) * 0.6)
     out = seq([(0.0, drum), (0.16, drum * 0.8)], 0.9)
     n = n_samples(0.5, SR)
-    f = midi_hz(62)
-    horn = lowpass(osc(f, n, SR, "saw") + osc(f * 1.5, n, SR, "saw") * 0.5, 1800, SR) * env_adsr(n, SR, 0.04, 0.1, 0.7, 0.15)
+    f = midi_hz(74)
+    horn = lowpass(osc(f, n, SR, "saw") + osc(f * 1.5, n, SR, "saw") * 0.5, 3000, SR) * env_adsr(n, SR, 0.04, 0.1, 0.7, 0.15)
     place(out, horn * 0.5, n_samples(0.34, SR))
     return out
 
@@ -491,8 +493,8 @@ CUES = {
     "deploy":          dict(r=[r_deploy], bus="SFX", vol_db=-6, max=2, gap=0.06, prio=7, pitch=0.04),
     "worker_buy":      dict(r=[r_worker_buy], bus="SFX", vol_db=-7, max=1, gap=0.1, prio=7, pitch=0.0),
     "gold_tick":       dict(r=[r_gold_tick], bus="SFX", vol_db=-13, max=2, gap=0.09, prio=2, pitch=0.05),
-    "hit_melee":       dict(r=[lambda g: r_hit_melee(g, 0), lambda g: r_hit_melee(g, 1), lambda g: r_hit_melee(g, 2)],
-                            bus="SFX", vol_db=-9, max=3, gap=0.045, prio=1, pitch=0.08),
+    "hit_melee":       dict(r=[lambda g, v=v: r_hit_melee(g, v) for v in range(5)],
+                            bus="SFX", vol_db=-7, max=2, gap=0.26, prio=1, pitch=0.08),
     "hit_arrow":       dict(r=[r_hit_arrow], bus="SFX", vol_db=-10, max=2, gap=0.05, prio=1, pitch=0.08),
     "shoot_arrow":     dict(r=[r_shoot_arrow], bus="SFX", vol_db=-12, max=2, gap=0.06, prio=1, pitch=0.08),
     "shoot_rock":      dict(r=[r_shoot_rock], bus="SFX", vol_db=-10, max=1, gap=0.12, prio=2, pitch=0.06),
@@ -661,7 +663,7 @@ BATTLE = dict(
     arp_order=[0, 1, 2, 3, 2, 1], arp16=True, arp_shape="square",
     drums=dict(kick=(0, 6, 8, 10), snare=(4, 12), hat=(0, 2, 4, 6, 8, 10, 12, 14), open=(14,)),
     fills=True, lead_shape="square", echo=0.25, soft_clip=True,
-    g_bass=0.42, g_arp=0.07, g_kick=0.6, g_snare=0.32, g_hat=0.07, g_lead=0.2,
+    g_bass=0.26, g_arp=0.07, g_kick=0.42, g_snare=0.32, g_hat=0.07, g_lead=0.2,
 )
 
 MENU = dict(
