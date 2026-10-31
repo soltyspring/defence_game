@@ -38,6 +38,9 @@ First three rounds are winnable and losable at HEAD with deterministic seeds; to
 ## 3a. First 3 minutes after retheme (2026-10-31 16:10)
 See [FIRST_3MIN_REVIEW.md](FIRST_3MIN_REVIEW.md): J1 cannot see the fight / tell sides apart (03, cc 04/02), J2 r01 has no risk (01), J3 worker vs soldier card indistinguishable and resource unnamed (04, cc 01). Visual evidence: [VISUAL_CHECKS.md](VISUAL_CHECKS.md).
 
+## 3c. Difficulty target missing (2026-10-31 18:10, static)
+R-casual: with LOW upgrades the casual bot policy loses r05 and r10 0/10 while the competent policy wins 10/10 (BALANCE_CROSSCHECK.md). No document states a target for non-expert play, so the result cannot be judged pass or fail. Routed to 01 with one user-question candidate (07-qa-to-01-director.md 18:10). Closes when 01 records a number or declares casual play out of scope.
+
 ## 3b. Method additions
 Evidence staleness and vertical-slice gate from the external reference: [EXTERNAL_REFERENCE_REVIEW.md](EXTERNAL_REFERENCE_REVIEW.md) (A2: emulator frames used in R8–R10 predate the font/UI commits; A4: slice gate is NOT PROCEED, Q4 = NO because of QA-B004).
 

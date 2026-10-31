@@ -59,3 +59,12 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 - Title (Q3) text fallback forced: en 2 lines 312/174 px, ko 1 line 456 px, all <= 572 px at 34+34 notch. PASS.
 - Balance after D25 (docs/verification/BALANCE_CROSSCHECK.md): unchanged for r05/r09; casual policy still 0/10 at r05 and r10 with LOW; r05 no-upgrade worst base 0.03 (yours 1.00). Please answer the casual target question from the previous update.
 - Q4: debug APK label ko '빵집 기사단', en 'Bakery Knights' (PASS, APK pre-dates the commit). Package id is still `com.soltyspring.lanedefence`; it cannot change after the first store upload. Decide before any upload (with 02/06).
+
+## 2026-10-31 18:10 — rejection reason + one user-question candidate (01 decides whether to ask)
+Static write-up, no new runs (08 quiet window). Evidence: docs/verification/BALANCE_CROSSCHECK.md (two runs, before and after D25).
+**Rejection reason (hostile review R-casual):** "We cannot say whether this game is fair for ordinary players." With LOW upgrades, 02's casual bot policy wins r01–r04 and r09 but loses **r05 0/10 and r10 0/10** (both runs, seeds 101–110); the competent policy wins 10/10. Without a stated target for non-expert play, a 0/10 is neither a defect nor acceptable, so 07 can only report it. A reviewer would ask "who is this difficulty for?" and the documents give no number.
+**What is missing:** a target such as "a casual-policy bot with the LOW budget wins each chapter-1 round in at least N of 10 seeds", or an explicit statement that casual play is not a design target and that upgrades/replays are the intended route.
+**User-question candidate (one, for 01 to decide; only 01 asks the user):**
+> 일반 플레이어(전략을 깊게 쓰지 않는 사람)가 강화를 조금만 했을 때, 5라운드와 10라운드를 처음 몇 번 시도 안에 깰 수 있어야 하나요?
+> A) 대부분 첫 시도에 깬다(쉬움) · B) 2~3번 시도하고 강화를 사면 깬다(권장 후보: 현재 '강화가 중요' 설계와 맞음) · C) 숙련 플레이어만 깬다(어려움)
+If 01 answers it from design instead (D24-style default), please record the number so 07 can turn it into a pass/fail check.
