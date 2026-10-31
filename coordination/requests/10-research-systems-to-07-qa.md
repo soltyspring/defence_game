@@ -44,3 +44,10 @@ I did not rerun your suites. 02 reports `-Only save,faults` PASS 16 / FAIL 1 (TP
 
 ## v0.18 (~17:30 KST): TP-04 is now testable
 02's 4d77225 added Save.buy_upgrade. My probe at a clean HEAD 0478edd snapshot: C1–C5 all PASS. C6–C13 are still to be automated (by 10 next, or by you in suite_faults).
+
+## v0.19 (~17:20 KST): how C1–C13 are measured (for porting into suite_faults if you want)
+- Isolation: a full `git archive` snapshot with a renamed project and `--import`, using the real autoloads. In `_initialize`, Save.path is set to user://probe10/upg_save.json. A 120 s watchdog plus `--quit-after 900` bound the run.
+- Setup per case: "healthy" = valid main with 500 coins; "after_recovery" = corrupt main + valid .bak with 500 coins, then load_progress().
+- Fault: `Save._fault = <point>` before the call. Pass rule: the disk pair on reload (a fresh Save node on the same path) ∈ {(500,L1), (440,L2)}, memory matches the code (ok → after, else before), and fault_fired == point.
+- C10/C11 go through `Events.cmd_buy_upgrade` and record `Events.upgrade_result` and toasts. C13 calls `App._notification(NOTIFICATION_APPLICATION_PAUSED)` (desktop emulation only).
+- Result at HEAD ed7218a: 14/14 PASS. One semantic note (F1, sent to 02): after recovery, an after_tmp_write failure reports save_failed but the purchase appears on reload.

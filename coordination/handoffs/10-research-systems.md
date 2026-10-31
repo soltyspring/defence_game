@@ -8,6 +8,12 @@ Updated: 2026-10-31 ~15:41 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
+## v0.19 (~17:22 KST): buy_upgrade C1–C13 automated
+- probe_upgrade_transaction.gd: part E (C6–C13, C5b) and a 120 s watchdog. Run at a clean origin/main ed7218a full snapshot: 14/14 PASS (2.0 s).
+- F1 (P3): in the after-recovery state, an after_tmp_write failure returns save_failed but the .tmp is adopted on reload (440/L2). Sent to 02.
+- R5 D still fails. Temporary "no max_level decrease after launch" rule proposed to 01. Measurement method sent to 07.
+- My own measurement bug: the C13 revision_delta was computed too late. Fixed and reran. Doc §9.10.
+
 ## v0.18 addendum (~17:30 KST)
 - buy_upgrade landed (02 4d77225). probe_upgrade_transaction at a clean HEAD 0478edd snapshot: C1–C5 PASS. R5 part D still fails. Next: automate C6–C13 in the probe.
 

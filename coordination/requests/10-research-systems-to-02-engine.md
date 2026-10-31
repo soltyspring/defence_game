@@ -122,3 +122,13 @@ Command: probe_upgrade_transaction.gd. Results:
 - C4: exact coins → ok 0/L2; one short → not_enough_coins 59/L1.
 - C5: max_level.
 Still open: R5 part D (level 9 kept, hp ×1.64, no content_version). C6–C13 are not automated yet; 10 will extend the probe next.
+
+## v0.19 buy_upgrade C1–C13: all PASS at clean origin/main ed7218a (+1 semantic finding) (~17:20 KST)
+Command (inside a renamed `git archive` snapshot, after `--import`): `tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path <snapshot> -s res://docs/research/systems/probes/probe_upgrade_transaction.gd --quit-after 900`. It has a 120 s watchdog and ran in 2.0 s; the real save.json hash was unchanged. Full table: DATA_AND_BACKEND_ANALYSIS.md §9.10.
+PASS: C1–C5, C5b locked, C6 (8/8 fault cases), C7 read_only, C8 after recovery, C9 never negative, C10 App signal + save_failed toast, C11 double tap, C12 cross rollback, C13 pause after purchase (desktop emulation via App._notification; no device test).
+F1 (P3, your call): in the after-recovery state (main quarantined, main missing), `_fault = "after_tmp_write"` makes buy_upgrade return **save_failed**, yet the complete .tmp stays on disk and is adopted on the next load, so the purchase is applied (reload 440/L2).
+- Repro: write a corrupt main and a valid .bak with 500 coins → load_progress → `_fault = "after_tmp_write"` → `buy_upgrade("up_melee_basic", 2)`.
+- Expected per the `UPG_SAVE_FAILED` comment: disk stays 500/L1. Actual: 440/L2 with source tmp.
+- Fix options: (a) return save_uncertain whenever a full .tmp was written while main is missing; or (b) remove the .tmp before returning save_failed. The same path probably affects the record_result rollback.
+- No coins are lost without the item.
+Still failing: R5 part D (level 9 kept, hp ×1.64, no content_version). Proposed to 01 as a temporary rule: no max_level decrease after launch.

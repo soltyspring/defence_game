@@ -1,7 +1,7 @@
 # 10-research-systems status
-Updated: 2026-10-31 ~17:21 KST · sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce
-Status: v0.18 DONE. Engine durability verdict from the exact 4.7.2-stable sources (commit ed1daf0bf…): Q1 sync before rename = No; Q2 Android user:// = FileAccessUnix/DirAccessUnix; Q3 GDScript flush yes (fflush), fsync no. Minimal Save proposals A/B to 02; no change for 06. Competitor device-change policy table from public docs (Random Dice Helpshift FAQ, GameDuo terms). buy_upgrade landed in 4d77225: C1–C5 PASS at a clean HEAD 0478edd snapshot. content_version still absent (R5 part D fails).
+Updated: 2026-10-31 ~17:22 KST · sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce
+Status: v0.19 DONE. buy_upgrade C1–C13 (+C5b) automated and run at a clean origin/main ed7218a snapshot: 14/14 PASS. F1 semantic finding (save_failed but purchase adopted from .tmp after a recovery) sent to 02. R5 part D still fails; temporary rule proposed to 01.
 User decisions: Q1 = A (DECIDED); Q2 = 보류; Q3 = title "빵집 기사단: 곰팡이 디펜스".
-Quota: 4846.25/10000 = 48.46% at 16:53.
-Validation: the tag ref resolved via the GitHub API; source files downloaded to a temp dir and deleted; line numbers cross-checked by grep; source IDs consistent. Device test NOT done.
-Pushed: … 654a797, 0478edd (v0.18). Addendum (C1–C5 retest + probe .uid files): next commit.
+Quota: 5162.81/10000 = 51.63% at 17:05.
+Validation: exit 0, 2.0 s, 120 s watchdog; real save.json hash unchanged; temp snapshot, user dir and output removed. C13 is desktop emulation only. Device test NOT done.
+Pushed: … 0478edd, e340144. v0.19: next commit.
