@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "id": "hero_captain",
-  "name": "대장",
+  "name": "제빵 대장",
   "name_key": "hero.hero_captain.name",
   "desc_key": "hero.hero_captain.desc",
   "hp": 600,

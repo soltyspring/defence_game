@@ -9,7 +9,7 @@ Data: data/economy.json, data/rounds.json rewards. Monetization is NOT decided; 
 ## 2. Meta economy (gold)
 Faucets (chapter 1): first clears 3,140; first 3-star bonuses 780; replay wins 30% of first clear; kill gold ≈ 20–60 per round (50% on loss).
 Sinks: 10 upgrade tracks, total 6,280 gold to max everything. First-clear + 3-star income ≈ 3,920 = 62% of the total upgrade cost, so a non-grinding player can afford only about 62% of all upgrade spending by R10, forcing choices (arithmetic on data, not measured behaviour); grinding replays or chapter 2 income covers the rest.
-Intended spend checkpoints: before R3 ≈ 240 gold (2–3 upgrades); before R5 ≈ 660 (≈7 upgrades); before R10 ≈ 2,500.
+Intended spend checkpoints: before R3 ≈ 240 gold (2–3 upgrades); before R5 ≈ 640 (≈9 levels on the LOW path; D22); before R10 ≈ 2,500.
 Upgrade curve: +8%/level units, +10% hero/base, cost ×~1.6 per level. Fully upgraded L5 unit = +32%. Enemy scaling reaches +55% by R10, so the gap is closed by roster breadth and skills, not stats alone.
 
 ## 3. Retention design (backlog order)
@@ -33,3 +33,6 @@ Design constraints regardless of model: no forced interstitials mid-round; rewar
 
 ## 5. Economy telemetry needed later (privacy permitting)
 Round attempts/wins, duration, stars, gold balance at round start, upgrade levels at loss. Local-only debug log first; any remote analytics requires user decision + privacy disclosure (04).
+
+## 6. Max-out and L5 (D22)
+L5 levels are a replay-only mastery tier (2,740 coins for all last levels). Chapter 1 must be clearable at the LOW first-clear budget. After every track is maxed, coins have no sink in MVP; a sink arrives with chapter 2 or cosmetics (B29).

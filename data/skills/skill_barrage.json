@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "id": "skill_barrage",
-  "name": "일제 포격",
+  "name": "빵가루 포격",
   "name_key": "skill.skill_barrage.name",
   "desc_key": "skill.skill_barrage.desc",
   "unlock_round": 8,

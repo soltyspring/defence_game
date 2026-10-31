@@ -5,7 +5,7 @@
   "units": [
     {
       "id": "melee_basic",
-      "name": "보병",
+      "name": "식빵병",
       "name_key": "unit.melee_basic.name",
       "desc_key": "unit.melee_basic.desc",
       "faction": "player",
@@ -34,7 +34,7 @@
     },
     {
       "id": "ranged_basic",
-      "name": "궁수",
+      "name": "롤빵병",
       "name_key": "unit.ranged_basic.name",
       "desc_key": "unit.ranged_basic.desc",
       "faction": "player",
@@ -63,7 +63,7 @@
     },
     {
       "id": "tank",
-      "name": "방패병",
+      "name": "통식빵",
       "name_key": "unit.tank.name",
       "desc_key": "unit.tank.desc",
       "faction": "player",
@@ -92,7 +92,7 @@
     },
     {
       "id": "fast",
-      "name": "돌격병",
+      "name": "프레첼",
       "name_key": "unit.fast.name",
       "desc_key": "unit.fast.desc",
       "faction": "player",
@@ -121,7 +121,7 @@
     },
     {
       "id": "siege",
-      "name": "투석기",
+      "name": "화덕포",
       "name_key": "unit.siege.name",
       "desc_key": "unit.siege.desc",
       "faction": "player",
@@ -150,7 +150,7 @@
     },
     {
       "id": "e_grunt",
-      "name": "졸병",
+      "name": "곰팡이 졸개",
       "name_key": "enemy.e_grunt.name",
       "faction": "enemy",
       "first_round": 1,
@@ -180,7 +180,7 @@
     },
     {
       "id": "e_swarm",
-      "name": "떼거리",
+      "name": "초파리 떼",
       "name_key": "enemy.e_swarm.name",
       "faction": "enemy",
       "first_round": 2,
@@ -210,7 +210,7 @@
     },
     {
       "id": "e_spitter",
-      "name": "투척병",
+      "name": "포자 뱉개",
       "name_key": "enemy.e_spitter.name",
       "faction": "enemy",
       "first_round": 3,
@@ -240,7 +240,7 @@
     },
     {
       "id": "e_brute",
-      "name": "거한",
+      "name": "썩은 멧돼지",
       "name_key": "enemy.e_brute.name",
       "faction": "enemy",
       "first_round": 4,
@@ -270,7 +270,7 @@
     },
     {
       "id": "e_bomber",
-      "name": "자폭병",
+      "name": "부푼 효모",
       "name_key": "enemy.e_bomber.name",
       "faction": "enemy",
       "first_round": 7,
@@ -301,7 +301,7 @@
     },
     {
       "id": "boss_warlord",
-      "name": "군단장",
+      "name": "곰팡이 장군",
       "name_key": "enemy.boss_warlord.name",
       "faction": "enemy",
       "first_round": 5,
@@ -331,7 +331,7 @@
     },
     {
       "id": "boss_overlord",
-      "name": "대군주",
+      "name": "부패 대군주",
       "name_key": "enemy.boss_overlord.name",
       "faction": "enemy",
       "first_round": 10,

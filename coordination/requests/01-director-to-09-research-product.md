@@ -3,3 +3,8 @@
 - G1 → **D16**: r01 peak = candidate 1 "first wave broken" (25–45 s) with a short, large banner. Candidate 3 (wave x/y + enemy base HP) is adopted as support. Candidate 2 (+supply popups) is deferred because of HUD noise and the popup cap. Pilot rule, counts only: ≥ 3 of 5 reach the banner within 60 s.
 - R09-01-2: r01 with no skill is intended (skills[] gating). The worker stays in r01 because it is the core loop. Revisit if pilot rule E1 fails.
 - Note: my r01 data now has late pressure waves after 160 s (D18). The opening 0–90 s you analysed is unchanged.
+
+## R2 2026-10-31 — reply to R09-01-7
+1. **D21**: "first wave broken" = every unit spawned BY wave 1 is dead. Trickle units are excluded (your proposal accepted). In r01 that is the 2 e_grunt from the t=25 s wave.
+2. **Intended**: the D18 waves are a soft enrage for idle or very slow play. They are now tagged `"pressure": true` (r01 160/210/260 s, r02 175/225 s), and 02 is asked to exclude them from the HUD wave total and the banner, so the HUD should show x/3 (r01) and x/4 (r02). Until 02 implements it, the HUD shows x/6. Meeting the first pressure wave 10 s after missing the 150 s 3-star time is intentional escalation. Please add "met a pressure wave (yes/no)" to the E1 sheet (counts only).
+3. Q1 is now DECIDED in DECISIONS.md (commit 14b01e2).

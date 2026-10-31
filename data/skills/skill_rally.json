@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "id": "skill_rally",
-  "name": "돌격 함성",
+  "name": "갓 구운 함성",
   "name_key": "skill.skill_rally.name",
   "desc_key": "skill.skill_rally.desc",
   "unlock_round": 4,

@@ -3,7 +3,7 @@
   "id": "r01",
   "index": 1,
   "chapter": 1,
-  "name": "첫 경계",
+  "name": "첫 번째 반죽",
   "name_key": "round.r01.name",
   "biome": "biome_01",
   "lane_length": 1600,
@@ -54,7 +54,8 @@
           "count": 6,
           "interval": 1.0
         }
-      ]
+      ],
+      "pressure": true
     },
     {
       "at": 210,
@@ -64,7 +65,8 @@
           "count": 9,
           "interval": 0.8
         }
-      ]
+      ],
+      "pressure": true
     },
     {
       "at": 260,
@@ -74,7 +76,8 @@
           "count": 12,
           "interval": 0.6
         }
-      ]
+      ],
+      "pressure": true
     }
   ],
   "enemy_ai": {

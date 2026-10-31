@@ -47,3 +47,6 @@ Rounds r01–r10, seeds 1–5. A CSV or markdown table under docs/architecture/ 
 - D15: implement `summon.summon_frame` (int): summoned units appear when the summon anim reaches this frame; absent → current timing.
 - D17: every data file now has `schema_version: 1`. Loader behaviour is unchanged (verified, 0 warnings).
 - Paired runs requested (BALANCE_DIAGNOSIS.md "Next"), plus a fix for the bot's worker stall (it never exceeds 3 workers although it wants 5).
+
+## R5 2026-10-31 — `pressure` wave flag (D21)
+Waves with `"pressure": true` (r01 t=160/210/260, r02 t=175/225) spawn normally, but please exclude them from `waves_total`, the HUD `wave.index/total` and the wave banner. When the first one spawns, emit the existing `counterattack` toast instead. Also exclude them from 09's "first wave broken" event. That event = every unit spawned by wave index 1 is dead, ignoring trickle units (D21). The data `name` fallbacks now equal the ko text (10's STALE_NAME check passes).

@@ -1,4 +1,12 @@
 # 01-director handoff
+## TASK 2026-10-31 — 09 R09-01-7, 10 economy, title queue
+- D21: "first wave broken" = all wave-1 units dead (trickle excluded). D18 waves tagged `pressure: true` (r01 160/210/260, r02 175/225); 02 asked (R5) to exclude them from the HUD total/banner. The 160 s arrival after the 150 s par is intended (soft enrage).
+- D22: intent checkpoints 240/640/2,500 (r05 lowered from 660); L5 is replay-only by design; no post-max sink in MVP (B29). ECONOMY.md updated.
+- Data: `name` fallbacks in units/hero/skills/rounds synced to the ko text (10's STALE_NAME). Validation: 10's probe_content_integrity exit 0, ERROR 0 / WARN 0 / INFO 0; l10n ALL_OK (122/122); JSON parse OK. Sim unaffected (only names and an unknown key changed); not re-run.
+- Title: 06 NAME_SEARCH_LOG shows no KIPRIS result (all NOT_CHECKED). Q3 (title) is PREPARED in docs/design/USER_QUESTION.md and is NOT asked, because Q2 (business model) is still the open question.
+- Replies: 01→09 R2, 01→10 R2, 01→02 R5.
+- Git: see the commit below.
+
 ## RESUME 2026-10-31 (after the 09:18 checkpoint) — Theme A applied
 - Recovery: the working tree matched checkpoint/quota-20261031-092323/01-director (git diff of 01 paths empty; only the last handoff line was uncommitted). Nothing was lost. Index empty; no Godot process of mine.
 - Q1 **DECIDED by user** (09:03 KST, words "모두 고치고 A) 빵집 기사단 vs 곰팡이 군단이걸로", via coordinator chat). Recorded in DECISIONS.md Q1 + D20.

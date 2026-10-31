@@ -31,3 +31,5 @@ Priority P0 (slice) / P1 (chapter 1) / P2 (production) / P3 (post-launch). Owner
 | B26 | P0 | Falsification sims for QUALITY_BAR claims 1/2/3/6/7 | 02 | requested R3 |
 | B27 | P1 | Retune worker growth / unit efficiency if claims 1 or 3 fail | 01 | blocked on B26 |
 | B28 | P1 | First 5-player exploratory pilot (§8.2 sheet + rules) | 01/07/04 | blocked on playable phone build |
+| B29 | P3 | Post-max coin sink (chapter 2 unlock costs or cosmetics) | 01 | idea (D22) |
+| B30 | P1 | `pressure` wave flag: exclude from HUD wave total/banner (D21) | 02/04 | requested |
