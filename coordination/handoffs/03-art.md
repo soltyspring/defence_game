@@ -122,6 +122,7 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - tools/art/scale_uniformity.py, tools/art/scale_option_patch.py (snapshot-only). Captures + metrics in docs/art/evidence/scale_uniformity/.
 - Result: current integer settings uniform (odd runs <= 0.6 %, only HP-bar fill widths); fractional 2.5x 62 % odd runs; letterbox 64-67 % screen; one downscale 7.6-26.8 % blended px. Recommendation: keep current (02 A16, 04 A14).
 - Human "reads as bakery" test: still not done (no players).
+- Commit beaaace [Test]: PUSHED origin/main (verified with git branch -r --contains at 19:35).
 
 ## Exact next steps on resume
 1. After 02 re-imports: python tools/art/import_audit.py . (expect PASS).
