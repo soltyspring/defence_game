@@ -1,0 +1,155 @@
+{
+ "src": "working tree",
+ "B1": {
+  "fg_outside_66dp_px": 0,
+  "mask_clipped_px": {
+   "circle": 0,
+   "rounded_square": 0,
+   "squircle": 0,
+   "teardrop": 0
+  },
+  "pass": true
+ },
+ "B2": {
+  "48dp": {
+   "hero_area_pct": 23.7,
+   "hero_dL_vs_bg": 33.4,
+   "hero_vs_mould_dE": {
+    "normal": 27.6,
+    "protan": 18.5,
+    "deutan": 23.3
+   },
+   "pass": false
+  },
+  "36dp": {
+   "hero_area_pct": 24.2,
+   "hero_dL_vs_bg": 30.7,
+   "hero_vs_mould_dE": {
+    "normal": 25.6,
+    "protan": 18.2,
+    "deutan": 22.8
+   },
+   "pass": false
+  },
+  "pass": false
+ },
+ "B3": {
+  "circle": {
+   "light": 6.23,
+   "dark": 2.31
+  },
+  "rounded_square": {
+   "light": 6.07,
+   "dark": 2.37
+  },
+  "squircle": {
+   "light": 5.93,
+   "dark": 2.43
+  },
+  "teardrop": {
+   "light": 6.66,
+   "dark": 2.16
+  },
+  "pass": true
+ },
+ "B4": {
+  "area_pct_48dp": 27.3,
+  "components_48dp": 1,
+  "pass": true
+ },
+ "B5": {
+  "battlecats": {
+   "mean_dE": 26.7,
+   "pattern_dL": 27.8,
+   "pass": true
+  },
+  "catwar2": {
+   "mean_dE": 36.0,
+   "pattern_dL": 22.2,
+   "pass": true
+  },
+  "stickwar": {
+   "mean_dE": 43.1,
+   "pattern_dL": 29.0,
+   "pass": true
+  },
+  "growcastle": {
+   "mean_dE": 24.7,
+   "pattern_dL": 22.4,
+   "pass": true
+  },
+  "aow2": {
+   "mean_dE": 44.4,
+   "pattern_dL": 25.9,
+   "pass": true
+  },
+  "pass": true
+ },
+ "B6": {
+  "docs/art/branding/store/store_icon_512.png": {
+   "size": [
+    512,
+    512
+   ],
+   "mode": "RGBA",
+   "size_ok": true,
+   "alpha_min": 255
+  },
+  "docs/art/branding/store/feature_graphic_ko_1024x500.png": {
+   "size": [
+    1024,
+    500
+   ],
+   "mode": "RGB",
+   "size_ok": true
+  },
+  "docs/art/branding/store/feature_graphic_en_1024x500.png": {
+   "size": [
+    1024,
+    500
+   ],
+   "mode": "RGB",
+   "size_ok": true
+  }
+ },
+ "T": {
+  "ko": {
+   "frames": {
+    "logo_title_ko": [
+     304,
+     30
+    ],
+    "logo_title_ko_2line": [
+     158,
+     58
+    ]
+   },
+   "drawn_bbox_px": [
+    512,
+    143
+   ],
+   "width_pct_of_view": 64.0,
+   "width_pct_of_safe": 69.9,
+   "glyph_height_mm_est": 8.22
+  },
+  "en": {
+   "frames": {
+    "logo_title_en": [
+     203,
+     21
+    ],
+    "logo_title_en_2line": [
+     202,
+     62
+    ]
+   },
+   "drawn_bbox_px": [
+    556,
+    147
+   ],
+   "width_pct_of_view": 69.5,
+   "width_pct_of_safe": 76.0,
+   "glyph_height_mm_est": 7.89
+  }
+ }
+}

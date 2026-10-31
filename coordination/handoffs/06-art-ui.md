@@ -5,8 +5,8 @@ launcher/title); 04-client-to-06-art-ui (07:3x, sizes + α .70), 08 U8-1 (menu 0
 09 W1 (07:20), 10 v0.34 (add `-c core.eol=lf` to ui_capture archive: not done yet, low risk).
 
 ## Current task (07:4x dispatch)
-(1) HUD attention criteria + re-measure on 92a1718 background — **done for ko 1x** (criteria 4417d18; results this commit).
-(2) Launcher icon + title screen check/redraw — **not started**.
+(1) HUD attention criteria + re-measure on 92a1718 background — **done for ko 1x** (criteria 4417d18; results 955adc0, ls-remote verified).
+(2) Launcher icon + title: criteria committed (3c6ad10); current icon measured (`branding_audit.py`, `docs/art/evidence/ui_art/branding_before.json`): B1/B3/B4/B5/B6 PASS, **B2 FAIL** (hero area 23.7–24.2 % < 25 %, hero vs mould protan ΔE 18.2–18.5 < 20). T1–T3 measurement not reliable yet (menu bbox caught non-logo pixels); recompute from title_block.gd slot rule. Redraw not started.
 (3) 03/04 approvals: 04 approved names/sizes (07:3x reply); 03 has not answered ink or names → nothing added to ui_main.
 
 ## Results so far
