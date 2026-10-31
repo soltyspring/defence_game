@@ -58,6 +58,11 @@ def down(img, n):
     return np.array(Image.fromarray(np.clip(img, 0, 255).astype(np.uint8)).resize((n, n), Image.BOX)).astype(float)
 
 
+def subprocess_show(path):
+    import subprocess
+    return subprocess.run(["git", "show", "HEAD:" + path], cwd=ROOT, capture_output=True, check=True).stdout.decode("utf-8")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--src", default=ROOT)
@@ -151,25 +156,67 @@ def main():
             info["alpha_min"] = int(np.array(im)[..., 3].min())
         st[f] = info
     rep["B6"] = st
-    # T1-T3 title on 07's menu frames
+    # T1-T4 title: src/ui/main_menu.gd _draw() slot + src/ui/title_block.gd compute() (largest integer scale k >= 1 of
+    # logo_title_<loc> / _2line that fits the slot), for the 393 dp view (800x360, safe 34,0,34,0) and two narrower views.
+    sys.path.insert(0, os.path.join(S, "tools", "art"))
+    import branding
     rep["T"] = {}
+    views = {"393dp_800x360_notch34": (800, 360, 34, 34), "640x360": (640, 360, 0, 0), "720x360_notch34": (720, 360, 34, 34)}
+    ok = {"T1": True, "T2": True, "T3": True, "T4": True}
     for loc in ("ko", "en"):
         meta = json.load(open(os.path.join(S, f"assets/atlases/ui_title_{loc}.json"), encoding="utf-8"))
-        menu = np.array(Image.open(os.path.join(ROOT, "docs/verification/evidence/art-baseline-ad47eda", f"{loc}_1x_1_menu.png")).convert("RGB"))
         page = np.array(Image.open(os.path.join(S, f"assets/atlases/ui_title_{loc}.png")).convert("RGBA"))
-        cols = {tuple(c) for c in page[page[..., 3] > 0][:, :3].tolist()}
-        top = menu[:180]
-        m = np.zeros(top.shape[:2], bool)
-        for c in cols:
-            m |= np.all(top == c, axis=-1)
-        ys, xs = np.nonzero(m)
-        r = {"frames": {k: [v["w"], v["h"]] for k, v in meta["frames"].items()}}
-        if len(xs):
-            w = int(xs.max() - xs.min() + 1); h = int(ys.max() - ys.min() + 1)
-            r.update({"drawn_bbox_px": [w, h], "width_pct_of_view": round(100.0 * w / 800, 1), "width_pct_of_safe": round(100.0 * w / 732, 1)})
-            k = round(h / max(1, meta["frames"][f"logo_title_{loc}_2line"]["h"]), 2)
-            r["glyph_height_mm_est"] = round(12 * 2 * max(1.0, k) * 0.8 * MM, 2)
+        head = json.loads(subprocess_show(f"assets/atlases/ui_title_{loc}.json"))
+        r = {"page_size": meta.get("size"), "page_size_HEAD": head.get("size")}
+        if meta.get("size") != head.get("size") or set(meta["frames"]) != set(head["frames"]):
+            ok["T4"] = False
+        # T2: the 2-line frame = two blocks of glyph rows; text split at the colon (branding.KO_A / KO_B, EN_A / EN_B)
+        two = meta["frames"][f"logo_title_{loc}_2line"]
+        crop = page[two["y"]:two["y"] + two["h"], two["x"]:two["x"] + two["w"], 3] > 0
+        rows = np.nonzero(crop.any(axis=1))[0]
+        gaps = [i for i in range(1, len(rows)) if rows[i] - rows[i - 1] > 1]
+        a_txt = branding.KO_A if loc == "ko" else branding.EN_A
+        b_txt = branding.KO_B if loc == "ko" else branding.EN_B
+        full = branding.KO_FULL if loc == "ko" else branding.EN_FULL
+        r["two_line_text"] = [a_txt, b_txt]
+        r["split_at_colon"] = bool(full.replace(" ", "") == (a_txt + ":" + b_txt).replace(" ", ""))
+        ok["T2"] &= r["split_at_colon"]
+        # glyph line heights (rows of the first line, drop shadow 2 px excluded) in art px
+        line_h = []
+        lab_, n_ = ndimage.label(crop.any(axis=1))
+        for i in range(1, n_ + 1):
+            ys_ = np.nonzero(lab_ == i)[0]
+            line_h.append(int(ys_.max() - ys_.min() + 1))
+        r["views"] = {}
+        for vn, (vw, vh, sl, sr) in views.items():
+            safe_w = vw - sl - sr
+            slot = (sl + 8, 28, safe_w - 16, max(40.0, (vh * 0.5 - 22) - 28))
+            best = None
+            for fr in (f"logo_title_{loc}", f"logo_title_{loc}_2line"):
+                f = meta["frames"][fr]
+                k = int(np.floor(min(slot[2] / f["w"], slot[3] / f["h"])))
+                if k < 1:
+                    continue
+                area = f["w"] * k * f["h"] * k
+                if best is None or area > best[3]:
+                    best = (fr, k, (f["w"] * k, f["h"] * k), area)
+            if best is None:
+                r["views"][vn] = {"logo": None, "fallback": "text (title_block.gd)"}
+                ok["T1"] = False
+                continue
+            fr, k, (dw, dh), _ = best
+            glyph_px = (min(line_h) - 3) if fr.endswith("_2line") else (two["h"] // 2 - 3) // 1
+            mm = round(glyph_px * k * MM, 2) if fr.endswith("_2line") else round((meta["frames"][fr]["h"] - 5) * k * MM, 2)
+            v = {"frame": fr, "scale": k, "drawn": [dw, dh], "width_pct_of_view": round(100.0 * dw / vw, 1),
+                 "fits_slot": bool(dw <= slot[2] and dh <= slot[3]), "glyph_height_mm_est": mm}
+            ok["T1"] &= v["fits_slot"] and v["width_pct_of_view"] <= 92.0
+            ok["T3"] &= mm >= 2.5
+            r["views"][vn] = v
         rep["T"][loc] = r
+    logo = A.audit_logo()
+    rep["T"]["T3_face_share_ge3"] = {k: v["share_ge3"] for k, v in logo.items()}
+    ok["T3"] &= all(v["share_ge3"] >= 0.80 for v in logo.values())
+    rep["T"]["pass"] = ok
     print(json.dumps(rep, ensure_ascii=False, indent=1))
     if a.json:
         json.dump(rep, open(a.json, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
