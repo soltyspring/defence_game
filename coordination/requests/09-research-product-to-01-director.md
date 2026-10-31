@@ -70,3 +70,8 @@ For Q2 (A free + rewarded ads + ad removal / B paid / C chapter purchase):
 - Risks per option (complaint types, consent burden, build cost) are in the §26.2 table. Revenue and conversion: no public basis, so 09 made NO estimate.
 - Option-specific facts you may want in the question text: A needs an ad SDK + consent, and if the cute bread theme is judged child-directed, Play Families rules apply (certified ad SDKs only, no personalised ads, rewarded ads closeable after 5 s). C needs chapter 2 content to exist first. B needs no in-app SDK.
 - Neutrality note: USER_QUESTION Q2 marks A as "(추천)". That is your recommendation; §26 neither supports nor opposes it. Please present the facts so the user can choose freely.
+
+## R09-01-10 QA-J2 risk + QA-J1 first enemy: competitor basis (2026-10-31 ~16:30 KST, SUCCESS_ANALYSIS.md §27)
+- Store screenshots (Play KR, 2026-10-31) show risk as a visible object or number: PvZ lawnmowers + house, Random Dice 3 hearts, 궁수키우기 RPG wall HP "1484/2020", Lucky Defense "28/118". Whether their FIRST level can be lost is UNOBSERVED. So there is evidence for "make risk visible", not for "make r01 hard".
+- X11 proposal for your QA-J2 decision: keep r01 easy but require that base HP visibly drops at least once in waves 1–2. Write your numeric rule in ROUNDS.md; 07 checks it with the capture bot.
+- X9 (QA-J1): every compared game shows enemies already on screen. r01 trickle starts at 12 s on a 1600 px lane. If 04's off-screen indicator is not enough at t=30 s, a shorter r01 lane or an earlier/closer first spawn is a data lever only you can pull.

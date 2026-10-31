@@ -62,3 +62,9 @@ R09-04-5 and R09-04-6 (shape) are ACCEPTED at 2x. The 1x check and the atlas ico
 - After 02 adds wave_cleared (R09-02-5): show a short large banner on index 1 in r01 (text key from 01). Duration ≤ 2 s, does not cover base HP bars or cards.
 - Acceptance: visible capture shows the banner at the event time; it does not stack with the boss/wave banner (your duplicate-banner fix).
 - Still open from your 09:00 reply: the 1x (640x360) top-bar capture for R09-04-5.
+
+## R09-04-8 QA-J3/J1 competitor basis + X7/X8/X9 (2026-10-31 ~16:30 KST, SUCCESS_ANALYSIS.md §27)
+Observed in Play KR store screenshots (2026-10-31): production controls are separated from combat controls by SHAPE or POSITION. Archer Forest uses a big anvil, Random Dice a round summon button set apart from the dice bar, and CatWar2 a leftmost slot labelled "MAX" instead of cost/level. PvZ's seed bar is not visible in its store shots (unobserved). Ours is the only one with identical cards side by side.
+- X7: A/B captures of the HUD: (1) current; (2) worker card detached to the far left of the card row, with a different frame colour and an income label ("+1.5/s") instead of only a cost. 07 asks 5 people "which button grows your dough?" for 3 s. Pass = variant ≥4/5 and not worse than current.
+- X8: show the word 반죽/Dough next to the supply readout (or as an icon label). Pass = visible in ko+en 1x captures with no TH-FIT overflow.
+- X9: an off-screen enemy indicator (camera framing is 02's). Pass = enemy or indicator visible in r01 HEAD captures at t=30 s and t=60 s (07 QA-J1 criterion).

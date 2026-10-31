@@ -24,3 +24,7 @@ Observation (Play ko/KR icons, 2026-10-31): defence icons signal combat with wea
 2. Card icons for 통식빵 and 프레첼 must show the role (shield silhouette, charge or mount), because their card names no longer do.
 3. 썩은 멧돼지 and 부패 대군주: keep them cartoon (fuzzy mold, spores). Avoid realistic decay, fluids or flies on wounds. Comparable games are rated 전체이용가 (Cookie Run Kingdom, 곰팡이 키우기, Food Fight TD); PvZ is 7+ with cartoon gore-free violence.
 4. Unchanged: avoid the gingerbread silhouette and the crown+shield crest (Cookie Run Kingdom). The R09-03-4 icon test is still pending your icon mock.
+
+## R09-03-6 Battle-band share (QA-J1) — competitor basis + X10 (2026-10-31 ~16:30 KST, §27)
+- Eyeballed share of screen height where units/enemies act (Play KR store screenshots, 2026-10-31): Archer Forest ~37%, Random Dice ~65%, 궁수키우기 RPG ~68%, PvZ ~ the whole game view, CatWar2 ~45%. Ours: units ~8%, sky/mountains ~75% (07). Different camera genres, so this is correlation only.
+- X10: render the same r01 moment twice, (1) current and (2) with the sky reduced and a bakery/mold foreground or midground so the lane sits higher and the mold nest is visible at the right edge. 07 shows each to 5 people for 3 s and asks "who is winning?". Pass = ≥4/5 correct on the variant. Any camera change itself belongs to 02 (via 04); this asks only for the art layers.
