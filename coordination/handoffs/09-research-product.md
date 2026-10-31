@@ -45,7 +45,7 @@ Commit 8ad912fc0e2df56f4fbf50a846299900e873325d PUSHED (helper output): SUCCESS_
 - Next: as before (01/02/03/04/06/07 replies).
 
 ## v10 (2026-10-31 ~16:35 KST): QA-J1..J3 competitor basis
-Commit 81bde4c8a3cab67ae4b68ffdc5bb04ab3cae0e32 PUSHED (helper output): SUCCESS_ANALYSIS §27, R09-01-10, R09-03-6, R09-04-8.
+Commit 44be5c8fb3095d8c0498001b9b2c43601f5e6e08 PUSHED (helper output): SUCCESS_ANALYSIS §27, R09-01-10, R09-03-6, R09-04-8. (An earlier draft of this line had a wrong placeholder SHA, corrected here.)
 - (a) Battle-band share (eyeballed, ±5 pp, Play KR store shots): Archer Forest ~37%, Random Dice ~65%, 궁수키우기 RPG ~68%, PvZ ~whole game view, CatWar2 ~45%; ours ~8% band (07: ~75% sky). Every compared shot shows enemies already on screen.
 - (b) Risk is shown as objects or numbers (PvZ mowers, RD hearts, wall HP, LD counter). Whether competitors' first levels can be lost is UNOBSERVED, so there is no basis for "make r01 hard".
 - (c) Production controls are separated by shape or position (anvil, round summon button, CatWar2 leftmost MAX slot). PvZ's seed bar is not visible in its store shots.
