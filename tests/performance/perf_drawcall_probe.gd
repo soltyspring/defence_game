@@ -45,6 +45,35 @@ var contended := -1
 var phase_set := "full"
 var uncapped := false
 var _uncap_resets := 0
+## --dc-window=WxH : borderless window of exactly W×H physical px (e.g. 2400x1080 = a phone at integer scale 3 with the 640×360 base).
+##   The window is aligned to the secondary screen on the side away from the primary, so any overflow is OFF-SCREEN (never on the
+##   primary monitor); the GPU still renders the whole W×H back buffer.
+## --dc-zoom=Z     : world camera zoom Z (e.g. 1.3333 = 02's (k+1)/k at k=3), applied like 04's tests/integration/zoom_preview.gd CamFix
+##   (after battle.gd each frame; ground kept 70 px above the view bottom). Test-only; 02 has no zoom flag yet.
+var win_req := Vector2i.ZERO
+var zoom := 1.0
+var _win_done := false
+var _win_info := {}
+var _alpha_done := false
+var _camfix: Node = null
+
+class CamFix extends Node:
+	var battle: Node
+	var view: Node
+	var z := 1.0
+	func _process(_d: float) -> void:
+		if battle == null or not is_instance_valid(battle) or battle.sim == null or view == null: return
+		var vs: Vector2 = battle.get_viewport_rect().size
+		var half := vs.x * 0.5 / z
+		var cx := clampf(float(battle.cam.position.x), -90.0 + half, float(battle.sim.L) + 50.0 - half)
+		var gy: float = view.ground_y
+		var cy := gy - (vs.y * 0.5 - 70.0) / z
+		battle.cam.zoom = Vector2(z, z)
+		battle.cam.position = Vector2(roundf(cx), cy)
+		view.view_w = vs.x / z
+		view.cam_x = cx
+		view.view_top = cy - vs.y * 0.5 / z
+		view.view_bottom = cy + vs.y * 0.5 / z
 var _vp_rid := RID()
 var _t := 0.0
 var _started := false
@@ -67,6 +96,10 @@ func _initialize() -> void:
 		elif a.begins_with("--perf-contended="): contended = int(a.get_slice("=", 1))
 		elif a.begins_with("--dc-set="): phase_set = a.get_slice("=", 1)
 		elif a == "--dc-uncapped": uncapped = true
+		elif a.begins_with("--dc-window="):
+			var wh := a.get_slice("=", 1).split("x")
+			if wh.size() == 2: win_req = Vector2i(int(wh[0]), int(wh[1]))
+		elif a.begins_with("--dc-zoom="): zoom = float(a.get_slice("=", 1))
 	if out_path == "":
 		out_path = ProjectSettings.globalize_path("res://build/perf/drawcalls_latest.json")
 	_boot.call_deferred()
@@ -85,6 +118,57 @@ func _boot() -> void:
 		Engine.max_fps = 0
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	_started = true
+
+## Borderless window of win_req physical px on the current (secondary) screen; overflow goes to the side away from the primary
+## screen, so it is off-screen and never on the primary monitor.
+func _apply_window() -> void:
+	_win_done = true
+	var scr := DisplayServer.window_get_current_screen()
+	var sp := DisplayServer.screen_get_position(scr)
+	var ss := DisplayServer.screen_get_size(scr)
+	var prim := DisplayServer.get_primary_screen()
+	var pp := DisplayServer.screen_get_position(prim)
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
+	var x := sp.x if sp.x >= pp.x else sp.x + ss.x - win_req.x
+	DisplayServer.window_set_size(win_req)
+	DisplayServer.window_set_position(Vector2i(x, sp.y))
+	_win_info = {"requested": win_req, "screen": scr, "screen_pos": sp, "screen_size": ss, "primary": prim, "primary_pos": pp,
+		"set_position": Vector2i(x, sp.y), "on_primary_screen": scr == prim}
+
+## Alpha statistics of every character-page frame: destination quad = frame rect; bbox = used (alpha > 0) rect; opaque = alpha > 0
+## pixel count. drawcall_view.gd sums them for the frames actually drawn, so the report gives quad / bbox / opaque fill per frame.
+var _alpha := {}   # tex rid id -> {Vector4i(x, y, w, h): Vector3i(quad, bbox, opaque)}
+var _alpha_ms := 0
+func _precompute_alpha() -> void:
+	var atlas = root.get_node_or_null("Atlas")
+	if atlas == null: return
+	var t0 := Time.get_ticks_msec()
+	for id in atlas.pages:
+		if not str(id).begins_with("char_"): continue
+		var p = atlas.pages[id]
+		if p.tex == null: continue
+		var img: Image = p.tex.get_image()
+		if img == null: continue
+		if img.is_compressed(): img.decompress()
+		if img.get_format() != Image.FORMAT_RGBA8: img.convert(Image.FORMAT_RGBA8)
+		var table := {}
+		for fname in p.frames:
+			var f = p.frames[fname]
+			var r := Rect2i(int(f.x), int(f.y), int(f.w), int(f.h))
+			var k := Vector4i(r.position.x, r.position.y, r.size.x, r.size.y)
+			if table.has(k): continue
+			var sub := img.get_region(r)
+			var used := sub.get_used_rect()
+			var data := sub.get_data()
+			var opaque := 0
+			var i := 3
+			while i < data.size():
+				if data[i] > 0: opaque += 1
+				i += 4
+			table[k] = Vector3i(r.size.x * r.size.y, used.size.x * used.size.y, opaque)
+		_alpha[p.tex.get_rid().get_id()] = table
+	_alpha_ms = Time.get_ticks_msec() - t0
 
 func _stress(sim) -> void:
 	if sim.ended or sim.paused: return
@@ -114,6 +198,23 @@ func _swap_view(battle) -> void:
 	_mine.setup(battle.sim, root.get_node("Atlas"), _orig.ground_y, _orig.biome)
 	_mine.show_damage = _orig.show_damage
 	_mine.analyze_runs = phase_set != "units"
+	_mine.alpha_stats = _alpha
+	_mine.cam_x = _orig.cam_x
+	_mine.view_w = _orig.view_w
+	_mine.view_top = _orig.view_top
+	_mine.view_bottom = _orig.view_bottom
+	if absf(zoom - 1.0) > 0.001:
+		_camfix = CamFix.new()
+		_camfix.name = "CamFix08"
+		_camfix.battle = battle
+		_camfix.view = _mine
+		_camfix.z = zoom
+		_camfix.process_priority = 1000   # after battle.gd's camera update in the same frame
+		battle.add_child(_camfix)
+	_win_info["actual_window"] = DisplayServer.window_get_size()
+	_win_info["actual_position"] = DisplayServer.window_get_position()
+	_win_info["view_size"] = root.get_visible_rect().size
+	_win_info["canvas_scale"] = root.get_final_transform().get_scale().x
 	_orig.visible = false
 	var app := root.get_node("App")
 	if app.ui_layer:
@@ -147,7 +248,7 @@ func _swap_view(battle) -> void:
 			n += 1
 	for ph in PHASES: samples[ph] = {"dc": PackedInt32Array(), "prims": PackedInt32Array(), "units": PackedInt32Array(), "proj": PackedInt32Array(), "fx": PackedInt32Array(), "texts": PackedInt32Array(),
 		"runs_real": PackedInt32Array(), "runs_row": PackedInt32Array(), "runs_merge2": PackedInt32Array(), "runs_merge1": PackedInt32Array(), "runs_row_merge2": PackedInt32Array(),
-		"frame_ms": PackedFloat32Array(), "draw_us": PackedInt32Array(), "unit_us": PackedInt32Array(), "gpu_ms": PackedFloat32Array(), "rcpu_ms": PackedFloat32Array(), "unit_px": PackedInt32Array()}
+		"frame_ms": PackedFloat32Array(), "draw_us": PackedInt32Array(), "unit_us": PackedInt32Array(), "gpu_ms": PackedFloat32Array(), "rcpu_ms": PackedFloat32Array(), "unit_px": PackedInt32Array(), "unit_bbox": PackedInt32Array(), "unit_opaque": PackedInt32Array(), "on_px": PackedInt32Array(), "on_bbox": PackedInt32Array(), "on_opaque": PackedInt32Array()}
 
 func _apply_phase(app, name: String) -> void:
 	for k in _mine.cats: _mine.cats[k] = true
@@ -175,6 +276,11 @@ func _process(delta: float) -> bool:
 		Engine.max_fps = 0
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 		_uncap_resets += 1
+	if win_req != Vector2i.ZERO and not _win_done and _t > 1.0:
+		_apply_window()
+	if not _alpha_done and _t > warmup * 0.5:
+		_alpha_done = true
+		_precompute_alpha()
 	var battle = app.battle
 	_stress(battle.sim)
 	if _mine == null:
@@ -185,10 +291,11 @@ func _process(delta: float) -> bool:
 		_apply_phase(app, PHASES[0])
 		timeline.append({"t": snappedf(_t, 0.01), "phase": PHASES[0], "cycle": 0})
 		return false
-	_mine.cam_x = _orig.cam_x
-	_mine.view_w = _orig.view_w
-	_mine.view_top = _orig.view_top
-	_mine.view_bottom = _orig.view_bottom
+	if _camfix == null:   # zoom mode: CamFix08 sets the view fields after battle.gd each frame
+		_mine.cam_x = _orig.cam_x
+		_mine.view_w = _orig.view_w
+		_mine.view_top = _orig.view_top
+		_mine.view_bottom = _orig.view_bottom
 	_phase_t += delta
 	# skip the first 0.5 s of each phase (canvas re-record + settle), then sample every frame
 	if _phase_t > 0.5:
@@ -215,6 +322,11 @@ func _process(delta: float) -> bool:
 			if _mine.cats.units:
 				s.unit_us.append(int(_mine.unit_us))
 				s.unit_px.append(int(_mine.unit_quad_px))
+				s.unit_bbox.append(int(_mine.unit_bbox_px))
+				s.unit_opaque.append(int(_mine.unit_opaque_px))
+				s.on_px.append(int(_mine.unit_onscreen_px))
+				s.on_bbox.append(int(_mine.unit_onscreen_bbox_px))
+				s.on_opaque.append(int(_mine.unit_onscreen_opaque_px))
 		s.gpu_ms.append(RenderingServer.viewport_get_measured_render_time_gpu(_vp_rid))
 		s.rcpu_ms.append(RenderingServer.viewport_get_measured_render_time_cpu(_vp_rid) + RenderingServer.get_frame_setup_time_cpu())
 	if _phase_t >= phase_s:
@@ -277,7 +389,7 @@ func _finish(app) -> void:
 			"ref": ref_name,
 			"units_median": _med(s.units), "projectiles_median": _med(s.proj), "fx_median": _med(s.fx), "texts_median": _med(s.texts),
 			"unit_page_runs_median": {"real": _med(s.runs_real), "row": _med(s.runs_row), "merge2": _med(s.runs_merge2), "merge1": _med(s.runs_merge1), "row_merge2": _med(s.runs_row_merge2)},
-			"frame_ms": _fdist(s.frame_ms), "view_draw_us": _idist(s.draw_us), "unit_draw_us": _idist(s.unit_us), "unit_quad_px": _idist(s.unit_px),
+			"frame_ms": _fdist(s.frame_ms), "view_draw_us": _idist(s.draw_us), "unit_draw_us": _idist(s.unit_us), "unit_quad_px": _idist(s.unit_px), "unit_bbox_px": _idist(s.unit_bbox), "unit_opaque_px": _idist(s.unit_opaque), "onscreen_quad_px": _idist(s.on_px), "onscreen_bbox_px": _idist(s.on_bbox), "onscreen_opaque_px": _idist(s.on_opaque),
 			"render_gpu_ms": _fdist(s.gpu_ms), "render_cpu_ms": _fdist(s.rcpu_ms)})
 		if is_ref and ph != "all":
 			prev_ref = _med(s.dc)
@@ -289,7 +401,7 @@ func _finish(app) -> void:
 		"env": {"engine": "%s.%s.%s" % [v.major, v.minor, v.patch], "gpu": RenderingServer.get_video_adapter_name(), "window": DisplayServer.window_get_size(),
 			"args": Array(OS.get_cmdline_user_args()), "time": Time.get_datetime_string_from_system(false, true)},
 		"config": {"warmup": warmup, "phase_s": phase_s, "cycles": cycles, "phase_set": phase_set, "uncapped": uncapped, "max_fps": Engine.max_fps,
-			"uncap_resets": _uncap_resets, "vsync": DisplayServer.window_get_vsync_mode()}, "rows": rows, "timeline": timeline,
+			"uncap_resets": _uncap_resets, "vsync": DisplayServer.window_get_vsync_mode(), "zoom": zoom, "window": _win_info, "alpha_precompute_ms": _alpha_ms, "alpha_pages": _alpha.size()}, "rows": rows, "timeline": timeline,
 		"last_drawn_counts": _mine.drawn if _mine else {}, "last_page_units": _mine.page_units if _mine else {}, "hud_children": _hud_info}
 	DirAccess.make_dir_recursive_absolute(out_path.get_base_dir())
 	var f := FileAccess.open(out_path, FileAccess.WRITE)

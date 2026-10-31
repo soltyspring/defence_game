@@ -73,6 +73,11 @@ func _draw() -> void:
 	for k in drawn: drawn[k] = 0
 	unit_us = 0
 	unit_quad_px = 0
+	unit_bbox_px = 0
+	unit_opaque_px = 0
+	unit_onscreen_px = 0.0
+	unit_onscreen_bbox_px = 0.0
+	unit_onscreen_opaque_px = 0.0
 	var t0 := Time.get_ticks_usec()
 	super()
 	draw_us = Time.get_ticks_usec() - t0
@@ -116,6 +121,14 @@ func _draw_unit(u) -> void:
 var draw_us := 0
 var unit_us := 0
 var unit_quad_px := 0
+## Set by the probe: tex rid id -> {Vector4i(x, y, w, h): Vector3i(quad, alpha bbox, opaque px)} for character pages.
+var alpha_stats := {}
+var unit_bbox_px := 0
+var unit_opaque_px := 0
+## On-screen parts (world px; multiply by (canvas scale × camera zoom)² for physical screen px).
+var unit_onscreen_px := 0.0
+var unit_onscreen_bbox_px := 0.0
+var unit_onscreen_opaque_px := 0.0
 ## false = skip the per-frame page-run bookkeeping (a copy + sort of all units) so it does not add to frame time in timing A/Bs.
 var analyze_runs := true
 
@@ -137,7 +150,24 @@ func _sim_tex(real_tex: Texture2D) -> Texture2D:
 func _blit_rec(rec, i: int, pos: Vector2, flip: bool, mod: Color) -> void:
 	if _cur_page != "":
 		var rr: Rect2 = rec.rects[i]
-		unit_quad_px += int(absf(rr.size.x * rr.size.y))   # destination quad area in view px (scale 1): fill-rate proxy
+		var qa := absf(rr.size.x * rr.size.y)
+		unit_quad_px += int(qa)   # destination quad area in world px (scale 1): fill-rate proxy
+		# on-screen part only (the GPU rasterises nothing outside the view). A flip draws the region mirrored about pos.x; the
+		# canvas keeps x0 and flips the texture, so the covered span is [pos.x - w + pv.x, pos.x + pv.x].
+		var pv: Vector2 = rec.pivots[i]
+		var x0 := (pos.x - pv.x) if not flip else (pos.x - rr.size.x + pv.x)
+		var vis := Rect2(cam_x - view_w * 0.5, view_top, view_w, view_bottom - view_top).intersection(Rect2(x0, pos.y - pv.y, rr.size.x, rr.size.y))
+		var frac := vis.get_area() / qa if qa > 0.0 else 0.0
+		unit_onscreen_px += vis.get_area()
+		if not alpha_stats.is_empty():
+			var tab = alpha_stats.get(rec.tex.get_rid().get_id())
+			if tab != null:
+				var st = tab.get(Vector4i(int(rr.position.x), int(rr.position.y), int(rr.size.x), int(rr.size.y)))
+				if st != null:
+					unit_bbox_px += st.y
+					unit_opaque_px += st.z
+					unit_onscreen_bbox_px += st.y * frac
+					unit_onscreen_opaque_px += st.z * frac
 	if tex_mode == "real" or _cur_page == "":
 		super(rec, i, pos, flip, mod)
 		return

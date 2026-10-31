@@ -68,3 +68,42 @@ r08 caps scene, frame pacing and GPU time with both builds (ANDROID_PROFILING.md
 ```
 Output (git-ignored): `build/perf/artab_676b105_D1FULL_20261101-014838/` (summary.json, summary.md, run_*.json, gate_*), the 2-unit
 static check `build/perf/artab_676b105_D1_gate/`, and the discarded capped attempt `build/perf/artab_676b105_D1FULL_20261101-011732/`.
+
+## 6. Real fill area without transparent margins (static alpha mask, 2026-11-01 02:1x)
+03 has not answered A12 yet (body-box ratio), so the area comes from the atlas alpha masks: `tools/perf/sprite_fill_static.py`
+(no Godot) on the M16 copies (`build/perf/artab_676b105/base` and `draft_D1FULL`; the art is identical at ad47eda). It averages the
+walk, attack and idle frames per anim set. **quad** is the frame rect, which is what the GPU shades today, because every sprite
+is an alpha-blended rectangle. **bbox** is the alpha bounding box, which a trimmed quad would shade. **opaque** counts the pixels
+with alpha > 0.
+
+| Set | quad base → D1FULL (px) | bbox base → D1FULL | opaque base → D1FULL |
+|---|---|---|---|
+| melee_basic 식빵병 | 1024 → 2304 | 353 → 779 (34 %) | 208 → 416 |
+| ranged_basic 롤빵병 | 1024 → 2304 | 310 → 639 (28 %) | 197 → 404 |
+| tank 통식빵 | 1024 → 2304 | 326 → 677 (29 %) | 241 → 505 |
+| fast 프레첼 | 1280 → 2000 | 858 → 1316 (66 %) | 415 → 623 |
+| siege 화덕포 | 1920 → 1920 | 1460 → 1460 (76 %) | 869 → 869 |
+| hero_captain 제빵 대장 | 2304 → 3364 | 832 → 1183 (35 %) | 464 → 654 |
+| worker 제빵사 | 1024 → 2304 | 316 → 643 (28 %) | 187 → 381 |
+| e_grunt 곰팡이 졸개 | 1024 → 2304 | 342 → 714 (31 %) | 198 → 400 |
+| e_swarm 초파리 떼 | 768 → 3072 | 344 → 1227 (40 %) | 146 → 475 |
+| e_spitter 포자 뱉개 | 1024 → 2304 | 284 → 587 (26 %) | 193 → 395 |
+| e_bomber 부푼 효모 | 1024 → 2304 | 377 → 783 (34 %) | 269 → 553 |
+| e_brute 썩은 멧돼지 | 2304 → 5184 | 864 → 1877 (36 %) | 604 → 1291 |
+| **mean of the 12 sets** | **1312 → 2639 (×2.01)** | **555 → 990 (×1.78; 42 % → 38 % of the quad)** | **332 → 580 (×1.75)** |
+
+(percentages = bbox / quad of the D1FULL frames)
+- The visible body grows ×1.75. The shaded quad grows ×2.0, because the D1 frames (48×48) carry more empty margin.
+- **Trimming the quads to the alpha box** would shade 38 % of today's D1 quad: 990 px per sprite on average, which is **25 % less
+  than the shipped 32 px quads shade today (1312 px)**. Trimmed D1 would therefore cost less fill than the current untrimmed art.
+  This is the largest fill lever found, larger than the zoom choice.
+- One code dependency blocks trimming: `battle_view.gd:261` places each HP bar at `-rec.rects[fi].size.y - 3`, so a trimmed frame
+  with a varying height would move the bar every frame. Trimming needs a fixed per-set bar anchor (02), and the packer has to keep
+  each frame's pivot (03).
+
+## 7. Phone-resolution follow-up (2026-11-01 03:34–03:53): see PHONE_FILL.md
+At 2400×1080 and 2340×1080 (integer scale 3), the desktop GPU still cannot separate shipped, D1FULL and D1FULL + zoom 4/3. All
+differences are inside the same-build drift (0.017 ms GPU). The pixel counts are exact:
+- D1 + zoom upper bound 3.33–3.37 Mpx (×3.7–3.9 of today). Trimmed quads give 1.23–1.24 Mpx (×1.36–1.43).
+- The highest measured on-screen fill was 1.39 Mpx (54 % of the screen).
+- The background's redundant clear rect costs one full screen (2.6 Mpx) per frame. That is more than D1 + zoom adds.

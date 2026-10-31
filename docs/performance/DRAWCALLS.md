@@ -116,6 +116,12 @@ worker 7. HUD code changes between v10 and v11 are 04's d724b9a (numbers Galmuri
 glyph cache is unlikely, because FONT_COST.md shows every ko.json string at Galmuri11 12 fits one cache page. My micro-check estimate
 (−1 to −2 per card button from ui-12 numbers) is **not confirmed** by the HUD: card buttons stayed at 9–10.
 
+### 3.0b After 04's R8 layering (2de6668), at phone resolution (2026-11-01 03:5x, ad47eda; PHONE_FILL.md §4)
+At 2400×1080 (canvas scale 3): **whole frame 58** (pre-R8 65), HUD alone 49, `hud_top` 7, card buttons 5 each. The ≤ 100 target
+is met on 1080-high phones. At scale 2 (04's 1280×720 measurement, which matches a 1600×720 or 1520×720 phone) the same code
+gives 129 and `hud_top` 53. The cause is glyph-cache pages: text is drawn from the 24 px oversampled cache, whose 256² pages hold
+about 100 glyphs each. So 720-high phones still miss the target until 04's `oversampling = 1.0` change.
+
 ### 3.1 Plan (as of v10; rows marked done are measured)
 BUDGETS.md: battle draw calls ≤ 100 (provisional, low-end GLES3) and ≤ 200 (mid-tier). At caps the battle is at 176–181 (v10: 177).
 Damage texts, fx and projectiles are ≤ 6 each, which corrects the 18:25 guess in the 02 request file (texts/fx interleaving). 04's

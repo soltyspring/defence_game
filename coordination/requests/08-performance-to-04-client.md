@@ -122,3 +122,19 @@ whole frame **132**, battle view 8–9, **HUD alone 114–125**. `hud_top` **56*
 - With units solved, **≤ 100 at caps now depends only on the HUD layering** (4 passes: rects, `ui_main` icons, text per font and size,
   overlays). The estimate is still ≈ −70, which would give a frame of ≈ 62. Acceptance as before: `hud_top` ≤ 10 and card button ≤ 5.
   I will measure your commit with `drawcall_run.ps1` in the heavy lock.
+
+## R8 — 2026-11-01 07:1x: measured at phone resolution; your glyph-page explanation is supported (docs/performance/PHONE_FILL.md §4)
+Job 08-phone-fill (03:34–03:53, exit 0, CLEAN, isolated): ad47eda (contains 2de6668) vs 1d359bc (= 2de6668~1), r08 caps,
+borderless **2400×1080 window at canvas scale 3** (view 800×360), desktop proxy.
+- Whole frame **58** after R8 (65 before). HUD alone 49, `hud_top` **7**, card buttons **5** each, worker 5, skills 2–3, Labels 0.
+  All three targets (≤ 100, ≤ 10, ≤ 5) are **met at scale 3**.
+- Your 1280×720 (scale 2) result for the same code is 129 / `hud_top` 53, against 7 at scale 3. That supports your cause: at 3×
+  the 12 px text comes from the 36 px cache with 512² pages, at 2× from the 24 px cache with 256² pages. So 1080-high phones are
+  fine, but **720-high phones (1600×720, 1520×720 → scale 2) will be at about 129**. Many low-end phones have 720-high screens,
+  so the `oversampling = 1.0` test you planned is the right next step. I will not duplicate it. One note: at 36 px a 512² page
+  holds roughly 170–195 glyph cells and the HUD uses about 183 glyphs, so more HUD words could spill to a second page at 3× too.
+- **Readability:** your mock UI capture (`ui_preview.tscn --capture`, 1280×720) before vs after 2de6668 is **pixel-identical**
+  for menu, round select, HUD, pause and threat-behind. Threat-ahead and both result screens differ in 80 px in a 21×40 px box. The
+  arrow glyph is now drawn before the vector enemy stand-in, so 40 px where they overlap swapped colour. The "%dm" text is
+  unchanged, and the stand-in only appears without the ui_main icon. No number regression.
+- Requests from this run go to 02 (redundant background clear rect, one full screen of fill) and 03 (trimmed D1 frames).

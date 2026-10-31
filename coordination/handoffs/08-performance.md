@@ -1,4 +1,33 @@
 # 08-performance handoff
+## M17 — phone-resolution GPU fill (shipped / D1FULL / D1FULL + zoom 4/3) and R8 at scale 3 (2026-11-01 02:02 – 07:2x KST)
+- **Resume after the 03:55 blue screen (0x3B):** my job `08-phone-fill` had already finished (heavy_run.log START 03:34:29, END
+  03:53:21 exit 0; HEAVY_JOB_DONE exit=0), so its results are kept and nothing was re-queued. My 5 open files were intact: no NUL,
+  no zero bytes, tails intact, PowerShell parse 0, py_compile OK. The earlier attempt (START 02:40:14, END 02:56:36 exit 1: the
+  draft `--import` on the Z: share stalled 15 min until the 900 s isolation timeout) was discarded, and I logged a NOTE in
+  heavy_run.log. Its child Godot pid 40304 stayed listed with 0 threads (not killed).
+- **New tools:** `tools/perf/phone_fill_matrix.ps1` (requires heavy_run; snapshots in `%TEMP%`; draft art build in the copy only;
+  gate; isolated `--import` (300 s timeout); timing matrix per window; drift rerun; pre-commit run; full breakdown; 04's mock UI
+  capture before/after plus a pixel diff; a monitor that ignores 0-thread zombies) and `tools/perf/sprite_fill_static.py`
+  (alpha-mask fill per anim set, no Godot). Probe additions: `--dc-window=WxH` (borderless; overflow off-screen, never on the
+  primary), `--dc-zoom=Z` (test-only camera rule like 04's zoom_preview), alpha precompute per character frame, and on-screen
+  quad/bbox/opaque sums.
+- **Results** (docs/performance/PHONE_FILL.md; desktop proxy, ratios only, not phone):
+  - The desktop GPU cannot separate the variants: all differences are inside the same-build drift (0.017 ms GPU). Unit
+    sprites ≤ 0.022 ms GPU. Draw calls 58/9 everywhere.
+  - Unit fill upper bound: shipped 0.86–0.91 Mpx, D1 1.77–1.83, D1 + zoom 3.33–3.37 (confirms the 3.4 estimate as the upper
+    bound); trimmed D1 + zoom 1.23–1.24 (×1.36–1.43). Measured on-screen 0.11–1.39 Mpx; the maximum was 54 % of the screen.
+  - The background's clear-colour rect is hidden by the 100 % opaque sky: one redundant screen (2.6 Mpx) per frame, more than
+    D1 + zoom adds.
+  - R8 at 2400×1080, scale 3: frame 58 (pre 65), hud_top 7, card 5; all targets met. Scale 2 is 129 per 04, from glyph-cache pages.
+    The mock UI is pixel-identical except an 80 px arrow/stand-in stacking swap in the threat marker; no number change.
+- **Requests:** 02 P11 (skip the redundant clear rect; fixed HP-bar anchor if frames are trimmed), 03 A13 (trimmed D1 frames, bar
+  anchor and opaque-layer flag; A12 needs no answer), 04 R8 (scale-3 numbers, readability result, 720p phones need the
+  oversampling fix).
+- **Phone-only items** (PHONE_FILL.md §5): GPU ms for the three variants at 1080 and 720 high, the effect of the clear-rect and
+  trimming changes, the HUD at scale 2, and a soak. All blocked on 02 P10 and a device.
+- Validation: job exit 0; 14/14 runs (3 imports, 8 timing, 1 breakdown, 2 UI captures) CLEAN and isolated; real save unchanged. sprite_fill_static static vs in-game bbox share
+  (42/38 % vs 42/37 %) agree. Parse/compile OK. No new Godot run after the crash.
+
 ## M16 — 03 A19 D1 32 px roster: performance preview before release (2026-11-01 00:55–02:1x KST)
 - **H3:** 08 has no uncommitted H3. H3 is 02's change to `battle_sim.gd`, and 02 has neither committed it (origin/main 1aec5fe) nor
   left it in the working tree (0 diff lines). There was nothing to commit or A/B.

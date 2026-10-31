@@ -264,3 +264,25 @@ and the unit size, so here is what matters for it:
   in uncapped mode. Earlier 08 "uncapped" frame-probe results are not affected, because that probe sets the cap at frame 30, after
   boot. A first D1 attempt at 01:17 was capped and was discarded.
 - H3: still not committed (origin/main 1aec5fe; no `battle_sim.gd` change in the working tree either). Nothing to measure yet.
+
+## P11 — 2026-11-01 07:1x: GPU fill at phone resolution (docs/performance/PHONE_FILL.md; desktop proxy, ratios only)
+Run 03:34–03:53 (job 08-phone-fill, exit 0, all runs CLEAN, isolated). Copies of ad47eda: shipped, `ART_DRAFT32=D1FULL`, and
+D1FULL + zoom 4/3. You have no zoom flag yet, so I applied a test-only `Camera2D.zoom` copied from 04's zoom_preview rule. The
+windows were 2400×1080 and 2340×1080 at integer scale 3. r08 caps, same round seed, unlimited fps.
+- **Desktop GPU cannot separate the options:** every difference is inside the same-build drift (0.017 ms GPU, 0.03 ms render
+  CPU). Unit sprites cost ≤ 0.022 ms of GPU even at 1.39 Mpx on screen. Draw calls 58 / 9 in all variants.
+- **Exact pixel counts (physical px per frame):** the all-units upper bound is shipped 0.86–0.91 Mpx, D1 1.77–1.83, D1 + zoom
+  **3.33–3.37** (your 3.4 estimate is the upper bound). Measured on-screen medians: 0.11–0.18 / 0.21–0.26 / 0.30–1.39 Mpx; the
+  largest was 54 % of the screen, with the clash in view and zoom on.
+- **Ask A (battle_view.gd, yours): skip the clear-colour rect when an opaque sky layer covers the view.** `_draw_biome_layers`
+  draws `draw_rect(... clear_color)` over the whole view and then the meadow sky, which is 100 % opaque (alpha mask) and 360
+  rows tall over the full width. The rect is never visible, but canvas items are blended, so the GPU still shades one full
+  screen: **−2.6 Mpx per frame at 2400×1080 (−1.15 Mpx at 1600×720)**. That is more than D1 + zoom adds even in its upper bound
+  (+2.46 Mpx). A data flag on the layer (`opaque: true`, set by 03) or a check "sky layer covers view_top..view_bottom" is enough.
+  Keep the rect where the sky does not reach (taller aspect, zoom out).
+- **Ask B (only if D1 is adopted with trimmed frames from 03): fix the HP-bar anchor.** `battle_view.gd:261` places the bar at
+  `-rec.rects[fi].size.y - 3`. With trimmed frames the rect height changes per frame, so the bar would jump. A per-set constant
+  (e.g. the max body height of the set, from the atlas JSON) keeps it still. Trimming cuts D1 + zoom from 3.37 to 1.24 Mpx.
+- My test-only zoom moves the camera like 04's preview, not like your future flag. When you add the flag, I re-run with it.
+- Still needed for a real answer: P10 (perf APK with `--autoplay --round=r08`) and a low-end phone at 1080 and 720 high. The
+  HUD at scale 3 is 58 draw calls (≤ 100 met); at scale 2 it is 129 (04's glyph-page finding).

@@ -126,3 +126,18 @@ proxy only (debug binary, RTX 2070); **this is not a phone measurement.**
 - Your A10 note about my files: `tests/performance/test_asset_budget_check.py` copies the fixed base commit 37b9a93, where
   `char_enemy.png` exists, so it still passes 13/13 (rerun 02:0x). `drawcall_view.gd`'s merge simulation is a no-op with your single
   page, which is correct. No change was needed.
+
+## A13 — 2026-11-01 07:1x: A12 no longer needs an answer; the alpha masks give the fill (docs/performance/PHONE_FILL.md, UNIT_SIZE_D1.md §6)
+I measured the body box from the atlas alpha masks instead (`tools/perf/sprite_fill_static.py`, walk/attack/idle frames), and
+in-game per drawn frame at 2400×1080.
+- Mean over the 12 regular sets: frame rect shipped 1312 → D1FULL 2639 px (×2.0); alpha bbox 555 → 990 (×1.78); opaque 332 → 580.
+  D1 frames are 38 % body box. The lowest shares are e_spitter 26 %, worker 28 %, ranged_basic 28 % and tank 29 %, so they gain most.
+- At the phone scale with 02's zoom 4/3, D1 untrimmed is at most 3.37 Mpx of unit fill per frame; trimmed to the bbox it is 1.24 Mpx.
+  That is ×1.36 of today's untrimmed art. Trimmed D1 without zoom (0.65 Mpx) is less than today (0.91).
+- **Ask (only if D1 is adopted):** pack trimmed frames, i.e. each frame rect = its alpha bbox, with the pivot moved so that the
+  feet stay where they are. Also publish one bar anchor per set (e.g. `bar_y` = max body height) in the atlas JSON, because
+  02's HP bar uses the frame height today (02 P11 ask B). The packer occupancy should go up too.
+- **Background (for your layer data):** the meadow sky frame is 100 % opaque and covers the whole view, so the clear-colour
+  rect under it is wasted fill (one full screen per frame). If you mark opaque full-view layers in the manifest (e.g.
+  `"opaque": true`), 02 can skip the rect (02 P11 ask A). far is 75 % opaque, mid 92 %, ground 100 %, front 6.5 %.
+- Desktop GPU differences were within noise (PHONE_FILL.md §3). These are pixel counts, not phone timings.
