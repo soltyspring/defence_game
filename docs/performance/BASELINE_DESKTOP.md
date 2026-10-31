@@ -241,3 +241,11 @@ Judgements (desktop quiet, provisional targets):
 - The battle_start event frames in (b)–(e) are not interpretable: `--autoplay` starts the battle during boot, so the 30-frame baseline is boot
   time (~145 ms). The battle-start cost comes from (d).
 - Still not measured: phone anything; release-template timings; CPU of 12 audio voices.
+
+### 9. Draw-call breakdown — 2026-10-31 18:47–19:38 (counts only; CONTENDED for timing, which is not reported)
+Full method and tables: DRAWCALLS.md. r08 at caps, 4 runs on f41fd12 and 84c18ab snapshots with their own import: frame 176–181 draw
+calls. Unit sprites 50–54 (atlas-page runs in depth order), HUD ≈ 100 (`hud_top` 48–50, each card button 7–11). Background, bases, bars,
+projectiles, fx and damage texts are ≤ 9 each. This corrects the §8 guess (texts/fx interleaving). Requests: 02 P9, 03 A9, 04 R8.
+**user:// isolation:** every run before 19:32 (this file's §2–§8 included) booted with the real player folder and its upgrades
+(10 v0.26 P1). From 19:32, all 08 launchers use a private APPDATA (`tools/perf/perf_isolation.ps1`). Timings with upgrades are not
+re-judged: the stress scenes hold 36/36 regardless of upgrade levels, and the sim A/B in §8 used the same save for base and fix.

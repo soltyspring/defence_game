@@ -140,3 +140,30 @@ while in battle and observe PSS and stability.
 | Mid | ≥ 1 | §2–§4, §6, §8 |
 | High | optional | §4 |
 The user must supply the phones; this machine has none attached. Until then every phone budget remains UNMEASURED.
+
+## 12. Emulator feasibility check (M14, 2026-10-31 19:14–19:28) — EMULATOR, not phone evidence
+Goal from the coordinator: run the same r08 dense scene once on 02's AVD and record frames and memory if possible.
+- Setup: no emulator or device was attached, so 08 started its own instance of `build/avd/LaneDefence_Phone` (API 36 x86_64,
+  1600×720 landscape, 4 vCPU, 4 GB, `-gpu host`, port 5580) with 02's command (ANDROID_BUILD.md A10). It booted in 57 s. 08 installed the
+  existing `build/android/defence-debug.apk` (17:37, sha256 0E53DC51…) and stopped the same instance with `adb -s emulator-5580 emu kill`
+  at 19:28. No other emulator or qemu process existed or was touched.
+- **r08 is not reachable with this APK.** `am start … GodotAppLauncher --esa command_line_params ++,--autoplay,--round=r08` arrives
+  as "Launch intent … with parameters []": the launcher alias drops the extras. `GodotApp` itself is not exported, so the shell gets
+  "Permission Denial". Without `--autoplay` there is no stress cheat, and a fresh save cannot pick r08 from the menu. To measure r08 on
+  an emulator or phone we need a perf-only debug export with the args baked in. Godot's Android export option for extra command-line
+  arguments would do it, but the option is unverified in this preset. 02 owns `export_presets.cfg`, so this is a request to 02.
+- Shared adb server: "daemon not running; starting now" happened 4 times in 12 minutes. Another tool on the PC restarts the server
+  (02 noted the same). One Play tap was lost that way. `android_capture.ps1` now retries adb calls (3 × 3 s) and records `adb_retries`.
+- `android_capture.ps1` fixes found by this run: the script now exits 2 (`APP_NOT_RUNNING`) when the app had no process in any sample;
+  before this fix, a run with no app process produced empty PSS rows and still exited 0. It also prints the pid per sample and strips
+  Android 14+ `RequestedLayerState{…}` from the SurfaceView name; before this fix, `--latency` got 0 frames.
+
+| Capture (menu only, EMULATOR) | Value |
+|---|---|
+| cold start `am start -S -W` TotalTime | 1313–3458 ms (7753 ms on the first launch after install) |
+| TOTAL PSS after load | **169–176 MB** (Native Heap 75.7 MB; Graphics 0 KB, host GPU memory is not counted in PSS) |
+| SurfaceFlinger present interval p50 / p95 / p99 | 16.9 / 46 / 127 ms and 22.1 / 96 / 184 ms (two 40 s menu runs) |
+| app CPU (top, 4 vCPU) | 67–69 % average |
+
+The PSS agrees with 02's 172–174 MB. The frame pacing figures come from an x86_64 guest whose host was also running other roles' Godot
+processes, so they say nothing about phones. Raw output (git-ignored): `build/perf/device/sdk_gphone64_x86_64_emulator-5580/`.

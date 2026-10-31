@@ -11,6 +11,9 @@ Set-Location $Root
 $Godot = Join-Path $Root 'tools\engine\Godot_v4.7.2-stable_win64_console.exe'
 $tmp = Join-Path $Root 'build\perf\semantics'
 New-Item -ItemType Directory -Force $tmp | Out-Null
+. (Join-Path $Root 'tools\perf\perf_isolation.ps1')
+$PerfAppData = New-PerfAppData $Root 'semantics'   # private user:// (10 v0.26 P1)
+$t0Iso = Get-Date
 # sc = selfcheck input, mode = strict flag, exit = expected exit, budgets = expected verdict, af/pf = expected adopted/provisional fails
 $cases = @(
     @{ name = 'pass_default';          sc = 'pass';         mode = '';             exit = 0; budgets = 'PASS'; af = 0; pf = 0 },
@@ -26,7 +29,8 @@ foreach ($c in $cases) {
     $a = @('--headless', '--path', '.', '-s', 'res://tests/performance/perf_bench.gd', '--', "--selfcheck=$($c.sc)", "--out=$tmp\$($c.name).json", '--contended=0')
     if ($c.mode) { $a += $c.mode }
     $prev = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
-    $out = & $Godot @a 2>&1 | Out-String
+    Enter-PerfAppData $PerfAppData
+    try { $out = & $Godot @a 2>&1 | Out-String } finally { Exit-PerfAppData }
     $code = $LASTEXITCODE
     $ErrorActionPreference = $prev
     $line = ($out -split "`n" | Where-Object { $_ -match '^PERF_BENCH ' } | Select-Object -Last 1)
@@ -51,5 +55,10 @@ foreach ($mode in @('', '--strict', '--strict-all')) {
     if (-not $iok) { $bad++ }
     Write-Host ("[semantics] {0,-4} inventory{1,-13} exit={2} (want {3}; fails={4} adopted={5} untagged={6})" -f $(if ($iok) { 'PASS' } else { 'FAIL' }), $(if ($mode) { $mode } else { '_default' }), $ic, $want, $all, $adopted, $untagged)
 }
+# isolation (10 v0.26 P1): the selfcheck runs above must have logged under the PRIVATE user dir
+$proof = Test-PerfIsolation $PerfAppData $t0Iso
+$isoOk = [bool]$proof
+if (-not $isoOk) { $bad++ }
+Write-Host ("[semantics] {0,-4} private_appdata        log={1}" -f $(if ($isoOk) { 'PASS' } else { 'FAIL' }), $(if ($proof) { $proof.Replace($Root, '.') } else { 'NONE (user:// not isolated)' }))
 Write-Host "[semantics] $(if ($bad -eq 0) { 'ALL PASS' } else { "$bad FAILED" })"
 exit $(if ($bad -eq 0) { 0 } else { 1 })

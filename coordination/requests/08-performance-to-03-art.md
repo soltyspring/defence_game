@@ -57,3 +57,21 @@ in battle), or pack it into ui_main's free space (ui_main occupancy ~0.35). Afte
 worst battle 9.50 MiB (cap 12). Note: it has `group: "ui"`. The engine never releases "ui" pages (src/core/atlas.gd:50), so `load_policy:
 "menu"` is not honoured and the logo stays resident in battle. If the logo is menu-only, a different group or a 02 change to honour
 `load_policy` would free 0.25 MiB in battle; this is low priority. Any further always-resident page will fail the menu cap.
+
+## A9 — 2026-10-31 19:40: merge the 4 battle character pages (draw calls, measured; docs/performance/DRAWCALLS.md §2.1)
+r08 at caps (≈ 73 units, origin/main f41fd12 and 84c18ab snapshots, desktop GL Compatibility): unit sprites cost **50–54 of 176–181**
+draw calls per frame. The cause is the page change between consecutive units in depth order. Today there are 4 character pages:
+char_player 512×512 (25–26 units incl. hero), char_player_adv, char_enemy and char_enemy_adv, each 512×256 (11–25 units each). That
+gives 49–60 page runs per frame, and the measured draw calls follow the run count.
+- **Ask:** pack char_player + char_player_adv + char_enemy + char_enemy_adv into **one 1024×512 page**. Used pixels from your JSON
+  `occupancy` at 84c18ab: 152 830 + 48 628 + 52 691 + 61 211 = **315 360 px of 524 288 (60 %)**. Your packer has to confirm the shapes
+  fit with padding/extrude. GPU memory 2.5 MiB → **2.0 MiB RGBA8**. Predicted unit draw calls: 49–60 → **1 run (≈ −52)**.
+- Second option if one page does not pack: 2 pages, player side (201 458 px) and enemy side (113 902 px), each 512×512 = 2.0 MiB total.
+  That gives ≈ −15 to −20 alone, or ≈ −35 with 02's proposed row sort (P9).
+- Trade-off: char_player is `load_policy: battle`, the other three are `battle_roster`. A round that uses only basic units would hold
+  2.0 MiB instead of 1.5 MiB (+0.5 MiB), and the worst battle drops 9.25 → 8.75 MiB. All caps keep passing (worst battle ≤ 12 MiB).
+  Bosses stay on their own pages (1 extra run each).
+- No code change is needed if `atlas.anim_sets` maps the 9 anim sets to the new page id (02's `Atlas` reads it from your JSON). I gate
+  the commit with `asset_budget_check.py --rev` and re-measure with `tools/perf/drawcall_run.ps1`.
+- Gate update: your aee329b, b113085 and the other commits up to 84c18ab: **PASS** (worst battle 9.25 MiB, all pages 9.50 MiB, menu
+  0.50 MiB, 43 SFX 0.93 MiB, music 0.56 MiB; page sizes unchanged).

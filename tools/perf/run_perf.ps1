@@ -20,6 +20,9 @@ if (-not (Test-Path (Join-Path $Root '.godot'))) { throw 'Project not imported (
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $Out = Join-Path $Root "build\perf\$stamp"
 New-Item -ItemType Directory -Force $Out | Out-Null
+. (Join-Path $PSScriptRoot 'perf_isolation.ps1')
+$PerfAppData = New-PerfAppData $Root 'run_perf'   # private user:// (10 v0.26 P1)
+$t0Run = Get-Date
 $sha = (& git rev-parse --short HEAD 2>$null)
 $dirty = @(& git status --porcelain -- src scenes data assets project.godot 2>$null).Count
 $others = @(Get-Process | Where-Object { $_.ProcessName -like 'Godot*' } | Select-Object Id, ProcessName, StartTime)
@@ -46,7 +49,8 @@ function Invoke-GodotVisible([string]$Name, [string[]]$GodotArgs) {
     $pos = "--screen $secondaryIndex"
     $all = @('--screen', "$secondaryIndex", '--resolution', '1280x720') + $GodotArgs + @("--perf-contended=$($others.Count)")
     $so = Join-Path $Out "$Name.log"; $se = Join-Path $Out "$Name.err.log"
-    $proc = Start-Process -FilePath $Godot -ArgumentList $all -RedirectStandardOutput $so -RedirectStandardError $se -PassThru -WindowStyle Hidden
+    Enter-PerfAppData $PerfAppData
+    try { $proc = Start-Process -FilePath $Godot -ArgumentList $all -RedirectStandardOutput $so -RedirectStandardError $se -PassThru -WindowStyle Hidden } finally { Exit-PerfAppData }
     $null = $proc.Handle
     $rect = $null; $winTitle = ''; $until = (Get-Date).AddSeconds(20)
     while ((Get-Date) -lt $until -and -not $proc.HasExited) {
@@ -79,7 +83,8 @@ function Invoke-GodotVisible([string]$Name, [string[]]$GodotArgs) {
 function Invoke-Godot([string]$Name, [string[]]$GodotArgs) {
     Write-Host "=== $Name ==="
     $prev = $ErrorActionPreference; $ErrorActionPreference = 'Continue'   # Godot logs warnings to stderr
-    $log = & $Godot @GodotArgs 2>&1 | Out-String
+    Enter-PerfAppData $PerfAppData
+    try { $log = & $Godot @GodotArgs 2>&1 | Out-String } finally { Exit-PerfAppData }
     $code = $LASTEXITCODE
     $ErrorActionPreference = $prev
     Set-Content -Path (Join-Path $Out "$Name.log") -Value $log -Encoding utf8
@@ -155,6 +160,9 @@ if (Test-Path $fj) {
     foreach ($r in $fo.summary) { $s += "| $($r.case) | $($r.allowed_size) | $($r.shape_cold_ms_med) | $($r.shape_warm_ms_med) | $($r.first_frame_ms_med) | $($r.warm_label_frame_ms_med) | $($r.glyph_hitch_ms_med) | $($r.idle_ms_med) | $($r.cache_pages) | $($r.cache_bytes) | $($r.load_ms_med) |" }
 }
 $meta.failures = $fail
+$meta.private_appdata = $PerfAppData
+$meta.isolation_proof_log = Test-PerfIsolation $PerfAppData $t0Run
+if (-not $meta.isolation_proof_log) { Write-Warning 'no godot log under the private APPDATA: user:// isolation NOT proven for this run' }
 $meta | ConvertTo-Json | Set-Content (Join-Path $Out 'meta.json') -Encoding utf8
 $s | Set-Content (Join-Path $Out 'summary.md') -Encoding utf8
 $latest = Join-Path $Root 'build\perf\latest'

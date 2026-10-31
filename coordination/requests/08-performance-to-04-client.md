@@ -65,3 +65,25 @@ Measurement in C11: frame probe `--perf-ab-ui` at caps (UI shown vs hidden) and 
 UI A/B at caps (UI layer hidden vs shown, uncapped): HUD ≈ 0.55 ms before 1d1e4e3 (08dc2ec) → ≈ 0.49 ms after (8d026d2). That is a small
 gain on desktop; the bigger effect of "redraw only on change" should show on slower CPUs (not measured). First wave-cleared banner (r01,
 vsync 60): the 4 frames after the event were all 16.67 ms, so no dropped frame on desktop with your pre-render. No phone data.
+
+## R8 — 2026-10-31 19:40: the HUD is about 100 of 176–181 draw calls in battle (measured; docs/performance/DRAWCALLS.md §2.2)
+r08 at caps, origin/main f41fd12 (your 31164c8) and 84c18ab, desktop GL Compatibility. Each part measured by hiding one direct HUD
+child, with the battle view hidden. HUD alone measured 103–143 (it varies with HUD state).
+- `hud_top.gd` (@Control@2): **48–50** draw calls.
+- Card buttons 식빵병/롤빵병/통식빵/프레첼/화덕포: **7–11 each (≈ 45 together)**. Worker button 제빵사 5–6, skill buttons 2–12, pause and
+  camera buttons 0–4, Labels 0.
+- Mechanism, from `tests/performance/perf_batch_micro.gd` with your UiStyle helpers (12 repeats in one `_draw`): 12 rects = 1, 12 texts
+  = 1, 12 icons = 1. Interleaving rect/text gives **24**, and the same items grouped give **2**. FONT_S text mixed with FONT_M bold
+  numbers gives 24, grouped 2. rect/icon/text interleaved gives **36**, grouped 3. Every switch between a plain rect (`draw_rect`,
+  `draw_pixel_box`, `draw_bar`, `draw_hatch`), an icon texture and each font kind starts a new draw call. The shadow+glyph pairs in
+  `draw_number` (H17) do not cost extra.
+- `hud_top._draw` alternates box → icon → text → bold number → num number → bar for every row. `touch_button._draw` goes box → icon →
+  label → cost → cooldown rect → badge → reason rect + text.
+- **Ask:** inside each `_draw`, draw in layers by texture: all rects (boxes, bars, hatch, plates), then all icons, then text per font
+  kind; then overlay rects (cooldown, reason) and their text. Overlays must stay on top, so they form one extra layer. Start with
+  `hud_top` (the biggest). My estimate from the micro-check is one draw call per distinct texture per layer, roughly 6 for hud_top
+  instead of 48–50. That is not measured on the HUD itself.
+- Your threat markers (31164c8) are hidden until 02's `threat` field exists, so they are not in these numbers. Please use the same
+  layer order there.
+- Budget: BUDGETS.md battle ≤ 100 draw calls (low-end, provisional). Units (02 P9 / 03 A9, ≈ −50) and the HUD are the only two parts big
+  enough to reach it. I re-measure your commit with `tools/perf/drawcall_run.ps1` (isolated user://).

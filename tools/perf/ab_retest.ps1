@@ -27,7 +27,8 @@ $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $Out = Join-Path $Root "build\perf\ab_$stamp"
 New-Item -ItemType Directory -Force $Out | Out-Null
 $fixSha = (& git rev-parse --short $FixRev).Trim()
-
+. (Join-Path $PSScriptRoot 'perf_isolation.ps1')
+$PerfAppData = New-PerfAppData $Root 'ab_retest'   # private user:// (10 v0.26 P1)
 function New-Snapshot([string]$dir) {
     New-Item -ItemType Directory -Force $dir | Out-Null
     $tar = Join-Path $Out 'tree.tar'
@@ -78,7 +79,8 @@ for ($i = 1; $i -le $Pairs; $i++) {
         if ($Quick) { $a += '--quick' }
         $so = Join-Path $Out "${side}_$i.log"; $se = Join-Path $Out "${side}_$i.err.log"
         $t0 = Get-Date
-        $proc = Start-Process -FilePath $Godot -ArgumentList $a -RedirectStandardOutput $so -RedirectStandardError $se -PassThru -WindowStyle Hidden
+        Enter-PerfAppData $PerfAppData
+        try { $proc = Start-Process -FilePath $Godot -ArgumentList $a -RedirectStandardOutput $so -RedirectStandardError $se -PassThru -WindowStyle Hidden } finally { Exit-PerfAppData }
         $null = $proc.Handle
         $seen = @{}
         while (-not $proc.HasExited) {
@@ -135,6 +137,7 @@ $summary = [ordered]@{
     note = 'Same harness, same seeds (rounds 11/22/33, scaling seed 77), interleaved runs. Debug editor binary. Not phone evidence.'
     fix_rev = $fixSha; base_rev = $BaseRev; files = $diffs; pairs = $Pairs; quick = [bool]$Quick; runs = $runs
     metrics = $rows; determinism = $det; deterministic_outcomes_identical = (@($det | Where-Object { -not $_.identical }).Count -eq 0)
+    private_appdata = $PerfAppData; isolation_proof_log = (Test-PerfIsolation $PerfAppData (Get-Date).AddHours(-6))
 }
 $summary | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $Out 'ab_summary.json') -Encoding utf8
 $md = @("# A/B retest $stamp ($($summary.evidence_class)) — $($summary.validity)", "fix $fixSha vs base $BaseRev for $($Files -join ', '); $Pairs interleaved pairs; max other Godot processes $maxOthers", '',

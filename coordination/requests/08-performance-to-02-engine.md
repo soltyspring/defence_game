@@ -189,3 +189,38 @@ cost (object count, static memory, start frame time) when Godot is allowed. FYI 
   remaining batch breaks are probably the damage texts (H6, fallback font, outline + fill) and fx/projectile interleaving. Next measurement:
   per-category draw-call counts.
 - **Pools:** setup p50 0.81 ms, 219 objects, +478 KB static per battle start. Fine.
+
+## P9 — 2026-10-31 19:30: unit sprites are the largest draw-call cost in battle (measured, desktop proxy; docs/performance/DRAWCALLS.md)
+r08, stress 36/36 (73 units), origin/main f41fd12 snapshot with its own import, 1280×720, GL Compatibility. 3 runs (v6–v8), CONTENDED for
+timing, but draw-call counts do not depend on load.
+- Whole frame **176–181** draw calls. Battle view alone 57–68, and removing the unit sprites drops it to **9 (−50 / −54 / −53)**.
+  Background 2–5, bases+workers 0–9, hp bars −1–2, projectiles −1–3, fx 0–3, damage texts 0–2.
+- **Correction:** my 18:25 guess (damage texts H6, fx/projectile interleaving) is wrong. Those are ≤ 3 each.
+- Cause: `_draw_unit` only draws textured quads (your H2 bar flush works), so every change of atlas page between consecutive units in
+  the lane_y order starts a new batch. There are 4 character pages (char_player 25–26 units incl. hero, char_player_adv 11–12,
+  char_enemy 23–25, char_enemy_adv 13). Counted **52–60 page runs per frame**, which matches the −53.
+- **Request (yours, no art change):** sort by `(roundf(lane_y), page, lane_y)`. Units are drawn at `roundf(ground_y + lane_y)`, so
+  units on one pixel row already have equal depth and their order among them is arbitrary today (`sort_custom` is not stable). Only
+  those ties are reordered. Measured in `tests/performance/drawcall_view.gd` (`_row_less`, `set_sort_mode("row")`): page runs
+  52–60 → 37–42, view **60–65 → 48 (−12 / −17)**; re-run on origin/main 84c18ab (isolated user://): runs 49–55 → 32, view → **41
+  (−13)**. Cache the page id on the unit at spawn (`atlas.anim_sets[u.anim_set]`), so the
+  compare does no Dictionary lookup.
+- With 03 merging pages (A9 in 08-performance-to-03-art.md), the same row sort would give 22–24 runs with 2 pages, about −35. With
+  1 page it would give 1 run, about −52. A page-first sort (experiment only, wrong overlaps across rows) measured view 13, which is the
+  floor for today's pages.
+- Acceptance proposal: battle view ≤ 50 draw calls at caps with the row sort alone (08 measures with `perf_drawcall_probe.gd` on your
+  commit). BUDGETS.md low-tier target for the whole frame is ≤ 100; the HUD (≈ 100, request R8 to 04) is the other half.
+
+## P10 — 2026-10-31 19:30: perf-only debug export with args (emulator r08 blocked)
+On 08's emulator run (ANDROID_PROFILING.md §12), `am start … GodotAppLauncher --esa command_line_params ++,--autoplay,--round=r08`
+reached Godot as "parameters []" because the launcher alias drops the extras, and `GodotApp` is not exported (Permission Denial).
+r08 with `--autoplay` therefore cannot be started on an emulator or phone. Request: a second debug preset or a one-off export that
+bakes `--autoplay --round=r08` into the APK's command-line arguments, at `build/android/defence-perf-r08.apk`. Godot's Android export
+has an extra-args option for this, but I have not verified it in our preset. The stress cheat lives in `tests/` and will not be in that
+APK, so the scene is r08 autoplay at its natural density, not 36/36. Low priority until a phone exists. Your AVD is stopped; I started
+and stopped only my own instance.
+
+## H3 / next quiet window
+No H3 commit seen up to origin/main 84c18ab. Your 4d5a53c (pressure-wave cue, +9 lines in battle_sim.gd) is not H3. When you commit H3, I
+will ask the coordinator for the C12 window (08-performance-to-coordinator.md) and A/B it against the pre-H3 `battle_sim.gd` blob, like
+C11.

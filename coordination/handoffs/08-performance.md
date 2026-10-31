@@ -1,4 +1,27 @@
 # 08-performance handoff
+## M14 — draw-call breakdown, emulator check, user:// isolation (2026-10-31 18:47–19:40 KST)
+- **(1) Draw calls** (DRAWCALLS.md). New `tests/performance/drawcall_view.gd` (test-only subclass of 02's battle_view: category
+  switches, page-run counter, row/page sort modes), `perf_drawcall_probe.gd` (interleaved reference phases, HUD children identified
+  by script and text), `perf_batch_micro.gd`, and `tools/perf/drawcall_run.ps1` (snapshot + own import + isolated run). r08 at caps:
+  frame 176–181. **Units 50–54** come from atlas-page runs (49–60 per frame over 4 character pages); the row sort measured −12 to −17;
+  one merged page is predicted at ≈ −52. **HUD ≈ 100**: hud_top 48–50 and card buttons 7–11 each. The micro-check shows every rect/icon/
+  font switch costs a draw call, while grouped items cost 1 per texture. Requests: 02 P9, 03 A9, 04 R8. Texts, fx and projectiles are
+  ≤ 6 each, which corrects the 18:25 guess.
+- Snapshot pitfall found: the shared `.godot/imported` holds 03's WIP textures. Without the snapshot's own `--import`, UiStyle disables
+  icons ("stale import"), and the HUD rows of v1–v5 were measured without icons.
+- **(2) Emulator** (ANDROID_PROFILING.md §12). I started my own instance of 02's AVD at 19:14 and stopped it with `emu kill` at
+  19:28, after announcing it in the coordinator file. It booted in 57 s, and the APK installed and launched. **r08 is not reachable**:
+  GodotAppLauncher drops `--esa command_line_params` and GodotApp is not exported. Request 02 P10. Menu PSS 169–176 MB (EMULATOR).
+  The shared adb server was restarted 4 times by another tool. `android_capture.ps1` fixes: exit 2 `APP_NOT_RUNNING` when no sample saw
+  the app, adb retry, pid per sample, and the Android 14+ layer name, which gave 0 frames before.
+- **(3) C12:** 02 has not committed H3 by 84c18ab. The request with its plan is in 08-performance-to-coordinator.md.
+- **10 v0.26 P1 (user:// isolation):** new `tools/perf/perf_isolation.ps1` (private APPDATA per tool, fresh save, proof log), used by
+  run_perf, ab_retest, c11_window, test_bench_semantics (new case 11) and drawcall_run. Reply in 08-performance-to-10-research-systems.md.
+- Gate: f41fd12..84c18ab (03 aee329b, b113085; 05 65502e8, 11c29cc) **PASS**, with page sizes unchanged.
+- Validation: test_bench_semantics 11/11 PASS, isolation log found, APPDATA restored. drawcall_run on 84c18ab exit 0, isolated, no
+  stale-import warning. PowerShell parse 0 errors for the 6 changed scripts. The android_capture menu run exit 0 had 7/7 samples with
+  the app and 631 frames.
+
 ## M13 — C11 quiet window done (2026-10-31 18:00–18:23 KST)
 - First **VALID_QUIET** desktop run. 0 foreign processes at 18:00:01, and all 10 steps were CLEAN under the per-second monitor. Results:
   BASELINE_DESKTOP.md §8.

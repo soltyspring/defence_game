@@ -24,6 +24,8 @@ $Godot = Join-Path $Root 'tools\engine\Godot_v4.7.2-stable_win64_console.exe'
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $Out = Join-Path $Root "build\perf\c11_$stamp"
 New-Item -ItemType Directory -Force $Out | Out-Null
+. (Join-Path $PSScriptRoot 'perf_isolation.ps1')
+$PerfAppData = New-PerfAppData $Root 'c11_window'   # private user:// (10 v0.26 P1)
 function Log([string]$m) { $l = "[c11 $(Get-Date -Format 'HH:mm:ss')] $m"; Write-Host $l; Add-Content -LiteralPath (Join-Path $Out 'c11.log') -Value $l -Encoding utf8 }
 function Get-Foreign([int[]]$own) {
     @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
@@ -58,7 +60,8 @@ $runs = @()
 function Invoke-Monitored([string]$Name, [string[]]$ArgList, [switch]$Visible) {
     $so = Join-Path $Out "$Name.log"; $se = Join-Path $Out "$Name.err.log"
     $t0 = Get-Date
-    $p = Start-Process -FilePath $Godot -ArgumentList $ArgList -RedirectStandardOutput $so -RedirectStandardError $se -PassThru -WindowStyle Hidden
+    Enter-PerfAppData $PerfAppData
+    try { $p = Start-Process -FilePath $Godot -ArgumentList $ArgList -RedirectStandardOutput $so -RedirectStandardError $se -PassThru -WindowStyle Hidden } finally { Exit-PerfAppData }
     $null = $p.Handle; $seen = @{}
     while (-not $p.HasExited) {
         $own = @($p.Id) + @(Get-CimInstance Win32_Process -Filter "ParentProcessId=$($p.Id)" -ErrorAction SilentlyContinue | ForEach-Object { [int]$_.ProcessId })
@@ -67,7 +70,7 @@ function Invoke-Monitored([string]$Name, [string[]]$ArgList, [switch]$Visible) {
     }
     $p.WaitForExit()
     $state = if ($seen.Count -gt 0) { 'CONTAMINATED' } else { 'CLEAN' }
-    $r = [ordered]@{ name = $Name; start = $t0.ToString('HH:mm:ss'); end = (Get-Date).ToString('HH:mm:ss'); exit = $p.ExitCode; state = $state; foreign_seen = @($seen.Values) }
+    $r = [ordered]@{ name = $Name; start = $t0.ToString('HH:mm:ss'); end = (Get-Date).ToString('HH:mm:ss'); exit = $p.ExitCode; state = $state; foreign_seen = @($seen.Values); isolation_proof_log = (Test-PerfIsolation $PerfAppData $t0) }
     Log "$Name exit=$($p.ExitCode) $state foreign_seen=$($seen.Count)"
     return $r
 }

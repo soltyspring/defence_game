@@ -1,5 +1,6 @@
 # 08-performance status
-Updated: 2026-10-31 18:26 +09:00
+Updated: 2026-10-31 19:42 +09:00
+M14: draw calls r08 caps 176-181 = units 50-54 (atlas-page runs; row sort -12..-17 measured, 1 page ~-52 predicted) + HUD ~100 (hud_top 48-50, cards 7-11 each; texture switches) -> 02 P9, 03 A9, 04 R8. Emulator: r08 not launchable (launcher drops args) -> 02 P10; menu PSS 169-176 MB EMULATOR. user:// isolation for all 08 launchers (10 P1). Gate PASS to 84c18ab. C12 requested for after 02 H3.
 M13: C11 VALID_QUIET 18:00-18:23 (all steps CLEAN): P2 step avg -36% (find_target -66%), STEPPING, EQUIVALENT, view 1.05 ms, draw calls p95 177, HUD 0.49 ms, setup 0.81 ms/+478 KB. Desktop only.
 M12: AU3 resolved (43/43 imports); range gate PASS to cc5dbb8 (menu exactly at cap after 19245a5, A8 to 03); C11 18:00-18:30 runner + setup/banner measurements prepared.
 M11: C11 17:00-17:25 NOT_RUN (8/10/8/2/11/6 foreign Godot processes; nothing touched); next: actively held 30-min slot proposed (e.g. 18:00-18:30).

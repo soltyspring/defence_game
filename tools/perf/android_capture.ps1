@@ -30,7 +30,17 @@ if ($devs.Count -eq 0) { Write-Host 'NO_DEVICE: adb lists no authorised device. 
 if ($Serial -eq '') { $Serial = $devs[0] }
 if ($devs -notcontains $Serial) { Write-Host "NO_DEVICE: serial $Serial not attached ($($devs -join ', '))."; exit 2 }
 
-function Sh([string]$cmd) { (& $Adb -s $Serial shell $cmd 2>&1 | Out-String) }
+## adb calls survive a shared-server restart by another tool ("daemon not running" / "device not found" for a few seconds): retry up to 3x.
+function Sh([string]$cmd) {
+    for ($k = 0; $k -lt 4; $k++) {
+        $o = try { (& $Adb -s $Serial shell $cmd 2>&1 | Out-String) } catch { "ADB_ERROR: $_" }
+        if ($o -notmatch "daemon not running|device '.*' not found|ADB_ERROR|no devices/emulators found") { return $o }
+        $script:adbRestarts++
+        Start-Sleep -Seconds 3
+    }
+    return $o
+}
+$script:adbRestarts = 0
 function Prop([string]$k) { (Sh "getprop $k").Trim() }
 
 $isEmu = (Prop 'ro.kernel.qemu') -eq '1' -or (Prop 'ro.hardware') -match 'ranchu|goldfish'
@@ -68,7 +78,7 @@ try {
     Sh 'dumpsys batterystats --reset' | Out-Null
     Save 'battery_before.txt' (Sh 'dumpsys battery')
     Save 'thermal_before.txt' (Sh 'dumpsys thermalservice')
-    & $Adb -s $Serial logcat -c 2>$null
+    try { & $Adb -s $Serial logcat -c 2>$null } catch { $script:adbRestarts++ }
 
     # ---- cold start ----
     if (-not $NoLaunch) {
@@ -111,11 +121,16 @@ try {
         $bt = [regex]::Match($bat, 'temperature:\s*(\d+)'); if ($bt.Success) { $row.battery_temp_c = [int]$bt.Groups[1].Value / 10.0 }
         # SurfaceFlinger present timestamps of the game's SurfaceView (Godot renders to a SurfaceView, not HWUI)
         if ($layer -eq '') {
-            $layer = ((Sh 'dumpsys SurfaceFlinger --list') -split "`n" | Where-Object { $_ -match 'SurfaceView' -and $_ -match [regex]::Escape($Package) } | Where-Object { $_ -notmatch 'Background' } | Select-Object -First 1)
-            if ($layer) { $layer = $layer.Trim() }
+            $layer = ((Sh 'dumpsys SurfaceFlinger --list') -split "`n" | Where-Object { $_ -match 'SurfaceView' -and $_ -match [regex]::Escape($Package) } | Where-Object { $_ -notmatch 'Background' } | Sort-Object { if ($_ -match '\(BLAST\)') { 0 } else { 1 } } | Select-Object -First 1)
+            if ($layer) {
+                $layer = $layer.Trim()
+                # Android 14+ lists "RequestedLayerState{<name> parentId=..}"; --latency wants the bare <name>
+                $mw = [regex]::Match($layer, '^RequestedLayerState\{(.+?)(\s+parentId=.*)?\}$')
+                if ($mw.Success) { $layer = $mw.Groups[1].Value }
+            }
         }
         if ($layer) {
-            $lat = (& $Adb -s $Serial shell dumpsys SurfaceFlinger --latency "`"$layer`"" 2>&1 | Out-String) -split "`n"
+            $lat = (Sh "dumpsys SurfaceFlinger --latency '$layer'") -split "`n"
             if ($lat.Count -gt 1 -and $lat[0].Trim() -match '^\d+$') { $refreshNs = [long]$lat[0].Trim() }
             foreach ($l in ($lat | Select-Object -Skip 1)) {
                 $p = $l.Trim() -split '\s+'
@@ -123,7 +138,7 @@ try {
             }
         }
         $samples.Add([pscustomobject]$row)
-        Write-Host ("[sample] t={0}s pss={1}KB gfx={2}KB cpu={3}% thermal={4} cpu_t={5} bat={6}%/{7}C frames={8}" -f $row.t_s, $row.total_pss_kb, $row.graphics_kb, $row.cpu_pct, $row.thermal_status, $row.temp_cpu_max_c, $row.battery_level, $row.battery_temp_c, $presents.Count)
+        Write-Host ("[sample] t={0}s pid={9} pss={1}KB gfx={2}KB cpu={3}% thermal={4} cpu_t={5} bat={6}%/{7}C frames={8}" -f $row.t_s, $row.total_pss_kb, $row.graphics_kb, $row.cpu_pct, $row.thermal_status, $row.temp_cpu_max_c, $row.battery_level, $row.battery_temp_c, $presents.Count, $(if ($pidv) { $pidv } else { 'NONE' }))
         Start-Sleep -Seconds $Interval
     }
 
@@ -133,7 +148,7 @@ try {
     Save 'batterystats.txt' (Sh "dumpsys batterystats $Package")
     Save 'battery_after.txt' (Sh 'dumpsys battery')
     Save 'thermal_after.txt' (Sh 'dumpsys thermalservice')
-    Save 'logcat_godot.txt' (& $Adb -s $Serial logcat -d -s godot:V 2>&1 | Out-String)
+    Save 'logcat_godot.txt' $(try { & $Adb -s $Serial logcat -d -s godot:V 2>&1 | Out-String } catch { "ADB_ERROR: $_" })
 } finally {
     if ($SimulateUnplug) { Sh 'dumpsys battery reset' | Out-Null }
 }
@@ -147,6 +162,8 @@ $pss = @($samples | Where-Object { $_.total_pss_kb } | ForEach-Object { $_.total
 $summary = [ordered]@{
     device = $facts
     samples = $samples.Count
+    app_running_samples = @($samples | Where-Object { $_.pid }).Count
+    adb_retries = $script:adbRestarts
     pss_kb = @{ max = ($pss | Measure-Object -Maximum).Maximum; avg = [math]::Round(($pss | Measure-Object -Average).Average) }
     graphics_kb_max = (@($samples | ForEach-Object { $_.graphics_kb }) | Measure-Object -Maximum).Maximum
     cpu_pct_avg = [math]::Round((@($samples | Where-Object { $_.cpu_pct -ne $null } | ForEach-Object { $_.cpu_pct }) | Measure-Object -Average).Average, 1)
@@ -159,4 +176,8 @@ $summary = [ordered]@{
 }
 $summary | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $Out 'summary.json') -Encoding utf8
 Write-Host "[device] summary $Out\summary.json"
+# No sample with a running app process = no evidence (empty PSS/frames must never read as a result).
+$running = @($samples | Where-Object { $_.pid }).Count
+if ($running -eq 0) { Write-Host "APP_NOT_RUNNING: $Package had no process in any of $($samples.Count) samples. No evidence captured."; exit 2 }
+if ($running -lt $samples.Count) { Write-Host "PARTIAL: app process present in $running/$($samples.Count) samples." }
 exit 0

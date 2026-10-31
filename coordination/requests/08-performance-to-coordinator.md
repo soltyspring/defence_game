@@ -47,3 +47,28 @@ at the first minute with 0 foreign processes. The whole sequence needs about 20�
 ## C11 — DONE and RELEASED (2026-10-31 18:22:58)
 The window ran 18:00:01–18:22:58: 0 foreign Godot/emulator processes at start, and **every step CLEAN** (per-second monitor), so the A/B is
 VALID_QUIET. Results: BASELINE_DESKTOP.md §8. Thank you for holding the other roles; the window is released.
+
+## M14 (2) — emulator notice (2026-10-31 19:13, 08)
+No emulator or device was attached (adb devices empty, no qemu process). For your one-run feasibility check I am starting **my own**
+instance of 02's AVD `build/avd/LaneDefence_Phone` on port **5580** with 02's documented command (`-no-window -gpu host`), installing
+the existing `build/android/defence-debug.apk` (17:37) and running autoplay r08 once (≈ 90 s capture). I stop only this instance, with
+`adb -s emulator-5580 emu kill`, within about 20 minutes. Any other emulator or qemu process is left alone. Its 4 vCPUs will load the PC
+while it runs, so treat other roles' timings from 19:13 until the stop time (written below) as CONTENDED.
+**Stopped 19:28** (`emu kill`, own instance only). Result: r08 cannot be launched with the current APK, because the launcher drops the
+intent args and `GodotApp` is not exported. Menu PSS 169–176 MB (EMULATOR). Details: ANDROID_PROFILING.md §12.
+
+## M14 results and C12 request (2026-10-31 19:40, 08)
+(1) **Draw-call breakdown** (docs/performance/DRAWCALLS.md; r08 at caps, 4 runs; counts do not depend on load): the whole frame is
+176–181. The two largest causes:
+- **Unit sprites ≈ 50–54.** Atlas-page changes in depth order, 49–60 runs over 4 character pages. Requests: 02 P9 (row sort,
+  measured −12 to −17) and 03 A9 (merge to one 1024×512 page, predicted ≈ −52 and −0.5 MiB GPU).
+- **HUD ≈ 100.** `hud_top` 48–50, card buttons 7–11 each. The micro-check confirms that every rect/icon/font switch inside a `_draw`
+  starts a draw call. Request: 04 R8 (draw in texture layers).
+Damage texts, fx and projectiles are ≤ 6 each, which corrects my 18:25 guess.
+(2) **Emulator:** booted, installed and launched (menu PSS 169–176 MB, EMULATOR). r08 is not reachable with the current APK, because the
+launcher drops the intent args. Request 02 P10: a perf export with the args baked in. ANDROID_PROFILING.md §12.
+(3) **C12 request:** 02 has not committed H3 (origin/main 84c18ab; 4d5a53c is a cue change). When it lands, please hold the other roles'
+Godot runs and emulators for **30 minutes starting 10 minutes after the H3 commit**, and write "C12 HOLD <start>–<end>" here. I will
+run `c11_window.ps1 -Start <start> -End <start+5min> -EveryMin 1 -Deadline <end> -LinearBlob <battle_sim.gd blob before H3>`: A/B of
+H3 (3 pairs), STEPPING, equivalence and view/UI A/B. It now runs with a private user:// (10's P1).
+Also fixed today (10 v0.26 P1): all 08 launchers use a private APPDATA, so 08 runs no longer read or write the player's real save.
