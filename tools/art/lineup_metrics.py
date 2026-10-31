@@ -3,13 +3,13 @@
     python tools/art/lineup_metrics.py <out.json> "<label>=<capture_dir>|<char_player_dir>" [...]
 
 For every unit in lineup_report.json (both poses): the frame alpha is cut from the atlas page that
-was imported for that capture (char_player from <char_player_dir>, other pages from assets/atlases),
+was imported for that capture (every page found in <char_player_dir>, the rest from assets/atlases),
 scaled x2 (window 1280x720 = 2 x 640x360) and placed where battle_view.gd draws it. Then, on the real
 captures:
   silhouette_pct  % of perimeter pixels where the unit pixel (or the next one inward) differs from
                   the background pixel just outside by dL* >= 15 (background = the *_bg capture)
-  dE_enemy_min    min CIE dE76 between the unit's mean colour (outline excluded) and each enemy's
-                  mean colour, per simulation (normal / protan / deutan / tritan)
+  dE_enemy_min    min CIE dE76 between the unit's mean colour (outline excluded) and each unit of the
+                  other side (allies vs enemies, enemies vs allies), per simulation (normal / protan / deutan / tritan)
 Units drawn as engine placeholders (their page is not resident in r01: e_brute) are skipped.
 """
 from __future__ import annotations
@@ -52,7 +52,7 @@ def measure(cap_dir, cp_dir):
                 continue
             pid = page_for(u["anim_set"], man)
             if pid not in pages:
-                d = cp_dir if pid == "char_player" else os.path.join(ROOT, "assets", "atlases")
+                d = cp_dir if os.path.exists(os.path.join(cp_dir, f"{pid}.png")) else os.path.join(ROOT, "assets", "atlases")
                 pages[pid] = np.array(Image.open(os.path.join(d, f"{pid}.png")).convert("RGBA"))
             x, y, w, h = (int(v) for v in u["rect"])
             a = pages[pid][y:y + h, x:x + w, 3] > 0
@@ -84,6 +84,14 @@ def measure(cap_dir, cp_dir):
             rows.append({"set": u["anim_set"], "side": u["side"], "x": u["x"], "silhouette_pct": round(ok / max(1, tot) * 100, 1),
                          "mean_rgb": px_rgb[keep].mean(0).tolist(), "px": int(M.sum())})
         enemies = [r for r in rows if r["side"] < 0]
+        allies = [r for r in rows if r["side"] > 0]
+        for r in rows:
+            if r["side"] < 0 and allies:
+                r["dE_enemy_min"] = {}
+                for mode in MACHADO:
+                    ua = lab(sim(np.array(r["mean_rgb"])[None], mode))[0]
+                    r["dE_enemy_min"][mode] = round(min(float(np.linalg.norm(ua - lab(sim(np.array(e["mean_rgb"])[None], mode))[0]))
+                                                        for e in allies), 1)   # for enemies: vs the allies
         for r in rows:
             if r["side"] > 0 and enemies:
                 r["dE_enemy_min"] = {}
@@ -107,7 +115,7 @@ def main(out, args):
     for label, poses in res.items():
         for pose, rows in poses.items():
             for r in rows:
-                if r["side"] > 0:
+                if "dE_enemy_min" in r:
                     k = f"{r['set']}@{int(r['x'])}"
                     summary.setdefault(k, {}).setdefault(pose, {})[label] = {
                         "sil": r["silhouette_pct"], "dE_protan": r["dE_enemy_min"]["protan"],

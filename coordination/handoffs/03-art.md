@@ -1,5 +1,5 @@
 # 03-art handoff
-Updated: 2026-10-31 19:34 +09:00 (real time from Get-Date). Q1 = A DECIDED; Q3 working title 빵집 기사단: 곰팡이 디펜스 (store name pending KIPRIS); Q2 business model DEFERRED (no ad/purchase UI). Art version 0.12.3.
+Updated: 2026-10-31 23:27 +09:00 (real time from Get-Date). Q1 = A, Q2 deferred, Q3 working title 빵집 기사단: 곰팡이 디펜스, Q4 home-screen name 빵집 기사단 (all DECIDED); Q5 difficulty unanswered (D28 is only a default). Art version 0.12.3.
 
 ## Session
 - Kiro CLI session ID: not visible from inside the session, so I cannot record it. Codex should read it from coordination/.runtime/quota/sessions.json / the launcher.
@@ -124,7 +124,15 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - Human "reads as bakery" test: still not done (no players).
 - Commit beaaace [Test]: PUSHED origin/main (verified with git branch -r --contains at 19:35).
 
+## Milestone 18 (resume 23:00 + blue-screen restart 23:2x)
+- Resume check: own paths at HEAD equal origin/checkpoint/quota-20261031-202729/03-art (git diff empty; the checkpoint commit 7be5503 carried no 03 file change). Nothing lost.
+- Crash check (23:22): own working-tree files (tools/art/build.py, lineup_metrics.py, new chars_big.py, size_draft_metrics.py) parse, no NUL bytes, no zero-size files in 03 paths, all PNG headers valid; the 23:05-23:06 captures decode. Nothing was running for 03 at 23:08 (last run ended 23:06:13).
+- Import audit main tree: FAIL for char_player, bases, ui_main only (02 has not re-imported; 02 A17). 03 does not touch the main-tree .godot.
+- 02 zoom (R17): not decided. Drafts D1 (proportional) / D2 (chunky) + S15 reference built via ART_DRAFT32 (tools/art/chars_big.py, not shipped) and captured in the real game at 1280x720 and 640x360 (isolated APPDATA, DISPLAY2). Results ART_AUDIT round 15, docs/art/evidence/size_drafts/.
+- Requests: 02 A17 (import, zoom data, QA-B012 palette), 04 A15 (drafts, star outline #8b90a3), 07 A11, 10 A1 (user-folder reply; my 19:05-19:20 runs were not isolated).
+- Heavy-run rule from 23:2x: every Godot/import/export run through coordination/heavy_run.ps1, one at a time.
+
 ## Exact next steps on resume
-1. After 02 re-imports: python tools/art/import_audit.py . (expect PASS).
-2. After 02 A14 + 06 APK rebuild: check the launcher layers in the APK with 06.
-3. Read incoming *-to-03-art.md.
+1. 08 A9 (merge the 4 battle character pages into one 1024x512): packer dry run fits (235 regions, 386,896 padded px of 524,288). Implement in build.py, then verify under heavy_run: PCK check, snapshot import + import_audit, one real capture. Not started.
+2. After 02 re-imports: python tools/art/import_audit.py . (expect PASS).
+3. After 02 decides R17: ship D1 or D2 (and resize brute/hero) or drop the drafts.

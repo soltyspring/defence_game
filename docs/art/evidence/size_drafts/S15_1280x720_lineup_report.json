@@ -1,0 +1,333 @@
+{
+ "ground_y": 290.0,
+ "poses": {
+  "attack": {
+   "cam_x": 375.0,
+   "units": [
+    {
+     "anim": "attack",
+     "anim_set": "ranged_basic",
+     "flip": false,
+     "frame_index": 2,
+     "id": "ranged_basic",
+     "is_hero": false,
+     "lane_y": 0.0,
+     "pivot": [
+      13.0,
+      31.0
+     ],
+     "rect": [
+      179.0,
+      219.0,
+      32.0,
+      32.0
+     ],
+     "side": 1,
+     "x": 220.0
+    },
+    {
+     "anim": "attack",
+     "anim_set": "tank",
+     "flip": false,
+     "frame_index": 1,
+     "id": "tank",
+     "is_hero": false,
+     "lane_y": 0.0,
+     "pivot": [
+      13.0,
+      31.0
+     ],
+     "rect": [
+      143.0,
+      255.0,
+      32.0,
+      32.0
+     ],
+     "side": 1,
+     "x": 260.0
+    },
+    {
+     "anim": "attack",
+     "anim_set": "melee_basic",
+     "flip": false,
+     "frame_index": 2,
+     "id": "melee_basic",
+     "is_hero": false,
+     "lane_y": 0.0,
+     "pivot": [
+      19.0,
+      47.0
+     ],
+     "rect": [
+      447.0,
+      299.0,
+      48.0,
+      48.0
+     ],
+     "side": 1,
+     "x": 300.0
+    },
+    {
+     "anim": "attack",
+     "anim_set": "hero_captain",
+     "flip": false,
+     "frame_index": 3,
+     "id": "hero_captain",
+     "is_hero": true,
+     "lane_y": 0.0,
+     "pivot": [
+      22.0,
+      47.0
+     ],
+     "rect": [
+      55.0,
+      211.0,
+      48.0,
+      48.0
+     ],
+     "side": 1,
+     "x": 345.0
+    },
+    {
+     "anim": "attack",
+     "anim_set": "melee_basic",
+     "flip": false,
+     "frame_index": 2,
+     "id": "melee_basic",
+     "is_hero": false,
+     "lane_y": 0.0,
+     "pivot": [
+      19.0,
+      47.0
+     ],
+     "rect": [
+      447.0,
+      299.0,
+      48.0,
+      48.0
+     ],
+     "side": 1,
+     "x": 390.0
+    },
+    {
+     "anim": "attack",
+     "anim_set": "e_grunt",
+     "flip": true,
+     "frame_index": 2,
+     "id": "e_grunt",
+     "is_hero": false,
+     "lane_y": 0.0,
+     "pivot": [
+      19.0,
+      47.0
+     ],
+     "rect": [
+      359.0,
+      159.0,
+      48.0,
+      48.0
+     ],
+     "side": -1,
+     "x": 440.0
+    },
+    {
+     "anim": "attack",
+     "anim_set": "e_spitter",
+     "flip": true,
+     "frame_index": 2,
+     "id": "e_spitter",
+     "is_hero": false,
+     "lane_y": 0.0,
+     "pivot": [
+      13.0,
+      31.0
+     ],
+     "rect": [
+      183.0,
+      111.0,
+      32.0,
+      32.0
+     ],
+     "side": -1,
+     "x": 480.0
+    },
+    {
+     "anim": "attack",
+     "anim_set": "e_brute",
+     "flip": true,
+     "id": "e_brute",
+     "is_hero": false,
+     "lane_y": 0.0,
+     "side": -1,
+     "x": 530.0
+    }
+   ],
+   "view_top": 0.0
+  },
+  "walk": {
+   "cam_x": 375.0,
+   "units": [
+    {
+     "anim": "walk",
+     "anim_set": "ranged_basic",
+     "flip": false,
+     "frame_index": 0,
+     "id": "ranged_basic",
+     "is_hero": false,
+     "lane_y": 0.0,
+     "pivot": [
+      13.0,
+      31.0
+     ],
+     "rect": [
+      307.0,
+      363.0,
+      32.0,
+      32.0
+     ],
+     "side": 1,
+     "x": 220.6
+    },
+    {
+     "anim": "walk",
+     "anim_set": "tank",
+     "flip": false,
+     "frame_index": 0,
+     "id": "tank",
+     "is_hero": false,
+     "lane_y": 0.0,
+     "pivot": [
+      13.0,
+      31.0
+     ],
+     "rect": [
+      307.0,
+      399.0,
+      32.0,
+      32.0
+     ],
+     "side": 1,
+     "x": 260.466666666667
+    },
+    {
+     "anim": "walk",
+     "anim_set": "melee_basic",
+     "flip": false,
+     "frame_index": 0,
+     "id": "melee_basic",
+     "is_hero": false,
+     "lane_y": 0.0,
+     "pivot": [
+      19.0,
+      47.0
+     ],
+     "rect": [
+      323.0,
+      195.0,
+      48.0,
+      48.0
+     ],
+     "side": 1,
+     "x": 300.666666666667
+    },
+    {
+     "anim": "idle",
+     "anim_set": "hero_captain",
+     "flip": false,
+     "frame_index": 0,
+     "id": "hero_captain",
+     "is_hero": true,
+     "lane_y": 0.0,
+     "pivot": [
+      22.0,
+      47.0
+     ],
+     "rect": [
+      367.0,
+      55.0,
+      48.0,
+      48.0
+     ],
+     "side": 1,
+     "x": 345.0
+    },
+    {
+     "anim": "walk",
+     "anim_set": "melee_basic",
+     "flip": false,
+     "frame_index": 0,
+     "id": "melee_basic",
+     "is_hero": false,
+     "lane_y": 0.0,
+     "pivot": [
+      19.0,
+      47.0
+     ],
+     "rect": [
+      323.0,
+      195.0,
+      48.0,
+      48.0
+     ],
+     "side": 1,
+     "x": 390.666666666667
+    },
+    {
+     "anim": "walk",
+     "anim_set": "e_grunt",
+     "flip": true,
+     "frame_index": 0,
+     "id": "e_grunt",
+     "is_hero": false,
+     "lane_y": 0.0,
+     "pivot": [
+      19.0,
+      47.0
+     ],
+     "rect": [
+      411.0,
+      107.0,
+      48.0,
+      48.0
+     ],
+     "side": -1,
+     "x": 439.366666666667
+    },
+    {
+     "anim": "attack",
+     "anim_set": "e_spitter",
+     "flip": true,
+     "frame_index": 0,
+     "id": "e_spitter",
+     "is_hero": false,
+     "lane_y": 0.0,
+     "pivot": [
+      13.0,
+      31.0
+     ],
+     "rect": [
+      39.0,
+      147.0,
+      32.0,
+      32.0
+     ],
+     "side": -1,
+     "x": 480.0
+    },
+    {
+     "anim": "walk",
+     "anim_set": "e_brute",
+     "flip": true,
+     "id": "e_brute",
+     "is_hero": false,
+     "lane_y": 0.0,
+     "side": -1,
+     "x": 529.6
+    }
+   ],
+   "view_top": 0.0
+  }
+ },
+ "view_w": 640.0,
+ "window": "(1280, 720)"
+}

@@ -54,3 +54,7 @@
 - Launcher logo now 48.0 x 51.0 dp, 0 px outside the 66 dp circle, 0 px clipped by 4 masks.
 - Import audit (tools/art/import_audit.py): clean HEAD snapshot 12/12 pages PASS; the main tree is stale only for char_player, bases, ui_main until 02 re-imports. If your runner uses the main tree, expect the old hero/melee/nest/cards there.
 - Footman/Catapult: not reproducible. Your capture_narrow.gd in a HEAD snapshot, r08, insets 34/0/34/0, en 1x/2x and ko 2x: 0 truncated buttons; the en cards draw Baker/Toast/Roll/Loaf/Twist/Oven in full. Please close it on your side if you agree. Evidence docs/art/evidence/{a26_ab,import_audit,labels_worst_layout}/.
+
+## A11 2026-10-31 23:27 +09:00 — cc: unit-size drafts, QA-B012 palette answer (QUEUED)
+- Unit size (your QA-J1 / LANE_OCCLUSION §2): drafts measured in the real game, ART_AUDIT round 15. Nothing shipped until 02 decides the zoom.
+- QA-B012: palette answer sent to 02 (A17): white digits on the light walls are 1.13-1.69:1; a 1 px K outline on all sides gives 10.7-15.9:1.
