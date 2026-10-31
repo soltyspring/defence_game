@@ -1,5 +1,10 @@
 # 06-services handoff
-Updated: 2026-10-31 ~18:00 KST (store graphics, Python only; label settings before)
+Updated: 2026-10-31 ~18:46 KST (clean-HEAD full run, Q2 repo scan, launcher icon placeholder; store graphics before)
+## Clean-HEAD run (18:39–18:46)
+- **Command:** `pwsh -NoProfile -File tests/services/run_services_on_head.ps1 [-Ref <sha>] [-Keep]`. It runs a git archive snapshot with its own `--import`, copies the APKs from build/, and runs the same 9 suites. Use it whenever other roles have uncommitted edits in the shared tree (at 18:39 src/core/app.gd, content.gd, save.gd and audio_event_bridge.gd were modified by others).
+- **Snapshot limits:** godot_uid_tracked reports NOT_RUN there (no .git), so run test_services_android in the shared tree for it.
+- **q2_repo_scan mutation hook:** `-- --q2-extra-dir=<dir>` (planted files only, outside the repo).
+- **Launcher icon next step:** after 02 adds the launcher_icons keys and rebuilds, compare the APK's icon_foreground.webp/icon_background.webp with 03's layers (colour/shape probe as in this session).
 ## Store graphics (17:55–18:00, Python only)
 - **Checker:** `python tests/services/check_store_graphics.py`. Final assets are expected in docs/services/store_assets/, which does not exist yet: `icon*.png`, `feature*.png|jpg`, `screenshot*.png|jpg`.
 - **After 18:30, if Godot is allowed:**
@@ -52,6 +57,7 @@ src/services/**, docs/services/**, tests/services/**, coordination/status/06-ser
 | Play tech | PLAY_TECH_REQUIREMENTS.md: P1 API 36, P2 64-bit, P3 16 KB (ELF LOAD, RELRO own-segment rule, zip alignment), P4 AAB; preset + Godot 4.7.2 config.gradle (AGP 8.6.1, NDK r29, target 36/min 24) + debug APK ELF header read; verdicts PASS/PASS/PASS(APK)/UNKNOWN(AAB zip)/FAIL(AAB); requests to 02 (release Gradle/AAB preset) and 04 (bundletool PAGE_ALIGNMENT_16K etc.). Static only, no Godot run | (this commit, see status) |
 | Label fmt | 4b5926d read only; listing lint cites export settings; android launcher_label VERIFIED_DEBUG_ONLY vs release_label (build/release only); config/name "Lane Defence" impact table (PC title, Project Manager, fallback menu) + options to 02/04 | 31dc7b0b0226dbad1ecebdc18eb2e5f8cc4670fb, fa5661b58269ec54f13b28f8973f5877f953151f |
 | Graphics | STORE_GRAPHICS.md (Play icon/feature/screenshot/video rules + adaptive icon guide), check_store_graphics.py (Python), 09 order vs rules (#3 반죽 conflict), requests 03/04/02/09 | a68bf517ce3b93c375bd7ff8337cdc7175dd88a7, a143134be5ba6c2fbe2082bcd1f8f09c4ec23de2 |
+| HEAD run | run_services_on_head.ps1 (clean snapshot runner); q2_repo_scan group (repo-wide Q2 deferred scan); launcher icon placeholder confirmed in both APKs; exact launcher_icons keys to 02 | 643cfa05f879ff76fffb96c909a1de4309fa3970 (+ next [Docs]) |
 | Checkpoint | this handoff + status | see status file / `git log -- coordination/handoffs/06-services.md` |
 
 ## M7 details (this task)

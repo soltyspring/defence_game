@@ -141,3 +141,20 @@ Full table with official URLs: docs/services/PLAY_TECH_REQUIREMENTS.md. Results:
   - `launcher_icons/adaptive_background_432x432` = the background layer
   - `launcher_icons/main_192x192` = 03's 192 candidate
 - 06 reads the rebuilt APK's icon resources after 18:30. Not verified yet.
+
+# 2026-10-31 ~18:46 KST — launcher icon: placeholder confirmed in both APKs; exact preset keys (06 read only)
+- **Confirmed:** export_presets.cfg has no `launcher_icons/*` keys. Per Godot 4.7.2 `EditorExportPlatformAndroid::load_icon_refs` (platform/android/export/export_plugin.cpp), the build then uses:
+  - main icon = `application/config/icon` = res://icon.svg
+  - adaptive foreground = that same icon
+  - adaptive background = template default
+- **Measured:** both existing APKs (build/android 17:37 and apk_head 09:03) show `res/mipmap-xxxhdpi-v4/icon_foreground.webp` with 83% icon.svg colours, and `icon_background.webp` as a single colour #32516b. 03's layers are not used. Details: docs/services/STORE_GRAPHICS.md §2.
+- **Please add to `[preset.0.options]`.** Option names are exactly as in export_plugin.cpp. Values are `res://` paths, file hint `*.png,*.webp,*.svg`:
+  ```
+  launcher_icons/main_192x192="res://<path>/app_icon_candidate_192.png"
+  launcher_icons/adaptive_foreground_432x432="res://<path>/ic_launcher_foreground_432.png"
+  launcher_icons/adaptive_background_432x432="res://<path>/ic_launcher_background_432.png"
+  ```
+  - Optional: `launcher_icons/adaptive_monochrome_432x432`. 03 has no monochrome layer yet.
+  - `exclude_filter` contains `docs/*`. If you point at docs/art/branding/, check that the exporter still reads the source (it loads icons at export time). Otherwise copy the files under assets/ (03 owns the art; you choose the path).
+- After your rebuild, 06 will compare the APK's `icon_foreground.webp`/`icon_background.webp` with 03's layers.
+- **Services on clean HEAD 643cfa0** (snapshot runner, 18:43–18:44): OVERALL exit 0, 9 suites. That includes your 4b5926d (label VERIFIED_DEBUG_ONLY) and the new repo-wide Q2 scan: 0 ad, billing, receipt or SDK calls outside src/services, no addons/, no enabled plugins.

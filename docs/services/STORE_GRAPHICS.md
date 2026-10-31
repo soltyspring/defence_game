@@ -29,7 +29,7 @@ Content was rephrased for compliance with licensing restrictions.
 | Adaptive foreground logo size | yes | **below the guide** | logo bbox 40.0 × 42.5 dp; the guide asks for at least 48×48 dp |
 | Adaptive background 432×432 | yes | **PASS** (fully opaque) | — |
 | Monochrome layer | no | ABSENT (optional) | themed icons on Android 13+; Android 16 QPR2 auto-themes apps without one |
-| Launcher icon actually used by the build | export_presets.cfg has no `launcher_icons/*` keys → Godot falls back to `config/icon` = res://icon.svg (16×16-grid placeholder) | **UNVERIFIED (after 18:30)** | needs 02 to set the adaptive layers and a rebuild; 06 then reads the APK |
+| Launcher icon actually used by the build | **Godot placeholder, confirmed (2026-10-31 18:45, aapt2 + Python, both existing APKs)** | **FAIL (placeholder)** | export_presets.cfg has no `launcher_icons/*` keys. By Godot 4.7.2 `load_icon_refs` (export_plugin.cpp), main icon = `application/config/icon` = res://icon.svg; adaptive foreground falls back to that icon; background = template default. In the APKs, `mipmap-xxxhdpi-v4/icon_foreground.webp` is 83% icon.svg colours (#1d2433, #3e6b34, #4a7fd4, #d44a4a) and `icon_background.webp` is a single colour #32516b. 03's layers use other colours (#1b1325, #d9a35e, #a46c3c …). The manifest icon is `mipmap-anydpi-v26/icon.xml` (adaptive). No monochrome tag |
 
 ## 3. Store image order (09 R09-06-5, SUCCESS_ANALYSIS.md §32.1) vs these rules
 | # | 09 proposal | Fits the rules? | Note |
@@ -51,5 +51,10 @@ Captions: ≤ 20% of the image, no call-to-action ("지금 플레이" etc.) or r
   - at least 3, better 6, real-gameplay screenshots at 1920×1080, 16:9 landscape, RGB with no alpha, following §3. The game's 640×360 view at ×3 gives exactly 1920×1080.
   - capture the game render, not a phone-shaped 20:9 screen, and not the PC window frame (its title still says "Lane Defence").
   - ko and en sets if captions are added.
-- **02 engine:** set `launcher_icons/adaptive_foreground_432x432`, `adaptive_background_432x432` (and `main_192x192`) to 03's files, so the APK launcher icon is not the placeholder. 06 checks the rebuilt APK after 18:30.
+- **02 engine:** set these keys in the Android preset (exact names from Godot 4.7.2 export_plugin.cpp; each takes a `res://` path to a `*.png`, `*.webp` or `*.svg`):
+  - `launcher_icons/main_192x192` (legacy icon; also the fallback for the foreground)
+  - `launcher_icons/adaptive_foreground_432x432`
+  - `launcher_icons/adaptive_background_432x432`
+  - optional `launcher_icons/adaptive_monochrome_432x432`
+  - The files must be inside the exported project. 06 then checks the rebuilt APK's `icon_foreground.webp` and `icon_background.webp` against 03's layers.
 - **User (via 01, later, one question at a time):** a preview video means a public or unlisted YouTube upload, which is an external publication. Not now.

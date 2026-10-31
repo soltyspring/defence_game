@@ -1,5 +1,19 @@
 # 06-services status
-Updated: 2026-10-31 ~18:00 KST (Play store graphics; Python only, no Godot)
+Updated: 2026-10-31 ~18:46 KST (post-quiet-window full run on clean HEAD; launcher icon confirmed placeholder)
+Status: COMPLETE.
+- **Clean HEAD runs** (tests/services/run_services_on_head.ps1, git archive + own import):
+  - b4b33a7, 18:39–18:40: OVERALL exit 0.
+  - 643cfa0, 18:43–18:44: OVERALL exit 0. Results: 502/0, 130/0, 161/0, listing 1825/0, m8 26/0, m10 81/0, android 104/0 (launcher_label=VERIFIED_DEBUG_ONLY, release_label=WAITING, release_preset=WAITING; .uid group NOT_RUN in snapshot), upgrade 901/0 (incl. new q2_repo_scan 616), integration PASS_INTEGRATED 156/0.
+  - No failures.
+- **Shared tree:** android 189/0, godot_uid_tracked PASS, 0 untracked .uid outside 06 paths.
+- **Q2 scan:** 0 Services.ads/purchases, get_singleton, billing/AdMob, receipt or HTTP calls in src/ and scenes/ outside src/services; no addons/; no enabled plugin flags; iap disabled. 2 planted-file mutations were caught, and a comment-only mention was ignored.
+- **Launcher icon:** export preset has no launcher_icons keys, and both APKs carry the Godot placeholder from icon.svg (aapt2 + Python colour check). Exact keys sent to 02.
+- Q2 DEFERRED. Nothing published.
+Current task: none. Next: see handoff.
+Commits: 643cfa05f879ff76fffb96c909a1de4309fa3970 [Test] PUSHED; docs/status in the next [Docs] commit.
+Previous: a68bf51 / a143134 / 8d026d2 (store graphics).
+--- History (older entries, not current) ---
+(graphics entry) Updated: 2026-10-31 ~18:00 KST (Play store graphics; Python only, no Godot)
 Status: COMPLETE. STORE_GRAPHICS.md + `python tests/services/check_store_graphics.py` (exit 3 = nothing fails, required assets missing).
 - **Missing:** store icon 512, feature graphic 1024×500, screenshots (≥ 2; 3+ at 16:9 1920×1080 for game recommendations).
 - **Existing 1600×720 captures fail** the 2:1 rule; the 1280×720 captures are too small for recommendations and mostly RGBA.
