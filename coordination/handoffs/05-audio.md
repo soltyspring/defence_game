@@ -36,7 +36,7 @@ src/audio/audio_manager.gd, src/audio/audio_event_bridge.gd, tools/audio/{run_go
 
 ## Git
 - Earlier: 67de63b, 067c594, ba38f2d, 5e21a23, c79add3, all PUSHED.
-- M3 commit: SHA recorded in the status file after push.
+- M3: 10449eed6971f50595c6f937675dab159ec0c676 "[Fix] 실전 통합 검증: 화면 밖 전투음 소거 버그와 종료 시 오디오 누수 수정, 통합 하네스 추가" → PUSHED origin/main (13 files).
 
 ## Strongest remaining reasons a reviewer could reject the audio
 - Nobody has listened. Audible quality, fatigue and mix balance against real music are unjudged; the agent cannot listen.

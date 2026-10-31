@@ -4,4 +4,4 @@ Status: M3 DONE (integration with real 02 autoload + Events.sfx verified in isol
 Validation: run_godot_checks.ps1 -Integration PASS; validate.py PASS. Details in handoff.
 Requests open: 02 A7 (prepare_quit on quit path), A8 (engine RefCounted exit leak, not audio); 04 C1 sliders, C2 UI cues.
 Not verified: human listening, Android device audio.
-Git: M3 commit pending push (see below).
+Git: M3 10449ee PUSHED origin/main.
