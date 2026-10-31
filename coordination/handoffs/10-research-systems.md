@@ -9,7 +9,7 @@ Updated: 2026-11-01 ~03:55 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
 ## v0.33 (~03:55 KST): release-path bytes (04 APK vs 06 AAB) and the migration-notice UI path (§9.25)
-- Pushed SHA: see the [Docs] record commit that follows this one. Only values checked with `git ls-remote` are recorded there.
+- **Pushed: 277b36eca242af8380f2f257d3503ac6d776b5e5** (origin/main, checked with `git ls-remote` after the push).
 - Heavy jobs: `& .\coordination\heavy_run_detached.ps1 -Label '10-<task>' -ScriptFile <job.ps1>`, queued once each. Then poll the `build\heavy\<label>-<ts>.log` for `HEAVY_JOB_DONE` in short calls. Lock waits were ~36–39 min tonight.
 - Job scripts (copies in evidence/pkg_notice_20261101/):
   - `.local_inspect/job_pkg_bytes.ps1`: builds the APK and AAB from one pinned SHA and measures both.

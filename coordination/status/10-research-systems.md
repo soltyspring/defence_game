@@ -19,4 +19,4 @@ Status: v0.33 DONE (release-path bytes and migration-notice UI path, §9.25).
 - (3) No content.gd normalisation up to 02ec60f, so the AC1/AC4 rerun was skipped. AC1 is still FAIL.
 - Canary 02:49:27 → 03:36:33: no change (save 614A1FAC560FBB78). All 11 10-run Godot boots isolated.
 User decisions: Q1 = A; Q2 = 보류; Q3 = "빵집 기사단: 곰팡이 디펜스"; Q4 = "빵집 기사단"; Q5 unanswered (D28 is a default only).
-Pushed: … f8a2b44, v0.32 7f45b5f8e8ad0e606bda63e80569a6983a8767e1 (+67ddd04); v0.33 SHA in the handoff after push.
+Pushed: … f8a2b44, v0.32 7f45b5f8e8ad0e606bda63e80569a6983a8767e1 (+67ddd04), v0.33 277b36eca242af8380f2f257d3503ac6d776b5e5.
