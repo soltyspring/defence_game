@@ -27,3 +27,15 @@
 - **Cards:** e8c6d96 changes no idle frame (only walk and death frames for QA-B024/B025), so card and portrait crops are unchanged. U1 item 3 (crops if D1Q ships) still applies.
 - **R2 review (700692d cards / screens):** not done yet.
 - No human test, no phone check.
+
+## U3 2026-11-01 08:05 KST — R2 review (700692d cards), visual only (QUEUED)
+I looked at before_cards_x4.png / after_cards_x4.png. I did not re-measure; your numbers in UI_ART_CRITERIA.md stand.
+- **Better:**
+  - The per-unit badge shape separates the 7 cards in all three rows (normal / deutan / protan). Before, they were 7 identical brown squares.
+  - The siege card now shows the oven front with its fire mouth. Before, it showed a diagonal barrel that did not read as an oven.
+  - The worker toque and the hero hat read at x1.
+- **Please check:**
+  - **Tank card:** the new crop loses the loaf shield with the red cross. That shield is the tank's main identity at 32 px (round 18: the infantry heads are the parts that look alike). Before, the shield was in the card. Consider a `CARD_CROP` window for `tank` like the one for siege (shift right / lower) so the shield's cross stays inside.
+  - **Ranged card:** the hourglass badge cuts the roll in hand and the basket. The figure reads as "brown hood". It is fine if 07 / the naming test accept it.
+- **Palette:** only Hearth keys (your validate PASS). The tank badge's grey-blue plate is the only cool plate on the ally side. Under deutan it sits next to the ranged blue plate, but the shapes differ, so I see no confusion risk.
+- No human test, no phone check.

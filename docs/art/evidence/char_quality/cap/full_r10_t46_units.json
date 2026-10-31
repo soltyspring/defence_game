@@ -1,0 +1,600 @@
+{
+ "canvas_scale": [
+  1.0,
+  1.0
+ ],
+ "combo": "current",
+ "image": [
+  1600,
+  720
+ ],
+ "t": 46.0166666666653,
+ "units": [
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": false,
+   "frame_index": 2,
+   "hero": false,
+   "lane_y": 1.39011287689209,
+   "page": "char_player",
+   "pivot": [
+    19.0,
+    47.0
+   ],
+   "rect": [
+    811.0,
+    315.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    389.0,
+    291.0
+   ],
+   "set": "tank",
+   "side": 1,
+   "world": [
+    1238.0,
+    291.0
+   ]
+  },
+  {
+   "anim": "death",
+   "dying": true,
+   "flip": false,
+   "frame_index": 1,
+   "hero": false,
+   "lane_y": -1.86130046844482,
+   "page": "char_player",
+   "pivot": [
+    19.0,
+    47.0
+   ],
+   "rect": [
+    315.0,
+    505.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    460.0,
+    288.0
+   ],
+   "set": "ranged_basic",
+   "side": 1,
+   "world": [
+    1309.0,
+    288.0
+   ]
+  },
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": false,
+   "frame_index": 2,
+   "hero": false,
+   "lane_y": -4.46333122253418,
+   "page": "char_player",
+   "pivot": [
+    22.0,
+    39.0
+   ],
+   "rect": [
+    559.0,
+    3.0,
+    48.0,
+    40.0
+   ],
+   "screen": [
+    -105.0,
+    286.0
+   ],
+   "set": "siege",
+   "side": 1,
+   "world": [
+    744.0,
+    286.0
+   ]
+  },
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": false,
+   "frame_index": 4,
+   "hero": false,
+   "lane_y": 1.79471397399902,
+   "page": "char_player",
+   "pivot": [
+    19.0,
+    47.0
+   ],
+   "rect": [
+    755.0,
+    159.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    150.0,
+    292.0
+   ],
+   "set": "ranged_basic",
+   "side": 1,
+   "world": [
+    999.0,
+    292.0
+   ]
+  },
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": false,
+   "frame_index": 4,
+   "hero": false,
+   "lane_y": -0.750312328338623,
+   "page": "char_player",
+   "pivot": [
+    19.0,
+    47.0
+   ],
+   "rect": [
+    107.0,
+    869.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    -171.0,
+    289.0
+   ],
+   "set": "tank",
+   "side": 1,
+   "world": [
+    678.0,
+    289.0
+   ]
+  },
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": false,
+   "frame_index": 1,
+   "hero": false,
+   "lane_y": -5.91692399978638,
+   "page": "char_player",
+   "pivot": [
+    21.0,
+    47.0
+   ],
+   "rect": [
+    159.0,
+    921.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    -67.0,
+    284.0
+   ],
+   "set": "melee_basic",
+   "side": 1,
+   "world": [
+    782.0,
+    284.0
+   ]
+  },
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": false,
+   "frame_index": 5,
+   "hero": false,
+   "lane_y": -2.55232214927673,
+   "page": "char_player",
+   "pivot": [
+    22.0,
+    39.0
+   ],
+   "rect": [
+    369.0,
+    905.0,
+    50.0,
+    40.0
+   ],
+   "screen": [
+    253.0,
+    287.0
+   ],
+   "set": "fast",
+   "side": 1,
+   "world": [
+    1102.0,
+    287.0
+   ]
+  },
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": false,
+   "frame_index": 0,
+   "hero": false,
+   "lane_y": -1.73847007751465,
+   "page": "char_player",
+   "pivot": [
+    19.0,
+    47.0
+   ],
+   "rect": [
+    159.0,
+    973.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    -499.0,
+    288.0
+   ],
+   "set": "ranged_basic",
+   "side": 1,
+   "world": [
+    350.0,
+    288.0
+   ]
+  },
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": false,
+   "frame_index": 4,
+   "hero": false,
+   "lane_y": 0.270110607147217,
+   "page": "char_player",
+   "pivot": [
+    21.0,
+    47.0
+   ],
+   "rect": [
+    691.0,
+    471.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    -707.0,
+    290.0
+   ],
+   "set": "melee_basic",
+   "side": 1,
+   "world": [
+    142.0,
+    290.0
+   ]
+  },
+  {
+   "anim": "attack",
+   "dying": false,
+   "flip": true,
+   "frame_index": 2,
+   "hero": false,
+   "lane_y": -4.94717359542847,
+   "page": "char_player",
+   "pivot": [
+    19.0,
+    47.0
+   ],
+   "rect": [
+    159.0,
+    869.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    560.0,
+    285.0
+   ],
+   "set": "e_spitter",
+   "side": -1,
+   "world": [
+    1409.0,
+    285.0
+   ]
+  },
+  {
+   "anim": "attack",
+   "dying": false,
+   "flip": true,
+   "frame_index": 3,
+   "hero": false,
+   "lane_y": -5.65149784088135,
+   "page": "char_player",
+   "pivot": [
+    20.0,
+    47.0
+   ],
+   "rect": [
+    3.0,
+    661.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    487.0,
+    284.0
+   ],
+   "set": "e_grunt",
+   "side": -1,
+   "world": [
+    1336.0,
+    284.0
+   ]
+  },
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": true,
+   "frame_index": 3,
+   "hero": false,
+   "lane_y": -5.44071102142334,
+   "page": "char_player",
+   "pivot": [
+    19.0,
+    47.0
+   ],
+   "rect": [
+    899.0,
+    471.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    553.0,
+    285.0
+   ],
+   "set": "e_spitter",
+   "side": -1,
+   "world": [
+    1402.0,
+    285.0
+   ]
+  },
+  {
+   "anim": "attack",
+   "dying": false,
+   "flip": true,
+   "frame_index": 3,
+   "hero": false,
+   "lane_y": -1.27742195129395,
+   "page": "char_player",
+   "pivot": [
+    20.0,
+    47.0
+   ],
+   "rect": [
+    3.0,
+    661.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    487.0,
+    289.0
+   ],
+   "set": "e_grunt",
+   "side": -1,
+   "world": [
+    1336.0,
+    289.0
+   ]
+  },
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": true,
+   "frame_index": 3,
+   "hero": false,
+   "lane_y": 4.26003265380859,
+   "page": "char_player",
+   "pivot": [
+    19.0,
+    47.0
+   ],
+   "rect": [
+    899.0,
+    471.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    553.0,
+    294.0
+   ],
+   "set": "e_spitter",
+   "side": -1,
+   "world": [
+    1402.0,
+    294.0
+   ]
+  },
+  {
+   "anim": "attack",
+   "dying": false,
+   "flip": true,
+   "frame_index": 3,
+   "hero": false,
+   "lane_y": -5.39583921432495,
+   "page": "char_player",
+   "pivot": [
+    20.0,
+    47.0
+   ],
+   "rect": [
+    3.0,
+    661.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    487.0,
+    285.0
+   ],
+   "set": "e_grunt",
+   "side": -1,
+   "world": [
+    1336.0,
+    285.0
+   ]
+  },
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": true,
+   "frame_index": 0,
+   "hero": false,
+   "lane_y": -1.15021514892578,
+   "page": "char_player",
+   "pivot": [
+    19.0,
+    47.0
+   ],
+   "rect": [
+    107.0,
+    713.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    553.0,
+    289.0
+   ],
+   "set": "e_spitter",
+   "side": -1,
+   "world": [
+    1402.0,
+    289.0
+   ]
+  },
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": true,
+   "frame_index": 0,
+   "hero": false,
+   "lane_y": -5.92064428329468,
+   "page": "char_player",
+   "pivot": [
+    20.0,
+    47.0
+   ],
+   "rect": [
+    263.0,
+    713.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    480.0,
+    284.0
+   ],
+   "set": "e_grunt",
+   "side": -1,
+   "world": [
+    1329.0,
+    284.0
+   ]
+  },
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": true,
+   "frame_index": 0,
+   "hero": false,
+   "lane_y": -1.98509550094604,
+   "page": "char_player",
+   "pivot": [
+    19.0,
+    47.0
+   ],
+   "rect": [
+    263.0,
+    557.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    706.0,
+    288.0
+   ],
+   "set": "e_bomber",
+   "side": -1,
+   "world": [
+    1555.0,
+    288.0
+   ]
+  },
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": true,
+   "frame_index": 0,
+   "hero": false,
+   "lane_y": -3.03054308891296,
+   "page": "char_player",
+   "pivot": [
+    28.0,
+    47.0
+   ],
+   "rect": [
+    883.0,
+    107.0,
+    64.0,
+    48.0
+   ],
+   "screen": [
+    954.0,
+    287.0
+   ],
+   "set": "e_swarm",
+   "side": -1,
+   "world": [
+    1803.0,
+    287.0
+   ]
+  },
+  {
+   "anim": "idle",
+   "dying": false,
+   "flip": false,
+   "frame_index": 3,
+   "hero": true,
+   "lane_y": 2.0,
+   "page": "char_player",
+   "pivot": [
+    26.0,
+    57.0
+   ],
+   "rect": [
+    127.0,
+    443.0,
+    58.0,
+    58.0
+   ],
+   "screen": [
+    340.0,
+    292.0
+   ],
+   "set": "hero_captain",
+   "side": 1,
+   "world": [
+    1189.0,
+    292.0
+   ]
+  }
+ ],
+ "user_data_dir": "C:/Users/aghose/AppData/Local/Temp/art03_iso_full/appdata/Godot/app_userdata/Lane Defence art03 snapshot",
+ "view": [
+  800.0,
+  360.0
+ ],
+ "zoom": 1.0
+}

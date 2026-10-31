@@ -318,7 +318,8 @@ def anim07(out, items):
     frame 0 on the baseline's captured walk frame 0. Death frames get battle_view's fade
     (alpha = (0.7 - t) / 0.7 at t = (i + 0.5) / fps, as capture_art_baseline.gd does). Frames are written in 07's
     layers/anim layout, then 07's own tools/qa/art_metrics.anim_metrics() measures them, so the numbers use 07's code.
-    items: "<label>=<char_dir>"; the first item must be the shipped build (used for the registration)."""
+    items: "<label>=<char_dir>"; the first item must hold the character pixels 07's baseline captured (ad47eda; the
+    char pages did not change between 253f2b6 and e8c6d96), because it is used for the registration."""
     import shutil
     import tempfile
     sys.path.insert(0, os.path.join(ROOT, "tools", "qa"))

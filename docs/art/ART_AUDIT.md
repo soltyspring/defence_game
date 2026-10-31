@@ -332,3 +332,51 @@ Context: after the 03:55 blue screen. No Godot run was needed for this round. Th
   - Proof: a clean HEAD copy with only the new pixel.py builds all 9 pages byte-identical to HEAD.
 - Evidence: docs/art/evidence/char_quality/qa_b024_b025_shipped_fix_x3.png (rows: brute walk, brute death, tank walk, 식빵병 death, 프레첼 death) and anim07_shipped_fix.json.
 - Not done: 07's capture of this commit. No human test, no phone. The hit animation is still never drawn by battle_view (QA-O006, 02).
+
+## Round 18 result (2026-11-01 09:xx) — D1Q, the hand-polished D1 draft, against the pass criteria Q1-Q13 (draft, not shipped)
+Selected only by `ART_DRAFT32=D1Q` (tools/art/chars_big.py). The shipped default stays the 32 px art until 02 decides R17. e8c6d96 put the QA-B024/B025 walk and death fixes into both the default and D1Q.
+
+**What was redrawn by hand at the target resolution:** faces, torsos, the loaf shield and the pony rider. D1FULL had nearest-scaled them.
+- **제빵사:** taller pleated toque with a sky_pale sheen, crumb pores on the face, a flour-dusted apron. The pick is carried over the shoulder.
+- **롤빵병:** round bun hood with crust grain, a wicker basket low on the back. Walks leaning forward with the roll cocked at shoulder height.
+- **통식빵:** loaf-crown helmet with gloss streaks, visor slit with a glint, a 12x14 loaf shield with crumb dots.
+- **포자 뱉개:** tall pointed spore hood with lilac spore dots, a spout mouth, slime drip.
+- **프레첼:**
+  - Rider head and torso redrawn.
+  - Crumb pores on the pony and a woven saddle cloth.
+  - The lance is drawn natively as a pretzel stick with salt flecks and a leaf tip. The scaled lance doubled every second column.
+- **식빵병 / 졸개:** the D1 bodies, plus spore dots on the mite. Both now also get the D1Q limbs.
+- **제빵 대장:** hat pleats, crust grain on the apron.
+- **초파리 떼:** natively drawn at 2x. Veined wings, striped abdomen, three legs.
+- **부푼 효모:** natively drawn at 1.5x and wider. Dough folds, spore speckle, glowing pores, 2x2 eyes with glints and angry brows, spore stalks, slime drips.
+- **썩은 멧돼지:** natively drawn at 1.5x. Fur strokes, bristles, teal patches with spores, drool on the gore.
+- **Limbs (all units):** 3 px or wider limbs are lit on the left and shaded on the right, with a trouser cuff and a knee crease.
+- **Motion:**
+  - Walk: stride +1, lift +1, arm swing +1, and 1 px more body bob on contact.
+  - Attack: the frame before the hit leans back 3 px, the hit frame lunges 3 px, the next 2 px.
+  - Hit and death: knocked back 3-4 px.
+
+**Pass criteria (fixed in round 18 before the redraw), measured on the D1Q atlas (HEAD 52cf31a + the draft) and on real captures:**
+| # | criterion | result | verdict |
+|---|---|---|---|
+| Q1 | idle feature_pct ≥ min(shipped, 45) | 제빵사 51.3, 식빵병 54.6, 롤빵병 46.1, 통식빵 46.6, 프레첼 49.8, 졸개 55.6, 초파리 70.4, 뱉개 49.4, 효모 36.6 (line 30.1), 멧돼지 24.3 (line 23.2), 대장 47.9 (line 40.0). D1FULL was 12.0-46.5 | PASS 11/11 |
+| Q2 | idle doubled ≤ 2.0 % | max 2.0 (졸개), 1.9 (롤빵병), 1.4 (초파리), others 0. D1FULL was up to 12.2 | PASS |
+| Q3 | real capture feature ≥ min(shipped, 40), doubled ≤ 2.0 | see the capture section below | see below |
+| Q4 | same-side walk IoU ≤ 0.60 | max 0.60 (롤빵병~통식빵, 뱉개~효모), 0.59 (제빵사~롤빵병); was 0.76 / 0.70 / 0.67 | PASS, three pairs at or just under the line |
+| Q5 | walk mean change ≥ 15 %, bob ≥ 2 px | min change 20.8 % (멧돼지), bob 2-6 px | PASS |
+| Q6 | attack range ≥ 8 px, change ≥ 35 % | min 9 px (효모), 10 px (프레첼); min change 48.3 % | PASS |
+| Q7 | hit change ≥ 25 % | min 29.6 % (멧돼지) | PASS |
+| Q8 | death change ≥ 30 % | min 39.1 % (효모) | PASS |
+| Q9 | size hierarchy | infantry 27-31 px < 멧돼지 36 < 대장 41 < 장군 45 < 대군주 56 | PASS |
+| Q10 | readability silhouette ≥ 60 % (village / dark / bright) | street of HEAD 1aec5fe (when the criteria were set): 75.5-79.8 / 65.4-66.9 / 70.9. 09's new street (92a1718, after the criteria): 84.0-87.0 / **51.5-57.2** / 87.5-100. Shipped art on the new street: 65.5-74.5 / 48.1-57.3 / 87.5-100 | PASS on the old street; on the new street village and bright PASS (better than shipped), `dark` FAIL for both. 09 and I treat `dark` as report-only (09 W1, my V1) |
+| Q11 | closest ally/enemy pair dE ≥ 10 (normal + 3 CVD) | 15.51 / protan 13.82 / deutan 15.70 / tritan 14.00 (shipped 19.28 / 16.37 / 18.98 / 18.28) | PASS, but lower than shipped |
+| Q12 | worst battle ≤ 12 MiB, one character page | 10.75 MiB, char_player 1024x1024 (shipped 8.75) | PASS |
+| Q13 | contract, determinism | anim names, frame counts, fps, loop, events and point names identical to the e8c6d96 default. validate.py --determinism PASS with ART_DRAFT32=D1Q. The default build has no D1Q pixels | PASS |
+**07's animation rules, predicted on D1Q** (char_quality.py anim07, 07's code; registration on the ad47eda character pixels, error 0 px):
+- A1 2-8 px.
+- A1c 58.4-86.0 %.
+- A5 48.6-100 %.
+- A6 0.42-0.50 s.
+- A6b 83-100 %.
+- All 10 ids pass. Evidence: anim07_d1q.json.
+**Capture section (Q3):** pending. The real captures of this final D1Q are queued as heavy job 03-cq-d1q-cap2. An 08:12 capture of the D1Q state just before the lance redraw is not used for the verdict: its only Q3 miss was 프레첼 r01 doubled 2.7 %, from the scaled lance in attack frame 2. That frame now measures 0.0 % in the atlas.

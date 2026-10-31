@@ -1,0 +1,484 @@
+{
+ "canvas_scale": [
+  1.0,
+  1.0
+ ],
+ "combo": "current",
+ "image": [
+  1600,
+  720
+ ],
+ "t": 46.0166666666653,
+ "units": [
+  {
+   "anim": "attack",
+   "dying": false,
+   "flip": false,
+   "frame_index": 2,
+   "hero": false,
+   "lane_y": 3.45551204681396,
+   "page": "char_player",
+   "pivot": [
+    21.0,
+    47.0
+   ],
+   "rect": [
+    551.0,
+    273.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    561.0,
+    293.0
+   ],
+   "set": "melee_basic",
+   "side": 1,
+   "world": [
+    911.0,
+    293.0
+   ]
+  },
+  {
+   "anim": "attack",
+   "dying": false,
+   "flip": false,
+   "frame_index": 3,
+   "hero": false,
+   "lane_y": 1.39011287689209,
+   "page": "char_player",
+   "pivot": [
+    19.0,
+    47.0
+   ],
+   "rect": [
+    107.0,
+    817.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    561.0,
+    291.0
+   ],
+   "set": "tank",
+   "side": 1,
+   "world": [
+    911.0,
+    291.0
+   ]
+  },
+  {
+   "anim": "attack",
+   "dying": false,
+   "flip": false,
+   "frame_index": 3,
+   "hero": false,
+   "lane_y": 5.25117111206055,
+   "page": "char_player",
+   "pivot": [
+    19.0,
+    47.0
+   ],
+   "rect": [
+    263.0,
+    765.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    469.0,
+    295.0
+   ],
+   "set": "ranged_basic",
+   "side": 1,
+   "world": [
+    819.0,
+    295.0
+   ]
+  },
+  {
+   "anim": "attack",
+   "dying": false,
+   "flip": false,
+   "frame_index": 4,
+   "hero": false,
+   "lane_y": 2.91520404815674,
+   "page": "char_player",
+   "pivot": [
+    21.0,
+    47.0
+   ],
+   "rect": [
+    211.0,
+    869.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    561.0,
+    293.0
+   ],
+   "set": "melee_basic",
+   "side": 1,
+   "world": [
+    911.0,
+    293.0
+   ]
+  },
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": false,
+   "frame_index": 1,
+   "hero": false,
+   "lane_y": 1.79471397399902,
+   "page": "char_player",
+   "pivot": [
+    22.0,
+    39.0
+   ],
+   "rect": [
+    479.0,
+    199.0,
+    48.0,
+    40.0
+   ],
+   "screen": [
+    394.0,
+    292.0
+   ],
+   "set": "siege",
+   "side": 1,
+   "world": [
+    744.0,
+    292.0
+   ]
+  },
+  {
+   "anim": "attack",
+   "dying": false,
+   "flip": false,
+   "frame_index": 3,
+   "hero": false,
+   "lane_y": -1.27742195129395,
+   "page": "char_player",
+   "pivot": [
+    19.0,
+    47.0
+   ],
+   "rect": [
+    263.0,
+    765.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    469.0,
+    289.0
+   ],
+   "set": "ranged_basic",
+   "side": 1,
+   "world": [
+    819.0,
+    289.0
+   ]
+  },
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": false,
+   "frame_index": 2,
+   "hero": false,
+   "lane_y": -5.39583921432495,
+   "page": "char_player",
+   "pivot": [
+    19.0,
+    47.0
+   ],
+   "rect": [
+    811.0,
+    315.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    328.0,
+    285.0
+   ],
+   "set": "tank",
+   "side": 1,
+   "world": [
+    678.0,
+    285.0
+   ]
+  },
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": false,
+   "frame_index": 4,
+   "hero": false,
+   "lane_y": -1.15021514892578,
+   "page": "char_player",
+   "pivot": [
+    21.0,
+    47.0
+   ],
+   "rect": [
+    691.0,
+    471.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    432.0,
+    289.0
+   ],
+   "set": "melee_basic",
+   "side": 1,
+   "world": [
+    782.0,
+    289.0
+   ]
+  },
+  {
+   "anim": "attack",
+   "dying": false,
+   "flip": false,
+   "frame_index": 2,
+   "hero": false,
+   "lane_y": -0.750312328338623,
+   "page": "char_player",
+   "pivot": [
+    22.0,
+    39.0
+   ],
+   "rect": [
+    421.0,
+    675.0,
+    50.0,
+    40.0
+   ],
+   "screen": [
+    561.0,
+    289.0
+   ],
+   "set": "fast",
+   "side": 1,
+   "world": [
+    911.0,
+    289.0
+   ]
+  },
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": false,
+   "frame_index": 0,
+   "hero": false,
+   "lane_y": 2.54380130767822,
+   "page": "char_player",
+   "pivot": [
+    19.0,
+    47.0
+   ],
+   "rect": [
+    159.0,
+    973.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    0.0,
+    293.0
+   ],
+   "set": "ranged_basic",
+   "side": 1,
+   "world": [
+    350.0,
+    293.0
+   ]
+  },
+  {
+   "anim": "walk",
+   "dying": false,
+   "flip": false,
+   "frame_index": 4,
+   "hero": false,
+   "lane_y": 0.270110607147217,
+   "page": "char_player",
+   "pivot": [
+    21.0,
+    47.0
+   ],
+   "rect": [
+    691.0,
+    471.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    -208.0,
+    290.0
+   ],
+   "set": "melee_basic",
+   "side": 1,
+   "world": [
+    142.0,
+    290.0
+   ]
+  },
+  {
+   "anim": "death",
+   "dying": true,
+   "flip": true,
+   "frame_index": 0,
+   "hero": false,
+   "lane_y": -2.55232214927673,
+   "page": "char_player",
+   "pivot": [
+    20.0,
+    47.0
+   ],
+   "rect": [
+    211.0,
+    661.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    589.0,
+    287.0
+   ],
+   "set": "e_grunt",
+   "side": -1,
+   "world": [
+    939.0,
+    287.0
+   ]
+  },
+  {
+   "anim": "attack",
+   "dying": false,
+   "flip": true,
+   "frame_index": 3,
+   "hero": false,
+   "lane_y": -1.98509550094604,
+   "page": "char_player",
+   "pivot": [
+    20.0,
+    47.0
+   ],
+   "rect": [
+    3.0,
+    661.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    589.0,
+    288.0
+   ],
+   "set": "e_grunt",
+   "side": -1,
+   "world": [
+    939.0,
+    288.0
+   ]
+  },
+  {
+   "anim": "attack",
+   "dying": false,
+   "flip": true,
+   "frame_index": 0,
+   "hero": false,
+   "lane_y": -1.73847007751465,
+   "page": "char_player",
+   "pivot": [
+    20.0,
+    47.0
+   ],
+   "rect": [
+    583.0,
+    221.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    589.0,
+    288.0
+   ],
+   "set": "e_grunt",
+   "side": -1,
+   "world": [
+    939.0,
+    288.0
+   ]
+  },
+  {
+   "anim": "attack",
+   "dying": false,
+   "flip": true,
+   "frame_index": 3,
+   "hero": false,
+   "lane_y": -3.03054308891296,
+   "page": "char_player",
+   "pivot": [
+    20.0,
+    47.0
+   ],
+   "rect": [
+    3.0,
+    661.0,
+    48.0,
+    48.0
+   ],
+   "screen": [
+    589.0,
+    287.0
+   ],
+   "set": "e_grunt",
+   "side": -1,
+   "world": [
+    939.0,
+    287.0
+   ]
+  },
+  {
+   "anim": "idle",
+   "dying": false,
+   "flip": false,
+   "frame_index": 3,
+   "hero": true,
+   "lane_y": 2.0,
+   "page": "char_player",
+   "pivot": [
+    26.0,
+    57.0
+   ],
+   "rect": [
+    127.0,
+    443.0,
+    58.0,
+    58.0
+   ],
+   "screen": [
+    406.0,
+    292.0
+   ],
+   "set": "hero_captain",
+   "side": 1,
+   "world": [
+    756.0,
+    292.0
+   ]
+  }
+ ],
+ "user_data_dir": "C:/Users/aghose/AppData/Local/Temp/art03_iso_full/appdata/Godot/app_userdata/Lane Defence art03 snapshot",
+ "view": [
+  800.0,
+  360.0
+ ],
+ "zoom": 1.0
+}

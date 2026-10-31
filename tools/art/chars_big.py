@@ -1040,9 +1040,32 @@ _LANCE0 = [None]
 
 
 def _lance_q(cv, hx, hy, ang, flag_phase=0):
-    """프레첼 lance: the shipped drawing plus shaft wraps (D1Q)."""
-    _LANCE0[0](cv, hx, hy, ang, flag_phase=flag_phase)
-    _wraps(cv, (hx, hy), ang, -2, 12, col="O", step=3)
+    """프레첼 lance (D1Q), drawn at the target resolution: a baked pretzel-stick shaft whose colour cycles
+    wood_light / wood / tan with salt flecks, so no two neighbouring columns repeat (the scaled 1.25x lance
+    doubled every second column), a leaf-shaped steel tip and the pennant."""
+    if not isinstance(cv, ScaledCanvas):
+        return _LANCE0[0](cv, hx, hy, ang, flag_phase=flag_phase)
+    R, k = cv.R, cv.k
+    dx, dy = _dir(ang)
+    X, Y = cv._p(hx), cv._p(hy)
+    t0, t1 = int(round(-3 * k)), int(round(13 * k))
+    cyc = ("o", "O", "T")
+    for t in range(t0, t1):
+        R.put(round(X + dx * t), round(Y + dy * t), c(cyc[(t - t0) % 3]))
+        if (t - t0) % 5 == 2:                                    # salt fleck on the upper side
+            R.put(round(X + dx * t + dy), round(Y + dy * t - dx), c("W"))
+    for j, t in enumerate(range(t1, t1 + 4)):                    # leaf-shaped steel tip
+        x, y = round(X + dx * t), round(Y + dy * t)
+        R.put(x, y, c("N" if j < 3 else "W"))
+        if j in (1, 2):
+            R.put(round(x - dy), round(y + dx), c("M" if j == 1 else "N"))
+            if j == 1:
+                R.put(round(x + dy), round(y - dx), c("W"))
+    bx, by = X + dx * (t1 - 3), Y + dy * (t1 - 3)                # pennant hangs under the shaft, trailing back
+    for kk in range(5):
+        for jj in range(4 - kk // 2):
+            R.put(round(bx - dx * kk), round(by - dy * kk) + 1 + jj + (flag_phase if kk == 4 else 0),
+                  c("C" if jj == 0 else ("B" if (kk + jj) % 2 else "b")))
 
 
 def _pony_q(cv, bx, by, phase, gallop=True, rear=0):
