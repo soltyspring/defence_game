@@ -38,6 +38,7 @@ Validation:
 - No own Godot left running.
 Not verified: human listening, Android device (lifecycle on a real phone, speaker loudness).
 Note: the B36 blind A/B files (v3.4) were recorded before these level changes; they still compare the cap fairly because both used the same levels.
+Git v3.5 (copied from PUSHED lines, verified with git log origin/main): 11c29cc1f2890c07d16c272bfffbb032716840f3 [Fix]; 16b7a8dc56c94e280e524e1ff63098bf2f9df237 [Test]; 2a63a65d74f6d131fb886dac6db8641c166c13b2 [Docs]; 8ff87a9a0f663e8cbe67856468ee0b132b2389db [Test]. The first Docs attempt was refused by the helper's diff check (blank line at EOF in PHONE_SPEAKER_CHECK.md); I unstaged only my own 15 paths, fixed the generator and retried.
 ## v3.4 (Codex review of 91eeb25–f41fd12: "86 hits/min may be noise density")
 1. **Shared hit cap**: cue groups in audio_manager.gd (manifest `groups`, cue `group`, stat `dropped_group`); group `hit` = hit_bread/hit_mold/hit_melee/hit_arrow.
    - Same-seed A/B (probe `seed(11)`, r02, 60 s; engine hit events 113–117 and kills 13–14 in every run):
