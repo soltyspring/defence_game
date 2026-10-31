@@ -61,6 +61,7 @@ func _run() -> void:
 	await test_back_once_and_result_pause()
 	await test_wave_cleared_banner()
 	await test_qaj3_and_upgrades()
+	await test_title_block()
 	for s in SECTIONS:
 		check(done.has(s), "section %s ran to completion (aborted by a script error otherwise)" % s)
 	print("[test_ui] passed=%d failed=%d" % [passes, failures.size()])
@@ -70,7 +71,7 @@ func _run() -> void:
 		print("  - " + f)
 	quit(1 if failures.size() > 0 else 0)
 
-const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard", "back_once", "wave_cleared", "upgrades"]
+const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard", "back_once", "wave_cleared", "upgrades", "title"]
 var done := {}
 
 func test_compile_all(dir_path: String) -> void:
@@ -922,3 +923,41 @@ func test_qaj3_and_upgrades() -> void:
 	fs.queue_free()
 	await _frames()
 	done["upgrades"] = true
+
+# ---------------------------------------------------------------- Q3 working title
+
+func test_title_block() -> void:
+	var TB := load("res://src/ui/title_block.gd")
+	var cases := {"640_notch": Rect2(34 + 8, 28, 572 - 16, 120), "640": Rect2(8, 28, 624, 120), "800_notch": Rect2(42, 28, 750, 160)}
+	for loc in ["ko", "en"]:
+		UiText.load_locale(loc)
+		var t: String = TB.title_text()
+		check(t != "레인 디펜스" and t != "Lane Defence", "[%s] stale provisional title replaced (%s)" % [loc, t])
+		for cname in cases:
+			var slot: Rect2 = cases[cname]
+			var l: Dictionary = TB.compute(slot, loc)
+			var ok: bool = not bool(l.truncated)
+			if l.mode == "text":
+				var hsum := 0.0
+				for ln in l.lines:
+					ok = ok and UiStyle_.text_width(ln[0], ln[1], &"bold") <= slot.size.x and int(ln[1]) in [24, 36]
+					hsum += float(ln[1]) + 4.0
+				ok = ok and hsum <= slot.size.y
+			else:
+				ok = slot.encloses(l.rect as Rect2)
+			check(ok, "[%s] title fits %s (%s: %s)" % [loc, cname, l.mode, l.get("lines", [])])
+		# colon split rule on a deliberately narrow slot
+		var narrow: Dictionary = TB.compute(Rect2(0, 0, 300, 100), loc)
+		if narrow.mode == "text":
+			check(narrow.lines.size() == 2 and str(narrow.lines[0][0]).ends_with(":") and not narrow.truncated, "[%s] narrow slot → 2 lines split after ':' (%s)" % [loc, narrow.lines])
+	UiText.load_locale("ko")
+	# mounted menu: title slot inside the safe area and above the play button
+	SafeArea.override_view_size = Vector2(640, 360)
+	SafeArea.override_safe_rect = Rect2(34, 0, 572, 360)
+	var m: Control = _mount("res://scenes/ui/main_menu.tscn", {"version": 1, "unlocked_round": 1, "stars": {}, "coins": 0, "settings": {}})
+	await _frames(2)
+	check(m.title_slot.size.y >= 40 and m.title_slot.end.y < m.btn_play.position.y and Rect2(34, 0, 572, 360).encloses(m.title_slot), "menu title slot above play, inside safe (%s)" % m.title_slot)
+	m.queue_free()
+	SafeArea.override_safe_rect = Rect2(0, 0, 640, 360)
+	await _frames()
+	done["title"] = true

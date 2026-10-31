@@ -5,6 +5,8 @@ var btn_play: Control
 var btn_select: Control
 var btn_settings: Control
 var btn_upgrades: Control
+const TitleBlock := preload("res://src/ui/title_block.gd")
+var title_slot := Rect2()   # QA
 var settings_panel: Control
 var quit_layer: Control
 var quit_buttons: Array = []
@@ -117,9 +119,13 @@ func _draw() -> void:
 		draw_rect(Rect2(x, h * 0.6 - hh, 8, hh), Color(0.16, 0.30, 0.20))
 		x += 8
 	draw_rect(Rect2(0, h * 0.82, view.x, h * 0.18), Color(0.36, 0.27, 0.18))
-	var tc := Vector2(safe.get_center().x, safe.position.y + safe.size.y * 0.24)
-	UiStyle.draw_text_centered(self, UiText.t("ui.title"), tc, UiStyle.FONT_XL, UiStyle.C_GOLD, true, &"bold")
-	UiStyle.draw_text_centered(self, UiText.t("ui.subtitle"), tc + Vector2(0, 32), UiStyle.FONT_M, UiStyle.C_TEXT)
+	# title slot: between the coin row and the play button; logo (03) or text (title_block.gd)
+	var slot_top := safe.position.y + 28
+	var slot_bottom := btn_play.position.y - 22    # leave room for the subtitle line
+	title_slot = Rect2(safe.position.x + 8, slot_top, safe.size.x - 16, maxf(40.0, slot_bottom - slot_top))
+	var bottom := TitleBlock.draw(self, title_slot, "en" if UiText.t("ui.play") == "Play" else "ko")
+	var sub: Array = UiStyle.fit_text(UiText.t("ui.subtitle"), safe.size.x - 16, UiStyle.FONT_M)
+	UiStyle.draw_text_centered(self, sub[0], Vector2(safe.get_center().x, minf(bottom + 10, btn_play.position.y - 10)), UiStyle.FONT_M, UiStyle.C_TEXT)
 	var p := progress()
 	if not UiStyle.draw_ui_icon(self, "icon_gold", Vector2(safe.position.x + 14, safe.position.y + 14)):
 		UiStyle.draw_glyph(self, &"coin", Vector2(safe.position.x + 14, safe.position.y + 14), 5)
