@@ -1,0 +1,1 @@
+02-engine 세션을 새 Kiro 로그인으로 복구했습니다. 08:21~08:22 요청은 인증 만료(authExpiryRetry)로 실패했으니 먼저 coordination/handoffs/02-engine.md, coordination/requests/coordinator-to-02-engine.md 최신 지시, 본인 작업트리 변경을 확인해 중단된 지점을 정리하세요. HISTORICAL QUOTA CHECKPOINT 문구는 이전 계정 기록이니 멈추지 마세요. 본인 소유 경로만 수정하고, 검증한 결과는 Publish-Task.ps1로 본인 명시 파일만 커밋·푸시해 실제 SHA를 보고하세요.

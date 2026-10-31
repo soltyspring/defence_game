@@ -1,0 +1,43 @@
+
+# Eight-worker expansion — authoritative ownership overrides
+User authorizes FOUR additional Kiro workers (8 total) and uniform window layout. All remain claude-opus-5.5 + trust-all. Existing owners keep current tasks except narrow reserved paths below; coordinate at milestones, never silently edit foreign files.
+05-audio: assets/audio/**, src/audio/**, tools/audio/**, docs/audio/**, own status/handoff/requests. These paths are EXCLUDED from 03-art ownership. Original SFX/music generation, audio manager and mixer contract. No UI/core changes; request bootstrap and settings integration from 02/04.
+06-services: src/services/**, docs/services/**, tests/services/**, own status/handoff/requests. Services for monetization, purchase/ad mock adapters, analytics event contracts and release configuration boundaries. tests/services/** is EXCLUDED from 04-client ownership. No production SDK credentials, charges or unapproved products; commercial choices go to 01. Existing save/progression core remains 02; UI remains 04; economy data remains 01. Request cross-owner changes rather than duplicating systems.
+07-qa: tests/acceptance/**, tools/qa/**, docs/verification/**, own status/handoff/requests. Independent integration acceptance, regressions, release verification and bug reports. tests/acceptance/** is EXCLUDED from 04-client ownership. No fixes in source/gameplay/UI: issue reproducible owner-targeted requests. 04 retains UI/export checks and build pipeline.
+08-performance: tools/perf/**, tests/performance/**, docs/performance/**, own status/handoff/requests. Repeatable profiling/stress and CPU/RAM/GPU/thermal methodology. tests/performance/** is EXCLUDED from 04-client ownership. 02 owns runtime fixes; send measured findings to 02/03/04. Desktop results never substitute for actual phone claims.
+Every role may read all files. Ownership above overrides broad prior assets/** and tests/** grants. No new worker asks the user directly: one question at a time through 01 only. Each completed verified task uses shared Publish-Task.ps1 and records SHA and push result. Avoid spawning competing Godot editors/imports; coordinate import/build lock with 02/04 and keep profiling output under local ignored directories.
+
+## Dispatch R4 — quality, judge review, typography and secondary-monitor tests
+Read coordination/QUALITY_REVIEW.md fully at next safe milestone. New direct user instructions include rigorous research, gongmojeon hostile rejection->fix->retest, strong Korean font/pixel visual verification and SECONDARY-monitor-only visible game tests. Implement the role-specific obligations there. Acknowledge read + actual actions/results in handoff. Use max effort for hard analysis when supported on next safe resume, no restart of active work solely for flags. Cross-owner issues go to owner; every verified fix/task commit AND push.
+
+# Completion review gate (explicit user instruction)
+After EVERY completed task inspect actual diff/commit, real test artifacts, regressions and downstream integrations. Report: changes; validation commands/results/artifacts; strongest rejection reasons/untested claims; owner fixes; SAME failing scenario retest; actual SHA/push; concrete next task. A push/parser/test count is not proof of correctness, fun, phone usability or release readiness. Docs alone do not close runtime defects. Update stale status/handoffs. P0/P1 blockers stay open until real acceptance evidence, no average score hides them. Codex directly dispatches the next correction/test to the completed CLI, verifies work actually starts, then advances implementation after verification; independent tasks may proceed across explicitly tracked dependencies.
+
+Window stability user override: read coordination/WINDOW_STABILITY.md. Never close/kill/recreate agent/terminal windows for next tasks or effort. Existing work must continue in its current window. New direct messages require proven live non-closing transport; request files stay QUEUED until acknowledged. No duplicate workers.
+
+Latest user checkpoint/CPU instructions: read coordination/QUOTA_POLICY.md. At observed97% save current atomic work/handoff, no new task/model call, await user login. Local guard preserves per-role WIP branches without changing main/shared index. Do not close worker windows. Keep full required verification but avoid rerunning unchanged imports/tests and coordinate heavy Godot runs. No throttling or process termination.
+
+C08 integration check: current %APPDATA%/Godot/app_userdata/Lane Defence/selftest_report.json contains failures=['script failed to compile: res://src/audio/audio_manager.gd']. Could be in-progress write, not yet established persistent bug. After your current atomic edit, coordinate with02 to parse your final file and rerun global selftest; attach full error and rerun evidence if reproducible. Do not claim clean project integration from historical engine PASS.
+
+# User update: 97% work stop and individual handoffs
+At >=97% stop ongoing work at the earliest safe boundary and write one role-specific file coordination/handoffs/<role>.md containing current task, completed/unfinished work, exact next steps, session ID, actual validation, errors and commit/push state. Commit and push owned WIP safely (checkpoint branch if unverified). Stop issuing new work and await user login. Quota guard generates fallback handoff only if missing, explicitly marked coordinator snapshot, and preserves existing handoffs; it creates independent WIP branches and reports actual push results. Never claim a worker authored an unconfirmed handoff or that it stopped merely because a request file exists. On trigger, coordinator must actively verify each session and deliver stop/checkpoint instruction using a supported safe session mechanism; if busy sessions cannot be stopped and instructed without losing work, report specific limitation, preserve windows and save snapshots. No authentication automation.
+
+## HISTORICAL QUOTA CHECKPOINT (previous account; superseded after new login)
+Historical instruction only: do not stop for this old notice. On a NEW 97% trigger, stop current work at a safe boundary and write coordination/handoffs/05-audio.md with completed work, unfinished work, exact next steps, validation, errors, session ID and commit/push status; commit/push owned work where possible. Await account login.
+
+## HISTORICAL QUOTA CHECKPOINT (previous account; superseded after new login)
+Historical instruction only: do not stop for this old notice. On a NEW 97% trigger, stop current work at a safe boundary and write coordination/handoffs/05-audio.md with completed work, unfinished work, exact next steps, validation, errors, session ID and commit/push status; commit/push owned work where possible. Await account login.
+
+## HISTORICAL QUOTA CHECKPOINT (previous account; superseded after new login)
+Historical instruction only: do not stop for this old notice. On a NEW 97% trigger, stop current work at a safe boundary and write coordination/handoffs/05-audio.md with completed work, unfinished work, exact next steps, validation, errors, session ID and commit/push status; commit/push owned work where possible. Await account login.
+
+
+## USER DECISION 2026-10-31 09:03 KST (Q1 answered)
+원문: "모두 고치고 A) 빵집 기사단 vs 곰팡이 군단이걸로" (사용자가 코디네이터 채팅에서 직접 답변)
+해석: Q1 테마는 A안 '빵집 기사단 vs 곰팡이 군단'으로 확정(DECIDED by user). 아군은 빵집 기사단, 적은 곰팡이 군단. 또한 지금까지 보고된 결함을 모두 고치라는 지시.
+영향: 01 기획 이름·세계관·텍스트, 03 아군/적/보스/배경/UI 그래픽 재테마, 04 UI 문구·타이틀·아이콘, 05 음악·효과음 음색, 02 데이터 ID는 테마 중립 유지(D1)로 코드 변경 최소, 07 재검증, 09 경쟁작 대비 정체성 점검, 06 스토어 문구, 08 텍스처 예산 재확인.
+데이터 ID는 D1에 따라 그대로 두고 표시 이름·그래픽·소리만 바꾼다.
+
+
+## QUOTA CHECKPOINT
+Stop current work at a safe boundary. Write coordination/handoffs/05-audio.md with completed work, unfinished work, exact next steps, validation, errors, session ID and commit/push status; commit/push owned work where possible. Await account login.
