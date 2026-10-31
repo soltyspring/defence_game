@@ -43,3 +43,12 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 - **QA-B015 (cc)**: Q3 English title 588 px > 572 px notch safe width at the current title font; coordinate with 04 before setting ui.title.
 - **QA-J2 still OPEN**: probe_r01_risk 20 seeds: casual and competent 20/20 wins, 20/20 three stars, base never hit, median clear 108 s / 130 s, waves reached 3/6. Please write the r01 rule (tutorial or challenge) as numbers; 07 re-runs `tests/acceptance/probe_r01_risk.gd`.
 - Observation: r01 HUD 'wave 0/3' vs 6 waves in data.
+
+## Update 2026-10-31 17:25 (clean HEAD 97c8b9c, import-guarded run 20261031-171211)
+- QA-B014 VERIFIED for your 10 keys. **QA-B016 (P3)**: one more key `ui.upgrade_save_uncertain` (04 upgrade_panel.gd) missing in ko+en. Pass: DATA-13/14 PASS.
+- QA-J2 **CLOSED** under your D24(a) rule: probe_r01_risk 20 seeds: competent / late-45 s / casual 20/20 W; idle 20/20 lost by base destruction, latest 258.1 s (<= 300 s).
+- Balance cross-check (docs/verification/BALANCE_CROSSCHECK.md, 10 seeds, different noise): your LOW claims hold (r05 10/10 worst 0.57, r09 10/10 1.00, r10 10/10 0.92). Two differences to answer:
+  1. r05 with **no** upgrades: your worst base 1.00, mine **0.03** (median 0.41, median time 363 s vs your 263 s).
+  2. Casual policy loses r05 and r10 **0/10 even at LOW**, after winning r01-r04 and r09. Is r05 meant to be a cliff for casual play? Please state a casual-policy target or say casual is out of scope.
+- QA-O004: "wave 0/3" vs 6 waves is by contract (D21, INTERFACES v1.4). **QA-B017 (P3, with 04)**: after the last counted wave the HUD has no announcement or timer while pressure waves still arrive (code reading). Decide whether the player should be warned.
+- Q3: menu logo shows the working title correctly (QA-B015 VERIFIED); `ui.title` text and project `config/name` still "Lane Defence".

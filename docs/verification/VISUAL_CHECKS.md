@@ -68,3 +68,23 @@ Script `tests/acceptance/capture_m8.gd` via `visible_launch.ps1 -ProjectPath %TE
 - 240 s continuous at 2× (`--autoplay --round=r08`, competent bot, normal fixed step). One real window focus loss at 85.08 s triggered the HUD auto-pause; the harness resumed 2 ms later and logged it (`focus_log`); max wall−sim drift 0.11 s, so the run stays real time. Run condition: launcher keeps the game window topmost on DISPLAY2; other worker terminals on the primary monitor were active, which is the likely focus thief.
 - 14 389 frames: peak 34 units, max 7 projectiles, max 24 damage numbers, max 2 HUD messages at once, **0 message overlaps**.
 - At the peak-unit frame (`ko_2x_crowd_peak.png`, sim 160 s) only allies and the player base are on screen: the 34 units are spread over the lane and every enemy is off camera.
+
+## M9 run — clean origin/main HEAD 97c8b9c (17:11–17:19), import guard on (`import_missing_after_guard=0`, 0 failed resource loads)
+The earlier attempt at 16ea2c2 (run 20261031-165935) is **void**: its snapshot import produced 3 of ~195 imported files, so fonts/atlases/audio fell back (116 "Failed loading resource" lines). The runner now re-imports until every `.import` target exists and refuses to run otherwise (`tools/qa/run_acceptance.ps1`). Earlier HEAD runs were checked: 0 failed loads in all of them.
+
+### C9 QA-B014 — 10 keys VERIFIED, 1 new key missing
+- `-Head` run 20261031-171211: the 10 `ui.upgrade*` keys added by 01 in c15e43a are present in ko+en. DATA-13/14 still FAIL on one key: **`ui.upgrade_save_uncertain`** (upgrade_panel.gd, added by 04 after c15e43a) → **QA-B016 (P3, 01 text, cc 04)**.
+
+### C10 QA-B013 HP bars under CVD — PARTIAL
+- HUD top bars: the enemy base bar is striped; under deutan/protan the striped enemy bar vs the solid player bar is clear (`evidence/visual5-97c8b9c/ko_2x_crowd_t025_deutan.png`). PASS.
+- World-space bars are still hue-only: the unit HP bars above units and the enemy base's own bar become the same olive under deutan, with no stripe (`zoom_units_deutan.png`, `zoom_basebar_deutan.png`, 4× nearest zoom). QA-B013 stays OPEN for the battle_view bars (02 draws them).
+- Same frame: damage numbers still use the fallback font and overlap ("85" over "5") → QA-B012 unchanged.
+
+### C11 Working title (Q3) and QA-B015 — VERIFIED by render
+- The menu now draws 03's title logo instead of the `ui.title` text (the key still reads "Lane Defence" / "레인 디펜스"). English logo on 2 lines **"Bakery Knights / Mold Defense"**, Korean **"빵집 기사단 / 곰팡이 디펜스"**; complete and inside the safe area at 640×360 with 34+34 notch at 1× and 2×, and at full width (`*_1_menu.png`). The 588 px one-line overflow predicted in C7 does not occur because 04 wraps after the colon (7461636). QA-B015 VERIFIED.
+- Remaining: `project.godot` `config/name` and `ui.title` still say "Lane Defence" (OS app label, other screens); store name waits for the human KIPRIS check (Q3).
+
+### C12 Upgrade screen now active — PASS (no monetization)
+- `purchase_available()` is now true (02's `Save.buy_upgrade` landed): buttons enabled, no "coming soon" notice. Currency is in-game coins only; 0 monetization words on menu, upgrade panel and HUD in all 4 configs (Q2 보류 respected).
+
+### C13 r08 crowd at 97c8b9c — 120 s real time, no pause (`focus_log` empty), 0 message overlaps, peak 29 units.

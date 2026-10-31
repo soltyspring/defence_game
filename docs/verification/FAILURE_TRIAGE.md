@@ -7,8 +7,12 @@ Updated 2026-10-31 09:18 +09:00. Scope: desktop headless Godot 4.7.2 on Windows.
 | **HEAD** | `.\tools\qa\run_acceptance.ps1 -Head` | clean `git archive` of committed HEAD in `%TEMP%\qa07_head` (own import, current tests overlaid) → **committed defect** |
 | **Workspace** | `.\tools\qa\run_acceptance.ps1` | shared tree with every worker's uncommitted WIP → only here = **work-tree contamination** |
 
-## Current: HEAD 3b2d830, run 20261031-162034
-PASS 145 · FAIL 0 · NOT_IMPLEMENTED 0 · NOT_TESTED 2 (AUD-03, PLAT-03) · BLOCKED 0; services suites exit 0. Summary: runs/head-3b2d830.md. Open visual findings outside the automated suite: QA-B012, QA-B013 (VISUAL_CHECKS C4), QA-J1..J3 (FIRST_3MIN_REVIEW).
+## Current: HEAD 97c8b9c, run 20261031-171211 (import guard: 0 missing)
+PASS 143 · FAIL 2 · NOT_TESTED 2 (AUD-03, PLAT-03) · BLOCKED 0; services suites exit 0.
+| Check | Bug | Owner | Cause | Reproduce | Pass criterion |
+|---|---|---|---|---|---|
+| DATA-13, DATA-14 | QA-B016 P3 | 01 (cc 04) | ui.upgrade_save_uncertain used in upgrade_panel.gd, not in data/text ko+en | -Head -Only data | both PASS |
+Void run: 20261031-165935 at 16ea2c2 (snapshot import incomplete, 116 failed loads).
 
 ## Verified fixed (same check IDs, HEAD condition)
 | Bug | Fix commit | Verified at | Checks |

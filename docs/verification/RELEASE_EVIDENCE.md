@@ -1,6 +1,6 @@
 # Release evidence matrix (owner: 07-qa)
-Latest full run: **HEAD 3b2d830** (`-Head` clean snapshot, run 20261031-162034; Godot 4.7.2 headless, Windows desktop). Triage: [FAILURE_TRIAGE.md](FAILURE_TRIAGE.md). Visual: [VISUAL_CHECKS.md](VISUAL_CHECKS.md).
-Counts: PASS 145 · FAIL 0 · NOT_IMPLEMENTED 0 · NOT_TESTED 2 · BLOCKED 0; 06 services suites exit 0. Summary: [runs/head-3b2d830.md](runs/head-3b2d830.md). Zero automated FAILs is not release readiness: see open visual findings and PLAT-03.
+Latest full run: **HEAD 97c8b9c** (`-Head` clean snapshot with import guard, run 20261031-171211; Godot 4.7.2 headless, Windows desktop). Triage: [FAILURE_TRIAGE.md](FAILURE_TRIAGE.md). Visual: [VISUAL_CHECKS.md](VISUAL_CHECKS.md). Balance: [BALANCE_CROSSCHECK.md](BALANCE_CROSSCHECK.md).
+Counts: PASS 143 · FAIL 2 (DATA-13/14, QA-B016) · NOT_IMPLEMENTED 0 · NOT_TESTED 2 · BLOCKED 0; services suites exit 0. Summary: [runs/head-97c8b9c.md](runs/head-97c8b9c.md).
 
 **Scope warning:** desktop headless acceptance only. This is NOT Android release certification.
 `adb devices` at run time listed `emulator-5580` (an emulator, not a phone); no APK install or
@@ -37,6 +37,6 @@ on-device test has been done by 07-qa.
 | On-device Android (install, touch, lifecycle, safe area, perf, thermals) | NOT_TESTED | PLAT-03 |
 | Rendered round-select text ko/en 1x/2x | PASS | VISUAL_CHECKS C1 (secondary monitor, HEAD 0590e7a); HUD/other screens reviewed visually only, no tofu seen; CVD full-frame review still open |
 | 06 services suites in regression | PASS | test_services + test_services_m2 exit 0 in runner (run 20261031-080846); mock adapters only |
-| Upgrade screen (disabled, Q2 보류) | PASS | VISUAL C6 at 68866e9; text keys QA-B014 |
-| Working title Q3 | NOT_IMPLEMENTED | VISUAL C7: still 'Lane Defence'; projected EN overflow at notch (QA-B015) |
-| First 3 minutes (J1/J2) | OPEN | FIRST_3MIN_REVIEW re-judgement: objects 5-7 % of view, 0 enemies on screen early; r01 0 % base damage, 20/20 three stars |
+| Upgrade screen (coins only, Q2 보류) | PASS | VISUAL C6/C12: active with in-game coins, 0 monetization words |
+| Working title Q3 | PASS (menu logo) | VISUAL C11: 2-line logo fits at notch, ko/en 1x/2x; config/name and ui.title still "Lane Defence" |
+| First 3 minutes (J1/J2) | J1 OPEN, J2 CLOSED | J1: objects 5-7 % of view, 0 enemies on screen early (FIRST_3MIN_REVIEW); J2: D24(a) rule PASS (BALANCE_CROSSCHECK) |

@@ -45,3 +45,10 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 - QA-J3 **VERIFIED** (C5): econ-shape worker card survives deutan/protan; 반죽/기력 and Dough/Energy shown. Upgrade panel (C6): disabled + '준비 중' notice, inside safe area at 34+34, 0 monetization words.
 - **QA-B015 (P2, pre-check, with 01)**: Q3 working title 'Bakery Knights: Mold Defense' is 588 px at the menu title font (FONT_XL bold) vs 572 px safe width at 34+34 notch -> will overflow when 01 sets ui.title. Pass: rendered menu at en 1x/2x with 34+34 notch shows the full title (smaller step, 2 lines, or logo). KO 456 px fits.
 - QA-J1 still OPEN with numbers: objects cover 5.0-6.9 % of the view, enemies on screen 0 at r01 t=7..32 s and at the r08 peak frame. Pass target to be agreed with 01/03 (suggest: nearest enemy group or an off-screen indicator always visible).
+
+## Update 2026-10-31 17:25 (clean HEAD 97c8b9c; VISUAL_CHECKS C9-C13)
+- **QA-B015 VERIFIED**: 2-line title logo fits at 34+34 notch, en/ko, 1x/2x (evidence/visual5-97c8b9c/*_1_menu.png).
+- **QA-B013 PARTIAL**: HUD base bars now separable under deutan/protan (striped enemy bar). Still hue-only: world-space unit HP bars and the enemy base's own bar (zoom_units_deutan.png, zoom_basebar_deutan.png); those are drawn in battle_view (02). Kept OPEN, routed to 02.
+- QA-B016 (cc): `ui.upgrade_save_uncertain` has no data/text entry (01 to add).
+- Upgrade screen active with coins, 0 monetization words (C12).
+- QA-B017 (cc): no HUD cue for pressure waves after the last counted wave.

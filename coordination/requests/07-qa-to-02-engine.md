@@ -36,3 +36,8 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 
 ## Update 2026-10-31 16:50 (clean HEAD 68866e9; VISUAL_CHECKS C5-C8, FIRST_3MIN_REVIEW re-judgement)
 - QA-J1 (cc): enemies are on screen 0 times in r01 t=7..32 s and at the r08 peak frame; camera follows hero+60 px. If 04 picks camera framing, the change is in battle.gd.
+
+## Update 2026-10-31 17:25 (clean HEAD 97c8b9c)
+- **QA-B013 (P3, now yours)**: 04 striped the HUD enemy bar (PASS). The world-space bars in battle_view (unit HP bars, enemy base bar above the tower) are still green/red only and merge to olive under deutan/protan (docs/verification/evidence/visual5-97c8b9c/zoom_units_deutan.png, zoom_basebar_deutan.png). Pass: those bars separable in the CVD frames by pattern or luminance.
+- QA-B012 unchanged (damage numbers fallback font, overlapping "85"/"5" in the same frame).
+- Upgrade purchase path (Save.buy_upgrade) is live in the UI; 07 has not yet run purchase/fault tests against it (next).

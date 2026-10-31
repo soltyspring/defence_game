@@ -63,6 +63,20 @@ try {
         Expand-Archive "$proj.zip" $proj -Force; Remove-Item "$proj.zip"
         Copy-Item (Join-Path $Root 'tests\acceptance\*.gd') (Join-Path $proj 'tests\acceptance') -Force
         & $Godot --headless --path $proj --import 2>&1 | Out-Null
+        # import guard: every .import must have its imported file, else re-import once, else refuse to run
+        for ($pass = 1; $pass -le 3; $pass++) {
+            $missing = @()
+            foreach ($imp in Get-ChildItem $proj -Recurse -Filter '*.import' -File | ? { $_.FullName -notmatch '\\\.godot\\' }) {
+                foreach ($m in Select-String -Path $imp.FullName -Pattern '^path(\.[a-z0-9_]+)?="res://(\.godot/imported/[^"]+)"') {
+                    if (-not (Test-Path (Join-Path $proj $m.Matches[0].Groups[2].Value))) { $missing += $m.Matches[0].Groups[2].Value }
+                }
+            }
+            if ($missing.Count -eq 0) { break }
+            Write-Host "import incomplete (pass $pass): $($missing.Count) imported files missing; re-importing"
+            & $Godot --headless --path $proj --import 2>&1 | Out-Null
+        }
+        Add-Content -Path (Join-Path $out 'env.txt') -Value "import_missing_after_guard=$($missing.Count)"
+        if ($missing.Count -gt 0) { Write-Host "SNAPSHOT IMPORT INCOMPLETE: $($missing.Count) missing; not running (results would use fallbacks)"; exit 3 }
         Add-Content -Path (Join-Path $out 'env.txt') -Value "mode=HEAD snapshot $git (workspace WIP excluded; tests overlaid from workspace)"
     } else { Add-Content -Path (Join-Path $out 'env.txt') -Value 'mode=workspace (includes uncommitted WIP of all workers)' }
     $gargs = @('--headless', '--path', $proj, '-s', 'res://tests/acceptance/acceptance.gd', '--', "--qa-out=$($out.Replace('\','/'))")
