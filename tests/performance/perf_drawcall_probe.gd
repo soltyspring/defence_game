@@ -40,6 +40,12 @@ var phase_s := 3.0
 var cycles := 2
 var out_path := ""
 var contended := -1
+## --dc-set=units : only "all", "view_only#0", "view_only-units" (repeated --dc-cycles times) for build-vs-build A/B of unit cost.
+## --dc-uncapped  : vsync off + max_fps 0, so per-phase frame time is CPU+GPU cost, not the 16.7 ms pacing.
+var phase_set := "full"
+var uncapped := false
+var _uncap_resets := 0
+var _vp_rid := RID()
 var _t := 0.0
 var _started := false
 var _done := false
@@ -59,6 +65,8 @@ func _initialize() -> void:
 		elif a.begins_with("--dc-cycles="): cycles = int(a.get_slice("=", 1))
 		elif a.begins_with("--dc-out="): out_path = a.get_slice("=", 1)
 		elif a.begins_with("--perf-contended="): contended = int(a.get_slice("=", 1))
+		elif a.begins_with("--dc-set="): phase_set = a.get_slice("=", 1)
+		elif a == "--dc-uncapped": uncapped = true
 	if out_path == "":
 		out_path = ProjectSettings.globalize_path("res://build/perf/drawcalls_latest.json")
 	_boot.call_deferred()
@@ -71,6 +79,11 @@ func _boot() -> void:
 	if change_scene_to_file("res://scenes/gameplay/main.tscn") != OK:
 		quit(1)
 		return
+	_vp_rid = root.get_viewport_rid()
+	RenderingServer.viewport_set_measure_render_time(_vp_rid, true)
+	if uncapped:
+		Engine.max_fps = 0
+		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	_started = true
 
 func _stress(sim) -> void:
@@ -100,6 +113,7 @@ func _swap_view(battle) -> void:
 	battle.move_child(_mine, _orig.get_index() + 1)
 	_mine.setup(battle.sim, root.get_node("Atlas"), _orig.ground_y, _orig.biome)
 	_mine.show_damage = _orig.show_damage
+	_mine.analyze_runs = phase_set != "units"
 	_orig.visible = false
 	var app := root.get_node("App")
 	if app.ui_layer:
@@ -120,16 +134,20 @@ func _swap_view(battle) -> void:
 	# phase measured immediately before it. Reference phases get a "#n" suffix so every phase has its own samples.
 	PHASES = ["all"]
 	var n := 0
-	for k in VIEW_CATS + ["+pagesort", "+rowsort", "+merge1sim", "+merge2sim", "+merge2sim_row"]:
-		PHASES.append("view_only#%d" % n)
-		PHASES.append(("view_only-" + k) if not k.begins_with("+") else "view_only" + k)   # +pagesort / +rowsort: drawcall_view.gd sort modes
-		n += 1
-	for c in _hud_children:
-		PHASES.append("hud_only#%d" % n)
-		PHASES.append("hud_only-" + str(c.name))
-		n += 1
+	if phase_set == "units":
+		PHASES = ["all", "view_only#0", "view_only-units"]
+	else:
+		for k in VIEW_CATS + ["+pagesort", "+rowsort", "+merge1sim", "+merge2sim", "+merge2sim_row"]:
+			PHASES.append("view_only#%d" % n)
+			PHASES.append(("view_only-" + k) if not k.begins_with("+") else "view_only" + k)   # +pagesort / +rowsort: drawcall_view.gd sort modes
+			n += 1
+		for c in _hud_children:
+			PHASES.append("hud_only#%d" % n)
+			PHASES.append("hud_only-" + str(c.name))
+			n += 1
 	for ph in PHASES: samples[ph] = {"dc": PackedInt32Array(), "prims": PackedInt32Array(), "units": PackedInt32Array(), "proj": PackedInt32Array(), "fx": PackedInt32Array(), "texts": PackedInt32Array(),
-		"runs_real": PackedInt32Array(), "runs_row": PackedInt32Array(), "runs_merge2": PackedInt32Array(), "runs_merge1": PackedInt32Array(), "runs_row_merge2": PackedInt32Array()}
+		"runs_real": PackedInt32Array(), "runs_row": PackedInt32Array(), "runs_merge2": PackedInt32Array(), "runs_merge1": PackedInt32Array(), "runs_row_merge2": PackedInt32Array(),
+		"frame_ms": PackedFloat32Array(), "draw_us": PackedInt32Array(), "unit_us": PackedInt32Array(), "gpu_ms": PackedFloat32Array(), "rcpu_ms": PackedFloat32Array(), "unit_px": PackedInt32Array()}
 
 func _apply_phase(app, name: String) -> void:
 	for k in _mine.cats: _mine.cats[k] = true
@@ -152,6 +170,11 @@ func _process(delta: float) -> bool:
 	_t += delta
 	var app := root.get_node_or_null("App")
 	if app == null or app.battle == null or app.battle.sim == null: return false
+	# the Perf autoload re-applies the settings fps cap (clamped 30..60) after boot, so hold the uncapped state every frame
+	if uncapped and Engine.max_fps != 0:
+		Engine.max_fps = 0
+		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+		_uncap_resets += 1
 	var battle = app.battle
 	_stress(battle.sim)
 	if _mine == null:
@@ -186,6 +209,14 @@ func _process(delta: float) -> bool:
 		s.texts.append(nt)
 		if _mine.visible and _mine.cats.units:   # hidden view => _draw not called, runs would be stale
 			for k in ["real", "row", "merge2", "merge1", "row_merge2"]: s["runs_" + k].append(int(_mine.runs[k]))
+		s.frame_ms.append(delta * 1000.0)
+		if _mine.visible:
+			s.draw_us.append(int(_mine.draw_us))
+			if _mine.cats.units:
+				s.unit_us.append(int(_mine.unit_us))
+				s.unit_px.append(int(_mine.unit_quad_px))
+		s.gpu_ms.append(RenderingServer.viewport_get_measured_render_time_gpu(_vp_rid))
+		s.rcpu_ms.append(RenderingServer.viewport_get_measured_render_time_cpu(_vp_rid) + RenderingServer.get_frame_setup_time_cpu())
 	if _phase_t >= phase_s:
 		_phase_i += 1
 		if _phase_i >= PHASES.size():
@@ -211,6 +242,22 @@ static func _mean(a: PackedInt32Array) -> float:
 	for x in a: t += x
 	return snappedf(float(t) / a.size(), 0.01)
 
+## p50 / p95 / mean of a float series (frame or render times, ms)
+static func _fdist(a: PackedFloat32Array) -> Dictionary:
+	if a.is_empty(): return {}
+	var s := a.duplicate()
+	s.sort()
+	var t := 0.0
+	for x in s: t += x
+	return {"n": s.size(), "p50": snappedf(s[s.size() / 2], 0.001), "p95": snappedf(s[mini(s.size() - 1, int(s.size() * 0.95))], 0.001),
+		"mean": snappedf(t / s.size(), 0.001)}
+
+static func _idist(a: PackedInt32Array) -> Dictionary:
+	if a.is_empty(): return {}
+	var f := PackedFloat32Array()
+	for x in a: f.append(float(x))
+	return _fdist(f)
+
 func _finish(app) -> void:
 	_done = true
 	var rows := []
@@ -229,7 +276,9 @@ func _finish(app) -> void:
 			"primitives_median": _med(s.prims), "delta_vs_ref": (ref - _med(s.dc)) if ph != "all" else 0.0,
 			"ref": ref_name,
 			"units_median": _med(s.units), "projectiles_median": _med(s.proj), "fx_median": _med(s.fx), "texts_median": _med(s.texts),
-			"unit_page_runs_median": {"real": _med(s.runs_real), "row": _med(s.runs_row), "merge2": _med(s.runs_merge2), "merge1": _med(s.runs_merge1), "row_merge2": _med(s.runs_row_merge2)}})
+			"unit_page_runs_median": {"real": _med(s.runs_real), "row": _med(s.runs_row), "merge2": _med(s.runs_merge2), "merge1": _med(s.runs_merge1), "row_merge2": _med(s.runs_row_merge2)},
+			"frame_ms": _fdist(s.frame_ms), "view_draw_us": _idist(s.draw_us), "unit_draw_us": _idist(s.unit_us), "unit_quad_px": _idist(s.unit_px),
+			"render_gpu_ms": _fdist(s.gpu_ms), "render_cpu_ms": _fdist(s.rcpu_ms)})
 		if is_ref and ph != "all":
 			prev_ref = _med(s.dc)
 			prev_name = ph
@@ -239,7 +288,8 @@ func _finish(app) -> void:
 		"note": "Draw calls are counted by the renderer per frame (whole frame incl. HUD). Deltas are not additive (batching). Desktop debug binary, GL Compatibility; phone GPUs/drivers may batch differently.",
 		"env": {"engine": "%s.%s.%s" % [v.major, v.minor, v.patch], "gpu": RenderingServer.get_video_adapter_name(), "window": DisplayServer.window_get_size(),
 			"args": Array(OS.get_cmdline_user_args()), "time": Time.get_datetime_string_from_system(false, true)},
-		"config": {"warmup": warmup, "phase_s": phase_s, "cycles": cycles}, "rows": rows, "timeline": timeline,
+		"config": {"warmup": warmup, "phase_s": phase_s, "cycles": cycles, "phase_set": phase_set, "uncapped": uncapped, "max_fps": Engine.max_fps,
+			"uncap_resets": _uncap_resets, "vsync": DisplayServer.window_get_vsync_mode()}, "rows": rows, "timeline": timeline,
 		"last_drawn_counts": _mine.drawn if _mine else {}, "last_page_units": _mine.page_units if _mine else {}, "hud_children": _hud_info}
 	DirAccess.make_dir_recursive_absolute(out_path.get_base_dir())
 	var f := FileAccess.open(out_path, FileAccess.WRITE)
@@ -252,6 +302,11 @@ func _finish(app) -> void:
 			r.phase, r.draw_calls_median, r.draw_calls_mean, r.delta_vs_ref, r.ref, r.primitives_median, r.units_median, r.projectiles_median, r.fx_median, r.texts_median,
 			pr.real, pr.row, pr.merge2, pr.merge1, pr.row_merge2, r.frames])
 	print("[drawcalls] last frame units per page ", _mine.page_units if _mine else {})
+	for r in rows:
+		if (r.frame_ms as Dictionary).is_empty(): continue
+		print("[timing] %-20s frame_ms p50=%.3f p95=%.3f mean=%.3f | view_draw_us p50=%s | unit_draw_us p50=%s | gpu_ms p50=%s | render_cpu_ms p50=%s" % [
+			r.phase, r.frame_ms.p50, r.frame_ms.p95, r.frame_ms.mean, str(r.view_draw_us.get("p50", "-")), str(r.unit_draw_us.get("p50", "-")),
+			str(r.render_gpu_ms.get("p50", "-")), str(r.render_cpu_ms.get("p50", "-"))])
 	for h in _hud_info:
 		print("[drawcalls] hud child %-14s %-14s %-34s desc=%3d rect=%s text=%s" % [h.name, h["class"], h.script, h.descendants, str(h.get("rect", [])), h.text])
 	print("[drawcalls] report ", out_path)

@@ -71,7 +71,12 @@ func set_page_sort(on: bool) -> void:
 
 func _draw() -> void:
 	for k in drawn: drawn[k] = 0
+	unit_us = 0
+	unit_quad_px = 0
+	var t0 := Time.get_ticks_usec()
 	super()
+	draw_us = Time.get_ticks_usec() - t0
+	if not analyze_runs: return
 	page_units = {}
 	for u in _order:
 		var p := _page(u)
@@ -101,8 +106,18 @@ func _draw_unit(u) -> void:
 	if cats.units:
 		drawn.units += 1
 		_cur_page = _page(u)
+		var t0 := Time.get_ticks_usec()
 		super(u)
+		unit_us += Time.get_ticks_usec() - t0
 		_cur_page = ""
+
+## CPU time of the frame's canvas recording (GDScript): whole _draw() and the part spent in _draw_unit (incl. its hp-bar queueing).
+## Per-unit timing adds 2 ticks calls per unit (≈ 73 at caps); compare builds with the same instrumentation only.
+var draw_us := 0
+var unit_us := 0
+var unit_quad_px := 0
+## false = skip the per-frame page-run bookkeeping (a copy + sort of all units) so it does not add to frame time in timing A/Bs.
+var analyze_runs := true
 
 ## SIMULATED page merge (counts only, WRONG PIXELS): bind every character-unit sprite to one shared page texture ("merge1") or to one
 ## texture per side ("merge2": player pages -> char_player, enemy pages -> char_enemy), keeping each sprite's own region rect. The GPU
@@ -120,6 +135,9 @@ func _sim_tex(real_tex: Texture2D) -> Texture2D:
 	return p.tex
 
 func _blit_rec(rec, i: int, pos: Vector2, flip: bool, mod: Color) -> void:
+	if _cur_page != "":
+		var rr: Rect2 = rec.rects[i]
+		unit_quad_px += int(absf(rr.size.x * rr.size.y))   # destination quad area in view px (scale 1): fill-rate proxy
 	if tex_mode == "real" or _cur_page == "":
 		super(rec, i, pos, flip, mod)
 		return

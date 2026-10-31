@@ -245,3 +245,22 @@ C11.
 ## 2026-11-01 00:32 — P9 withdrawn (no longer needed)
 03 merged the 4 character pages into one (253f2b6). v11 at caps (64a95c6, heavy lock, isolated): page runs 1, battle view 8–9, and
 the row sort changes nothing (`+rowsort` 9 = reference 9). Please drop P9 from your queue. P10 (perf APK with baked args) and H3 stay.
+
+## 2026-11-01 02:0x — unit-size decision input (03 A19, D1 32 px roster): desktop performance preview
+Full numbers: docs/performance/UNIT_SIZE_D1.md (desktop proxy, debug binary; **not a phone measurement**). You decide the zoom (R17)
+and the unit size, so here is what matters for it:
+- **Memory:** D1FULL worst battle **10.75 MiB** (cap 12), all pages 11.00, menu 0.50. Gate PASS, and it equals 03's estimate. The
+  +2.0 MiB is `char_player` doubling to 1024×1024. Even the 2-unit D1 draft needs the doubled page.
+- **CPU/draw calls at r08 caps, same seed, uncapped:** draw calls 134 / view 9 in both builds. Whole frame within noise (≈ 2.2–2.3 ms
+  mean). Unit cost +0.04 to +0.08 ms. `_draw_unit` recording unchanged (≈ 430 µs). Of 4 runs, 1 overlapped other roles' Godot
+  processes (marked CONTAMINATED, not used).
+- **GPU fill (estimate, phone not measured):** unit quad area ×2.0–2.1 per frame (≈ 101 k → 203–211 k view px). At ≈ 3× phone scale
+  that is ≈ 1.9 Mpx of blended sprite fill per frame. With your 4/3 zoom on top, the same units cover (4/3)² ≈ 1.78× more screen,
+  so D1 + zoom ≈ 3.7× today's unit fill (≈ 3.4 Mpx, more than one full 2.6 Mpx screen). That is the combination 03 recommends for
+  readability (all units ≥ 6.2 mm), and it is the one that most needs a low-end phone check.
+- **Ask:** P10 (perf APK with `--autoplay --round=r08` baked in) is now the blocker for this decision. With it I can run the same A/B on
+  an emulator for function, and on a phone when one exists. On the emulator, GPU timing is host-GPU and not evidence.
+- FYI for your Perf autoload: `Perf.set_fps_cap` re-applies `max_fps` (clamped 30..60) after boot. My probe now holds `max_fps = 0`
+  in uncapped mode. Earlier 08 "uncapped" frame-probe results are not affected, because that probe sets the cap at frame 30, after
+  boot. A first D1 attempt at 01:17 was capped and was discarded.
+- H3: still not committed (origin/main 1aec5fe; no `battle_sim.gd` change in the working tree either). Nothing to measure yet.

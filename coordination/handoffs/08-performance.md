@@ -1,4 +1,30 @@
 # 08-performance handoff
+## M16 — 03 A19 D1 32 px roster: performance preview before release (2026-11-01 00:55–02:1x KST)
+- **H3:** 08 has no uncommitted H3. H3 is 02's change to `battle_sim.gd`, and 02 has neither committed it (origin/main 1aec5fe) nor
+  left it in the working tree (0 diff lines). There was nothing to commit or A/B.
+- **New tool:** `tools/perf/art_variant_ab.ps1`. It requires heavy_run (exit 4 otherwise) and makes `git archive` copies (base / draft)
+  of one commit. It runs `ART_DRAFT32=<Draft> python tools/art/build.py` only inside the draft copy and checks that the working-tree
+  `assets/atlases` hashes are unchanged. Then it runs `asset_budget_check --tree --base <rev>` on both copies, `--import` per copy,
+  and interleaved pairs of the probe in `--dc-set=units --dc-uncapped` mode via 10's `isolated_godot.ps1`. A thread job lists
+  foreign Godot/emulator processes every second and marks a run CONTAMINATED when it sees one.
+- **Probe additions:** `perf_drawcall_probe.gd` gained `--dc-set=units`, `--dc-uncapped` (holds `max_fps = 0` every frame, because
+  the Perf autoload re-applies the 60 cap after boot), per-phase frame_ms, view and unit `_draw` µs, GPU/render-CPU ms and the unit quad
+  area. `drawcall_view.gd` times `_draw`/`_draw_unit`, sums the unit quad area, and can skip the page-run bookkeeping
+  (`analyze_runs`).
+- **Results** (676b105, desktop proxy, **not phone**; docs/performance/UNIT_SIZE_D1.md):
+  - Memory D1FULL: worst battle 10.75 MiB, all pages 11.00 MiB, menu 0.50 MiB. PASS, and equal to 03's estimate. The cause is
+    `char_player` 1024×512 → 1024×1024 (+2 MiB). The 2-unit D1 already needs 1024×1024.
+  - r08 caps, same seed, 2 pairs: draw calls 134/9 unchanged. Whole frame within noise. Unit cost +0.04 to +0.08 ms. Unit quad area
+    ×2.0–2.1, a fill-rate risk on phones (estimate ≈ 1.9 Mpx/frame, ≈ 3.4 Mpx with 02's 4/3 zoom).
+  - run base_1 was CONTAMINATED: 10's and 01's jobs overlapped (their NOTE lines in heavy_run.log at 01:49 and 01:50). The table uses
+    the 3 CLEAN runs. The first attempt (01:17) was capped at 60 fps by Perf.set_fps_cap; its frame times were discarded, and its
+    draw-call and static values match.
+- **Requests:** 03 A12 (results; ask: the body-box / frame-rect ratio so the fill estimate can drop transparent margins; my self-test
+  is fine as is), 02 (decision input; P10 is now the blocker for a device check; FYI on Perf.set_fps_cap; H3 not seen).
+- **Validation:** art_variant_ab exit 0 twice (the second is the valid one). 3 of 4 probe runs CLEAN, isolated, real save 614A1FAC
+  unchanged, `ART_DRAFT32` unset afterwards, working-tree atlases unchanged. `test_asset_budget_check.py` 13/13 PASS. Runner parse 0
+  errors, GDScript indentation tabs only. Every heavy step ran inside heavy_run (lock waits 842 s and 1347 s).
+
 ## M15 — resume after the 23:09 blue screen; draw-call reduction plan with numbers (2026-10-31 22:58 – 2026-11-01 00:2x KST)
 - **Resume check:** the 20:29 checkpoint `checkpoint/quota-20261031-202729/08-performance` (db87912) has no file changes vs ae6f9af,
   and M14 (b0fb679, cfa0c28) is on main, so no work was lost. After the crash, my 3 open files (`drawcall_view.gd`,

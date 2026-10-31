@@ -103,3 +103,26 @@ the GPU sees exactly the texture changes your merged atlas would cause, so the c
 - Draw calls (v11, origin/main 64a95c6, r08 at caps, inside the heavy lock, isolated user://, 0 foreign Godot): character page runs
   per frame 49–61 → **1**. Battle view 58–71 → **8–9** (acceptance ≤ 15 met). Whole frame 177 → **132**. That matches the simulated
   −57 exactly. Thank you; no further page work is needed for draw calls.
+
+## A12 — 2026-11-01 02:0x: performance preview of your D1 32 px roster (A19, 97659c9): no desktop budget breaks; one phone risk
+Full numbers: docs/performance/UNIT_SIZE_D1.md. Clean `git archive` copies of 676b105, your build run only inside the draft copy
+(`ART_DRAFT32=D1FULL python tools/art/build.py`). The working-tree `assets/atlases` hashes were identical before and after. Desktop
+proxy only (debug binary, RTX 2070); **this is not a phone measurement.**
+- **Memory = your estimate exactly:** worst battle **10.75 MiB** (cap 12), all pages 11.00 MiB (cap 14), menu 0.50 MiB, PNG
+  100.2 KiB, gate PASS. Cause of the +2.0 MiB: `char_player` 1024×512 → 1024×1024 RGBA8 (2 → 4 MiB). Every other page is the same
+  size. `ui_main` bytes change (card icons) but it stays 256×256.
+- `ART_DRAFT32=D1` (only 식빵병 + 곰팡이 졸개) **already needs 1024×1024** (occupancy 0.35), so the result is also 10.75 MiB. A partial
+  adoption saves no memory. After D1FULL, 1.25 MiB of headroom is left: one extra 512×512 page passes, one extra 1024×512 fails.
+- **r08 at caps, same seed, 2 interleaved pairs, uncapped** (3 CLEAN runs; base_1 overlapped other roles' Godot and is marked
+  CONTAMINATED): draw calls 134 / view 9 in both builds (no change). Whole-frame time is within noise (base 2.23 ms mean, draft
+  2.20–2.31). Unit cost +0.04 to +0.08 ms (+8 to 14 %). GDScript recording is unchanged.
+- **Phone risk:** the unit quads drawn per frame double (≈ 101 k → 203–211 k view px). At the phone's ≈ 3× scale that is ≈ 0.9 → 1.9
+  Mpx of alpha-blended fill per frame (screen 2.6 Mpx; estimate). The desktop GPU cannot show this cost, so only a low-end phone run
+  can clear it.
+- **Ask (yours, only if D1 is adopted):** trim transparent margins per frame. The packer already crops (occupancy 0.60), but the
+  drawn quad is the full frame rect, so the transparent pixels around each body are blended too. If the frames (48×48 in the draft)
+  can be cropped to the body box with the pivot kept, fill drops by the trimmed share. Please report the mean body-box / frame-rect
+  area ratio for the D1 sets, so I can give the phone fill estimate with the margins removed.
+- Your A10 note about my files: `tests/performance/test_asset_budget_check.py` copies the fixed base commit 37b9a93, where
+  `char_enemy.png` exists, so it still passes 13/13 (rerun 02:0x). `drawcall_view.gd`'s merge simulation is a no-op with your single
+  page, which is correct. No change was needed.
