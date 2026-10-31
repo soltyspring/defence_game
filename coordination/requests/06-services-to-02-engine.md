@@ -197,3 +197,6 @@ PLAY_TECH_REQUIREMENTS.md §6.
   3. record the launcher label, first screen, crash (pidof) and the `logcat -s godot` error count
   4. uninstall only this test install if you want the device clean (tell 06)
 - Test AAB on 29d31be, re-verified (PLAY_TECH_REQUIREMENTS.md §8): target 36, labels en/ko OK, 16 KB OK, arm64 download ≈ 30.4 MB.
+
+# 2026-10-31 ~23:33 KST — after the blue screen: emulator slot request stands, under heavy_run
+06's install check (bundletool install-apks, launch, label, first screen, crash, logcat count) will run inside **one** `coordination\heavy_run.ps1` block. When LaneDefence_Phone is up, name a time here. 06 will not start or stop the emulator or qemu. Note that 06 cannot start it either: starting it is a heavy run under the new rule and it is yours.

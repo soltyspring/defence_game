@@ -1,5 +1,16 @@
 # 06-services status
-Updated: 2026-10-31 ~23:08 KST (resumed; isolation committed; AAB rerun verified; emulator WAITING)
+Updated: 2026-10-31 ~23:33 KST (blue-screen resume; heavy_run guard; post-crash validation)
+Status: COMPLETE except the emulator install check.
+- **Crash check:** 06 files intact (127 files: no zero-byte or NUL content; `git diff HEAD` clean; 6303e18 on origin).
+- **heavy_run:** 06 runners refuse to run outside coordination\heavy_run.ps1 (96e9962).
+- **Post-crash run:** under heavy_run, OVERALL exit 0, isolated=true, 0 real-folder writes.
+- **Emulator:** WAITING. No device, no 02 slot. When it comes, it runs inside heavy_run.
+- Q2 DEFERRED. Nothing published.
+Current task: none. Next: see handoff.
+Commits: 96e996245591795a75b03a580cd74de230cc3be0 [Test] PUSHED; docs in the next [Docs].
+Previous: 29d31be / e78c790 / 6303e18 (isolation, AAB rerun).
+--- History (older entries, not current) ---
+(22:57 resume entry) Updated: 2026-10-31 ~23:08 KST (resumed; isolation committed; AAB rerun verified; emulator WAITING)
 Status: COMPLETE except the emulator install check.
 - Resume check: nothing lost vs checkpoint/quota-20261031-202729/06-services.
 - **Isolation (29d31be):** all 06 runners use a private APPDATA. First isolated run OVERALL exit 0 with isolated=true and 0 writes to the real folder.

@@ -1,5 +1,23 @@
 # 06-services handoff
-Updated: 2026-10-31 ~23:08 KST (resumed after the 97% stop at 20:27; new account, quota ~0.4% at 22:57)
+Updated: 2026-10-31 ~23:33 KST (resumed after the 23:08:55 blue screen; heavy_run rule applied)
+## Blue-screen resume check (23:23)
+- `git status` for 06 paths: clean. `git diff HEAD` over all 127 tracked 06 files: clean. No file is missing, zero-byte or NUL-filled (byte scan).
+- Last 06 commit before the crash, 6303e18, is in origin/main. No 06 temp folders and no Gradle Java processes were left.
+- Before the crash 06's last heavy run ended 23:07 (AAB). Nothing of 06 was running at 23:08:55.
+## Heavy-run rule (from 23:2x, must follow)
+- Every Godot, Gradle/AAB/APK or emulator step runs one at a time PC-wide, inside `& .\coordination\heavy_run.ps1 -Label '06-<name>' -Script { … }`.
+- 06 runners check this: `Assert-SvcHeavyLock` in svc06_isolation.ps1 makes `run_services_suites.ps1`, `run_services_on_head.ps1` and `try_debug_aab.ps1` exit 4 unless an ancestor process holds the lock. Verified: a direct run is refused (exit 4); the heavy_run run is accepted.
+- Commands:
+  - suites: `& .\coordination\heavy_run.ps1 -Label '06-services-suites' -Script { pwsh -NoProfile -File tests/services/run_services_suites.ps1 }`
+  - AAB: `& .\coordination\heavy_run.ps1 -Label '06-test-aab' -Script { pwsh -NoProfile -File tests/services/try_debug_aab.ps1 -TimeoutSec 900 -JavaHome "$env:LOCALAPPDATA\svc06_tools\jdk-17.0.20.1+1" -Bundletool "$env:LOCALAPPDATA\svc06_tools\bundletool-all-1.18.3.jar" }`
+  - The emulator install check (below) must also run inside one heavy_run block.
+## Post-crash validation (actual)
+- Run: heavy_run '06-services-suites', lock acquired after 308 s wait, 23:30:44 end.
+- Results: 502/0, 130/0, 161/0, listing 1831/0, m8 26/0, m10 81/0, android 189/0 (VERIFIED_DEBUG_ONLY / release WAITING), upgrade 927/0, integration PASS_INTEGRATED 156/0. OVERALL exit 0.
+- SVC06_ISOLATION isolated=true; 0 writes to the real folder; real save unchanged; 0 other Godot processes at start.
+- Commit: 96e996245591795a75b03a580cd74de230cc3be0 [Test] (heavy_run guard). Docs: this handoff/status, next [Docs] commit.
+## Earlier resume (22:57) for reference
+Updated earlier: 2026-10-31 ~23:08 KST (resumed after the 97% stop at 20:27; new account, quota ~0.4% at 22:57)
 ## Resume check (22:57)
 - **Nothing lost.** Branch `checkpoint/quota-20261031-202729/06-services` (fede276) is an empty WIP commit; `git diff` vs the working tree for 06 paths is empty; the 06 worktree was clean.
 - **Decisions in force:** Q1 theme A, Q2 deferred (ads/billing disabled), Q3 title "빵집 기사단: 곰팡이 디펜스", Q4 launcher "빵집 기사단". Q5 difficulty is unanswered; D28 is a default, not an approval.
