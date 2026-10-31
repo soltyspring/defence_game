@@ -119,8 +119,15 @@ def main() -> int:
                 if hits > best[0]: best = (hits, float(off), float(scale))
     hits, off, scale = best
     cue_a = cue_t * scale + off
+    mgain_t = [x[0] * scale + off for x in meta["music_gain"]]
+    clk = np.array(meta.get("clock", []), dtype=float)
+    if int(meta.get("log_format", 1)) >= 2 and len(clk) > 2:
+        # v3.9 log: every cue has its audio-clock start and the clock maps wall -> audio time; no fit needed
+        cue_a = np.array([float(c[5]) if float(c[5]) >= 0 else float(c[0]) * scale + off for c in meta["cues"]])
+        mgain_t = list(np.interp([x[0] for x in meta["music_gain"]], clk[:, 0], clk[:, 1]))
+        hits = int(sum(1 for t0 in cue_a if len(on) and np.min(np.abs(on - t0)) < 0.04))
     # --- music bus gain(t) (incl. ducking), mapped to the audio clock
-    g = np.array([[x[0] * scale + off, x[1]] for x in meta["music_gain"]])
+    g = np.array([[t0, x[1]] for t0, x in zip(mgain_t, meta["music_gain"])])
     ts = np.arange(n) / sr
     gain_db = np.interp(ts, g[:, 0], g[:, 1])
     music_eff = music * (10 ** (gain_db / 20))[:, None]

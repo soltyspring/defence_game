@@ -65,6 +65,10 @@ func _bus(n: StringName) -> int:
 	return AudioServer.get_bus_index(n)
 
 func _run() -> void:
+	# v3.9: the onset-cluster limit is tested on its own below; the older logic tests start several SFX within
+	# 0.1 s and check exact levels, so they run with the limit off and it is switched back on for its own test.
+	var oc_saved: Dictionary = (A.onset_cluster as Dictionary).duplicate()
+	A.onset_cluster = {}
 	# --- buses + manifest
 	for b in [&"Music", &"SFX", &"UI"]:
 		_ok(_bus(b) >= 0, "bus %s missing" % b)
@@ -308,6 +312,53 @@ func _run() -> void:
 	A.play(&"hit_mold")
 	A.cue_played.disconnect(grab)
 	_ok(absf(A._sfx[last.voice].volume_db - float(A.cues[&"hit_mold"].vol_db)) < 0.01, "hit_mold after the duck at full level")
+	# v3.9: onset-cluster limit (docs/audio/ONSET_PEAK_CHECK.md). 8 SFX 10 ms apart (all inside the 0.1 s window).
+	A.onset_cluster = oc_saved
+	rep.onset_cluster = {"policy": oc_saved}
+	if oc_saved.is_empty(): print("selftest: onset_cluster policy not in the manifest -> rule OFF, cluster tests skipped")
+	if not oc_saved.is_empty():
+		var cdb := float(oc_saved.get("db", -6.0))
+		var cex := int(oc_saved.get("exempt_prio", 3))
+		A.advance(5.0)
+		A.stop_all_sfx()
+		var cl0 := int(A.stats.cluster_lowered)
+		var order := [&"shoot_spit", &"deploy", &"hit_bread", &"explosion", &"death_enemy", &"gold_tick", &"death_ally", &"hit_base"]
+		var voice_of := {}
+		var cl_of := {}
+		var retro := []   # [new cue, lowered voice index]
+		A.cue_played.connect(grab)
+		for cue in order:
+			A.advance(0.01)
+			_ok(A.play(cue), "cluster test: %s plays" % cue)
+			voice_of[cue] = last.voice
+			cl_of[cue] = float(A.last_play.get("cl", 0.0))
+			if (A.last_cluster as Array).size() == 2: retro.append([cue, int(A.last_cluster[0])])
+		A.cue_played.disconnect(grab)
+		var exempt_touched := 0
+		for cue in order:
+			if int(A.cues[cue].prio) >= cex:
+				if cl_of[cue] != 0.0: exempt_touched += 1
+				for r in retro:
+					if int(r[1]) == int(voice_of[cue]): exempt_touched += 1
+		_ok(exempt_touched == 0, "onset cluster changed an exempt (prio >= %d) cue %d times" % [cex, exempt_touched])
+		_ok(cl_of[&"shoot_spit"] == 0.0 and cl_of[&"hit_bread"] == 0.0, "first 3 starts at full level")
+		_ok(retro.size() == 2 and int(retro[0][1]) == int(voice_of[&"shoot_spit"]) and int(retro[1][1]) == int(voice_of[&"hit_bread"]),
+			"explosion lowers shoot_spit, death_enemy lowers hit_bread (got %s)" % str(retro))
+		_ok(absf(cl_of[&"gold_tick"] - cdb) < 0.001, "6th start, low priority gold_tick starts %.1f dB lower (got %.2f)" % [cdb, cl_of[&"gold_tick"]])
+		_ok(int(A.stats.cluster_lowered) - cl0 == 3, "3 low-priority voices lowered (got %d)" % (int(A.stats.cluster_lowered) - cl0))
+		A.advance(0.5)   # past the window AND past the shared 0.36 s hit-group gap (hit_bread above)
+		A.cue_played.connect(grab)
+		_ok(A.play(&"hit_mold"), "hit_mold after the window plays")
+		A.cue_played.disconnect(grab)
+		_ok(float(A.last_play.get("cl", 0.0)) == 0.0, "after the window a low-priority cue starts at full level")
+		# exempt-only burst in one frame: nothing may be lowered
+		A.advance(5.0)
+		var cl1 := int(A.stats.cluster_lowered)
+		for cue in [&"deploy", &"explosion", &"death_enemy", &"death_ally", &"hit_base_mold", &"wave_cleared"]:
+			_ok(A.play(cue), "exempt burst: %s plays" % cue)
+			_ok(float(A.last_play.get("cl", 0.0)) == 0.0, "exempt %s in a burst starts unchanged" % cue)
+		_ok(int(A.stats.cluster_lowered) == cl1, "exempt-only burst lowers nothing")
+		rep.onset_cluster = {"policy": oc_saved, "retro": retro.size(), "exempt_touched": exempt_touched}
 	if E.has_signal("upgrade_result"):
 		A.advance(5.0)
 		p0 = A.stats.played

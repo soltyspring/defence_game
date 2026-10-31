@@ -60,6 +60,19 @@ var _sfxduck_below := 0
 var _sfxduck_until := 0.0
 var _v_duck: Dictionary = {}   # AudioStreamPlayer -> dB currently applied by the SFX duck
 var _last_variant: Dictionary = {}
+## v3.9 test evidence (read by tools/audio/integration_probe.gd; no effect on playback): the parts of the last
+## play() and the voices the last danger duck lowered, so a recording's cue log can be re-rendered exactly.
+var last_play: Dictionary = {}  # {vj: vol jitter dB, off: off-screen dB, sd: SFX duck dB at start, pj: pitch jitter}
+var last_duck: Array = []       # [[voice index in _sfx, extra dB], ...] from the most recent _start_sfx_duck
+## Onset-cluster limit (v3.9, docs/audio/ONSET_PEAK_CHECK.md): several SFX that start together add their attacks on
+## the same samples (the v3.8 -0.50 dBFS peak: 5 cues on one sample). Manifest "onset_cluster": {window s, max_full,
+## db, exempt_prio}. From the (max_full+1)-th SFX start within `window`: a low-priority cue (prio < exempt_prio) starts
+## `db` lower; an exempt cue starts unchanged and lowers ONE low-priority voice that started in the window instead.
+## Nothing is delayed or dropped; exempt cues (danger signals, deaths, deploy, skills, boss) are never changed.
+## Stats cluster_events / cluster_lowered; last_play.cl and last_cluster let the probe log every action.
+var onset_cluster: Dictionary = {}
+var _onsets: Array = []          # [[clock, player, prio, lowered], ...] SFX starts within the window, oldest first
+var last_cluster: Array = []     # [voice index, dB] when the last play() lowered an earlier voice, else []
 
 var _clock := 0.0
 var _paused := false
@@ -76,6 +89,7 @@ var _lowpass_slot := -1
 var bridge: Node = null
 
 var stats := {"played": 0, "dropped_gap": 0, "dropped_max": 0, "dropped_voices": 0, "dropped_offscreen": 0, "attenuated_offscreen": 0, "dropped_group": 0, "sfx_ducked": 0, "sfx_duck_events": 0,
+	"cluster_events": 0, "cluster_lowered": 0,
 	"stolen": 0, "missing": 0, "peak_voices": 0, "load_ms": 0, "resident_sfx_bytes": 0}
 
 func _ready() -> void:
@@ -168,6 +182,7 @@ func _load_manifest() -> void:
 	for g in m.get("groups", {}):
 		group_gap[str(g)] = float(m.groups[g].get("min_gap", 0.0))
 	upgrade_result_cue = m.get("upgrade_result_cue", {})
+	onset_cluster = m.get("onset_cluster", {})
 	var pcm := 0
 	for cue in m.get("cues", {}):
 		var c: Dictionary = m.cues[cue].duplicate()
@@ -271,17 +286,21 @@ func play(cue: StringName, params: Dictionary = {}) -> bool:
 	var prio := int(c.get("prio", 1))
 	var vol := float(c.get("vol_db", 0.0)) + float(params.get("vol_db", 0.0))
 	var vj := float(c.get("vol_jitter", 0.0))   # v3.8: small random level change (dB) against identical repeats
-	if vj > 0.0: vol += _rng.randf_range(-vj, vj)
+	var vjv := 0.0
+	if vj > 0.0: vjv = _rng.randf_range(-vj, vj)
+	vol += vjv
 	var sduck := 0.0
 	if bus == "SFX" and _clock < _sfxduck_until and prio < _sfxduck_below:
 		sduck = _sfxduck_db
+	var offv := 0.0
 	if params.has("x"):
 		var att := _offscreen_atten(float(params.x))
 		if att <= -80.0 and prio < 5:
 			stats.dropped_offscreen += 1
 			return false
 		if att < 0.0: stats.attenuated_offscreen += 1
-		vol += maxf(att, -offscreen_max_atten_db)
+		offv = maxf(att, -offscreen_max_atten_db)
+		vol += offv
 	var p: AudioStreamPlayer
 	if bus == "Music":
 		p = _stinger
@@ -299,15 +318,23 @@ func play(cue: StringName, params: Dictionary = {}) -> bool:
 	_last_variant[cue] = vi
 	var s: AudioStream = streams[vi]
 	var jit := float(c.get("pitch", 0.0))
-	var pitch := float(params.get("pitch", 1.0)) * (1.0 + (_rng.randf_range(-jit, jit) if jit > 0.0 else 0.0))
+	var pj: float = _rng.randf_range(-jit, jit) if jit > 0.0 else 0.0
+	var pitch := float(params.get("pitch", 1.0)) * (1.0 + pj)
+	var cl := 0.0
+	last_cluster = []
+	if bus == "SFX" and not onset_cluster.is_empty():
+		cl = _onset_cluster_rule(prio, p)
 	p.stream = s
-	p.volume_db = vol + sduck
+	p.volume_db = vol + sduck + cl
 	p.pitch_scale = clampf(pitch, 0.25, 4.0)
 	p.stream_paused = false
 	p.play()
 	_v_cue[p] = cue
 	_v_prio[p] = prio
 	_v_start[p] = _clock
+	if bus == "SFX" and not onset_cluster.is_empty():
+		_onsets = _onsets.filter(func(o): return o[1] != p)   # a reused voice keeps only its newest start
+		_onsets.append([_clock, p, prio, cl < 0.0])
 	_v_end[p] = _clock + s.get_length() / p.pitch_scale + 0.02
 	_last_play[cue] = _clock
 	if grp != "": _group_last[grp] = _clock
@@ -320,8 +347,35 @@ func play(cue: StringName, params: Dictionary = {}) -> bool:
 		_start_sfx_duck(dsd, int(c.get("duck_sfx_below", prio)), s.get_length() / p.pitch_scale, p)
 	var dk := float(c.get("duck", 0.0))
 	if dk < 0.0: duck(dk, s.get_length())
+	last_play = {"vj": vjv, "off": offv, "sd": sduck, "pj": pj, "cl": cl}
 	cue_played.emit(cue, _sfx.find(p))
 	return true
+
+## Onset-cluster limit (see onset_cluster above). Returns the dB for the NEW voice (0 or onset_cluster.db).
+func _onset_cluster_rule(prio: int, newp: AudioStreamPlayer) -> float:
+	var w := float(onset_cluster.get("window", 0.1))
+	var i := 0
+	while i < _onsets.size():
+		if _clock - float(_onsets[i][0]) >= w: _onsets.remove_at(i)
+		else: i += 1
+	if _onsets.size() + 1 <= int(onset_cluster.get("max_full", 3)): return 0.0
+	stats.cluster_events += 1
+	var d := float(onset_cluster.get("db", -6.0))
+	var ex := int(onset_cluster.get("exempt_prio", 3))
+	if prio < ex:
+		stats.cluster_lowered += 1
+		return d
+	for o in _onsets:   # oldest first; only a voice that is still the same start (not stolen and reused)
+		var v: AudioStreamPlayer = o[1]
+		if v == newp or int(o[2]) >= ex or bool(o[3]) or not _voice_busy(v) or float(_v_start.get(v, -1.0)) != float(o[0]):
+			continue
+		if int(_v_prio.get(v, 99)) >= ex: continue   # reused in the same frame by an exempt cue: never touch it
+		v.volume_db += d
+		o[3] = true
+		stats.cluster_lowered += 1
+		last_cluster = [_sfx.find(v), d]
+		return 0.0
+	return 0.0
 
 func _acquire(pool: Array[AudioStreamPlayer], prio: int) -> AudioStreamPlayer:
 	var victim: AudioStreamPlayer = null
@@ -355,6 +409,7 @@ func _start_sfx_duck(db: float, below: int, dur: float, owner: AudioStreamPlayer
 	_sfxduck_db = minf(db, _sfxduck_db) if _clock < _sfxduck_until else db
 	_sfxduck_below = maxi(below, _sfxduck_below) if _clock < _sfxduck_until else below
 	_sfxduck_until = maxf(_sfxduck_until, _clock + dur)
+	last_duck = []
 	for v in _sfx:
 		if v == owner or not _voice_busy(v) or int(_v_prio.get(v, 99)) >= _sfxduck_below: continue
 		var extra := _sfxduck_db - float(_v_duck.get(v, 0.0))
@@ -362,6 +417,7 @@ func _start_sfx_duck(db: float, below: int, dur: float, owner: AudioStreamPlayer
 			v.volume_db += extra
 			_v_duck[v] = _sfxduck_db
 			stats.sfx_ducked += 1
+			last_duck.append([_sfx.find(v), extra])
 
 func sfx_duck_active() -> bool:
 	return _clock < _sfxduck_until
@@ -379,6 +435,7 @@ func _exit_tree() -> void:
 		p.stop()
 		p.stream = null
 	_v_cue.clear(); _v_prio.clear(); _v_start.clear(); _v_end.clear()
+	_onsets.clear()
 	_music_cur = -1
 	_music_id = &""
 	_music_fade = [{}, {}]

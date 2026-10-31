@@ -1,4 +1,6 @@
 # Detached heavy run for 05-audio. Owner: 05-audio.
+# SUPERSEDED (2026-11-01): use coordination/heavy_run_detached.ps1 -Label 05-<task> -ScriptFile build/heavy/<job>.ps1
+# (coordinator rule in coordination/HEAVY_RUN.md, 01:55 KST). Kept only because v3.8 evidence logs name it.
 # Why: the agent tool call has a 30-min limit; a long heavy_run lock wait plus recordings exceeded it, the tool killed
 # the heavy_run wrapper and its Godot child kept running outside the lock (heavy_run.log NOTE 2026-11-01 01:47).
 # This script is started as its own hidden process, so the tool limit cannot kill the wrapper; the lock stays held

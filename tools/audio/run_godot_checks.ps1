@@ -7,10 +7,13 @@
 #   pwsh tools/audio/run_godot_checks.ps1 -Integration  # + simulated 02 request A1 (Audio autoload, exact line),
 #                                                       #   02 global selftest, leak attribution, bounded real battle
 # Exit code 0 = all pass. Integration report: tools/audio/_render/integration/*.json (git-ignored via .gdignore dir)
-param([switch]$Integration, [int]$BattleSeconds = 95, [switch]$Record, [int]$RecordSeconds = 60, [switch]$EngineSelftest, [string]$RecordRound = 'r02', [switch]$RecordUntilEnd, [string]$InjectEnd = '', [int]$InjectAt = -1, [string]$RecordTag = '', [switch]$SkipIntegrationBattle, [string]$ProbeArgs = '', [switch]$Lifecycle, [string]$RecordSeeds = '', [string]$RecordRounds = '')
+param([switch]$Integration, [int]$BattleSeconds = 95, [switch]$Record, [int]$RecordSeconds = 60, [switch]$EngineSelftest, [string]$RecordRound = 'r02', [switch]$RecordUntilEnd, [string]$InjectEnd = '', [int]$InjectAt = -1, [string]$RecordTag = '', [switch]$SkipIntegrationBattle, [string]$ProbeArgs = '', [switch]$Lifecycle, [string]$RecordSeeds = '', [string]$RecordRounds = '', [string]$From05 = '')
+# -From05 <dir> (v3.9): take the 05 paths (src/audio, assets/audio, tools/audio/*.gd) from a snapshot made when the job
+# was queued, so edits made while the job waits for the heavy_run lock cannot leak into it. No .import copy-back then.
 if ($Record) { $Integration = $true }
 $ErrorActionPreference = 'Continue'   # Godot writes diagnostics to stderr; judge by exit codes
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+$src05 = if ($From05) { (Resolve-Path $From05).Path } else { $root }
 $godot = Join-Path $root 'tools\engine\Godot_v4.7.2-stable_win64_console.exe'
 if (-not (Test-Path $godot)) { Write-Error "Godot console not found: $godot"; exit 2 }
 $sb = Join-Path ([IO.Path]::GetTempPath()) 'defence_audio_sandbox'
@@ -46,9 +49,9 @@ Remove-Item $tar -Force
 foreach ($d in @('src\audio', 'assets\audio')) {
   $dst = Join-Path $sb $d
   if (Test-Path $dst) { Remove-Item -LiteralPath $dst -Recurse -Force }
-  Copy-Item (Join-Path $root $d) $dst -Recurse
+  Copy-Item (Join-Path $src05 $d) $dst -Recurse
 }
-"foreign files from HEAD $headSha; 05 paths from worktree"
+"foreign files from HEAD $headSha; 05 paths from $(if ($From05) { "snapshot $From05" } else { 'worktree' })"
 $proj = Get-Content (Join-Path $sb 'project.godot') -Raw
 $proj = $proj -replace '(\[application\]\r?\n)', "`$1config/use_custom_user_dir=true`nconfig/custom_user_dir_name=""defence_audio_sandbox""`n"
 if ($Integration) {
@@ -60,7 +63,7 @@ if ($Integration) {
 }
 Set-Content (Join-Path $sb 'project.godot') $proj -NoNewline -Encoding utf8
 New-Item -ItemType Directory -Path (Join-Path $sb 'tools\audio') -Force | Out-Null
-foreach ($f in @('audio_selftest.gd', 'integration_probe.gd', 'leak_probe.gd', 'lifecycle_probe.gd')) { Copy-Item (Join-Path $root "tools\audio\$f") (Join-Path $sb 'tools\audio') }
+foreach ($f in @('audio_selftest.gd', 'integration_probe.gd', 'leak_probe.gd', 'lifecycle_probe.gd')) { Copy-Item (Join-Path $src05 "tools\audio\$f") (Join-Path $sb 'tools\audio') }
 Get-ChildItem $sb -Recurse -Filter '*.import' | Remove-Item -Force
 "sandbox=$sb userdir=$userDir integration=$Integration"
 "autoloads: " + ((Get-Content (Join-Path $sb 'project.godot') | Select-String '^\w+="\*res://') -join ' | ')
@@ -91,12 +94,13 @@ $r = Run 'import' @('--headless', '--path', $sb, '--import') 300
 "import exit=$($r.code)"
 # New WAV/OGG files in 05 paths without a committed .import: copy the .import Godot just generated in the sandbox
 # (same res:// layout), so the repo keeps .wav = .wav.import parity without importing the shared checkout.
-foreach ($w in Get-ChildItem (Join-Path $root 'assets\audio') -Recurse -File -Include *.wav, *.ogg) {
+foreach ($w in Get-ChildItem (Join-Path $src05 'assets\audio') -Recurse -File -Include *.wav, *.ogg) {
   $imp = $w.FullName + '.import'
   if (-not (Test-Path $imp)) {
-    $rel = $w.FullName.Substring($root.Length + 1)
+    $rel = $w.FullName.Substring($src05.Length + 1)
     $sbImp = Join-Path $sb ($rel + '.import')
-    if (Test-Path $sbImp) { Copy-Item $sbImp $imp; "import file added from sandbox: $rel.import" } else { "  ^ no .import generated for $rel"; $fail++ }
+    if ($From05) { "  missing .import in snapshot: $rel (not copied back in -From05 mode)"; $fail++ }
+    elseif (Test-Path $sbImp) { Copy-Item $sbImp $imp; "import file added from sandbox: $rel.import" } else { "  ^ no .import generated for $rel"; $fail++ }
   }
 }
 foreach ($s in @('res://src/audio/audio_manager.gd', 'res://src/audio/audio_event_bridge.gd', 'res://tools/audio/audio_selftest.gd', 'res://tools/audio/integration_probe.gd', 'res://tools/audio/leak_probe.gd', 'res://tools/audio/lifecycle_probe.gd')) {

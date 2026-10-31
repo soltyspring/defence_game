@@ -38,7 +38,11 @@ var _record_seconds := 60.0
 var _rec := {}                 # bus name -> AudioEffectRecord
 var _rec_t0_us := 0
 var _rec_state := "idle"       # idle | recording | saved
-var _cue_log: Array = []       # [t_s, cue, vol_db_param]
+var _cue_log: Array = []       # [t_wall_s, cue, variant, pitch, vol_db, t_audio_s, voice, vol_jitter, offscreen, duck_at_start, cluster_db, prio]
+var _cluster_log: Array = []   # v3.9: [t_audio_s, new voice, lowered earlier voice, dB] per onset-cluster action on an earlier voice
+var _duck_log: Array = []      # v3.9: [t_audio_s, owner voice, [[voice, extra dB], ...]] per danger-cue SFX duck
+var _clock_player: AudioStreamPlayer = null   # v3.9: silent audio-clock voice (see _audio_now)
+var _clock_log: Array = []     # v3.9: [t_wall_s, t_audio_s] each time the audio clock advanced (mix blocks)
 var _gain_log: Array = []      # [t_s, music_bus_db, music_mute, master_mute]
 var _record_until_end := false # --record-until-end: stop 4.5 s after battle_ended (stinger is <= 3 s)
 var _ended_rec_ts := -1.0
@@ -164,10 +168,29 @@ func _on_cue(cue: StringName, _voice: int) -> void:   # _voice = index in A._sfx
 	_frame_cues[c] = true
 	if _rec_state == "recording":
 		# v3.8: also log WHICH file (variant index), pitch and volume, for repetition analysis
+		# v3.9: + audio-clock start (the mix block the voice really starts in), voice index, and the parts of the
+		# volume (jitter, off-screen, duck at start), so tools/audio/rerender.py can rebuild the SFX bus exactly
 		var vi := int(A._last_variant.get(cue, 0))
 		var pl: AudioStreamPlayer = A._sfx[_voice] if _voice >= 0 and _voice < A._sfx.size() else null
+		var lp: Dictionary = A.get("last_play") if A.get("last_play") is Dictionary else {}
 		_cue_log.append([snappedf((Time.get_ticks_usec() - _rec_t0_us) / 1e6, 0.001), c, vi,
-			snappedf(pl.pitch_scale, 0.0001) if pl else 1.0, snappedf(pl.volume_db, 0.01) if pl else 0.0])
+			snappedf(pl.pitch_scale, 0.0001) if pl else 1.0, snappedf(pl.volume_db, 0.01) if pl else 0.0,
+			snappedf(_audio_now(), 0.00001), _voice, snappedf(float(lp.get("vj", 0.0)), 0.01),
+			snappedf(float(lp.get("off", 0.0)), 0.01), snappedf(float(lp.get("sd", 0.0)), 0.01),
+			snappedf(float(lp.get("cl", 0.0)), 0.01), int(A.cues.get(cue, {}).get("prio", 1))])
+		var lc = A.get("last_cluster")
+		if lc is Array and (lc as Array).size() == 2:
+			_cluster_log.append([snappedf(_audio_now(), 0.00001), _voice, int(lc[0]), float(lc[1])])
+		var cd: Dictionary = A.cues.get(cue, {})
+		if float(cd.get("duck_sfx", 0.0)) < 0.0 and A.get("last_duck") is Array:
+			_duck_log.append([snappedf(_audio_now(), 0.00001), _voice, (A.last_duck as Array).duplicate(true)])
+
+## v3.9: audio time = seconds of audio the mixer has produced since the recording started, read from a silent
+## clock voice that started in the same mix block as the AudioEffectRecord capture. A voice started now begins at
+## the next mix block, which is exactly this position in the recording (the cue log's wall time is not: the
+## headless Dummy driver mixes 4096-frame blocks and falls behind the wall clock).
+func _audio_now() -> float:
+	return _clock_player.get_playback_position() if _clock_player and _clock_player.playing else -1.0
 
 func _on_battle_started(info: Dictionary) -> void:
 	in_battle = true
@@ -312,11 +335,30 @@ func _record_step() -> void:
 				var bi := AudioServer.get_bus_index(b)
 				AudioServer.add_bus_effect(bi, r)        # appended last: Master = post-limiter, stems = pre-fader
 				_rec[b] = r
+			# v3.9 audio clock: 8-bit silence at 11025 Hz (= 4 output frames at 44.1 kHz), long enough for the whole
+			# recording, at -80 dB on Master (all-zero data adds nothing to any stem). Started in the capture's frame.
+			var cw := AudioStreamWAV.new()
+			cw.format = AudioStreamWAV.FORMAT_8_BITS
+			cw.mix_rate = 11025
+			cw.stereo = false
+			var zeros := PackedByteArray()
+			zeros.resize(int((_record_seconds + 120.0) * 11025.0))
+			zeros.fill(0)
+			cw.data = zeros
+			_clock_player = AudioStreamPlayer.new()
+			_clock_player.process_mode = Node.PROCESS_MODE_ALWAYS
+			_clock_player.stream = cw
+			_clock_player.volume_db = -80.0
+			_clock_player.bus = &"Master"
+			add_child(_clock_player)
+			_clock_player.play()
 			for b in _rec: _rec[b].set_recording_active(true)
 			_rec_t0_us = Time.get_ticks_usec()
 			_rec_state = "recording"
 		"recording":
 			var ts := (Time.get_ticks_usec() - _rec_t0_us) / 1e6
+			var ta := snappedf(_audio_now(), 0.00001)
+			if _clock_log.is_empty() or ta != float(_clock_log[-1][1]): _clock_log.append([snappedf(ts, 0.0001), ta])
 			var mi := AudioServer.get_bus_index(&"Music")
 			_gain_log.append([snappedf(ts, 0.001), snappedf(AudioServer.get_bus_volume_db(mi), 0.01),
 				AudioServer.is_bus_mute(mi), AudioServer.is_bus_mute(0)])
@@ -332,6 +374,9 @@ func _record_step() -> void:
 				var ui_db := AudioServer.get_bus_volume_db(AudioServer.get_bus_index(&"UI"))
 				var meta := {"seconds": ts, "battle_ended_at": _ended_rec_ts, "results": rep.results, "end_injected": rep.get("end_injected", {}), "mix_rate": AudioServer.get_mix_rate(), "files": files,
 					"sfx_bus_db": sfx_db, "ui_bus_db": ui_db, "cues": _cue_log, "music_gain": _gain_log,
+					"log_format": 2, "cue_fields": ["t_wall", "cue", "variant", "pitch", "vol_db", "t_audio", "voice", "vol_jitter_db", "offscreen_db", "duck_at_start_db", "cluster_db", "prio"],
+					"ducks": _duck_log, "clusters": _cluster_log, "clock": _clock_log, "audio_block_frames": _block_frames(),
+					"onset_cluster": A.get("onset_cluster"), "audio_stats": (A.stats as Dictionary).duplicate(),
 					"limiter": AudioServer.get_bus_effect(0, 0).get_class() if AudioServer.get_bus_effect_count(0) > 0 else "",
 					"round": _round, "driver": "headless Dummy (software mix, real time)"}
 				var f := FileAccess.open("user://rec_meta.json", FileAccess.WRITE)
@@ -343,11 +388,27 @@ func _record_step() -> void:
 					for e in range(AudioServer.get_bus_effect_count(bi) - 1, -1, -1):
 						if AudioServer.get_bus_effect(bi, e) == _rec[b]: AudioServer.remove_bus_effect(bi, e)
 				_rec.clear()
+				if _clock_player:
+					_clock_player.stop()
+					_clock_player.stream = null
+					_clock_player.queue_free()
+					_clock_player = null
 				if _record_until_end:
 					# done early: write the report, release audio, quit after 0.5 s wall clock (prepare_quit rule)
 					_write_report()
 					A.prepare_quit()
 					get_tree().create_timer(0.5, true, false, true).timeout.connect(func(): get_tree().quit(0))
+
+## v3.9: the mixer's block size in output frames = the most common step of the audio clock (starts are quantised to it)
+func _block_frames() -> int:
+	var steps := {}
+	for i in range(1, _clock_log.size()):
+		var d := int(round((float(_clock_log[i][1]) - float(_clock_log[i - 1][1])) * AudioServer.get_mix_rate()))
+		if d > 0: steps[d] = int(steps.get(d, 0)) + 1
+	var best := 0
+	for k in steps:
+		if best == 0 or int(steps[k]) > int(steps[best]): best = k
+	return best
 
 func _drive() -> void:
 	bt += get_process_delta_time()

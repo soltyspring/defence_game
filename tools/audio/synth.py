@@ -938,6 +938,11 @@ PROJECTILE_CUE = {"arrow": "shoot_arrow", "rock": "shoot_rock", "spit": "shoot_s
 # Shared rate limits (v3.4). "hit": minimum seconds between ANY two hit cues (bread/mold/fallbacks), so the
 # faction split does not double hit density. Value chosen by the same-seed A/B in docs/audio/HIT_DENSITY_AB.md.
 CUE_GROUPS = {"hit": {"min_gap": 0.36}}   # same-seed A/B: 83 -> 49 hits/min (target 48-56); NOT yet confirmed by listening
+# v3.9 onset-cluster limit (docs/audio/ONSET_PEAK_CHECK.md): from the 4th SFX start within 0.1 s, low-priority cues
+# (prio < 3: hits, shots, gold_tick) start / are lowered 6 dB; prio >= 3 (danger, deaths, deploy, skills, boss) never.
+# OFF in the committed manifest until the after-run (job 05-peak-after-9rec) meets P1-P7; ONSET_CLUSTER_ON enables it.
+ONSET_CLUSTER = {"window": 0.1, "max_full": 3, "db": -6.0, "exempt_prio": 3}
+ONSET_CLUSTER_ON = False
 # 04 upgrade_panel result codes -> cue (semantic Events.sfx &"upgrade_result" {"code": code}); key name requested from 04 (C5)
 # "" = intentionally silent (already_applied = repeated tap of a finished purchase; the first tap already sounded)
 UPGRADE_RESULT_CUE = {"ok": "ui_upgrade_ok", "already_applied": "", "not_enough_coins": "ui_upgrade_no_coins",
@@ -1171,7 +1176,7 @@ def main() -> int:
                   "neutral": "UI and fallback cues"},
         "sfx_format": {"codec": "pcm_s16le", "rate": SFX_SR, "channels": 1},
         "cues": {}, "music": {}, "skill_kind_cue": SKILL_KIND_CUE, "projectile_cue": PROJECTILE_CUE,
-        "upgrade_result_cue": UPGRADE_RESULT_CUE, "groups": CUE_GROUPS,
+        "upgrade_result_cue": UPGRADE_RESULT_CUE, "groups": CUE_GROUPS, **({"onset_cluster": ONSET_CLUSTER} if ONSET_CLUSTER_ON else {}),
     }
     seed = 1000
     for cue, c in CUES.items():

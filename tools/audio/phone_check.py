@@ -107,6 +107,9 @@ def main() -> int:
     music, sfx, ui = music[:n], sfx[:n], ui[:n]
     scale = (n / SR) / float(meta["seconds"])
     g = np.array([[x[0] * scale, x[1]] for x in meta["music_gain"]])
+    clk = np.array(meta.get("clock", []), dtype=float)
+    if len(clk) > 2:   # v3.9 log: map the gain log's wall times to audio time through the logged audio clock
+        g[:, 0] = np.interp(np.array([x[0] for x in meta["music_gain"]], dtype=float), clk[:, 0], clk[:, 1])
     mgain = 10 ** (np.interp(np.arange(n) / SR, g[:, 0], g[:, 1]) / 20)
     music_eff = music * mgain
     bg_music_ph = phone(music_eff)
