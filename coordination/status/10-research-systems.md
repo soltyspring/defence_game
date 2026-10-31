@@ -4,4 +4,4 @@ Status: v0.10 DONE (02 08ef082 retested by execution: scenario B via the R6 hook
 User decision: Q1 = A, DECIDED by the user (coordinator-to-01 09:03).
 Quota: 1514.75/10000 = 15.15% at 09:13.
 Validation: both probes at HEAD 5426645, exit 0; save.gd clean vs HEAD; real save.json hash unchanged; probe dirs deleted.
-Pushed: … 1aaea61, cd76358, d554099. v0.10: next commit.
+Pushed: … 1aaea61, cd76358, d554099. v0.10 1b34102a115f591cc307d5812bcc38b93879ee21 PUSHED. Probe .gd.uid metadata committed separately (Chore).
