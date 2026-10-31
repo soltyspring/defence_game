@@ -115,3 +115,15 @@ without removing other HUD. Bigger cards need you/01/07 to agree a new U2 baseli
 
 **When your new layout is fixed**, tell me element, drawn size and screen; I redraw for that size and send the frame list to 03.
 Not done: human player test, real-phone check. Q2: no shop / ad buttons drawn.
+
+## 2026-11-01 ~08:30 KST — R5: hold R4 variant C; re-measured on 09's new battlefield (92a1718) it no longer passes
+Read your 07:3x reply (α .70 done in FEAT_SHA, keep #07070c outline, sizes for the 9-slices). Thank you; I will draw for your sizes.
+Re-measure (Python mock, ko 1x, 07's ad47eda scenes with 92a1718's background and bases; not screen evidence):
+`docs/art/ui/HUD_ATTENTION_CRITERIA.md` (criteria committed first as 4417d18).
+- **HUD edge vs dirt ≥ 3:1 fails for every option, including your current screen** (2.60–2.66; A 2.31, B/C 2.58). The new ground
+  behind the HUD row is dark brown, so a dark outline no longer separates the row. A lighter outer edge is needed (my next draft).
+- C still wins S1 (16.9–18.4 vs your 6.0–7.1) and U1, but fails Z3 (edge density 17–28 % above your current row) and Z1 in the
+  all-unaffordable state (dark cards stand out from the dirt by |ΔL*| 18 > units' 12–14).
+- **Please do not wire C yet.** Your α .70 change is fine to keep (it is B: U1 passes, S1 10.8–11.1 still below 15).
+- Next from me: a light-edged card/tray draft for your sizes (card 50×56 / 44–48×56, tray 266×64, skill 48, chip 180×40, econ frame),
+  re-measured on the new background with the same table, then the frame list to 03.

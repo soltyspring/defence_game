@@ -1,27 +1,32 @@
 # 06-art-ui handoff
-Updated: 2026-11-01 ~07:45 KST. Session: this Kiro window (former 06-services), reopened after the 03:55 BSOD.
-Processed: coordinator 01:08 (role), the 03:2x dispatch, `coordination/prompts/06-afford-state.txt`, the 06:5x BSOD resume note;
-03-art-to-06-art-ui U1 (03:15), 07-qa-to-06-art-ui (03:19), 09-art-world W1. No new replies since.
+Updated: 2026-11-01 ~08:30 KST. Session: this Kiro window (former 06-services). Quota may reach 97 % around 08:30–08:50.
+Processed: coordinator 01:08, the 03:2x dispatch, `06-afford-state`, the 06:5x BSOD note, the 07:4x dispatch (new background,
+launcher/title); 04-client-to-06-art-ui (07:3x, sizes + α .70), 08 U8-1 (menu 0 MiB headroom, ui_main must stay 256×256),
+09 W1 (07:20), 10 v0.34 (add `-c core.eol=lf` to ui_capture archive: not done yet, low risk).
 
-## Crash recovery (06:5x)
-- heavy_run.log: every 06 START has an END (last: 06-ui-capture-narrow 02:56–02:57, ok). Nothing of mine was lost in the lock queue.
-- The 03:53 / 03:55 mock files (A, B) were intact but carried a bug (2x baseline state read with halved rects); regenerated A, B and
-  made C (pure Python, no Godot, no build.py in the shared tree).
+## Current task (07:4x dispatch)
+(1) HUD attention criteria + re-measure on 92a1718 background — **done for ko 1x** (criteria 4417d18; results this commit).
+(2) Launcher icon + title screen check/redraw — **not started**.
+(3) 03/04 approvals: 04 approved names/sizes (07:3x reply); 03 has not answered ink or names → nothing added to ui_main.
 
-## Done (SHAs checked with git ls-remote after each push)
-- 1d359bc, 700692d, 04269f4, 5a46675, adc0965, 7a77501, 02ec60f (see earlier status).
-- This commit: CARD_STATE_CRITERIA.md (criteria written before measuring, then results), mock A/B/C with state metrics,
-  `ui.card_off`, `ui.CARD_FRAME_LIT` (proposals, not wired), `size_candidates.py` + `docs/art/evidence/ui_art/sizes/`,
-  genre video section, requests 04 R4 and 03 R4: **da2d2a6** (git ls-remote origin refs/heads/main = da2d2a6d31c2a08a69e7ad47066103608ba1a52d, 07:4x KST).
+## Results so far
+- New background breaks the HUD-vs-dirt 3:1 for all options incl. 04's current HUD (2.60–2.66). C keeps S1/U1 but fails Z3 and
+  Z1 (all unaffordable). Asked 04 to hold C (R5), told 09 (W-1, FYI only).
 
-## Open, waiting on others
-- 07: fixed-set verdict on adc0965 and 02ec60f. Accept it as written. If U1 fails in the unaffordable state, point to variant C
-  (needs 04 code + new `card_<uid>_off` frames) and ask for a rejudge after that lands.
-- 04: R3/R4 (which frames, which sizes, icon_off). Then draw to those sizes; add NEW names only after 03 + 04 approve.
-- 03: `ink` #07070c key; approval of `card_<uid>_off` and the other NEW names. If ink lands: switch chrome K -> ink, rebuild in a
-  clean HEAD copy, re-run `hud_mock.py` for variant C.
+## Exact next steps
+1. en run of the same three mocks (each ~1.5 min):
+   `& $env:TEMP\run_nb.ps1` equivalent = `python tools/art/ui_art/hud_mock.py --frames build/ui06/bg_92a1718 --layers build/ui06/bg_92a1718/layers --tags en ...`
+   (bg frames: `python tools/art/ui_art/bg_swap.py --sha 92a1718 --out build/ui06/bg_92a1718`, 11 s).
+2. Draft D: outer 2 px light edge (T/U) on card_frame*, btn*, hud_tray, btn_skill, chip_resource; badge outline 1 px; off body
+   lighter (|ΔL*| vs dirt ≤ 13). Draw at 04's sizes (card 50×56 and 44–48×56, tray 266×64, skill 48, chip 180×40, econ frame NEW).
+   Re-measure D on the new background with the same table (S1, S2, U1, ground, Z1–Z3, U2, U3).
+3. Launcher/title (2): write criteria first (66 dp safe circle on 108 dp, 48/36 dp silhouette, light/dark wallpaper contrast,
+   monochrome layer, genre icon distinctness vs the 5 store icons, title line breaks/cut-off at 393 dp), measure current
+   `assets/branding` + `ui_title_*`, redraw in branding.py / launcher_icons.py / adaptive_icon.py, clean HEAD copy build.
+   Play 512 icon + feature graphic: only check they can come from the same art (docs/services/STORE_GRAPHICS.md sizes).
+4. When 03 approves names: add NEW frames to ui_main (must stay 256×256, 08 U8-1), clean HEAD copy build, ask 07 to judge.
+5. 07 has not judged adc0965 / 02ec60f yet (captures lost in the BSOD). Accept their result as written when it comes.
 
 ## Rules I keep
-- Heavy / Godot runs only via `coordination/heavy_run_detached.ps1 -Label 06-<task> -ScriptFile <job.ps1>`; headless unless a
-  screen capture is required; one variant/resolution per job; poll HEAVY_JOB_DONE in short calls.
-- Never run build.py in the shared tree: clean `git archive HEAD` copy in %TEMP%, copy back only my pages.
+Godot only via `coordination/heavy_run_detached.ps1 -Label 06-<task> -ScriptFile <job>` (headless unless a capture is needed,
+DISPLAY2, one variant per job). Never build.py in the shared tree. Q2: no shop/ad art. No human play test, no real-phone check yet.

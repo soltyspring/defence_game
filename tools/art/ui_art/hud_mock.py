@@ -288,11 +288,25 @@ def verdict(res):
     s1 = [v["pass"]["S1"] for loc in res.get("state", {}).values() for kv in loc.values() for v in kv["mock"].values()]
     s2 = [v["pass"]["S2"] for loc in res.get("state", {}).values() for kv in loc.values() for v in kv["mock"].values()]
     worst["state_S1_cards_failing"] = s1.count(False)
+    z = {"Z1": [], "Z2": [], "Z3": []}
+    for loc, t in res["tags"].items():
+        for v, vv in t.items():
+            for sc, row in vv.items():
+                if "attention_mock" not in row or not sc.startswith(("4_", "5_", "6_")):
+                    continue
+                am, a0 = row["attention_mock"], row["attention_04now"]
+                ud = row["1x"]["after"].get("unit_dL_median")
+                z["Z1"].append(am["card_row_pop_dL"] is not None and ud is not None and am["card_row_pop_dL"] <= ud)
+                z["Z2"].append(am["card_row_L"] <= am["unit_L_mean"])
+                if v == "as_captured":
+                    z["Z3"].append(am["card_row_grad"] <= a0["card_row_grad"] * 1.10)
+    worst.update({f"{k}_failing": vals.count(False) for k, vals in z.items()})
     worst["state_S2_cards_failing"] = s2.count(False)
     ok = {"ground_min_wcag": bool(worst["ground_min_wcag"] >= 3.0), "u1_failing_pairs": bool(worst["u1_failing_pairs"] == 0),
           "u2_max_pp_increase": bool(worst["u2_max_pp_increase"] <= 0.5), "u3_max_pct": bool(worst["u3_max_pct"] == 0.0),
           "g3_max_px": bool(worst["g3_max_px"] == 0),
-          "state_S1": bool(worst["state_S1_cards_failing"] == 0), "state_S2": bool(worst["state_S2_cards_failing"] == 0)}
+          "state_S1": bool(worst["state_S1_cards_failing"] == 0), "state_S2": bool(worst["state_S2_cards_failing"] == 0),
+          "Z1": bool(worst["Z1_failing"] == 0), "Z2": bool(worst["Z2_failing"] == 0), "Z3": bool(worst["Z3_failing"] == 0)}
     worst = {k: (float(v) if isinstance(v, (float, np.floating)) else int(v)) for k, v in worst.items()}
     return {"worst": worst, "where": where, "pass": ok, "all_pass": bool(all(ok.values()))}
 
@@ -331,6 +345,27 @@ def state_metrics(en_img, en_r, dis_img, dis_r, k):
     return out
 
 
+def attention(img, himg, rects, htf, bg):
+    """HUD_ATTENTION_CRITERIA.md Z1-Z3 at 1x. rects: unit-card button rects (x, y, w, h) in 1x px."""
+    Li = AM.lab(img)[..., 0]
+    Lh = AM.lab(himg)[..., 0]
+    cm = np.zeros(Li.shape, bool)
+    band = np.zeros(Li.shape, bool)
+    for (x, y, w, h) in rects:
+        cm[y:y + h, x:x + w] = True
+        band[max(0, y - 8):max(0, y - 3), x:x + w] = True
+    nonhud = np.all(img == himg, axis=-1)
+    band &= nonhud
+    gx = np.abs(np.diff(Li, axis=1)); gy = np.abs(np.diff(Li, axis=0))
+    mx = cm[:, 1:] & cm[:, :-1]; my = cm[1:, :] & cm[:-1, :]
+    um = np.any(htf != bg, axis=-1)
+    Lu = AM.lab(htf)[..., 0]
+    return {"card_row_L": round(float(Li[cm].mean()), 1), "dirt_above_L": round(float(Lh[band].mean()), 1) if band.any() else None,
+            "card_row_pop_dL": round(float(abs(Li[cm].mean() - Lh[band].mean())), 1) if band.any() else None,
+            "unit_L_mean": round(float(Lu[um].mean()), 1),
+            "card_row_grad": round(float((gx[mx].sum() + gy[my].sum()) / max(1, mx.sum() + my.sum())), 2)}
+
+
 def baseline_state(loc, k):
     """04's current screen: 통식빵 (tank) and 화덕포 (siege) affordable in r06, unaffordable in r08 (real ad47eda frames)."""
     tag = f"{loc}_{k}x"
@@ -357,8 +392,15 @@ def main():
     ap.add_argument("--ink", default="", help="hex: draw chrome-frame K pixels in this colour (decision variant only)")
     ap.add_argument("--off-badge", action="store_true", help="unaffordable cards: card_<uid>_off at alpha 1 (variant C)")
     ap.add_argument("--lit-body", action="store_true", help="affordable card body = ui.CARD_FRAME_LIT (variant C)")
+    ap.add_argument("--frames", default="", help="dir with <tag>_<scene>.png + reports (default 07 ad47eda set)")
+    ap.add_argument("--layers", default="", help="dir with layer frames (default 07 ad47eda layers)")
+    ap.add_argument("--variant-name", default="", help="label stored in the json")
     a = ap.parse_args()
-    global INK, OFF_BADGE
+    global INK, OFF_BADGE, E, L
+    if a.frames:
+        E = a.frames
+    if a.layers:
+        L = a.layers
     OFF_BADGE = a.off_badge
     INK = tuple(int(a.ink[i:i + 2], 16) for i in (0, 2, 4)) if a.ink else None
     old = old_atlas()
@@ -374,7 +416,8 @@ def main():
                 "btn_move_right": rgba(ui.move_button(1)), "btn_move_left": rgba(ui.move_button(-1))})
     res = {"note": "PROPOSAL MOCK on 07 baseline ad47eda frames; not screen evidence", "all_dimmed_alpha": a.dim_alpha,
            "ink": a.ink or "palette K", "off_badge": a.off_badge, "lit_body": a.lit_body,
-           "off_l_scale": ui.OFF_L_SCALE if a.off_badge else None, "tags": {}, "state": {}}
+           "off_l_scale": ui.OFF_L_SCALE if a.off_badge else None, "frames_dir": os.path.relpath(E, ROOT).replace("\\", "/"),
+           "variant": a.variant_name, "tags": {}, "state": {}}
     keep = {}
     for loc in a.tags.split(","):
         rep1 = json.load(open(os.path.join(E, f"{loc}_1x_art_report.json"), encoding="utf-8"))
@@ -398,6 +441,10 @@ def main():
                 if scene == "4_r06_t46":
                     keep[(loc, variant)] = (mock1, mock2, cards_drawn)
                 row = res["tags"].setdefault(f"{loc}", {}).setdefault(variant, {}).setdefault(scene, {})
+                htf1 = img(os.path.join(L, f"{loc}_1x_{scene}_htf.png")); bg1 = img(os.path.join(L, f"{loc}_1x_{scene}_bg.png"))
+                if cards_drawn:
+                    row["attention_mock"] = attention(mock1, h1, [(r["x"], r["y"], r["w"], r["h"]) for r in cards_drawn], htf1, bg1)
+                    row["attention_04now"] = attention(f1, h1, [tuple(int(v) for v in c["button"]) for c in meta.get("cards", [])], htf1, bg1)
                 for k, frame, mk in (("1x", f1, mock1), ("2x", f2, mock2)):
                     tag = f"{loc}_{k}"
                     Image.fromarray(mk).save(os.path.join(vdir, f"{tag}_{scene}.png"))
@@ -417,7 +464,7 @@ def main():
                     ha = np.any(mk != hk, axis=-1)
                     sc = 1 if k == "1x" else 2
                     els_k = [(e[0], e[1] * sc, e[2] * sc, e[3] * sc, e[4] * sc) for e in els]
-                    keys = ("hud_px_pct", "hud_on_units_pct", "cards_on_screen", "cards_min_dE_normal", "cards_min_dE_deutan",
+                    keys = ("hud_px_pct", "hud_on_units_pct", "unit_dL_median", "cards_on_screen", "cards_min_dE_normal", "cards_min_dE_deutan",
                             "cards_min_shape_dL", "cards_pairs_failing_u1", "cards_pairs_failing_u1_list")
                     row[k] = {"after": {q: after.get(q) for q in keys},
                               "hud_px_pct_before": round(100.0 * hb.sum() / hb.size, 2),
@@ -427,7 +474,7 @@ def main():
                         row[k]["before"] = {q: before.get(q) for q in keys}
                 row["g3_1x_px_differing"] = {"before": g3(f1, f2), "after": g3(mock1, mock2)}
     # baseline U1/U2/U3 from 07's committed art_metrics.json
-    am = json.load(open(os.path.join(E, "art_metrics.json"), encoding="utf-8"))
+    am = json.load(open(os.path.join(ROOT, "docs", "verification", "evidence", "art-baseline-ad47eda", "art_metrics.json"), encoding="utf-8"))
     res["baseline_art_metrics_json"] = {t: {s: {q: v.get(q) for q in ("hud_px_pct", "hud_on_units_pct", "cards_min_dE_normal",
                                                                       "cards_min_dE_deutan", "cards_min_shape_dL", "cards_pairs_failing_u1")}
                                             for s, v in r.get("scenes", {}).items()} for t, r in am.items() if isinstance(r, dict) and "scenes" in r}
