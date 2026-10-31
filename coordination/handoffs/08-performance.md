@@ -15,7 +15,7 @@
   16:10/16:12) in all 08 files.
 - Next steps (exact): (1) When 02 commits the WIP: snapshot that commit and re-run the probe; require verdict STEPPING. (2) In C11: the M3
   A/B command, then the H1/H2 frame baselines from a HEAD snapshot. (3) Run the asset gate on every 03/05 asset commit.
-- M7 commit: recorded only after `git show` verification (see below).
+- M7 commit: `aac831cf9c99a65e3873bdfe47259d30d0378538` [Test], 16:19:52. Verified with `git show --stat` (11 files incl. tests/performance/perf_frame_probe.gd +71 and the new requests file to 07), and `git branch -r --contains` shows origin/main.
 ## M6 — 08 stress-refill bug fixed (2026-10-31 16:12 +09:00)
 - Coordinator review: 7e166dc/ab00170 accepted. **New rule: verify every commit right after publishing with `git show --stat <sha>`
   and `git branch -r --contains <sha>` before writing its SHA anywhere** (9d989ed had recorded a non-existent SHA).
