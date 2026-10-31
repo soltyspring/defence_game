@@ -202,12 +202,17 @@ static func text_width(text: String, size: int, kind: StringName = &"ui") -> flo
 ## only the last line is ellipsized if still too long. Returns {"lines": PackedStringArray, "size": int,
 ## "kind": StringName, "truncated": bool}.
 static func fit_lines(text: String, max_w: float, size: int, max_lines := 2, kind: StringName = &"ui") -> Dictionary:
-	var one: Array = fit_label(text, max_w, size, kind)
-	if one[0] == text or max_lines <= 1:
+	if text_width(text, size, kind) <= max_w or max_lines <= 1:
+		var one: Array = fit_label(text, max_w, size, kind)
 		return {"lines": PackedStringArray([one[0]]), "size": one[1], "kind": one[2], "truncated": one[0] != text}
+	# prefer wrapping at the same size over switching to the 10 px cut: tiles in one grid keep one
+	# text size (15:45 capture: "Break the Mold Wall" alone at 10 px looked inconsistent)
 	var w := wrap_text(text, max_w, size, kind)
 	if w.size() <= max_lines:
 		return {"lines": w, "size": size, "kind": kind, "truncated": false}
+	var one2: Array = fit_label(text, max_w, size, kind)
+	if one2[0] == text:
+		return {"lines": PackedStringArray([text]), "size": one2[1], "kind": one2[2], "truncated": false}
 	var out := w.slice(0, max_lines - 1)
 	var rest := " ".join(w.slice(max_lines - 1))
 	out.append(fit_text(rest, max_w, size, kind)[0])
