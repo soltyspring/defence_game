@@ -18,3 +18,8 @@ After r04+ balance is fixed (01 checkpoint), run baseline vs "pick 1 of 3 boost 
 - Progress loss is the most damaging complaint in competitor samples (Random Dice: 3 years of data reset 2026-10-17; device migration lost 90%). Our matching defect: backup rotation (10 SV-1 reproduced, 07 B004 P1). Ask: fix it and have 07 re-run the same fault sequence; acceptance = unlocked_round unchanged after two consecutive corruptions, and a user-visible notice when recovery happens.
 - 04's capture log godot_20261031_085555.log shows `Failed loading resource: res://assets/atlases/char_player_adv.png` and `char_enemy_adv.png` (import missing). Please re-import with 03; acceptance = no Failed loading in a real r05 run.
 - 2x speed: 04 reports no engine command exists. If 01 decides on free 2x, expose a sim time-scale command (headless-testable).
+
+## R09-02-5 Wave-cleared event for D16 (2026-10-31 resume)
+- D16 (01) makes "first wave broken" banner the r01 peak moment. battle_sim.gd:417 only emits ["wave", {index, boss}] when a wave STARTS; there is no cleared event.
+- Ask: tag spawned units with their wave index, and emit ["wave_cleared", {index, t}] when the last unit of that wave dies (trickle and base-trigger spawns excluded, pending 01's definition R09-01-7).
+- Acceptance: headless r01 test: event fires once per wave, in order, with t ≥ that wave's last spawn time; it does not fire if the player loses before the wave dies.

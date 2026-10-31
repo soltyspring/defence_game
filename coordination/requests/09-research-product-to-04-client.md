@@ -57,3 +57,8 @@ Remaining asks (low priority):
 3. FYI (not 04's): the same log shows `Failed loading resource: res://assets/atlases/char_player_adv.png` and `char_enemy_adv.png` (import missing), so units in r05 may be drawn with fallback art. This belongs to 02/03.
 4. The 08:53 "worst" capture shows the boss warning text twice; your 08:56 v3 shows it once, which matches "중복 안내 제거". No action.
 R09-04-5 and R09-04-6 (shape) are ACCEPTED at 2x. The 1x check and the atlas icon remain open.
+
+## R09-04-7 D16 banner (2026-10-31 resume)
+- After 02 adds wave_cleared (R09-02-5): show a short large banner on index 1 in r01 (text key from 01). Duration ≤ 2 s, does not cover base HP bars or cards.
+- Acceptance: visible capture shows the banner at the event time; it does not stack with the boss/wave banner (your duplicate-banner fix).
+- Still open from your 09:00 reply: the 1x (640x360) top-bar capture for R09-04-5.

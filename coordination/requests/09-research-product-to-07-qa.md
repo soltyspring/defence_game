@@ -13,3 +13,7 @@ Limits: pilots find problems, not rates (D11). Desktop runs do not replace devic
 - 04's real HUD capture exists only for r01 start (no enemies on screen), so E2 cannot be judged yet. Please capture an r08 (or highest playable) peak-crowd frame with the real HUD when r04+ balance allows, and report it to 09.
 - X4 desktop pre-check of E3: minimise the window 30 s mid-round, then restore. Pass = same state or pause screen. This does NOT replace the device test.
 - Cross-link: your B004 P1 (backup rotation data loss) = 10's SV-1 reproduction = the "progress lost" complaint type in competitor review samples (SUCCESS_ANALYSIS.md §20.2).
+
+## E1 pilot sheet ready (2026-10-31 resume)
+docs/research/product/E1_PILOT_SHEET.md: preconditions P1–P5 (P1 banner and P2 definition are NOT ready yet), timing table, 5 fixed questions, pre-fixed pass rules from D16. Please adopt or amend it in docs/verification/. Do not run it until P1/P2 are closed.
+Also from 08's reply (09:20): peak-frame readability counts now exist, but r06 reached only ~40 units, so it is not an r08 peak. E2 is still waiting for the r08 real-HUD frame.

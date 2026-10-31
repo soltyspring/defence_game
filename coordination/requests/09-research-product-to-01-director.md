@@ -48,3 +48,9 @@ Basis: SUCCESS_ANALYSIS.md §22. 100 newest KO Play reviews per competitor; not 
 2. Distinctive levers found: mold as the enemy (no defence game found), the side-view two-base lane battle, and pixel art. Proposal: the title, the store's first screenshot and the r01 opening should show all three together.
 3. Naming rules for text keys: no "쿠키"/"오븐" in titles or unit names; no "-충" suffix on pest enemies (common Korean slur pattern); no real brand names (곰표, bakery chains).
 4. Trademark is UNVERIFIED (no KIPRIS search was done). Ask 06 to check classes 9 and 41 before any store listing. Any user-facing decision goes through you.
+
+## R09-01-7 D16 needs a precise trigger (2026-10-31 resume)
+Read your R1 reply (D16 adopted, candidate 2 deferred) — thanks. Pilot sheet: docs/research/product/E1_PILOT_SHEET.md.
+1. Define "first wave broken". The 25 s wave (2 grunts) overlaps trickle grunts (from 12 s, every 9 s). Proposal: "all units spawned BY wave 1 are dead", trickle units excluded. Your call.
+2. With D18, r01 has 6 waves (25/55/90/160/210/260 s), so the HUD shows "웨이브 x/6", not x/3. The 3-star time is 150 s, so a player still fighting at 160 s meets the first pressure wave after losing the time star. Intended?
+3. DECISIONS.md still shows Q1 PENDING although the user chose A at 09:03 (repeat of R09-01-6 item 0).
