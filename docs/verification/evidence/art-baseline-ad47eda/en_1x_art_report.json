@@ -1,0 +1,1931 @@
+{
+  "notes": [],
+  "safe": [
+    34.0,
+    0.0,
+    34.0,
+    0.0
+  ],
+  "scenes": {
+    "1_menu": {
+      "kind": "ui"
+    },
+    "2_r01_t10": {
+      "allies_in_camera": 2,
+      "battle_seed": 641615738,
+      "boss_in_camera": false,
+      "bot": "competent",
+      "budget": "low",
+      "camera_x": 503.333333333336,
+      "cards": [
+        {
+          "button": [
+            464.0,
+            300.0,
+            50.0,
+            56.0
+          ],
+          "disabled": false,
+          "icon": [
+            477.0,
+            304.0,
+            24.0,
+            24.0
+          ],
+          "text": "Toast"
+        }
+      ],
+      "ended": false,
+      "enemies_in_camera": 1,
+      "fx_alive": 0,
+      "gold": 41.0,
+      "ground_screen_y": 290.0,
+      "j1_rect_pct": 1.4,
+      "kills": 0,
+      "kind": "battle",
+      "projectiles_alive": 0,
+      "round": "r01",
+      "sim_t": 10.0,
+      "texts_alive": 0,
+      "units": [
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            346.0,
+            262.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_grunt",
+          "in_camera": true,
+          "rect": [
+            764.0,
+            260.0,
+            32.0,
+            32.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": true,
+          "id": "hero_captain",
+          "in_camera": true,
+          "rect": [
+            318.0,
+            245.0,
+            48.0,
+            48.0
+          ],
+          "side": "ally"
+        }
+      ],
+      "units_in_camera": 3
+    },
+    "3_r01_t30": {
+      "allies_in_camera": 4,
+      "battle_seed": 641615738,
+      "boss_in_camera": false,
+      "bot": "competent",
+      "budget": "low",
+      "camera_x": 447.333333333335,
+      "cards": [
+        {
+          "button": [
+            464.0,
+            300.0,
+            50.0,
+            56.0
+          ],
+          "disabled": false,
+          "icon": [
+            477.0,
+            304.0,
+            24.0,
+            24.0
+          ],
+          "text": "Toast"
+        }
+      ],
+      "ended": false,
+      "enemies_in_camera": 5,
+      "fx_alive": 0,
+      "gold": 39.0,
+      "ground_screen_y": 290.0,
+      "j1_rect_pct": 4.3,
+      "kills": 1,
+      "kind": "battle",
+      "projectiles_alive": 0,
+      "round": "r01",
+      "sim_t": 30.0,
+      "texts_alive": 0,
+      "units": [
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            349.0,
+            255.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            199.0,
+            253.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            29.0,
+            254.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_grunt",
+          "in_camera": true,
+          "rect": [
+            378.0,
+            257.0,
+            32.0,
+            32.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_grunt",
+          "in_camera": true,
+          "rect": [
+            378.0,
+            264.0,
+            32.0,
+            32.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_grunt",
+          "in_camera": true,
+          "rect": [
+            378.0,
+            262.0,
+            32.0,
+            32.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_grunt",
+          "in_camera": true,
+          "rect": [
+            396.0,
+            258.0,
+            32.0,
+            32.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_grunt",
+          "in_camera": true,
+          "rect": [
+            724.0,
+            254.0,
+            32.0,
+            32.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": true,
+          "id": "hero_captain",
+          "in_camera": true,
+          "rect": [
+            318.0,
+            245.0,
+            48.0,
+            48.0
+          ],
+          "side": "ally"
+        }
+      ],
+      "units_in_camera": 9
+    },
+    "4_r06_t46": {
+      "allies_in_camera": 5,
+      "battle_seed": 641615738,
+      "boss_in_camera": false,
+      "bot": "04 zoom_preview plan (17 deploys, hero 150 px behind the front)",
+      "budget": "none",
+      "camera_x": 1267.33333333333,
+      "cards": [
+        {
+          "button": [
+            300.0,
+            300.0,
+            50.0,
+            56.0
+          ],
+          "disabled": false,
+          "icon": [
+            313.0,
+            304.0,
+            24.0,
+            24.0
+          ],
+          "text": "Toast"
+        },
+        {
+          "button": [
+            354.0,
+            300.0,
+            50.0,
+            56.0
+          ],
+          "disabled": false,
+          "icon": [
+            367.0,
+            304.0,
+            24.0,
+            24.0
+          ],
+          "text": "Roll"
+        },
+        {
+          "button": [
+            408.0,
+            300.0,
+            50.0,
+            56.0
+          ],
+          "disabled": false,
+          "icon": [
+            421.0,
+            304.0,
+            24.0,
+            24.0
+          ],
+          "text": "Loaf"
+        },
+        {
+          "button": [
+            462.0,
+            300.0,
+            50.0,
+            56.0
+          ],
+          "disabled": false,
+          "icon": [
+            475.0,
+            304.0,
+            24.0,
+            24.0
+          ],
+          "text": "Twist"
+        },
+        {
+          "button": [
+            516.0,
+            300.0,
+            50.0,
+            56.0
+          ],
+          "disabled": false,
+          "icon": [
+            529.0,
+            304.0,
+            24.0,
+            24.0
+          ],
+          "text": "Oven"
+        }
+      ],
+      "ended": false,
+      "enemies_in_camera": 6,
+      "fx_alive": 2,
+      "gold": 277.9,
+      "ground_screen_y": 290.0,
+      "j1_rect_pct": 4.6,
+      "kills": 4,
+      "kind": "battle",
+      "projectiles_alive": 0,
+      "round": "r06",
+      "sim_t": 46.0,
+      "texts_alive": 3,
+      "units": [
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "tank",
+          "in_camera": true,
+          "rect": [
+            358.0,
+            260.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "ranged_basic",
+          "in_camera": true,
+          "rect": [
+            386.0,
+            257.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": true,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            469.0,
+            264.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "siege",
+          "in_camera": false,
+          "rect": [
+            -145.0,
+            247.0,
+            48.0,
+            40.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "ranged_basic",
+          "in_camera": true,
+          "rect": [
+            118.0,
+            253.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "tank",
+          "in_camera": false,
+          "rect": [
+            -202.0,
+            261.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -99.0,
+            253.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "fast",
+          "in_camera": true,
+          "rect": [
+            216.0,
+            262.0,
+            40.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "ranged_basic",
+          "in_camera": false,
+          "rect": [
+            -531.0,
+            256.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -739.0,
+            257.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_brute",
+          "in_camera": true,
+          "rect": [
+            482.0,
+            242.0,
+            48.0,
+            48.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": [
+            496.0,
+            249.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_grunt",
+          "in_camera": true,
+          "rect": [
+            486.0,
+            254.0,
+            32.0,
+            32.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_grunt",
+          "in_camera": true,
+          "rect": [
+            486.0,
+            258.0,
+            32.0,
+            32.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_brute",
+          "in_camera": true,
+          "rect": [
+            568.0,
+            242.0,
+            48.0,
+            48.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_grunt",
+          "in_camera": true,
+          "rect": [
+            607.0,
+            253.0,
+            32.0,
+            32.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_swarm",
+          "in_camera": true,
+          "rect": [
+            774.0,
+            265.0,
+            32.0,
+            24.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": true,
+          "id": "hero_captain",
+          "in_camera": true,
+          "rect": [
+            318.0,
+            245.0,
+            48.0,
+            48.0
+          ],
+          "side": "ally"
+        }
+      ],
+      "units_in_camera": 11
+    },
+    "5_r08_peak": {
+      "allies_in_camera": 10,
+      "battle_seed": 641615738,
+      "boss_in_camera": false,
+      "bot": "competent",
+      "budget": "low",
+      "camera_x": 1650.0,
+      "cards": [
+        {
+          "button": [
+            274.0,
+            300.0,
+            50.0,
+            56.0
+          ],
+          "disabled": false,
+          "icon": [
+            287.0,
+            304.0,
+            24.0,
+            24.0
+          ],
+          "text": "Toast"
+        },
+        {
+          "button": [
+            328.0,
+            300.0,
+            50.0,
+            56.0
+          ],
+          "disabled": false,
+          "icon": [
+            341.0,
+            304.0,
+            24.0,
+            24.0
+          ],
+          "text": "Roll"
+        },
+        {
+          "button": [
+            382.0,
+            300.0,
+            50.0,
+            56.0
+          ],
+          "disabled": true,
+          "icon": [
+            395.0,
+            304.0,
+            24.0,
+            24.0
+          ],
+          "text": "Loaf"
+        },
+        {
+          "button": [
+            436.0,
+            300.0,
+            50.0,
+            56.0
+          ],
+          "disabled": false,
+          "icon": [
+            449.0,
+            304.0,
+            24.0,
+            24.0
+          ],
+          "text": "Twist"
+        },
+        {
+          "button": [
+            490.0,
+            300.0,
+            50.0,
+            56.0
+          ],
+          "disabled": true,
+          "icon": [
+            503.0,
+            304.0,
+            24.0,
+            24.0
+          ],
+          "text": "Oven"
+        }
+      ],
+      "ended": false,
+      "enemies_in_camera": 17,
+      "fx_alive": 3,
+      "gold": 56.7,
+      "ground_screen_y": 290.0,
+      "j1_rect_pct": 8.4,
+      "kills": 52,
+      "kind": "battle",
+      "prepass": {
+        "count": 27,
+        "mode": "peak",
+        "step": 9495,
+        "t": 158.25
+      },
+      "prepass_matches": true,
+      "projectiles_alive": 2,
+      "round": "r08",
+      "sim_t": 158.25,
+      "texts_alive": 3,
+      "units": [
+        {
+          "bar": [
+            564.0,
+            250.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "ranged_basic",
+          "in_camera": true,
+          "rect": [
+            560.0,
+            255.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": [
+            562.0,
+            258.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            558.0,
+            263.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": [
+            562.0,
+            250.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            558.0,
+            255.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": [
+            566.0,
+            254.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            562.0,
+            259.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            532.0,
+            262.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            414.0,
+            261.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            297.0,
+            255.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            180.0,
+            263.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            73.0,
+            260.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -44.0,
+            262.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -151.0,
+            261.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -258.0,
+            265.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -364.0,
+            254.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -471.0,
+            263.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -578.0,
+            259.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -695.0,
+            263.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -812.0,
+            258.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -930.0,
+            265.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -1047.0,
+            255.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -1164.0,
+            265.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": [
+            596.0,
+            239.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_brute",
+          "in_camera": true,
+          "rect": [
+            578.0,
+            244.0,
+            48.0,
+            48.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": [
+            594.0,
+            241.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_brute",
+          "in_camera": true,
+          "rect": [
+            576.0,
+            246.0,
+            48.0,
+            48.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": [
+            594.0,
+            260.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_grunt",
+          "in_camera": true,
+          "rect": [
+            584.0,
+            265.0,
+            32.0,
+            32.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_brute",
+          "in_camera": true,
+          "rect": [
+            583.0,
+            247.0,
+            48.0,
+            48.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_spitter",
+          "in_camera": true,
+          "rect": [
+            656.0,
+            257.0,
+            32.0,
+            32.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": [
+            590.0,
+            264.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_swarm",
+          "in_camera": true,
+          "rect": [
+            581.0,
+            269.0,
+            32.0,
+            24.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_spitter",
+          "in_camera": true,
+          "rect": [
+            656.0,
+            255.0,
+            32.0,
+            32.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_swarm",
+          "in_camera": true,
+          "rect": [
+            581.0,
+            270.0,
+            32.0,
+            24.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_swarm",
+          "in_camera": true,
+          "rect": [
+            581.0,
+            263.0,
+            32.0,
+            24.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_swarm",
+          "in_camera": true,
+          "rect": [
+            581.0,
+            268.0,
+            32.0,
+            24.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_spitter",
+          "in_camera": true,
+          "rect": [
+            656.0,
+            261.0,
+            32.0,
+            32.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_brute",
+          "in_camera": true,
+          "rect": [
+            631.0,
+            242.0,
+            48.0,
+            48.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_swarm",
+          "in_camera": true,
+          "rect": [
+            581.0,
+            261.0,
+            32.0,
+            24.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_spitter",
+          "in_camera": true,
+          "rect": [
+            656.0,
+            262.0,
+            32.0,
+            32.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_swarm",
+          "in_camera": true,
+          "rect": [
+            609.0,
+            262.0,
+            32.0,
+            24.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_swarm",
+          "in_camera": true,
+          "rect": [
+            637.0,
+            270.0,
+            32.0,
+            24.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "e_spitter",
+          "in_camera": true,
+          "rect": [
+            667.0,
+            258.0,
+            32.0,
+            32.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": [
+            441.0,
+            240.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": true,
+          "id": "hero_captain",
+          "in_camera": true,
+          "rect": [
+            428.0,
+            245.0,
+            48.0,
+            48.0
+          ],
+          "side": "ally"
+        }
+      ],
+      "units_in_camera": 27
+    },
+    "6_r10_boss": {
+      "allies_in_camera": 14,
+      "battle_seed": 641615738,
+      "boss_in_camera": true,
+      "bot": "competent",
+      "budget": "low",
+      "camera_x": 1850.0,
+      "cards": [
+        {
+          "button": [
+            274.0,
+            300.0,
+            50.0,
+            56.0
+          ],
+          "disabled": false,
+          "icon": [
+            287.0,
+            304.0,
+            24.0,
+            24.0
+          ],
+          "text": "Toast"
+        },
+        {
+          "button": [
+            328.0,
+            300.0,
+            50.0,
+            56.0
+          ],
+          "disabled": false,
+          "icon": [
+            341.0,
+            304.0,
+            24.0,
+            24.0
+          ],
+          "text": "Roll"
+        },
+        {
+          "button": [
+            382.0,
+            300.0,
+            50.0,
+            56.0
+          ],
+          "disabled": true,
+          "icon": [
+            395.0,
+            304.0,
+            24.0,
+            24.0
+          ],
+          "text": "Loaf"
+        },
+        {
+          "button": [
+            436.0,
+            300.0,
+            50.0,
+            56.0
+          ],
+          "disabled": false,
+          "icon": [
+            449.0,
+            304.0,
+            24.0,
+            24.0
+          ],
+          "text": "Twist"
+        },
+        {
+          "button": [
+            490.0,
+            300.0,
+            50.0,
+            56.0
+          ],
+          "disabled": true,
+          "icon": [
+            503.0,
+            304.0,
+            24.0,
+            24.0
+          ],
+          "text": "Oven"
+        }
+      ],
+      "ended": false,
+      "enemies_in_camera": 1,
+      "fx_alive": 0,
+      "gold": 56.0,
+      "ground_screen_y": 290.0,
+      "j1_rect_pct": 7.2,
+      "kills": 20,
+      "kind": "battle",
+      "prepass": {
+        "boss_alive_step": 6510,
+        "boss_first_in_camera_step": 6510,
+        "camera": "hero",
+        "step": 6570
+      },
+      "projectiles_alive": 0,
+      "round": "r10",
+      "sim_t": 109.5,
+      "texts_alive": 12,
+      "units": [
+        {
+          "bar": [
+            635.0,
+            251.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            631.0,
+            256.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": [
+            635.0,
+            252.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            631.0,
+            257.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": [
+            636.0,
+            251.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            632.0,
+            256.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": [
+            636.0,
+            254.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            632.0,
+            259.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": [
+            636.0,
+            249.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            632.0,
+            254.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": [
+            636.0,
+            251.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            632.0,
+            256.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": [
+            636.0,
+            250.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            632.0,
+            255.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": [
+            624.0,
+            258.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            620.0,
+            263.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            536.0,
+            255.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            398.0,
+            261.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            280.0,
+            261.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            152.0,
+            253.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": true,
+          "rect": [
+            24.0,
+            261.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -104.0,
+            257.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -232.0,
+            253.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -370.0,
+            253.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -456.0,
+            260.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -541.0,
+            265.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -669.0,
+            255.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -797.0,
+            255.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -925.0,
+            259.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -1042.0,
+            260.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -1181.0,
+            263.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": false,
+          "dying": false,
+          "hero": false,
+          "id": "melee_basic",
+          "in_camera": false,
+          "rect": [
+            -1309.0,
+            261.0,
+            32.0,
+            32.0
+          ],
+          "side": "ally"
+        },
+        {
+          "bar": null,
+          "boss": true,
+          "dying": false,
+          "hero": false,
+          "id": "boss_warlord",
+          "in_camera": true,
+          "rect": [
+            644.0,
+            230.0,
+            64.0,
+            64.0
+          ],
+          "side": "enemy"
+        },
+        {
+          "bar": [
+            411.0,
+            240.0,
+            18.0,
+            4.0
+          ],
+          "boss": false,
+          "dying": false,
+          "hero": true,
+          "id": "hero_captain",
+          "in_camera": true,
+          "rect": [
+            398.0,
+            245.0,
+            48.0,
+            48.0
+          ],
+          "side": "ally"
+        }
+      ],
+      "units_in_camera": 15
+    },
+    "7_result": {
+      "kind": "ui",
+      "round": "r01",
+      "screen": "result",
+      "sim_t": 110.57,
+      "won": true
+    }
+  },
+  "seed_call": 4242,
+  "tag": "en_1x",
+  "view": [
+    800.0,
+    360.0
+  ],
+  "window": [
+    800,
+    360
+  ]
+}

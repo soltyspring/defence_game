@@ -47,3 +47,4 @@ on-device test has been done by 07-qa.
 | Battle background (sky share, identity) | PASS | M12 V1-V3: sky 17 % r01, 21 % r08; village + nest readable incl. deutan |
 | Damage numbers | FAIL (P3) | M12 V4: QA-B012 reopened |
 | Casual difficulty target D28 | PASS (bots, DEFAULT target) | BALANCE_CROSSCHECK last section: all 11 rows PASS with the fixed probe (3e355a8; r04/r05 from d5f145a). Floors only; not human evidence; Q5 unanswered |
+| Graphics readability (screen level, 393 dp phone) | FAIL (baseline) | ART_BASELINE.md at ad47eda: fixed re-runnable set (27/27 identical on re-run). FAIL now: hero ΔL* (QA-B020), card icons (QA-B021), soldier size (QA-B022, provisional), unit/lane and boss contrast (QA-B023). PASS: effects on units 2.5 %, HUD on units 0 %. Not measurable by tools: "looks like bread/mould", appeal |

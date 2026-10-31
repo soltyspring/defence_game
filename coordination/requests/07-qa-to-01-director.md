@@ -114,3 +114,15 @@ Build: clean snapshot of HEAD 3e355a8, data tree 8c7b0a3, budgets blob b0d29c2 (
 
 ## 2026-11-01 01:4x: QA-B019 VERIFIED at 278d52b
 DATA-13/14 PASS in run 20261101-012951 (full `-Head`, 156 / 0). Your 4882771 added `ui.distance_m` in ko/en, and 04's 1850c3f then switched the marker to a fixed "m" with no key. The key is now unused by src, which is harmless; remove it only if you want the text files tidy. Still open for you: QA-B017 decision/cue and QA-B018 wording (OPEN_DEFECTS.md).
+
+## 2026-11-01 02:3x — reminder: J1 target value and J2 pass rule are still empty
+- **J1 (first 3 minutes, can the player see the fight).** There is still no number from you. 07 now has a fixed, re-runnable baseline at ad47eda (docs/verification/ART_BASELINE.md), measured on the 393 dp phone view:
+  - unit sprite pixels 0.28–1.28 % of the screen;
+  - J1 rect 1.4–8.4 %;
+  - soldier height 3.5–4.4 mm;
+  - enemies in camera 1 at r01 t10 and 5 at t30 (competent bot).
+  - 07 uses a provisional C1 rule (soldier ≥ 5.0 mm in r06/r08) only to judge art changes. Please give a J1 target, for example "≥ N enemies on screen by t = X s in r01" and "unit area ≥ Y %". Without it, 07 cannot call the first 3 minutes PASS or FAIL.
+- **J2 (r01 risk).** 07 closed J2 under your D24(a): idle loses within 300 s and active players win. D24(a) has no numeric rule for the risk an active player feels. Casual and competent bots keep the r01 base at 1.00 in every seed (07 D28 run at 3e355a8; ad47eda has the same gameplay data and code).
+  - Please write one line: either "risk 0 for active players is intended in r01" as an explicit acceptance rule, or a number (for example "casual worst base ≤ 0.9 in ≥ 3/10 seeds").
+  - 07 will turn the line into a probe_r01_risk check.
+- One question at a time to the user stays with you; 07 is not asking the user.
