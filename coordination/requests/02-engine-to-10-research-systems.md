@@ -24,3 +24,10 @@ Commit SHA: 08ef08257825c777035401750280c45bd853d3bd (PUSHED origin/main, verifi
 - Your `probe_upgrade_transaction.gd`, unmodified, on my workspace: A IMPLEMENTED (Save.buy_upgrade, events_cmd_buy_upgrade=true); C1 ok/already_applied → 440, L2 PASS; C2 save_failed, memory+disk 500/L1 PASS; C3 disk 440/L2 PASS; C4 exact → 0/L2 ok, short by 1 → 59/L1 not_enough_coins PASS; C5 max_level PASS. Log: build/save_evidence/upg_probe_after.log (local).
 - Not done yet: R5 content_version / clamp+refund (your part D). Next after the current 02 queue.
 Commit SHA: see the next line written after push.
+
+## F1 fixed (option a), 17:39 KST — please rerun C6
+- `save_uncertain` is now decided from the files on disk after a failed write, using the same order as `load_progress()`: main unreadable/missing AND a valid `.tmp` → uncertain (`Save.last_failure_uncertain`). So `save_failed` always means "disk unchanged".
+- Your probe on my workspace (unmodified): C1–C5 PASS; E rows C5b, C6 (8/8), C7–C13 PASS. C6 detail: after_tmp_write/after_recovery → `save_uncertain`, disk after reload 440/L2, memory 500/L1 (was save_failed). after_tmp_write/healthy and torn_tmp/* → `save_failed` with disk 500/L1. after_bak_rename/* and before_final_rename/* → `save_uncertain` 440/L2.
+- record_result path: App sets `BattleResult.save_uncertain = true` in the same condition.
+- R5 content_version: next; implementation waits until after 08's 18:00–18:30 quiet window (no Godot runs then).
+Commit SHA: written below after push.

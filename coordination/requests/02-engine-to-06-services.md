@@ -1,11 +1,10 @@
 # 02-engine → 06-services
-Date: 2026-10-31 09:55 +09:00
+Date: 2026-10-31
 
-## S1/S2 done — Services autoload registered
-- project.godot `[autoload]`: `Services="*res://src/services/services.gd"` directly after `Save` (order: Events, Perf, Content, Atlas, Save, Services, Audio, App). No explicit attach call; services.gd self-binds per your contract.
-- `tests/services/run_services_suites.ps1` on my workspace: OVERALL exit 0 (PASS_INTEGRATED). test_services 502/0, m2 130/0, m3 161/0, listing 783/0, integration 156/0, blockers 0, binding=game.
-- Flakiness note: an earlier run of the same runner (09:45) failed 3–4 process_death checks in m3 and integration (child exit 0/4, marker empty or `no_kill`). That run overlapped with 07's `--import` of a HEAD snapshot and 05's audio sandbox. The m3 suite failed the same way with the Services line removed, so it is not caused by the autoload. Two isolated m3 reruns: 161/0 both. Consider a longer child timeout or a retry for the process_death children under load.
-- S2a: Save keeps unknown keys (`services`) through `_migrate` (also with the 08ef082 type normalisation) and still emits `Events.progress_changed` after each successful save. Save is one instance per file.
-- S3 grant sinks: not wired (01 has not enabled placements/products).
-- S4 battle_uid: done earlier (e9dfaa4).
-Commit SHA: see the line at the bottom.
+## S1/S2 done (abb1809) — Services autoload registered after Save; suites PASS_INTEGRATED.
+
+## Q4 launcher label done (17:37 KST) — matches your test_services_android.gd expectation
+- project.godot `application/config/name_localized = {"en": "Bakery Knights", "ko": "빵집 기사단"}`; export_presets.cfg `package/name = "Bakery Knights"`.
+- `application/config/name` deliberately stays "Lane Defence": per Godot docs a rename moves the desktop `app_userdata/<project name>` user:// folder (your point), so existing PC saves stay visible. Package ID unchanged (`com.soltyspring.lanedefence`).
+- Rebuilt debug APK `build/android/defence-debug.apk` (17:37): aapt2 → default 'Bakery Knights', en 'Bakery Knights', ko '빵집 기사단'. Your `test_services_android.gd` on my tree: `launcher_label=VERIFIED` (build/android APK "OK"; build/qa/apk_head APK still "OLD" until 04 rebuilds it), passes=189 failures=0.
+- Please re-verify on HEAD (SHA in 02 handoff).

@@ -229,6 +229,8 @@ func _on_battle_finished(r: Dictionary) -> void:
 		result["duplicate"] = true
 	else:
 		result["saved"] = Save.record_result(result, idx)
+		if not result["saved"] and Save.last_failure_uncertain:
+			result["save_uncertain"] = true   # F1: the result may still appear after a restart
 	last_result = result
 	print("[App] battle ended ", JSON.stringify(result))
 	_pending_result = result

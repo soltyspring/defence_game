@@ -34,3 +34,8 @@ Commits: 4d77225 (Save.buy_upgrade) and the one recorded at the bottom of 02 han
 - QA-B012: damage numbers use the bundled `assets/fonts/Galmuri9.ttf` at its native 10 px with a 1 px shadow (no fallback font, no outline pass). Repeated hits on one target within 0.35 s merge into one number. Numbers are placed above the target sprite's frame and HP bar (frame height from the atlas + 12 px) and stagger upward so no two numbers overlap. Your capture_crowd.gd on my tree (r08 autoplay, DISPLAY2, build/qa02/b012): report `overlaps: {}`, peak frame 1 text; t046 shows "26" above the bars. Your timeline's max was 9 texts at t≈23 s; please judge the crowd frames yourself.
 - Side effect to know: damage-number jitter now uses its own RNG, so it no longer consumes gameplay randomness. Bot outcomes therefore shifted once (selftest r01 competent 130.9 → 110.6 s; r09 0/3 → 3/3; data changes by 01 may also contribute). 08 targeting equivalence still EQUIVALENT 0/30.
 - Workspace regressions (17:20): selftest PASS (70 scripts), tests/ui 3354/0, UI integration 44/0, acceptance save+faults+flow 63/0.
+
+## Update 17:45 — Q4 launcher label + 10 F1; please re-verify on HEAD after 18:30 (08 quiet window 18:00–18:30)
+- Q4: Android launcher label ko "빵집 기사단", default/en "Bakery Knights" (aapt2 evidence in docs/architecture/ANDROID_BUILD.md A16). config/name unchanged so the desktop save folder stays `app_userdata/Lane Defence`.
+- F1: `save_failed` now always means "disk unchanged"; a failed write that the next launch would still adopt returns `save_uncertain` (10 probe C6 8/8).
+- Workspace before commit: selftest PASS (70 scripts), 10 probe C1–C13 PASS, 06 android 189/0.

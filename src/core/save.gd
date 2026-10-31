@@ -196,7 +196,16 @@ func save_progress() -> bool:
 	var ok := _write()
 	if not ok:
 		progress.revision = old_rev
+		# F1 (10): decide "uncertain" from what is ON DISK, exactly as the next load_progress() would choose:
+		# main unreadable/missing + valid .tmp => the next launch adopts this write.
+		last_failure_uncertain = _read(path) == null and _read(path + ".tmp") != null
+	else:
+		last_failure_uncertain = false
 	return ok
+
+## After a failed save_progress(): true if the next launch will still load the state of that write
+## (callers report save_uncertain / "outcome unknown" instead of save_failed).
+var last_failure_uncertain := false
 
 ## Furthest point the last write reached: start | tmp_verified | done. After "tmp_verified" a failed save may
 ## still be adopted on the next launch (load prefers a verified .tmp when main is missing), so callers must treat
@@ -376,7 +385,7 @@ func buy_upgrade(upgrade_id: String, to_level: int) -> String:
 	progress.coins = coins
 	if had_key: ups[upgrade_id] = cur
 	else: ups.erase(upgrade_id)
-	return UPG_SAVE_UNCERTAIN if last_write_stage == "tmp_verified" else UPG_SAVE_FAILED
+	return UPG_SAVE_UNCERTAIN if last_failure_uncertain else UPG_SAVE_FAILED
 
 func set_setting(key: String, value: Variant) -> void:
 	progress.settings[key] = value

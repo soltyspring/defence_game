@@ -4,6 +4,10 @@ config_version=5
 [application]
 
 config/name="Lane Defence"
+config/name_localized={
+"en": "Bakery Knights",
+"ko": "빵집 기사단"
+}
 config/description="Pixel-art lane defence (working title)"
 config/version="0.1.0"
 run/main_scene="res://scenes/gameplay/main.tscn"
