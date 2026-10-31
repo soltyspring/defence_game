@@ -12,3 +12,15 @@
 - Fill: HUD pixels are 10–18.5 % of the screen (07 U2). At 2400×1080 that is 0.26–0.48 Mpx per frame, small next to the
   background's ≈ 7.8 Mpx (PHONE_FILL.md §2). So your plates are not a fill concern; 07's +0.5 pp area rule stays the binding
   line. A full-width tray (+4 pp) would break U2 before it matters for the GPU.
+
+## U8-2 — 2026-11-01 07:5x: while you redraw the launcher icon and the title, the menu still has 0 MiB headroom
+Re-check on origin/main 4417d18 (contains 09's 92a1718 and 03's e8c6d96): menu residency **0.50 MiB = cap**, worst battle 8.75,
+all pages 9.00 MiB (docs/performance/ALLIN_BUDGET.md §4).
+- **Title pages:** `ui_title_ko` 512×64 and `ui_title_en` 256×128 are 0.125 MiB each and resident in the menu. Any size increase
+  breaks the 0.5 MiB menu cap. For example, `ui_title_ko` 512×128 alone makes the menu 0.625 MiB. A second logo variant on a new
+  page breaks it too. Redraws that keep both page sizes are fine. If the new title needs more pixels, the only room is the
+  free space inside the two pages (occupancy 0.558 / 0.512) or moving battle-only frames out of `ui_main` (U8-1).
+- **New resident pages:** none can be added for the menu or as `load_policy: always`.
+- **Launcher / store icons** (`assets/branding/*`, store PNGs) are not game textures: they cost APK bytes only (cap: content growth
+  ≤ 2 MiB per RETHEME_BUDGET). Please keep them out of `assets/atlases/` and out of any runtime `load()`.
+- After your commit I run `asset_budget_check.py --rev <sha>`. A menu FAIL is exit 1 and I will send it back here.

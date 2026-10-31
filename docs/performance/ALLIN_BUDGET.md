@@ -44,3 +44,13 @@ art build in a copy, and file reads. The working-tree `assets/atlases` hashes we
   the GPU cap, so 08 does not propose it.
 - Atlas pages are only part of texture memory: font glyph caches (≤ 2.25 MiB, FONT_COST.md), engine defaults and the phone's
   window buffers come on top. The phone session's `tex_mib` from the game monitor is the real total (DEVICE_SESSION.md).
+
+## 4. Re-check on the committed pages (2026-11-01 07:45, origin/main 4417d18)
+- 09-art-world committed its three pages in **92a1718**. The six committed blobs (bases, biome_meadow, fx_combat .png/.json) are
+  **byte-identical** to the working-tree copies used in §2 (git hash-object equal for all six), so the "world" values above were
+  the committed values.
+- `allin_static_budget.ps1 -Rev 4417d18` (contains 92a1718): the working tree no longer differs from the commit, so head = world:
+  **8.75 / 9.00 / 0.50 MiB**, the same as the §2 "world" row. The D1 and allin rows stay **10.75 / 11.00 / 0.50 MiB**, gate PASS.
+- Atlas PNG total is 88.4 KiB, not 87.5. The +0.9 KiB comes from 03's e8c6d96 (07 QA-B024/B025 walk and death frames in
+  char_player and both boss pages; page sizes unchanged), not from 09.
+- Report: `build/perf/allin_4417d18/summary.md`.
