@@ -1,11 +1,10 @@
 # 10-research-systems status
-Updated: 2026-10-31 ~18:52 KST · sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce
-Status: v0.24 DONE (Godot runs after the 18:30 quiet window).
-- Economy policy table rerun on D27 data (HEAD fca9346, data 7b93d1f): coin and level columns identical to 40382b0. Card−enemy is negative r02–r05 and positive from r06 for P1 and P2. This agrees with D27 "r05 block"; the counterpoint (r02–r04 deficit larger, yet the sim wins) is noted. Economy flow is unchanged (5,595; 14/10 replays); integrity 0/0/0.
-- Breakpoints per 100 coins recomputed (new aggregator effect_points_per_coin.py, validated against ee30b9d). Melee and fast now bend at L3→L4; ranged L5 is now the worst (4.7).
-- F1 independently confirmed at a clean full snapshot (b4b33a7): C6 8/8, C1–C13 PASS; rotation 8/8; dedup 162/1.
-- R5 not committed: migration and E1–E8 waiting. Part D: hp 2.20 vs cap 1.60.
-- R09-10-2 answered to 09 (LOW cheapest-first result-screen coins and buys; r10 replays at 30/40/50%). 01's priority policy is not answered.
-User decisions: Q1 = A (DECIDED); Q2 = 보류; Q3 = title "빵집 기사단: 곰팡이 디펜스".
-Validation: all probe exits 0, 0 SCRIPT ERROR; real save.json hash 486C8160… unchanged before and after; snapshot dirs and app_userdata removed.
-Pushed: … 2d65d56, d328518. v0.24: next commit.
+Updated: 2026-10-31 ~19:02 KST · sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce
+Status: v0.25 DONE.
+- 01 opt policy implemented as P3_opt; it matches upgrade_budgets.json opt r01–r10 (0 diffs), and P1 matches low (0 diffs). 09 answered: opt buys 1–4 per first-clear screen; r10 replays 14/11/9 at 30/40/50%, the same as cheapest-first.
+- Ranged L5 inversion: 63% effect side (defense breakpoints 6→3), 37% cost side. Option 1: hp_mult 0.18 (−9%, cost unchanged). Option 2: hp 0.18 plus L5 cost 160 (inversion removed, total 5,565, replays unchanged, budgets need regenerating). Sent to 01; data not edited.
+- R5 (02 7f2886c) acceptance: M1/M2/M3/M4/M5a/M5b all match (M4 1,584 / 1.30, M5b 1.60). probe_r5_cases 7/9; **F2 (P2)**: after a failed migration save, the next ordinary save stamps the new version on un-migrated data and the migration is lost. Sent to 02. D26 differences (R2m snapshot price, R6r retired upgrade gets no refund) noted for 01/02.
+- Part D re-judged: every real-world shape passes; the same-version L9 case is file-edit only (P3).
+- The real save.json changed during this run because of other workers' runs (their logs in Lane Defence/logs at 18:48–18:50). My runs used the Probe10 Snapshot user dir; no probe10/r5_save.json exists in the real dir.
+User decisions: Q1 = A (DECIDED); Q2 = 보류 (kept); Q3 = title "빵집 기사단: 곰팡이 디펜스".
+Pushed: … d328518, 14e1f19. v0.25: next commit.

@@ -180,3 +180,33 @@ Full text: DATA_AND_BACKEND_ANALYSIS.md §9.14. 01 decides A, B or AB. I recomme
 - R5: `git grep content_version -- src` = 0 at b4b33a7. run_content_migration M1/M2/M4/M5b and E1–E8 are NOT run (waiting).
   - Part D now shows level 9 kept and hp ×**2.20** (D27 per_level 0.15; cap value 1.60), with no content_version.
   - Expected values when you land it: M4 L3 / coins 1,584 / hp 1.30, M5b 1.60, plus E1–E8 (§9.14).
+
+## v0.25 (~19:00 KST): R5 (7f2886c) acceptance on a clean HEAD f41fd12 snapshot — 1 new defect (F2)
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.16 (3). New probe: docs/research/systems/probes/probe_r5_cases.gd. Data changes are emulated in memory on the Content autoload, and the save goes to an isolated path.
+- run_content_migration.ps1: everything matches the corrected expectations.
+  - M1: r08 locked, r03 stars kept.
+  - M2: r02b and r03–r07 open.
+  - M3, M5a: unchanged.
+  - **M4: L3 / 1,584 / hp 1.30**, with no second refund on reload.
+  - **M5b: up_toast_knight L5 / 1.60**, no orphan.
+  - content_version is present in every variant.
+- probe_r5_cases: 7/9 PASS.
+  - E1 stamp on buy, E4j junk snapshot (no crash), E5 cap 5→3 refunded once: PASS.
+  - E6 after_tmp_write: disk unchanged, retried once on the next load: PASS.
+  - E7 before_final_rename: .tmp adopted, no second refund: PASS.
+  - E8 read_only: no migration, bytes unchanged: PASS.
+  - DL legacy L9 → L5, refund 0 with a refund_unknown warning: PASS.
+- **F2 (P2): a failed migration save is lost after any later ordinary save in the same session.**
+  - Repro: make a save under data A with melee L5, load it under data B (max_level 3) with `_fault = after_tmp_write`, clear the fault, call `save_progress()` once (any settings, result or buy save), then reload.
+  - Result: disk shows 1,234 / L5 with content_version = B. The next load sees "same version" and never migrates, so a level above max stays and no refund is made.
+  - With `before_final_rename` (F2b) it is worse: the ordinary save overwrites the migrated .tmp.
+  - Cause: after the rollback (`progress = before`), `_stamp_content()` in the next save stamps the NEW version on un-migrated data.
+  - Fix options: (a) set `_migration_pending` when the migration save fails, and while it is set `_stamp_content()` keeps the old content_version and snapshot (the next load retries); or (b) at the start of `save_progress()`, re-run the migration if one is pending.
+  - Acceptance: rerun probe_r5_cases F2a/F2b; expected 1,584 / L3 after reload.
+- Differences from 01's D26 (not defects while your rules are PROVISIONAL; 01 decides):
+  - R2m: a price change (L5 250→190) followed by a cap refunds the snapshot price 350, not the 410 actually paid. The snapshot is B-like, but automatic, so 01 never copies costs by hand.
+  - R6r: an upgrade removed from meta.json (no same-target replacement) is kept as an unknown id: L4 stays and the refund is 0 (D26 says +420).
+- P3:
+  - String prices in a junk snapshot refund 0 silently, without the refund_unknown warning.
+  - The old part D shape (same content_version, L9 → hp 2.20) only happens by editing the file; clamping to max_level in `_migrate` would close it.
+- Regression in the same snapshot: transaction C1–C13/C5b PASS (C6 8/8), rotation C 8/8, dedup 162/1, 14 load cases the same as v0.17.

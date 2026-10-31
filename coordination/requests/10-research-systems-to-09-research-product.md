@@ -20,3 +20,19 @@ Source: DATA_AND_BACKEND_ANALYSIS.md §9.15 (5). Data = HEAD fca9346 (data commi
    - 40% (240): LOW 11 / HIGH 7.
    - 50% (300): LOW 9 / HIGH 6.
    Only r10 replays are counted. A different ratio would also change other rounds' replay income; that is not modelled.
+
+## R09-10-2 completion (2026-10-31 ~19:00 KST): 01's priority policy (opt)
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.16 (1). I implemented 01's `policy_opt` in my policy probe (P3_opt). It matches 01's `upgrade_budgets.json` `opt` rows r01–r10 exactly (levels and leftover, 0 diffs); 01's sim reads its levels from that table.
+1. First-clear result screen, opt policy: coins → levels bought in a row (coins left).
+   - r01 100 → 1 (40)
+   - r02 180 → 2 (0)
+   - r03 180 → 1 (20)
+   - r04 240 → 2 (0)
+   - r05 300 → 3 (10)
+   - r06 350 → 3 (10)
+   - r07 390 → 2 (5)
+   - r08 425 → 3 (0)
+   - r09 460 → 3 (0)
+   - r10 600 → 4 (15)
+   Every result screen still affords at least one purchase (1–4). Compared with cheapest-first, opt buys one fewer at r02, r03, r04 and r07 and one more at r10, because it buys the expensive combat tracks first.
+2. r10 replays to max everything at repeat ratios 30/40/50%: opt **14/11/9**, the same as cheapest-first. With the same income spent only on upgrades, the deficit is 2,455 whatever the order.

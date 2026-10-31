@@ -206,3 +206,23 @@ Full tables: DATA_AND_BACKEND_ANALYSIS.md §9.15. All runs exit 0; content integ
    - Siege still rarely changes hits against small enemies (L4 1/9, L5 2/9).
    Rerun the metric with: `python docs/research/systems/probes/effect_points_per_coin.py <probe_upgrade_effect output> --rev HEAD`.
 4. Still open from v0.22/v0.23: the A/B/AB refund-source decision (02's R5 question 1), no clawback, and the store-note rule.
+
+## v0.25 (~19:00 KST): ranged L5 efficiency inversion — two concrete fixes (your decision; I did not edit data)
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.16 (2). Each what-if changed meta.json only inside a throwaway snapshot and reran probe_upgrade_effect, plus integrity and economy flow for the combined fix.
+- Cause, per 100 coins, ranged L4 7.5 → L5 4.7 (−37%):
+  - Effect side: breakpoints 12 → 9, because defense breakpoints fall 6 → 3.
+  - Cost side: 160 → 190.
+  - Log share: effect 63%, cost 37%.
+  - Why the effect side drops: ranged hp is 70 + 10.5 per level, so 101.5 → 112 does not push four enemies' hits-to-kill to the next integer (r02 e_grunt, r10 e_grunt, r10 e_brute, r10 boss_overlord). Melee at the same costs gains a breakpoint at L5 (11 → 12), so it has no inversion.
+- Not possible by cost alone: costs must not decrease (integrity rule), so L5 ≥ 160. At 160 the ratio is 5.6, still inverted; removing the inversion would need L5 ≤ 120.
+- Rejected: atk_mult 0.15 → 0.20 makes it worse (L5 4.2).
+- **Option 1 (effect only): ranged `hp_mult` 0.15 → 0.18.**
+  - L5 gets 13 breakpoints → 6.8 vs L4 7.5 (−9%, the same gap as melee).
+  - Costs are unchanged: total 5,595; r10 replays to max are LOW 14/11/9 and HIGH 10/7/6 at 30/40/50%; upgrade_budgets.json is unchanged.
+  - Side effect: ranged hp +2.6…+7.5% at L2–L5 (L5 112 → 120.4). 0.20 gives no extra breakpoints over 0.18.
+- **Option 2 (removes the inversion): option 1 plus ranged L5 cost 190 → 160.**
+  - L5 8.1 > L4 7.5.
+  - Total 5,565 (−30). Replays are unchanged at 14/11/9 (10/7/6); the deficit drops only 2,455 → 2,425 (HIGH 1,675 → 1,645). Integrity ERROR 0.
+  - Cheapest-first now buys ranged L5 earlier, so upgrade_budgets.json low r10 and high r09/r10 change (3 diffs). You would regenerate it and rerun your sim.
+- The metric weighs every enemy row equally (ASSUME). Whether a player notices the inversion is not something I estimate.
+Also: I implemented your `policy_opt` (P3_opt); it matches your opt table r01–r10 exactly (0 diffs), and P1 matches `low` (0 diffs). Still open: the refund-source decision (A/B/AB). Note that 02's R5 now records prices automatically per save (B-like); see the 10→02 v0.25 note.

@@ -3,7 +3,7 @@
 A breakpoint ("체감 지점") = one (track, enemy, round) row where the hits-to-kill count changes at that level,
 counted separately for offense (ally hits to kill the enemy) and defense (enemy hits to kill the ally).
 Per 100 coins = points(L) / cost to reach L * 100. Every enemy row has the same weight (ASSUME metric).
-Usage: python effect_points_per_coin.py <probe_upgrade_effect output file> [--rev <git rev for meta.json costs>]
+Usage: python effect_points_per_coin.py <probe_upgrade_effect output file> [--rev <git rev for meta.json costs>] [--meta <meta.json file>]
 Static post-processing only; the hit counts themselves come from the Godot probe run.
 """
 import json, subprocess, sys
@@ -18,7 +18,11 @@ def main():
             rows = json.loads(line[len("UE breakpoints "):])
     if rows is None:
         sys.exit("no 'UE breakpoints' line in " + path)
-    meta = json.loads(subprocess.run(["git", "show", f"{rev}:data/meta.json"], capture_output=True, check=True).stdout)
+    if "--meta" in sys.argv:   # a what-if meta.json file (e.g. a patched snapshot copy) instead of git
+        meta = json.load(open(sys.argv[sys.argv.index("--meta") + 1], encoding="utf-8-sig"))
+        rev = "file:" + sys.argv[sys.argv.index("--meta") + 1]
+    else:
+        meta = json.loads(subprocess.run(["git", "show", f"{rev}:data/meta.json"], capture_output=True, check=True).stdout)
     costs = {u["id"]: u["costs"] for u in meta["upgrades"]}
     out = {}
     for tr in sorted({r["track"] for r in rows}):
