@@ -87,11 +87,18 @@ func run(q, tree) -> void:
 	var tile_w := floorf(((NARROW_SAFE.size.x - side * 2.0) - 6.0 * 4.0) / 5.0) - LABEL_PAD
 	for loc in locales:
 		var cut2 := []
+		var wrapped := []
 		for rid in rounds:
 			var txt := str(locales[loc].get(rounds[rid], rid))
-			var fit: Array = UiStyle.fit_label(txt, tile_w, UiStyle.FONT_S)
-			if str(fit[0]) != txt: cut2.append("'%s'→'%s'" % [txt, fit[0]])
-		q.check("TH-FIT-ROUND-" + loc.to_upper(), "%s: round names fit round-select tiles (%.0f px) at narrowest layout" % [loc, tile_w], cut2.is_empty(), "; ".join(cut2.slice(0, 10)))
+			# mirror the committed round tile: TouchButton.wrap_lines (2 since 5a2099d) via UiStyle.fit_lines
+			if (UiStyle as Script).get_script_method_list().any(func(m): return m.name == "fit_lines"):
+				var fl: Dictionary = UiStyle.fit_lines(txt, tile_w, UiStyle.FONT_S, 2)
+				if bool(fl.truncated): cut2.append("'%s'→%s" % [txt, Array(fl.lines)])
+				elif (fl.lines as PackedStringArray).size() > 1: wrapped.append(txt)
+			else:
+				var fit: Array = UiStyle.fit_label(txt, tile_w, UiStyle.FONT_S)
+				if str(fit[0]) != txt: cut2.append("'%s'→'%s'" % [txt, fit[0]])
+		q.check("TH-FIT-ROUND-" + loc.to_upper(), "%s: round names fit round-select tiles (%.0f px, up to 2 lines) at narrowest layout without ellipsis" % [loc, tile_w], cut2.is_empty(), "; ".join(cut2.slice(0, 10)), {"wrapped_to_2_lines": wrapped})
 	# ---- ally vs enemy colour separation
 	_colours(q, tree, content)
 

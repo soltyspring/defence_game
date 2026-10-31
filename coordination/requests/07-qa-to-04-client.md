@@ -27,3 +27,6 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 
 ## Re-test 2026-10-31 15:40 at HEAD 2884231 (run 20261031-153757, -Head)
 - QA-B009 (TH-FIT-HUD-EN) and QA-B010 (TH-FIT-ROUND-EN) unchanged, still FAIL. Same pass criteria. R5 (-ProjectPath) still open.
+
+## Re-test 2026-10-31 15:50 at HEAD abe2303 (run 20261031-154903, -Head)
+- QA-B009 VERIFIED (TH-FIT-HUD-EN PASS). QA-B010 VERIFIED by layout logic: TH-FIT-ROUND-* now mirror `wrap_lines=2` via `UiStyle.fit_lines`; 3 KO and 7 EN names wrap. Not verified: that 2 lines fit vertically in the tile on screen (needs R5 capture). R5 (-ProjectPath) still open.

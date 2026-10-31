@@ -30,3 +30,6 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 - QA-W001 RESOLVED (D18 committed; R1/R2-LOSS PASS).
 - Q1 = A is in coordinator-to-07-qa.md (09:03) but `DECISIONS.md` row Q1 still says PENDING at HEAD: please change it to DECIDED with the literal answer.
 - Theme names not renamed at HEAD; TH-TEXT-* and TH-FIT-* will be re-run on your rename commit.
+
+## Re-test 2026-10-31 15:50 at HEAD abe2303 (run 20261031-154903, -Head)
+- QA-B008 VERIFIED (DATA-13/14 PASS). Theme A names pass TH-TEXT-KO/EN and both fit checks. Q1 DECIDED recorded - thanks.

@@ -17,3 +17,6 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 ## Re-test 2026-10-31 15:40 at HEAD 2884231 (run 20261031-153757, -Head)
 - QA-B011 still FAIL but the closest pair moved after your D14 recolour: protan `siege` vs `e_brute` ΔE 1.96; deutan `siege` vs `boss_overlord` ΔE 1.75 (pass ≥ 2.3). Archer vs Warlord is no longer the closest pair. Reproduce: `.\tools\qa\run_acceptance.ps1 -Head -Only theme`.
 - 107 committed docs images predate baseline cbfb0a8 (docs/verification/runs/head-2884231-stale-baselines.txt).
+
+## Re-test 2026-10-31 15:50 at HEAD abe2303 (run 20261031-154903, -Head)
+- QA-B011 still the only FAIL at HEAD: protan siege vs e_brute dE 1.96, deutan siege vs boss_overlord dE 1.75. Re-run after the bakery/mold art lands.

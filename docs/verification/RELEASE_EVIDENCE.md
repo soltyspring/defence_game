@@ -1,6 +1,6 @@
 # Release evidence matrix (owner: 07-qa)
-Latest full run: **HEAD 2884231** (`-Head` clean snapshot, run 20261031-153757; Godot 4.7.2 headless, Windows desktop). Triage: [FAILURE_TRIAGE.md](FAILURE_TRIAGE.md). Theme guard: [THEME_CHANGE_CHECKS.md](THEME_CHANGE_CHECKS.md).
-Counts: PASS 137 · FAIL 6 · NOT_IMPLEMENTED 1 · NOT_TESTED 2 · BLOCKED 0; 06 services suites exit 0. Summary: [runs/head-2884231.md](runs/head-2884231.md). Hostile review: [HOSTILE_REVIEW.md](HOSTILE_REVIEW.md).
+Latest full run: **HEAD abe2303** (`-Head` clean snapshot, run 20261031-154903; Godot 4.7.2 headless, Windows desktop). Triage: [FAILURE_TRIAGE.md](FAILURE_TRIAGE.md). Theme guard: [THEME_CHANGE_CHECKS.md](THEME_CHANGE_CHECKS.md).
+Counts: PASS 143 · FAIL 2 · NOT_IMPLEMENTED 0 · NOT_TESTED 2 · BLOCKED 0; 06 services suites exit 0. Summary: [runs/head-abe2303.md](runs/head-abe2303.md). Hostile review: [HOSTILE_REVIEW.md](HOSTILE_REVIEW.md).
 
 **Scope warning:** desktop headless acceptance only. This is NOT Android release certification.
 `adb devices` at run time listed `emulator-5580` (an emulator, not a phone); no APK install or
@@ -23,14 +23,14 @@ on-device test has been done by 07-qa.
 | Save corruption / recovery / semantics | PASS (6/8) | SAVE-01..04, 07, 08; recovery notice on menu FLOW-24 |
 | Save type normalisation | PASS | SAVE-05, SAVE-06 (QA-B003 verified) |
 | Save fault tolerance (TP-01/02/06/13/14) | PASS | all 9 faults checks at e5bd4aa/5426645; QA-B004 P1 verified (fix 08ef082). Kill points rebuilt from file states, not yet via `Save._fault` |
-| Localised text for engine toasts | FAIL | DATA-13/14: 4 `toast.*` keys missing in data/text (QA-B008); FLOW-04B PASS |
-| Theme guard: label fit, names, colour separation | FAIL | TH-FIT-HUD-EN (QA-B009), TH-FIT-ROUND-EN (QA-B010), TH-COL-PROTAN/DEUTAN proxy (QA-B011); TH-TEXT-*, TH-FIT-*-KO, TH-COL-NORMAL/TRITAN PASS |
-| Visual baselines | STALE | 107 committed docs images predate cbfb0a8 (runs/head-2884231-stale-baselines.txt); no theme-era capture at HEAD yet |
+| Localised text for engine toasts | PASS | DATA-13/14, FLOW-04B (QA-B008 verified) |
+| Theme guard: label fit, names, colour separation | FAIL (proxy) | TH-TEXT-*, TH-FIT-HUD-*, TH-FIT-ROUND-* PASS with theme A names; TH-COL-PROTAN/DEUTAN FAIL (QA-B011) |
+| Visual baselines | STALE | 75 committed docs images predate 2b350c4 (runs/head-abe2303-stale-baselines.txt); no theme-era HEAD capture by 07 yet |
 | Image integration (atlases, P0 sprites/fx/biome/icons/bases, residency, release) | PASS | ART-01..11; resident battle pages ≤ 32 MiB estimate |
 | Audio assets | PASS | AUD-01 (31 file refs exist) |
 | Audio in game | PARTIAL | AUD-02 PASS at e9dfaa4 (`Audio` autoload registered). AUD-03 (cues fire on events, honour settings/pause) NOT_TESTED; nothing was listened to |
 | Monetization disabled (D9) | PASS | MON-01..03 (data flags off, no SDK singletons, services default `disabled`) |
-| Services wired | NOT_IMPLEMENTED | MON-04 (no `Services` autoload; consistent with D9) |
+| Services wired | PASS (static) | `Services` autoload now registered (MON-04 no longer reported); MON-03 mode=disabled PASS; disabled-state UI not exercised |
 | Android export preset / permissions | PASS (static) | PLAT-01/02 |
 | On-device Android (install, touch, lifecycle, safe area, perf, thermals) | NOT_TESTED | PLAT-03 |
 | Rendered text (Hangul tofu/clipping), colour-blind readability, visual frames | NOT_TESTED | needs 04 secondary-monitor visible-test launcher (requested) |
