@@ -41,6 +41,7 @@ func _initialize() -> void:
 	_group("backup_policy_values", test_backup_values)
 	_group("backup_policy_doc", test_backup_doc)
 	_group("backup_privacy_consistency", test_consistency)
+	_group("godot_uid_tracked", test_uid_tracked)
 	report.passes = passes
 	report.failures = Array(failures)
 	report.release_preset = release_preset
@@ -301,4 +302,48 @@ func test_consistency() -> bool:
 	else:
 		check(visible.contains("Google 계정 백업") and visible.contains("Google account backup"), "published page states the backup copy while backup is on")
 	check(doc().contains("**no contradiction with the current build (B0).**") != backup_on, "doc §5 verdict is for the current backup state")
+	return true
+
+## Godot 4.4+ writes a `.uid` beside every script; the engine docs say to commit them (UID
+## references break on other clones otherwise; see docs/services/GODOT_UID_AUDIT.md). Every 06
+## script must have its .uid tracked by git. Repo-wide untracked .uid files are reported only
+## (other owners commit their own).
+const UID_DIRS := ["res://src/services", "res://tests/services"]
+
+func _gd_files(dir: String, out: Array) -> void:
+	var d := DirAccess.open(dir)
+	if d == null:
+		return
+	for f in d.get_files():
+		if f.ends_with(".gd"):
+			out.append(dir.path_join(f))
+	for sub in d.get_directories():
+		_gd_files(dir.path_join(sub), out)
+
+func test_uid_tracked() -> bool:
+	var out: Array = []
+	var code := OS.execute("git", PackedStringArray(["-C", ProjectSettings.globalize_path("res://"), "ls-files", "--", "src/services", "tests/services"]), out, true)
+	if code != 0 or out.is_empty():
+		print("  godot_uid_tracked NOT_RUN (git unavailable, exit %d)" % code)
+		return true
+	var tracked := {}
+	for line in "\n".join(PackedStringArray(out)).split("\n"):
+		if line.strip_edges() != "":
+			tracked["res://" + line.strip_edges()] = true
+	var scripts: Array = []
+	for d in UID_DIRS:
+		_gd_files(d, scripts)
+	check(scripts.size() >= 40, "06 scripts found (%d)" % scripts.size())
+	for s in scripts:
+		if not tracked.has(s):
+			continue   # an untracked script (work in progress) has no committed uid yet
+		check(FileAccess.file_exists(s + ".uid"), "%s has a .uid file" % s)
+		check(tracked.has(s + ".uid"), "%s.uid is tracked by git" % s)
+	var st: Array = []
+	OS.execute("git", PackedStringArray(["-C", ProjectSettings.globalize_path("res://"), "status", "--porcelain", "--untracked-files=all"]), st, true)
+	var others := 0
+	for line in "\n".join(PackedStringArray(st)).split("\n"):
+		if line.begins_with("?? ") and line.ends_with(".uid") and not line.contains("services/"):
+			others += 1
+	print("  untracked .uid outside 06 paths: %d (reported to owners, not committed by 06)" % others)
 	return true

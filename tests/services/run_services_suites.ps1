@@ -9,7 +9,7 @@ $ErrorActionPreference = 'Continue'   # Godot writes warnings to stderr; 'Stop' 
 Set-Location (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent)
 $G = '.\tools\engine\Godot_v4.7.2-stable_win64_console.exe'
 if (-not (Test-Path $G)) { Write-Output "Godot console binary not found at $G"; exit 1 }
-$suites = @('test_services', 'test_services_m2', 'test_services_m3', 'test_services_listing', 'test_services_m8', 'test_services_m10', 'test_services_android', 'test_services_integration')
+$suites = @('test_services', 'test_services_m2', 'test_services_m3', 'test_services_listing', 'test_services_m8', 'test_services_m10', 'test_services_android', 'test_services_upgrade', 'test_services_integration')
 $worst = 0
 foreach ($s in $suites) {
   $extra = @()
