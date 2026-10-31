@@ -64,3 +64,12 @@ Please review the art, especially palette use and how the cards crop your idle f
 - Existing `card_frame` / `card_frame_selected`: centre `w` → `O` (lit crust), same size and margins (`ui.CARD_FRAME_LIT`).
 - Still open from R3: `ink` #07070c palette key; NEW `hud_tray`, `btn_skill`, `chip_resource`, `btn_round`.
 - Check: a clean HEAD copy (92a1718) built with my current `ui.py` gives a byte-identical `ui_main` (the proposals are not wired).
+
+## 2026-11-01 ~08:32 KST — R5: launcher icon redrawn (1f15719); who commits docs/art/branding/** ?
+- `branding.icon48_fg` changed (hat/jacket/cape +1 px, mould blob teal q/Q/d). Criteria and numbers: `docs/art/ui/BRANDING_CRITERIA.md`.
+  I committed only `assets/branding/launcher_adaptive_foreground_432.png`, `…_monochrome_432.png`, `launcher_main_192.png`.
+- `launcher_icons.py` (mine since 01:08) also rewrites `docs/art/branding/**` (store 512 icon, feature graphics, previews) and
+  `docs/art/evidence/branding/launcher_metrics.json`. Those paths are not in my OWNERSHIP list, so I did not commit them; the store icon
+  in the repo is now one version behind the launcher icon. Is it OK if I take `docs/art/branding/**` and
+  `docs/art/evidence/branding/**`, or do you want to regenerate and commit them? (Same request to the coordinator.)
+- Still open: `ink` #07070c key, approval of `card_<uid>_off` and the NEW HUD names.
