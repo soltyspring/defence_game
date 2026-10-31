@@ -1,7 +1,43 @@
 # 05-audio handoff
-Updated: 2026-10-31 ~20:xx (v3.4: shared hit cap A/B, tray-bell/whisk UI confirm, crumb-shell barrage)
+Updated: 2026-10-31 ~21:xx (v3.5: app lifecycle suspend/resume, settings persistence + zero output, phone-speaker check and fixes)
 Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all.
 
+## FIXED RULE — commit SHAs (after two mistakes: af491c2, 53883db)
+1. Never type a SHA before the push has printed it. Never fill in a SHA "for the next commit".
+2. Write SHAs only in a SEPARATE Publish-Task call, after the earlier calls have returned, by copying the `PUSHED <sha>` lines from their output.
+3. That SHA-record commit records only commits that already exist on origin (check with `git log origin/main`). It never records its own SHA; that one is reported in chat.
+
+## v3.5 (Codex review of 65502e8–53883db: release-facing sound problems)
+1. **App lifecycle** (src/audio/audio_manager.gd): APPLICATION_PAUSED/FOCUS_OUT now SUSPEND audio. Master is muted, every player is stream-paused, no new cue or music starts (a requested music change is kept and started on resume). RESUMED/FOCUS_IN continue in place; battle SFX stay paused until the player resumes the battle.
+   - New `tools/audio/lifecycle_probe.gd` + `run_godot_checks.ps1 -Lifecycle` → 27/27 checks PASS:
+     - Music held 13.842 → 13.854 s over 2 s in background, then continued (+0.93 s after 1 s).
+     - A boss warning cut by the background resumed from 0.017 s.
+     - Pause screen: 0 SFX leaked, UI taps still sound.
+     - After unpausing, combat sounds return. The FOCUS_OUT/IN cycle passes too.
+   - Baseline: the same probe against the pre-v3.5 manager FAILED 6 checks (music ran on 1.86 s silently during 2 s background; UI cues could start in background; no suspended state).
+   - The notifications are simulated with propagate_notification; real Android audio focus/driver behaviour is NOT verified.
+2. **Settings** (02 Save + 04 UI, read-only here): a real second process reads the save left by the first. music 0.3 → restored 0.3, Music bus −20.92 dB; sfx 0 → SFX and UI muted. music 0 + sfx 0 → Master output digital silence (peak 0 over 172,032 samples while 6 cues were triggered).
+   - No defect found, so no new request. 04 C1 (sliders) is still open: the UI offers only on/off.
+3. **Phone-speaker check** (`tools/audio/phone_check.py` → docs/audio/PHONE_SPEAKER_CHECK.md): 300 Hz high-pass + −6 dB, cues placed every 1 s over a real recorded battle background, SNR on each cue's loud frames.
+   - Before (same background): death_ally masked 22.8 %, hit_base 17.5 %, hit_mold and death_enemy 10.5 %.
+   - Fixes:
+     - death_ally −12 → −8.5 dB
+     - death_enemy −12 → −11 dB
+     - hit_mold −7 → −6 dB
+     - hit_base −9 → −4.5 dB, plus a brighter, longer wood crack and a smaller knock (only hit_base.wav changed; total audio size unchanged, +0 B)
+   - After (SAME background): worst masked 10.5 % (death_ally).
+   - On a NEW seed-11 recording made with the new levels: worst 13.0 % (death_ally); death_enemy and hit_base 11.1 %.
+   - Faction hits classified 100 % correctly full band and with the phone filter (separation 11.25).
+   - Whole-mix check: buried 4.7 %, peak −1.74 dBFS, 0 clipped, limiter never engaged.
+4. 06 asked for confirmation for its licence screen: replied in `05-audio-to-06-services.md` (all audio original, no third-party content).
+Validation:
+- `validate.py --determinism` PASS.
+- `run_godot_checks.ps1 -Integration -BattleSeconds 80 -Record -ProbeArgs "--probe-seed=11" -Lifecycle` → PASS:
+  - hit_mold 11 / bread 23 / fallback 0; deploy 14 = 14, skill 7 = 7, wave_cleared 1 = 1, upgrade 2 = 2, hero 1 = 1/1
+  - 0 dups; audio-class exit leaks 0; lifecycle 27/27, settings 3/3 + 5/5
+- No own Godot left running.
+Not verified: human listening, Android device (lifecycle on a real phone, speaker loudness).
+Note: the B36 blind A/B files (v3.4) were recorded before these level changes; they still compare the cap fairly because both used the same levels.
 ## v3.4 (Codex review of 91eeb25–f41fd12: "86 hits/min may be noise density")
 1. **Shared hit cap**: cue groups in audio_manager.gd (manifest `groups`, cue `group`, stat `dropped_group`); group `hit` = hit_bread/hit_mold/hit_melee/hit_arrow.
    - Same-seed A/B (probe `seed(11)`, r02, 60 s; engine hit events 113–117 and kills 13–14 in every run):
