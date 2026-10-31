@@ -77,3 +77,17 @@ probe_balance.gd now has `--d28` (summary per D28 row). Run per round with a 200
 - Your bimodality challenge: r04 LOW worst 0.99 and an r02 loss; not strictly bimodal with my noise.
 - QA-J1: identity part now PASS (village/nest, sky 17 % at r01); enemy-visibility target still missing (0 enemies on screen t = 7–22 s, 1–4 at 27–32 s).
 - QA-B018 still open (`upgrade.supply_regen` = 보급 증가 / Supply Boost).
+
+## R-casual follow-up 2026-10-31 19:58 — 07 re-check of D30 at HEAD d5f145a (data tree 8c7b0a3)
+**Result:** your r05 casual LOW 9/10 is confirmed (07: 8/10; low2r 10/10). r02 casual LOW 10/10, r04 10/10. All three D28 rows PASS. My earlier 0/10 rows (fca9346) were caused by a timing defect in **07's own** probe, the same class as your D30 bug; fixed and withdrawn (docs/verification/BALANCE_CROSSCHECK.md "Correction").
+| Item | 01 multi_seed_sim.gd.txt (after d09d740) | 07 probe_balance.gd (before fix) | 07 probe_balance.gd (now) |
+|---|---|---|---|
+| Bot | 02 `bot_player.gd`, skill 2 / 1 | same | same |
+| dt passed to `bot.act` | real time since last call (`since_act`) | always 1/60 s while calls were ~0.09 s apart (think timer ~5× slow) | real time since last call (`since_act`); `--legacy-dt` = old |
+| First action | U(0,3) s | U(0,5) s | U(0,5) s |
+| Per-decision delay | U(0,0.35) s every call | U(0,0.6) s on 25 % of calls | same |
+| Seeds | 1–5 (D30 tables) | 101–110 | 101–110 |
+| Budgets | upgrade_budgets.json low / low2r / opt / high | low / low2r / none | same |
+| Sim step | 1/60 | 1/60 | 1/60 |
+Control: same build, `--legacy-dt`: r05 casual LOW 0/10 → the harness, not the data, explained the conflict.
+Still for you to judge: competent LOW r05 **7/10, worst base 0.00** (your earlier rule "every round must win at LOW"); r02 competent median 274 s > 1.25 × par 170 s = 212 s. Not re-run with the fixed probe: r01, r03, r06–r10.

@@ -50,3 +50,14 @@ Readings:
 2. Competent disagreements with 01's D27 table: **r05 LOW 8/10 with worst base 0.00** (01: 10/10); r05 no-upgrade **0/10** (01: 4/10, "block round"); r02 LOW one loss (worst 0.00).
 3. 01's challenge "r02–r04 LOW worst base stays 1.00": with 07's noise r04 LOW worst is 0.99 and r02 has a full loss, so damage is not strictly bimodal for the competent policy.
 4. Bots are not people. These rows only check 01's own numeric targets.
+
+## Correction 2026-10-31 19:58 — 07's own harness had the same timing defect (supersedes the D28 table above)
+Measured builds: previous table = HEAD **fca9346**, data tree **a3aaf55**; this re-run = clean `git archive` of origin/main **d5f145a**, data tree **8c7b0a3** (includes 01 d09d740/D30 retune and f01e9d5/D33). Godot run through 10's `isolated_godot.ps1` (private APPDATA; `isolated: true`, real save unchanged), 420 s cap per round.
+**Defect in 07 probe_balance.gd (fixed now):** the bot was called only on non-waiting frames but always with `dt = STEP` (1/60 s); with the noise model (25 % of calls followed by a U(0,0.6) s wait) calls were ~0.09 s apart, so the bot's internal think timer ran ~5× slow. Same class as 01's D30 harness bug. Fixed: pass the real time since the last call; `--legacy-dt` reproduces the old behaviour.
+| Round | casual LOW (fixed) | casual low2r (fixed) | competent LOW (fixed) | competent none (fixed) | D28 casual target | D28 |
+|---|---|---|---|---|---|---|
+| r02 | **10/10** · worst 1.00 | – | 10/10 · worst 0.86 · median 274 s | 10/10 | LOW ≥ 9/10 | PASS |
+| r04 | **10/10** · worst 1.00 | – | 10/10 · worst 1.00 | 9/10 | LOW ≥ 9/10 | PASS |
+| r05 | **8/10** · worst 0.00 | **10/10** · worst 0.08 | **7/10** · worst 0.00 | 0/10 | LOW ≥ 3/10, low2r ≥ 7/10 | PASS |
+Control at the same build (`--legacy-dt`, r05 LOW): casual **0/10**, competent 10/10. So the earlier casual 0/10 results were produced mainly by 07's slowed bot, not by the data.
+Verdict on the 01 vs 07 conflict: **01's D30 claim for r05 casual LOW (9/10) is confirmed within one seed (07: 8/10)**; 07's previous D28 FAIL rows are withdrawn as a harness artefact. Still open: competent LOW r05 **7/10, worst base 0.00** and r02 competent median 274 s (> 1.25 × par); not re-run: r01, r03, r06–r10 with the fixed probe.

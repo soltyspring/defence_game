@@ -18,12 +18,14 @@ func _initialize() -> void:
 	var seeds := 10
 	var budgets := ["low", "none"]
 	var d28 := false
+	var legacy_dt := false
 	var results := {}
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--rounds="): rounds = Array(a.get_slice("=", 1).split(","))
 		if a.begins_with("--seeds="): seeds = int(a.get_slice("=", 1))
 		if a.begins_with("--budgets="): budgets = Array(a.get_slice("=", 1).split(","))
 		if a == "--d28": d28 = true
+		if a == "--legacy-dt": legacy_dt = true   # reproduce the pre-fix (slowed bot) numbers
 	var bud = JSON.parse_string(FileAccess.get_file_as_string("res://docs/design/balance/upgrade_budgets.json"))
 	var c = ContentS.new()
 	c.load_all("res://data")
@@ -42,10 +44,15 @@ func _initialize() -> void:
 					var bot = BotS.new(pol, sd)
 					var wait := rng.randf_range(0.0, 5.0)
 					var min_ratio := 1.0
+					var since_act := 0.0
 					while not sim.ended and sim.t < 900.0:
 						wait -= STEP
+						since_act += STEP
 						if wait <= 0.0:
-							bot.act(sim, STEP)
+							# D30-class fix (2026-10-31 20:xx): pass the real time since the last call. Before this, 07 passed
+							# STEP although calls were ~0.09 s apart on average, so the bot's think timer ran ~5x slow.
+							bot.act(sim, STEP if legacy_dt else since_act)
+							since_act = 0.0
 							if rng.randf() < 0.25: wait = rng.randf_range(0.0, 0.6)
 						sim.step(STEP)
 						min_ratio = minf(min_ratio, sim.player_base.hp / sim.player_base.hp_max)
