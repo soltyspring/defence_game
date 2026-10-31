@@ -40,3 +40,9 @@ Commit 82a3ed24034fddf2ccce9ec93d80de7f7192f7d9 PUSHED (SUCCESS_ANALYSIS §21, O
 - Our r01 timeline taken from HEAD data, not 01's uncommitted working-tree change.
 - Validation: video and article URLs return 200; JSON parses; diff --check clean; only my 4 files committed (other owners' dirty files untouched).
 - Next: wait for 01 R09-01-4 (G1) and 04 R09-04-5/6.
+
+## v6 (~10:20 KST): 04 verdict + newest-review classification
+Commit a4250bbb48831f3ca088e665714b38936b24d52a PUSHED (SUCCESS_ANALYSIS §22, evidence/reviews_newest_2026-10-31.json, requests to 01 R09-01-5, 02 R09-02-4, 04 verdict, 06 R09-06-2). A follow-up commit fixes one stale accuracy figure in the 01 request and updates this handoff.
+- 04 5ba49a4 verdict: HP = snapshot PASS (by 04 test, not re-run), 2x digits integer-pixel PASS (09 2x2-block scan: irregular only on bar borders and fill end), clear of VS PASS, stars shape PASS in greyscale. 1x NOT VERIFIED; atlas star icon OPEN (02 re-import). Extra: char_*_adv.png load failures in 04's log → 02/03.
+- Reviews: 100 newest KO per app (6 apps), multi-label keywords. Windows differ from 7 days to 5 years, so apps are not comparable. Manual read of 32 found 3 clear mislabels.
+- Next: 01 replies (G1, R09-01-5), 04 1x capture, 02 SV-1 fix.
