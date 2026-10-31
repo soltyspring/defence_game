@@ -79,12 +79,33 @@ func _apply_pixel_scale() -> void:
 
 var pixel_scale := 1
 
+## Desktop window title = the in-game title `ui.title` in the UI's current locale (04 UiText, data/text/<locale>.json).
+## `application/config/name` stays "Lane Defence" because renaming it moves the desktop user:// folder (Godot docs).
+## No effect on the Android launcher name: that comes from config/name_localized + export package/name at export time,
+## and window_set_title only changes the running window (no title bar on Android).
+func _apply_window_title() -> void:
+	if DisplayServer.get_name() == "headless":
+		return
+	var title := ""
+	var ui_text = load("res://src/ui/ui_text.gd") if ResourceLoader.exists("res://src/ui/ui_text.gd") else null
+	if ui_text and ui_text.has_method("t"):
+		title = str(ui_text.t("ui.title", ""))
+	if title == "":
+		title = str(ProjectSettings.get_setting("application/config/name_localized", {}).get("en", ""))
+	if title != "":
+		# Root Window.title owns the native title in Godot 4 (a direct DisplayServer call is overwritten by it).
+		get_tree().root.title = title
+	window_title = title
+
+var window_title := ""
+
 ## Called by scenes/gameplay/main.tscn once its World and UI nodes exist.
 func boot(p_main: Node, p_world: Node2D, p_ui: CanvasLayer) -> void:
 	main = p_main
 	world = p_world
 	ui_layer = p_ui
 	_apply_pixel_scale()
+	_apply_window_title()
 	if not get_tree().root.size_changed.is_connected(_apply_pixel_scale):
 		get_tree().root.size_changed.connect(_apply_pixel_scale)
 	Perf.set_fps_cap(int(Save.progress.settings.get("fps_cap", 60)))
@@ -107,8 +128,8 @@ func boot(p_main: Node, p_world: Node2D, p_ui: CanvasLayer) -> void:
 		start_round(direct, true)
 	else:
 		show_screen(&"menu")
-	print("[App] boot ok platform=%s renderer=%s view=%s window=%s screen=%s ui_source=%s atlas=%s save_recovered=%s" % [OS.get_name(),
-		RenderingServer.get_video_adapter_name(), str(get_viewport().get_visible_rect().size), str(DisplayServer.window_get_size()), str(screen), JSON.stringify(ui_source), JSON.stringify(Atlas.texture_report()), Save.recovered])
+	print("[App] boot ok platform=%s renderer=%s view=%s window=%s title=%s screen=%s ui_source=%s atlas=%s save_recovered=%s" % [OS.get_name(),
+		RenderingServer.get_video_adapter_name(), str(get_viewport().get_visible_rect().size), str(DisplayServer.window_get_size()), window_title, str(screen), JSON.stringify(ui_source), JSON.stringify(Atlas.texture_report()), Save.recovered])
 
 func _process(delta: float) -> void:
 	_clock += delta

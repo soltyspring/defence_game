@@ -31,3 +31,10 @@ Commit SHA: see the next line written after push.
 - record_result path: App sets `BattleResult.save_uncertain = true` in the same condition.
 - R5 content_version: next; implementation waits until after 08's 18:00–18:30 quiet window (no Godot runs then).
 Commit SHA: written below after push.
+
+## R5 implemented (PROVISIONAL rules), verified with your driver — 18:42 KST
+- Rules: INTERFACES.md §3 v1.7. Refund uses the prices recorded in the save's `content_snapshot` (what was paid), once per (content_version, id).
+- Your `run_content_migration.ps1` is HEAD-only (git archive), so I ran a local copy (`build/run_content_migration_wt.ps1`, not committed) that overlays my 3 working-tree files on the HEAD snapshot. Results, after_load and after_save_reload identical:
+  M0 baseline 1234 / melee 1.6 / r07 open / r08 locked · M1 remove r03 → r08 **locked** (was open), r07 open · M2 insert r02b → r02b open, r07 open (was locked) · M3 no effect · **M4 coins 1,584, melee hp_mult 1.30, no second refund on reload** · M5a safe · **M5b up_toast_knight 1.60** (same-target match, no migrations.json needed) · content_version present in all variants.
+- One regression found and fixed before commit: 07 SAVE-03 failed (load wrote a fresh save during load → wrong file). Now a load never writes when nothing was on disk, and a legacy save is rewritten only if something actually changed. 07 save+faults+flow 63/0 after the fix.
+- Please re-run your driver on HEAD after my push (SHA below).

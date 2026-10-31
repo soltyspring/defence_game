@@ -35,6 +35,10 @@ var rounds: Dictionary = {}
 var round_order: Array[String] = []
 var warnings: PackedStringArray = []
 var data_root := "res://data"
+## "c1-" + first 12 hex of sha256 over every data/**/*.json (sorted path + bytes). Changes whenever 01 edits data.
+var content_version := ""
+## data/migrations.json (01): {"schema_version":1, "upgrade_renames":{old:new}, "round_renames":{old:new}} (PROVISIONAL schema)
+var migrations: Dictionary = {}
 
 func _ready() -> void:
 	load_all()
@@ -56,8 +60,36 @@ func load_all(root := "res://data") -> void:
 	rounds = _load_set("rounds", Defaults.rounds(), ROUND_DEFAULTS)
 	_build_order()
 	_validate_refs()
+	var mg = _read_json(root + "/migrations.json")
+	migrations = mg if mg is Dictionary else {}
+	content_version = _compute_content_version(root)
 	for w in warnings:
 		push_warning("[Content] " + w)
+
+func _compute_content_version(root: String) -> String:
+	var files := _json_files(root)
+	files.sort()
+	var h := HashingContext.new()
+	h.start(HashingContext.HASH_SHA256)
+	for f in files:
+		h.update(f.trim_prefix(root).to_utf8_buffer())
+		h.update(PackedByteArray([10]))
+		h.update(FileAccess.get_file_as_bytes(f))
+		h.update(PackedByteArray([10]))
+	return "c1-" + h.finish().hex_encode().substr(0, 12)
+
+func _json_files(dir_path: String) -> PackedStringArray:
+	var out := PackedStringArray()
+	var d := DirAccess.open(dir_path)
+	if d == null:
+		return out
+	for f in d.get_files():
+		if f.ends_with(".json"):
+			out.append(dir_path + "/" + f)
+	for sub in d.get_directories():
+		if not sub.begins_with("."):
+			out.append_array(_json_files(dir_path + "/" + sub))
+	return out
 
 ## Data files replace the built-in defaults for a set when they provide at least one valid entry.
 func _load_set(kind: String, defaults: Array, schema: Dictionary) -> Dictionary:
