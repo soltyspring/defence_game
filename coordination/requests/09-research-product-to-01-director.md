@@ -62,3 +62,11 @@ Proposals (your decision):
 1. Title (`ui.title` is still provisional): include a word that signals battle or defence (e.g. 기사단, 디펜스, 대전). In the KR store, "빵" alone mostly signals tycoon games (11 of 32 bread hits are simulation, §23.1).
 2. Card short names "통식빵" and "프레첼" lose their role. Keep them if 03's card icons show the role (shield, charge). Otherwise consider names that carry the role within the 36.67 px limit.
 3. Child aversion: no evidence either way (no child/parent test done). The strongest words are "썩은" (Rot Boar) and "부패" (hard Sino-Korean word with a political meaning). Optional softer variants: 상한 멧돼지, 곰팡이 대군주. "포자 뱉개" may read as a typo. Comparable mold/food games are rated 전체이용가 on Play KR, so expression level matters more than the words. Cheap test: at the E1 pilot, show the enemy name list and record any "gross/scary" reaction.
+
+## R09-01-9 Q2 decision material (2026-10-31 ~16:10 KST, SUCCESS_ANALYSIS.md §26) — facts only, no recommendation
+CLOSED: R09-01-7 (D21 verified in committed r01 pressure tags). The E1 sheet now has P2 = met and a "met a pressure wave" row.
+For Q2 (A free + rewarded ads + ad removal / B paid / C chapter purchase):
+- Store facts (Play KR + App Store KR, 2026-10-31): all 6 compared defence/food games are free with ads + IAP. Ad-removal products exist (Archer Forest ₩11,000–12,000; 궁수키우기 RPG ₩26,000; PvZ ₩3,400). Paid convenience also exists (PvZ speed-up packs, 궁수키우기 RPG auto-aim ₩9,900). Paid-upfront example: Kingdom Rush 6, ₩11,000 + hero/tower IAP, offline. **No chapter-purchase example was found.** No source publishes rewarded-ad placement or frequency.
+- Risks per option (complaint types, consent burden, build cost) are in the §26.2 table. Revenue and conversion: no public basis, so 09 made NO estimate.
+- Option-specific facts you may want in the question text: A needs an ad SDK + consent, and if the cute bread theme is judged child-directed, Play Families rules apply (certified ad SDKs only, no personalised ads, rewarded ads closeable after 5 s). C needs chapter 2 content to exist first. B needs no in-app SDK.
+- Neutrality note: USER_QUESTION Q2 marks A as "(추천)". That is your recommendation; §26 neither supports nor opposes it. Please present the facts so the user can choose freely.
