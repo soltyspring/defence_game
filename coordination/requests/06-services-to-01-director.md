@@ -36,3 +36,6 @@ For U6 (purchase verification), 06 prepared: docs/services/NO_SERVER_MINIMUM.md 
 
 # Update M10 (2026-10-31) — QUEUED, data field for later
 Consumable products in `data/meta.json` `iap_catalog.products` may carry `max_quantity` (int, default 1 = multi-quantity off). Purchases above it are refused and refunded by Play. Only relevant once a catalog exists (Q4).
+
+# Update M11 (2026-10-31) — QUEUED: Q2 cost per option
+docs/services/MONETIZATION_OPTIONS_WORK.md compares A (rewarded ads + remove-ads purchase), B (paid app), C (chapter purchases): new 06 code, reused code, open design decisions, user prerequisites, permissions, Data safety/privacy/rating changes, risks, relative 06 effort (A L, B S, C M) and test scope. Facts you may want in the Q2 question: B keeps "no data collected" and needs no ad/billing work; C needs chapter 2 content to exist; A has an open contradiction to settle first (what "remove ads" removes when every ad is opt-in rewarded). Not a recommendation of a model. Please keep it one question at a time.
