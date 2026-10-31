@@ -1,6 +1,7 @@
 extends RefCounted
 ## Main-menu title: 03 logo frame when available, else the localized ui.title text. Owner: 04-client.
-## User Q3 (16:19 KST): working title "빵집 기사단: 곰팡이 디펜스". Final store name only after a
+## User Q3 (16:19 KST): working title "빵집 기사단: 곰팡이 디펜스"; working English title "Bakery Knights:
+## Mold Defense" (English counterpart of Q3, same as 06 store copy). Final store name only after a
 ## human KIPRIS check (classes 9/41), so this stays a WORKING title. Text comes from data/text `ui.title`
 ## (01). The old provisional values ("레인 디펜스"/"Lane Defence") are treated as stale until 01 updates
 ## the key (04→01 R7). Then the UI fallback below is used.

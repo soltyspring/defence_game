@@ -134,8 +134,9 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 	base_labels.player = _hp_text(pb, half - 8)
 	base_labels.enemy = _hp_text(eb, half - 8)
 	var cy := y + h / 2
-	# solid backing plate under the digits: the enemy stripes broke glyph shapes (an "8" read as "3"
-	# in the 16:56 CVD capture); same plate on both bars so only the bar fill differs
+	# solid backing plate under the digits so the enemy stripes never run through glyph strokes; same
+	# plate on both bars so only the bar fill differs. (Correction: the "8 read as 3" given as the reason
+	# in commit 5eab876 was wrong — r05 enemy base HP really is 1300 in data, c15e43a.)
 	var pw := UiStyle.number_width(base_labels.player, UiStyle.NUM_S)
 	var ew0 := UiStyle.number_width(base_labels.enemy, UiStyle.NUM_S)
 	var plate := Color(0.05, 0.05, 0.08, 0.78)
