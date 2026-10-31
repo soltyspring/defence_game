@@ -8,7 +8,7 @@ Status: COMPLETE except the emulator install check.
 - Old 06 files in the real user folder were left untouched; asked 10/coordinator.
 - Q2 DEFERRED. Nothing published.
 Current task: none. Next: see handoff.
-Commits: 29d31be19fd9a2fe701f2bfbc8ec36e7aaccbc0e [Test] PUSHED; docs in the next [Docs].
+Commits: 29d31be19fd9a2fe701f2bfbc8ec36e7aaccbc0e [Test], e78c7900f2df63b4bf1ef434a6f293148a6277e5 [Docs] PUSHED.
 Quota: ~0.5% (new account).
 Previous: a386b15 / 5c0ced7 (AAB rerun, size breakdown).
 --- History (older entries, not current) ---

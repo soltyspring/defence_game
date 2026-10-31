@@ -7,7 +7,7 @@ Updated: 2026-10-31 ~23:08 KST (resumed after the 97% stop at 20:27; new account
 | What | Commit |
 |---|---|
 | Isolation: `tests/services/svc06_isolation.ps1`, used by `run_services_suites.ps1`, `run_services_on_head.ps1` and `try_debug_aab.ps1`. Private APPDATA; real save hashed before/after; proof line `SVC06_ISOLATION`; no proof → OVERALL 1 | 29d31be19fd9a2fe701f2bfbc8ec36e7aaccbc0e |
-| Docs: PLAY_TECH §8 (AAB rerun results), requests 02/10, this handoff and status | see status file (next [Docs] commit) |
+| Docs: PLAY_TECH §8 (AAB rerun results), requests 02/10, this handoff and status | e78c7900f2df63b4bf1ef434a6f293148a6277e5 |
 ## Validation (actual)
 - `pwsh -NoProfile -File tests/services/run_services_suites.ps1`, 23:00:34–23:01:04, shared tree, 4 other Godot processes:
   - 502/0, 130/0, 161/0, listing 1831/0, m8 26/0, m10 81/0
