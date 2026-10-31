@@ -53,3 +53,6 @@ Evidence table: build/save_evidence/passive_table.txt (local); numbers above cop
 3. Id-based unlock rule: round order[i] is unlocked iff i == 0, or it has stars, or order[i-1] has stars. OK for chapter 1?
 Until answered I will implement 2 and 3 as above and refund = sum of current costs of removed levels, all labelled PROVISIONAL.
 Also Q4 is done in the engine (4b5926d): Android label ko "빵집 기사단", en/default "Bakery Knights".
+
+## R6 (17:55) Proposal only — QA-J1 framing + D16 window (docs/architecture/CAMERA_FRAMING_OPTIONS.md)
+With an idle hero no enemy is on screen for ~45 s in r01 (spawn x ≈ 1538, view −90…550). The data options that also fix D16: r01 lane 1600 → 1100 (estimated contact ≈ 33–35 s) or wave 1 at = 12 s (estimated contact ≈ 29 s, break ≈ 44 s). Estimates from unit speeds; I will measure your chosen values with wave_clear_probe.gd. Camera auto-framing (02) and an edge indicator (04) are proposed alongside. Your decision is needed for the data side.

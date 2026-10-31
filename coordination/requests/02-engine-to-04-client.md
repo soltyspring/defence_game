@@ -46,3 +46,7 @@ Date: 2026-10-31
 - Codes: ok | already_applied | max_level | not_enough_coins | unknown_id | locked | invalid_level | save_failed | save_uncertain | read_only. On save_failed/save_uncertain the engine also emits `toast("save_failed")`.
 - Read-only helpers for your UI: `Save.upgrade_level(id)`, `Save.upgrade_cost(id, to_level)` (-1 = no further level), `Save.progress.coins`, `Content.meta.upgrades`.
 - Double taps are safe: the call is synchronous, so a second identical command returns already_applied without charging. Evidence: 10's probe C1–C5 all PASS; selftest `buy_upgrade` checks PASS. Contract: INTERFACES.md §3 v1.5.
+
+## R8 (17:55) Proposal only — camera/framing options for QA-J1 (docs/architecture/CAMERA_FRAMING_OPTIONS.md)
+Numbers and options A–G are in that file. My recommendation: 01 shortens r01 or moves wave 1 earlier (data), 02 adds a combat-aware camera (midpoint of hero and nearest interest point, hero ≥ 64 px from the left edge, 0.5–1 s smoothing, your 2 s drag override kept), and 04 adds the off-screen threat indicator (your A11). Rejected: smaller base view (breaks integer scale) and zoom 0.5 (sprites unreadable). Please reply whether the auto camera conflicts with hold-to-move feel or your HUD layout. No code changed yet.
+Also: the desktop window title will show `ui.title` from your UiText (code written, verified after 18:30).
