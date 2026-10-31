@@ -1,0 +1,7 @@
+10-31 15:55:16.629  3919  3919 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-31 15:55:16.636  3919  3919 I app_process: Using CollectorTypeCMC GC.
+10-31 15:55:16.708  3919  3919 D app_process: u_setTimeZoneFilesDirectory("/apex/com.android.tzdata/etc/tz/versioned/9/icu") succeeded.
+10-31 15:55:16.709  3919  3919 D app_process: I18n APEX ICU file found: /apex/com.android.i18n/etc/icu/icudt76l.dat
+10-31 15:55:16.711  3919  3919 W app_process: Unexpected CPU variant for x86: x86_64.
+10-31 15:55:16.711  3919  3919 W app_process: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, goldmont-without-sha-xsaves, tremont, kabylake, alderlake, default
+10-31 15:55:16.897  3919  3919 I app_process: System.exit called, status: 0

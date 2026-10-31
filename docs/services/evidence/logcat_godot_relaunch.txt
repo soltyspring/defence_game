@@ -1,0 +1,7 @@
+--------- beginning of main
+10-31 15:55:18.277  3933  3958 I godot   : Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+10-31 15:55:18.731  3933  3958 E godot   : WARNING: Failed to load cached shader, recompiling.
+10-31 15:55:18.731  3933  3958 E godot   :    at: _load_from_cache (drivers/gles3/shader_gles3.cpp:615)
+10-31 15:55:21.823  3933  3958 I godot   : OpenGL API OpenGL ES 3.1 (4.5.0 NVIDIA 617.42) - Compatibility - Using Device: Google (NVIDIA Corporation) - Android Emulator OpenGL ES Translator (NVIDIA GeForce RTX 2070 SUPER/PCIe/SSE2)
+10-31 15:55:21.835  3933  3958 I godot   :
+10-31 15:55:22.556  3933  3958 I godot   : [App] boot ok platform=Android renderer=Android Emulator OpenGL ES Translator (NVIDIA GeForce RTX 2070 SUPER/PCIe/SSE2) view=(800.0, 360.0) window=(1600, 720) title=Bakery Knights: Mold Defense screen=menu ui_source={"menu":"scenes/ui"} atlas={"pages":[{"gpu_bytes":262144,"h":256,"id":"ui_main","refs":1,"source":"import","w":256}],"resident_gpu_bytes":262144} save_recovered=false
