@@ -1,5 +1,10 @@
 # 06-services handoff
-Updated: 2026-10-31 ~18:46 KST (clean-HEAD full run, Q2 repo scan, launcher icon placeholder; store graphics before)
+Updated: 2026-10-31 ~19:08 KST (test AAB blocked by JDK 25; Data safety evidence; backup candidate; clean-HEAD run before)
+## Test AAB attempt (18:51–19:02)
+- **Script:** `pwsh -NoProfile -File tests/services/try_debug_aab.ps1 [-TimeoutSec 600]`. Scratch git-archive copy; it flips the Gradle/AAB options and unpacks android_source.zip there only, then exports with `--export-debug` and the editor's debug keystore.
+- **Blocker:** editor setting `export/android/java_sdk_path` = JDK 25.0.2. Gradle 8.11.1 needs Java ≤ 23. Once a JDK 17 exists and the setting points at it, rerun the script; on success, check the AAB with bundletool (not installed): `build-apks --mode=universal` and per-device APKs, `dump config` PAGE_ALIGNMENT_16K, aapt2 badging target 36 / labels, `get-size total`.
+- **Cleanup:** the script leaves %TEMP%\svc06_aab_<sha> and possibly a Gradle daemon. Delete them afterwards, as done this time.
+- **Quota:** ~82% at 19:05.
 ## Clean-HEAD run (18:39–18:46)
 - **Command:** `pwsh -NoProfile -File tests/services/run_services_on_head.ps1 [-Ref <sha>] [-Keep]`. It runs a git archive snapshot with its own `--import`, copies the APKs from build/, and runs the same 9 suites. Use it whenever other roles have uncommitted edits in the shared tree (at 18:39 src/core/app.gd, content.gd, save.gd and audio_event_bridge.gd were modified by others).
 - **Snapshot limits:** godot_uid_tracked reports NOT_RUN there (no .git), so run test_services_android in the shared tree for it.
@@ -58,6 +63,7 @@ src/services/**, docs/services/**, tests/services/**, coordination/status/06-ser
 | Label fmt | 4b5926d read only; listing lint cites export settings; android launcher_label VERIFIED_DEBUG_ONLY vs release_label (build/release only); config/name "Lane Defence" impact table (PC title, Project Manager, fallback menu) + options to 02/04 | 31dc7b0b0226dbad1ecebdc18eb2e5f8cc4670fb, fa5661b58269ec54f13b28f8973f5877f953151f |
 | Graphics | STORE_GRAPHICS.md (Play icon/feature/screenshot/video rules + adaptive icon guide), check_store_graphics.py (Python), 09 order vs rules (#3 반죽 conflict), requests 03/04/02/09 | a68bf517ce3b93c375bd7ff8337cdc7175dd88a7, a143134be5ba6c2fbe2082bcd1f8f09c4ec23de2 |
 | HEAD run | run_services_on_head.ps1 (clean snapshot runner); q2_repo_scan group (repo-wide Q2 deferred scan); launcher icon placeholder confirmed in both APKs; exact launcher_icons keys to 02 | 643cfa05f879ff76fffb96c909a1de4309fa3970 (+ next [Docs]) |
+| AAB try | try_debug_aab.ps1 (scratch Gradle/AAB export) → blocked by JDK 25 vs Gradle 8.11.1; DATA_SAFETY §2c code-evidence lines; B0–B3 question candidate to 01; requests 02/04 | 71325251423518de06b657dc3c250336997d01db (+ next [Docs]) |
 | Checkpoint | this handoff + status | see status file / `git log -- coordination/handoffs/06-services.md` |
 
 ## M7 details (this task)

@@ -106,3 +106,15 @@ New services suite `tests/services/test_services_upgrade.gd` (285 checks, in the
   - **The build today shows `Lane Defence`** (package/name and config/name; APK label in every locale). Whatever the answer, it should change before release. That is 02's change after your Q4 record. 06 did not touch it.
 - **Small fix for USER_QUESTION Q4:** it says the title is 14자. The lint counts "빵집 기사단: 곰팡이 디펜스" as **15 characters** (spaces and colon included, as Play counts). Please correct it if the number matters to the user.
 - **Order:** keep the privacy-page hosting candidate (17:25 entry) behind Q4 in your one-at-a-time queue, as you planned.
+
+# 2026-10-31 ~19:06 KST — QUEUED: user-question CANDIDATE for save backup (you choose when; after Q5 or wherever you place it)
+Background facts (SAVE_BACKUP_POLICY.md; no device test was run): today the save survives app updates only.
+**Candidate question (one question):**
+> 휴대폰을 바꾸거나 게임을 지웠다 다시 설치할 때 진행 상황을 어떻게 할까요?
+| 안 | 재설치 시 | 새 폰으로 옮길 때 | 개인정보처리방침 영향 | 누가 구현 |
+|---|---|---|---|---|
+| B0 그대로 (기본값) | 처음부터 | 처음부터 (일부 제조사 폰 직접 전송만 남을 수 있음) | 없음 | 없음 |
+| B1 저장 파일만 Google 백업 (06 추천, Gradle 빌드가 생긴 뒤) | 이어서 | 이어서 (Google 백업 또는 직접 전송) | "Google 계정 백업에 사본이 남을 수 있음" 한 문장 추가(준비됨) | 02 (Gradle 빌드 + 규칙 파일 2개), 06 문구, 07 기기 확인 |
+| B2 백업 완전 차단 | 처음부터 | 처음부터 (모든 폰 동일) | 없음 | 02 (Gradle 빌드 + 규칙 파일) |
+| B3 삭제 때 "데이터 남기기" 묻기 | 남기기를 고른 경우만 이어서 | 처음부터 | "남기기를 고르면 남음" 한 문장 | 02 (설정 하나) |
+Note: B1 and B2 need the Gradle build. That build is currently blocked by JDK 25 vs Gradle 8.11.1 (PLAY_TECH_REQUIREMENTS.md §5), so they can only be implemented after a JDK 17 is set up. Nothing changes until the user answers.

@@ -158,3 +158,10 @@ Full table with official URLs: docs/services/PLAY_TECH_REQUIREMENTS.md. Results:
   - `exclude_filter` contains `docs/*`. If you point at docs/art/branding/, check that the exporter still reads the source (it loads icons at export time). Otherwise copy the files under assets/ (03 owns the art; you choose the path).
 - After your rebuild, 06 will compare the APK's `icon_foreground.webp`/`icon_background.webp` with 03's layers.
 - **Services on clean HEAD 643cfa0** (snapshot runner, 18:43–18:44): OVERALL exit 0, 9 suites. That includes your 4b5926d (label VERIFIED_DEBUG_ONLY) and the new repo-wide Q2 scan: 0 ad, billing, receipt or SDK calls outside src/services, no addons/, no enabled plugins.
+
+# 2026-10-31 ~19:06 KST — QUEUED: debug test AAB is blocked by the JDK (scratch try, your files untouched)
+`tests/services/try_debug_aab.ps1` ran on a git-archive copy of f41fd12. Only in that copy it set `use_gradle_build=true`/`export_format=1` and unpacked android_source.zip (headless `--install-android-build-template` did not create android/build).
+- **Result:** Godot's export step completed, including the ko label resource. Gradle 8.11.1 then failed: "Unsupported class file major version 69".
+- **Cause:** the editor's `export/android/java_sdk_path` is JDK 25.0.2. Gradle needs 9.1+ for Java 25 (https://docs.gradle.org/current/userguide/compatibility.html). Godot recommends JDK 17, and the template's config.gradle uses Java 17.
+- **Needed (machine setup, not a repo file):** install a JDK 17 and set `export/android/java_sdk_path` to it. Then add a Gradle/AAB preset (your file). 06 reruns the script and checks the AAB with bundletool (also not installed yet).
+- No upload key was made and nothing was uploaded. My scratch copy and Gradle daemon are gone. Gradle 8.11.1 is now cached in the user's ~/.gradle.

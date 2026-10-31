@@ -1,5 +1,17 @@
 # 06-services status
-Updated: 2026-10-31 ~18:46 KST (post-quiet-window full run on clean HEAD; launcher icon confirmed placeholder)
+Updated: 2026-10-31 ~19:08 KST (test AAB attempt, Data safety evidence lines, backup question candidate)
+Status: COMPLETE with one blocker.
+- **Test AAB: BLOCKED.** Gradle 8.11.1 (Godot 4.7.2 template) cannot run on the machine's only JDK 25.0.2 ("Unsupported class file major version 69"); a JDK 17 is needed. Scratch copy only; no upload key, no upload; 02/04 files untouched. bundletool checks therefore NOT RUN.
+- **Data safety:** DATA_SAFETY_DRAFT §2c ties each answer to a rerunnable grep or lint (network, SDK, ID and log calls: 0 hits).
+- **Backup:** B0–B3 user-question candidate sent to 01.
+- Q2 DEFERRED. Nothing published.
+Current task: none. Next: see handoff.
+Validation: listing 1825/0 and android 189/0 after the doc edits; clean-HEAD full run at 643cfa0 OVERALL exit 0 (18:44).
+Commits: 71325251423518de06b657dc3c250336997d01db [Test] PUSHED; docs in the next [Docs].
+Quota: ~82% at 19:05. Checkpoint and stop at ≥ 97%.
+Previous: 643cfa0 / 27e7a44 (clean-HEAD run, launcher icon).
+--- History (older entries, not current) ---
+(HEAD-run entry) Updated: 2026-10-31 ~18:46 KST (post-quiet-window full run on clean HEAD; launcher icon confirmed placeholder)
 Status: COMPLETE.
 - **Clean HEAD runs** (tests/services/run_services_on_head.ps1, git archive + own import):
   - b4b33a7, 18:39–18:40: OVERALL exit 0.

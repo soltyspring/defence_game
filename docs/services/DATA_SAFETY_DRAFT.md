@@ -35,6 +35,21 @@ Caveat: the debug APK is not the release AAB. The release bundle's merged manife
 Side finding (04 A6): `assets/fonts/OFL-Galmuri.txt` is not inside this APK (only `fonts_provenance.json` is); 02's include_filter fix came later (141d226) and needs a new APK to verify. Not a Data safety issue, but a licence one (IN_APP_LEGAL_DISPLAY.md).
 ## 2b. Re-check against the Android backup policy (2026-10-31)
 Current build: `allowBackup=false`, no `dataExtractionRules`/`fullBackupContent`, `hasFragileUserData=false` (SAVE_BACKUP_POLICY.md §1). The "No" answer and the deletion answer below **hold**: the app never sends the save anywhere; a device-to-device transfer that some phone makers still run (S5) is a user-initiated system transfer the developer never receives. If save backup is turned on later (option B1), 06 expects "No" to stay (the copy goes to the user's own Google backup; compare the Data safety FAQ on user uploads to their own Drive), but the deletion row and the privacy policy `[백업 활성화 시]` sentence change. Full table: SAVE_BACKUP_POLICY.md §5. Not verified on a device.
+## 2c. Each draft answer tied to code evidence (HEAD f41fd12, 2026-10-31 ~19:05 KST; Q2 deferred; not submitted)
+`git grep` runs over tracked `src/**/*.gd` and `scenes/**/*.tscn`, comment-only lines excluded. Commands are listed so anyone can rerun them.
+| Form item | Draft answer | Evidence (rerunnable) | Result |
+|---|---|---|---|
+| Network use by the app | none | `git grep -nE "HTTPRequest|HTTPClient|StreamPeerTCP|StreamPeerTLS|WebSocketPeer|PacketPeerUDP|ENetMultiplayerPeer|TCPServer|UDPServer|OS\.shell_open" -- "src/*.gd" "scenes/*.tscn"` | **0 hits** |
+| Network permission | none | export_presets.cfg `permissions/internet=false`, `access_network_state=false`; APK `aapt2 dump permissions` lists none; lint `android_permissions` | 0 permissions |
+| Third-party SDKs / plugins | none | `git grep -nE "Engine\.get_singleton|JavaClassWrapper|JNISingleton|GDExtension"` → **0 hits**; no `addons/`; no `android/plugins`; no enabled `plugins/*` (lint `q2_repo_scan`) | none |
+| Ads, billing, receipts | none | lint `q2_repo_scan`: 0 `Services.ads`/`Services.purchases`/AdMob/billing/receipt calls outside src/services; services run in `disabled` mode (`service_diagnostics` live = all false) | none |
+| Device or other IDs (incl. advertising ID) | not collected | `git grep -nE "get_unique_id|advertising|AD_ID|ANDROID_ID|get_model_name|IP\.get_local"` → **0 hits**; no AD_ID permission (lint) | 0 |
+| App info and performance (crash logs, diagnostics) | not collected | `git grep -nE "OS\.alert|Logger|FileAccess\.open\(.*log"` → **0 hits**. Godot's own file log, if enabled, stays in `user://logs` on the device; no code sends it. Android vitals data is Google's, not ours | 0 |
+| App activity / analytics | not collected | analytics sink is `null` by default (lint `data_safety_draft`); no remote endpoint | 0 |
+| On-device game progress | not "collected" (never leaves the device) | `user://save.json` in app-private storage; `allowBackup=false` (SAVE_BACKUP_POLICY.md §1) | stays on device |
+| Encrypted in transit | not applicable | nothing transmitted (rows above) | — |
+| Deletion | uninstall or clear app data | §2b; privacy draft §4 | — |
+Limits: grep finds only code that is in the repo. A future plugin, SDK or Gradle dependency must be re-checked on the release AAB's merged manifest and libraries; none exists yet (§5 of PLAY_TECH_REQUIREMENTS.md: no AAB). This is a draft for the user. It is not submitted and not published.
 ## 3. Draft answers (disabled mode)
 | Form section | Draft answer | Note |
 |---|---|---|

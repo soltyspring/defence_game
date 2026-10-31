@@ -54,3 +54,21 @@ Not a policy issue: shipping x86_64 is allowed. arm64-only for release is a size
    - Check `aapt2 dump badging` for targetSdk 36 and the Q4 label.
    - After the user's internal-track upload, read Play Console's app bundle explorer for 16 KB and 64-bit status. That is a user action.
 3. **Not now:** a 16 KB emulator image or device run. That needs an emulator, which is outside this task and after the 18:00–18:30 quiet window.
+
+## 5. Debug-signed test AAB attempt (2026-10-31 18:51–19:02 KST, scratch copy only)
+Script: `pwsh -NoProfile -File tests/services/try_debug_aab.ps1`. It works on a `git archive` copy of HEAD f41fd12 in %TEMP%. **Only in that copy** it sets `use_gradle_build=true` and `export_format=1`, and unpacks Godot's `android_source.zip` into `android/build`; `--install-android-build-template` did not create it headless. It then runs `--export-debug Android` with the editor's debug keystore. No upload key was created, nothing was uploaded, and 02/04 files were not changed. The scratch copy and the Gradle daemon were removed afterwards.
+
+**Result: no AAB. Blocked at the Gradle step.**
+| Step | Result |
+|---|---|
+| Godot export preparation (manifest, ko label resource `values-ko/godot_project_name_string.xml`, asset pack) | done |
+| Gradle wrapper downloads Gradle 8.11.1 (Godot 4.7.2 template) | done (now cached in `%USERPROFILE%\.gradle`) |
+| `gradlew validateJavaVersion clean bundleStandardDebug` | **FAILED**: "Unsupported class file major version 69" |
+Cause: the only JDK on this machine is **25.0.2**, set in the editor's `export/android/java_sdk_path`. Gradle's official compatibility table says Java 25 needs Gradle 9.1.0 or later to run, and the Godot 4.7.2 template pins Gradle 8.11.1 (https://docs.gradle.org/current/userguide/compatibility.html). Godot's Android export doc recommends OpenJDK 17 (https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_android.html). The template's `config.gradle` also asks for Java 17.
+
+Not checked because no AAB exists: per-device APKs via bundletool, target 36, 64-bit, 16 KB alignment (`PAGE_ALIGNMENT_16K`), ko/en label in the bundle, download size. bundletool is not installed either. The verdicts in §3 stay as they are (P4 FAIL, P3c UNKNOWN).
+
+What unblocks it (requested from 02/04; a machine setup step, not a 06 file change):
+1. Install a JDK 17 and point the editor setting `export/android/java_sdk_path` at it. This is an editor_data setting, not in the repo.
+2. Add a release/test preset with the Gradle build and AAB export to export_presets.cfg (02), or keep this scratch override.
+3. Install bundletool (a jar from Google's bundletool releases) for the per-device APK checks.

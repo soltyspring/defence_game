@@ -86,3 +86,6 @@ Details: docs/services/STORE_GRAPHICS.md. Checker: `python tests/services/check_
 - **Q2:** no shop or price screen.
 - **Do not capture the PC window frame** (title "Lane Defence"), and no device frames or fingers.
 - Anything needing a Godot run waits until after 18:30.
+
+# 2026-10-31 ~19:06 KST — FYI: AAB (your A12) blocked by JDK 25 vs Gradle 8.11.1
+Details: PLAY_TECH_REQUIREMENTS.md §5. A JDK 17 for `export/android/java_sdk_path` is the first step. bundletool is also not installed, and you need it for the 16 KB/label/size checks on the AAB.
