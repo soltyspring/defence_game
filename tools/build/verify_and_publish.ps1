@@ -12,11 +12,16 @@ param(
 )
 . "$PSScriptRoot\common.ps1"
 Set-Location $Root
-$snap = Join-Path $env:TEMP 'ui04_gate'
-if (Test-Path $snap) { Remove-Item -Recurse -Force $snap }
+# Unique scratch dir per run (17:01: a fixed dir was half-deleted while another process held a file in
+# it, so tests were "File not found"). Old gate dirs are removed best-effort.
+Get-ChildItem $env:TEMP -Directory -Filter 'ui04_gate_*' -ErrorAction SilentlyContinue | Where-Object { $_.LastWriteTime -lt (Get-Date).AddHours(-1) } | ForEach-Object { Remove-Item -Recurse -Force $_.FullName -ErrorAction SilentlyContinue }
+$snap = Join-Path $env:TEMP ("ui04_gate_{0}_{1}" -f (Get-Date -Format 'HHmmss'), $PID)
 New-Item -ItemType Directory $snap | Out-Null
 & git archive --format=zip -o "$snap.zip" HEAD
 Expand-Archive "$snap.zip" $snap -Force; Remove-Item "$snap.zip"
+foreach ($req in @('project.godot', 'tests\ui\test_ui.gd', 'tests\integration\test_ui_integration.gd')) {
+    if (-not (Test-Path (Join-Path $snap $req))) { Write-Host "GATE FAILED: snapshot incomplete ($req missing) — environment, not a test result."; exit 2 }
+}
 foreach ($p in $Paths) {
     $src = Join-Path $Root $p; $dst = Join-Path $snap $p
     if (Test-Path $src) { New-Item -ItemType Directory -Force (Split-Path $dst) | Out-Null; Copy-Item $src $dst -Force }
