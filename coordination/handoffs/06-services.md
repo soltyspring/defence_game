@@ -1,5 +1,11 @@
 # 06-services handoff
-Updated: 2026-10-31 ~17:52 KST (02 label settings checked; config/name impact; Play tech requirements before)
+Updated: 2026-10-31 ~18:00 KST (store graphics, Python only; label settings before)
+## Store graphics (17:55–18:00, Python only)
+- **Checker:** `python tests/services/check_store_graphics.py`. Final assets are expected in docs/services/store_assets/, which does not exist yet: `icon*.png`, `feature*.png|jpg`, `screenshot*.png|jpg`.
+- **After 18:30, if Godot is allowed:**
+  1. Run the services runner.
+  2. When 02 sets launcher_icons and rebuilds, read the APK's mipmap icon resources (aapt2 dump resources) to confirm the adaptive icon is used instead of icon.svg.
+  3. Consider adding check_store_graphics.py to run_services_suites.ps1 as a non-blocking step. Exit 3 must not turn OVERALL red.
 ## Label settings check (17:45–17:52)
 - **What 02 changed (4b5926d, read only):** package/name "Bakery Knights", name_localized en "Bakery Knights" / ko "빵집 기사단". config/name stays "Lane Defence" to keep the desktop user:// path.
 - **Debug APKs:** 02's debug APKs (build/android 17:37, build/qa/apk_q4probe 17:36) carry the right labels. Note: apk_q4probe is not in the scanned dirs.
@@ -45,6 +51,7 @@ src/services/**, docs/services/**, tests/services/**, coordination/status/06-ser
 | Q4 | Launcher name decision recorded (§2b launcher blocks, NAME_SEARCH_LOG, OPEN_DECISIONS U10, KIPRIS search-first note); lint: launcher = store title before ":", brand/Bread Defense clean, KIPRIS §3 rows + no-space forms, name-log rows; android launcher_label: aapt2 badging (UTF-8 via temp file) OLD=WAITING / OK=VERIFIED / else FAIL, preset package/name + name_localized checks | c0218449596086c29a3fecd91078e5930effcfb6, 2193dcb6a87598fa00c4eca62f33999df83a3a2e |
 | Play tech | PLAY_TECH_REQUIREMENTS.md: P1 API 36, P2 64-bit, P3 16 KB (ELF LOAD, RELRO own-segment rule, zip alignment), P4 AAB; preset + Godot 4.7.2 config.gradle (AGP 8.6.1, NDK r29, target 36/min 24) + debug APK ELF header read; verdicts PASS/PASS/PASS(APK)/UNKNOWN(AAB zip)/FAIL(AAB); requests to 02 (release Gradle/AAB preset) and 04 (bundletool PAGE_ALIGNMENT_16K etc.). Static only, no Godot run | (this commit, see status) |
 | Label fmt | 4b5926d read only; listing lint cites export settings; android launcher_label VERIFIED_DEBUG_ONLY vs release_label (build/release only); config/name "Lane Defence" impact table (PC title, Project Manager, fallback menu) + options to 02/04 | 31dc7b0b0226dbad1ecebdc18eb2e5f8cc4670fb, fa5661b58269ec54f13b28f8973f5877f953151f |
+| Graphics | STORE_GRAPHICS.md (Play icon/feature/screenshot/video rules + adaptive icon guide), check_store_graphics.py (Python), 09 order vs rules (#3 반죽 conflict), requests 03/04/02/09 | a68bf517ce3b93c375bd7ff8337cdc7175dd88a7, a143134be5ba6c2fbe2082bcd1f8f09c4ec23de2 |
 | Checkpoint | this handoff + status | see status file / `git log -- coordination/handoffs/06-services.md` |
 
 ## M7 details (this task)

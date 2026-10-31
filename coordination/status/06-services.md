@@ -1,5 +1,18 @@
 # 06-services status
-Updated: 2026-10-31 ~17:52 KST (02 4b5926d label settings checked; config/name impact)
+Updated: 2026-10-31 ~18:00 KST (Play store graphics; Python only, no Godot)
+Status: COMPLETE. STORE_GRAPHICS.md + `python tests/services/check_store_graphics.py` (exit 3 = nothing fails, required assets missing).
+- **Missing:** store icon 512, feature graphic 1024×500, screenshots (≥ 2; 3+ at 16:9 1920×1080 for game recommendations).
+- **Existing 1600×720 captures fail** the 2:1 rule; the 1280×720 captures are too small for recommendations and mostly RGBA.
+- **Adaptive icon:** passes size, safe zone and opaque background; logo 40×42.5 dp is below the 48 dp guide.
+- **Launcher icon in the build:** the preset has no launcher_icons keys, so the build uses icon.svg. UNVERIFIED until a rebuild after 18:30.
+- **09 order:** fits, but #3 still says 반죽 (D25 → 밀가루).
+- Requests sent to 03/04/02/09. Q2 DEFERRED. Nothing published.
+Current task: none. Next: see handoff.
+Validation: Python checker only; Godot services runner NOT run (quiet window 18:00–18:30). Last runner OVERALL exit=0 at 17:47.
+Commits: a68bf517ce3b93c375bd7ff8337cdc7175dd88a7 [Test], a143134be5ba6c2fbe2082bcd1f8f09c4ec23de2 [Docs] PUSHED.
+Previous: 31dc7b0 / fa5661b / 13e78c0 (label settings, config/name impact).
+--- History (older entries, not current) ---
+(label entry) Updated: 2026-10-31 ~17:52 KST (02 4b5926d label settings checked; config/name impact)
 Status: COMPLETE.
 - 02's launcher-name format works with 06's check: package/name "Bakery Knights" + name_localized en/ko.
 - 06 fixed only its own items: the doc line now cites the export settings, the "Q4 waits" check was removed (Q4 is answered), and a debug APK no longer counts as release proof.
