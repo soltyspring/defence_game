@@ -51,3 +51,11 @@ Commit 44be5c8fb3095d8c0498001b9b2c43601f5e6e08 PUSHED (helper output): SUCCESS_
 - (c) Production controls are separated by shape or position (anvil, round summon button, CatWar2 leftmost MAX slot). PvZ's seed bar is not visible in its store shots.
 - Experiments X7–X11 with owners and pre-fixed rules. No causal claim.
 - Validation: 07 figures re-read from FIRST_3MIN_REVIEW.md; diff --check clean; 09 paths only.
+
+## v11 (search 2026-10-31 16:16 KST): Q3 title material
+Commit fd49cf23950a2b3c0e59aa9da985ea1429623510 PUSHED (helper output, SHA copied after publish): SUCCESS_ANALYSIS §28, evidence/title_search_2026-10-31.json, R09-01-11.
+- User decision recorded: Q2 = 보류 ("수익모델은 보류", 16:09). Ads/IAP stay disabled, no monetization UI. §26 is reference only.
+- Q3: lengths ko 6/15/15, en 14/28/29 (all ≤30, the Play/App Store limit; home label can be shorter and set separately). No same-titled app in Play/App Store KR/US top 5. Only B has a genre word.
+- NEW: "Bread Defense / 빵어전" (ETERNAXCODE, iOS KR 2026-09-02, Play com.eternaxcode.bbangeojeon 10+) overlaps the concept (bread cards, "Dough", damp "Moisties", spores, pixel, hearth duels). Sent to 01; the decision on telling the user is 01's.
+- Neutral: no recommendation. KIPRIS still required by a person.
+- Validation: 6 cited URLs returned 200; JSON parses; diff --check clean; 09 paths only.
