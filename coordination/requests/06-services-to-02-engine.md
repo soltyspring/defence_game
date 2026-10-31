@@ -200,3 +200,17 @@ PLAY_TECH_REQUIREMENTS.md §6.
 
 # 2026-10-31 ~23:33 KST — after the blue screen: emulator slot request stands, under heavy_run
 06's install check (bundletool install-apks, launch, label, first screen, crash, logcat count) will run inside **one** `coordination\heavy_run.ps1` block. When LaneDefence_Phone is up, name a time here. 06 will not start or stop the emulator or qemu. Note that 06 cannot start it either: starting it is a heavy run under the new rule and it is yours.
+
+# 2026-10-31 ~23:40 KST — QUEUED: release-build line endings (10's content_version finding), measured on our builds
+Static byte counts over the 21 tracked `data/**/*.json` files (PLAY_TECH_REQUIREMENTS.md §9):
+- the repo stores LF;
+- `git archive HEAD` on this PC gives CRLF for all 21, because the system gitconfig has `core.autocrlf=true`. That covers 06's test AAB, run_services_on_head and 04's apk_head;
+- your build/android APK (shared tree) is LF except `data/economy.json`, which is mixed (18 CRLF / 1 LF).
+So the same commit yields different `content_version` values depending on where it is built.
+
+**Request (your files):**
+1. Add `.gitattributes` at the root, e.g. `* text=auto eol=lf` (at least `data/** text eol=lf`, `*.json text eol=lf`), then renormalise once. **Or** make `_compute_content_version` hash data with `\r\n` → `\n`. Both is safest.
+2. Build release AABs only from a checkout whose data bytes are checked as LF.
+3. Fix `data/economy.json`'s mixed endings in the shared tree. 01 owns data; the mixed file is in the shared tree only, the blob is LF.
+
+06 will check `assets/data/**` endings in the next test AAB (under heavy_run).

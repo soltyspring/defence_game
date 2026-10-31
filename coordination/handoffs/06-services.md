@@ -1,5 +1,12 @@
 # 06-services handoff
-Updated: 2026-10-31 ~23:33 KST (resumed after the 23:08:55 blue screen; heavy_run rule applied)
+Updated: 2026-10-31 ~23:42 KST (real-folder leftovers quarantined; CRLF check; blue-screen resume before)
+## Quarantine and line endings (23:35–23:42, no Godot)
+- **Quarantine:** 16 06-made files moved, not deleted, from `%APPDATA%\Godot\app_userdata\Lane Defence\` to `%LOCALAPPDATA%\defence_userdata_quarantine\06-20261031-233513\`, with MANIFEST_06.json.
+  - Before/after hashes all match; save.json 614A1FAC… and .bak E4263BE6… unchanged.
+  - Undo one-liner: docs/services/USERDATA_QUARANTINE_06.md.
+  - Not touched: save files, logs/, other roles' files.
+- **Line endings:** blobs LF; `git archive` CRLF (system core.autocrlf=true); 04 apk_head CRLF; 02 build/android LF + economy.json mixed. PLAY_TECH_REQUIREMENTS §9; request to 02.
+- **Next AAB run** (under heavy_run): add a check of `assets/data/**` line endings in the AAB. Expected CRLF until 02 adds .gitattributes or normalises the hash.
 ## Blue-screen resume check (23:23)
 - `git status` for 06 paths: clean. `git diff HEAD` over all 127 tracked 06 files: clean. No file is missing, zero-byte or NUL-filled (byte scan).
 - Last 06 commit before the crash, 6303e18, is in origin/main. No 06 temp folders and no Gradle Java processes were left.

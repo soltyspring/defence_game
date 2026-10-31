@@ -1,5 +1,15 @@
 # 06-services status
-Updated: 2026-10-31 ~23:33 KST (blue-screen resume; heavy_run guard; post-crash validation)
+Updated: 2026-10-31 ~23:42 KST (real-folder leftovers quarantined; CRLF impact on test AAB)
+Status: COMPLETE except the emulator install check.
+- **Leftovers moved:** 16 files (7 reports and m3dbg1~3) moved to `%LOCALAPPDATA%\defence_userdata_quarantine\06-20261031-233513\`. Hashes verified, save.json/.bak unchanged. Undo: USERDATA_QUARANTINE_06.md.
+- **Line endings:** `git archive` on this PC gives CRLF data (core.autocrlf=true), so 06's test AAB carried CRLF data (inferred from the same input; the AAB itself was deleted). The 02 shared-tree APK has LF plus 1 mixed file. Requests sent to 02 (.gitattributes / normalised content_version).
+- **Emulator:** WAITING for 02.
+- Q2 DEFERRED. Nothing published.
+Current task: none. Next: see handoff.
+Commits: next [Docs].
+Previous: 96e9962 / 287ad66 / 369a2dc (blue-screen resume, heavy_run guard).
+--- History (older entries, not current) ---
+(blue-screen entry) Updated: 2026-10-31 ~23:33 KST (blue-screen resume; heavy_run guard; post-crash validation)
 Status: COMPLETE except the emulator install check.
 - **Crash check:** 06 files intact (127 files: no zero-byte or NUL content; `git diff HEAD` clean; 6303e18 on origin).
 - **heavy_run:** 06 runners refuse to run outside coordination\heavy_run.ps1 (96e9962).

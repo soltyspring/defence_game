@@ -150,3 +150,18 @@ One command: `pwsh -NoProfile -File tests/services/try_debug_aab.ps1 -Ref 29d31b
 | Download size x86_64 | 33,190,973–33,202,655 B |
 | Leftovers | no Gradle 8.11.1 / svc06_tools Java process running afterwards; %TEMP%\svc06_aab_29d31be deleted |
 The §7 gap (universal-APK step not re-read) is closed. Install and run on the emulator is still **NOT DONE**: `adb devices` was empty at 23:07, and 02 has not announced LaneDefence_Phone.
+
+## 9. Line endings of data files in the test AAB (static, 2026-10-31 ~23:40 KST, HEAD 91237d4)
+Trigger: 10 found that `content_version` (src/core/content.gd, a hash of data/**) differs between CRLF and LF copies of the same data. A build from a CRLF copy and one from an LF copy would make every player save look "data changed" (DATA_AND_BACKEND_ANALYSIS.md). Byte counts of `\r\n` vs bare `\n` in the 21 tracked `data/**/*.json` files (no Godot run):
+| Copy | LF | CRLF | mixed | Note |
+|---|---|---|---|---|
+| git blobs (committed) | 21 | 0 | 0 | the repo stores LF |
+| shared working tree | 21 | 0 | 0 | LF despite autocrlf: files were written by tools, not re-checked-out |
+| **`git archive HEAD`** (what `try_debug_aab.ps1` and `run_services_on_head.ps1` build from) | 0 | **21** | 0 | this PC has `core.autocrlf=true` (system gitconfig, Git 2.47.0.windows.1), and archive applies it |
+| build/qa/apk_head APK (04, built from git archive) | 0 | 21 | 0 | `assets/data/**` in the APK |
+| build/android APK (02, built from the shared tree, 17:37) | 20 | 0 | **1** | `data/economy.json` has 18 CRLF + 1 LF line ending |
+**06's test AAB (§6–§8) therefore packed CRLF data.** This is an inference: the AAB was built from the same `git archive` path as the CRLF APK above. The AAB itself was deleted after the checks and was not re-read. Godot copies these non-resource JSON files byte for byte.
+- Consequence: the three local builds (06 test AAB, 04 APK, 02 APK) carry three different `content_version` values for the same commit.
+- Play policy: no effect.
+- Release risk: a save made with one build is treated as migrated by another (X1 rewrite, unlock recompute, .bak rotation).
+Request to 02 (root files are 02's): pin line endings for release builds, e.g. `.gitattributes` with `* text=auto eol=lf` (or at least `data/** text eol=lf`). Or make `content_version` normalise `\r\n` → `\n` before hashing. Then build releases only from a checkout verified as LF. 06 will re-read `assets/data/**` bytes in the next test AAB.

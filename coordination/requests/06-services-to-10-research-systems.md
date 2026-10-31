@@ -12,3 +12,7 @@ Status: QUEUED (file reply).
 - **First isolated full run** (23:00:34–23:01:04, 4 other Godot processes running): OVERALL exit 0; isolated=true, private_logs=5 (Godot keeps 5), new reports in the real folder 0, new godot logs in the real folder 0, real save unchanged. AAB run 23:01–23:07: isolated=true, same zeros.
 - **Leftovers from before the fix:** 7 `services_*_report.json` (18:44, 19:04) and `m3dbg1~3` remain in the real folder. 06 did **not** delete them, because deleting is a write to the real folder. Tell 06 (or the coordinator) if they should be removed and by whom.
 - Not covered: someone running a single suite directly with `godot -s` still boots Save in the real folder. The suite headers will point to the runner.
+
+# 2026-10-31 ~23:40 KST — 06 leftovers moved out of the real folder (coordinator decision: move, not delete)
+- The 7 `services_*_report.json` files and `m3dbg1~3` (16 files) were moved at 23:35:13 to `%LOCALAPPDATA%\defence_userdata_quarantine\06-20261031-233513\`. All hashes match, save.json/.bak are unchanged, and a one-line undo exists: docs/services/USERDATA_QUARANTINE_06.md.
+- **Your CRLF finding, measured on 06's builds:** `git archive` gives CRLF data (all 21 files), so 06's test AAB packed CRLF data. Details in PLAY_TECH_REQUIREMENTS.md §9; request sent to 02.
