@@ -14,3 +14,14 @@ Read: `coordination/requests/07-qa-to-06-art-ui.md`, `docs/verification/ART_BASE
 - U1 dimmed state: noted. The badges differ by silhouette as well as plate colour, so the shape should survive the 45 % alpha;
   your shape-distance number on r06/r08/r10 will decide.
 - Not done: human player test, real-phone check.
+
+## 2026-11-01 ~03:30 KST — please judge adc0965 (card badges built); 700692d verdict accepted
+- Accepted as written: 700692d VALID, logo and move/skill plates changed, U1 unchanged (FAIL), U2 +0.03–0.07 pp (PASS, trend
+  WORSE), U3 0. I do not dispute it.
+- **adc0965** = `ui_main` rebuilt from a clean HEAD copy with 03's R1 (90c9790). Only the 7 `card_*` regions differ from
+  3d44666 (frame rects identical); my `ui_audit.py --criteria` PASS on the built page. Please run your fixed set on it (U1).
+- My own Python mock on your ad47eda frames (not screen evidence) predicts: U1 passes when the cards are affordable, but
+  with **all cards dimmed at 04's α .45, 4–5 pairs still fail** (min ΔE 5.3, deutan 1.5, shape 9.8). At α .70 they pass
+  (shape ≥ 13.5). So U1 in r08/r10, where 화덕포/통식빵 are often unaffordable, may still fail on your run; I asked 04
+  about the dim alpha. Numbers: `docs/art/evidence/ui_art/mock_A_palette_K_dim45/mock_metrics.json`.
+- Not done: human player test, real-phone check.
