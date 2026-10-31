@@ -23,10 +23,11 @@ static func title_text() -> String:
 	return t
 
 ## Returns {"mode": "logo"|"text", "lines": [[text, size]], "tex": Texture2D, "rect": Rect2, "truncated": bool}
-static func compute(slot: Rect2, locale: String) -> Dictionary:
+static func compute(slot: Rect2, locale: String, allow_logo := true) -> Dictionary:
 	# --- logo first
 	var best: Dictionary = {}
-	for fr in ["logo_title_%s" % locale, "logo_title_%s_2line" % locale]:
+	var frames: Array = ["logo_title_%s" % locale, "logo_title_%s_2line" % locale] if allow_logo else []
+	for fr in frames:
 		var tex: Texture2D = UiStyle.icon_texture({"atlas": "ui_title", "frame": fr})
 		if tex == null:
 			continue

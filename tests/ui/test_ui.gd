@@ -935,7 +935,7 @@ func test_title_block() -> void:
 		check(t != "레인 디펜스" and t != "Lane Defence", "[%s] stale provisional title replaced (%s)" % [loc, t])
 		for cname in cases:
 			var slot: Rect2 = cases[cname]
-			var l: Dictionary = TB.compute(slot, loc)
+			var l: Dictionary = TB.compute(slot, loc, false)   # text fallback must fit too (logo may be absent)
 			var ok: bool = not bool(l.truncated)
 			if l.mode == "text":
 				var hsum := 0.0
@@ -947,7 +947,9 @@ func test_title_block() -> void:
 				ok = slot.encloses(l.rect as Rect2)
 			check(ok, "[%s] title fits %s (%s: %s)" % [loc, cname, l.mode, l.get("lines", [])])
 		# colon split rule on a deliberately narrow slot
-		var narrow: Dictionary = TB.compute(Rect2(0, 0, 300, 100), loc)
+		var withlogo: Dictionary = TB.compute(cases["640_notch"], loc)
+		check(withlogo.mode == "text" or cases["640_notch"].encloses(withlogo.rect as Rect2), "[%s] logo (if present) fits the narrowest slot (%s)" % [loc, withlogo.mode])
+		var narrow: Dictionary = TB.compute(Rect2(0, 0, 300, 100), loc, false)
 		if narrow.mode == "text":
 			check(narrow.lines.size() == 2 and str(narrow.lines[0][0]).ends_with(":") and not narrow.truncated, "[%s] narrow slot → 2 lines split after ':' (%s)" % [loc, narrow.lines])
 	UiText.load_locale("ko")
