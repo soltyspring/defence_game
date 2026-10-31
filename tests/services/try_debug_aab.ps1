@@ -80,8 +80,12 @@ if ((Test-Path $aab) -and $Bundletool -ne '' -and $JavaHome -ne '') {
   & $java -jar $Bundletool dump manifest --bundle=$aab *>> (Join-Path $out 'bt_manifest.xml')
   & $java -jar $Bundletool build-apks --bundle=$aab --output=$apks --ks=$ks --ks-pass=pass:android --ks-key-alias=androiddebugkey --key-pass=pass:android --overwrite *>> $log
   & $java -jar $Bundletool get-size total --apks=$apks --dimensions=ABI,SDK *>> (Join-Path $out 'bt_size.csv')
-  & $java -jar $Bundletool build-apks --bundle=$aab --output=(Join-Path $out 'universal.apks') --mode=universal --ks=$ks --ks-pass=pass:android --ks-key-alias=androiddebugkey --key-pass=pass:android --overwrite *>> $log
-  Expand-Archive (Join-Path $out 'universal.apks') -DestinationPath (Join-Path $out 'universal') -Force
+  $uni = Join-Path $out 'universal.apks'
+  & $java -jar $Bundletool build-apks --bundle=$aab --output=$uni --mode=universal --ks=$ks --ks-pass=pass:android --ks-key-alias=androiddebugkey --key-pass=pass:android --overwrite *>> $log
+  Expand-Archive $uni -DestinationPath (Join-Path $out 'universal') -Force
+  $u = Get-ChildItem (Join-Path $out 'universal') -Filter *.apk | Select-Object -First 1
+  $aapt2 = Join-Path $env:LOCALAPPDATA 'Android\Sdk\build-tools\36.1.0\aapt2.exe'
+  if ($u -and (Test-Path $aapt2)) { & $aapt2 dump badging $u.FullName 2>$null | Select-String "^targetSdkVersion|^application-label:|^application-label-ko:|^application-label-en:|^native-code|^uses-permission" | ForEach-Object { $_.Line } | Out-File (Join-Path $out 'universal_badging.txt') }
   Expand-Archive $apks -DestinationPath (Join-Path $out 'split') -Force
   "bundletool done; outputs in $out" | Out-File $log -Append
 }
