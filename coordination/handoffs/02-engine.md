@@ -1,32 +1,21 @@
 # 02-engine handoff
-Updated: 2026-10-31 17:25 +09:00
-Status: ACTIVE. Model claude-opus-5.5, trust-all. Session ID: not exposed inside the session.
+Updated: 2026-10-31 17:47 +09:00
+Status: ACTIVE — paused for 08's quiet measurement window 18:00–18:30 KST (no Godot/editor/emulator runs by 02, no source edits in the shared tree in that window).
+Model claude-opus-5.5, trust-all. Session ID: not exposed inside the session.
 HISTORICAL QUOTA CHECKPOINT notices are previous-account records; not acted on.
 
 ## User decisions
-Q1 theme DECIDED: A "빵집 기사단 vs 곰팡이 군단" (data IDs unchanged, D1). Q3 work title DECIDED (16:19 KST, verbatim "빵집 기사단: 곰팡이 디펜스"); final store name after KIPRIS; ui.title text is 01's. Q2 monetization ON HOLD: no paid currency, no ad-reward paths (02 adds none).
+Q1 theme A "빵집 기사단 vs 곰팡이 군단" (data IDs unchanged). Q3 work title "빵집 기사단: 곰팡이 디펜스" (store name after KIPRIS). Q4 (17:19 KST): home-screen name ko "빵집 기사단", en "Bakery Knights"; in-game/store titles keep the full work title. Q2 monetization ON HOLD (no paid currency/ad-reward paths).
 
-## This round (Codex priorities 1–4)
-1. `Save.buy_upgrade(id, to_level)` (4d77225, PUSHED): one atomic save for coins + level, rollback on failure, codes ok/already_applied/max_level/not_enough_coins/unknown_id/locked/invalid_level/save_failed/save_uncertain/read_only; `Events.cmd_buy_upgrade` → `Events.upgrade_result`. 10's probe_upgrade_transaction.gd unmodified: C1–C5 all PASS. selftest `buy_upgrade` PASS. 04 told (R7).
-2. 03 A11: main-tree `--import` under lock; validate.py --import-cache PASS (all pages match). Local `build/.gdignore` stops the UID-duplicate scan of 08's build/perf trees (0 warnings now). DISPLAY2 captures: title logo + themed battle art. 03 and 07 asked to re-capture.
-3. 05 A9: `target_side` in hit cues + coalescing key. 05's runner uses committed HEAD, so its counts need a re-run after this push.
-4. QA-B012: Galmuri9 10 px numbers, same-target merge (0.35 s), placement above frame + bar, vertical stagger; separate text RNG (bot outcomes shifted once; noted to 07).
+## This round
+1. Q4 (4b5926d): `application/config/name_localized = {"en": "Bakery Knights", "ko": "빵집 기사단"}`, `package/name = "Bakery Knights"`. `config/name` kept "Lane Defence" so the desktop user:// folder (app_userdata/Lane Defence) does not move (Godot docs). Package ID unchanged. APK rebuilt 17:37 under the import lock: aapt2 default/en 'Bakery Knights', ko '빵집 기사단'. 06 test_services_android: launcher_label=VERIFIED, 189/0. Evidence: docs/architecture/ANDROID_BUILD.md A16. Known side effect: desktop window title still "Lane Defence".
+2. 10 F1 (4b5926d): after a failed write, `Save.last_failure_uncertain` is computed from disk (main unreadable/missing + valid .tmp = next load adopts it) → buy_upgrade `save_uncertain`; `save_failed` now always means disk unchanged. BattleResult.save_uncertain for record_result. 10 probe: C1–C5 and C5b–C13 PASS; C6 after_tmp_write/after_recovery = save_uncertain, disk 440/L2.
+Validation 17:39–17:41: selftest PASS (70 scripts; report path still app_userdata/Lane Defence).
 
-## Validation (17:00–17:22, workspace)
-selftest PASS (70 scripts); targeting_equivalence EQUIVALENT 0/30; tests/ui 3354/0; UI integration 44/0; services PASS_INTEGRATED (earlier this round); 07 acceptance save+faults+flow 63/0; audio checks PASS (sandbox from HEAD); 07 capture_crowd on r08: overlaps {}.
-Balance (selftest, current data): competent bot 3/3 r01–r04, r08, r09; 0/3 r05, r06, r07, r10. r01 wave_cleared(1) still outside D16 25–45 s (01 decision pending).
+## Commits (PUSHED, origin/main verified)
+… 4d77225, 09508b1, 7fc45f5, 4b5926d (Q4 + F1). This handoff: committed after.
 
-## Commits this session (PUSHED)
-… 22d99ea, 6e93682, 4d77225 (buy_upgrade). This step: bottom.
-
-## Next steps
-1. 07 -Head re-verify (save,faults,flow + B012 crowd) on this HEAD; 05 re-run -Integration; 03 re-capture.
-2. 10 R5 content_version + clamp/refund (probe part D).
-3. 08 remaining H3/H4/H6-done/H8/H9–H13; P4 save latency log; P5 perf hooks.
-4. QA-J1 camera framing (enemies off-screen r01 t=7..32) — coordinate with 04.
-5. 01 decisions: D16 window vs r01 data, D7 caps text, 900 s timer rule. 05 A8 cycle; OS close → quit_game; 04 R12 release preset.
-
-## Commit for this step
-09508b1e15549820cd6a5a03624f4844d472550e [Fix] 피해 숫자를 번들 도트 글꼴·병합·겹침 방지로 표시하고 타격 효과음에 피격 진영 추가 — PUSHED (origin/main = 09508b1 verified).
-- 07 -Head: my run got "another 07-qa acceptance run is in progress"; 07's own run is on snapshot 09508b1 (build/qa07 latest env.txt git_head=09508b1). Result is 07's to post.
-- 05 -Integration: sandbox held open by 05's own process ("could not clean … files held open"), exit 2, report not refreshed (still hit_melee=36 from an older run). 05 to re-run on 09508b1.
+## Next (after 18:30)
+1. 10 R5 content_version (minimal contract in 10's v0.15): Content computes `content_version = "c1-" + sha256(sorted data/**/*.json)[:12]`; Save writes it and `migrations_applied`; on mismatch in ONE atomic save: apply data/migrations.json renames (01 owns the file), clamp upgrades to max_level, refund per 01's rule (unknown → 0 + logged), recompute unlocks id-based (order[i] unlocked iff i==0 or stars has order[i] or order[i-1]); roll back on failed write. Needs from 01: refund rule / cost history and migrations.json schema. Acceptance: 10's run_content_migration.ps1 M1/M2/M4/M5b.
+2. 07/06/10 re-verify on 4b5926d (requests written). 04 to rebuild build/qa/apk_head (still OLD label).
+3. 08 remaining H3/H4/H8/H9–H13, P4, P5; QA-J1 camera framing with 04; 01 decisions (D16 vs r01 data, D7 caps text, 900 s timer); 05 A8; OS close → quit_game; 04 R12 release preset.
