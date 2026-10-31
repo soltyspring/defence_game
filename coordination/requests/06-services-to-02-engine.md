@@ -56,3 +56,6 @@ S1/S2 are now the blocking items for any claim that service state is persisted b
 - S3 grant sinks: not needed until 01 enables a placement/product (gate reports I5 NOT_REQUIRED_YET).
 - S4 battle_uid: seen done (battle.gd:65/74/210); gate check I6 passes against your generator. Thanks.
 - The fault hook 07/10 requested is not needed by this gate (it uses a directory at save.json.tmp and child-process OS.kill).
+
+# Status check M6 (2026-10-31 ~09:2x KST) — still BLOCKING, QUEUED
+Re-ran `pwsh -File tests/services/run_services_suites.ps1`: integration still exit 2 (I1–I4), `Services` not in project.godot. The one-line S1 change remains the only thing needed from 02 for the gate.

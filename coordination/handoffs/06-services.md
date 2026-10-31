@@ -1,5 +1,5 @@
 # 06-services handoff
-Updated: 2026-10-31 (M5 complete; M4 blocker still open)
+Updated: 2026-10-31 (M6 complete; M4 blocker still open)
 Status: M4 COMPLETE. **BLOCKER: 02 S1/S2 unanswered → the game does not register `Services` and does not persist service state. There is NO game-integration evidence.** M3 evidence = real `src/core/save.gd` in isolation. No real ads, billing, consent SDK or remote analytics; everything runs in `disabled` mode (verified D1–D6 every gate run). No monetization decision; none invented.
 Session: same Kiro window, resumed after the 08:21–08:22 authExpiryRetry failure under the new login. Session ID not exposed to the agent. HISTORICAL QUOTA CHECKPOINT sections in coordinator-to-06-services.md are previous-account records; not acted on.
 
@@ -49,6 +49,15 @@ src/services/**, docs/services/**, tests/services/**, coordination/status/06-ser
 - Validation: runner OVERALL exit=2 (502/0, 130/0, 161/0, integration 146 passes / 0 failures / blockers I1–I4).
 - Commit: 56cd600e628f3acb092ba461c58b6ae80635db4e `[Docs] 광고·결제·개인정보 출시 요건 목록(공식 출처·확인일)과 코드 대조표, 사용자 결정 순서와 문서 동기화 검사 추가` (4 files) → PUSHED origin/main.
 - Requests: 01 M5 (decision queue U1–U8, DD1), 04 M5 (B8, B9, A1, A2, V2, C1 inputs). QUEUED.
+## M6 (2026-10-31): store listing + privacy policy drafts; gate re-run
+- User decision processed: Q1 theme A "빵집 기사단 vs 곰팡이 군단" (coordinator-to-06-services.md, 09:03 KST, literal answer "모두 고치고 A) 빵집 기사단 vs 곰팡이 군단이걸로"). DECISIONS.md not yet updated by 01 (asked in request).
+- `docs/services/STORE_LISTING_DRAFT.md`: policy/limits table with official sources (answer/9859152 limits 30/80/4000; answer/9898842 metadata rules), ko/en title candidates (3 each, 6–29 chars), short descriptions (ko 45, en 79 chars), full descriptions (ko 528, en 1001 chars), claim→evidence table. Not claimed: meta upgrades (no upgrade screen), play-time numbers, age suitability. Unit names are placeholders. No trademark search.
+- `docs/services/PRIVACY_POLICY_DRAFT.md`: ko/en template for the no-data disabled build, [광고/결제/분석 활성화 시] blocks, [법률 확인 필요] marks, placeholders, change summary table.
+- `tests/services/test_services_listing.gd` (615 checks): lengths, emoji, repeated special chars, ranking/promo/program words (ko+en), ALL CAPS, keyword repetition ≤5, keyword-list lines, testimonial quotes, monetization change markers, claim evidence rows, policy title/required items/markers/ko-en placeholder and block parity. 7 mutations each caught (exit 1), files restored.
+- `OPEN_DECISIONS.md` U9 store title (independent). Runner now includes the listing suite.
+- Gate re-run: project.godot still has no `Services` → integration exit 2 (146 passes, 0 failures, I1–I4). Exit 0 NOT reached; cannot be reached by 06.
+- Validation: runner OVERALL exit=2: 502/0, 130/0, 161/0, listing 615/0, integration 146/0 + 4 blockers.
+- Commit: 3afb2592fd3f051fdc9cf990ea07e3f279c1b715 `[Docs] 빵집 기사단 스토어 등록 문구 초안(한·영)과 개인정보처리방침 템플릿, 메타데이터 정책 검사 추가` (5 files) → PUSHED origin/main.
 ## Next task (06)
 1. When 02 adds the autoload line: run `pwsh -File tests/services/run_services_suites.ps1`; require OVERALL exit 0 and every R/P row `binding=game`, then update SAVE_INTEGRATION_CONTRACT.md status and REWARD_STATE_TABLE.md "Game binding" column with the evidence.
 2. If the gate fails after integration: fix 06-side causes; route 02-side causes with the failing row ID.

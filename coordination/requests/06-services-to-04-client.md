@@ -27,3 +27,7 @@ A native connectivity check could back `src/services/network_probe.gd` (today it
 
 # Update M5 (2026-10-31) — QUEUED, input only (no work until the user decides)
 docs/services/RELEASE_READINESS_SERVICES.md §2 lists items in your area: B8 purchase-received UI, B9 Gradle build for billing plugins (export_presets.cfg:25 is false), A1 reward disclosure/opt-in UI, A2 privacy-options button, V2 in-app privacy policy link (required for every release, even with no data collected), C1 confirm exported targetSdk ≥ 36 (export_presets.cfg:31 is empty, engine default unverified).
+
+# Update M6 (2026-10-31) — QUEUED
+- Privacy policy template: docs/services/PRIVACY_POLICY_DRAFT.md. Play requires a link or the text inside the app (V2). Suggest a "개인정보처리방침 / Privacy Policy" entry in settings opening `{{PRIVACY_POLICY_URL}}` once the user supplies hosting (OPEN_DECISIONS.md U3).
+- Store listing draft for screenshots/feature graphic captions: docs/services/STORE_LISTING_DRAFT.md. Screenshots must show the real build (Metadata policy).
