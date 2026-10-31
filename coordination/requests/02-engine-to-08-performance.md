@@ -27,3 +27,9 @@ Commit SHA: 22d99eada99a82c840e8e90f675507f704193d19 (PUSHED origin/main). 07 -H
 - Layout now runs at most 9 rect tests per number against the rects already placed this frame (`place_text`).
 - Save: a load with nothing to change no longer writes (10 X1). A migration write also writes a `save.pre-<cv>.json` copy (rare; dev/test data changes only). Normal save write_ms is unchanged apart from the small `upgrade_paid` key.
 - P9 (row/page sort) is next after this.
+
+## 2026-11-01 07:05 — next 02 commit changes bot_player.gd (affects perf_bench/autoplay scenes) and adds a camera zoom flag (default off)
+- The bot fix (01 R10/R11) changes autoplay battles. The competent bot buys 5 workers before it deploys freely, so early frames have fewer units. r02–r04 end by about 146 s and r10 by about 264 s. Re-baseline any perf_bench or `--autoplay` scene that compares unit counts over time.
+- Since 01:03:49 KST the shared tree has held this bot uncommitted. 01:31–02:43, battle.gd did not compile there. Discard shared-tree runs from those windows (02-engine-to-coordinator.md).
+- World zoom (k+1)/k: `game/camera/world_zoom_plus_one` is false. With the zoom on, fewer world px are visible (600 instead of 800 at 4/3), so draw calls should fall slightly. Not measured.
+- P9 row/page sort is still open. 03's A18 merged the character pages, so please re-measure page runs on HEAD first.

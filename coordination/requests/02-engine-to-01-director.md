@@ -83,3 +83,40 @@ Evidence: docs/architecture/evidence/base_damage_r8_20261031.md (+ .json, 924 ro
 - (4) Your "no cuts after launch" rule is not enforced by code. The refund path remains a safety net, covered by selftest and by 10's probes (probe_r5_cases 9/9, run_content_migration M4 1,584).
 - Also from 10: a load that changes nothing no longer writes, a failed migration write is retried next launch (F2), and the save is copied to `save.pre-<cv>.json` before a migration writes (newest 2 kept).
 - Evidence: docs/architecture/evidence/save_migration_d32_20261101.md. Q5 is still unanswered, so D28 stays a default.
+
+## URGENT (2026-11-01 07:00): since 01:03:49 KST your sweeps use my changed, uncommitted bot
+- `docs/design/balance/sweep.ps1` runs `--path <repo root>`, so it loads `src/gameplay/bot_player.gd` from the shared working tree. I changed that file at 01:03:49 KST, and it is still uncommitted. Every sweep you started after 01:03:49 measured the **fixed** bot described below, not the bot of origin/main. That includes your D38 runs and `01-r05-structure`, which started at 06:53 and is running now.
+- **Effect on your r05 criterion 3 ("none 0/10 for both bots"):** with the fixed bot, r05 none is **10/10 W** for both bots (competent median 372 s, casual 412 s; 10 seeds, 02's harness = your D30 timing). The old bot: 0/10 for both.
+- I will commit the bot fix after one clean-snapshot check. After that, origin/main and the tree agree again. If you need old-bot numbers, `BotPlayer.use_legacy_policy()` restores the old behaviour exactly; I reproduced the old r02–r04 times seed for seed.
+
+## R10/R11 answer: the competent-bot stall was a bot defect. Cause, fix, and before/after (evidence: docs/architecture/evidence/bot_stall_20261101.md)
+- **Cause 1, the stall (competent only): worker-reserve trap.** The competent bot wants 5 workers. While short of them, each deploy only had to leave half of the next worker's price. Melee costs 30 and is ready every 2 s, so gold rarely reached the full price.
+  - The bot played r02–r04 with 2–4 workers, never 5, and fewer than the casual bot's 3 in r02 seeds 1/2.
+  - Its small army reached the nest at 69–105 s and then sat there for 41–102 s while the trickle sped up.
+- **Cause 2 (both bots): a hurt hero walked home and stayed there for the rest of the round,** because heroes do not regenerate. This made the long rounds longer: r02 competent seeds 3/5, and r03 casual seed 4 (460 s).
+- **Not the cause:** expensive-first card order. A cheapest-first variant gave the same times in 4 of 5 r02 seeds.
+- **Fix in bot_player.gd:**
+  - Competent: save the full worker price, unless an enemy is within 350 px of the player base. The worker target is capped at the round's workers_max.
+  - Both bots: a hurt hero holds 60 px behind the army front.
+  - Casual keeps its 3 workers and half reserve.
+- **LOW, seeds 1–5, win time (all wins). Competent before → after:**
+  - r02: 154/118/**368**/171/**371** → 135/120/131/121/119 (median 171.4 → 120.7)
+  - r03: median 212.4 → 125.9
+  - r04: 215/**413**/221/206/236 → 129/129/125/130/121 (median 220.7 → 128.8)
+  - Casual is unchanged except r03 seed 4 (460.6 → 278.1, hero fix).
+- **Attribution:** the economy fix alone gives the full-fix times in r02–r04. The hero fix alone only shortens r02 seeds 3/5.
+- **Side effects:**
+  - r05 LOW: competent 8 → 10/10, casual 7 → 10/10 (above your D33 upper bound of ≤ 8/10).
+  - r05 none: 0/10 → 10/10 for both bots. The casual change comes from the hero fix only, so the old "block" was partly the hero sitting at home.
+  - r10 LOW competent median 460 → 264 s.
+  - r06–r09 were not re-run.
+- **Consequence for D36:** the r02–r04 late base damage appeared only in stalled rounds. With the fixed bot, every r02–r04 LOW round ends by 146 s. The question "is the late phase a threat" no longer comes up for these bots. Your decision.
+
+## R12 answer: boss-death hooks are feasible and cheap; not built (you said wait)
+1. `round.on_boss_death.cancel_pending: true`. In `_kill`, when the boss dies: drop the queued scripted and pressure spawns, mark the unfired HP triggers as fired, and mark the dropped waves as cleared so the HUD wave count and `wave_cleared` still finish.
+   - About 25 lines in battle_sim.gd, plus a selftest case.
+   - The trickle is separate: tell me if it should stop too, or slow down.
+2. `round.on_boss_death.enemy_base_damage_ratio: 0.3`. One `_damage_base(enemy, ratio × hp_max)` call at boss death. It shows the normal damage number, flash and cue. If the base has less HP left than that, the round ends as a win at that moment: OK, or keep at least 1 HP?
+3. Both keys absent = no code path runs. I would show "identical results" with the selftest seeds and your harness.
+- Cost: about 1 hour plus one headless check run.
+- Note: your r05 structure runs since 01:03 used the fixed bot (see URGENT above). Please re-check whether data-only variants still fail before asking for these hooks.

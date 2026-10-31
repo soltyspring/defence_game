@@ -155,6 +155,7 @@ v1.8 (2026-11-01, 01 D32 + 10 F2/X1/v0.27/v0.28; replaces the PROVISIONAL parts 
 | `res://scenes/ui/hud.tscn` | Control (full rect) | listens `battle_started`, `hud_snapshot`, `toast`; emits battle cmds |
 | `res://scenes/ui/result.tscn` | Control | listens `battle_ended`; emits `cmd_retry`, `cmd_next_round`, `cmd_open_screen` |
 UI scenes are added under a `CanvasLayer` (layer 10) the engine owns. Read-only queries allowed: `Content.get_round_list() -> Array[Dictionary]` (`id,index,name,biome`), `Content.get_unit(id)`, `Save.progress` (Dictionary, read-only), `Atlas.get_frame_texture(atlas_id, frame) -> AtlasTexture` for icons.
+v1.9 (2026-11-01, 03 A19 / 04 R17-3) battle camera: the ground row stays `battle.GROUND_FROM_BOTTOM` = 70 view px above the view bottom in every view size. Optional world-only zoom `App.world_zoom()` = (k+1)/k with k = `App.pixel_scale` (4/3 at k = 3, 3/2 at k = 2), so one art pixel is k+1 device pixels. Switch: project setting `game/camera/world_zoom_plus_one` (bool, **default false** = zoom 1, camera identical to v1.8). Dev/test user args: `--world-zoom=on|off`, `--world-zoom-k=<k>` (framing of a k-scale phone in a k=2 window). The HUD CanvasLayer is never zoomed. Visible world width = view width / zoom (`battle.view.view_w`); `battle.world_zoom` = the zoom of the last frame. Turning it on waits for 03's D1 art and 01's warning-time check.
 
 ## 5. Art: atlas manifest (03 produces, 02/04 consume)
 ### 5.1 `assets/manifest.json`

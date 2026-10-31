@@ -30,6 +30,8 @@ var tutorial = null
 var tutorial_key := ""
 var _evbuf: Array = []
 var _shake := 0.0
+var world_zoom := 1.0                  # camera zoom used in the last frame (1 = off; App.world_zoom())
+const GROUND_FROM_BOTTOM := 70.0       # ground row, view px above the view bottom (04 CamFix / R17)
 
 func start(p_round_id: String, seed_value: int, upgrades: Dictionary, autoplay := false) -> void:
 	round_id = p_round_id
@@ -232,7 +234,12 @@ func _step_tutorial() -> void:
 		Events.tutorial_step.emit(tutorial_key)
 
 func _update_camera(delta: float) -> void:
-	var vw := get_viewport_rect().size.x
+	var vs := get_viewport_rect().size
+	# 03 A19 / 04 R17-3: optional world-only zoom (k+1)/k (App.world_zoom(), project setting, default off). The HUD
+	# is a CanvasLayer and is not zoomed. With z == 1 every value below equals the pre-zoom camera exactly.
+	var z: float = App.world_zoom()
+	world_zoom = z
+	var vw := vs.x / z                     # visible world width
 	view.view_w = vw
 	_free_cam_t = maxf(0.0, _free_cam_t - delta)
 	if _free_cam_t <= 0.0 and not _drag_active:
@@ -241,12 +248,16 @@ func _update_camera(delta: float) -> void:
 	var lo := -90.0 + vw * 0.5
 	var hi: float = sim.L + 50.0 - vw * 0.5
 	_cam_x = clampf(_cam_x, lo, maxf(lo, hi))
-	# Integer scale_mode can give views taller than 360 (e.g. 800x450): keep the ground at the bottom and show more sky.
-	var vh := get_viewport_rect().size.y
-	var cy := roundf(360.0 - vh * 0.5)
+	# Ground row fixed GROUND_FROM_BOTTOM view px above the view bottom (04 CamFix): integer-scale views taller than
+	# 360 (e.g. 800x450) show more sky. Zoomed, cy stays unrounded so that (ground_y - cy) * z is a whole view px.
+	var vh := vs.y
+	var cy: float = float(view.ground_y) - (vh * 0.5 - GROUND_FROM_BOTTOM) / z
+	if z == 1.0:
+		cy = roundf(cy)
+	cam.zoom = Vector2(z, z)
 	cam.position = Vector2(roundf(_cam_x), cy)
-	view.view_top = cy - vh * 0.5
-	view.view_bottom = cy + vh * 0.5
+	view.view_top = cy - vh * 0.5 / z
+	view.view_bottom = cy + vh * 0.5 / z
 	if _shake > 0.0:
 		if bool(Save.progress.settings.get("screen_shake", true)):
 			cam.offset = Vector2(roundf(randf_range(-_shake, _shake)), roundf(randf_range(-_shake, _shake) * 0.5))
@@ -282,5 +293,5 @@ func _unhandled_input(ev: InputEvent) -> void:
 		_drag_active = ev.pressed
 		_drag_last = ev.position
 	elif ev is InputEventScreenDrag and _drag_active:
-		_cam_x -= ev.relative.x   # events arrive in 640x360 canvas space (canvas_items stretch)
+		_cam_x -= ev.relative.x / world_zoom   # events arrive in view (canvas) px; one world px = world_zoom view px
 		_free_cam_t = 2.0

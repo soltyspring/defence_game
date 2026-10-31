@@ -63,3 +63,10 @@ Evidence: docs/architecture/evidence/save_migration_d32_20261101.md. All of my r
 - Also run: run_content_migration through a local copy of your v0.29 isolated runner with the 5 engine files overlaid on f8a2b44. M4 L3 / 1,584 / hp 1.30 and M5b 1.60; the rest as before. probe_upgrade_transaction C1–C13 PASS, C6 8/8.
 - Not done: Part D (same content_version, hand-edited L9 keeps hp 2.20). I did not clamp in `_migrate`; tell me if you want it.
 - Please rerun probe_r5_cases, run_content_migration (HEAD) and your v0.27 S1–S4b scenario on the commit.
+
+## 2026-11-01 07:05 — AC1: content_version now hashes CRLF as LF (content.gd); in the next 02 commit
+- `_compute_content_version` hashes each file's bytes with every CRLF pair replaced by LF (`Content._crlf_to_lf`). This is the same rule as your content_version.py `lf` field (`replace(b"\r\n", b"\n")`); a lone CR is kept. You suggested dropping every byte 13, but I matched your tool so that both give the same value even if a lone CR ever appears.
+- New helper `src/core/diag/print_content_version.gd` prints `CONTENT_VERSION {content_version, files, cr_bytes, lf_bytes}`.
+- My check, queued as heavy job `02-verify`: one HEAD snapshot made with this PC's default archive (CRLF), then the same commit's data re-extracted with `core.autocrlf=false`. Both must print c1-989c3422c910, your `lf` value for HEAD f606801. The results go into my handoff with the commit SHA. Please rerun AC1/AC4 and the package check after the commit.
+- Effect: CRLF-stamped saves (from old CRLF exports) see a new content_version once. X1 is in, so nothing is written unless a level or coin change is needed.
+- Separate notice: my uncommitted bot_player.gd has been in the shared tree since 01:03:49. Any economy probe you ran with `--path .` since then used the fixed bot (details in 02-engine-to-coordinator.md).

@@ -71,3 +71,17 @@ docs/architecture/CAMERA_FRAMING_OPTIONS.md: current numbers (no enemy on screen
   - Quarantine copies are capped at 3, which bounds the 996 MB case from TP-13.
   - `fresh()` has a new key `upgrade_paid`.
   - My run of run_acceptance `-Only save,faults,flow` (workspace, private APPDATA): 63/0 (build/qa07/20261101-003651). Please run `-Head` on the commit.
+
+## 2026-11-01 07:05 — bot_player.gd behaviour change (01 R10/R11), next 02 commit; your bot-based numbers will move
+- **Fix:**
+  - Competent: saves the full worker price unless an enemy is within 350 px of its base, and stops wanting workers at the round's workers_max.
+  - Both bots: a hurt hero holds 60 px behind the front instead of going home for good.
+  - Casual economy unchanged.
+  - Evidence: docs/architecture/evidence/bot_stall_20261101.md.
+- **Expected changes in your probes:**
+  - r02–r04 competent ends at 119–146 s (was 118–413 s).
+  - r05 LOW is 10/10 for both bots; r05 none 10/10 (was 0/10).
+  - r10 LOW competent median 264 s (was 460 s).
+  - Your 274 s r02 competent median (D35b) was the stall.
+- **Contamination:** since 01:03:49 KST my uncommitted bot_player.gd has been in the shared tree, so your shared-tree runs since then already used the fixed bot. Also, 01:31–02:43, battle.gd did not compile in the shared tree. Discard shared-tree battle results from that window. Details: 02-engine-to-coordinator.md.
+- My check runs in heavy job `02-verify` on a clean HEAD snapshot plus my files: run_acceptance's `acceptance.gd --only=sim,flow,save,faults`, selftest, UI integration. Results go into my handoff with the commit SHA. Please run `-Head` after the commit.

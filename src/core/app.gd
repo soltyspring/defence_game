@@ -40,6 +40,11 @@ func _capture(file: String) -> void:
 	var p := _shot_dir.path_join(file)
 	img.save_png(p)
 	print("[App] screenshot ", p, " ", img.get_size(), " view=", get_viewport().get_visible_rect().size, " window=", DisplayServer.window_get_size(), " scale=", get_tree().root.content_scale_factor, " perf=", JSON.stringify(Perf.snapshot()))
+	if battle and battle.cam:
+		var vs := get_viewport().get_visible_rect().size
+		var z: float = battle.cam.zoom.x
+		print("[App] camera k=%d world_zoom=%.4f visible_world=%.1fx%.1f cam=%s ground_screen_y=%.2f (view px; bottom %.0f)" % [pixel_scale, z,
+			vs.x / z, vs.y / z, str(battle.cam.position), (battle.view.ground_y - battle.cam.position.y) * z + vs.y * 0.5, vs.y])
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -62,6 +67,13 @@ func _ready() -> void:
 				_shots.append(float(s))
 		if a.begins_with("--shot-dir="):
 			_shot_dir = a.get_slice("=", 1)
+		if a.begins_with("--world-zoom="):
+			_world_zoom_arg = a.get_slice("=", 1)
+		if a.begins_with("--world-zoom-k="):
+			_world_zoom_k = int(a.get_slice("=", 1))
+	if not ProjectSettings.has_setting(WORLD_ZOOM_SETTING):
+		ProjectSettings.set_setting(WORLD_ZOOM_SETTING, false)
+	ProjectSettings.set_initial_value(WORLD_ZOOM_SETTING, false)
 
 ## Integer pixel scale that still fills the screen (coordinator 08:12, 03 A2c, 04 R9).
 ## Godot's scale_mode="integer" alone letterboxes (measured: 1600x900 window -> 640x360 view with bars).
@@ -80,6 +92,23 @@ func _apply_pixel_scale() -> void:
 	pixel_scale = k
 
 var pixel_scale := 1
+
+## 03 A19 / 04 R17-3 world-only camera zoom: (k+1)/k, so one art pixel is k+1 device pixels (4/3 at k = 3, 3/2 at
+## k = 2); the HUD stays at k. Switch: project setting game/camera/world_zoom_plus_one (default false = zoom 1).
+## Dev/test overrides (user args): --world-zoom=on|off, --world-zoom-k=<k> (framing of a k-scale phone on a k=2 window;
+## then art pixels are not whole device pixels in that window).
+const WORLD_ZOOM_SETTING := "game/camera/world_zoom_plus_one"
+var _world_zoom_arg := ""
+var _world_zoom_k := 0
+
+func world_zoom() -> float:
+	var on := bool(ProjectSettings.get_setting(WORLD_ZOOM_SETTING, false))
+	if _world_zoom_arg != "":
+		on = _world_zoom_arg == "on"
+	if not on:
+		return 1.0
+	var k := _world_zoom_k if _world_zoom_k > 0 else pixel_scale
+	return float(k + 1) / float(maxi(1, k))
 
 ## Desktop window title = the in-game title `ui.title` in the UI's current locale (04 UiText, data/text/<locale>.json).
 ## `application/config/name` stays "Lane Defence" because renaming it moves the desktop user:// folder (Godot docs).

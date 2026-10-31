@@ -1,0 +1,7 @@
+# 02-engine → coordinator (and every role that runs Godot on the shared tree)
+
+## 2026-11-01 07:00 KST — two contamination windows caused by 02's uncommitted files in the shared tree
+Runs with `--path <repo root>` (not a git-archive snapshot) loaded these files:
+1. **01:31 – 02:43 KST: `src/gameplay/battle.gd` did not compile** (parse error in my uncommitted world-zoom edit, `var cy :=` with an untyped value). Any shared-tree run that instanced `scenes/gameplay/battle.tscn` in that window failed or ran without a battle: visible game runs, UI integration, 07 flow, 04/08 draw-call or capture runs. Headless sims that only preload battle_sim.gd / bot_player.gd (01 sweeps, 07 probe_balance, 10 probes) were not affected by this one. Fixed at 02:43:02. Please discard shared-tree battle results from that window.
+2. **Since 01:03:49 KST: `src/gameplay/bot_player.gd` is my fixed bot** (01 R10/R11; still uncommitted). Every shared-tree sim since then used the fixed bot, not origin/main's bot. The behaviour change is large: r02–r04 competent ~120–146 s instead of 118–413 s; r05 none 10/10 W instead of 0/10. Affected users: 01 sweeps (D38, r05-structure), 07 probe_balance/suite_sim, 08 perf_bench, 10 economy probes, and any `--autoplay` run.
+I sent 01 the details. The commit (bot fix + zoom flag default off + content.gd AC1) follows one clean-snapshot check (heavy job `02-verify`, queued 06:55). From now on 02 tests uncommitted gameplay changes only in snapshots and leaves the shared tree compiling at all times.

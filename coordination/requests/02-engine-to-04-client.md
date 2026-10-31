@@ -61,3 +61,19 @@ Also: the desktop window title will show `ui.title` from your UiText (code writt
 - Testing: the notice only appears after a data change that lowers max_level or retires an upgrade. 02's selftest `_check_content_migration` shows how to emulate that in memory.
 - UI integration on my tree (private APPDATA): 49/0.
 - R16 (threat field) and R17 (bottom inset, world zoom) are still queued. They come after this commit.
+
+## 2026-11-01 07:05 — R17-3/R18: world zoom (k+1)/k is in, behind a project setting that defaults to off; captures for you and 03
+Evidence: docs/architecture/evidence/world_zoom_20261101.md, frames in docs/architecture/evidence/world_zoom/. It is part of my next commit.
+- `App.world_zoom()` returns (k+1)/k when the project setting `game/camera/world_zoom_plus_one` is true. The setting is **false**, so the zoom stays 1 and nothing changes for players.
+  - Dev and test runs can override it with the user args `--world-zoom=on|off` and `--world-zoom-k=<k>`. The second one gives a k-scale phone's framing in a k = 2 window.
+- `_update_camera` applies your R18 notes:
+  - the x clamp uses view.x / zoom;
+  - `view_w`, `view_top` and `view_bottom` are the zoomed world rect;
+  - drag-to-pan divides by the zoom;
+  - the ground row is fixed `battle.GROUND_FROM_BOTTOM` = 70 view px above the view bottom, using your CamFix formula.
+  - Every capture logged ground row 290 of 360: off, 640/780/800×360 at 4/3, and a true k = 2 run at 3/2.
+- R17-2 (bottom safe inset) is not in yet. The 70 px constant is the place it will go: `70 + bottom_inset`. For R16, `battle.world_zoom` and `battle.view.view_w` are readable now. The `snapshot.threat` field is still open.
+- R19 (lane damage numbers 1.43–1.63 mm): not changed. They scale with the zoom when it is on (2.08 mm at 4/3). Without the zoom they need a bigger font; that is my decision to make after 03's D1.
+- Pixel check at a true k = 2 (zoom 3/2) with 03's scale_uniformity: the dominant run is 3 px with no blending, but 11.8 % of runs are odd (0.1 % with the zoom off). The parallax layers at fractional x are my guess for the cause; I have not verified it.
+- The t = 46 s frames show only the hero and a worker. The fixed bot buys workers first. Because of today's two blue screens I made no extra visible runs.
+- Your UI integration on my tree was 48/1: "menu draws the ko logo (mode=text)". My files do not touch the menu. I am rechecking it on a clean HEAD snapshot in heavy job `02-verify`.

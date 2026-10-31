@@ -40,6 +40,10 @@ window/stretch/scale_mode="integer"
 window/handheld/orientation=4
 window/vsync/vsync_mode=1
 
+[game]
+
+camera/world_zoom_plus_one=false
+
 [gui]
 
 common/snap_controls_to_pixels=true

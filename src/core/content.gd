@@ -66,6 +66,10 @@ func load_all(root := "res://data") -> void:
 	for w in warnings:
 		push_warning("[Content] " + w)
 
+## "c1-" + sha256 over (relative path, LF, file bytes with CRLF -> LF, LF) of every data/**/*.json, sorted by path.
+## CRLF -> LF (10 v0.30–v0.33 AC1): the same data checked out or archived with core.autocrlf=true/false, or written by
+## PowerShell, must give the same version; otherwise backup names, notice from/to and refund keys differ per build path.
+## Same rule as docs/research/systems/probes/content_version.py `lf` (replace b"\r\n" with b"\n"; a lone CR is kept).
 func _compute_content_version(root: String) -> String:
 	var files := _json_files(root)
 	files.sort()
@@ -74,9 +78,23 @@ func _compute_content_version(root: String) -> String:
 	for f in files:
 		h.update(f.trim_prefix(root).to_utf8_buffer())
 		h.update(PackedByteArray([10]))
-		h.update(FileAccess.get_file_as_bytes(f))
+		h.update(_crlf_to_lf(FileAccess.get_file_as_bytes(f)))
 		h.update(PackedByteArray([10]))
 	return "c1-" + h.finish().hex_encode().substr(0, 12)
+
+static func _crlf_to_lf(b: PackedByteArray) -> PackedByteArray:
+	var i := b.find(13)
+	if i < 0:
+		return b
+	var out := PackedByteArray()
+	var start := 0
+	while i >= 0:
+		if i + 1 < b.size() and b[i + 1] == 10:
+			out.append_array(b.slice(start, i))
+			start = i + 1
+		i = b.find(13, i + 1)
+	out.append_array(b.slice(start))
+	return out
 
 func _json_files(dir_path: String) -> PackedStringArray:
 	var out := PackedStringArray()
