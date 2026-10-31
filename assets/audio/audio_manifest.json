@@ -366,7 +366,7 @@
   },
   "hit_mold": {
    "bus": "SFX",
-   "vol_db": -7,
+   "vol_db": -6,
    "max": 2,
    "gap": 0.22,
    "prio": 1,
@@ -543,7 +543,7 @@
   },
   "hit_base": {
    "bus": "SFX",
-   "vol_db": -9,
+   "vol_db": -4.5,
    "max": 1,
    "gap": 0.35,
    "prio": 5,
@@ -568,7 +568,7 @@
      "seconds": 0.34,
      "bytes": 15038,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -17.43
+     "rms_dbfs": -18.93
     }
    ]
   },
@@ -636,7 +636,7 @@
   },
   "death_ally": {
    "bus": "SFX",
-   "vol_db": -12,
+   "vol_db": -8.5,
    "max": 2,
    "gap": 0.08,
    "prio": 3,
@@ -667,7 +667,7 @@
   },
   "death_enemy": {
    "bus": "SFX",
-   "vol_db": -12,
+   "vol_db": -11,
    "max": 2,
    "gap": 0.07,
    "prio": 3,

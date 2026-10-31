@@ -592,8 +592,9 @@ def r3_death_ally(rng):
 
 def r3_hit_base_bakery(rng):
     """Player bakery tower hit: wooden crack + crust shower + low (but >300 Hz-led) knock."""
-    knock = thump(330, 200, 0.2, 0.06, drive=2.5) * 0.4
-    crack = burst(rng, 0.05, 0.012, 1200, 5000) * 0.8
+    knock = thump(330, 200, 0.2, 0.06, drive=2.5) * 0.22
+    # v3.5: longer, brighter wood crack so "our base is hit" survives a phone speaker (PHONE_SPEAKER_CHECK)
+    crack = mix(burst(rng, 0.07, 0.018, 1500, 6000), seq([(0.05, burst(rng, 0.05, 0.012, 1800, 6500) * 0.6)], 0.12))
     return mix(knock, crack, seq([(0.02, crumbs(rng, 0.3, 30, 1500, 6000) * 0.6)], 0.34))
 
 
@@ -819,17 +820,17 @@ CUES = {
                             bus="SFX", vol_db=-8, max=2, gap=0.22, prio=1, pitch=0.07, faction="bakery", group="hit",
                             desc="a bread soldier is hit: dry crust crunch"),
     "hit_mold":        dict(r=[lambda g, v=v: r3_hit_mold(g, v) for v in range(3)],
-                            bus="SFX", vol_db=-7, max=2, gap=0.22, prio=1, pitch=0.08, faction="mold", group="hit",
+                            bus="SFX", vol_db=-6, max=2, gap=0.22, prio=1, pitch=0.08, faction="mold", group="hit",
                             desc="a mold unit is hit: wet squish + bubble"),
     "hit_arrow":       dict(r=[r_hit_arrow], bus="SFX", vol_db=-10, max=2, gap=0.05, prio=1, pitch=0.08, faction="neutral", group="hit", desc="ranged impact fallback"),
     "shoot_arrow":     dict(r=[r_shoot_arrow], bus="SFX", vol_db=-12, max=2, gap=0.06, prio=1, pitch=0.08, faction="bakery", desc="baguette thrower whoosh"),
     "shoot_rock":      dict(r=[r_shoot_rock], bus="SFX", vol_db=-10, max=1, gap=0.12, prio=2, pitch=0.06, faction="bakery", desc="oven cannon puff + thunk"),
     "shoot_spit":      dict(r=[r3_shoot_spit], bus="SFX", vol_db=-11, max=2, gap=0.08, prio=1, pitch=0.08, faction="mold", desc="spore spit: wet ptoo + bubbles"),
-    "hit_base":        dict(r=[r3_hit_base_bakery], bus="SFX", vol_db=-9, max=1, gap=0.35, prio=5, pitch=0.05, faction="bakery", desc="bakery tower hit: wooden crack + crust shower"),
+    "hit_base":        dict(r=[r3_hit_base_bakery], bus="SFX", vol_db=-4.5, max=1, gap=0.35, prio=5, pitch=0.05, faction="bakery", desc="bakery tower hit: wooden crack + crust shower"),
     "hit_base_mold":   dict(r=[r3_hit_base_mold], bus="SFX", vol_db=-9, max=1, gap=0.35, prio=5, pitch=0.05, faction="mold", desc="mold hive hit: heavy wet thud"),
     "explosion":       dict(r=[r3_explosion], bus="SFX", vol_db=-8, max=2, gap=0.12, prio=5, pitch=0.06, faction="mold", desc="spore bomber burst: splat + hiss + bubbles"),
-    "death_ally":      dict(r=[r3_death_ally], bus="SFX", vol_db=-12, max=2, gap=0.08, prio=3, pitch=0.06, faction="bakery", desc="bread crumbles: dry crackle + soft falling tone"),
-    "death_enemy":     dict(r=[r3_death_enemy], bus="SFX", vol_db=-12, max=2, gap=0.07, prio=3, pitch=0.08, faction="mold", desc="mold bursts: squelch + bubble fizz"),
+    "death_ally":      dict(r=[r3_death_ally], bus="SFX", vol_db=-8.5, max=2, gap=0.08, prio=3, pitch=0.06, faction="bakery", desc="bread crumbles: dry crackle + soft falling tone"),
+    "death_enemy":     dict(r=[r3_death_enemy], bus="SFX", vol_db=-11, max=2, gap=0.07, prio=3, pitch=0.08, faction="mold", desc="mold bursts: squelch + bubble fizz"),
     "hero_death":      dict(r=[r_hero_death], bus="SFX", vol_db=-5, max=1, gap=1.0, prio=9, pitch=0.0, duck=-6, faction="bakery", desc="head baker falls: 4-note falling triangle line"),
     "hero_respawn":    dict(r=[r_hero_respawn], bus="SFX", vol_db=-8, max=1, gap=1.0, prio=8, pitch=0.0, faction="bakery", desc="rising sparkle arpeggio"),
     "skill_slam":      dict(r=[r_skill_slam], bus="SFX", vol_db=-4, max=1, gap=0.2, prio=9, pitch=0.0, duck=-4, faction="bakery", desc="rolling-pin ground pound"),

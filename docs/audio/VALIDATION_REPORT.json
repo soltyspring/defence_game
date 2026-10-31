@@ -238,7 +238,7 @@
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 0.997,
-   "mix_level_db": -21.3
+   "mix_level_db": -20.3
   },
   "hit_mold_2.wav": {
    "cue": "hit_mold",
@@ -253,7 +253,7 @@
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 0.991,
-   "mix_level_db": -20.6
+   "mix_level_db": -19.6
   },
   "hit_mold_3.wav": {
    "cue": "hit_mold",
@@ -268,7 +268,7 @@
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 0.998,
-   "mix_level_db": -20.2
+   "mix_level_db": -19.2
   },
   "hit_arrow.wav": {
    "cue": "hit_arrow",
@@ -337,13 +337,13 @@
    "rate": 22050,
    "seconds": 0.34,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -17.43,
+   "rms_dbfs": -18.93,
    "clipped": 0,
-   "dc": -0.00054,
+   "dc": -0.0003,
    "edge_first": 0.0,
    "edge_last": 0.0,
-   "hf300_share": 0.684,
-   "mix_level_db": -26.4
+   "hf300_share": 0.846,
+   "mix_level_db": -23.4
   },
   "hit_base_mold.wav": {
    "cue": "hit_base_mold",
@@ -388,7 +388,7 @@
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 1.0,
-   "mix_level_db": -28.4
+   "mix_level_db": -24.9
   },
   "death_enemy.wav": {
    "cue": "death_enemy",
@@ -403,7 +403,7 @@
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 0.977,
-   "mix_level_db": -26.3
+   "mix_level_db": -25.3
   },
   "hero_death.wav": {
    "cue": "hero_death",
@@ -691,7 +691,7 @@
   "disk_budget": 2500000,
   "sfx_pcm_resident_bytes": 977472,
   "sfx_pcm_budget": 2097152,
-  "worst_case_sfx_sum_db": 24.8,
+  "worst_case_sfx_sum_db": 25.1,
   "note": "worst case = every SFX/UI cue at max instances, peaks aligned; runtime voice caps (SFX pool 12, UI pool 3) plus Master limiter keep real output below this"
  },
  "failures": [],

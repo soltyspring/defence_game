@@ -242,7 +242,7 @@ func cue_instances(cue: StringName) -> int:
 ## Play a one-shot cue. params: x (world px, optional distance attenuation), vol_db (additive),
 ## pitch (multiplier). Returns true if a voice started.
 func play(cue: StringName, params: Dictionary = {}) -> bool:
-	if not enabled: return false
+	if not enabled or _suspended: return false   # app in background: nothing may start
 	var c: Dictionary = cues.get(cue, {})
 	if c.is_empty() or (c.streams as Array).is_empty():
 		stats.missing += 1
@@ -360,6 +360,9 @@ func prepare_quit() -> void:
 # ---------------------------------------------------------------- music
 func play_music(id: StringName, fade := 0.8) -> void:
 	if not enabled: return
+	if _suspended:
+		_pending_music = id   # remember: start it on resume
+		return
 	if id == _music_id and _music_cur >= 0 and _music[_music_cur].playing: return
 	var d: Dictionary = music_defs.get(id, {})
 	if d.is_empty():
@@ -384,6 +387,7 @@ func play_music(id: StringName, fade := 0.8) -> void:
 	_music_id = id
 
 func stop_music(fade := 0.8) -> void:
+	_pending_music = &""
 	if _music_cur >= 0: _fade(_music_cur, -80.0, fade, true)
 	_music_cur = -1
 	_music_id = &""
@@ -408,7 +412,7 @@ func set_battle_paused(p: bool) -> void:
 	else:
 		var dt := _clock - _pause_t0
 		for v in _v_end: _v_end[v] = float(_v_end[v]) + dt
-	for v in _sfx: v.stream_paused = p
+	for v in _sfx: v.stream_paused = p or _suspended
 	var mi: int = _bus_idx[BUS_MUSIC]
 	if _lowpass_slot >= 0: AudioServer.set_bus_effect_enabled(mi, _lowpass_slot, p)
 	_apply_bus_volumes()
@@ -416,15 +420,45 @@ func set_battle_paused(p: bool) -> void:
 func is_battle_paused() -> bool:
 	return _paused
 
+## App lifecycle (v3.5). Android home button / incoming call / screen off arrive as APPLICATION_PAUSED (and
+## FOCUS_OUT); desktop alt-tab as FOCUS_OUT. While suspended: Master muted, EVERY player is stream-paused
+## (music keeps its position instead of running on silently), and no new cue starts. On RESUMED/FOCUS_IN the
+## music and UI continue from where they stopped; battle SFX stay paused while the battle itself is paused
+## (App keeps the battle paused until the player taps resume), then continue from their positions.
 func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_APPLICATION_PAUSED:
 			if mute_on_focus_loss or what == NOTIFICATION_APPLICATION_PAUSED:
-				_focus_muted = true
-				_apply_bus_volumes()
+				_set_suspended(true)
 		NOTIFICATION_APPLICATION_FOCUS_IN, NOTIFICATION_APPLICATION_RESUMED:
-			_focus_muted = false
-			_apply_bus_volumes()
+			_set_suspended(false)
+
+var _suspended := false
+var _pending_music: StringName = &""
+var _suspend_t0 := 0.0
+
+func is_suspended() -> bool:
+	return _suspended
+
+func _set_suspended(on: bool) -> void:
+	if on == _suspended:
+		return
+	_suspended = on
+	_focus_muted = on
+	if on:
+		_suspend_t0 = _clock
+	else:
+		var dt := _clock - _suspend_t0
+		for v in _v_end: _v_end[v] = float(_v_end[v]) + dt   # voices did not advance while suspended
+	for p in _music + _ui + ([_stinger] if _stinger else []):
+		p.stream_paused = on
+	for p in _sfx:
+		p.stream_paused = on or _paused
+	_apply_bus_volumes()
+	if not on and _pending_music != &"":
+		var m := _pending_music
+		_pending_music = &""
+		play_music(m)
 
 # ---------------------------------------------------------------- tick
 func _process(delta: float) -> void:
@@ -460,6 +494,7 @@ func snapshot() -> Dictionary:
 	s.music = str(_music_id)
 	s.duck_db = snf(_duck_cur)
 	s.paused = _paused
+	s.suspended = _suspended
 	s.volumes = _vol.duplicate()
 	s.load_errors = Array(load_errors)
 	return s
