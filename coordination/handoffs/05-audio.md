@@ -1,8 +1,47 @@
 RULE (line 1, fixed after 3 violations: af491c2, 53883db, f5f42df batch): a commit SHA is written ONLY in a separate tool call made AFTER the Publish-Task call that printed `PUSHED <sha>` has returned; copy it from that output, check it with `git log origin/main`, and never record the SHA-record commit's own SHA in the file.
 # 05-audio handoff
-Updated: 2026-10-31 23:xx KST (resumed after the 20:27 quota stop, new login, same session; window reopened by the user)
-Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all. Quota at resume: 0.39 %.
+Updated: 2026-11-01 00:xx KST (v3.7: danger cues death_ally / hit_base on phone speakers; resumed after the 23:08 blue screen)
+Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all.
+Heavy-run rule acknowledged: every Godot run goes through `& .\coordination\heavy_run.ps1 -Label '05-…' -Script {…}`, one at a time, never bypassed. The lock waits were 597 s and 754 s, which is normal. The private-APPDATA isolation was kept.
 
+## Blue-screen recovery check (23:2x)
+- `git status`: only `tools/audio/run_godot_checks.ps1` was modified (the `-RecordSeeds` edit made just before the crash). Integrity: 19,311 bytes, no NUL, ends with a newline, parses without errors.
+- Integrity scan of all 148 tracked 05 files (zero size, NUL bytes, missing EOL, WAV tails of zeros): two flags, both harmless and identical to the committed HEAD:
+  - `docs/audio/previews/listen/.gdignore` is 0 bytes by design.
+  - `coordination/status/05-audio.md` lacked a final newline when committed; now rewritten with one.
+- The interrupted baseline recording left nothing usable and was redone.
+
+## v3.7 (coordinator review of 131dcf2/e09633f: danger cues masked on phone speakers)
+Criteria were written BEFORE the change. The 3-seed baseline, diagnosis, change, before/after table and verdicts are all in docs/audio/PHONE_SPEAKER_CHECK.md:
+- Baseline (seeds 11/23/37): death_ally masked 10.9/12.5/10.7 %, hit_base 10.9/12.5/10.7 %, p10 down to −1.6 dB.
+- Same seed 11 with identical assets: 14.3 % at 23:00 vs 10.9 % now. So the earlier "background differs" explanation was not proven by one seed; the run-to-run noise is about ±3 points.
+- Diagnosis: 100 % of low-SNR placements are masked by OTHER battle SFX, never by the music.
+  - death_ally had only 3 % of its energy at 1–2 kHz.
+  - hit_base loses at 300 Hz–2 kHz.
+- Change:
+  - death_ally: onset crust snap and 1–4 kHz content (+1.1 dB phone loudness).
+  - New runtime danger-cue SFX duck: −6 dB on lower-priority SFX while death_ally / hit_base sound; music untouched.
+  - Rejected: a hit_base tock (the offline estimate got worse); hit_base.wav is unchanged.
+- After (same seeds):
+  - death_ally masked 0.0/3.6/0.0 %, p10 7.1/5.0/3.7 dB
+  - hit_base masked 0.0/3.6/1.8 %, p10 6.4/5.5/4.6 dB
+  - → D1/D2/G3 PASS
+  - Mix −22.0 LUFS on all seeds, peaks ≤ −2.41 dBFS, 0 clipped, no fatigue → G1 PASS
+- **G2 NOT met as written**: wave_cleared 3.6 → 7.1 %, hit_base_mold 10.7 → 14.0 %. The masked placements co-occur with wave_incoming/deploy/hit_mold, rarely with death_ally, so this is attributed to battle variance. That is an inference, not proven; it stays open.
+- Size: +882 B (death_ally.wav only).
+Validation:
+- `validate.py --determinism` PASS.
+- `python tools/perf/asset_budget_check.py --worktree` → verdict PASS (sfx 43/0.94 MiB, music 2/0.56 MiB).
+- `run_godot_checks.ps1` selftest PASS, including the new duck assertions.
+- `-Integration -BattleSeconds 80 -Record -RecordSeeds 11,23,37 -Lifecycle` PASS:
+  - hits mold 14 / bread 19 / fallback 0; deploy 14 = 14, skill 7 = 7, wave_cleared 1 = 1, upgrade 2 = 2, hero 1 = 1/1
+  - 0 dups; audio-class exit leaks 0; lifecycle 27/27; settings 3/3 + 5/5
+  - isolation proof: real save unchanged
+- No own Godot left running.
+Not verified: human listening (nobody has listened), Android device.
+Next:
+1. G2 follow-up: either more seeds for wave_cleared, or accept it as variance on a listener's judgement.
+2. Still waiting: 02 A10 (swarm buzz), 01 menu/music-variation decision, 04 C1/C5.
 ## Resume check 23:xx
 - `origin/checkpoint/quota-20261031-202729/05-audio` (377a780) differs from the worktree only in `tools/audio/_render/**` (local, git-ignored run outputs). Those files are still present locally. All v3.6 work had been pushed before the stop (1da1f8c, c47654e, e4df6f6, d5f145a; d5f145a verified on origin). **Nothing lost.**
 - Requests re-read: 01 R1, 02 (A1–A3, A6, A7, A9 done; A8 not started; **A10 unit id / spawn cue: not answered, not in HEAD**), 06 (licence confirmation already answered), 08 AU3 (resolved), coordinator (quota notes historical).
