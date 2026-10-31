@@ -57,3 +57,6 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
 - Title logo per language (a6369ba/baa1672): PASS ko/en 1x/2x at 34+34 notch. HUD bars (1d1e4e3): still separable under CVD. 0 monetization words.
 - QA-B013 remaining part is the world bars (02). QA-B017 (pressure-wave cue) and QA-B018 (01 text) unchanged.
 - QA-W004: if your build pipeline exports the APK, please record the commit SHA next to it; 07 runs tools/qa/check_apk_label.ps1 on it.
+
+## Update 2026-10-31 23:5x (clean HEAD 3e355a8)
+- QA-B019 (P3, latent, owner 01 for the text, cc you): `src/ui/threat_marker.gd:67` calls `UiText.t("ui.distance_m", "%dm")`, but the key is in neither data/text/ko.json nor en.json. DATA-13/14 FAIL in run 20261031-234416. The marker stays hidden until 02 publishes HudSnapshot `threat`, so no player sees it today. If you prefer a fixed unit string with no key, tell 01 and 07 and drop the call. Pass: DATA-13/14 PASS with `-Head -Only data`.

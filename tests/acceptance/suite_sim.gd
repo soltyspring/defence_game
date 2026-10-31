@@ -24,7 +24,67 @@ func run(q, _tree) -> void:
 	var p0: Array = Array(c.round_order).slice(0, 3)
 	for i in p0.size():
 		_round(q, c, str(p0[i]), "R%d" % (i + 1))
+	_base_defense(q, c, str(p0[0]))
 	c.free()
+
+## 02 eceb9f4 / INTERFACES v1.5 (01 D29) player-base defence keys economy.base_defense{dps_cap, push_px, stagger_s,
+## tower_splash}. BD-DATA checks what the sim reads from data (missing = 0 = off). The option checks set values in
+## memory after setup, like 02's base_damage_probe, so they hold whatever 01 later puts in data. Same round and
+## seed for every run, so only the option differs: idle player for BD-CAP/BD-PUSH, competent bot for BD-SPLASH.
+func _base_defense(q, c, rid: String) -> void:
+	var probe = SimS.new()
+	probe.setup(c, rid, 55)
+	if not ("base_defense" in probe and "base_dmg_capped" in probe):
+		q.record("BD-DATA", Q.NOT_IMPL, "economy.base_defense keys (INTERFACES v1.5) not in this BattleSim", "")
+		return
+	var want := {"dps_cap": 0.0, "push_px": 0.0, "stagger_s": 0.0, "tower_splash": 0.0}
+	var bd = econ.get("base_defense", {})
+	if bd is Dictionary:
+		for k in want:
+			if bd.get(k) is int or bd.get(k) is float: want[k] = float(bd[k])
+	var off := _idle_trace(c, rid, {})
+	q.check("BD-DATA", "base_defense read from economy.json at setup (missing key = 0 = off); player tower bolt splash = tower_splash",
+		probe.base_defense == want and off.bolt_player.all(func(v): return is_equal_approx(v, want.tower_splash)),
+		"sim=%s data=%s player_bolt_splash=%s" % [probe.base_defense, want, off.bolt_player])
+	var cap := maxf(1.0, floorf(off.peak_1s * 0.5))
+	var on := _idle_trace(c, rid, {"dps_cap": cap})
+	q.check("BD-CAP", "dps_cap: player base never loses more than the cap in any 1 s window; the excess is counted in base_dmg_capped",
+		off.peak_1s > cap and on.peak_1s <= cap + 0.001 and on.capped > 0.0 and on.lost > 0.0,
+		"%s idle: peak 1 s loss off=%.1f, cap=%.0f -> on=%.1f, capped=%.1f, lost=%.1f" % [rid, off.peak_1s, cap, on.peak_1s, on.capped, on.lost],
+		{"off": off, "on": on})
+	var push := _idle_trace(c, rid, {"push_px": 30.0, "stagger_s": 0.5})
+	q.check("BD-PUSH", "push_px + stagger_s slow the damage on the player base (idle: base lasts longer than with the option off)",
+		push.end_t > off.end_t, "%s idle: base destroyed at off=%.1f s, push 30 px + stagger 0.5 s=%.1f s (900 = survived)" % [rid, off.end_t, push.end_t],
+		{"off_end_t": off.end_t, "push_end_t": push.end_t, "push_lost": push.lost})
+	# Idle run: enemies reach the player base, so the PLAYER tower fires. Competent run: allies reach the enemy base,
+	# so the ENEMY tower fires (in the competent run alone the player tower never fired at 3e355a8: QA-T002).
+	var spl := _idle_trace(c, rid, {"tower_splash": 37.5})
+	var spe := _idle_trace(c, rid, {"tower_splash": 37.5}, 2)
+	q.check("BD-SPLASH", "tower_splash applies to the PLAYER tower bolt only (idle run: player tower fires; competent run: enemy tower fires)",
+		not spl.bolt_player.is_empty() and not spe.bolt_enemy.is_empty() and spl.bolt_player.all(func(v): return is_equal_approx(v, 37.5)) and spe.bolt_enemy.all(func(v): return v == 0.0),
+		"idle player bolt splash=%s, competent enemy bolt splash=%s (both must be non-empty)" % [spl.bolt_player, spe.bolt_enemy], {"player_bolt_splash": spl.bolt_player, "enemy_bolt_splash": spe.bolt_enemy})
+
+## One r01 run, seed 55; pol 0 = idle player, 2 = competent bot (act every step, so dt = STEP is the real interval).
+func _idle_trace(c, rid: String, opt: Dictionary, pol := 0, max_t := 900.0) -> Dictionary:
+	var s = SimS.new()
+	s.setup(c, rid, 55)
+	for k in opt: s.base_defense[k] = float(opt[k])
+	var bot = BotS.new(pol, 55) if pol > 0 else null
+	var hist := PackedFloat64Array([s.player_base.hp])
+	var peak := 0.0
+	var bp := {}
+	var be := {}
+	while not s.ended and s.t < max_t:
+		if bot: bot.act(s, STEP)
+		s.step(STEP)
+		hist.append(s.player_base.hp)
+		if hist.size() > 60: peak = maxf(peak, hist[hist.size() - 61] - hist[hist.size() - 1])   # loss over the last 60 steps
+		for p in s.projectiles:
+			if p.alive and p.kind == "tower_bolt":
+				if p.side == SimS.SIDE_PLAYER: bp[snappedf(p.splash, 0.001)] = true
+				else: be[snappedf(p.splash, 0.001)] = true
+	return {"peak_1s": snappedf(peak, 0.01), "capped": snappedf(s.base_dmg_capped, 0.01), "lost": snappedf(hist[0] - s.player_base.hp, 0.01),
+		"end_t": snappedf(s.t, 0.1) if s.ended else max_t, "bolt_player": bp.keys(), "bolt_enemy": be.keys()}
 
 func _round(q, c, rid: String, tag: String) -> void:
 	var raw: Dictionary = Q.read_json("res://data/rounds/%s.json" % rid)

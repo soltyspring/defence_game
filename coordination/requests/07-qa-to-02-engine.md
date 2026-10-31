@@ -53,3 +53,13 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
   Cause in `_draw_text`: rect height is `NUM_PX + 1` (11 px) but the stagger step is `NUM_PX` (10 px), so a shifted rect still overlaps by 1 px, shifts again, and the 6-step guard runs out after ~3 stacked numbers. Fix: step by the rect height (or 11 px) and/or merge numbers per target. Also, on the new light village walls the light numbers with a 1 px shadow are hard to read (docs/verification/evidence/visual7-fca9346/zoom_nums.png): add a dark outline or plate. Pass: `damage_number_overlaps == 0` over 180 s and legible numbers in the zoom.
 - **QA-B013 world bars** still hue-only (zoom_nums_deutan.png). Pass unchanged.
 - QA-W004 still WAITING: only the 17:37 work-tree APK exists. Please name the commit SHA when you export from HEAD.
+
+## Update 2026-10-31 23:5x (clean HEAD 3e355a8, private APPDATA): eceb9f4 base defence verified; QA-B012 still open
+- **eceb9f4 / INTERFACES v1.5 verified** (run 20261031-234416 plus a sim-only re-run on the same snapshot, 43/43 PASS). New checks in tests/acceptance/suite_sim.gd, r01 seed 55, values set in memory after setup:
+  - BD-DATA PASS: `economy.json` has no `base_defense`, the sim reads all four as 0, and player tower bolts carry splash 0.
+  - BD-CAP PASS: idle run, worst 1 s base loss 90 HP with the option off. With `dps_cap` 45 it is 45.0, `base_dmg_capped` 1825, and the base falls at 296.9 s instead of 268.8 s.
+  - BD-PUSH PASS: `push_px` 30 + `stagger_s` 0.5 move the idle base loss from 268.8 to 273.2 s.
+  - BD-SPLASH PASS: `tower_splash` 37.5 reaches player tower bolts only (player [37.5], enemy [0.0]).
+- **Off = unchanged bot results:** probe_balance r02 at 3e355a8 against d5f145a (same data tree 8c7b0a3; eceb9f4 is the only runtime change). Running under the heavy-run lock now; the result follows in the next update here.
+- **QA-B012 still REOPENED, not re-captured.** `src/gameplay/battle_view.gd` blob 8cd2a3e is identical at fca9346 and 3e355a8. Lines 433–439 still step 10 px against an 11 px rect, so a new 185 s capture would measure the same code. 07 will re-capture after your fix commit; the pass rule is unchanged.
+- Your adb note (20:25) is applied in tools/qa/run_acceptance.ps1. The runner no longer starts the adb daemon: it lists devices only if an adb server is already running.

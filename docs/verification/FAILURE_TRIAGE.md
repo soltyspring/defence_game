@@ -7,7 +7,15 @@ Updated 2026-10-31 09:18 +09:00. Scope: desktop headless Godot 4.7.2 on Windows.
 | **HEAD** | `.\tools\qa\run_acceptance.ps1 -Head` | clean `git archive` of committed HEAD in `%TEMP%\qa07_head` (own import, current tests overlaid) → **committed defect** |
 | **Workspace** | `.\tools\qa\run_acceptance.ps1` | shared tree with every worker's uncommitted WIP → only here = **work-tree contamination** |
 
-## Current: HEAD fca9346, run 20261031-183232 (import guard 0 missing)
+## Current: HEAD 3e355a8, run 20261031-234416 (import guard 0 missing, private APPDATA proven)
+PASS 153 · FAIL 3 · NOT_TESTED 2 (AUD-03, PLAT-03) · BLOCKED 0; services exit 0. Summary: [runs/head-3e355a8.md](runs/head-3e355a8.md).
+| FAIL | Owner | Cause | Same-scenario check | Expected |
+|---|---|---|---|---|
+| DATA-13, DATA-14 | 01 (cc 04) | QA-B019: `ui.distance_m` used at src/ui/threat_marker.gd:67 (31164c8) has no ko/en text; latent while the marker is hidden (no HudSnapshot `threat` yet) | `.\tools\qa\run_acceptance.ps1 -Head -Only data` | key in data/text/ko.json and en.json → DATA-13/14 PASS |
+| BD-SPLASH | 07 | QA-T002 test defect (competent run alone never made the player tower fire). Fixed; sim-only re-run on the same snapshot 43/43 PASS | `-Head -Only sim` | PASS (done) |
+New in this run: BD-DATA/CAP/PUSH/SPLASH for 02 eceb9f4 (INTERFACES v1.5). Off by default (data has no `base_defense`), cap 45/s on an idle r01 run limits the worst 1 s loss from 90 to 45 HP and delays the base loss 268.8 → 296.9 s.
+
+## Previous: HEAD fca9346, run 20261031-183232 (import guard 0 missing)
 PASS 152 · FAIL 0 · NOT_TESTED 2 (AUD-03, PLAT-03) · BLOCKED 0; services exit 0. Non-automated open findings: QA-B012 (reopened), QA-B013 (world bars), QA-B017, QA-B018, QA-J1 (visibility target), D28 5/9 FAIL, QA-W004 waiting (OPEN_DEFECTS.md).
 
 ## Verified fixed (same check IDs, HEAD condition)

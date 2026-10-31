@@ -178,3 +178,12 @@ func run(q, tree) -> void:
 	for n in _nodes: n.free()
 	_nodes.clear()
 	_holder.free()
+	_purge_quarantine()
+
+## Save renames a damaged main file to <name>.json.corrupt-<unix> and never prunes it. TP-13c's 50 MiB save
+## therefore left one 52 MB copy per run (10 v0.28: 19 copies, 996 MB in the real user folder). Remove this
+## suite's quarantine copies and TP-13 files after the checks; the verdicts above are already recorded.
+func _purge_quarantine() -> void:
+	for fn in DirAccess.get_files_at(DIR):
+		if fn.contains(".corrupt-") or fn.begins_with("tp13."):
+			DirAccess.remove_absolute(DIR + "/" + fn)

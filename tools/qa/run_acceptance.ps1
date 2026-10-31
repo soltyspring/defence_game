@@ -1,11 +1,17 @@
 # 07-qa acceptance runner. Owner: 07-qa.
 # Usage (workspace root):  .\tools\qa\run_acceptance.ps1 [-Only data,assets,sim,save,faults,flow,release,services] [-WaitSeconds 180]
 # Output (git-ignored):    build/qa07/<timestamp>/acceptance_report.{json,md}, godot.log, env.txt
-# Exit code: 0 = no FAIL, 1 = FAIL present, 2 = watchdog/crash, 3 = engine busy (import/editor) or missing.
+# Exit code: 0 = no FAIL, 1 = FAIL present, 2 = watchdog/crash, 3 = engine busy (import/editor), missing,
+#            incomplete snapshot import, or user:// isolation not proven.
 # Coordination: never runs --import or the editor. Waits while a Godot import/editor/export is running
 # or while build/.godot-import.lock is held by 02/04 (see coordination/requests/07-qa-to-02-engine.md).
 # -Head: run against a clean `git archive HEAD` snapshot in %TEMP%\qa07_head (own .godot import) so other
 #        workers' uncommitted WIP cannot contaminate results. Current tests/acceptance/** files are overlaid.
+# user:// isolation (10 v0.26/v0.28): Godot 4.7.2 on Windows builds user:// from %APPDATA% + config/name, so every
+#        Godot child here gets a PRIVATE APPDATA = build/qa07/<timestamp>/appdata. Proof = this run's own Godot log
+#        under that folder; without it the run exits 3. env.txt also records whether the REAL qa07 folder changed.
+# Retention: after the run, files > 1 MiB under the private APPDATA (TP-13's 50 MiB save and its quarantine copy)
+#        are deleted and listed in env.txt; small files (saves, reports, logs) stay with the run as evidence.
 param([string[]]$Only = @(), [int]$WaitSeconds = 180, [switch]$Head)
 $ErrorActionPreference = 'Stop'
 $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
@@ -44,16 +50,37 @@ New-Item -ItemType Directory -Force $base | Out-Null
 $lock = $null
 try { $lock = [IO.File]::Open((Join-Path $base '.run.lock'), 'OpenOrCreate', 'ReadWrite', 'None') }
 catch { Write-Host 'another 07-qa acceptance run is in progress'; exit 3 }
+$RealAppData = $env:APPDATA
 try {
     $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
     $out = Join-Path $base $stamp
     New-Item -ItemType Directory -Force $out | Out-Null
+    $Iso = Join-Path $out 'appdata'
+    New-Item -ItemType Directory -Force $Iso | Out-Null
+    # Every Godot process of this run sees only the private APPDATA; git and adb keep the normal profile.
+    function Invoke-IsoGodot([string[]]$GArgs) {
+        $env:APPDATA = $Iso
+        try { return (& $Godot @GArgs 2>&1 | Out-String) } finally { $env:APPDATA = $RealAppData }
+    }
     $ErrorActionPreference = 'Continue'   # git/adb write progress to stderr
     $git = (& git rev-parse --short HEAD 2>$null)
     $dirty = (& git status --porcelain 2>$null | Measure-Object).Count
     $adb = Join-Path $env:LOCALAPPDATA 'Android\Sdk\platform-tools\adb.exe'
-    $devices = if (Test-Path $adb) { (& $adb devices 2>&1 | Out-String).Trim() } else { 'adb not found' }
-    @("timestamp=$stamp", "git_head=$git", "dirty_paths=$dirty", "godot=$(& $Godot --version 2>$null)", "adb_devices:", $devices) | Set-Content (Join-Path $out 'env.txt') -Encoding utf8
+    # `adb devices` starts the adb daemon when none runs; the daemon inherits our output pipe and a piped caller
+    # then waits forever (02 report 20:25). Query only an already running server.
+    $devices = if (-not (Test-Path $adb)) { 'adb not found' }
+        elseif (@(Get-Process -Name adb -ErrorAction SilentlyContinue).Count -eq 0) { 'adb server not running; not started by this runner' }
+        else { (& $adb devices 2>&1 | Out-String).Trim() }
+    $realUser = Join-Path $RealAppData 'Godot\app_userdata\Lane Defence'
+    function Get-RealState {
+        $q = @(Get-ChildItem (Join-Path $realUser 'qa07') -Recurse -File -ErrorAction SilentlyContinue)
+        $nw = $q | Sort-Object LastWriteTime | Select-Object -Last 1
+        $h = foreach ($f in 'save.json', 'save.json.bak') { $p = Join-Path $realUser $f; if (Test-Path $p) { (Get-FileHash $p).Hash.Substring(0, 16) } else { '-' } }
+        [pscustomobject]@{ qa07 = "$($q.Count) files, newest $(if ($nw) { $nw.LastWriteTime.ToString('s') } else { '-' })"; save = ($h -join '/') }
+    }
+    $real0 = Get-RealState
+    $t0 = Get-Date
+    @("timestamp=$stamp", "git_head=$git", "dirty_paths=$dirty", "godot=$((Invoke-IsoGodot @('--version')).Trim())", "user_appdata_private=$Iso", "adb_devices:", $devices) | Set-Content (Join-Path $out 'env.txt') -Encoding utf8
     $proj = '.'
     if ($Head) {
         $proj = Join-Path $env:TEMP 'qa07_head'
@@ -62,7 +89,7 @@ try {
         & git archive --format=zip -o "$proj.zip" HEAD
         Expand-Archive "$proj.zip" $proj -Force; Remove-Item "$proj.zip"
         Copy-Item (Join-Path $Root 'tests\acceptance\*.gd') (Join-Path $proj 'tests\acceptance') -Force
-        & $Godot --headless --path $proj --import 2>&1 | Out-Null
+        Invoke-IsoGodot @('--headless', '--path', $proj, '--import') | Out-Null
         # import guard: every .import must have its imported file, else re-import once, else refuse to run
         for ($pass = 1; $pass -le 3; $pass++) {
             $missing = @()
@@ -73,7 +100,7 @@ try {
             }
             if ($missing.Count -eq 0) { break }
             Write-Host "import incomplete (pass $pass): $($missing.Count) imported files missing; re-importing"
-            & $Godot --headless --path $proj --import 2>&1 | Out-Null
+            Invoke-IsoGodot @('--headless', '--path', $proj, '--import') | Out-Null
         }
         Add-Content -Path (Join-Path $out 'env.txt') -Value "import_missing_after_guard=$($missing.Count)"
         if ($missing.Count -gt 0) { Write-Host "SNAPSHOT IMPORT INCOMPLETE: $($missing.Count) missing; not running (results would use fallbacks)"; exit 3 }
@@ -82,7 +109,7 @@ try {
     $gargs = @('--headless', '--path', $proj, '-s', 'res://tests/acceptance/acceptance.gd', '--', "--qa-out=$($out.Replace('\','/'))")
     if ($Only.Count -gt 0) { $gargs += "--only=$($Only -join ',')" }
     $prev = 'Stop'
-    $log = & $Godot @gargs 2>&1 | Out-String
+    $log = Invoke-IsoGodot $gargs
     $code = $LASTEXITCODE
     $ErrorActionPreference = $prev
     Set-Content -Path (Join-Path $out 'godot.log') -Value $log -Encoding utf8
@@ -94,7 +121,7 @@ try {
         if (-not (Test-Path (Join-Path $Root "tests\services\$s.gd"))) { continue }
         if ($Only.Count -gt 0 -and -not ($Only -contains 'services')) { continue }
         $ErrorActionPreference = 'Continue'
-        $slog = & $Godot --headless --path $proj -s "res://tests/services/$s.gd" 2>&1 | Out-String
+        $slog = Invoke-IsoGodot @('--headless', '--path', $proj, '-s', "res://tests/services/$s.gd")
         $scode = $LASTEXITCODE
         $ErrorActionPreference = $prev
         Set-Content -Path (Join-Path $out "$s.log") -Value $slog -Encoding utf8
@@ -118,7 +145,26 @@ try {
         Write-Host "[baselines] $($stale.Count) committed docs images predate visual baseline $($base_c.Split(' ')[1])"
     }
     $ErrorActionPreference = $prev
+    # user:// isolation proof and retention (see header)
+    $pname = 'Lane Defence'
+    $cfg = Select-String -Path (Join-Path $proj 'project.godot') -Pattern '^config/name="(.*)"' -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($cfg) { $pname = $cfg.Matches[0].Groups[1].Value }
+    $ownLogs = @(Get-ChildItem (Join-Path $Iso "Godot\app_userdata\$pname\logs") -Filter 'godot*.log' -ErrorAction SilentlyContinue | Where-Object { $_.LastWriteTime -ge $t0 }).Count
+    $realLogs = @(Get-ChildItem (Join-Path $realUser 'logs') -Filter 'godot*.log' -ErrorAction SilentlyContinue | Where-Object { $_.LastWriteTime -ge $t0 }).Count
+    $real1 = Get-RealState
+    $big = @(Get-ChildItem $Iso -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Length -gt 1MB })
+    $bigBytes = ($big | Measure-Object Length -Sum).Sum
+    $envLines = @(
+        "isolation_own_logs=$ownLogs (godot*.log under the private user dir since start; 0 = not proven)",
+        "real_qa07_before=$($real0.qa07)", "real_qa07_after=$($real1.qa07)",
+        "real_save_hashes_before_after=$($real0.save) -> $($real1.save) (any process may write these)",
+        "real_new_logs_any_process=$realLogs",
+        "pruned_private_files_over_1MiB=$($big.Count) bytes=$([long]$bigBytes)") + @($big | ForEach-Object { "  pruned $($_.FullName.Substring($Iso.Length)) $($_.Length)" })
+    Add-Content -Path (Join-Path $out 'env.txt') -Value $envLines
+    $big | ForEach-Object { Remove-Item -LiteralPath $_.FullName -Force -ErrorAction SilentlyContinue }
+    Write-Host ("[isolation] private user dir={0} own_logs={1} real_qa07_changed={2} pruned={3} files ({4:N0} B)" -f $Iso, $ownLogs, ($real0.qa07 -ne $real1.qa07), $big.Count, [long]$bigBytes)
+    if ($ownLogs -eq 0) { Write-Host 'ISOLATION NOT PROVEN (no Godot log under the private APPDATA): results not trusted'; $code = 3 }
     Write-Host "script_errors_in_log=$errs  exit=$code  report=$out"
     Set-Content -Path (Join-Path $base 'latest.txt') -Value $out -Encoding utf8
     exit $code
-} finally { if ($lock) { $lock.Dispose() } }
+} finally { $env:APPDATA = $RealAppData; if ($lock) { $lock.Dispose() } }

@@ -1,6 +1,6 @@
 # Release evidence matrix (owner: 07-qa)
-Latest full run: **HEAD fca9346** (`-Head`, import guard 0 missing, run 20261031-183232; Godot 4.7.2 headless, Windows desktop). Triage: [FAILURE_TRIAGE.md](FAILURE_TRIAGE.md). Visual: [VISUAL_CHECKS.md](VISUAL_CHECKS.md). Balance: [BALANCE_CROSSCHECK.md](BALANCE_CROSSCHECK.md). Open: [OPEN_DEFECTS.md](OPEN_DEFECTS.md).
-Counts: PASS 152 · FAIL 0 · NOT_TESTED 2 · BLOCKED 0; services exit 0. Summary: [runs/head-fca9346.md](runs/head-fca9346.md). 0 automated FAILs is not release readiness: D28 5/9 FAIL, QA-B012 reopened.
+Latest full run: **HEAD 3e355a8** (`-Head`, import guard 0 missing, private APPDATA proven, run 20261031-234416; Godot 4.7.2 headless, Windows desktop). Triage: [FAILURE_TRIAGE.md](FAILURE_TRIAGE.md). Visual: [VISUAL_CHECKS.md](VISUAL_CHECKS.md). Balance: [BALANCE_CROSSCHECK.md](BALANCE_CROSSCHECK.md). Open: [OPEN_DEFECTS.md](OPEN_DEFECTS.md). Isolation: [USERDATA_POLICY.md](USERDATA_POLICY.md).
+Counts: PASS 153 · FAIL 3 · NOT_TESTED 2 · BLOCKED 0; services exit 0. Two FAILs are committed code (DATA-13/14, QA-B019 latent text key). The third, BD-SPLASH, was a 07 test defect; after the fix the sim suite is 43/43 on the same snapshot. Summary: [runs/head-3e355a8.md](runs/head-3e355a8.md). Previous: fca9346 152/0. Automated PASS is not release readiness: QA-B012 is still reopened and the D28 rows are bot checks only.
 
 **Scope warning:** desktop headless acceptance only. This is NOT Android release certification.
 `adb devices` at run time listed `emulator-5580` (an emulator, not a phone); no APK install or
@@ -23,7 +23,8 @@ on-device test has been done by 07-qa.
 | Save corruption / recovery / semantics | PASS (6/8) | SAVE-01..04, 07, 08; recovery notice on menu FLOW-24 |
 | Save type normalisation | PASS | SAVE-05, SAVE-06 (QA-B003 verified) |
 | Save fault tolerance (TP-01/02/06/13/14) | PASS | all 9 faults checks at e5bd4aa/5426645; QA-B004 P1 verified (fix 08ef082). Kill points rebuilt from file states, not yet via `Save._fault` |
-| Localised text for engine toasts | PASS | DATA-13/14, FLOW-04B (QA-B008 verified) |
+| Localised text for engine toasts | PASS (toasts) · FAIL latent key | DATA-13/14 FAIL at 3e355a8 only for `ui.distance_m` (QA-B019, hidden threat marker); toast keys PASS, FLOW-04B (QA-B008 verified) |
+| Player-base defence keys (INTERFACES v1.5, 02 eceb9f4) | PASS (off by default) | BD-DATA/CAP/PUSH/SPLASH at 3e355a8; D34: 01 keeps it off |
 | Theme guard: label fit, names, colour separation | PASS | TH-* all PASS at 3b2d830 (QA-B011 verified after 7705aec) |
 | Visual baselines | STALE (older images) | 123 committed docs images predate 7705aec; current HEAD captures: evidence/visual2-5c08bb4 (layout), evidence/visual3-3b2d830 (new art) |
 | Narrowest notch layout (rendered) | PASS | VISUAL_CHECKS C3: ko/en 1x/2x, 0 truncated/out-of-safe buttons, full base HP numbers |
