@@ -1,5 +1,14 @@
 # 06-services handoff
-Updated: 2026-10-31 ~19:08 KST (test AAB blocked by JDK 25; Data safety evidence; backup candidate; clean-HEAD run before)
+Updated: 2026-10-31 ~19:35 KST (test AAB built with private JDK 17 + bundletool checks; AAB blocker before)
+## Test AAB with private JDK 17 (19:09–19:35)
+- **Command:**
+  ```
+  pwsh -NoProfile -File tests/services/try_debug_aab.ps1 -TimeoutSec 900 -JavaHome "$env:LOCALAPPDATA\svc06_tools\jdk-17.0.20.1+1" -Bundletool "$env:LOCALAPPDATA\svc06_tools\bundletool-all-1.18.3.jar"
+  ```
+  The Godot step is capped at 240 s because Godot may not exit after export. The Gradle rerun uses a temp .cmd with every argument quoted, since the ABI list contains `|`.
+- **This session:** the final Gradle rerun and the bundletool checks were run by hand with the same logic, after the script's first pass had the `C:`/`|` quoting bugs. The committed script contains those fixes, but **a full end-to-end rerun of the committed script has not been done yet.** Do one before relying on it.
+- **Cleanup after each run:** delete %TEMP%\svc06_aab_* and stop leftover Java processes whose command line contains svc06_tools or GradleDaemon.
+- **Tool locations and checksums:** PLAY_TECH_REQUIREMENTS §6.
 ## Test AAB attempt (18:51–19:02)
 - **Script:** `pwsh -NoProfile -File tests/services/try_debug_aab.ps1 [-TimeoutSec 600]`. Scratch git-archive copy; it flips the Gradle/AAB options and unpacks android_source.zip there only, then exports with `--export-debug` and the editor's debug keystore.
 - **Blocker:** editor setting `export/android/java_sdk_path` = JDK 25.0.2. Gradle 8.11.1 needs Java ≤ 23. Once a JDK 17 exists and the setting points at it, rerun the script; on success, check the AAB with bundletool (not installed): `build-apks --mode=universal` and per-device APKs, `dump config` PAGE_ALIGNMENT_16K, aapt2 badging target 36 / labels, `get-size total`.
@@ -64,6 +73,7 @@ src/services/**, docs/services/**, tests/services/**, coordination/status/06-ser
 | Graphics | STORE_GRAPHICS.md (Play icon/feature/screenshot/video rules + adaptive icon guide), check_store_graphics.py (Python), 09 order vs rules (#3 반죽 conflict), requests 03/04/02/09 | a68bf517ce3b93c375bd7ff8337cdc7175dd88a7, a143134be5ba6c2fbe2082bcd1f8f09c4ec23de2 |
 | HEAD run | run_services_on_head.ps1 (clean snapshot runner); q2_repo_scan group (repo-wide Q2 deferred scan); launcher icon placeholder confirmed in both APKs; exact launcher_icons keys to 02 | 643cfa05f879ff76fffb96c909a1de4309fa3970 (+ next [Docs]) |
 | AAB try | try_debug_aab.ps1 (scratch Gradle/AAB export) → blocked by JDK 25 vs Gradle 8.11.1; DATA_SAFETY §2c code-evidence lines; B0–B3 question candidate to 01; requests 02/04 | 71325251423518de06b657dc3c250336997d01db (+ next [Docs]) |
+| AAB built | private Temurin 17 + bundletool 1.18.3 (checksums verified); Godot's Gradle command rerun with process-only JAVA_HOME; AAB checks all PASS; script updated (end-to-end rerun pending) | 8fc4715b704c056b073c871ece834f8efd146e4f (+ next [Docs]) |
 | Checkpoint | this handoff + status | see status file / `git log -- coordination/handoffs/06-services.md` |
 
 ## M7 details (this task)

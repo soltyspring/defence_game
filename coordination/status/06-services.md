@@ -1,5 +1,17 @@
 # 06-services status
-Updated: 2026-10-31 ~19:08 KST (test AAB attempt, Data safety evidence lines, backup question candidate)
+Updated: 2026-10-31 ~19:35 KST (test AAB built with a private JDK 17 and checked with bundletool)
+Status: COMPLETE.
+- **Test AAB built** (scratch copy of 53883db, debug key, JDK 17 only inside the build process; no upload key, no upload, 02/04 files untouched).
+- **Bundle checks:** PAGE_ALIGNMENT_16K, split zipalign -P 16 OK, ELF LOAD 0x4000; target 36 / min 24; arm64 + x86_64 only; labels en Bakery Knights / ko 빵집 기사단; no permissions; allowBackup=false; download ≈ 29.0 MiB arm64, 31.6 MiB x86_64.
+- **Tools:** Temurin 17.0.20.1+1 and bundletool 1.18.3, checksums match the official values; in `%LOCALAPPDATA%\svc06_tools` (delete the folder to remove). PLAY_TECH_REQUIREMENTS §6.
+- **Still open (02):** Gradle/AAB preset in the repo, editor JDK, launcher icon keys. release_label stays WAITING (no build/release package).
+- Q2 DEFERRED. Nothing published.
+Current task: none. Next: see handoff.
+Commits: 8fc4715b704c056b073c871ece834f8efd146e4f [Test] PUSHED; docs in the next [Docs].
+Quota: ~88% at 19:31. Checkpoint and stop at ≥ 97%.
+Previous: 7132525 / efcd4c0 (AAB blocker, Data safety evidence, backup candidate).
+--- History (older entries, not current) ---
+(AAB-blocked entry) Updated: 2026-10-31 ~19:08 KST (test AAB attempt, Data safety evidence lines, backup question candidate)
 Status: COMPLETE with one blocker.
 - **Test AAB: BLOCKED.** Gradle 8.11.1 (Godot 4.7.2 template) cannot run on the machine's only JDK 25.0.2 ("Unsupported class file major version 69"); a JDK 17 is needed. Scratch copy only; no upload key, no upload; 02/04 files untouched. bundletool checks therefore NOT RUN.
 - **Data safety:** DATA_SAFETY_DRAFT §2c ties each answer to a rerunnable grep or lint (network, SDK, ID and log calls: 0 hits).

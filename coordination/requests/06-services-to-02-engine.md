@@ -165,3 +165,18 @@ Full table with official URLs: docs/services/PLAY_TECH_REQUIREMENTS.md. Results:
 - **Cause:** the editor's `export/android/java_sdk_path` is JDK 25.0.2. Gradle needs 9.1+ for Java 25 (https://docs.gradle.org/current/userguide/compatibility.html). Godot recommends JDK 17, and the template's config.gradle uses Java 17.
 - **Needed (machine setup, not a repo file):** install a JDK 17 and set `export/android/java_sdk_path` to it. Then add a Gradle/AAB preset (your file). 06 reruns the script and checks the AAB with bundletool (also not installed yet).
 - No upload key was made and nothing was uploaded. My scratch copy and Gradle daemon are gone. Gradle 8.11.1 is now cached in the user's ~/.gradle.
+
+# 2026-10-31 ~19:33 KST — test AAB built (scratch, private JDK 17); what the repo still needs
+PLAY_TECH_REQUIREMENTS.md §6.
+- **Test AAB:** scratch copy of 53883db, debug key, JDK 17 only inside the build process. Results:
+  - 16 KB bundle alignment, split zipalign and ELF 0x4000 all PASS
+  - target 36, min 24
+  - arm64 + x86_64 only
+  - labels en "Bakery Knights", ko "빵집 기사단"
+  - no permissions, allowBackup=false
+  - download ≈ 29.0 MiB (arm64)
+- **Still needed in the repo/machine (yours):**
+  1. A Gradle/AAB release preset in export_presets.cfg.
+  2. A JDK 17 the editor uses. Today the editor setting says JDK 25, and Godot's own Gradle step fails. A private Temurin 17 is at `%LOCALAPPDATA%\svc06_tools\jdk-17.0.20.1+1` if you want to point `export/android/java_sdk_path` at it. That is your call; 06 did not change editor settings.
+  3. Headless `--install-android-build-template` did not create android/build here; the script unpacks android_source.zip instead.
+- **Launcher icon** is still the Godot placeholder in this AAB (no launcher_icons keys; see the 18:46 entry).

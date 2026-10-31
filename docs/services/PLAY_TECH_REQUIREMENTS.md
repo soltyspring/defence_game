@@ -72,3 +72,38 @@ What unblocks it (requested from 02/04; a machine setup step, not a 06 file chan
 1. Install a JDK 17 and point the editor setting `export/android/java_sdk_path` at it. This is an editor_data setting, not in the repo.
 2. Add a release/test preset with the Gradle build and AAB export to export_presets.cfg (02), or keep this scratch override.
 3. Install bundletool (a jar from Google's bundletool releases) for the per-device APK checks.
+
+## 6. Debug-signed test AAB built with a private JDK 17 (2026-10-31 19:09–19:31 KST, scratch copy of HEAD 53883db)
+**How:** `pwsh -NoProfile -File tests/services/try_debug_aab.ps1 -JavaHome <jdk17> -Bundletool <jar>`.
+- Godot prepares the Gradle project with its editor settings, then its own Gradle step fails on JDK 25 as in §5.
+- The script then reruns **Godot's exact Gradle command** (`gradlew validateJavaVersion clean bundleStandardDebug …`, every argument quoted) with `JAVA_HOME` set **only inside that build process**.
+- System PATH, JAVA_HOME, the registry and the shared editor settings were not changed.
+- Signed with the editor's debug keystore. **No upload key was created and nothing was uploaded.** 02/04 files are untouched.
+- Note: headless Godot re-saves `tools/engine/editor_data/editor_settings-4.7.tres` on exit with unchanged values (engine behaviour; untracked file).
+
+**Results (measured on the AAB, SHA-256 0F9D39B0…C116BE, 59,198,558 B):**
+| Check | Result | Tool |
+|---|---|---|
+| Bundle 16 KB zip alignment | `PAGE_ALIGNMENT_16K`, native libs uncompressed | `bundletool dump config` |
+| Split APK alignment | `zipalign -c -P 16` "Verification successful" on base-arm64_v8a and base-x86_64 (libs at 16 KB offsets) | build-tools 36.1.0 |
+| ELF LOAD alignment (arm64 split) | all LOAD segments 0x4000 | 06 ELF header read |
+| min / target SDK | 24 / **36** | `bundletool dump manifest`, aapt2 on the universal APK |
+| 64-bit | native-code `arm64-v8a`, `x86_64` only | aapt2 |
+| Launcher label | default/en **Bakery Knights**, ko **빵집 기사단** | aapt2 on the universal APK |
+| Permissions | none | aapt2 dump permissions |
+| allowBackup | false | dump manifest |
+| Download size (per ABI, all devices) | arm64-v8a 30,390,920–30,402,608 B (≈ 29.0 MiB); x86_64 33,177,021–33,188,709 B | `bundletool get-size total --dimensions=ABI` |
+| Universal APK | 164,958,636 B (uncompressed libs; not what Play serves) | — |
+Updated verdicts for §3:
+- **P1, P2, P3a, P3c: PASS on a test AAB.** P3b (RELRO) is the same libraries as §2.
+- **P4: an AAB can be built**, but only with a JDK 17 and a Gradle/AAB preset. Both are still missing from the repo setup (02).
+- **Release label:** VERIFIED on this test AAB, but the AAB is not in build/release, so lint `release_label` stays WAITING.
+- Play Console's own check needs an upload, which is a user action.
+
+**Tools downloaded (06, for builds only; remove by deleting the folder):**
+| Tool | Location | Version | SHA-256 (matches official) | Source |
+|---|---|---|---|---|
+| Eclipse Temurin JDK (zip, not installer) | `%LOCALAPPDATA%\svc06_tools\jdk-17.0.20.1+1\` | 17.0.20.1+1 | e53a79c3c3d86865bd7e787903884331068e71321714ffd44f145785affc7cb0 (Adoptium API `package.checksum`) | https://api.adoptium.net/v3/assets/latest/17/hotspot ; GitHub adoptium/temurin17-binaries |
+| bundletool | `%LOCALAPPDATA%\svc06_tools\bundletool-all-1.18.3.jar` | 1.18.3 (2025-12-15) | a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29 (GitHub release asset digest) | https://github.com/google/bundletool/releases/tag/1.18.3 |
+| Gradle 8.11.1 (downloaded by Godot's wrapper) | `%USERPROFILE%\.gradle\wrapper\dists\gradle-8.11.1-bin\` | 8.11.1 | not checked by 06 (wrapper handles it) | services.gradle.org |
+Removal: delete `%LOCALAPPDATA%\svc06_tools\` (334 MB; the JDK zip was already deleted after extraction), plus `%USERPROFILE%\.gradle\wrapper\dists\gradle-8.11.1-bin\` if unwanted. Nothing else was installed. The scratch copy `%TEMP%\svc06_aab_*` was deleted.
