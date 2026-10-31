@@ -11,7 +11,7 @@ Updated: 2026-10-31 ~23:56 KST (LF-pinned builds, AAB data verified; quarantine 
   - content_version c1-e8790a4f2e85 = blobs = Godot
   - AAB 59,212,662 B, 16K alignment, labels/target/ABI OK
   - isolated=true; scratch, iso dir and Gradle Java all gone
-- **Docs:** PLAY_TECH_REQUIREMENTS §10; requests 02 and 04 (04's build_android_debug.ps1 line 24 still uses plain `git archive`).
+- **Docs:** PLAY_TECH_REQUIREMENTS §10; requests 02 and 04 (04's build_android_debug.ps1 line 24 still uses plain `git archive`). Commit 1e5b4d8b80b81dfbdf81f78d256fdb10b1bfc2e7.
 - **Next:** emulator install check when 02 gives a slot (inside heavy_run). 04's/02's builds stay CRLF/mixed until they change their scripts or add .gitattributes.
 ## Quarantine and line endings (23:35–23:42, no Godot)
 - **Quarantine:** 16 06-made files moved, not deleted, from `%APPDATA%\Godot\app_userdata\Lane Defence\` to `%LOCALAPPDATA%\defence_userdata_quarantine\06-20261031-233513\`, with MANIFEST_06.json.

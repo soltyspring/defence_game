@@ -8,7 +8,7 @@ Status: COMPLETE except the emulator install check.
 - Requests to 02/04 for the other build paths. Emulator still WAITING for 02.
 - Q2 DEFERRED. Nothing published.
 Current task: none. Next: see handoff.
-Commits: 4bf8f742e049c7cc050e8951ba88321b860c1585 [Test] PUSHED; docs in the next [Docs].
+Commits: 4bf8f742e049c7cc050e8951ba88321b860c1585 [Test], 1e5b4d8b80b81dfbdf81f78d256fdb10b1bfc2e7 [Docs] PUSHED.
 Previous: 95d9b1c / 3e355a8 (quarantine, CRLF table).
 --- History (older entries, not current) ---
 (quarantine entry) Updated: 2026-10-31 ~23:42 KST (real-folder leftovers quarantined; CRLF impact on test AAB)
