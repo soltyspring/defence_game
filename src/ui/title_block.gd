@@ -14,6 +14,10 @@ const UiStyle := preload("res://src/ui/ui_style.gd")
 const UiText := preload("res://src/ui/ui_text.gd")
 
 const STALE := ["레인 디펜스", "Lane Defence"]
+## Test hook: render the text fallback even when the logo exists (07 QA-B015 needs a rendered text title).
+static var force_text := false
+static var last_mode := ""         # QA: what the menu actually drew
+static var last_lines: Array = []
 const WORKING_TITLE := {"ko": "빵집 기사단: 곰팡이 디펜스", "en": "Bakery Knights: Mold Defense"}
 
 static func title_text() -> String:
@@ -59,7 +63,9 @@ static func compute(slot: Rect2, locale: String, allow_logo := true) -> Dictiona
 
 ## Draws the block centred in slot; returns the bottom y used (for the subtitle).
 static func draw(ci: CanvasItem, slot: Rect2, locale: String) -> float:
-	var l := compute(slot, locale)
+	var l := compute(slot, locale, not force_text)
+	last_mode = l.mode
+	last_lines = l.get("lines", [])
 	if l.mode == "logo":
 		ci.draw_texture_rect(l.tex, l.rect, false)
 		return (l.rect as Rect2).end.y

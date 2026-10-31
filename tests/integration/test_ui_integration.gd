@@ -131,6 +131,8 @@ func _run() -> void:
 			# simulated notch insets L,T,R,B in logical px (same as ui_preview); worst case = 34,0,34,0
 			var p := a.get_slice("=", 1).split(",")
 			load("res://src/ui/safe_area.gd").override_insets = Vector4(float(p[0]), float(p[1]), float(p[2]), float(p[3]))
+		elif a == "--title-text":
+			load("res://src/ui/title_block.gd").force_text = true
 		elif a.begins_with("--locale="):
 			load("res://src/ui/ui_text.gd").load_locale(a.get_slice("=", 1))
 
@@ -142,6 +144,11 @@ func _run() -> void:
 	var menu := assert_screen(&"menu")
 	if menu == null:
 		_finish(); return
+	var TB := load("res://src/ui/title_block.gd")
+	var tline := []
+	for ln in TB.last_lines:
+		tline.append("%s@%d w=%.0f" % [ln[0], ln[1], load("res://src/ui/ui_style.gd").text_width(ln[0], ln[1], &"bold")])
+	check(menu.title_slot.size.x > 0 and (TB.last_mode == "logo" or TB.last_lines.size() >= 1), "menu title drawn: mode=%s slot_w=%.0f lines=%s" % [TB.last_mode, menu.title_slot.size.x, tline])
 	await shot("1_menu")
 	tap(menu.btn_select)
 	await _frames(3)
