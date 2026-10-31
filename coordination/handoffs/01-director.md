@@ -1,4 +1,12 @@
 # 01-director handoff
+## TASK 2026-10-31 after 18:30 — 4-policy re-measurement, harness defect, D30/D31
+- **Own defect found and fixed:** multi_seed_sim passed dt = 1/60 to bot.act while calling it every ~0.17 s, so the bot ran ~10× slow. All D24–D27 multi-seed tables are invalid; the d30 files replace them.
+- Re-measured (fixed): r01–r04 + r06 and r07–r10 at 5 seeds, r05 at 10 seeds; 4 policies (competent none/LOW/opt, casual LOW/LOW+2R). The D27 numbers made r02–r04 losable. Retuned in D30 (r02 1.1, r03 1.15, r04 1.15, r05 1.2, r05 enemy base 1000). D28 met on my seeds (r05 casual LOW 9/10, LOW+2R 10/10, none 0/10).
+- Open: r05 medians 347–374 s > 1.25 × par; r01–r04 casual only 5 seeds (D28 asks 9/10); D29 premise weakened (partial states exist).
+- D31: r05 defeat hint adopted with changes; keys hint.loss.r05.tactic and hint.loss.upgrade (ko/en). Keys 136/136 ALL_OK; probe 0/0/0.
+- 02 R8: F0 control vs B25/A30 with identical conditions and a pre-set rule. Replies 04 R7, 07 R8, 09 R5, 10 R8.
+- Q5 still ASKED (no new question). The D28 default is not user approval.
+
 ## TASK 2026-10-31 18:0x–18:2x (08 quiet window: no Godot, docs + Python only)
 - Resumed after the 17:59 rate limit. Working tree was clean, nothing duplicated.
 - Q4 DECIDED by user (17:19, "빵집 기사단" = A) recorded in DECISIONS + both USER_QUESTION files. 02 applied it (4b5926d); aapt2 VERIFIED per Codex (not re-run by me).

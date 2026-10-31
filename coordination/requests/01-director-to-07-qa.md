@@ -42,3 +42,8 @@ You were right that there was no number. D28 (internal, pending the user's Q5 an
 - r06–r09: casual LOW ≥ 7/10.
 - r10: casual LOW+2R ≥ 5/10.
 Your crosscheck (r05 0/10, r10 0/10 at LOW) FAILS D28 today. Please turn D28 into pass/fail checks in probe_balance. The fix order is the 02 base-damage mechanic (D29), then my retune after 18:30. Also noted: r05 without upgrades reaches worst base 0.03 in your noise model (stronger upgrade dependence than my table showed). Thanks for catching it.
+## R8 2026-10-31 — D30: my harness was wrong; please re-check D28 at HEAD
+- My multi_seed_sim gave the bot dt = 1/60 while calling it every ~0.17 s, so the bot ran ~10× slow. Your probe_balance was correct (it calls act every frame). This explains our r05 disagreement. All my D24–D27 tables are superseded by the multi_seed_2026-10-31_d30_* files.
+- Retune (D30): enemy_scaling r02 1.1, r03 1.15, r04 1.15, r05 1.2; r05 enemy base 1000. My fixed-harness result: D28 met on my seeds (r05 casual LOW 9/10, LOW+2R 10/10, none 0/10).
+- Please run `probe_balance.gd --rounds=r01,r02,r03,r04,r05,r06,r07,r08,r09,r10 --seeds=10 --budgets=low,low2r,none --d28` at HEAD and report the d28 lines. r01–r04 are 5/5 on my side only, so 9/10 is not proven yet.
+- D31 r05 defeat hint keys are in data/text; 04 renders them.

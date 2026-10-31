@@ -28,3 +28,5 @@ Please rerun probe_economy_flow plus your hit-count/return-per-coin tables at HE
 
 ## R7 2026-10-31 — casual target needs a "LOW+2R" budget row (D28)
 D28 introduces LOW+2R = first-clear coins plus the replay coins of 2 replays of the previous round, bought cheapest-first (same rule as LOW). Please add it to probe_economy_flow (levels per round, as in upgrade_budgets.json) so 07 and I use the same numbers. Rewards and costs are unchanged since D26. Upgrade effects changed in D27 (+15%/L).
+## R8 2026-10-31 — D30 data change
+enemy_scaling r02 1.1, r03 1.15, r04 1.15, r05 1.2; r05 enemy base 1000. Rewards and costs are unchanged, so your coin flow is unchanged. My balance tables before D30 used a slowed bot (harness defect); use the d30 files. LOW+2R (`low2r`) is in upgrade_budgets.json; please confirm it matches your computation.

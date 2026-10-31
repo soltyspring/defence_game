@@ -79,3 +79,16 @@ Sweep (r02–r05, 5 seeds; candidate overrides in memory):
 r05 10 seeds: scaling 1.25 → none 5/10, LOW 10/10 (worst 0.38); **1.3 (applied) → none 4/10, LOW 10/10 (worst 0.11), opt 10/10 (worst 0.62)**; 1.3 + player base 2200 → none 5/10.
 Full run on the final data (multi_seed_2026-10-31_d27.md, r05 at 1.25 in that run; r05 1.3 in _d27_r05_10seeds.md): none r01–r04 5/5 W; LOW and opt 5/5 W in every round; LOW medians ≤ 1.25 × par everywhere except r05, which is at 325 s = 1.25 × par in the 10-seed run.
 Root cause of the unmet r02–r04 target: in this sim, base contact cascades. Once enemies reach the base, the bot's freshly deployed units and the tower cannot stop the pile, so outcomes are either no hit (1.00) or a loss. A 0.6–0.9 band needs a mechanic (for example a base that pushes enemies back, or a capped damage-per-second on the base), not a number change. Not requested yet.
+## Update 2026-10-31 (5) — HARNESS DEFECT and re-measurement (D30)
+**Defect in my own tool:** multi_seed_sim.gd.txt called `bot.act(sim, 1/60)` only every U(0, 0.35) s. bot_player.gd counts its think timer down by the dt it is given, so the bot decided about 10× less often than designed (competent every ~2.5 s instead of 0.25 s; casual every ~9 s instead of 0.9 s). Every table in Updates (2)–(4) and D24–D27 used this slowed bot. In the first D30 run the casual bot lost even r01 0/5, which exposed the bug (07's probe_balance gives casual r01 20/20). Fix: pass the real elapsed time since the last call. 07's harness was not affected.
+Re-measurement with the fixed harness (files multi_seed_2026-10-31_d30_*.md; 5 seeds, r05 10 seeds):
+| round | before retune (D27 data) | after retune (D30 data) |
+|---|---|---|
+| r02 | competent LOW 4/5, opt 3/5 | all policies with upgrades 5/5 |
+| r03 | competent LOW 4/5, casual LOW 4/5 | 5/5 (casual LOW worst 0.48) |
+| r04 | competent none 1/5, casual LOW 3/5 | 5/5 (competent none 5/5, worst 0.79) |
+| r05 (10 seeds) | none 0/10; competent LOW **3/10**; casual LOW 6/10, LOW+2R 8/10 | none 0/10; competent LOW 10/10; casual LOW 9/10, LOW+2R 10/10 |
+| r06–r10 | casual LOW 5/5 every round; r10 casual LOW+2R 5/5 | unchanged (rounds not retuned) |
+D28 (casual targets) is met on these seeds: r01–r04 5/5 (5 seeds, so ≥ 9/10 is not yet shown at 10 seeds), r05 9/10 and 10/10, r06–r09 5/5, r10 5/5.
+Corrections to earlier claims: (1) "bimodal, no middle state" was measured on the slowed bot. With the fixed bot, partial end states exist, so D29's premise is weaker (02/09 informed). (2) D27's "upgrades shorten r07–r09" also needs a re-read on the d30 tables.
+Still open: r05 lengths 347–374 s exceed 1.25 × par; the r06 "none" row and the D24 length rule for other rounds were not fully re-checked with the fixed bot at 5 seeds for all budgets (the r01–r04/r06 and r07–r10 files have them).

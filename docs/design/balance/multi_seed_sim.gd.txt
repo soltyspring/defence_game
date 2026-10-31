@@ -4,7 +4,8 @@ extends SceneTree
 ## Variance therefore comes from PLAYER TIMING NOISE, seeded per run: the bot first acts after U(0,3) s, and after each
 ## decision waits an extra U(0,0.35) s (models human reaction time). This is a stand-in for human variance, not a human model.
 ## Extra probe for r01 risk: a "late starter" bot that does nothing for the first N s (arg 6, default 30).
-## Args: <out.json> [overrides.json|-] [budgets=none,low,high] [seeds=1,2,3,4,5] [rounds=all|r01,r05] [late_delay_s=30]
+## Args: <out.json> [overrides.json|-] [budgets=none,low,high] [seeds=1,2,3,4,5] [rounds=all|r01,r05] [late_delay_s=30] [policies=competent,casual]
+## Policy "casual" = 02 bot_player skill 1 (the same casual policy 07 uses in probe_balance.gd).
 const ContentS := preload("res://src/core/content.gd")
 const SimS := preload("res://src/gameplay/battle_sim.gd")
 const BotS := preload("res://src/gameplay/bot_player.gd")
@@ -18,11 +19,16 @@ func _run(sim, bot, seed_v: int, start_delay: float) -> Dictionary:
 	var w1_clear := -1.0
 	var ev_seen := 0
 	var prev: float = float(sim.player_base.hp)
+	var since_act := 0.0
 	while not sim.ended and sim.t < 900.0:
 		if bot != null:
 			wait -= step
+			since_act += step
 			if wait <= 0.0:
-				bot.act(sim, step)
+				# FIX 2026-10-31 (D30): pass the real elapsed time. Before this fix the bot got dt=1/60 per call although
+				# calls were ~0.17 s apart, so its internal think timer ran ~10x slow (a slowed-down bot).
+				bot.act(sim, since_act)
+				since_act = 0.0
 				wait = rng.randf_range(0.0, 0.35)
 		sim.step(step)
 		var hp: float = float(sim.player_base.hp)
@@ -49,6 +55,7 @@ func _initialize() -> void:
 	for s in (a[3] if a.size() > 3 else "1,2,3,4,5").split(","): seeds.append(int(s))
 	var only: Array = [] if a.size() <= 4 or a[4] == "all" else Array(a[4].split(","))
 	var late_delay: float = float(a[5]) if a.size() > 5 else 30.0
+	var policies: Array = Array((a[6] if a.size() > 6 else "competent").split(","))
 	var budgets = JSON.parse_string(FileAccess.get_file_as_string("res://docs/design/balance/upgrade_budgets.json"))
 	var content = ContentS.new()
 	content.load_all("res://data")
@@ -67,11 +74,12 @@ func _initialize() -> void:
 			for k in overrides[rid]: content.rounds[rid][k] = overrides[rid][k]
 		for b in budgets_list:
 			var lv: Dictionary = {} if b == "none" else budgets[b][rid]["levels"]
-			for sd in seeds:
-				var s = SimS.new(); s.setup(content, rid, sd, lv)
-				var r := _run(s, BotS.new(2, sd), sd, 0.0)
-				r.merge({"round": rid, "budget": b, "seed": sd, "kind": "competent"})
-				rows.append(r)
+			for pol in policies:
+				for sd in seeds:
+					var s = SimS.new(); s.setup(content, rid, sd, lv)
+					var r := _run(s, BotS.new(2 if pol == "competent" else 1, sd), sd, 0.0)
+					r.merge({"round": rid, "budget": b, "seed": sd, "kind": pol})
+					rows.append(r)
 		var p = SimS.new(); p.setup(content, rid, 5)
 		var pr := _run(p, null, 5, 0.0); pr.merge({"round": rid, "budget": "none", "seed": 5, "kind": "idle"}); rows.append(pr)
 		if rid == "r01":

@@ -137,6 +137,8 @@
     "ui.upgrade_error": "Cannot upgrade (%s)",
     "ui.upgrade_none": "Nothing to upgrade yet",
     "banner.first_wave_cleared": "First wave broken!",
-    "ui.upgrade_save_uncertain": "Save result unknown. Restart to check"
+    "ui.upgrade_save_uncertain": "Save result unknown. Restart to check",
+    "hint.loss.r05.tactic": "Put Loaf Shields in front and hit the Mold General from behind with Rolls.",
+    "hint.loss.upgrade": "Replay an earlier round for gold, upgrade, then try again."
   }
 }

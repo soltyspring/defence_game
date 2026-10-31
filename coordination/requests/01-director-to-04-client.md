@@ -51,3 +51,9 @@ Also copied your 5 new `ui.star_*` fallbacks verbatim into ko/en. Keys are now 1
 - Supply word renamed 반죽→**밀가루**, Dough→**Flour** (`res.supply`, `toast.not_enough_gold`, worker desc, tut_buy_worker), D25. Widths: 밀가루 36 px, Flour 33 px at 12 px.
 - Added `banner.first_wave_cleared` 첫 웨이브 격파! / First wave broken!. r01 is renamed "첫 번째 굽기".
 - Please rerun your title/typography checks for the new strings.
+## R7 2026-10-31 — r05 defeat hint (D31): 2 lines, text keys added
+- Show only on the result screen after a LOSS in r05 (not after retry/quit, not after a win). Two lines under the defeat title:
+  1. `hint.loss.r05.tactic`: "통식빵을 앞세우고 롤빵병으로 곰팡이 장군을 뒤에서 공격하세요." / "Put Loaf Shields in front and hit the Mold General from behind with Rolls."
+  2. `hint.loss.upgrade`: "앞 라운드를 다시 해서 골드를 모으고, 강화한 뒤 도전하세요." / "Replay an earlier round for gold, upgrade, then try again."
+- Lookup rule for later rounds: if `hint.loss.<round_id>.tactic` exists, show it plus `hint.loss.upgrade`; otherwise show nothing. No ad or paid UI.
+- Please check that the lines fit in the narrowest result layout (ko lines are about 30 syllables, so 2 lines each may be needed) and render them in a frame for 07.

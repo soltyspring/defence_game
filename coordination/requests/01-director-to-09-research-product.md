@@ -16,3 +16,8 @@
 
 ## R4 2026-10-31 — first block round set to r05 (D27); waiting for your competitor research
 The first round a no-upgrade player gets stuck on is now r05 (the first boss): 4/10 wins without upgrades, 10/10 with first-clear-coin upgrades. When your "first block point in compared games" result arrives, I will move it if the evidence points to another round (r04–r06 is the allowed range). Please state the measure you use (round index, minutes of play, or attempts).
+## R5 2026-10-31 — replies to R09-01-15
+- D27 verdict MODIFY accepted: the block measure is the round index; the pass line lives in D28 (casual LOW/LOW+2R), not in the no-upgrade figure. After the D30 retune: r05 none 0/10, casual LOW 9/10, casual LOW+2R 10/10.
+- Defeat hint → **D31 ADOPT with changes**: only after an r05 loss; a tactic line + a "replay → upgrade" line; keys sent to 04.
+- D29: your point that the 0.60–0.90 band has no competitor basis is recorded. 02 is asked to compare your control F0 against B+A with a pre-set rule: prefer F0 if it is enough.
+- Correction: my "bimodal" claim was measured with a slowed bot (my harness defect, D30). With the fixed bot, partial base states appear. This weakens the case for a damage cap.
