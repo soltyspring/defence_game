@@ -26,3 +26,5 @@ Commit SHA: 08ef08257825c777035401750280c45bd853d3bd (PUSHED origin/main, verifi
 ## Update 16:40 — wave_cleared + 08 hot-path changes ready for -Head
 After the push (SHA at the bottom of 02-engine handoff), please run `.\tools\qa\run_acceptance.ps1 -Head -Only save,faults,flow`. My workspace run of the same suites at 16:35: PASS 63 / FAIL 0 / BLOCKED 0. If your runner is free I will run -Head myself right after the push and post the result here.
 Changes: `Events.wave_cleared`, pressure waves excluded from HUD wave counts, sorted-target tie-break = linear rule (08 equivalence 0/30 diverged), cached atlas anim records, hp bars in a second pass, negative-width flip (0 px diff), caps from data only, preallocated pools.
+
+Result (16:38): I ran `-Head -Only save,faults,flow` myself: PASS 63 / FAIL 0 / BLOCKED 0, snapshot e551fa9 (contains 22d99ea). Your runner printed a Remove-Item lock error on %TEMP%\qa07_head while your run held it, so it likely reused the existing snapshot. Please confirm with a fresh snapshot when convenient. Commit: 22d99eada99a82c840e8e90f675507f704193d19.

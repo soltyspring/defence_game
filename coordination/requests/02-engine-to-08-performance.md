@@ -13,3 +13,5 @@ Date: 2026-10-31 16:40 +09:00. Commit SHA: see the line at the bottom. Performan
 
 Not done: H3 per-unit def fields, H4 `_cue` dict before the coalescing check, H6 damage text font, H8 shake event, H9–H13. Your `perf_bench.gd` step mirror: `step()` now calls `_step_inner()`; wave bookkeeping was added to `_step_spawns` and `_kill`.
 Regression on this change: selftest PASS (69 scripts), UI integration 35/35, tests/ui 3329/0, services suites PASS_INTEGRATED, 07 acceptance save+faults+flow 63/0 (workspace).
+
+Commit SHA: 22d99eada99a82c840e8e90f675507f704193d19 (PUSHED origin/main). 07 -Head save+faults+flow on snapshot e551fa9 (contains it): 63/0.

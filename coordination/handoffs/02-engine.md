@@ -23,3 +23,7 @@ selftest PASS (69 scripts; find_target identity 2217/0; waves_and_pools; pools_g
 2. 08 remaining: H3 def fields, H4 _cue alloc, H6 damage-text font, H8 shake coalescing, H9–H13; P4 save latency log; P5 perf hooks.
 3. 01 decisions: D16 window vs r01 data, D7 caps text, passive loss time, 900 s timer rule.
 4. 05 A8 RefCounted cycle; OS window close → quit_game. 04 R12-2 release preset, R12-3 emulator slot. 07 QA-R1 hooks.
+
+## Commit for this step
+22d99eada99a82c840e8e90f675507f704193d19 [Feat] 웨이브 격파 이벤트와 압박 웨이브 제외, 렌더 할당·배치 개선과 타깃 동률 규칙 통일 — PUSHED origin/main.
+07 `-Head -Only save,faults,flow` (16:38, out build/qa07/20261031-163837): PASS 63 / FAIL 0 / BLOCKED 0 on HEAD snapshot e551fa9, which contains 22d99ea (ancestor; snapshot events.gd has wave_cleared). The runner logged a Remove-Item lock error on %TEMP%\qa07_head (07's own run held it), so the snapshot was probably reused rather than rebuilt; it was at e551fa9 either way.
