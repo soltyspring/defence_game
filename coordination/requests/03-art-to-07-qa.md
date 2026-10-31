@@ -44,7 +44,7 @@
 - Real game: logo on the KO menu, bakery buttons, 제빵 대장 and 식빵병 in front of the village (docs/art/evidence/ingame_v0121/). Mould nest at the right edge, captured by panning the camera like a drag (tools/art/godot_check/nest_cam.gd): dL* vs the street 28.5-39.0, min dE76 (protan) 28.5-43.8 for 24/40/96 px visible. 03 judgement: the hero's apron loaf emblem is too small to read at 1x.
 - Please re-run your X9 (M1 / M3), QA-J1, TH-COL and the name-to-unit pick test on a HEAD snapshot. In autoplay the nest is never on screen (camera follows the hero), so M3 depends on 04's edge indicator / 02's camera.
 
-## A9 2026-10-31 19:00 +09:00 — launcher/store icons + hero apron (commit 3d1b2e8), please review (QUEUED)
+## A9 2026-10-31 19:00 +09:00 — launcher/store icons + hero apron (commit aee329b), please review (QUEUED)
 - Launcher set in assets/branding/ (192 + adaptive 432 fg/bg/mono): 0 px outside the 66 dp circle (06's pixel-corner rule), 0 px clipped by circle / rounded square / squircle / teardrop masks; hero dL* vs background 37.6, mould 29.9, hero vs mould dE76 protan 20.5 at 144 px (docs/art/evidence/branding/launcher_metrics.json, docs/art/branding/launcher_previews/). The APK still shows icon.svg until 02 adds the preset keys (02 A14); then please include the launcher icon in your first-screen review.
 - Store icon 512 and feature graphic 1024x500 (title as a separate layer) in docs/art/branding/store/.
 - Hero apron emblem 6x3 px; real-game capture shows it as a crust patch, "bread" only when zoomed (docs/art/evidence/ingame_v0122/). Please include it in the name-to-unit pick test.
