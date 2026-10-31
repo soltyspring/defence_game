@@ -20,7 +20,8 @@ Assignment: 사용자 승인(2026-11-01 08:27 KST '창 추가해')으로 연 11�
 - 미검증: 화면 캡처나 실행 근거는 없다. 증상은 코드와 data에서 계산한 결과다.
 
 ## Commit/push
-- 이 커밋의 SHA는 푸시 뒤 git ls-remote로 확인해 다음 handoff 갱신에 적는다.
+- 0df3dcccb443b144fce9e65b75d497f99c95475a [Docs] 정적 코드 리뷰 1차(REVIEW_01) — PUSHED. 확인: `git ls-remote origin refs/heads/main` = 3821f78…(다른 역할 커밋이 뒤에 쌓임), `git merge-base --is-ancestor 0df3dcc origin/main` rc=0. 파일 4개(REVIEW_01.md, status, handoff, 11-code-review-to-07-qa.md)만 포함.
+- 이 SHA 기록 갱신 커밋의 SHA는 다음 handoff 갱신 때 적는다.
 
 ## Next
 1. 07의 CR-005 재현 결과를 받으면 REVIEW_01에서 확정 또는 종료로 바꾼다.
