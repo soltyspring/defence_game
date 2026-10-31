@@ -15,6 +15,7 @@ Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, tr
 - Job 2 `05-peak-after-9rec` (08:26:39, HEAVY_JOB_DONE exit 0): P1/P2/P3/P4/P6-G1/P7 PASS. **P5 after FAIL as written** (1 of 45 peaks 2.58 dB; one cue logged one 512-frame chunk late). **G2 FAIL** (hit_bread/hit_mold +5.4 points in one A/B battle, because the rule lowers prio-1 hits). No peak in 18 new recordings needed the rule (all ≤ −2.02 dBFS). **Rule stays OFF**; options (a) keep off, (b) softer variant: coordinator decision. Table: ONSET_PEAK_CHECK.md §5.
 - Manifest has no `onset_cluster` (synth.py `ONSET_CLUSTER_ON = False`). Enabling it changes no audio bytes.
 - Pass criteria P1–P7: ONSET_PEAK_CHECK.md §3, written before the change.
+Git (copied from the PUSHED lines after those calls returned; git ls-remote origin refs/heads/main = 1db1f59b3993080c4228e518c3f738984b5f147a): 30401e3842fd6d8283b78a346d63b075937d4c57 [Feat]; 1db1f59b3993080c4228e518c3f738984b5f147a [Docs].
 Not verified: human listening, real phone.
 
 ## v3.8 repetition fatigue (coordinator task). Details: docs/audio/REPETITION_CHECK.md, PHONE_SPEAKER_CHECK.md "v3.8 re-judge"
