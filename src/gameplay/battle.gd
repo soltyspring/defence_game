@@ -56,8 +56,8 @@ func start(p_round_id: String, seed_value: int, upgrades: Dictionary, autoplay :
 	cam.make_current()
 	cam.limit_left = -90
 	cam.limit_right = int(sim.L + 50.0)
-	cam.limit_top = 0
-	cam.limit_bottom = 360
+	cam.limit_top = -100000   # vertical framing is done in _update_camera (bottom-anchored)
+	cam.limit_bottom = 100000
 	_cam_x = sim.hero.x
 	cam.position = Vector2(_cam_x, 180)
 	if autoplay:
@@ -238,7 +238,12 @@ func _update_camera(delta: float) -> void:
 	var lo := -90.0 + vw * 0.5
 	var hi: float = sim.L + 50.0 - vw * 0.5
 	_cam_x = clampf(_cam_x, lo, maxf(lo, hi))
-	cam.position = Vector2(roundf(_cam_x), 180.0)
+	# Integer scale_mode can give views taller than 360 (e.g. 800x450): keep the ground at the bottom and show more sky.
+	var vh := get_viewport_rect().size.y
+	var cy := roundf(360.0 - vh * 0.5)
+	cam.position = Vector2(roundf(_cam_x), cy)
+	view.view_top = cy - vh * 0.5
+	view.view_bottom = cy + vh * 0.5
 	if _shake > 0.0:
 		if bool(Save.progress.settings.get("screen_shake", true)):
 			cam.offset = Vector2(roundf(randf_range(-_shake, _shake)), roundf(randf_range(-_shake, _shake) * 0.5))

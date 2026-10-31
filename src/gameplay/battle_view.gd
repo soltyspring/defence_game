@@ -10,6 +10,8 @@ var ground_y := 290.0
 var biome := "meadow"
 var cam_x := 320.0
 var view_w := 640.0
+var view_top := 0.0       # world y at the top of the screen (integer scale may show more than 360 px)
+var view_bottom := 360.0
 var show_damage := true
 var _order: Array = []
 var _font: Font
@@ -73,9 +75,10 @@ func _draw_background() -> void:
 	var pal := _biome_palette()
 	# sky bands
 	var bands := 6
+	var band_h := (ground_y - view_top) / float(bands)
 	for i in bands:
 		var c: Color = pal.sky_top.lerp(pal.sky_bottom, float(i) / (bands - 1))
-		draw_rect(Rect2(left, -40.0 + i * 40.0, w, 41.0), c)
+		draw_rect(Rect2(left, view_top - 8.0 + i * band_h, w, band_h + 9.0), c)
 	# far hills (parallax 0.3)
 	var off := cam_x * 0.7
 	var step := 96.0
@@ -95,7 +98,7 @@ func _draw_background() -> void:
 		x += step
 	# ground
 	draw_rect(Rect2(left, ground_y - 12.0, w, 4.0), pal.grass_top)
-	draw_rect(Rect2(left, ground_y - 8.0, w, 90.0), pal.ground)
+	draw_rect(Rect2(left, ground_y - 8.0, w, maxf(90.0, view_bottom - ground_y + 16.0)), pal.ground)
 	var gx := floorf(left / 16.0) * 16.0
 	while gx < left + w:
 		draw_rect(Rect2(gx + fposmod(gx * 0.7, 9.0), ground_y + 10.0 + fposmod(gx * 0.31, 30.0), 2, 2), pal.ground_dot)
@@ -110,7 +113,7 @@ func _draw_biome_layers(left: float, w: float, front: bool) -> bool:
 		if f.is_empty():
 			continue
 		if not drew and not front and layer.has("clear_color"):
-			draw_rect(Rect2(left, -40.0, w, 440.0), Color(str(layer.clear_color)))
+			draw_rect(Rect2(left, view_top - 8.0, w, view_bottom - view_top + 16.0), Color(str(layer.clear_color)))
 		drew = true
 		var par := float(layer.get("parallax", 1.0))
 		var r: Rect2 = f.rect
@@ -120,10 +123,12 @@ func _draw_biome_layers(left: float, w: float, front: bool) -> bool:
 		else:
 			y = float(layer.get("view_y", ground_y - r.size.y))
 		var tile_w := r.size.x
-		var off := cam_x * (1.0 - par)
-		var x := floorf((left - off) / tile_w) * tile_w + off
+		# Round the layer origin ONCE (half-up, sign-consistent) and step copies by exact integer tile widths.
+		# Per-copy roundf() rounded .5 offsets away from zero, leaving 1 px gaps between copies (03 A4 white seams).
+		var bx := floorf(cam_x * (1.0 - par) + 0.5)
+		var x := floorf((left - bx) / tile_w) * tile_w + bx
 		while x < left + w:
-			draw_texture_rect_region(f.tex, Rect2(roundf(x), y, tile_w, r.size.y), r)
+			draw_texture_rect_region(f.tex, Rect2(x, y, tile_w, r.size.y), r)
 			x += tile_w
 	return drew
 

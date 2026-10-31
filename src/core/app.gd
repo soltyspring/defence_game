@@ -38,7 +38,7 @@ func _capture(file: String) -> void:
 	DirAccess.make_dir_recursive_absolute(_shot_dir)
 	var p := _shot_dir.path_join(file)
 	img.save_png(p)
-	print("[App] screenshot ", p, " ", img.get_size(), " perf=", JSON.stringify(Perf.snapshot()))
+	print("[App] screenshot ", p, " ", img.get_size(), " view=", get_viewport().get_visible_rect().size, " window=", DisplayServer.window_get_size(), " scale=", get_tree().root.content_scale_factor, " perf=", JSON.stringify(Perf.snapshot()))
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -60,11 +60,32 @@ func _ready() -> void:
 		if a.begins_with("--shot-dir="):
 			_shot_dir = a.get_slice("=", 1)
 
+## Integer pixel scale that still fills the screen (coordinator 08:12, 03 A2c, 04 R9).
+## Godot's scale_mode="integer" alone letterboxes (measured: 1600x900 window -> 640x360 view with bars).
+## So pick k = largest integer with view >= 640x360 and set the content size to window/k: k=2 at
+## 1280x720 (640x360), 1600x900 (800x450), 1600x720 (800x360); k=3 at 2400x1080 (800x360), 1920x1080 (640x360).
+## Below 640x360 physical the view equals the window (k=1).
+func _apply_pixel_scale() -> void:
+	var root := get_tree().root
+	var ws := DisplayServer.window_get_size() if DisplayServer.get_name() != "headless" else Vector2i(640, 360)
+	if ws.x <= 0 or ws.y <= 0:
+		return
+	var k := maxi(1, mini(ws.x / 640, ws.y / 360))
+	var size := Vector2i(maxi(1, ws.x / k), maxi(1, ws.y / k))
+	if root.content_scale_size != size:
+		root.content_scale_size = size
+	pixel_scale = k
+
+var pixel_scale := 1
+
 ## Called by scenes/gameplay/main.tscn once its World and UI nodes exist.
 func boot(p_main: Node, p_world: Node2D, p_ui: CanvasLayer) -> void:
 	main = p_main
 	world = p_world
 	ui_layer = p_ui
+	_apply_pixel_scale()
+	if not get_tree().root.size_changed.is_connected(_apply_pixel_scale):
+		get_tree().root.size_changed.connect(_apply_pixel_scale)
 	Perf.set_fps_cap(int(Save.progress.settings.get("fps_cap", 60)))
 	for id in Atlas.pages:   # always-resident UI pages (load_policy "always" / group "ui")
 		var m: Dictionary = Atlas.pages[id].meta
@@ -85,8 +106,8 @@ func boot(p_main: Node, p_world: Node2D, p_ui: CanvasLayer) -> void:
 		start_round(direct, true)
 	else:
 		show_screen(&"menu")
-	print("[App] boot ok platform=%s renderer=%s screen=%s ui_source=%s atlas=%s save_recovered=%s" % [OS.get_name(),
-		RenderingServer.get_video_adapter_name(), str(screen), JSON.stringify(ui_source), JSON.stringify(Atlas.texture_report()), Save.recovered])
+	print("[App] boot ok platform=%s renderer=%s view=%s window=%s screen=%s ui_source=%s atlas=%s save_recovered=%s" % [OS.get_name(),
+		RenderingServer.get_video_adapter_name(), str(get_viewport().get_visible_rect().size), str(DisplayServer.window_get_size()), str(screen), JSON.stringify(ui_source), JSON.stringify(Atlas.texture_report()), Save.recovered])
 
 func _process(delta: float) -> void:
 	_clock += delta
