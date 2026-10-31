@@ -39,6 +39,7 @@ Validation:
   - isolation proof: real save unchanged
 - No own Godot left running.
 Not verified: human listening (nobody has listened), Android device.
+Git v3.7 (copied from the PUSHED lines after those calls returned; each verified on origin/main): 4d6f9bdbde82876fff7977404ba06cce8a366fbc [Fix]; 6737f3663927b2d3cf1b32dac882c563fd14359f [Test]; e00aa883435c6a0ff2d68244bbb4995609bc5dd9 [Docs].
 Next:
 1. G2 follow-up: either more seeds for wave_cleared, or accept it as variance on a listener's judgement.
 2. Still waiting: 02 A10 (swarm buzz), 01 menu/music-variation decision, 04 C1/C5.
