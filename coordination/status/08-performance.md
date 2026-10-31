@@ -1,5 +1,6 @@
 # 08-performance status
-Updated: 2026-10-31 16:1x +09:00
+Updated: 2026-10-31 16:4x +09:00
+M5: static hot-path review docs/performance/CODE_REVIEW_HOTPATH.md (H1–H13, 24/24 line refs verified), P7 request to 02, D7 caps FYI to 01; stress unit-drop root cause = D18 empty enemy_ai.pool vs probe refill (fix pending); asset gate PASS; no Godot used.
 M4: static per-commit asset gate tools/perf/asset_budget_check.py (exit 1 on cap breach) + self-test 11/11 PASS; 03 theme A redraw 2b350c4 PASS (GPU unchanged 9.25 MiB, 0 page size changes); 05 committed audio PASS; C11 still waiting on the coordinator; no Godot used in M4.
 Status: M3 (contamination handling, quiet-window request, re-theme baseline + caps) VERIFIED and PUSHED (c58c59e, origin/main).
 Theme Q1 = A "빵집 기사단 vs 곰팡이 군단" (user decision 09:03) processed.

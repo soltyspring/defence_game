@@ -70,3 +70,6 @@ Information for 05: if the music were imported as non-streamed or decoded (e.g. 
 (44.1 kHz stereo, 27.4 s battle track + menu track). It must stay a streamed OGG.
 APK: still only the stale 07:23 APK, so the APK rows report "same APK file: not evidence". A fresh before/after build from 04 is pending (R6).
 Contended or not does not matter here: these are file measurements, not timings.
+
+Re-check 16:4x (`python tools/perf/asset_budget_check.py --range 37b9a93..HEAD`, HEAD 0590e7a): ccf3033, 2b350c4, 5930430 → PASS
+(no new asset commits since 16:1x). Exit 0.

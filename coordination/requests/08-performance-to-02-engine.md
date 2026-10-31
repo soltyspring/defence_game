@@ -96,3 +96,33 @@ contended as well. The "−45.8 % / −68 %" and "+0.7 %" figures above are **wi
 quiet window (08-performance-to-coordinator.md C11) and will re-run `ab_retest.ps1 -RequireQuiet` (with per-second contamination
 monitor) on HEAD vs the linear blob d4d7c13. P2 acceptance is therefore **not judged** yet. The P2b tie-break finding is deterministic and
 stays valid: please still align the tie-break (check: `targeting_equivalence.gd` → EQUIVALENT).
+
+## P7 — 2026-10-31 16:4x: hot-path code review (static, no Godot run). Full table: docs/performance/CODE_REVIEW_HOTPATH.md
+Reviewed committed HEAD 0590e7a (battle_sim e9dfaa4, battle_view/battle 141d226, atlas fdd4d86). Line numbers refer to those versions. Ranked
+by expected cost at caps on low-end phones. These are estimates, not measured on a phone, and the earlier A/B timings are invalid. I will
+measure each item in the quiet window C11 with the method named.
+1. **H1 per-sprite Dictionary allocation** — `battle_view.gd:230,232,201,330,349-350,158-161` → `atlas.gd:136-143` (`anim()` 120-133 +
+   `frame()` 108-117): ~2 Dictionaries per sprite ≈ 200 per frame ≈ 12 000/s at caps. Ask: resolve per (anim_set, anim) once per page
+   acquire into a reusable record (tex, Array[Rect2], Array[Vector2] pivots, fps, loop); return indices, not dicts. Measure: frame probe
+   stress A/B (view shown vs hidden).
+2. **H2 batch breaks** — hp bars `battle_view.gd:237→317-322` drawn between sprites, `draw_set_transform` per flipped sprite 245-247,
+   `Color("hex")` parse per bar 322. Ask: draw all bars in a second pass after the sprites; flip with a negative-width dest rect; make the
+   bar colours consts. Measure: draw calls p95 at caps (M1 186; provisional low-tier target ≤ 100).
+3. **H3 per-unit def lookups** — `battle_sim.gd:554,556,560,589,608,615,622,632` (`u.def.range`, `float(u.def.speed)`,
+   `str(u.def.get("attack_type"))`, `projectile` fetched twice on 622, …) per unit per step. Ask: copy these to typed fields of `Unit` in
+   `_new_unit` (926). Measure: bench `sections.units` + cap-clash step avg (A/B, `-RequireQuiet`).
+4. **H4 `_cue` allocates before the coalescing check** — callers 638, 877, 973, 785, 800 build a params Dictionary, and 789 builds the key
+   String before `cues.has` (790). Ask: pass scalars and build the dict only when the key is new; use a StringName/int key.
+5. **H5 depth sort** — `battle_view.gd:52-56` new lambda + sort every frame. Ask: cache the Callable and skip the sort when no lane_y order
+   changed (units spawn with fixed lane_y).
+6. **H6 damage text** — `battle_view.gd:380-381` outline + text with `ThemeDB.fallback_font` at 8 px (not Galmuri, separate glyph cache).
+   Ask: use one Galmuri9 numerals size with a 1 px shadow pass, or pre-render digits.
+7. **H8 events** — `battle_sim.gd:799` "shake" event (Array + Dictionary) on every hit to the player base. Ask: coalesce to one per step.
+8. **Caps source of truth** — D7 says 30 ally / 40 enemy. Effective caps are **36/36/64 projectiles/48 fx/24 texts**
+   (`game_config.json` clamped by `perf.gd` ceilings, now 40/side), while `battle_sim.gd:89` defaults say 30/40/fx 32. Ask: keep one
+   source (data). Please confirm the numbers so 01 can update D7 and ENGINE.md §7 can state them.
+9. **Lazy pools** — `_new_projectile` 959-969, `_fx` 971-989, `_text` 991-1006, `_new_unit` 926 allocate on first use mid-fight.
+   Ask: pre-create to caps in `setup()` (≈ 64 + 48 + 24 + ~80 small objects).
+Lower priority: H9 `battle.gd:143-149` per-frame alive counts (keep counters in the sim); H10 linear free-slot scans; H11 `army_count`
+in `snapshot()` per card (1026); H13 `Color(str(layer.clear_color))` per frame (battle_view 116).
+Already fine: `_sorted_into` reuses arrays; event buffer swap (P3); towers scan only on cooldown.
