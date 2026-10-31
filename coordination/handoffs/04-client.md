@@ -126,3 +126,6 @@ State at checkpoint: work stopped at a safe point. The owned working tree is CLE
 3. If 02 set integer scale / re-imported: the same command at `-Resolution 1600x900` → expect an 800×450 view and 0% odd glyph runs; check icons in the shared tree (no `[UiStyle] … stale` warning in godot_*.log).
 4. If 02 gives an install slot: `.\tools\build\build_android_debug.ps1`, then install/start/screencap on their AVD only in the agreed slot; record the result in docs/qa/RELEASE_READINESS.md A13.
 5. Commit only verified owned files with tools/build/verify_and_publish.ps1 (it runs both suites on a HEAD snapshot, then calls Publish-Task.ps1).
+
+## Commit record 2026-11-01 00:35 (all on origin/main, checked with `git branch -r --contains`)
+be2abb3 [Fix] user:// isolation for 04 runners · d724b9a [Fix] readable numbers (Galmuri11 12) · 1850c3f [Fix] marker "m" + LF snapshots · b659c97 [Docs] resume record and replies.
