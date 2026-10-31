@@ -1,6 +1,7 @@
 extends SceneTree
 ## Probe for 01/09 (D16 "first wave broken at 25–45 s"): when does wave_cleared(1) fire in r01 for different
 ## player policies? Run: tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://src/core/diag/wave_clear_probe.gd
+## with a PRIVATE APPDATA (Save boots as an autoload): & docs/research/systems/probes/isolated_godot.ps1 -GodotArgs @(<same args>)
 ## Policies: competent bot (selftest bot); hero_rush (bot + hero always advances to its leash); deploy_only
 ## (bot deploys/buys workers, hero stays home). Owner: 02-engine.
 

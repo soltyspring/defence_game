@@ -1,6 +1,7 @@
 extends SceneTree
 ## Balance probe for 01: a player who does nothing (no workers, no deploys, hero never moved).
 ## Run: tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://src/core/diag/passive_probe.gd
+##   with a PRIVATE APPDATA (Save boots as an autoload): & docs/research/systems/probes/isolated_godot.ps1 -GodotArgs @(<same args>)
 ## The engine time limit is disabled so the run shows whether the enemy can ever destroy the base (cut at 1800 s).
 ## Attribution variants for r01/r02: no_player_tower (player base tower never fires), no_hero (hero removed).
 ## Owner: 02-engine.

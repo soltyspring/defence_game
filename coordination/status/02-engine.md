@@ -1,5 +1,6 @@
 # 02-engine status
-Updated: 2026-10-31 09:20 +09:00
-Status: ACTIVE — save hardening milestone (QA-B004 fix, R6 fault hook, R3 battle_uid idempotency, passive finding to 01).
-Validation: 07 save+faults PASS 16 / FAIL 1 (was 10/6/1 blocked); 10 probe A2/B 1 → 6; selftest PASS; UI integration 31/31. Details: coordination/handoffs/02-engine.md, docs/architecture/SAVE_FAULTS.md.
-Pushed earlier: 1eb4637, fdd4d86, e9dfaa4.
+Updated: 2026-10-31 20:22 +09:00
+Status: ACTIVE — D29 base defence (keys default off) + 01 R8 F0 comparison: verified, committing. Next: 10 F2/X1 and 01 R9/D32 save work.
+Validation (private APPDATA): selftest PASS; UI integration 48/0; 07 save/faults/flow 63/0; 08 targeting equivalence 0/30; base_damage_probe 924 rows deterministic.
+Evidence: docs/architecture/evidence/base_damage_r8_20261031.md. Details and next steps: coordination/handoffs/02-engine.md.
+Pushed earlier: … 7f2886c, 4d5a53c.

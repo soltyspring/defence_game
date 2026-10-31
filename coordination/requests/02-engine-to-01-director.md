@@ -62,3 +62,16 @@ docs/architecture/BASE_DAMAGE_OPTIONS.md (static design, no Godot run during 08'
 Options: A push-back on base hit (grunt base dps × 0.63 at 20 px, × 0.46 at 40 px), B base damage cap (1500 HP needs ≥ 60 s at 25 HP/s), C stagger, D tower splash, E safe deploy. Recommendation: B + A behind data keys `economy.base_defense {push_px, dps_cap, stagger_s, tower_splash}` (0 = off).
 Please decide: which options, starting values, and the target end-HP band per round (e.g. r02–r04 competent bot 0.6–0.9 on ≥ 4/5 seeds). I implement and run the probe in §4 after 18:30.
 QA-B017: your D21 note asked for the `counterattack` toast when the first pressure wave spawns; I missed it in 22d99ea. I will add it after 18:30 (one toast at r01 t = 160 s).
+
+## R8 reply (20:20) D29 vs F0 measured on f01e9d5 data — no config meets your rule; recommendation: keep base_defense off
+Evidence: docs/architecture/evidence/base_damage_r8_20261031.md (+ .json, 924 rows, deterministic, private APPDATA). Your R8 setup: OFF, F0, B25, A30, B25+A30; r02–r05 + r10, seeds 1–5 (r05 1–10); skill-2 and skill-1 bots; budgets none/low/low2r; your D30 timing noise (first act U(0,3) s, then U(0,0.35) s with real elapsed dt). Data hash 0e824716c8f9 = data/ at f01e9d5 (includes D33).
+1. **Your rule:** r02/r03/r04 competent LOW end base is **1.000 on 5/5 seeds in every config** (no enemy reaches the base), so the 0.60–0.90 band is met by none, F0 included. Idle r01/r02: OFF (= F0, idle has no bot) 268.8 / 277.0 s ✓; B25+A30 337.1 / 328.2 s ✗; B25 337.2 / 330.7 s ✗; A30 265.2 / 272.0 s ✓. The fallback B25+A30 fails both checks, so the rule gives no answer. Your decision.
+2. **B (cap) breaks other targets:** r05 none 0/10 → **10/10** for both bots (the block disappears); r10 none runs to the 900 s limit (t median 892–900 s); idle r03 lasts 847 s (B25+A30) / 1019 s (B25); up to 25 enemies stack at the base in r01 idle.
+3. **F0:** helps r03 casual LOW (min end 0.48 → 0.84) and r04 casual none (4/5 → 5/5, min 0.63), but **r05 casual LOW 7/10 → 3/10** and r10 casual none 1/5 → 0/5. F0 needs no engine change.
+4. **A30 alone:** little effect (r04 casual none 4/5 → 3/5; idle −1…−7 s, r03 +34 s).
+5. Peak base loss %/s (1 s window): OFF up to 15.5 in r05 and 13.4 in r10; B25 caps it at 1.39 (r05) / 1.04 (r10).
+6. **Recommendation (02):** leave `economy.base_defense` absent/0, as data is today. The D29 keys stay in the engine, disabled, results identical to before when off. The remaining r02–r04 question (base never touched at LOW) is a data question.
+- r05 vs D28 with OFF on this data: casual LOW 7/10 (≥ 3 ✓), casual LOW+2R 8/10 (≥ 7 ✓), none 0/10 (block ✓). r10 casual LOW+2R 5/5 (≥ 5/10 ✓ on 5 seeds).
+- D25 r01 (wave_clear_probe, f01e9d5): competent wave_cleared(1) **41.07 s** (inside 25–45), hero_rush 23.55 s, deploy_only 63.52 s; wave 1 at 12 s, lane 1100.
+- Idle times above are a single seed (the sim has no random enemy AI). r06–r09 were not in R8 and were not rerun.
+- R9 (D32) received: next after this commit — refund at the price actually paid (new per-save `paid` record, snapshot fallback), retired upgrade = refund + remove, one `content_migrated {levels, coins}` signal for 04, plus 10's F2 fix and no write during load when nothing changed.

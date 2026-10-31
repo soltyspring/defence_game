@@ -103,6 +103,12 @@ var enemy_hp_mult := 1.0
 var enemy_atk_mult := 1.0
 var tower: Dictionary = {}
 var enemy_tower_mult := 1.0
+## 01 D29 player-base defence (economy.base_defense; every key 0 = off = previous behaviour):
+## dps_cap HP/s over a sliding 1 s window, push_px knock-back on enemy melee base hits (bosses immune),
+## stagger_s extra attack delay after an enemy base hit, tower_splash px splash for the PLAYER tower only.
+var base_defense := {"dps_cap": 0.0, "push_px": 0.0, "stagger_s": 0.0, "tower_splash": 0.0}
+var _pbase_hits := PackedFloat64Array()   # [t0, dmg0, t1, dmg1, ...] applied damage on the player base, last 1 s
+var base_dmg_capped := 0.0                # damage removed by the cap this battle (probe/QA evidence)
 var hero_atk_mult := 1.0
 var hero_hp_mult := 1.0
 var income_add := 0.0
@@ -185,6 +191,12 @@ func setup(p_content, round_id: String, seed_value: int = 1, p_upgrades: Diction
 	enemy_atk_mult = float(sc.get("atk", 1.0))
 	tower = econ.get("base_tower", {})
 	enemy_tower_mult = float(round_def.get("enemy_tower_atk_mult", 1.0))
+	var bd = econ.get("base_defense", {})
+	base_defense = {"dps_cap": 0.0, "push_px": 0.0, "stagger_s": 0.0, "tower_splash": 0.0}
+	if bd is Dictionary:
+		for k in base_defense:
+			if bd.get(k) is int or bd.get(k) is float: base_defense[k] = float(bd[k])
+	_pbase_hits.clear()
 	# meta upgrades
 	var base_hp_mult := _upgrade_mult("base:player", "hp_mult")
 	hero_hp_mult = _upgrade_mult("hero:" + str(hero_def.id), "hp_mult")
@@ -695,6 +707,10 @@ func _resolve_attack(u: Unit) -> void:
 			if float(u.def.get("splash", 0.0)) > 0.0:
 				var bx: float = enemy_base.x - BASE_HALF if u.side == SIDE_PLAYER else player_base.x + BASE_HALF
 				_area_damage_side(-u.side, bx, float(u.def.get("splash", 0.0)), atk, kb, null)
+			if u.side == SIDE_ENEMY and not u.is_boss:
+				# D29 option A (push-back) and C (stagger) on enemy melee hits against the player base
+				if base_defense.push_px > 0.0: u.kb = maxf(u.kb, base_defense.push_px)
+				if base_defense.stagger_s > 0.0: u.atk_cd += base_defense.stagger_s
 	if bool(u.def.get("self_destruct", false)):
 		_fx("explosion", u.x, -6.0, 0.4, float(u.def.get("splash", 0.0)))
 		u.hp = 0.0
@@ -846,9 +862,30 @@ func _cue(cue: StringName, kind: String, params: Dictionary) -> void:
 	if not cues.has(key):
 		cues[key] = [cue, params]
 
+## D29 option B: at most dps_cap damage on the player base in any 1 s window. Returns the applied amount.
+func _cap_player_base_damage(amount: float) -> float:
+	var i := 0
+	while i < _pbase_hits.size() and _pbase_hits[i] <= t - 1.0:
+		i += 2
+	if i > 0:
+		_pbase_hits = _pbase_hits.slice(i)
+	var used := 0.0
+	for j in range(1, _pbase_hits.size(), 2):
+		used += _pbase_hits[j]
+	var applied := clampf(base_defense.dps_cap - used, 0.0, amount)
+	base_dmg_capped += amount - applied
+	if applied > 0.0:
+		_pbase_hits.append(t)
+		_pbase_hits.append(applied)
+	return applied
+
 func _damage_base(side: int, amount: float) -> void:
 	var b: Dictionary = player_base if side == SIDE_PLAYER else enemy_base
 	if b.hp <= 0.0: return
+	if side == SIDE_PLAYER and base_defense.dps_cap > 0.0:
+		amount = _cap_player_base_damage(amount)
+		if amount <= 0.0:
+			return   # fully absorbed this second: no HP change, no text, no shake
 	b.hp = maxf(0.0, b.hp - amount)
 	b.flash = 0.12
 	if side == SIDE_PLAYER:
@@ -895,7 +932,7 @@ func _step_towers(dt: float) -> void:
 		p.arc = 6.0
 		p.t = 0.0
 		p.dmg = float(tower.get("atk", 15.0)) * (enemy_tower_mult if side == SIDE_ENEMY else 1.0)
-		p.splash = 0.0
+		p.splash = base_defense.tower_splash if side == SIDE_PLAYER else 0.0   # D29 option D, player tower only
 		p.struct_mult = 1.0
 		p.knockback = 0.0
 		p.homing = true

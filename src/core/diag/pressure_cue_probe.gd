@@ -2,6 +2,7 @@ extends SceneTree
 ## QA-B017 check: an idle player in r01 gets exactly one `counterattack` cue, at the first pressure wave time,
 ## and the HUD wave counter never counts pressure waves. Also renders the engine fallback menu title text.
 ## Run: tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://src/core/diag/pressure_cue_probe.gd
+##   with a PRIVATE APPDATA (Save boots as an autoload): & docs/research/systems/probes/isolated_godot.ps1 -GodotArgs @(<same args>)
 ## Owner: 02-engine.
 
 const ContentS := preload("res://src/core/content.gd")

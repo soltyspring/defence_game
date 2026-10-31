@@ -1,6 +1,8 @@
 extends SceneTree
-## Headless engine self-test. Run:
-##   tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://src/core/diag/selftest.gd
+## Headless engine self-test. Run with a PRIVATE APPDATA (the Save autoload boots and may rewrite the real
+## user://save.json after a data change, 10 v0.26):
+##   & docs/research/systems/probes/isolated_godot.ps1 -GodotArgs @('--headless','--path','.','-s','res://src/core/diag/selftest.gd')
+## (plain: tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://src/core/diag/selftest.gd)
 ## Exit code 0 = all checks pass. Writes a JSON report to user://selftest_report.json and prints it.
 ## Owner: 02-engine.
 
@@ -52,6 +54,7 @@ func _initialize() -> void:
 	print("tutorial ", JSON.stringify(report.get("tutorial", {})))
 	print("waves_and_pools ", JSON.stringify(report.get("waves_and_pools", {})))
 	print("buy_upgrade ", JSON.stringify(report.get("buy_upgrade", {})))
+	print("base_defense ", JSON.stringify(report.get("base_defense", {})))
 	print("scripts ok %d/%d, scenes %d, foreign errors %s" % [report.scripts_ok, report.scripts_total, report.scenes_total, str(report.foreign_script_errors)])
 	for b in balance_flags: print("BALANCE: ", b)
 	print("report: ", ProjectSettings.globalize_path("user://selftest_report.json"))
@@ -326,6 +329,40 @@ func _check_rules(content) -> void:
 	var roster: Array = content.round_enemy_roster(content.get_round(content.round_order[0]))
 	report.rules = {"same_tick_both_bases_player_win": both_ok, "skills_by_round": gating, "r01_enemy_roster": roster}
 	if roster.is_empty(): _fail("r01 enemy roster empty")
+	_check_base_defense(content)
+
+## 01 D29 option B: player-base damage cap over a sliding 1 s window (economy.base_defense.dps_cap).
+func _check_base_defense(content) -> void:
+	var sim = SimS.new()
+	sim.setup(content, content.round_order[0], 1)
+	var econ_bd = content.economy.get("base_defense", {})
+	var read_ok := true
+	for k in ["dps_cap", "push_px", "stagger_s", "tower_splash"]:
+		var want := float(econ_bd.get(k, 0.0)) if econ_bd is Dictionary and (econ_bd.get(k) is int or econ_bd.get(k) is float) else 0.0
+		if not is_equal_approx(float(sim.base_defense.get(k, -1.0)), want): read_ok = false
+	if not read_ok: _fail("base_defense not read from economy.json: %s" % str(sim.base_defense))
+	sim.base_defense = {"dps_cap": 25.0, "push_px": 0.0, "stagger_s": 0.0, "tower_splash": 0.0}
+	sim.player_base.hp = 1000.0
+	sim.events.clear()
+	sim.t = 10.0
+	var hp := []
+	for i in 3:
+		sim._damage_base(1, 20.0)       # 20 applied, then 5 (cap 25 reached), then 0 (absorbed)
+		hp.append(sim.player_base.hp)
+	sim.t = 11.01                       # the first two hits left the 1 s window
+	sim._damage_base(1, 20.0)
+	hp.append(sim.player_base.hp)
+	var shakes := 0
+	for ev in sim.events:
+		if ev[0] == "shake": shakes += 1
+	var cap_ok: bool = hp == [980.0, 975.0, 975.0, 955.0] and is_equal_approx(sim.base_dmg_capped, 35.0) and shakes == 3
+	if not cap_ok: _fail("dps_cap: hp %s capped %s shakes %d (want 980/975/975/955, 35, 3)" % [str(hp), str(sim.base_dmg_capped), shakes])
+	# enemy base is never capped
+	var eb: float = sim.enemy_base.hp
+	sim._damage_base(-1, 100.0)
+	var enemy_ok: bool = is_equal_approx(sim.enemy_base.hp, eb - 100.0)
+	if not enemy_ok: _fail("dps_cap must not apply to the enemy base")
+	report.base_defense = {"read_from_economy": read_ok, "cap_hp": hp, "capped": sim.base_dmg_capped, "shakes": shakes, "enemy_base_uncapped": enemy_ok}
 
 ## Drives TutorialDirector the way battle.gd does, with the competent bot on the first round.
 func _check_tutorial(content) -> void:

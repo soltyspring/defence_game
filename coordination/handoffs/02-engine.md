@@ -1,29 +1,46 @@
 # 02-engine handoff
-Updated: 2026-10-31 17:47 +09:00
-Status: ACTIVE — paused for 08's quiet measurement window 18:00–18:30 KST (no Godot/editor/emulator runs by 02, no source edits in the shared tree in that window).
+Updated: 2026-10-31 20:22 +09:00
+Status: ACTIVE — D29 base defence + 01 R8 F0 comparison done and being committed; next R9/D32 + 10 F2/X1 save work.
 Model claude-opus-5.5, trust-all. Session ID: not exposed inside the session.
 HISTORICAL QUOTA CHECKPOINT notices are previous-account records; not acted on.
+Last processed: DECISIONS up to D33; 01→02 R7, R8, R9 (read; R9 queued); 10→02 v0.24–v0.27 (F2 + X1 queued); 08→02 P9/P10 (queued);
+04→02 R16/R17 (queued); 03→02 A16 (integer settings kept, no change needed); 06→02 18:46/19:06/19:33 (launcher_icons, AAB preset queued).
 
 ## User decisions
-Q1 theme A "빵집 기사단 vs 곰팡이 군단" (data IDs unchanged). Q3 work title "빵집 기사단: 곰팡이 디펜스" (store name after KIPRIS). Q4 (17:19 KST): home-screen name ko "빵집 기사단", en "Bakery Knights"; in-game/store titles keep the full work title. Q2 monetization ON HOLD (no paid currency/ad-reward paths).
+Q1 theme A "빵집 기사단 vs 곰팡이 군단" (data IDs unchanged). Q3 work title "빵집 기사단: 곰팡이 디펜스" (store name after KIPRIS).
+Q4 home-screen name ko "빵집 기사단", en "Bakery Knights". Q2 monetization ON HOLD (no paid currency/ad-reward paths).
 
-## This round
-1. Q4 (4b5926d): `application/config/name_localized = {"en": "Bakery Knights", "ko": "빵집 기사단"}`, `package/name = "Bakery Knights"`. `config/name` kept "Lane Defence" so the desktop user:// folder (app_userdata/Lane Defence) does not move (Godot docs). Package ID unchanged. APK rebuilt 17:37 under the import lock: aapt2 default/en 'Bakery Knights', ko '빵집 기사단'. 06 test_services_android: launcher_label=VERIFIED, 189/0. Evidence: docs/architecture/ANDROID_BUILD.md A16. Known side effect: desktop window title still "Lane Defence".
-2. 10 F1 (4b5926d): after a failed write, `Save.last_failure_uncertain` is computed from disk (main unreadable/missing + valid .tmp = next load adopts it) → buy_upgrade `save_uncertain`; `save_failed` now always means disk unchanged. BattleResult.save_uncertain for record_result. 10 probe: C1–C5 and C5b–C13 PASS; C6 after_tmp_write/after_recovery = save_uncertain, disk 440/L2.
-Validation 17:39–17:41: selftest PASS (70 scripts; report path still app_userdata/Lane Defence).
+## This round (D29 + R8)
+- `src/gameplay/battle_sim.gd`: `economy.base_defense{dps_cap, push_px, stagger_s, tower_splash}`, player base only, every key
+  missing/0 = off. B = 1 s sliding-window cap (`_cap_player_base_damage`, `base_dmg_capped`); A = knock-back on non-boss enemy
+  base hits; C = extra attack delay; D = player tower bolt splash. INTERFACES.md §2.7 v1.5.
+- `src/core/diag/base_damage_probe.gd`: 01 R8 grid (OFF, F0, B25, A30, B25+A30; budgets none/low/low2r; seeds 1–5, r05 1–10;
+  01's D30 bot timing noise; peak base loss %/s; max enemies at base; idle time to loss), `--configs=` shards, `--merge=`.
+- `src/core/diag/selftest.gd`: new base_defense check (cap 25: 980/975/975/955, capped 35, 3 shakes, enemy base uncapped).
+  Header of selftest/passive/pressure_cue/wave_clear probes: run with a private APPDATA (10 v0.26 item 1).
+- Result (data f01e9d5, hash 0e824716c8f9): docs/architecture/evidence/base_damage_r8_20261031.md. r02–r04 competent LOW end
+  1.000 in every config (base never hit), so 01's band is met by none; B breaks the r05 block (none 0/10 → 10/10), r10 none
+  runs to 900 s, idle r03 847–1019 s. Recommendation to 01: keep base_defense off (data has no key today).
+- Validation on this tree (all with private APPDATA, real save.json unchanged): selftest PASS (73 scripts); UI integration
+  48/0; 07 run_acceptance save,faults,flow 63/0 (build/qa07/20261031-195027); 08 targeting_equivalence EQUIVALENT 0/30;
+  wave_clear_probe r01 competent 41.07 s / hero_rush 23.55 s / deploy_only 63.52 s.
+- Note: running 07's runner from a pwsh pipe started the adb daemon, which kept the pipe open (my call timed out after the
+  run had finished). Use Start-Process or read build/qa07/latest.txt.
 
 ## Commits (PUSHED, origin/main verified)
-… 4d77225, 09508b1, 7fc45f5, 4b5926d (Q4 + F1). This handoff: committed after.
+… 4b5926d (Q4 + F1), 653188e, 2a6dac5, 7f2886c (R5 content_version + window title), 4d5a53c (QA-B017 + fallback title).
+This round: [Feat] D29 commit — SHA recorded in the status file after the push.
 
-## Next (after 18:30)
-1. 10 R5 content_version (minimal contract in 10's v0.15): Content computes `content_version = "c1-" + sha256(sorted data/**/*.json)[:12]`; Save writes it and `migrations_applied`; on mismatch in ONE atomic save: apply data/migrations.json renames (01 owns the file), clamp upgrades to max_level, refund per 01's rule (unknown → 0 + logged), recompute unlocks id-based (order[i] unlocked iff i==0 or stars has order[i] or order[i-1]); roll back on failed write. Needs from 01: refund rule / cost history and migrations.json schema. Acceptance: 10's run_content_migration.ps1 M1/M2/M4/M5b.
-2. 07/06/10 re-verify on 4b5926d (requests written). 04 to rebuild build/qa/apk_head (still OLD label).
-3. 08 remaining H3/H4/H8/H9–H13, P4, P5; QA-J1 camera framing with 04; 01 decisions (D16 vs r01 data, D7 caps text, 900 s timer); 05 A8; OS close → quit_game; 04 R12 release preset.
-
-## 17:53 KST — uncommitted WIP in the shared tree (verify after 18:30, then commit)
-- `src/core/app.gd`: `_apply_window_title()` sets the desktop window title to `UiText.t("ui.title")` (04's locale rule) at boot; config/name unchanged; no Android effect (launcher label comes from name_localized + package/name at export).
-- `src/core/content.gd`: `content_version` ("c1-" + sha256 of sorted data/**/*.json [:12]) and `migrations` (data/migrations.json, optional).
-- `src/core/save.gd`: R5 content migration on load (PROVISIONAL rules: renames via migrations.json or same-target heuristic, clamp + refund at prices recorded in `content_snapshot`, id-based unlock recompute only when a previous content_version exists, one atomic save, rollback on failure, `migration_log`); every save stamps `content_version` + `content_snapshot`.
-- Checks done before 18:00: `--check-only` parse of all 3 files OK (only the autoload-name notice); 3-s headless boot reaches the menu without script errors. NOT yet run: selftest, 10 run_content_migration.ps1 M1/M2/M4/M5b, 07 save/faults (load now may write: legacy/no-cv saves get stamped), visible window-title check.
-- Committed docs (653188e): docs/architecture/CAMERA_FRAMING_OPTIONS.md + proposals to 01/04/07 (no code change).
-- 18:00–18:30: no Godot/editor/emulator by 02.
+## Next
+1. 10 F2 (P2): failed migration save must keep the OLD content_version/snapshot until the migration succeeds
+   (`_migration_pending`; `_stamp_content` skips while set). Acceptance: 10 probe_r5_cases F2a/F2b 1,584 / L3 after reload.
+2. 10 X1 (P1): no write during load when nothing changed (`if not changed: return` for any prev_cv); optional `-s` guard.
+3. 01 R9 / D32: refund at the price actually paid (new per-save `paid` record, snapshot fallback); retired upgrade =
+   refund + remove; one `content_migrated {levels, coins}` signal (04 notice, key `notice.content_migrated`); 10 v0.27
+   pre-migration backup `save.pre-<cv>.json` (keep 2). Re-run 10 run_content_migration + probe_r5_cases, 07 save/faults.
+4. 08 P9: sort units by (round(lane_y), atlas page, lane_y) with the page id cached at spawn; then 08 C12 A/B. H3/H4/H8/H9–H13, P4, P5.
+5. 04 R16 `snapshot.threat` (+ `ground_screen_y`), R17 bottom safe inset in `_update_camera` and world zoom (k+1)/k question;
+   03 A16: keep `App._apply_pixel_scale` + integer mode (no change); camera check at 780×360 / 800×360.
+6. 06: `launcher_icons/*` keys in export_presets.cfg, Gradle/AAB preset, JDK 17 path (machine setting, ask before changing).
+   08 P10 perf APK with baked args. 04 R12-2 release preset (exclude src/ui/mock, src/core/diag, bot_player; arm64).
+7. Re-import under lock for 03 A12/A13 pages; tell 03. 05 A8 RefCounted cycle; OS window close → quit_game. 07 QA-R1 hooks.
