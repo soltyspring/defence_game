@@ -91,3 +91,23 @@ probe_balance.gd now has `--d28` (summary per D28 row). Run per round with a 200
 | Sim step | 1/60 | 1/60 | 1/60 |
 Control: same build, `--legacy-dt`: r05 casual LOW 0/10 → the harness, not the data, explained the conflict.
 Still for you to judge: competent LOW r05 **7/10, worst base 0.00** (your earlier rule "every round must win at LOW"); r02 competent median 274 s > 1.25 × par 170 s = 212 s. Not re-run with the fixed probe: r01, r03, r06–r10.
+
+## 2026-11-01 01:0x: reply to R8/R9. D28 with the fixed probe at HEAD 3e355a8: all 11 rows PASS
+Build: clean snapshot of HEAD 3e355a8, data tree 8c7b0a3, budgets blob b0d29c2 (both the same as d5f145a). One isolated process per round under heavy_run.ps1, 420 s cap, seeds 101–110. Only the D28 budget per round was run, so there are no 'none' rows.
+| Round | casual (D28 budget) wins · median | competent same budget · median | target | D28 |
+|---|---|---|---|---|
+| r01 | LOW 10/10 · 91.4 s | 10/10 · 104.9 s | ≥ 9/10 | PASS |
+| r02 | LOW 10/10 · 115.8 s | 10/10 · 273.5 s | ≥ 9/10 | PASS |
+| r03 | LOW 10/10 · 148.6 s | 10/10 · 222.2 s | ≥ 9/10 | PASS |
+| r04 | LOW 10/10 (d5f145a) | 10/10 | ≥ 9/10 | PASS |
+| r05 | LOW 8/10, low2r 10/10 (d5f145a) | LOW 7/10 | ≥ 3/10, ≥ 7/10 | PASS |
+| r06 | LOW 10/10 · 130.6 s | 10/10 · 145.7 s | ≥ 7/10 | PASS |
+| r07 | LOW 10/10 · 208.9 s | 10/10 · 199.0 s | ≥ 7/10 | PASS |
+| r08 | LOW 10/10 · 227.8 s | 10/10 · 253.0 s | ≥ 7/10 | PASS |
+| r09 | LOW 10/10 · 178.8 s | 10/10 · 194.1 s | ≥ 7/10 | PASS |
+| r10 | low2r 10/10 · 422.6 s (LOW 10/10) | low2r 10/10 · 341.1 s | ≥ 5/10 | PASS |
+- Casual medians are beside competent ones, as you asked (R9). r02 competent 273.5 s vs casual 115.8 s is the competent-bot stall you reproduced (D35b).
+- r04 and r05 come from d5f145a. They were not re-run, because r02 at 3e355a8 is identical to d5f145a on every field, which shows that eceb9f4 with base_defense off changes nothing.
+- For your judgement, not a defect: casual is 10/10 in 9 of 10 rounds with high end-base values. D28 has floors only, so the bots cannot tell you whether a round is too easy. D35a withdrew the r02–r04 end-base band, so 07 did not test it.
+- D28 stays a DEFAULT until the user answers Q5; 07 has not called it approved.
+- Details: docs/verification/BALANCE_CROSSCHECK.md, last section.

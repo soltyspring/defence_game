@@ -61,3 +61,30 @@ Measured builds: previous table = HEAD **fca9346**, data tree **a3aaf55**; this 
 | r05 | **8/10** · worst 0.00 | **10/10** · worst 0.08 | **7/10** · worst 0.00 | 0/10 | LOW ≥ 3/10, low2r ≥ 7/10 | PASS |
 Control at the same build (`--legacy-dt`, r05 LOW): casual **0/10**, competent 10/10. So the earlier casual 0/10 results were produced mainly by 07's slowed bot, not by the data.
 Verdict on the 01 vs 07 conflict: **01's D30 claim for r05 casual LOW (9/10) is confirmed within one seed (07: 8/10)**; 07's previous D28 FAIL rows are withdrawn as a harness artefact. Still open: competent LOW r05 **7/10, worst base 0.00** and r02 competent median 274 s (> 1.25 × par); not re-run: r01, r03, r06–r10 with the fixed probe.
+
+## D28 with the fixed probe, all rounds — HEAD 3e355a8, 2026-11-01 00:09–01:04
+Measured build: clean `git archive` snapshot of HEAD **3e355a8** (run 20261031-234416, import guard 0). Data tree **8c7b0a3**, `upgrade_budgets.json` blob **b0d29c2**. Both equal d5f145a's; the only runtime change since d5f145a is 02 eceb9f4 (base_defense, off by default).
+Method: `tools/qa/run_d28.ps1` runs one round per `coordination/heavy_run.ps1` lock and one `isolated_godot.ps1` process (private APPDATA, `isolated: true` for every round, real save unchanged), with a 420 s cap. No round hit the cap. Seeds 101–110, probe_balance.gd with the QA-T001 fix. Only the D28 budget was run for each round (heavy-run rule), so there are no 'none' rows this time.
+- **Base defence off = unchanged results:** r02 LOW at 3e355a8 matches d5f145a on every field both outputs have. Competent: 10/10, 141.3/273.5/403.1 s, worst base 0.86. Casual: 10/10, 111.8/115.8/385.5 s, worst 1.00.
+- **r04 and r05 were not re-run.** They are taken from d5f145a (same data, same budgets, base_defense off proven by the r02 identity).
+
+| Round | casual D28 budget: wins · time min/median/max · worst base | competent same budget: wins · median · worst | par × 1.25 | D28 target | D28 |
+|---|---|---|---|---|---|
+| r01 | LOW 10/10 · 84.9/91.4/110.3 s · 1.00 | 10/10 · 104.9 s · 1.00 | 187.5 | LOW ≥ 9/10 | PASS |
+| r02 | LOW 10/10 · 111.8/115.8/385.5 s · 1.00 | 10/10 · **273.5 s** · 0.86 | 212.5 | LOW ≥ 9/10 | PASS |
+| r03 | LOW 10/10 · 123.0/148.6/484.3 s · 0.54 | 10/10 · 222.2 s · 1.00 | 250 | LOW ≥ 9/10 | PASS |
+| r04 (d5f145a) | LOW 10/10 · worst 1.00 | 10/10 · worst 1.00 | — | LOW ≥ 9/10 | PASS |
+| r05 (d5f145a) | LOW 8/10 · 0.00; low2r 10/10 · 0.08 | LOW 7/10 · 0.00 | — | LOW ≥ 3/10, low2r ≥ 7/10 | PASS |
+| r06 | LOW 10/10 · 118.3/130.6/141.2 s · 1.00 | 10/10 · 145.7 s · 1.00 | 325 | LOW ≥ 7/10 | PASS |
+| r07 | LOW 10/10 · 155.0/208.9/237.1 s · 1.00 | 10/10 · 199.0 s · 0.94 | 337.5 | LOW ≥ 7/10 | PASS |
+| r08 | LOW 10/10 · 196.5/227.8/280.1 s · 1.00 | 10/10 · 253.0 s · 1.00 | 350 | LOW ≥ 7/10 | PASS |
+| r09 | LOW 10/10 · 169.1/178.8/184.2 s · 1.00 | 10/10 · 194.1 s · 1.00 | 375 | LOW ≥ 7/10 | PASS |
+| r10 | low2r 10/10 · 296.8/422.6/428.3 s · 0.87 (LOW 10/10 · 462.4 s · 0.61) | low2r 10/10 · 341.1 s · 1.00 | 475 | low2r ≥ 5/10 | PASS |
+
+Readings:
+1. **All 11 D28 rows PASS** with the fixed probe. 07's earlier 5/9 FAIL table (fca9346) stays withdrawn (QA-T001).
+2. Casual wins 10/10 in every round except r05 (8/10). D28 only sets lower bounds, so this table cannot show that a round is too easy. Apart from r05 the casual policy never comes close to losing (worst base below 0.9 only in r03 0.54, r10 0.61/0.87). Whether that is the intended feel is for the user's Q5 answer and for human pilots, not for bots.
+3. r02 competent median 273.5 s is above 1.25 × par (212.5 s), while casual takes 115.8 s. This matches 01's R9 finding (competent-bot stall, D35b to 02). It is a bot behaviour, not a data finding.
+4. Process note: the first r10 run had only 'low' because of a variable-name bug in run_d28.ps1. PowerShell names are case-insensitive, so the local `$budgets` overwrote the `-Budgets` parameter. The bug is fixed and r10 low2r was re-run separately (01:02–01:04). r01–r09 needed only 'low', so their rows are unaffected.
+5. Bots are not people. These rows check 01's own numeric targets only; D28 is a DEFAULT until the user answers Q5.
+Raw output: `build/qa07/d28_3e355a8_<round>.txt` and `d28_3e355a8_low2r_r10.txt` (local, git-ignored; each has `[rows]` per-seed lines including the enemy base ratio at the end).

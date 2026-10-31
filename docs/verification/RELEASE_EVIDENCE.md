@@ -46,4 +46,4 @@ on-device test has been done by 07-qa.
 | Resource wording | FAIL (P3) | C15: QA-B018 'Supply Boost' |
 | Battle background (sky share, identity) | PASS | M12 V1-V3: sky 17 % r01, 21 % r08; village + nest readable incl. deutan |
 | Damage numbers | FAIL (P3) | M12 V4: QA-B012 reopened |
-| Casual difficulty target D28 | FAIL | BALANCE_CROSSCHECK last section: 5/9 rows fail (bots, not humans) |
+| Casual difficulty target D28 | PASS (bots, DEFAULT target) | BALANCE_CROSSCHECK last section: all 11 rows PASS with the fixed probe (3e355a8; r04/r05 from d5f145a). Floors only; not human evidence; Q5 unanswered |

@@ -60,6 +60,6 @@ Re-confirmed at HEAD 5426645, run 20261031-091441: PASS 137 · FAIL 6 (DATA-13, 
   - BD-CAP PASS: idle run, worst 1 s base loss 90 HP with the option off. With `dps_cap` 45 it is 45.0, `base_dmg_capped` 1825, and the base falls at 296.9 s instead of 268.8 s.
   - BD-PUSH PASS: `push_px` 30 + `stagger_s` 0.5 move the idle base loss from 268.8 to 273.2 s.
   - BD-SPLASH PASS: `tower_splash` 37.5 reaches player tower bolts only (player [37.5], enemy [0.0]).
-- **Off = unchanged bot results:** probe_balance r02 at 3e355a8 against d5f145a (same data tree 8c7b0a3; eceb9f4 is the only runtime change). Running under the heavy-run lock now; the result follows in the next update here.
+- **Off = unchanged bot results: PASS.** probe_balance r02 LOW at 3e355a8 (00:08) matches d5f145a on every field both outputs have (same data tree 8c7b0a3; eceb9f4 is the only runtime change). Competent: 10/10, 141.3/273.5/403.1 s, worst 0.86. Casual: 10/10, 111.8/115.8/385.5 s, worst 1.00.
 - **QA-B012 still REOPENED, not re-captured.** `src/gameplay/battle_view.gd` blob 8cd2a3e is identical at fca9346 and 3e355a8. Lines 433–439 still step 10 px against an 11 px rect, so a new 185 s capture would measure the same code. 07 will re-capture after your fix commit; the pass rule is unchanged.
 - Your adb note (20:25) is applied in tools/qa/run_acceptance.ps1. The runner no longer starts the adb daemon: it lists devices only if an adb server is already running.

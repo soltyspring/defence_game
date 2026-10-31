@@ -1,6 +1,6 @@
 extends SceneTree
 ## 07-qa independent balance probe (cross-check of 01's multi_seed_sim, not a copy of it).
-##   Godot_console --headless --path . -s res://tests/acceptance/probe_balance.gd -- --rounds=r05,r09,r10 --seeds=10 [--budgets=low,none]
+##   Godot_console --headless --path . -s res://tests/acceptance/probe_balance.gd -- --rounds=r05,r09,r10 --seeds=10 [--budgets=low,none] [--d28] [--rows]
 ## Differences from 01 on purpose: seeds 101.. (not 1..5); noise = reaction delay U(0,0.6) s per decision
 ## and start U(0,5) s (01: U(0,0.35) / U(0,3)); also a casual policy. Upgrade levels read from 01's
 ## docs/design/balance/upgrade_budgets.json (same LOW/HIGH definition, so results are comparable).
@@ -19,6 +19,7 @@ func _initialize() -> void:
 	var budgets := ["low", "none"]
 	var d28 := false
 	var legacy_dt := false
+	var per_seed := false
 	var results := {}
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--rounds="): rounds = Array(a.get_slice("=", 1).split(","))
@@ -26,6 +27,7 @@ func _initialize() -> void:
 		if a.begins_with("--budgets="): budgets = Array(a.get_slice("=", 1).split(","))
 		if a == "--d28": d28 = true
 		if a == "--legacy-dt": legacy_dt = true   # reproduce the pre-fix (slowed bot) numbers
+		if a == "--rows": per_seed = true          # also print one [rows] line with every seed's outcome
 	var bud = JSON.parse_string(FileAccess.get_file_as_string("res://docs/design/balance/upgrade_budgets.json"))
 	var c = ContentS.new()
 	c.load_all("res://data")
@@ -56,7 +58,8 @@ func _initialize() -> void:
 							if rng.randf() < 0.25: wait = rng.randf_range(0.0, 0.6)
 						sim.step(STEP)
 						min_ratio = minf(min_ratio, sim.player_base.hp / sim.player_base.hp_max)
-					rows.append({"won": sim.won, "t": snappedf(sim.t, 0.1), "min_base": snappedf(min_ratio, 0.01), "stars": int(sim.result().stars)})
+					rows.append({"seed": sd, "won": sim.won, "t": snappedf(sim.t, 0.1), "min_base": snappedf(min_ratio, 0.01), "stars": int(sim.result().stars),
+						"enemy_base": snappedf(sim.enemy_base.hp / sim.enemy_base.hp_max, 0.01)})
 				var wins := rows.filter(func(x): return x.won)
 				results["%s|%s|%d" % [rid, b, pol]] = wins.size()
 				var ts := wins.map(func(x): return x.t); ts.sort()
@@ -65,6 +68,8 @@ func _initialize() -> void:
 					"wins": wins.size(), "t_min_med_max": [ts[0] if ts.size() else null, ts[ts.size() / 2] if ts.size() else null, ts.back() if ts.size() else null],
 					"par": par, "med_le_1_25_par": ts.size() > 0 and ts[ts.size() / 2] <= 1.25 * par, "worst_min_base": mb[0], "median_min_base": mb[mb.size() / 2],
 					"stars": rows.map(func(x): return x.stars)}))
+				if per_seed:
+					print("[rows] ", JSON.stringify({"round": rid, "budget": b, "policy": "competent" if pol == 2 else "casual", "rows": rows}))
 	if d28:
 		var rules := []
 		for r in ["r01", "r02", "r03", "r04"]: rules.append([r, "low", 9])
