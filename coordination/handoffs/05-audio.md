@@ -24,6 +24,7 @@ Validation:
 - Mix: buried 7.5 %, 0 clipped. Phone check: worst masked 12.3 % (death_ally).
 - No own Godot left running.
 Not verified: human listening, Android device.
+Git v3.6 (copied from the PUSHED lines of the three earlier calls; each verified with git merge-base --is-ancestor against origin/main): 1da1f8cc909fc52c1313190600b8638f260faf64 [Feat]; c47654ec040fa14d2440415016ca6b96e515dc3d [Test]; e4df6f6914d898f76333e35d1aafcea6ecf791cd [Docs].
 ## v3.5 (Codex review of 65502e8–53883db: release-facing sound problems)
 1. **App lifecycle** (src/audio/audio_manager.gd): APPLICATION_PAUSED/FOCUS_OUT now SUSPEND audio. Master is muted, every player is stream-paused, no new cue or music starts (a requested music change is kept and started on resume). RESUMED/FOCUS_IN continue in place; battle SFX stay paused until the player resumes the battle.
    - New `tools/audio/lifecycle_probe.gd` + `run_godot_checks.ps1 -Lifecycle` → 27/27 checks PASS:
