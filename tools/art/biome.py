@@ -672,31 +672,44 @@ def _v2_house(cv, rng, x0, w, wall_top, shop, roof_kind):
     else:
         cv.hline(x0, x0 + w - 1, SH - 3, c("O"))
         cv.hline(x0, x0 + w - 1, SH - 2, c("w"))
-    # street level in shadow: warm mid-dark (L* ~33-35) so the bread soldiers' mass AND every unit's dark outline
-    # separate from it (03 readability: outline vs background dL* >= 15 needs L* >= ~23; darker walls failed it)
-    cv.rect(x0, SH, w, H - SH, c("O"))
-    cv.vline(x0, SH, H - 1, c("H"))
+    # street level behind the units. STREET picks the colours (see STREET_LIGHT / STREET_SHADOW below _v2_house)
+    S = STREET
+    cv.rect(x0, SH, w, H - SH, c(S["wall"]))
+    cv.vline(x0, SH, H - 1, c(S["corner"]))
     if shop:
         sx, sw = x0 + 4, w - 18
-        cv.rect(sx - 1, SH + 5, sw + 2, 20, c("h"))                           # window frame
-        cv.rect(sx, SH + 6, sw, 18, c("H"))                                    # dim display window
+        cv.rect(sx - 1, SH + 5, sw + 2, 20, c(S["frame"]))                    # window frame
+        cv.rect(sx, SH + 6, sw, 18, c(S["glass"]))                             # display window
         for bx in range(sx + 3, sx + sw - 4, 7):
-            cv.ellipse(bx + 2, SH + 20, 2.4, 1.4, c("o"))                      # loaves in the half-light
+            cv.ellipse(bx + 2, SH + 20, 2.4, 1.4, c(S["loaf"]))                # loaves
         door_x = x0 + w - 11
     else:
         door_x = x0 + w // 2 - 4
         for wx in (x0 + 5, x0 + w - 12):
             if abs(wx - door_x) > 10:
-                cv.rect(wx - 1, SH + 7, 9, 11, c("h"))
-                cv.rect(wx, SH + 8, 7, 9, c("H"))
-    cv.rect(door_x - 1, SH + 5, 10, H - SH - 5, c("h"))
-    cv.rect(door_x, SH + 6, 8, H - SH - 6, c("H"))
-    cv.put(door_x + 5, SH + 18, c("o"))                                        # knob
+                cv.rect(wx - 1, SH + 7, 9, 11, c(S["frame"]))
+                cv.rect(wx, SH + 8, 7, 9, c(S["glass"]))
+    cv.rect(door_x - 1, SH + 5, 10, H - SH - 5, c(S["door_frame"]))
+    cv.rect(door_x, SH + 6, 8, H - SH - 6, c(S["door"]))
+    cv.put(door_x + 5, SH + 18, c(S["knob"]))                                  # knob
     lx = x0 + w // 2 + (6 if shop else -12)                                   # one small oven-warm lantern per front
     if abs(lx - (door_x + 4)) < 7:
         lx = door_x - 6
     cv.put(lx, SH, c("w"))
     cv.rect(lx - 1, SH + 1, 3, 3, c("e")); cv.put(lx, SH + 2, c("Z")); cv.hline(lx - 1, lx + 1, SH + 4, c("w"))
+
+
+# Street level (screen y 244-297, behind every unit) and street floor. 07 art_compare C4 measures each whole unit
+# (dark outline included, whole-unit L* 35-60) against what is behind it; every unit is >= 15 L* away only if the
+# street is L* >= 75 or <= 20, and <= 20 fails 03's outline rule (docs/art/world/EXTERNAL_RANGE.md section 3).
+# STREET_SHADOW = art-world 1 (92a1718, C4 WORSE); STREET_LIGHT / STREET_STONE = art-world 2 candidates.
+STREET_SHADOW = dict(wall="O", corner="H", frame="h", glass="H", loaf="o", door_frame="h", door="H", knob="o",
+                     pave="w", pave_joint="h", kerb="O", kerb2="w", lane="O", lane_edge="h", rut="H", dust="H", crumb="o")
+STREET_LIGHT = dict(wall="U", corner="x", frame="z", glass="z", loaf="T", door_frame="x", door="z", knob="O",
+                    pave="U", pave_joint="x", pave_line="U", kerb="X", kerb2="N", lane="x", lane_edge="X", rut="N", dust="N", crumb="U")
+STREET_STONE = dict(wall="x", corner="N", frame="N", glass="X", loaf="T", door_frame="X", door="N", knob="O",
+                    pave="N", pave_joint="x", kerb="X", kerb2="N", lane="x", lane_edge="X", rut="N", dust="N", crumb="z")
+STREET = STREET_LIGHT
 
 
 def v2_mid(meta, seed=222):
@@ -737,31 +750,32 @@ def v2_ground(meta, seed=233):
     W, H = PERIOD, 80
     cv = WrapCanvas(W, H)
     LANE = 15
+    S = STREET
     for x in range(W):
         for y in range(H):
             if y < 7:
-                k = "h" if (y == 3 or (x + (y // 4) * 5) % 9 == 0) else "w"    # pavement joints, low contrast
+                k = S.get("pave_line", S["pave_joint"]) if y == 3 else (S["pave_joint"] if (x + (y // 4) * 5) % 9 == 0 else S["pave"])
             elif y == 7:
-                k = "O"                                                            # kerb edge
+                k = S["kerb"]                                                      # kerb edge
             elif y == 8:
-                k = "w"
+                k = S["kerb2"]
             elif y < 22:
-                k = "O"                                                            # packed-earth lane
+                k = S["lane"]                                                      # packed-earth lane
             elif y < 24:
-                k = "h"
+                k = S["lane_edge"]
             else:
                 k = "w"
             cv.put(x, y, c(k))
     for x in range(W):                                                             # faint wheel ruts
         if (x // 3) % 6 != 0 and x % 2 == 0:
-            cv.put(x, 15, c("H"))
+            cv.put(x, 15, c(S["rut"]))
         if (x // 5) % 7 != 0 and x % 3 == 0:
-            cv.put(x, 19, c("H"))
+            cv.put(x, 19, c(S["rut"]))
     for _ in range(110):                                                           # flour dust and crumbs on the lane
         x, y = int(rng.integers(0, W)), int(rng.integers(10, 21))
-        cv.put(x, y, c("H"))
+        cv.put(x, y, c(S["dust"]))
         if rng.uniform() < 0.25:
-            cv.put(x + 1, y, c("o"))
+            cv.put(x + 1, y, c(S["crumb"]))
     for _ in range(60):                                                            # soil stones (mostly under the HUD)
         x, y, w = int(rng.integers(0, W)), int(rng.integers(26, 76)), int(rng.integers(2, 5))
         for i in range(w):

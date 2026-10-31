@@ -1,0 +1,26 @@
+r01/meadow   A12/E11 godot=None sil_min=74.5 crowd_min=10.1 fx=[3.7, 3.6, 1.8] proj_sep=[]
+r01/dark     A12/E11 godot=None sil_min=57.3 crowd_min=10.1 fx=[3.7, 3.6, 1.8] proj_sep=[]
+r01/bright   A12/E11 godot=None sil_min=100.0 crowd_min=10.1 fx=[3.7, 3.6, 1.8] proj_sep=[]
+r05/meadow   A13/E12 godot=None sil_min=70.5 crowd_min=1.7 fx=[1.8, 2.8, 5.9] proj_sep=[95.0, 95.0, 100.0]
+r05/dark     A13/E12 godot=None sil_min=48.1 crowd_min=1.7 fx=[1.8, 2.8, 5.9] proj_sep=[75.0, 75.0, 58.0]
+r05/bright   A13/E12 godot=None sil_min=96.8 crowd_min=1.7 fx=[1.8, 2.8, 5.9] proj_sep=[45.0, 45.0, 66.0]
+r10/meadow   A13/E14 godot=None sil_min=65.5 crowd_min=7.1 fx=[2.5, 3.5, 5.2] proj_sep=[72.7, 95.0, 100.0]
+r10/dark     A13/E14 godot=None sil_min=49.1 crowd_min=7.1 fx=[2.5, 3.5, 5.2] proj_sep=[87.9, 75.0, 59.2]
+r10/bright   A13/E14 godot=None sil_min=87.5 crowd_min=7.1 fx=[2.5, 3.5, 5.2] proj_sep=[72.7, 45.0, 65.3]
+FAILS:
+   ('r01/meadow', 'crowd_fail', [('melee_basic', 300, 25.8), ('e_grunt', 312, 10.1), ('e_grunt', 329, 29.9), ('e_grunt', 362, 35.3)])
+   ('r01/dark', 'silhouette_fail', [('e_grunt', 57.3), ('e_grunt', 59.8), ('e_grunt', 57.8), ('e_grunt', 59.8), ('e_grunt', 57.3), ('e_grunt', 58.5), ('e_grunt', 57.8), ('worker', 59.4), ('e_grunt', 57.3), ('e_grunt', 57.8), ('e_grunt', 57.8), ('e_grunt', 58.5)])
+   ('r01/dark', 'crowd_fail', [('melee_basic', 300, 25.8), ('e_grunt', 312, 10.1), ('e_grunt', 329, 29.9), ('e_grunt', 362, 35.3)])
+   ('r01/bright', 'crowd_fail', [('melee_basic', 300, 25.8), ('e_grunt', 312, 10.1), ('e_grunt', 329, 29.9), ('e_grunt', 362, 35.3)])
+   ('r05/meadow', 'crowd_fail', [('melee_basic', 300, 33.7), ('e_spitter', 340, 1.7), ('e_swarm', 321, 14.0), ('melee_basic', 260, 30.3), ('e_swarm', 386, 32.4), ('e_grunt', 312, 25.8), ('e_grunt', 405, 2.0)])
+   ('r05/dark', 'silhouette_fail', [('ranged_basic', 58.8), ('ranged_basic', 58.3), ('e_swarm', 48.1), ('e_swarm', 50.0), ('e_brute', 57.8), ('e_grunt', 57.8), ('e_swarm', 50.0), ('ranged_basic', 58.3), ('e_grunt', 57.3), ('e_grunt', 57.8), ('e_grunt', 57.8), ('e_spitter', 58.5), ('e_brute', 58.7)])
+   ('r05/dark', 'crowd_fail', [('melee_basic', 300, 33.7), ('e_spitter', 340, 1.7), ('e_swarm', 321, 14.0), ('melee_basic', 260, 30.3), ('e_swarm', 386, 32.4), ('e_grunt', 312, 25.8), ('e_grunt', 405, 2.0)])
+   ('r05/dark', 'proj_fail', [('spit', 58.0)])
+   ('r05/bright', 'crowd_fail', [('melee_basic', 300, 33.7), ('e_spitter', 340, 1.7), ('e_swarm', 321, 14.0), ('melee_basic', 260, 30.3), ('e_swarm', 386, 32.4), ('e_grunt', 312, 25.8), ('e_grunt', 405, 2.0)])
+   ('r05/bright', 'proj_fail', [('arrow', 45.0), ('arrow', 45.0)])
+   ('r10/meadow', 'crowd_fail', [('ranged_basic', 186, 19.2), ('e_swarm', 406, 24.5), ('e_bomber', 312, 7.1), ('e_swarm', 387, 20.3), ('e_swarm', 331, 16.8), ('tank', 300, 32.8)])
+   ('r10/dark', 'silhouette_fail', [('ranged_basic', 59.2), ('e_swarm', 50.0), ('e_bomber', 59.5), ('e_swarm', 49.1), ('boss_warlord', 57.9), ('e_swarm', 49.1), ('e_grunt', 57.8), ('e_brute', 56.5), ('e_brute', 57.1), ('e_swarm', 49.1), ('e_spitter', 59.8), ('e_grunt', 57.8), ('e_grunt', 58.5)])
+   ('r10/dark', 'crowd_fail', [('ranged_basic', 186, 19.2), ('e_swarm', 406, 24.5), ('e_bomber', 312, 7.1), ('e_swarm', 387, 20.3), ('e_swarm', 331, 16.8), ('tank', 300, 32.8)])
+   ('r10/dark', 'proj_fail', [('spit', 59.2)])
+   ('r10/bright', 'crowd_fail', [('ranged_basic', 186, 19.2), ('e_swarm', 406, 24.5), ('e_bomber', 312, 7.1), ('e_swarm', 387, 20.3), ('e_swarm', 331, 16.8), ('tank', 300, 32.8)])
+   ('r10/bright', 'proj_fail', [('arrow', 45.0)])

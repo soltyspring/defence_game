@@ -38,3 +38,18 @@ Tool: `python tools/art/world/ext_metrics.py docs/art/world/external_range.json 
 
 ## 4. Limits
 Six marketing screenshots from four games, one frame each; captions, frames and resizing are in the images. The unit stand-in counts props. No player saw any of this.
+
+## 5. Art-world 2: light street (2026-11-01 09:25 KST, composites + 03 tools, no new GPU capture yet)
+tools/art/biome.py: `STREET = STREET_LIGHT` (cream U front, z windows/doors without dark frames, U pavement without the joint line, pale stone x lane). `STREET_SHADOW` (= 92a1718, verified identical by the same A/B) stays in the file. Evidence: docs/art/world/evidence/world2/ (street_ab.json from `tools/art/world/street_ab.py`, two composites, 03 readability output for HEAD 85d22bd and for this change).
+| measure | line | 92a1718 shadow street | light street |
+|---|---|---|---|
+| C4 formula, every walk frame of 12 sets at 3 places: min / median dL* | ≥ 15 for ≥ 90 % | 6.7 / 15.3, 6 enemy sets < 15 | **28.9 / 42.4, none < 15** |
+| band behind heads (y 255–285): L* / C* / % C* ≥ 35 / edges | P3: ≤ 15 % / ≤ 15 % | 29.4 / 26.5 / 1.4 % / 13.6 % | 88.8 / 14.5 / 1.4 % / 12.9 % |
+| keep ring dE (P4 ≥ 25) / nest ring dE | ≥ 25 | 12.6 / 36.7 | **28.9** / 44.8 |
+| 03 nest_check dL* / protan dE (≥ 25 / ≥ 20) | | 17.7–19.0 / 16.8–17.9 | **35.5–41.3 / 33.9–38.9** |
+| 03 readability sil_min meadow r01/r05/r10 | ≥ 60 | 74.5 / 70.5 / 65.5 | 70.9 / 60.8 / 70.9 |
+| sil_min dark variant / bright variant | ≥ 60 | **57.3 / 48.1 / 49.1** / 100 / 96.8 / 87.5 | 95.1 / 94.0 / 91.6 / 70.9 / **57.2** (boss_warlord, r05) / 70.9 |
+| proj_sep meadow / bright (≥ 60) | | 95–100, 72.7–100 / bright arrow **45** | 72.7–80 / 72.7–80 (all PASS) |
+| P1 interior ring (now info) ally / enemy min dL* | info | 28.1 / 11.2 | 11.5 / 18.1 |
+Also: validate --determinism PASS, contract_diff 0 changes, 08 asset_budget_check PASS (worst battle 8.75 MiB), cvd_check unchanged. A first light version with x/N doors and frames failed proj_sep (30–45: the 03 bread-roll arrow, T L* 70.7, sat on L* 80 details); lightening the details fixed it.
+Still open: units in front of the keep's dark lower course (C4 formula 0.6–3.8 at x 30–96; no lower-course colour tried fixes it, they pass there only in the first seconds of a round); bright stress variant boss_warlord 57.2; 07's real capture of this commit not run yet.
