@@ -10,7 +10,7 @@ Status: COMPLETE (emulator evidence only).
 - **PLAY_TECH §12 release checklist:** RB1 line-endings blocker plus RB2–RB5.
 - Not a real phone or payment check. Q2 DEFERRED (ads and billing disabled). Nothing published.
 Current task: none. Next: see handoff.
-Commits: 6ca56a7a59d936a6b81d3ba05cd9600e1c497abf [Test] (emu script + evidence) PUSHED; docs in the next [Docs].
+Commits: 6ca56a7a59d936a6b81d3ba05cd9600e1c497abf [Test] (emu script + evidence), 7c95593cc846349a95991de7c6e35620b1ac86d0 [Docs] PUSHED.
 Previous: 4bf8f74 / 1e5b4d8 / 974808e (LF-pinned builds).
 --- History (older entries, not current) ---
 (LF entry) Updated: 2026-10-31 ~23:56 KST (LF-pinned test builds; AAB data read directly; content_version matches)

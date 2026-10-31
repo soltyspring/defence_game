@@ -9,6 +9,7 @@ Updated: 2026-11-01 ~00:58 KST (emulator install/run check done; release blocker
   4. 00:51 — cold boot; all checks passed except 76 unattributed FATAL-pattern lines.
   5. 00:55 — final run with attribution: FATAL 0, ANR 0, everything else as in run 4.
 - **Evidence (committed):** docs/services/evidence/emu_check.json, emu_first_launch.png, emu_relaunch.png, logcat_godot_*.txt, logcat_fatal_*.txt. PLAY_TECH_REQUIREMENTS §11.
+- **Commits:** 6ca56a7a59d936a6b81d3ba05cd9600e1c497abf [Test] (script + evidence); 7c95593cc846349a95991de7c6e35620b1ac86d0 [Docs] (§11, §12, 02 note, status, handoff).
 - **Release checklist:** PLAY_TECH §12, RB1 (one LF build path or a normalised hash) blocking; RB2–RB5.
 - **Next:** none for 06 until 02 or 04 change their build paths (RB1) or a real phone is available (RB4, user/07).
 - **Known script gap:** the emulator's redirected log files can still be locked when the script deletes its `%TEMP%\svc06_emu_*` work dir. After the 00:55 run two such dirs were left and 06 deleted them by hand at 00:57. A retry loop is not committed because it has not been run; delete leftovers after each run.
