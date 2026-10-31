@@ -1,5 +1,5 @@
 # 06-services handoff
-Updated: 2026-10-31 (M11 complete)
+Updated: 2026-10-31 (M12 complete; Q2 DEFERRED by user 16:09)
 Status: **M8 COMPLETE. Game Save integration gate PASSES (exit 0, binding=game)** after 02 registered the Services autoload (141d226). Resume check: worktree for 06 paths clean, checkpoint branch checkpoint/quota-20261031-092323/06-services (726e22a) has no diff vs HEAD for 06 paths → nothing lost. No Godot processes left running by 06.
 Session ID: not exposed to the agent (same Kiro window throughout; never closed or restarted).
 Nothing is live: no ad SDK, billing library, consent SDK, server, account or key. All services run in `disabled` mode. No monetization decision exists; none was invented.
@@ -25,6 +25,7 @@ src/services/**, docs/services/**, tests/services/**, coordination/status/06-ser
 | M9 | Billing prep: plugin candidates (both Billing 9.1.0, not installed), license-tester + internal-track test plan T1–T16 with [USER] steps, no-server minimum bar and risks, billing_docs lint (75 checks, 5 mutations caught) | 82108f86b612c1dbc5bae725be58a72cfea90d42 |
 | M10 | Multi-quantity consumables: grant × quantity once per token, ledger records quantity, one consume; > max_quantity or invalid fails closed; test_services_m10 (81 checks incl. crash and sink-saves-then-fails on the autoload Save); state table P7; 5 mutations caught | 710384033c8cf518f83b5ea6afd81776ba0a898b |
 | M11 | Data safety "No" confirmed vs 04 A7/C1 + own aapt2 (APK SHA-256 09AF2E47…A6DE, HEAD 8ad912f delta checked); in-app privacy link + licences display proposal (OFL text, Godot MIT + Engine copyright info); Q2 options A/B/C work and test scope; legal_and_options lint 55 checks, 3 mutations caught | e5099bdd7b911bd703ae9866b125c28173fde197 |
+| M12 | Q2 deferred acknowledged; publishable disabled-mode privacy page (privacy_site/index.html, 6 placeholders = publish blockers), GitHub Pages hosting facts + H1–H4 choices + P1–P9 steps; content rating re-check for Q2 deferred; Families assessment T1–T3 aligned with 09 §25.3; lint privacy_site 41 + families 30 checks, 5 mutations caught | 98e757b15ce2e30dba6b2426715dd58115af22bb |
 | Checkpoint | this handoff + status | see status file / `git log -- coordination/handoffs/06-services.md` |
 
 ## M7 details (this task)
@@ -55,6 +56,9 @@ Open from M9: plugin purchase fields (signature/JSON/quantity) unverified; quant
 Semantics chosen from Play's multi-quantity guidance: one token, quantity N, one consume. Not verified on a real store: how the chosen plugin reports quantity (BILLING_PLUGIN_CANDIDATES.md §2).
 ## M11 validation (actual)
 Runner OVERALL exit=0: 502/0, 130/0, 161/0, listing 1024/0 (legal_and_options_docs 55), m8 26/0, m10 81/0, integration PASS_INTEGRATED 156/0 binding=game. Mutations (exit 1, restored): legal source removed, option cell empty, APK hash removed. Own re-check: aapt2 on build/qa/apk_head/defence-debug.apk (07e97ca) → no permissions, target 36, min 24, SHA-256 09AF2E47…A6DE; OFL-Galmuri.txt not in that APK (04 A6 still open). Requests: 04 R-M11 (privacy button, credits, licences view, APK re-check), 01 M11 (Q2 cost table), 05 (confirm no third-party audio).
+## M12 validation (actual)
+Runner OVERALL exit=0: 502/0, 130/0, 161/0, listing 1087/0, m8 26/0, m10 81/0, integration PASS_INTEGRATED 156/0 binding=game. Mutations (exit 1, restored): draft marker on page, section renamed, ad placeholder leaked onto page, rating answer flipped to Yes, Families source removed. Found on the way: the older content_rating check parsed my new §2a table as §2 (test scope fixed), and F2–F5 cited "same" instead of a URL (fixed). One edit hit a transient file lock while Godot read the file; mutation results from that run were discarded and redone after the edit succeeded.
+User decision processed: Q2 DEFERRED 16:09 KST ("수익모델은 보류"): ads/billing stay disabled, no monetization UI.
 ## Exact next steps when resumed
 1. Read coordinator-to-06-services.md (latest section), DECISIONS.md, quota, replies to 06.
 2. `pwsh -File tests/services/run_services_suites.ps1` must stay OVERALL exit 0.
