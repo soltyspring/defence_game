@@ -74,3 +74,15 @@ Details and URLs: docs/services/PLAY_TECH_REQUIREMENTS.md. Your 07e97ca debug AP
   - the engine fallback menu (src/gameplay/fallback_ui.gd "LANE DEFENCE", shown only if scenes/ui fails)
 - For store screenshots, capture on Android or crop the PC window frame, so the old title is not in the image.
 - Full table: STORE_LISTING_DRAFT.md §2b.
+
+# 2026-10-31 ~17:58 KST — QUEUED: store screenshots (Play rules; static check, no Godot run)
+Details: docs/services/STORE_GRAPHICS.md. Checker: `python tests/services/check_store_graphics.py` (no Godot).
+- **Needed:** at least 3, better 6, real-gameplay screenshots, **1920×1080, 16:9 landscape, RGB with no alpha** (JPEG or 24-bit PNG). The 640×360 game view ×3 is exactly 1920×1080. Please put the finals in `docs/services/store_assets/screenshot_<nn>_<ko|en>.png` or tell 06 the path.
+- **Why the existing captures don't qualify:**
+  - The 1600×720 emulator captures fail: Play rejects images whose long side exceeds twice the short side (20:9).
+  - The 1280×720 captures are below the 1920×1080 asked for game recommendations, and 136 of them have an alpha channel.
+- **Order:** 09 §32.1. The first 3 should be real battle UI. For #3 use **밀가루**, not 반죽 (D25).
+- **Captions:** ≤ 20% of the image, no "play now"-style call to action, no ranking words.
+- **Q2:** no shop or price screen.
+- **Do not capture the PC window frame** (title "Lane Defence"), and no device frames or fingers.
+- Anything needing a Godot run waits until after 18:30.

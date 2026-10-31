@@ -132,3 +132,12 @@ Full table with official URLs: docs/services/PLAY_TECH_REQUIREMENTS.md. Results:
   - (b) set the window title at startup from `name_localized` or ui.title, keeping the desktop `user://` path
   - (c) rename `config/name` with `use_custom_user_dir`. This still moves the desktop folder: a custom dir lives at `<OS data dir>/<name>`, not under `Godot/app_userdata/`.
   - The fallback text could use `ui.title`.
+
+# 2026-10-31 ~17:58 KST — QUEUED: launcher icon in the export preset (static read; check after 18:30)
+- `export_presets.cfg` has no `launcher_icons/*` keys, so Godot falls back to `config/icon` = res://icon.svg (16×16-grid placeholder).
+- 03's adaptive layers pass the Android guide's size and safe-zone rules: 432×432, 0 px outside the 66 dp circle, opaque background (docs/services/STORE_GRAPHICS.md §2).
+- When you are ready, please set:
+  - `launcher_icons/adaptive_foreground_432x432` = res://docs/art/branding/adaptive/ic_launcher_foreground_432.png (or a copy under assets/, if docs/* stays excluded from export; your call)
+  - `launcher_icons/adaptive_background_432x432` = the background layer
+  - `launcher_icons/main_192x192` = 03's 192 candidate
+- 06 reads the rebuilt APK's icon resources after 18:30. Not verified yet.

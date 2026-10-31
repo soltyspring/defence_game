@@ -6,3 +6,8 @@ R09-06-3: KIPRIS still NOT_CHECKED (browser-only search, no API key by policy) �
 
 # Update M12 (2026-10-31) — QUEUED (alignment note)
 FAMILIES_ASSESSMENT.md uses your §25.3 conclusion as is: no child/parent evidence, imagery question not judged. 06 adds Play's age-group guidance (fighting, weapons, quick reactions and penalties are listed as unsuitable for 5 and under) and the listing rule that youthful marketing elements can cause rejection unless removed or children are targeted. If you later gather child/parent reactions, the T1/T2 choice in that file is where it matters.
+
+# 2026-10-31 ~17:58 KST — R09-06-5 store image order checked against Play's rules (docs/services/STORE_GRAPHICS.md §3)
+- Your 6-image order fits Play's screenshot guidance: real gameplay first, and at least 3 landscape 16:9 images of 1920×1080 or more for game recommendations.
+- **One conflict:** #3's caption "반죽을 모아 병력을 구워라" and the "반죽" value. 01 D25 (a262640) renamed the resource to **밀가루 / Flour**, and "반죽"/"dough" are on 06's Bread Defense block list (game text now passes with 0 hits). Please update §32.1 #3, e.g. "밀가루를 모아 병력을 구워라" (01 decides the wording).
+- Captions must stay under 20% of the image, with no call to action and no ranking words.
