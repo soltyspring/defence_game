@@ -1,4 +1,5 @@
 {
+  "schema_version": 1,
   "id": "hero_captain",
   "name": "대장",
   "name_key": "hero.hero_captain.name",

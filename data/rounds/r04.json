@@ -1,4 +1,5 @@
 {
+  "schema_version": 1,
   "id": "r04",
   "index": 4,
   "chapter": 1,
@@ -93,15 +94,18 @@
     }
   ],
   "enemy_ai": {
-    "income": 4.17,
+    "pool": [],
+    "income": 0,
     "start_gold": 0,
-    "pool": [
+    "think": 2.5,
+    "after_waves_loop": false,
+    "note": "Disabled: trickle (deterministic) replaces the random enemy AI. Engine ran both, giving 1.3-1.8x designed spawns (docs/design/BALANCE_DIAGNOSIS.md). Previous pool/income kept below for reference only.",
+    "disabled_pool": [
       "e_grunt",
       "e_swarm",
       "e_spitter"
     ],
-    "think": 2.5,
-    "after_waves_loop": true
+    "disabled_income": 4.17
   },
   "trickle": {
     "start": 10,

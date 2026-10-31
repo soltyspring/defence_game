@@ -119,6 +119,7 @@
     "ui.star_base_hp": "기지 체력 %d%% 이상",
     "ui.star_base_hp_any": "기지 체력 지키기",
     "ui.star_time": "%d초 안에 클리어",
-    "ui.star_time_any": "빠르게 클리어"
+    "ui.star_time_any": "빠르게 클리어",
+    "toast.counterattack": "적이 반격합니다!"
   }
 }

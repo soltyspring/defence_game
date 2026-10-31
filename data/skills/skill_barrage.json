@@ -1,4 +1,5 @@
 {
+  "schema_version": 1,
   "id": "skill_barrage",
   "name": "일제 포격",
   "name_key": "skill.skill_barrage.name",

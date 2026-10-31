@@ -362,7 +362,8 @@
         "unit": "e_swarm",
         "count": 3,
         "interval": 12.0,
-        "max_alive": 9
+        "max_alive": 9,
+        "summon_frame": 3
       }
     }
   ]

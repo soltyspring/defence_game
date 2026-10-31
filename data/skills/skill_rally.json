@@ -1,4 +1,5 @@
 {
+  "schema_version": 1,
   "id": "skill_rally",
   "name": "돌격 함성",
   "name_key": "skill.skill_rally.name",

@@ -1,4 +1,5 @@
 {
+  "schema_version": 1,
   "id": "skill_slam",
   "name": "내려찍기",
   "name_key": "skill.skill_slam.name",

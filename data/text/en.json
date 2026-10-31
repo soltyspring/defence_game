@@ -119,6 +119,7 @@
     "ui.star_base_hp": "Base HP %d%%+",
     "ui.star_base_hp_any": "Keep your base healthy",
     "ui.star_time": "Clear within %ds",
-    "ui.star_time_any": "Clear quickly"
+    "ui.star_time_any": "Clear quickly",
+    "toast.counterattack": "Enemy counterattack!"
   }
 }
