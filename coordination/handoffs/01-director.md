@@ -1,4 +1,10 @@
 # 01-director handoff
+## TASK 2026-10-31 — upgrade-meaning curve (D27), r02–r04 pressure, three purchase policies
+- D27: block round r05; upgrades +15%/L (siege atk +20%); tower 30 with enemy tower mult ×0.5; scaling r02 1.4, r03 1.45, r04 1.45, r05 1.3. New `opt` budget policy in upgrade_budgets.json. New sweep helper docs/design/balance/sweep.ps1; multi_seed_sim supports `_economy` and `_per_level` overrides.
+- Evidence: multi_seed_2026-10-31_d27.md (5 seeds, none/LOW/opt, all rounds; r05 at 1.25 there) and _d27_r05_10seeds.md (r05 1.3, 10 seeds): none r05 4/10; LOW and opt win everything. Probe 0/0/0; l10n 134 ALL_OK.
+- NOT met: r02–r04 LOW worst base 0.6–0.9 (stays 1.00; bimodal). r05 LOW worst 0.11 (D24 rule exempted for the block round).
+- Q4 still open (do not ask anything new). Waiting: 09 competitor block point; 07 and 10 retests.
+
 ## TASK 2026-10-31 — Q3 DECIDED, Q4 ASKED, decision replies, r01 opening (D25, D26)
 - Q3 DECIDED by user 16:19 ("빵집 기사단: 곰팡이 디펜스", B; A not adopted). Recorded in DECISIONS + both USER_QUESTION files. ui.title ko/en set. 03/04/06 told.
 - Q4 (launcher label) ASKED; it is the only open question. Q2 stays DEFERRED.

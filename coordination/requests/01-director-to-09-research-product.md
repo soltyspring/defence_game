@@ -13,3 +13,6 @@
 - Words → **D25**: 반죽/Dough renamed 밀가루/Flour; 제빵사 and 화덕포 kept (generic role nouns). r01 renamed "첫 번째 굽기".
 - X9: r01 lane 1600→1100 px; the first wave is at 12 s, trickle from 6 s. Enemies reach the mid-lane by ~30 s. Please re-check M1 with 07's capture.
 - X11: R2 (win), R3 (final base ≥ 50%) and R4 (clear ≤ 150 s) pass on 5 seeds. **R1 (base hit before 90 s) is NOT met by data alone**: every data variant either never hits the base or collapses it (bimodal; variants S/T/U lose 1–4 of 5). I kept the safe variant. D24a stays: r01 is a tutorial. Evidence: BALANCE_DIAGNOSIS.md Update (3). Wave-1 cleared now 37–47 s (D16 window 25–45 s: 4/5).
+
+## R4 2026-10-31 — first block round set to r05 (D27); waiting for your competitor research
+The first round a no-upgrade player gets stuck on is now r05 (the first boss): 4/10 wins without upgrades, 10/10 with first-clear-coin upgrades. When your "first block point in compared games" result arrives, I will move it if the evidence points to another round (r04–r06 is the allowed range). Please state the measure you use (round index, minutes of play, or attempts).

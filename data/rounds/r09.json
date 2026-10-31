@@ -182,8 +182,8 @@
     "hp": 1.225,
     "atk": 1.225
   },
-  "enemy_tower_atk_mult": 1.0,
+  "enemy_tower_atk_mult": 0.5,
   "tutorial": [],
   "provisional": true,
-  "balance_note": "D23 (2026-10-31): enemy_scaling halved; r07-r10 trickle without e_brute and 1.5 s slower; validated at the LOW first-clear budget (docs/design/balance/low_budget_2026-10-31_low.json). D24 (2026-10-31): length/fragility retune, 5-seed check docs/design/balance/multi_seed_2026-10-31_after.json."
+  "balance_note": "D23 (2026-10-31): enemy_scaling halved; r07-r10 trickle without e_brute and 1.5 s slower; validated at the LOW first-clear budget (docs/design/balance/low_budget_2026-10-31_low.json). D24 (2026-10-31): length/fragility retune, 5-seed check docs/design/balance/multi_seed_2026-10-31_after.json. D27: upgrade curve (block at r05), tower ×2 with enemy mult ×0.5."
 }

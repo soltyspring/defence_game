@@ -62,3 +62,20 @@ r01 variants (5 seeds, no upgrades, plus an idle player and a 45 s late starter;
 | V | S + enemy atk ×0.5 | 5/5 W | 5/5 W | 0/5 |
 Reading: once grunts reach the base, the base falls; there is no small-hit middle state in data. X11 R1 is not met.
 Full check after D25/D26 (multi_seed_2026-10-31_d25.md + _d25_r10.md for r10 with enemy base 2000): every round LOW 5/5 W, every LOW median ≤ 1.25 × par. Worst LOW base: r02 1.00, r03 1.00, r04 1.00, r05 0.40, r10 0.69. r02–r04 never hit an active bot's base: pressure there is low (open). Without upgrades only r10 loses (1/5 W). Upgrades matter weakly (open, Codex finding a).
+
+## Update 2026-10-31 (4) — upgrade-meaning curve (D27)
+Policies: none; LOW = first-clear coins, cheapest first (10's path); opt = first-clear coins, combat priority (melee > hero > ranged > tank > supply > fast > siege > worker > energy > base; upgrade_budgets.json `opt`).
+Sweep (r02–r05, 5 seeds; candidate overrides in memory):
+| cand | change | r02–r04 LOW worst base | r05 none | r05 LOW | r05 opt |
+|---|---|---|---|---|---|
+| A | scaling 1.2/1.25/1.25/1.3 | 1.00 | 2/5 | **1/5** | 4/5 |
+| B | 1.35–1.5 | r02 0.00 (a loss) | 0/5 | 0/5 | 0/5 |
+| C | 1.5–1.7 | losses | 0/5 | 0/5 | 0/5 |
+| D | A + upgrades +15%/L | 1.00 | 0/5 | 3/5 | 4/5 |
+| E | D + tower 30 (enemy mult ×0.5), r02–r04 1.4–1.45 | 1.00 | 2/5 | 3/5 | 5/5 |
+| F (applied) | E + r05 1.25 | 1.00 | 3/5 | 5/5 | 5/5 |
+| G | F + r02–r04 1.65–1.7 | losses (r02 2/5) | 5/5 | 5/5 | 5/5 |
+| H | F + r02–r04 1.5–1.55, r05 1.3 | r02 0.00 (a loss) | 3/5 | 5/5 | 5/5 |
+r05 10 seeds: scaling 1.25 → none 5/10, LOW 10/10 (worst 0.38); **1.3 (applied) → none 4/10, LOW 10/10 (worst 0.11), opt 10/10 (worst 0.62)**; 1.3 + player base 2200 → none 5/10.
+Full run on the final data (multi_seed_2026-10-31_d27.md, r05 at 1.25 in that run; r05 1.3 in _d27_r05_10seeds.md): none r01–r04 5/5 W; LOW and opt 5/5 W in every round; LOW medians ≤ 1.25 × par everywhere except r05, which is at 325 s = 1.25 × par in the 10-seed run.
+Root cause of the unmet r02–r04 target: in this sim, base contact cascades. Once enemies reach the base, the bot's freshly deployed units and the tower cannot stop the pile, so outcomes are either no hit (1.00) or a loss. A 0.6–0.9 band needs a mechanic (for example a base that pushes enemies back, or a capped damage-per-second on the base), not a number change. Not requested yet.

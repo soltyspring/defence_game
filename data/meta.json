@@ -34,8 +34,8 @@
         190
       ],
       "per_level": {
-        "hp_mult": 0.08,
-        "atk_mult": 0.08
+        "hp_mult": 0.15,
+        "atk_mult": 0.15
       }
     },
     {
@@ -50,8 +50,8 @@
         190
       ],
       "per_level": {
-        "hp_mult": 0.08,
-        "atk_mult": 0.08
+        "hp_mult": 0.15,
+        "atk_mult": 0.15
       }
     },
     {
@@ -66,8 +66,8 @@
         210
       ],
       "per_level": {
-        "hp_mult": 0.08,
-        "atk_mult": 0.08
+        "hp_mult": 0.15,
+        "atk_mult": 0.15
       }
     },
     {
@@ -82,8 +82,8 @@
         210
       ],
       "per_level": {
-        "hp_mult": 0.08,
-        "atk_mult": 0.08
+        "hp_mult": 0.15,
+        "atk_mult": 0.15
       }
     },
     {
@@ -98,8 +98,8 @@
         260
       ],
       "per_level": {
-        "hp_mult": 0.08,
-        "atk_mult": 0.12
+        "hp_mult": 0.15,
+        "atk_mult": 0.2
       }
     },
     {
@@ -114,8 +114,8 @@
         225
       ],
       "per_level": {
-        "hp_mult": 0.1,
-        "atk_mult": 0.1
+        "hp_mult": 0.15,
+        "atk_mult": 0.15
       }
     },
     {

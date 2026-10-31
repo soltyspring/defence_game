@@ -265,5 +265,104 @@
    "spent_levels": 27,
    "leftover": 120
   }
- }
+ },
+ "opt": {
+  "r01": {
+   "levels": {},
+   "spent_levels": 0,
+   "leftover": 0
+  },
+  "r02": {
+   "levels": {
+    "up_melee_basic": 2
+   },
+   "spent_levels": 1,
+   "leftover": 40
+  },
+  "r03": {
+   "levels": {
+    "up_melee_basic": 3,
+    "up_hero": 2
+   },
+   "spent_levels": 3,
+   "leftover": 0
+  },
+  "r04": {
+   "levels": {
+    "up_melee_basic": 4,
+    "up_hero": 2
+   },
+   "spent_levels": 4,
+   "leftover": 20
+  },
+  "r05": {
+   "levels": {
+    "up_melee_basic": 5,
+    "up_hero": 2,
+    "up_base_hp": 2
+   },
+   "spent_levels": 6,
+   "leftover": 0
+  },
+  "r06": {
+   "levels": {
+    "up_melee_basic": 5,
+    "up_ranged_basic": 3,
+    "up_hero": 3,
+    "up_base_hp": 2
+   },
+   "spent_levels": 9,
+   "leftover": 10
+  },
+  "r07": {
+   "levels": {
+    "up_melee_basic": 5,
+    "up_ranged_basic": 3,
+    "up_tank": 2,
+    "up_hero": 4,
+    "up_supply_regen": 2,
+    "up_base_hp": 2
+   },
+   "spent_levels": 12,
+   "leftover": 10
+  },
+  "r08": {
+   "levels": {
+    "up_melee_basic": 5,
+    "up_ranged_basic": 4,
+    "up_tank": 2,
+    "up_hero": 5,
+    "up_supply_regen": 2,
+    "up_base_hp": 2
+   },
+   "spent_levels": 14,
+   "leftover": 5
+  },
+  "r09": {
+   "levels": {
+    "up_melee_basic": 5,
+    "up_ranged_basic": 5,
+    "up_tank": 3,
+    "up_hero": 5,
+    "up_supply_regen": 3,
+    "up_base_hp": 2
+   },
+   "spent_levels": 17,
+   "leftover": 0
+  },
+  "r10": {
+   "levels": {
+    "up_melee_basic": 5,
+    "up_ranged_basic": 5,
+    "up_tank": 5,
+    "up_fast": 2,
+    "up_hero": 5,
+    "up_supply_regen": 3,
+    "up_base_hp": 2
+   },
+   "spent_levels": 20,
+   "leftover": 0
+  }
+ },
+ "policy_opt": "first-clear coins only (same income as LOW); buys by combat priority melee>hero>ranged>tank>supply>fast>siege>worker>energy>base_hp, first affordable in that order, repeated."
 }

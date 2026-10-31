@@ -20,3 +20,8 @@ A 5-seed run (bot timing noise) showed my single-seed D23 "LOW 10/10" was fragil
 - Siege curve: up_siege atk per level 0.08→0.12 (siege is the base-damage role; your v0.14 flag).
 - migrations.json refund rule (for when the file is created): lowered max_level or retired upgrade → refund the coins actually paid for the removed levels (from upgrade_cost_history); cost changes alone → no refund, levels kept; renamed ids → map via upgrade_renames, no refund; retired rounds keep their stars in the save, never removed.
 - Growth motivation (Codex finding a): upgrades are strictly needed only in r10 in the bot sim. Not fixed in this task; see BALANCE_DIAGNOSIS.md.
+
+## R6 2026-10-31 — D27 upgrade curve: please recompute
+Changed: meta.json per_level for units and hero +8%/+10% → +15% hp and atk (siege atk +20%). Costs are unchanged since D26. economy base_tower atk 15→30, with every round's enemy_tower_atk_mult halved. enemy_scaling r02 1.4, r03 1.45, r04 1.45, r05 1.3. Block round = r05.
+New policy row in upgrade_budgets.json: `opt` (first-clear coins, combat priority; see `policy_opt`).
+Please rerun probe_economy_flow plus your hit-count/return-per-coin tables at HEAD. The coin flow should be unchanged; hit-count breakpoints and L5 return per coin will move. Sim: no upgrades r05 4/10 W; LOW and opt 10/10 W (BALANCE_DIAGNOSIS.md Update 4).

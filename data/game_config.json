@@ -2,7 +2,10 @@
   "schema_version": 2,
   "data_version": "0.1.0-provisional",
   "units_note": "Distances px and speeds px/s in 640x360 logical reference space. Times in seconds. All values PROVISIONAL.",
-  "reference_viewport": { "width": 640, "height": 360 },
+  "reference_viewport": {
+    "width": 640,
+    "height": 360
+  },
   "lane": {
     "ground_y": 290,
     "player_base_x": 0,
@@ -27,8 +30,16 @@
     "deterministic_seed_default": 12345
   },
   "resources": {
-    "supply": { "start": 60, "regen_per_sec": 4.0, "cap": 200 },
-    "energy": { "start": 30, "regen_per_sec": 3.0, "cap": 100 }
+    "supply": {
+      "start": 60,
+      "regen_per_sec": 4.0,
+      "cap": 200
+    },
+    "energy": {
+      "start": 30,
+      "regen_per_sec": 3.0,
+      "cap": 100
+    }
   },
   "worker": {
     "unit_id": "worker",
@@ -39,13 +50,36 @@
     "visual_max": 8
   },
   "bases": {
-    "player": { "hp_default": 1500, "width": 64 },
-    "enemy": { "hp_default": 800, "width": 64 },
-    "tower": { "atk": 15, "attack_interval": 1.5, "range": 130, "projectile": true }
+    "player": {
+      "hp_default": 1500,
+      "width": 64
+    },
+    "enemy": {
+      "hp_default": 800,
+      "width": 64
+    },
+    "tower": {
+      "atk": 30,
+      "attack_interval": 1.5,
+      "range": 130,
+      "projectile": true
+    }
   },
   "hero_id": "hero_captain",
-  "hero_respawn": { "base_sec": 8, "per_death_sec": 2, "max_sec": 20, "invuln_on_spawn_sec": 1.5 },
-  "camera": { "follow": "hero", "drag_pan": true, "return_to_hero_after_sec": 2.0 },
-  "speed_options": [1, 2],
+  "hero_respawn": {
+    "base_sec": 8,
+    "per_death_sec": 2,
+    "max_sec": 20,
+    "invuln_on_spawn_sec": 1.5
+  },
+  "camera": {
+    "follow": "hero",
+    "drag_pan": true,
+    "return_to_hero_after_sec": 2.0
+  },
+  "speed_options": [
+    1,
+    2
+  ],
   "kill_bounty_enabled": true
 }

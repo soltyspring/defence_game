@@ -128,7 +128,7 @@
     "hp": 1.0,
     "atk": 1.0
   },
-  "enemy_tower_atk_mult": 0.6,
+  "enemy_tower_atk_mult": 0.3,
   "tutorial": [
     "tut_move_hero",
     "tut_deploy_unit",
@@ -137,5 +137,5 @@
   ],
   "provisional": true,
   "pressure_note": "Waves after the designed last wave and a faster trickle floor exist only so that an idle player loses by base destruction (D18). A competent bot finishes before them.",
-  "balance_note": "D23 (2026-10-31): enemy_scaling halved; r07-r10 trickle without e_brute and 1.5 s slower; validated at the LOW first-clear budget (docs/design/balance/low_budget_2026-10-31_low.json). D25: lane 1100, first wave at 12 s (D16 window), earlier trickle (X9)."
+  "balance_note": "D23 (2026-10-31): enemy_scaling halved; r07-r10 trickle without e_brute and 1.5 s slower; validated at the LOW first-clear budget (docs/design/balance/low_budget_2026-10-31_low.json). D25: lane 1100, first wave at 12 s (D16 window), earlier trickle (X9). D27: upgrade curve (block at r05), tower ×2 with enemy mult ×0.5."
 }

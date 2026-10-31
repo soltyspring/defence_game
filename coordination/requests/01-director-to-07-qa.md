@@ -25,3 +25,11 @@ Known open, to challenge: r10 lasts 760 s at LOW (900 s limit); several rounds f
 - **D24(b)** length rule: competent bot median win time at the LOW budget ≤ 1.25 × time_3, LOW 5/5 W, worst LOW base ≥ 0.25. My 5-seed result passes (docs/design/balance/multi_seed_2026-10-31_after.md). Data changed: boss_warlord, boss_overlord, r05/r09/r10 (see D24c); r10 time_3 is now 380.
 - Caveat for your probe_winrate: with the random AI off, the sim seed alone gives identical runs. I injected bot timing noise to get variance (described in BALANCE_DIAGNOSIS.md). If your 20-seed probe shows identical results per round, that is why.
 - Also added the 10 `ui.upgrade*` keys from 04's fallback to data/text (keys now 132/132, l10n ALL_OK).
+
+## R6 2026-10-31 — D27 upgrade curve: same-condition retest
+Please verify independently with your probe_winrate (and with timing noise if your probe supports it; see BALANCE_DIAGNOSIS.md for why plain seeds are identical):
+1. No upgrades: r01–r04 must win; r05 is the block round (my result: 4/10 W).
+2. Upgrade levels from upgrade_budgets.json `low` and `opt` for each round: every round must win (my result: 5/5, r05 10/10).
+3. Idle player still loses every round (R*-LOSS); r01 rules in ROUNDS.md still pass.
+4. Known unmet target to challenge: r02–r04 LOW worst base stays 1.00 (no visible threat). My claim is that the outcomes are bimodal; please check your capture frames for a partial-damage case that proves me wrong.
+Data changed: meta.json per_level, economy base_tower, every round's enemy_tower_atk_mult, r02–r05 enemy_scaling.

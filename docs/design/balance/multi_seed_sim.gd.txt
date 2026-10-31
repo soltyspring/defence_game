@@ -55,6 +55,11 @@ func _initialize() -> void:
 	if overrides.has("_units"):
 		for uid in overrides["_units"]:
 			for k in overrides["_units"][uid]: content.units[uid][k] = overrides["_units"][uid][k]
+	if overrides.has("_economy"):
+		for k in overrides["_economy"]: content.economy[k] = overrides["_economy"][k]
+	if overrides.has("_per_level"):
+		for u in content.meta.get("upgrades", []):
+			if overrides["_per_level"].has(str(u.id)): u["per_level"] = overrides["_per_level"][str(u.id)]
 	var rows := []
 	for rid in content.round_order:
 		if not only.is_empty() and not only.has(rid): continue
