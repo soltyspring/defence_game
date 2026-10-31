@@ -1,0 +1,124 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[App] boot ok platform=Windows renderer= view=(640.0, 640.0) window=(0, 0) title= screen=battle ui_source={"hud":"scenes/ui"} atlas={"pages":[{"gpu_bytes":1048576,"h":512,"id":"char_player","refs":1,"source":"import","w":512},{"gpu_bytes":524288,"h":256,"id":"char_enemy","refs":1,"source":"import","w":512},{"gpu_bytes":1048576,"h":512,"id":"bases","refs":1,"source":"import","w":512},{"gpu_bytes":524288,"h":256,"id":"fx_combat","refs":1,"source":"import","w":512},{"gpu_bytes":262144,"h":256,"id":"ui_main","refs":1,"source":"import","w":256},{"gpu_bytes":2097152,"h":512,"id":"biome_meadow","refs":1,"source":"import","w":1024}],"resident_gpu_bytes":5505024} save_recovered=false
+AUDIO_LIFECYCLE {"checks":{"bg_all_active_sfx_ui_paused":true,"bg_audio_suspended":true,"bg_battle_paused_by_app":true,"bg_master_muted":true,"bg_music_did_not_advance":true,"bg_music_stream_paused":true,"bg_new_sfx_refused":true,"bg_new_ui_refused":true,"bg_no_sfx_started":true,"bg_probe_voice_started":true,"bg_sfx_voice_held":true,"focus_in_resume_ok":true,"focus_in_unmuted":true,"focus_out_battle_paused":true,"focus_out_music_held":true,"focus_out_suspended":true,"pause_screen_no_sfx_leak":true,"pause_screen_ui_works":true,"resume_battle_still_paused":true,"resume_master_unmuted":true,"resume_music_continues_from_same_point":true,"resume_music_playing":true,"resume_sfx_held_while_battle_paused":true,"unpause_battle_running":true,"unpause_combat_sounds_again":true,"unpause_held_voice_continues":true,"unpause_sfx_players_unpaused":true},"mode":"lifecycle","pass":true,"values":{"active_players_at_bg":1,"held_voice_pos_0_3s_after":0.389,"held_voice_pos_at_unpause":0.017,"music_pos_after_1s_resume":15.897,"music_pos_after_2s_bg":14.875,"music_pos_before_bg":14.864,"seconds_until_first_sfx_after_unpause":3.3,"sfx_after_unpause":1,"sfx_during_pause_screen":0,"sfx_plays_total":5}}
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)
+SCRIPT ERROR: Cannot call method 'get_playback_position' on a null value.
+   at: _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+   GDScript backtrace (most recent call first):
+       [0] _lifecycle (res://tools/audio/lifecycle_probe.gd:207)
+       [1] _process (res://tools/audio/lifecycle_probe.gd:83)

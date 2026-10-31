@@ -1,0 +1,44 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+{
+ "audio_autoload": true,
+ "events_autoload": true,
+ "failures": [],
+ "imported": true,
+ "pass": true,
+ "play_call_us": 2.52,
+ "resident_sfx_bytes": 199288,
+ "snapshot": {
+  "active_sfx": 1,
+  "active_ui": 0,
+  "attenuated_offscreen": 0,
+  "dropped_gap": 1719,
+  "dropped_group": 655,
+  "dropped_max": 115,
+  "dropped_offscreen": 0,
+  "dropped_voices": 1,
+  "duck_db": 0.0,
+  "load_errors": [],
+  "load_ms": 72,
+  "missing": 0,
+  "music": "",
+  "paused": false,
+  "peak_voices": 12,
+  "played": 190,
+  "resident_sfx_bytes": 199288,
+  "stolen": 1,
+  "suspended": false,
+  "volumes": {
+   "master": 1.0,
+   "music": 0.8,
+   "sfx": 1.0
+  }
+ },
+ "stress": {
+  "attempts": 600,
+  "peak_voices": 12,
+  "started": 107
+ }
+}
+AUDIO SELFTEST PASS
+AUDIO_INTEGRATION_REPORT {"audio_children":[19,19],"audio_snapshot":{"active_sfx":0,"active_ui":0,"attenuated_offscreen":0,"dropped_gap":1719,"dropped_group":655,"dropped_max":115,"dropped_offscreen":0,"dropped_voices":1,"duck_db":0.0,"load_errors":[],"load_ms":72,"missing":0,"music":"","paused":false,"peak_voices":12,"played":190,"resident_sfx_bytes":199288,"stolen":1,"suspended":false,"volumes":{"master":1.0,"music":0.8,"sfx":1.0}},"battles_ended":1,"battles_started":0,"bridge_derived":{"alert":true,"base":true,"command":false,"death":false,"gold":true,"hero":true,"milestone":true,"ui":true,"upgrade":false},"commands":{"deploy":0,"deploy_unaffordable":0,"skill":0,"worker":0},"cue_counts":{"boss_incoming":2,"death_ally":15,"death_enemy":15,"deploy":2,"explosion":15,"gold_tick":24,"hero_death":1,"hero_respawn":1,"hit_arrow":1,"hit_base":1,"hit_base_mold":2,"hit_bread":2,"hit_melee":21,"hit_mold":5,"shoot_arrow":30,"shoot_rock":1,"shoot_spit":24,"skill_barrage":1,"skill_cast":1,"skill_heal":1,"skill_rally":1,"skill_slam":3,"stinger_defeat":1,"stinger_win":2,"ui_back":1,"ui_confirm":1,"ui_error":2,"ui_tap":3,"ui_upgrade_max":1,"ui_upgrade_no_coins":2,"ui_upgrade_ok":3,"ui_upgrade_save_failed":1,"wave_cleared":2,"wave_incoming":1,"worker_buy":1},"engine_truth":{"deployed":0,"hero_deaths":0,"kills":0,"skills_cast":0,"workers_bought":0},"errors":[],"events_has_sfx":true,"focus":{},"hit_events_enemy":4,"hit_events_player":2,"max_active_sfx":0,"max_active_ui":0,"max_music_playing":0,"music_timeline":[{"m":"","t":0.1}],"pause":{},"phases":[],"results":[{"time":null,"won":true}],"same_frame_duplicates":[{"cue":"hit_melee","t":0.0},{"cue":"explosion","t":0.0},{"cue":"explosion","t":0.0},{"cue":"explosion","t":0.0},{"cue":"explosion","t":0.0},{"cue":"explosion","t":0.0},{"cue":"explosion","t":0.0},{"cue":"explosion","t":0.0},{"cue":"explosion","t":0.0},{"cue":"explosion","t":0.0},{"cue":"explosion","t":0.0},{"cue":"explosion","t":0.0},{"cue":"explosion","t":0.0},{"cue":"explosion","t":0.0},{"cue":"explosion","t":0.0},{"cue":"skill_slam","t":0.0},{"cue":"ui_tap","t":0.0},{"cue":"hit_melee","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"death_enemy","t":0.0},{"cue":"death_ally","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"death_enemy","t":0.0},{"cue":"death_ally","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"hit_melee","t":0.0},{"cue":"death_ally","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"death_enemy","t":0.0},{"cue":"death_ally","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"death_enemy","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"hit_melee","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"death_ally","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"death_ally","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"death_enemy","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"death_enemy","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"hit_melee","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"death_ally","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"death_ally","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"death_enemy","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"hit_melee","t":0.0},{"cue":"death_ally","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"death_enemy","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"death_ally","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"death_enemy","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"hit_melee","t":0.0},{"cue":"death_ally","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"death_ally","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"death_enemy","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"death_ally","t":0.0},{"cue":"hit_melee","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"death_enemy","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"death_ally","t":0.0},{"cue":"shoot_arrow","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"shoot_spit","t":0.0},{"cue":"death_enemy","t":0.0},{"cue":"boss_incoming","t":0.0},{"cue":"ui_tap","t":0.0},{"cue":"ui_error","t":0.0},{"cue":"deploy","t":0.0},{"cue":"hit_base_mold","t":0.0},{"cue":"death_enemy","t":0.0},{"cue":"gold_tick","t":0.0},{"cue":"death_enemy","t":0.0},{"cue":"ui_upgrade_ok","t":0.0},{"cue":"ui_upgrade_no_coins","t":0.0},{"cue":"wave_cleared","t":0.0},{"cue":"skill_slam","t":0.0},{"cue":"hit_mold","t":0.0},{"cue":"hit_mold","t":0.0},{"cue":"hit_mold","t":0.0},{"cue":"hit_mold","t":0.0},{"cue":"hit_bread","t":0.0},{"cue":"ui_upgrade_ok","t":0.0},{"cue":"stinger_win","t":0.0},{"cue":"hit_melee","t":0.0},{"cue":"hit_melee","t":0.0},{"cue":"hit_melee","t":0.0},{"cue":"hit_melee","t":0.0},{"cue":"hit_melee","t":0.0},{"cue":"hit_melee","t":0.0},{"cue":"hit_melee","t":0.0},{"cue":"hit_melee","t":0.0},{"cue":"hit_melee","t":0.0},{"cue":"hit_melee","t":0.0},{"cue":"hit_melee","t":0.0},{"cue":"hit_melee","t":0.0}],"screens":["menu","battle"],"switch_check":{},"t":0.5,"toasts":{"not_enough_gold":1},"upgrade_replies":["ok","already_applied","not_enough_coins","ok"],"wave_cleared_events":2,"wave_cleared_index":[1,1]}
