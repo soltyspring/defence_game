@@ -108,8 +108,32 @@ Candidate r01 ranges for your decision. The rule is lower bound = observed min a
 Data basis: committed HEAD r01 (lane 1600 ≈ 2.5 screens at 640 px logical width; waves 25/55/90 s). The shared working tree also holds an UNCOMMITTED r01 edit (lane 1100, waves 12/40/75 s, seen 17:08). If that is yours, (a)–(d) must be re-measured after you commit it. In 2 of the 3 games both bases are on one screen in stage 1. We have no evidence that this causes our (a) gap.
 
 ## R09-01-14 Growth motivation: first-stuck candidates (2026-10-31 ~17:50 KST, SUCCESS_ANALYSIS.md §34)
-Observed (public storyboard frames, 7 videos, 4 games; one player each): every game opened a growth screen right after the first stage clear (1:30–4:40 into play) and before any defeat. Battle Cats, Cat War 2 and Waggle Squad reopened it after nearly every stage. No beginner video showed a defeat in the first 10–25 min. The only marked spike is the Battle Cats KR guide's chapter-1 last stage (Japan), solved by levels plus a tactic change (stall, wait for money) plus a unit swap.
-Reading [I]: "only r10 needs upgrades" sits at the same place as Battle Cats' first spike (chapter end), so it is not by itself a gap. The gap is entry habit and small repeat rewards before r10.
+Observed (public storyboard frames, 7 videos, 4 games; one player each): every game opened a growth screen right after the first stage clear (1:30–4:40 into play) and before any defeat. Battle Cats, Cat War 2 and Waggle Squad reopened it after nearly every stage. No beginner video showed a defeat in the first 10–25 min. The only marked spike is the Battle Cats KR guide's Japan stage, solved by levels plus a tactic change (stall, wait for money) plus a unit swap. **[Corrected in v16, see R09-01-15]** I first wrote that Japan was the last stage of chapter 1. That was wrong. In S2 the last stage is the Moon, and Japan is the 5th stage shown.
+Reading [I]: ~~"only r10 needs upgrades" sits at the same place as Battle Cats' first spike (chapter end), so it is not by itself a gap.~~ (withdrawn in v16, because Japan is not the chapter end). The gap is entry habit and small repeat rewards before r10.
 Note your own d25 table: without upgrades r07 (338 s / par 270) and r08 (447 s / par 280, worst base 0.30) exceed 1.25×par and lose 3★. So upgrades already matter for stars from r07.
 Ask (sim only, your decision): compare C0 = current; C1 = r05 not 3★-able with no upgrades; C2 = r07 or r08 no-upgrade win ≤ 4/5. Report none/LOW/HIGH 5-seed wins, median/par, stars, worst base. Keep D24(b) as the pass line.
 Basis update: a262640 committed D25, so §33.2's "HEAD r01 = lane 1600" is superseded; r01 competent median now 102 s.
+
+## R09-01-15 D27 verdict, base-damage evidence for D29, and the Japan correction (2026-10-31 ~18:30 KST, SUCCESS_ANALYSIS.md §35)
+Reply to your R4 ("state the measure you use"). Source: public YouTube storyboard frames only (1–5 s per frame, no download). URLs, channels and dates are in §35.1. No Godot was used (08 window). Speeds are video-time readings, not game constants.
+
+**D27 verdict: MODIFY. Keep r05; change the basis and add two conditions.**
+- Measure = **round index** only. Minutes of play and attempts are [U]. S2 is an edited guide, and the EN video uses a different stage order. B3 may be a deliberate loss.
+- Battle Cats KR (S2 kb6u-IRIDFw 0:10–1:15 captions): Korea → Mongolia → China → Philippines → Japan. Japan is the first stage the guide marks as "twice as hard". It is the 5th stage shown. Whether the guide skipped stages in between is [U]. If it did, Japan is later than 5th, so the evidence points to "r05 or later" and gives no reason to move to r04.
+- Condition 1, reference player: the Battle Cats player who gets stuck at Japan bought upgrades after nearly every clear (S2 0:25/0:50/0:55/1:05). So "no upgrades 4/10" has no competitor counterpart. The comparable condition is your D28 casual LOW r05 ≥ 3/10 and LOW+2R ≥ 7/10, and it currently fails (07: 0/10). I suggest the block pass line lives in D28, not in D27's no-upgrade figure.
+- Condition 2, exit hint: after a defeat at Japan, Battle Cats shows its own stage-specific hint (B3 CtyF0JF20Ls 0:48–0:53). In paraphrase, it says to hit from range while tanks block, and to power up with XP from other stages. Our result screen shows retry/upgrades/menu only, and I found no per-round hint text key (static grep of result.gd and data/text). Proposal for you and 04: a 2-line r05 defeat hint (one tactic line, plus "replay an earlier round → upgrade"). No paid or ad UI.
+- Limit: this rests on one game. Cat War 2 (L1–10) and Waggle (about 10 stages) showed no stuck point. Chapter length in Battle Cats is unverified, so index vs. fraction of the chapter cannot be settled.
+
+**Japan correction (affects R09-01-14 and §34):** Japan is NOT the last stage of chapter 1. In S2 the last stage is the Moon (6:40–7:05). I have withdrawn the reading "r10 sits where Battle Cats' first spike is". Japan's exact index is [U].
+
+**Base-damage evidence for D29** (table in §35.4):
+- Battle Cats shows the base HP as a number "x/max" above the base. It drops on every hit, with dark smoke at the base (B1 k-LmII5inLA, B2 6mij7-xSrqU).
+- Speed varied up to about 7× within one fight. B1 (stage 1, no units deployed): 984→0 in about 13 s, 3%/s then 21%/s. B2 (late game): 192000→about 6000 in about 26 s, 1.6%/s then 11%/s.
+- No push-back at the base was visible in B1, and B2/B3 are unreadable. I saw no damage cap. The only middle state I saw was B2, which held at about 3% and won, and that is a late-game stage. The recovery tool is the player-fired cat cannon, which B3 uses at 1:06 when enemies are at the base.
+- Waggle Squad (2 early videos, about 10 min) shows a green bar over each base. The player castle was never hit. Cat War 2 tints the enemy castle red when hit. Mongle: no source [U].
+- [I] For D29:
+  - (a) B at 25 HP/s on a 1500 base caps the drop at 1.7%/s, so a full drain takes ≥ 60 s. That is 2–5× slower than the Battle Cats averages observed (3.7–7.6%/s).
+  - (b) Our uncapped cascade, per 02's doc §1 estimate (2.6–6.7%/s), is in the same range as Battle Cats. So the gap may be the recovery tool, not the drain speed.
+  - (c) **Acceptance 1 (r02–r04 end base 0.60–0.90) is an internal target with no competitor basis.** The observed early stages show 0 base damage.
+  - (d) Neither A nor B has a competitor precedent. That is not a reason to reject them; their only basis is 02's arithmetic.
+- I asked 02 (R09-02-6) to add these to the probe: a no-mechanic control F0, where the bot returns the hero to the base and casts `skill_slam` when ≥ 3 enemies are within 60 px of the base, plus time-to-destroy and peak %/s columns. You decide whether any of this changes D29.
