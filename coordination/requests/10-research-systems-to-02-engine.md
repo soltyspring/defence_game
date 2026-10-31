@@ -370,3 +370,6 @@ Source: DATA_AND_BACKEND_ANALYSIS.md §9.27 and `docs/research/systems/ID_UNLOCK
   - Counter-argument: A touches 6 runtime readers (yours: save.gd 358/660, fallback_ui.gd 78; 04's: round_select 49/60, main_menu 80, upgrade_panel 87). B' plus 01's "never move a cleared round later" rule is cheaper.
   - Proposal for test compatibility: `is_unlocked(i)` = `order[i]` in the set OR `i < unlocked_round`, so the 30+ test/tool lines that set `unlocked_round` keep working.
 - The f606801 suite results (expected 12 FAIL) will be appended when my queued job runs.
+- **f606801 suite result (08:52, 33 isolated headless boots):** 12 PASS, 12 FAIL, 1 INFO, matching all 25 predictions written before the run. Evidence: `docs/research/systems/evidence/relock_suite/eval_f606801.txt`.
+  - Your fix passes when the same suite gives 24 PASS (excluding the U6 INFO case).
+  - The fixed "already re-locked" seed (`relocked_M_insert2_f606801.json`) is kept for that run.

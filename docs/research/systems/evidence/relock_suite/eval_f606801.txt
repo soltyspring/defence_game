@@ -1,0 +1,56 @@
+# relock_eval.py on the f606801 run (10-relock-suite 08:46:38-08:52:15, isolated 33/33). Predictions were written in relock_cases.json before the run.
+STEP M_nochange__s1         unlocked=6   open=r01,r02,r03,r04,r05,r06 log=- -> ok
+CASE M_nochange       PASS | predicted at f606801: PASS
+STEP M_cap4__s1             unlocked=6   open=r01,r02,r03,r04,r05,r06 log=- -> ok
+CASE M_cap4           PASS | predicted at f606801: PASS
+STEP M_bytes__s1            unlocked=6   open=r01,r02,r03,r04,r05,r06 log=- -> ok
+CASE M_bytes          PASS | predicted at f606801: PASS
+STEP M_remove_r03__s1       unlocked=5   open=r01,r02,r04,r05,r06 log=unlocked_round 6->5|backup save.pre-c1-989c3422c910.json -> ok
+CASE M_remove_r03     PASS | predicted at f606801: PASS
+STEP M_insert1__s1          unlocked=7   open=r01,r02,r02x,r03,r04,r05,r06 log=unlocked_round 6->7|backup save.pre-c1-989c3422c910.json -> ok
+CASE M_insert1        PASS | predicted at f606801: PASS
+STEP M_insert2__s1          unlocked=3   open=r01,r02,r02x log=unlocked_round 6->3|backup save.pre-c1-989c3422c910.json -> U1 cleared but locked r03,r04,r05; U2 was playable, now locked r03,r04,r05,r06; U5 bought upgrade locked up_fast(L2)
+CASE M_insert2        FAIL s1 U1 cleared but locked r03,r04,r05; s1 U2 was playable, now locked r03,r04,r05,r06; s1 U5 bought upgrade locked up_fast(L2); must_open missing r03,r04,r05,r06 | predicted at f606801: FAIL U1 U2 U5 must_open
+STEP M_chain2__s1           unlocked=7   open=r01,r02,r02x,r03,r04,r05,r06 log=unlocked_round 6->7|backup save.pre-c1-989c3422c910.json -> ok
+STEP M_chain2__s2           unlocked=3   open=r01,r02,r02x log=unlocked_round 7->3|backup save.pre-c1-57bbc2c75bce.json -> U1 cleared but locked r03,r04,r05; U2 was playable, now locked r03,r04,r05,r06; U5 bought upgrade locked up_fast(L2)
+CASE M_chain2         FAIL s2 U1 cleared but locked r03,r04,r05; s2 U2 was playable, now locked r03,r04,r05,r06; s2 U5 bought upgrade locked up_fast(L2); must_open missing r03,r04,r05,r06 | predicted at f606801: FAIL U1 U2 U5 must_open (step 2)
+STEP M_chain3__s1           unlocked=7   open=r01,r02,r02x,r03,r04,r05,r06 log=unlocked_round 6->7|backup save.pre-c1-989c3422c910.json -> ok
+STEP M_chain3__s2           unlocked=3   open=r01,r02,r02x log=unlocked_round 7->3|backup save.pre-c1-57bbc2c75bce.json -> U1 cleared but locked r03,r04,r05; U2 was playable, now locked r03,r04,r05,r06; U5 bought upgrade locked up_fast(L2)
+STEP M_chain3__s3           unlocked=3   open=r01,r02,r02x log=- -> U1 cleared but locked r03,r04,r05; U5 bought upgrade locked up_fast(L2)
+CASE M_chain3         FAIL s2 U1 cleared but locked r03,r04,r05; s2 U2 was playable, now locked r03,r04,r05,r06; s2 U5 bought upgrade locked up_fast(L2); s3 U1 cleared but locked r03,r04,r05; s3 U5 bought upgrade locked up_fast(L2); must_open missing r03,r04,r05,r06 | predicted at f606801: FAIL U1 U2 U5 must_open (step 2; step 3 does not repair)
+STEP M_insert_front__s1     unlocked=7   open=r00,r01,r02,r03,r04,r05,r06 log=unlocked_round 6->7|backup save.pre-c1-989c3422c910.json -> ok
+CASE M_insert_front   PASS | predicted at f606801: PASS
+STEP M_remove_insert__s1    unlocked=6   open=r01,r02,r02x,r04,r05,r06 log=- -> ok
+CASE M_remove_insert  PASS | predicted at f606801: PASS
+STEP M_move_r03_end__s1     unlocked=5   open=r01,r02,r04,r05,r06 log=unlocked_round 6->5|backup save.pre-c1-989c3422c910.json -> U1 cleared but locked r03; U2 was playable, now locked r03
+CASE M_move_r03_end   FAIL s1 U1 cleared but locked r03; s1 U2 was playable, now locked r03; must_open missing r03 | predicted at f606801: FAIL U1 U2 must_open
+STEP M_rename_move__s1      unlocked=5   open=r01,r02,r04,r05,r06 log=unlocked_round 6->5|backup save.pre-c1-989c3422c910.json -> U1 cleared but locked r03n; U2 was playable, now locked r03n
+CASE M_rename_move    FAIL s1 U1 cleared but locked r03n; s1 U2 was playable, now locked r03n; must_open missing r03n | predicted at f606801: FAIL U1 U2 must_open
+STEP M_rename2__s1          unlocked=3   open=r01,r02,r03n log=unlocked_round 6->3|backup save.pre-c1-989c3422c910.json -> U1 cleared but locked r05; U2 was playable, now locked r05,r06; U5 bought upgrade locked up_fast(L2)
+CASE M_rename2        FAIL s1 U1 cleared but locked r05; s1 U2 was playable, now locked r05,r06; s1 U5 bought upgrade locked up_fast(L2); must_open missing r05,r06 | predicted at f606801: FAIL U1 U2 U5 must_open
+STEP M_rename2_map__s1      unlocked=6   open=r01,r02,r03n,r04n,r05,r06 log=backup save.pre-c1-989c3422c910.json -> ok
+CASE M_rename2_map    PASS | predicted at f606801: PASS
+STEP C_bytes__s1            unlocked=10  open=r01,r02,r03,r04,r05,r06,r07,r08,r09,r10 log=unlocked_round 11->10|backup save.pre-c1-989c3422c910.json -> U4 wrote (sha c4433d3d3e2f->90bea237f3bc, new backups save.pre-c1-989c3422c910.json)
+STEP C_bytes__s2            unlocked=10  open=r01,r02,r03,r04,r05,r06,r07,r08,r09,r10 log=- -> ok
+CASE C_bytes          FAIL s1 U4 wrote (sha c4433d3d3e2f->90bea237f3bc, new backups save.pre-c1-989c3422c910.json) | predicted at f606801: FAIL U4 (step 1: 11->10 write; step 2 no write)
+STEP C_insert2__s1          unlocked=3   open=r01,r02,r02x log=unlocked_round 11->3|backup save.pre-c1-989c3422c910.json -> U1 cleared but locked r03,r04,r05,r06,r07,r08,r09,r10; U2 was playable, now locked r03,r04,r05,r06,r07,r08,r09,r10
+CASE C_insert2        FAIL s1 U1 cleared but locked r03,r04,r05,r06,r07,r08,r09,r10; s1 U2 was playable, now locked r03,r04,r05,r06,r07,r08,r09,r10; must_open missing r03,r04,r05,r06,r07,r08,r09,r10 | predicted at f606801: FAIL U1 U2 must_open (11->3)
+STEP C_append1__s1          unlocked=11  open=r01,r02,r03,r04,r05,r06,r07,r08,r09,r10,r11 log=- -> ok
+CASE C_append1        PASS | predicted at f606801: PASS (open prefix 11 = unlocked 11, no write)
+STEP C_move_r03_end__s1     unlocked=10  open=r01,r02,r04,r05,r06,r07,r08,r09,r10,r03 log=unlocked_round 11->10|backup save.pre-c1-989c3422c910.json -> ok
+CASE C_move_r03_end   PASS | predicted at f606801: PASS (11->10 write is allowed here: the order changed)
+STEP N_bytes__s1            unlocked=1   open=r01 log=- -> ok
+CASE N_bytes          PASS | predicted at f606801: PASS
+STEP N_insert_front__s1     unlocked=1   open=r00 log=- -> U2 was playable, now locked r01
+CASE N_insert_front   FAIL s1 U2 was playable, now locked r01; must_open missing r01 | predicted at f606801: FAIL U2 must_open
+STEP F_insert_front__s1     unlocked=1   open=r00 log=- -> ok
+CASE F_insert_front   PASS | predicted at f606801: PASS
+STEP I_bytes__s1            unlocked=3   open=r01,r02,r03 log=unlocked_round 6->3|backup save.pre-c1-989c3422c910.json -> U2 was playable, now locked r04,r05,r06
+CASE I_bytes          FAIL s1 U2 was playable, now locked r04,r05,r06; must_open missing r04,r05,r06 | predicted at f606801: FAIL U2 must_open (6->3)
+STEP I_cap4__s1             unlocked=3   open=r01,r02,r03 log=unlocked_round 6->3|backup save.pre-c1-989c3422c910.json -> U2 was playable, now locked r04,r05,r06
+CASE I_cap4           FAIL s1 U2 was playable, now locked r04,r05,r06; must_open missing r04,r05,r06 | predicted at f606801: FAIL U2 must_open (6->3)
+STEP R_same_data__s1        unlocked=3   open=r01,r02,r02x log=- -> U1 cleared but locked r03,r04,r05; U5 bought upgrade locked up_fast(L2)
+CASE R_same_data      INFO(U6) not repaired: s1 U1 cleared but locked r03,r04,r05; s1 U5 bought upgrade locked up_fast(L2) | predicted at f606801: INFO: not repaired (r03-r05 stay locked, no write)
+STEP R_changed_data__s1     unlocked=3   open=r01,r02,r02x log=- -> U1 cleared but locked r03,r04,r05; U5 bought upgrade locked up_fast(L2)
+CASE R_changed_data   FAIL s1 U1 cleared but locked r03,r04,r05; s1 U5 bought upgrade locked up_fast(L2); must_open missing r03,r04,r05,r06 | predicted at f606801: FAIL U1 U5 must_open (stars rule keeps 3)
+RELOCK_EVAL {"target": "f606801bbe115f92a8adaf6be6ee932e7a1c4a1d", "log": "build\\heavy\\10-relock-suite-20261101-074357.log", "cases": 25, "pass": 12, "fail": 12, "info": 1, "missing": 0}

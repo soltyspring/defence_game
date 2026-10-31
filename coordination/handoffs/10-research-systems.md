@@ -18,11 +18,9 @@ Updated: 2026-11-01 ~07:45 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
   - New variants in `relock_variants.py`. release_guard now also checks the new player (k=0).
 - Queued once each: `10-emu-aab` (07:38, `.local_inspect/job_emu_aab.ps1`) and `10-relock-suite` (07:43, f606801).
 - `10-emu-aab` finished at 08:26. The install and asset pack were verified (split_assetPackInstallTime.apk holds 21 LF data files, c1-989c3422c910). The launch steps did not run because of MY script bug (two lines joined), now fixed. Requeued once as `10-emu-aab-r2` at 08:28 (log `build/heavy/10-emu-aab-r2-20261101-082834.log`).
-- Second unit (§9.27 (2)(3) + 08/04 shader notes) is written. Its SHA is in the status file once pushed.
-- If stopped before they finish:
-  - Poll `build/heavy/10-emu-aab-20261101-073845.log` and `10-relock-suite-20261101-074357.log` for HEAVY_JOB_DONE. Do not requeue.
-  - Then run `python docs/research/systems/probes/relock_eval.py docs/research/systems/.local_inspect/rs_out_f606801`.
-  - Write §9.27, and send the 08/04 shader note and the 06 AAB note.
+- Second unit (§9.27 (2)(3) + 08/04 shader notes) pushed in 6ee5384d30912b4567f8b40b3d135549d6e47d20. The 02/01 requests went in 26182f7a190619a73fef1bc9d5432204a6695b70, and AAB run 1 in aa2af2ae405fb664c5c55580d221b2166bff432e (all checked with `git ls-remote`).
+- `10-relock-suite` (f606801) finished 08:52: 12 PASS / 12 FAIL / 1 INFO, all equal to the predictions. Evidence: `evidence/relock_suite/eval_f606801.txt`, `runs_f606801.txt` and the fixed seed `relocked_M_insert2_f606801.json` (keep it).
+- If stopped before `10-emu-aab-r2` finishes: poll `build/heavy/10-emu-aab-r2-20261101-082834.log` for HEAVY_JOB_DONE and do not requeue. Then fill §9.27 (4) run 2 (A0 content_version, A1 refund/backup/notice, A3 refund_unknown) and tell 06.
 - When 02's fix lands: put its SHA in `relock_target.txt`, queue `10-relock-suite` once, run relock_eval.py on `rs_out_<sha7>`.
 
 ## v0.34 (~07:45 KST): round re-lock cause, AC9 emulator part, git archive CRLF table (§9.26)
