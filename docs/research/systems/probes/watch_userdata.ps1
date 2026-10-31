@@ -6,6 +6,11 @@
 # grandparent command lines) so short runs between snapshots are still seen. Changed/new files are attributed to
 # processes whose lifetime overlaps the file's mtime, with an owner guess from the command lines.
 # Usage:  pwsh -NoProfile -File docs/research/systems/probes/watch_userdata.ps1 -DurationMin 30 -FileIntervalSec 300 -OutDir <dir>
+# Rule since 2026-10-31 23:2x KST: a run longer than 1 minute is a "long measurement" and must go through
+# coordination/heavy_run.ps1, which would block every other worker's Godot run for its whole length. For routine
+# checks use the one-shot probes/userdata_canary.ps1 instead. Limit: processes are sampled every -ProcIntervalSec,
+# so a run shorter than that can rotate the real logs without being sampled; a start-time match is then only a
+# coincidence (the 19:29:02 case in §9.19 was withdrawn for this reason).
 # Output: <OutDir>\watch_events.jsonl (one JSON per event) and <OutDir>\watch_summary.md; last line "WATCH_USERDATA <json>".
 param([int]$DurationMin = 30, [int]$FileIntervalSec = 300, [int]$ProcIntervalSec = 5, [string]$OutDir = '',
       [string]$Folder = (Join-Path $env:APPDATA 'Godot\app_userdata\Lane Defence'))

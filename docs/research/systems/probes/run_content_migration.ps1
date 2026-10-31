@@ -6,6 +6,11 @@ $ErrorActionPreference = 'Continue'   # native Godot stderr must not abort the r
 $godot = (Resolve-Path 'tools/engine/Godot_v4.7.2-stable_win64_console.exe').Path
 $sha = (git rev-parse HEAD).Trim()
 $root = Join-Path $env:TEMP "probe10_mig_$($sha.Substring(0,7))"
+# v0.29: every Godot child runs with a PRIVATE APPDATA (user:// can never be the real player folder, §9.17)
+$realAppData = $env:APPDATA
+$env:APPDATA = Join-Path $env:TEMP "probe10_mig_appdata_$($sha.Substring(0,7))"
+New-Item -ItemType Directory -Force $env:APPDATA | Out-Null
+try {
 $u8 = New-Object Text.UTF8Encoding($false)
 if (Test-Path $root) { Remove-Item -Recurse -Force $root }
 New-Item -ItemType Directory $root | Out-Null
@@ -56,5 +61,10 @@ foreach ($k in $mut.Keys) {
   Remove-Item -Recurse -Force $d
 }
 Remove-Item -Recurse -Force $root
-Remove-Item -Recurse -Force "$env:APPDATA\Godot\app_userdata\Probe10 Snapshot" -ErrorAction SilentlyContinue
 "HEAD=$sha"
+"isolation: private APPDATA=$($env:APPDATA) logs_present=$(Test-Path (Join-Path $env:APPDATA 'Godot\app_userdata\Probe10 Snapshot\logs'))"
+} finally {
+  $priv = $env:APPDATA
+  $env:APPDATA = $realAppData
+  Remove-Item -Recurse -Force $priv -ErrorAction SilentlyContinue
+}

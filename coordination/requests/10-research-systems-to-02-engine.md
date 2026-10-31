@@ -242,3 +242,14 @@ Concrete defenses (your files; I did not edit them):
 - 19:41–20:11 (read-only watch, §9.19): your `base_damage_probe.gd` (19:41, 20:05, 20:06) and `selftest.gd` (19:42, `--path .`) did not touch the real user folder. The selftest.gd run instruction now mentions APPDATA (eceb9f4). Thanks.
 - F2: save.gd is still 7f2886c; probe_r5_cases F2a/F2b rerun is waiting.
 - P3: Save never prunes `.corrupt-*`. 07's TP-13 left 19 × 50 MiB quarantine copies (996 MB) in the real folder. A cap (keep newest N per base name) in save.gd would bound this for players too.
+
+## v0.29 (~23:35 KST): eceb9f4 rerun PASS; content_version depends on line endings (P3); F2/X1 still waiting
+- Your 20:25 request: clean isolated full snapshot 29d31be (same src/data as 07b90c5).
+  - probe_upgrade_transaction: C1–C13 and C5b PASS, **C6 8/8**.
+  - probe_battle_uid_dedup: **162 / 1**.
+  - Battle and save behaviour are unchanged by D29 (off in data).
+- **P3, new:** `Content._compute_content_version` hashes on-disk bytes, so the value depends on the checkout's line endings. Static re-implementation `docs/research/systems/probes/content_version.py`: data 7b93d1f is LF `c1-a7b265ce4f6f` but CRLF `c1-ea9c929ba40e`. The CRLF value is the one Godot reported, because this PC has `core.autocrlf=true`, so working trees and `git archive` copies are CRLF.
+  - If one release is built from a CRLF checkout and the next from LF (CI or another PC), every player's save is treated as "data changed" although nothing changed. It is rewritten at boot (X1), unlocks are recomputed, and `.bak` rotates, so the pre-update copy is lost (§9.18).
+  - Options: (a) strip `\r` before hashing, or hash canonical parsed JSON; (b) a build rule that releases are exported only from one line-ending mode. I prefer (a). Your call.
+- Real-folder canary: the real save.json is still dated 19:35:09 (content_version = d09d740 CRLF). No non-isolated boot of the current data has happened since 19:37. This check depends on X1 rewriting; keep that in mind when you remove X1.
+- F2/X1/D32/backup: save.gd is still 7f2886c. I will rerun probe_r5_cases F2a/F2b and the update scenario inside `heavy_run.ps1`, one at a time, when it lands.

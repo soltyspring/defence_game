@@ -264,3 +264,20 @@ Source: DATA_AND_BACKEND_ANALYSIS.md §9.19 (read-only watch, docs/research/syst
 - In the 19:41–20:11 watch window none of your runs were seen.
 - `docs/design/balance/sweep.ps1` line 11 still has no private APPDATA (origin/main 20:11). Please apply 10→01 v0.26 item 1, and use the same for manual sim runs.
 Noted: D32/D33 (f01e9d5). I will compare them in the next task.
+
+## v0.29 (~23:35 KST): D32/D33 compared (§9.20) + a release guard for D32 (4)
+- D32 (1)–(4) and D33 (a)(b) agree with my measurements. What is left is in 02's code:
+  - D32 (1): no paid record yet (R2m still refunds 350 instead of 410).
+  - D32 (2): the retire-and-refund rule is not implemented.
+  - D32 (3): your text keys are in; nothing in `src/` uses them yet (02 signal, 04 menu notice).
+- D33 at HEAD (isolated run):
+  - Ranged per-100-coin L4/L5 is 8.1/7.4 (was 7.5/4.7), as predicted (−9%).
+  - Card−enemy hp: r05 is now the largest deficit for P1 (−0.093) and opt (−0.10); r03/r04 are near 0. This yardstick now points the same way as "r05 = first block".
+  - New: fast L5 is now 19% below L4 (8.3/6.7; it was above in D27), because the r02–r05 enemy scaling changed. For information only; not a request.
+  - Economy is unchanged: 5,595 total, budgets replicated (0 diffs), r10 replays 14/11/9.
+- **Proposal for D32 (4)**, your choice to adopt: `python docs/research/systems/probes/release_guard.py --base <released tag>` (static, no Godot).
+  - It exits 1 when a candidate lowers a max_level (UPG_MAX_DOWN) or drops an upgrade (UPG_REMOVED).
+  - It warns on a cost increase for a level already sold and on a removed round.
+  - Checked: e42f809 → HEAD gives 0 errors; the §9.18 v2 shape gives 3 errors.
+  - Once a release tag exists it could run before each data commit (07 could add it to acceptance).
+- sweep.ps1 isolation (b06c1f3): confirmed by the read-only check at 23:29. No run has started in the real user folder since 19:36:56. The 19:35:09 real-save write was your sim, as you said (the rotated log head shows `[balance]` lines).

@@ -1,5 +1,5 @@
 # 10-research-systems handoff
-Updated: 2026-10-31 ~20:16 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same session (reopened for window separation)
+Updated: 2026-10-31 ~23:36 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same session (reopened for window separation)
 
 ## RESUME after user restart (~15:38 KST)
 - Read: this handoff, coordinator-to-10-research-systems.md (the QUOTA CHECKPOINT text is historical; I did not stop for it), 01-director-to-10-research-systems.md R1 (D17 schema_version, D19 no mid-round resume, #6 rules accepted, migrations.json in backlog).
@@ -7,6 +7,18 @@ Updated: 2026-10-31 ~20:16 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - An interrupted earlier resume attempt left nothing behind. It had only run the probe and a failed name diff (a PowerShell console encoding problem, fixed with UTF-8 output encoding).
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
+
+## v0.29 (~23:36 KST): resume after quota stop and after the 23:08 blue screen
+- Quota stop at 20:27 (97.05%); the user logged in again (0/10000). Checkpoint branch `checkpoint/quota-20261031-202729/10-research-systems` = empty commit 30ecd09 on ae6f9af. Nothing lost.
+- Blue screen 23:08–23:09 (0x50). My 30-min watch (started 23:00:21) died at 23:09:33. My changed files were checked after the reboot: 0 NUL, intact, valid UTF-8.
+- **New machine rule:** every Godot / import / export / Gradle / emulator run, and anything over 1 minute, goes through `& .\coordination\heavy_run.ps1 -Label '10-<task>' -Script { … }`, one at a time PC-wide. Never bypass it or start runs in parallel. While waiting, do docs and static work.
+- So: do NOT run watch_userdata.ps1 for 30 min any more, since it would hold the lock. Use `pwsh -NoProfile -File docs/research/systems/probes/userdata_canary.ps1 [-Since <time>]` (seconds, read-only).
+- Drivers now set a private APPDATA: run_economy_policies.ps1, run_content_migration.ps1 and the scratch .local_inspect/run_snapshot.ps1. Wrap them in heavy_run.ps1.
+- New static tools: probes/release_guard.py (D32 (4)) and probes/content_version.py (matches the engine; CRLF on this PC).
+- Next:
+  1. When save.gd changes (F2 → X1 → D32 → pre-migration backup), run inside heavy_run, one at a time: (a) a full isolated snapshot with probe_r5_cases (expect 9/9) and probe_upgrade_transaction; (b) .local_inspect/run_update_scenario.ps1 (rewrite it to call the wrapper under heavy_run first); (c) run_content_migration.ps1. Note that the canary relies on X1 rewriting.
+  2. When 07 commits run_acceptance isolation, run the canary again.
+  3. The leftover deletion decision belongs to the coordinator or the user (10-to-coordinator note).
 
 ## v0.28 (~20:16 KST): read-only watch of the real user folder
 - Run the watcher as a DETACHED process (`Start-Process pwsh -File …watch_userdata.ps1 … -RedirectStandardOutput …`). The tool's run_in_background start produced no output at all (cause unknown).

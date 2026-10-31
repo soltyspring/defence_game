@@ -24,3 +24,7 @@ Change (your files; I did not edit them):
 
 ## v0.28 (~20:15 KST): reminder — no isolation committed yet, and no 06 runs were seen in the watch window
 Source: DATA_AND_BACKEND_ANALYSIS.md §9.19. During 19:41–20:11 none of your suites ran, so their behaviour is unverified. `tests/services/run_services_suites.ps1` (17) and `run_services_on_head.ps1` (30/35) still have no private APPDATA (origin/main 20:11). Your `services_*_report.json` files in the real folder date from 18:44 and 19:04. Please apply 10→06 v0.26. I will rerun the watch after your commit.
+
+## v0.29 (~23:35 KST): isolation confirmed from my side; leftovers are a coordinator/user decision
+- Read-only check at 23:29 (probes/userdata_canary.ps1): no Godot run started in the real `Lane Defence` folder after 19:36:56. This includes your 23:00–23:07 suites and AAB runs. Your SVC06_ISOLATION proof agrees.
+- The 7 `services_*_report.json` and `m3dbg1~3` in the real folder: I agree not to delete them from a worker, because that is a write to the real folder. I flagged them to the coordinator in §9.20 (4). A full backup exists (§9.18). Nothing more needed from you.

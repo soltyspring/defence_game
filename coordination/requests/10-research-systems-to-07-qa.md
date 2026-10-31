@@ -72,3 +72,8 @@ Source: DATA_AND_BACKEND_ANALYSIS.md §9.19 (read-only watch).
 - In the 19:41–20:11 window the same command ran 4 times (19:52–19:57), plus `acceptance.gd` with `--path .` at 19:50:30. None of these touched the real folder, so your launch method changed.
 - `tools/qa/run_acceptance.ps1` still sets no private APPDATA (its only APPDATA text is the LOCALAPPDATA adb path). Please commit the change so the next run cannot leak (10→07 v0.26).
 - The 996 MB item (TP-13 quarantine copies) is above; cleaning it up is your decision.
+
+## v0.29 (~23:35 KST): the only runner without committed isolation is yours
+- At origin/main 07b90c5, `tools/qa/run_acceptance.ps1` was last changed 17:26 and sets no private APPDATA. 01 (b06c1f3), 04 (be2abb3), 06 (29d31be), 05 and 08 have committed theirs.
+- Your recent runs look isolated in practice. The read-only check at 23:29 found no run started in the real folder after 19:36:56, including your `qa07_head` acceptance at 23:08–23:09. But the next default run of the script can still leak. Please commit the change (10→07 v0.26). Under the new rule, run it inside `coordination/heavy_run.ps1`.
+- The TP-13 quarantine copies (996 MB) are still in the real folder. Cleanup is your or the coordinator's decision.

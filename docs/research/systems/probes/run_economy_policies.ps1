@@ -11,6 +11,10 @@ $root = (Resolve-Path "$PSScriptRoot\..\..\..\..").Path
 $godot = Join-Path $root 'tools\engine\Godot_v4.7.2-stable_win64_console.exe'
 $tmp = Join-Path $env:TEMP ("p10pol_" + [guid]::NewGuid().ToString('N').Substring(0, 8))
 New-Item -ItemType Directory $tmp | Out-Null
+# v0.29: the Godot child gets a PRIVATE APPDATA (user:// can never be the real player folder, §9.17)
+$realAppData = $env:APPDATA
+$env:APPDATA = Join-Path $tmp 'appdata'
+New-Item -ItemType Directory -Force $env:APPDATA | Out-Null
 try {
   if ($Rev) {
     Push-Location $root; git archive --format=zip -o "$tmp\d.zip" $Rev data; Pop-Location
@@ -51,6 +55,6 @@ try {
   } else { "budgets check: upgrade_budgets.json not found" }
   $out | Where-Object { $_ -like 'PROBE10_ECON_POLICIES*' -or $_ -like '*SCRIPT ERROR*' }
 } finally {
+  $env:APPDATA = $realAppData
   Remove-Item -Recurse -Force $tmp -ErrorAction SilentlyContinue
-  Remove-Item -Recurse -Force "$env:APPDATA\Godot\app_userdata\Probe10 Policies" -ErrorAction SilentlyContinue
 }

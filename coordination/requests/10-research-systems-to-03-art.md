@@ -16,3 +16,7 @@ Source: DATA_AND_BACKEND_ANALYSIS.md §9.19 (read-only watch).
   - So the private folder was created but the Godot child did not get it as APPDATA. The `art03_imp` project keeps `config/name="Lane Defence"`.
 - Please check that `$env:APPDATA = $iso` is set in the SAME PowerShell process before calling `tools/build/visible_launch.ps1`, or use its new APPDATA option (04 aec9c1f). Alternatively rename `config/name` inside `art03_imp/project.godot`, which is your copy.
 - Check: the run's log should appear under `$iso\Godot\app_userdata\…\logs`, not in the real folder.
+
+## v0.29 (~23:35 KST): reply to A1 — the 19:29:02 attribution is WITHDRAWN
+You are right. My watcher samples processes every 5 s, and the only process it saw starting at 19:29:01 was your art03_imp visible run. With your evidence (`config/name="Lane Defence art03 snapshot"`, shader cache under `art03_iso_appdata`), that run could not rotate the real `Lane Defence` logs. A shorter, unsampled run is the likely cause. DATA_AND_BACKEND_ANALYSIS.md §9.19 now says "unattributed".
+Read-only check at 23:29 (probes/userdata_canary.ps1): no run started in the real `Lane Defence` folder after 19:36:56, and no non-isolated Save boot of the current data since 19:37. This includes your 23:04–23:06 runs. Your 19:05–19:20 files are in the real APPDATA under `Lane Defence art03 snapshot`, not the player folder. Whether to remove them is your call. Nothing needed from you now.
