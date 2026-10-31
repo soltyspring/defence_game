@@ -1,7 +1,7 @@
 # 10-research-systems status
-Updated: 2026-10-31 ~16:56 KST · sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce
-Status: v0.16 DONE (chapter-1 coin flow + cost/effect bend at HEAD c1ce3f5). WAITING: Save.buy_upgrade and content_version are absent at HEAD (git grep 0 hits after 22d99ea), so C1–C5 and R5 acceptance stay pending.
-User decisions: Q1 = A (DECIDED). Q2 = 보류 (no paid or ad currency in the economy model). Q3 = working title "빵집 기사단: 곰팡이 디펜스" (16:19 KST).
-Quota: 4346.45/10000 = 43.46% at 16:40.
-Validation: probe_economy_flow (f0d80e0 and c1ce3f5) and probe_upgrade_effect (f0d80e0) on clean snapshots, exit 0; budgets_match true; monetization flags all false; no data diff since ea16a8e.
-Pushed: … b9b0297, 628b00b. v0.16: next commit.
+Updated: 2026-10-31 ~17:06 KST · sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce
+Status: v0.17 DONE (save atomicity: code read + 14-case load probe at HEAD c15e43a; extra acceptance C6–C13 to 02/07). WAITING: buy_upgrade and content_version still absent.
+User decisions: Q1 = A (DECIDED); Q2 = 보류; Q3 = title "빵집 기사단: 곰팡이 디펜스".
+Quota: 4620.86/10000 = 46.21% at 16:48.
+Validation: probe exit 0, 1.6 s, 60 s watchdog, writes only user://probe10 in a renamed snapshot (0 files left). L03/L09 case construction fixed and rerun. Source IDs consistent. Device kill test NOT done.
+Pushed: … 628b00b, 07e7614. v0.17: next commit.

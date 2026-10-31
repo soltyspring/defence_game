@@ -83,3 +83,22 @@ Minimal contract (proposal):
 3. On a content_version mismatch, in one atomic save: apply data/migrations.json `upgrade_renames` (keep the higher level on collision) and `round_renames`; clamp levels to max_level and refund via `upgrade_cost_history` (01 decides the rule; if there is no history, refund 0 and log error content/refund_unknown); recompute unlocks; record content_version and the keys. Roll back like record_result on a failed write.
 Acceptance (same driver): M1 r08 locked; M2 r02b and r03–r07 unlocked; M4 L3, coins 1,644, hp_mult 1.16, no second refund on reload; M5b (with a rename entry) up_toast_knight L5, hp_mult 1.32; content_version present in all variants.
 Until this exists: please treat round removal/insert/reorder, lowering max_level and upgrade id renames as release-blocking data changes after launch. Unit id renames and numeric tuning are safe.
+
+## v0.17 save atomicity check before buy_upgrade (~17:05 KST, HEAD c15e43a, save.gd last changed 08ef082) — read-only, no device test
+Probe: docs/research/systems/probes/probe_save_load_cases.gd. Run inside a renamed `git archive` snapshot with `--quit-after 600`; it has a 60 s watchdog and actually took 1.6 s. Table in DATA_AND_BACKEND_ANALYSIS.md §9.8.
+- PASS, no progress lost: zero-byte main, truncated main, stale checksum, payload not an object, missing main with a newer verified .tmp (adopted), torn .tmp (falls back to .bak), oversize >2 MiB (falls back to .bak), envelope-less JSON, legacy save without a version field (migrated), UTF-8 BOM (loads). Payload version 99 → read_only, save refused, bytes unchanged.
+- Observations (P3, your call):
+  (a) only the payload `version` is read; the envelope `version` is write-only;
+  (b) after L07 (all three corrupt → fresh, recovered=true) the corrupt .bak survives the first save until the next rotation;
+  (c) a torn .tmp is left in place, not quarantined, and the next save overwrites it;
+  (d) the 2 MiB guard sends a legitimately large save to .bak (current saves are a few KB).
+- Android partial-write risk (source reading, UNKNOWN on device): Godot master FileAccessUnix::flush() is fflush() only and there is no fsync in file_access_unix.cpp. Android's AtomicFile syncs before rename. A process kill is covered by the rename order. A power loss may leave the new main empty or stale, and then the load chain falls back to .bak, so the expected loss is the last save or two. I could not find a GDScript fsync. Please confirm the FileAccess implementation used for user:// on Android in 4.7.2 if you can.
+Additional acceptance cases for buy_upgrade, beyond C1–C5:
+- C6: kill at each of the 4 FAULT_POINTS during a purchase × {healthy, first save after recovery} → reload always shows the matching (coins, level) pair, before or after the purchase, never mixed.
+- C7: read_only save → `read_only` returned, memory and bytes unchanged.
+- C8: first purchase after a .bak/.tmp recovery → .bak afterwards is not the corrupt file, and the purchase persists.
+- C9: coins never negative in memory or on disk (balance = cost, cost−1, near the cap).
+- C10: on `save_failed`, no success UI; at before_final_rename, re-read Save state ("outcome unknown").
+- C11: double tap on the same to_level charges once.
+- C12: a failed purchase followed by a successful record_result in the same session → disk has the result and not the purchase, and each rollback touches only its own fields.
+- C13: purchase followed by app pause → the extra save does not double-apply (device test still pending).

@@ -1,5 +1,5 @@
 # 데이터·백엔드 분석: 성공한 디펜스 게임의 온라인 기능과 우리 게임의 최소 설계
-작성: 10-research-systems · 버전 v0.16 (v0.16 §9.7 챕터 1 코인 흐름·비용 대비 효과, v0.15 §9.6 데이터 버전 변경과 세이브, v0.14 §9.5 업그레이드 효과 곡선, v0.13 §9.4 업그레이드 트랜잭션·content_version, … v0.11 재시작 후 무결성 재실행: D17 확인, v0.12 테마 A 이름표 검사 통과·세이브 재확인) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
+작성: 10-research-systems · 버전 v0.17 (v0.17 §9.8 저장 원자성 점검, v0.16 §9.7 챕터 1 코인 흐름·비용 대비 효과, v0.15 §9.6 데이터 버전 변경과 세이브, v0.14 §9.5 업그레이드 효과 곡선, v0.13 §9.4 업그레이드 트랜잭션·content_version, … v0.11 재시작 후 무결성 재실행: D17 확인, v0.12 테마 A 이름표 검사 통과·세이브 재확인) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
 범위: 경쟁작에서 **관찰되는** 온라인 기능, 그 기능의 **공개 문서화된** 기술, **UNKNOWN**, 우리 오프라인 우선 Godot 게임에 필요한 최소 콘텐츠 DB·세이브·거래 계약. 런타임 코드는 수정하지 않았다. 내부 DB나 비공개 구현에 접근한 적 없다. 게임을 직접 플레이하지 않았다(스토어 텍스트·공개 스크린샷만 확인).
 
 ## 0. 현재 판단 (요약)
@@ -700,6 +700,50 @@ v0.9 기준선(9ca4a43) → HEAD 43b4692 이름 변화(ko / en, 대체값 = ko):
 - 공통: 비용이 레벨마다 약 1.6배로 오르고 효과는 레벨당 +8%(영웅 +10%)로 일정하다. 그래서 100코인당 체감 지점은 L2→L3에서 대략 절반으로 준다(tank는 약 40% 감소로 가장 완만하다). 앞의 수입 표와 합치면, LOW 경로가 챕터 1 동안 사는 레벨(대부분 L4까지)이 비용 대비 효과가 높은 구간이다. **L5(재플레이 전용, D22 b)는 100코인당 2.9~5.4 지점**으로 가장 낮다.
 - 보급·일꾼·기력·본진 트랙은 타격 수 지표에 해당하지 않아 이 표에 없다. 대신 §9.5 (1)의 비율 수치를 쓴다: 보급은 레벨당 +0.5/s 고정, 일꾼은 레벨당 일꾼 1명당 +0.25/s, 기력 업그레이드는 Rally/Barrage만 쓸 때 효과 없음, 본진은 맞는 라운드에서만 효과.
 
+### 9.8 현재 Save 구현의 저장 원자성 점검 (v0.17, buy_upgrade 이전 준비)
+- 범위: HEAD c15e43a3e496527d44474d09a69b0f6d777a91fc의 `src/core/save.gd`. 마지막 변경은 08ef082이고, `git show`로 읽기만 했다. 실제 세이브와 작업 트리는 수정하지 않았다. **실기기 종료 테스트는 하지 않았다.**
+- **코드 읽기 결과**(`save.gd` 주석과 본문):
+  - 쓰기 순서는 `save.json.tmp`에 쓰기 → `flush()` → `close()` → `.tmp` 다시 읽어 검증 → (main이 정상이면) 기존 `.bak` 삭제 + main→`.bak` rename / (main이 손상이면) main을 `.corrupt-<unix>`로 격리 → `.tmp`→main rename이다. 임시 파일에 쓴 뒤 이름을 바꾸는 방식이고, 백업 1개를 유지한다.
+  - 읽기 순서는 정상 main → 정상 `.tmp` → 정상 `.bak` → 새 세이브다. 크기 2 MiB 초과, JSON 오류, envelope 없음, 체크섬 불일치, payload가 객체가 아님 중 하나면 거부하고 다음 후보로 넘어간다.
+  - 버전은 **payload 안의 `version`**으로 판단한다. VERSION=1보다 크면 읽기 전용이다. 없으면 0으로 보고 이전 형식에서 이전한다. envelope의 `version`은 쓰기만 하고 읽을 때는 무시한다.
+- **실행 재현**: 프로브 `docs/research/systems/probes/probe_save_load_cases.gd`, 명령 `tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path <스냅샷> -s res://docs/research/systems/probes/probe_save_load_cases.gd --quit-after 600`.
+  - HEAD를 `git archive`한 src+project.godot 스냅샷(autoload 제거, 프로젝트 이름 변경)에서 `user://probe10/`에만 썼다. 60초 워치독을 두었고, 실제 실행 시간은 1.6초였다. exit 0. 끝난 뒤 파일 0개를 확인했고 스냅샷과 사용자 폴더를 지웠다.
+  - 첫 실행에서 L03(체크섬)과 L09(버전) 케이스가 잘못 만들어져 있었다. L03은 envelope 안 escape된 문자열을 치환하지 못했고, L09는 envelope 버전만 바꿨다. 고쳐서 다시 돌렸고 아래는 수정 후 결과다.
+
+| 케이스 | 파일 상태 | 로드 결과(진행도 / 출처 / recovered) | 격리 | 이후 저장 |
+|---|---|---|---|---|
+| L01 main 0바이트, `.bak` 정상 | 전원 차단 직후 같은 상태 | 6 / bak / true | main 격리 | 성공, 재로드 main 6 |
+| L02 main JSON 절반에서 잘림 | 부분 기록 | 6 / bak / true | 격리 | 성공 |
+| L03 payload만 손으로 수정(체크섬 그대로) | 변조 | 6 / bak / true, `checksum mismatch` | 격리 | — |
+| L04 payload가 배열 | 형식 오류 | 6 / bak / true | 격리 | — |
+| L05 main 없음, `.tmp` 최신 정상, `.bak` 이전 | rename 직전 종료 | **8 / tmp** / true(최신 상태 채택) | — | 성공, `.tmp` 정리됨 |
+| L06 main 없음, `.tmp` 잘림, `.bak` 정상 | 쓰기 도중 종료 | 6 / bak / true | `.tmp`는 격리하지 않고 남김(다음 저장이 덮어씀) | — |
+| L07 셋 다 손상 | 최악 | 1 / fresh / **true**(사용자에게 알림) | main 격리 | 성공. 단 손상 `.bak`은 다음 회전 전까지 남음 |
+| L08 main 2 MiB 초과 | 크기 제한(02 잠정값) | 6 / bak / true | 격리 | — |
+| L09 payload `version` 99 | 상위 버전 | 8 / main / false, **read_only true** | — | `save_progress()` false, **파일 바이트 그대로** |
+| L09b envelope만 99, payload 1 | — | 8 / main, read_only **false** | — | 성공(v1로 다시 씀) |
+| L10 `version` 필드 없음(구 형식) | 이전 형식 | 4 / main | — | 성공(v1로 이전) |
+| L11 UTF-8 BOM 접두 | 외부 편집기 저장 | 8 / main(정상 로드) | — | — |
+| L12 envelope 없는 일반 JSON | 형식 오류 | 6 / bak / true, `bad envelope` | 격리 | — |
+| L13 파일 없음 | 첫 설치 | 1 / fresh / false | — | 성공 |
+- 결론(데스크톱 Windows 실행 기준): 이 손상 유형들에서 진행도를 잃지 않았다(L07 제외. L07은 복구할 사본이 없는 경우이고 알림이 있다). 상위 버전은 덮어쓰지 않는다. 체크섬은 변조나 손상 탐지용일 뿐 보안 장치가 아니다(§5.2).
+- **Android 강제 종료와 부분 기록 위험(코드와 1차 소스 읽기, 실기기 미실시):**
+  - 프로세스 종료(저메모리 종료, 최근 앱에서 밀어 닫기): `flush()`로 커널에 넘어간 데이터는 프로세스가 죽어도 남는다. 같은 디렉터리 안의 `rename`은 POSIX에서 원자적이다. 그래서 디스크에는 "이전 main" 또는 "새 main", 혹은 "main 없음 + 검증된 `.tmp`"(L05와 같은 상태)가 남고, 읽기 순서가 모두 처리한다. 이 경로는 R6 장애 훅 4지점으로 데스크톱에서 재현했다(§6.4 v0.10, 8/8).
+  - 전원 차단·커널 패닉: Godot의 `FileAccessUnix::flush()`는 `fflush()`만 호출한다. godotengine/godot master의 `drivers/unix/file_access_unix.cpp`에는 `fsync`가 없다(S21). 4.7.2 태그와 Android에서 user://에 쓰는 FileAccess 구현이 같은지는 **확인하지 않았다(UNKNOWN)**. Android의 `AtomicFile`은 rename 전에 데이터를 sync한다고 문서에 적혀 있다(S22). 따라서 전원 차단 직후에는 새 main이 비어 있거나 이전 내용일 수 있다. 이 경우 읽기 순서상 `.bak`(직전 저장본)으로 돌아가므로, **잃는 범위는 최근 한두 번의 저장**으로 예상된다(L01·L02가 그 상태의 데스크톱 재현). GDScript에서 fsync를 직접 부를 방법은 확인하지 못했다(UNKNOWN).
+  - 남은 실험(04/07, 실기기 필요): `adb shell am kill`이나 강제 종료를 저장 직후 반복하는 방법, 기기 전원 차단은 수동으로 해야 한다. 기록하지 않은 결과를 주장하지 않는다.
+
+**buy_upgrade가 이 저장 경로를 쓸 때 C1~C5에 더할 합격 기준(02·07 전달):**
+| ID | 시나리오 | 기대값 |
+|---|---|---|
+| C6 | 구매 중 장애 지점 4개(`after_tmp_write`, `torn_tmp`, `after_bak_rename`, `before_final_rename`) × 정상/복구 직후 | 재로드 시 (코인, 레벨)이 언제나 (구매 전) 또는 (구매 후)의 짝. 코인만 줄거나 레벨만 오른 상태는 없음 |
+| C7 | `read_only`(payload v99) 세이브에서 구매 | `read_only` 반환, 메모리·파일 바이트 불변 |
+| C8 | `.bak`/`.tmp` 복구 직후 첫 구매 | 저장 후 `.bak`이 손상 파일이 아니고, 재로드 시 구매가 반영됨(SV-1 경로 재확인) |
+| C9 | 잔액 = 비용, 잔액 = 비용−1, 이미 코인 상한 근처 | 메모리·디스크 모두 코인이 음수가 되지 않음. 로드 시 0으로 클램프되어 공짜가 되는 경로 없음(v0.13 단순 구현 결함) |
+| C10 | `save_failed` 반환 후 UI | 성공 표시 없음. "결과 불명" 지점(`before_final_rename`)에서는 UI가 Save 상태를 다시 읽어 표시 |
+| C11 | 같은 프레임 두 번 탭(같은 `to_level`) | 1회만 차감(`already_applied`) |
+| C12 | 구매 실패(롤백) → 같은 세션에서 `record_result` 성공 | 디스크에 전투 결과만 있고 실패한 구매는 없음. 반대 순서도 서로의 롤백이 상대 필드를 되돌리지 않음 |
+| C13 | 구매 직후 앱 일시정지(`NOTIFICATION_APPLICATION_PAUSED` → `Save.save_progress()`) | 추가 저장이 구매를 중복 반영하지 않음. 실기기는 미실시로 표기 |
+
 ## 10. 출처 (모두 2026-10-31 KST 접근)
 | ID | 출처 | URL | 한계 |
 |---|---|---|---|
@@ -723,3 +767,5 @@ v0.9 기준선(9ca4a43) → HEAD 43b4692 이름 변화(ko / en, 대체값 = ko):
 | S18 | Play Integrity API 개요 | https://developer.android.com/google/play/integrity/overview | — |
 | S19 | PostgreSQL INSERT / ON CONFLICT | https://www.postgresql.org/docs/current/sql-insert.html | — |
 | S20 | Play 검색 결과(궁수키우기/아처키우기)와 각 상세 페이지 배지 | https://play.google.com/store/search?q=%EA%B6%81%EC%88%98%ED%82%A4%EC%9A%B0%EA%B8%B0&c=apps | 검색 순위는 개인화·시점에 따라 다름 |
+| S21 | Godot 소스 drivers/unix/file_access_unix.cpp(flush = fflush), dir_access_unix.cpp(rename) | https://raw.githubusercontent.com/godotengine/godot/master/drivers/unix/file_access_unix.cpp · https://raw.githubusercontent.com/godotengine/godot/master/drivers/unix/dir_access_unix.cpp | master 기준. 4.7.2 태그와 Android 경로 미확인 |
+| S22 | Android AtomicFile 레퍼런스 | https://developer.android.com/reference/android/util/AtomicFile | 우리 엔진이 쓰는 API가 아님. 비교 기준으로만 인용 |

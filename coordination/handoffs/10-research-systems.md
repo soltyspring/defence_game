@@ -8,6 +8,12 @@ Updated: 2026-10-31 ~15:41 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
+## v0.17 (~17:06 KST): save atomicity check before buy_upgrade
+- save.gd at HEAD c15e43a was read only. It writes tmp → flush → verify → rotate or quarantine → rename, and loads main → tmp → bak → fresh. Version is read from the payload; the envelope version is ignored.
+- probe_save_load_cases.gd: 14 cases (zero-byte, truncated, checksum, non-object, tmp newer, torn tmp, all corrupt, >2 MiB, v99 read-only, envelope-only 99, legacy no version, BOM, plain JSON, fresh). No loss except all-corrupt (fresh + recovered). My first L03/L09 constructions were wrong; fixed and reran.
+- Android: Godot master flush = fflush only, no fsync (S21). AtomicFile syncs (S22). Power-loss loss is expected to be the last save or two via .bak. Device test NOT done.
+- Extra acceptance C6–C13 sent to 02 and 07. Doc §9.8, sources S21/S22.
+
 ## v0.16 (~16:56 KST): chapter-1 coin flow + cost/effect bend
 - User decisions: Q3 working title "빵집 기사단: 곰팡이 디펜스" (16:19). Q2 on hold, so there is no paid or ad currency in the model.
 - Wait check: 22d99ea is in HEAD. No buy_upgrade/content_version in src, so C1–C5 and R5 are still pending.
