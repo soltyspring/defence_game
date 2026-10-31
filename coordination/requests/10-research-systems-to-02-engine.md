@@ -102,3 +102,14 @@ Additional acceptance cases for buy_upgrade, beyond C1–C5:
 - C11: double tap on the same to_level charges once.
 - C12: a failed purchase followed by a successful record_result in the same session → disk has the result and not the purchase, and each rollback touches only its own fields.
 - C13: purchase followed by app pause → the extra save does not double-apply (device test still pending).
+
+## v0.18 durability verdict on our exact engine (4.7.2-stable = commit ed1daf0bf001b6…, same as `--version`) (~17:20 KST)
+Source citations with line numbers are in DATA_AND_BACKEND_ANALYSIS.md §9.9 (S23). Device test NOT done.
+- Q1 sync before rename: **No.** FileAccessUnix::flush = fflush (file_access_unix.cpp L329–332), _close = fclose (L198–220), DirAccessUnix::rename = ::rename (dir_access_unix.cpp L420). There are 0 fsync/fdatasync hits in the 8 files read.
+- Q2 Android user://: **FileAccessUnix / DirAccessUnix** (os_android.cpp L120, L133; user:// → ACCESS_USERDATA in core/io/file_access.cpp L72–73).
+- Q3 GDScript: **flush yes (it is fflush, not durable), fsync no.** OS.set_use_file_access_save_and_swap only adds temp+rename on close without sync; it is off by default and unused in src. Do not enable it.
+Your current order (flush/close → verify → rotate only a good main → rename) needs no change. Minimal proposals (your decision):
+- A. Time-spaced .bak rotation: if the last rotation was less than T s ago (provisional; 08/02 pick T), keep .bak, delete main, then rename tmp→main. Main-missing plus a verified tmp is already handled by the load order (L05). This keeps .bak at least T s old, so it is more likely already written back when power is lost. Acceptance: a second save within T leaves .bak bytes equal to the pre-first-save main; after T it rotates; R6 8/8 and the 14 load cases still pass.
+- B. Coalesce back-to-back saves (record_result followed immediately by the PAUSED save).
+- C. (Not recommended now) a native fsync plugin (Android AtomicFile style).
+Power-loss outcome remains an inference until a device test: two saves inside the kernel writeback window could leave both main and .bak unwritten.

@@ -1,5 +1,5 @@
 # 데이터·백엔드 분석: 성공한 디펜스 게임의 온라인 기능과 우리 게임의 최소 설계
-작성: 10-research-systems · 버전 v0.17 (v0.17 §9.8 저장 원자성 점검, v0.16 §9.7 챕터 1 코인 흐름·비용 대비 효과, v0.15 §9.6 데이터 버전 변경과 세이브, v0.14 §9.5 업그레이드 효과 곡선, v0.13 §9.4 업그레이드 트랜잭션·content_version, … v0.11 재시작 후 무결성 재실행: D17 확인, v0.12 테마 A 이름표 검사 통과·세이브 재확인) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
+작성: 10-research-systems · 버전 v0.18 (v0.18 §9.9 엔진 저장 내구성 판정·경쟁작 기기 변경 정책, v0.17 §9.8 저장 원자성 점검, v0.16 §9.7 챕터 1 코인 흐름·비용 대비 효과, v0.15 §9.6 데이터 버전 변경과 세이브, v0.14 §9.5 업그레이드 효과 곡선, v0.13 §9.4 업그레이드 트랜잭션·content_version, … v0.11 재시작 후 무결성 재실행: D17 확인, v0.12 테마 A 이름표 검사 통과·세이브 재확인) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
 범위: 경쟁작에서 **관찰되는** 온라인 기능, 그 기능의 **공개 문서화된** 기술, **UNKNOWN**, 우리 오프라인 우선 Godot 게임에 필요한 최소 콘텐츠 DB·세이브·거래 계약. 런타임 코드는 수정하지 않았다. 내부 DB나 비공개 구현에 접근한 적 없다. 게임을 직접 플레이하지 않았다(스토어 텍스트·공개 스크린샷만 확인).
 
 ## 0. 현재 판단 (요약)
@@ -744,6 +744,43 @@ v0.9 기준선(9ca4a43) → HEAD 43b4692 이름 변화(ko / en, 대체값 = ko):
 | C12 | 구매 실패(롤백) → 같은 세션에서 `record_result` 성공 | 디스크에 전투 결과만 있고 실패한 구매는 없음. 반대 순서도 서로의 롤백이 상대 필드를 되돌리지 않음 |
 | C13 | 구매 직후 앱 일시정지(`NOTIFICATION_APPLICATION_PAUSED` → `Save.save_progress()`) | 추가 저장이 구매를 중복 반영하지 않음. 실기기는 미실시로 표기 |
 
+### 9.9 실제 엔진 버전에서의 저장 내구성 판정과 경쟁작의 기기 변경 정책 (v0.18)
+**(1) 우리가 쓰는 Godot 버전 [확인]:**
+- 바이너리 `tools/engine/Godot_v4.7.2-stable_win64_console.exe --version`의 출력은 `4.7.2.stable.official.ed1daf0bf`다.
+- `tools/build/common.ps1`의 `GodotVersionDir = '4.7.2.stable'`와 템플릿 경로 `tools/engine/editor_data/export_templates/4.7.2.stable`이 같은 버전을 가리킨다. `project.godot`의 `config/features`는 "4.7"이고, docs/architecture/ANDROID_BUILD.md A1/A2에 SHA-512 검증 기록이 있다.
+- GitHub API에서 태그 `4.7.2-stable`은 커밋 `ed1daf0bf001b61586d9930840f2f1394092c079`를 가리킨다. 바이너리 버전 문자열과 같으므로, 아래 인용은 **우리가 쓰는 정확한 커밋의 소스**다(S23).
+
+**(2) 세 질문의 판정(4.7.2-stable 소스, 줄 번호 인용)**
+| 질문 | 답 | 근거 |
+|---|---|---|
+| Q1 rename 전에 데이터를 디스크에 sync하는가 | **아니오** | `FileAccessUnix::flush()`는 `fflush(f)`만 호출한다([file_access_unix.cpp#L329-L332](https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/unix/file_access_unix.cpp#L329-L332)). `_close()`는 `fclose`다(#L198-L220). `DirAccessUnix::rename`은 POSIX `::rename`이다([dir_access_unix.cpp#L401-L431](https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/unix/dir_access_unix.cpp#L401-L431), #L420). 내려받은 8개 파일(file_access_unix.cpp, dir_access_unix.cpp, os_android.cpp, file_access_android.cpp, file_access_filesystem_jandroid.cpp, dir_access_jandroid.cpp, core/io/file_access.cpp/.h)에서 `fsync`·`fdatasync`·`F_FULLFSYNC` 검색 결과는 0건이다 |
+| Q2 Android에서 user://에 쓰는 구현 | **FileAccessUnix / DirAccessUnix [확인]** | `OS_Android::initialize_core()`에서 `make_default<FileAccessUnix>(ACCESS_USERDATA)`([os_android.cpp#L120](https://github.com/godotengine/godot/blob/4.7.2-stable/platform/android/os_android.cpp#L120)), `make_default<DirAccessUnix>(ACCESS_USERDATA)`(#L133). `user://` 경로는 `ACCESS_USERDATA`로 간다([core/io/file_access.cpp#L72-L73](https://github.com/godotengine/godot/blob/4.7.2-stable/core/io/file_access.cpp#L72-L73)). 그러므로 Q1의 Unix 구현이 Android user://에도 그대로 적용된다 |
+| Q3 GDScript에서 flush/fsync를 할 수 있는가 | **flush: 예(단 fsync 아님) / fsync: 아니오** | `FileAccess.flush`가 바인딩되어 있지만(core/io/file_access.cpp#L1027) 내부는 `fflush`라 사용자 공간 버퍼를 커널에 넘길 뿐이다. fsync 바인딩은 없다(검색 0건). `OS.set_use_file_access_save_and_swap(true)`(core/core_bind.cpp#L316-L318, #L846)를 켜면 WRITE 열기가 `<path>-XXXXXX` 임시 파일에 쓰고 close할 때 rename한다(file_access_unix.cpp#L118-L168, #L210-L218). 여기에도 sync는 없다. 기본값은 꺼져 있다(`backup_save = false`, file_access.h#L145). 저장소 `src`에는 이 호출이 없다(`git grep` 0건) |
+- 결론 [추론, 실기기 미실시]:
+  - 프로세스 강제 종료에서는 안전하다. 커널에 넘어간 데이터와 원자적 rename, 그리고 세이브 로드 순서가 지켜 준다(§9.8, §6.4 8/8).
+  - 전원 차단·커널 패닉에서는 마지막 쓰기들이 아직 저장 장치에 내려가지 않았을 수 있다. 커널은 dirty 데이터를 일정 시간 뒤 기록한다(`dirty_expire_centisecs`·`dirty_writeback_centisecs`, S26). Android 기기의 실제 값과 파일 시스템(f2fs/ext4)별 rename 동작은 **불명**이다.
+  - 그래서 **두 번의 저장이 짧은 간격으로 이어지면** main과 .bak이 둘 다 아직 기록되지 않은 상태일 수 있다. 예: 전투 결과 저장 직후 앱이 일시정지해 다시 저장하는 경우(app.gd의 ecord_result와 NOTIFICATION_APPLICATION_PAUSED 저장). 이때 전원이 끊기면 두 파일이 모두 손상되어 새 세이브로 돌아갈 가능성을 배제할 수 없다[추측].
+  - 저장이 충분히 떨어져 있으면 .bak이 이미 기록되어 있어, 잃는 범위는 최근 저장 하나로 줄어든다[추측].
+
+**(3) 02에 제안하는 최소 변경(02가 판단):**
+- 이미 만족하는 것: "flush·close → 검증 → rename" 순서와 "정상 main만 .bak으로 회전"은 HEAD에 있다(§9.8). 바꿀 필요가 없다.
+- 제안 A(최소): **시간 간격을 둔 .bak 회전.** 마지막 회전 뒤 T초(잠정값, 08/02가 정함) 안에 다시 저장하면, .bak은 그대로 두고 main만 교체한다. 교체 방법은 main 삭제 → .tmp→main rename이다. 그 사이에 끊겨도 로드 순서가 "main 없음 + 검증된 .tmp"를 처리한다(§9.8 L05). 이렇게 하면 .bak은 언제나 T초 이상 된 세대라, 기록됐을 가능성이 높아진다. 수용 시험: T 안의 두 번째 저장 뒤 .bak 바이트가 첫 저장 전 main과 같아야 하고, T가 지나면 회전되어야 하며, 기존 R6 8/8과 §9.8 14종이 그대로 통과해야 한다.
+- 제안 B: 연속 저장 합치기. 같은 프레임이나 짧은 간격의 save_progress 호출을 한 번으로 묶는다. 결과 저장과 일시정지 저장이 겹치는 경우가 대상이다.
+- 제안 C(무거움, 선택): Android 네이티브 플러그인으로 fsync를 호출하는 것. 04 빌드 경로와 플러그인 유지 비용이 생긴다. Android `AtomicFile`(S22)이 그 방식이다. 지금 단계에서는 권하지 않는다.
+- 하지 않을 것: OS.set_use_file_access_save_and_swap을 켜는 것. 내구성 이득은 없고 임시 파일만 늘어난다(근거는 위 Q3).
+
+**(4) 06 영향:** 06의 SAVE_BACKUP_POLICY.md B1안(`save.json`과 `save.json.bak`만 백업하고 `.tmp`·`.corrupt-*`는 제외)은 이 결과와 맞는다. 바꿀 필요가 없다. 전원 차단 때 두 파일이 모두 손상되는 경우[추측]에는 Auto Backup의 마지막 사본이 유일한 다음 복구 경로라는 점이 B1의 근거를 보강한다. Auto Backup은 백업할 때 앱을 종료한다(S8). 그래서 쓰기 도중인 파일이 백업될 위험은 문서상 낮다.
+
+**(5) 경쟁작의 기기 변경·재설치 진행 저장(공개 자료만, 2026-10-31 접근. 내부 DB 구조는 추정하지 않음):**
+| 항목 | 랜덤 다이스(com.percent.royaldice, 111퍼센트) | 아처키우기(잠정 com.GameDuo.MadArcher, 게임듀오) |
+|---|---|---|
+| 1차 자료 | 공식 도움말 센터(Helpshift) "🔐 계정" 섹션 4개 문서(S24) | 회사 공통 서비스 이용약관(S25), 개인정보처리방침(S9), Play Data safety(S1). 게임 전용 FAQ는 찾지 못했다 |
+| 계정 연동 | 플랫폼 계정 연동. "구글, 애플, 게임센터 등"이고, 스토어 계정 1개에 게임 계정 1개다. 이미 연동한 계정의 해제·변경은 불가하다(S24 "연동 된 스토어 계정을 바꾸고 싶어요") | 약관에 "임시회원 = 게스트 로그인 기능"이 정의되어 있다(S25 용어 정의 3호). 개인정보처리방침에는 Facebook·Google 등 제3자 도구 연결 시 받는 데이터가 적혀 있다(S9). 게임 안의 연동 화면은 확인하지 않았다 |
+| 기기 변경 | "크로스플랫폼 로그인 지원, Android와 iOS 상호간 로그인 가능". 계정 이관은 "오류로 접속이 불가한 경우에 한해" 지원하고, **단순 분실·기기 변경 요청은 지원하지 않는다**(S24 "계정 이관을 해주세요") | 약관 예시 문구: "기기 변경 또는 본인의 선택에 의한 기기 초기화에 따른 데이터 소실, 변경에 대해서는 복구가 불가능", "모바일 기기에 게임 정보를 기록하는 서비스의 특성에 따라 … 앱을 삭제하면 게임 데이터가 삭제되며 복구가 불가능"(S25). 이 문구는 "서비스 별 추가(아래는 예시)"라고 되어 있어, **아처키우기에 그대로 적용되는지는 불명**이다 |
+| 계정 정보 보관 | "연동하신 플랫폼의 계정을 관리/보관하고 있지 않다"(S24 "계정을 분실했어요") | 방침상 "계정 및 게임 진행 상황에 대한 데이터"를 자동 수집하고, 고유 ID를 생성한다(S9). 서버 저장 여부는 불명 |
+| 재설치 | 공식 문서에 직접 언급 없음(불명). 연동 로그인으로 복구된다고 보는 것은 추론 | 위 약관 예시(앱 삭제 시 복구 불가)가 적용된다면 게스트 데이터는 소실. 09 리뷰 표본(2022-12-26, [R])에도 "재설치 후 광고 제거까지 초기화" 불만이 있다 |
+| 클라우드 저장 | "크로스플랫폼 로그인"이 공개된 사실이다. 저장 위치와 방식은 불명 | 불명 |
+- 우리 게임에 주는 시사점[추론]: 두 회사 모두 "플랫폼 계정에 연동하지 않으면 기기 변경 시 보장 없음"을 정책으로 명시하거나, 그렇게 읽힌다. 우리는 계정이 없는 오프라인 게임이라, 기기 변경 복구는 Android Auto Backup(06 B1)뿐이다. 스토어·설정 문구에 "기기 간 진행 이전 보장"을 쓰지 않는다는 D19 규칙과 일치한다. Q2 보류에 따라 결제 복원은 범위 밖이다.
 ## 10. 출처 (모두 2026-10-31 KST 접근)
 | ID | 출처 | URL | 한계 |
 |---|---|---|---|
@@ -769,3 +806,7 @@ v0.9 기준선(9ca4a43) → HEAD 43b4692 이름 변화(ko / en, 대체값 = ko):
 | S20 | Play 검색 결과(궁수키우기/아처키우기)와 각 상세 페이지 배지 | https://play.google.com/store/search?q=%EA%B6%81%EC%88%98%ED%82%A4%EC%9A%B0%EA%B8%B0&c=apps | 검색 순위는 개인화·시점에 따라 다름 |
 | S21 | Godot 소스 drivers/unix/file_access_unix.cpp(flush = fflush), dir_access_unix.cpp(rename) | https://raw.githubusercontent.com/godotengine/godot/master/drivers/unix/file_access_unix.cpp · https://raw.githubusercontent.com/godotengine/godot/master/drivers/unix/dir_access_unix.cpp | master 기준. 4.7.2 태그와 Android 경로 미확인 |
 | S22 | Android AtomicFile 레퍼런스 | https://developer.android.com/reference/android/util/AtomicFile | 우리 엔진이 쓰는 API가 아님. 비교 기준으로만 인용 |
+| S23 | Godot 4.7.2-stable 소스(태그 = 커밋 ed1daf0bf001b6…, 우리 바이너리와 같음): file_access_unix.cpp, dir_access_unix.cpp, os_android.cpp, core/io/file_access.cpp·.h, core/core_bind.cpp | https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/unix/file_access_unix.cpp · https://github.com/godotengine/godot/blob/4.7.2-stable/platform/android/os_android.cpp · https://github.com/godotengine/godot/blob/4.7.2-stable/core/io/file_access.cpp | 소스 읽기. 실기기 동작은 미검증 |
+| S24 | 랜덤 다이스 공식 도움말 센터 "🔐 계정" 섹션 | https://111percent.helpshift.com/hc/ko/3-random-dice-pvp-defense/section/20-account-4/ · https://111percent.helpshift.com/hc/ko/3-random-dice-pvp-defense/faq/809-account-transfer/ | 문서 게시일 표기 없음 |
+| S25 | 게임듀오 서비스 이용약관(회사 공통) | https://gameduo.net/terms-of-service | 게임별 적용 범위 불명, "예시" 문구 |
+| S26 | Linux 커널 문서 /proc/sys/vm (dirty writeback 조정값) | https://docs.kernel.org/admin-guide/sysctl/vm.html | 기본값과 Android 기기 값은 인용하지 않음 |

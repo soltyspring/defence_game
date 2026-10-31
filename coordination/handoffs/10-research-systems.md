@@ -8,6 +8,12 @@ Updated: 2026-10-31 ~15:41 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
+## v0.18 (~17:21 KST): engine durability verdict + competitor device-change policy
+- Exact engine: `--version` 4.7.2.stable.official.ed1daf0bf. The tag 4.7.2-stable resolves to commit ed1daf0bf001b61586d9930840f2f1394092c079 (GitHub API).
+- Q1 No sync before rename (flush=fflush L329–332, close=fclose, rename=::rename; 0 fsync hits). Q2 Android user:// = FileAccessUnix/DirAccessUnix (os_android.cpp L120/L133). Q3 flush yes (not durable), fsync no; save_and_swap is off and unused.
+- 02: no change needed to the current order. Proposals: A time-spaced .bak rotation, B coalesce saves, C native fsync (not recommended). 06: B1 backup rules unchanged (new request file section).
+- Competitors (public docs only): Random Dice Helpshift account FAQ (cross-platform login, one store account per game account, no transfer for simple device change, does not keep platform account info). GameDuo company terms (guest = temporary member; device change or app deletion → no recovery as an "example" clause; whether it applies to Archer Forest is unknown). Doc §9.9, sources S23–S26.
+
 ## v0.17 (~17:06 KST): save atomicity check before buy_upgrade
 - save.gd at HEAD c15e43a was read only. It writes tmp → flush → verify → rotate or quarantine → rename, and loads main → tmp → bak → fresh. Version is read from the payload; the envelope version is ignored.
 - probe_save_load_cases.gd: 14 cases (zero-byte, truncated, checksum, non-object, tmp newer, torn tmp, all corrupt, >2 MiB, v99 read-only, envelope-only 99, legacy no version, BOM, plain JSON, fresh). No loss except all-corrupt (fresh + recovered). My first L03/L09 constructions were wrong; fixed and reran.
