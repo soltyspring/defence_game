@@ -109,7 +109,7 @@ func _on_direct(cue: StringName, params: Dictionary) -> void:
 		params = params.merged({"pitch": 1.12, "vol_db": -2.0})   # only if hit_base_mold is absent
 	# v3.3 (02 A9, 09508b1): ranged/siege hits now also resolve to the victim's material cue. Keep the
 	# attack weight audible: arrows/spit lighter and higher, siege (oven cannon) heavier and lower.
-	# UNVERIFIED in Godot (written during 08's quiet window); harness rerun pending.
+	# Verified: audio_selftest (voice pitch_scale) + run_godot_checks -Integration (hit_mold/hit_bread, 0 dups).
 	if cue == &"hit" and (c == &"hit_mold" or c == &"hit_bread"):
 		match str(params.get("kind", "melee")):
 			"ranged": params = params.merged({"pitch": 1.15, "vol_db": -2.0})
