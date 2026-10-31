@@ -1,10 +1,11 @@
 # 06-services status
-Updated: 2026-10-31 (M6)
-Status: M6 COMPLETE (store listing ko/en draft + privacy policy template + lint). Theme A decided by user (09:03). M4 integration gate still BLOCKED (02 S1 not done; re-run exit 2). **BLOCKED: game Save integration (02 S1/S2) not done** — no game-integration evidence exists; M3 evidence is real save.gd in isolation only. Real ads/billing/consent/analytics NOT integrated, NOT live; disabled mode verified (D1–D6). No monetization decision.
-Current task: none in progress. Next: wait for 02 S1, then rerun the gate (see handoff).
+Updated: 2026-10-31 (CHECKPOINT after M7)
+Status: STOPPED at safe point (user checkpoint). M7 COMPLETE (name search log, content rating draft, Data safety draft). Integration gate still BLOCKED (02 S1). Nothing live; disabled mode.
+Current task: none (checkpoint). Next: see handoff "Exact next steps".
 Validation: `pwsh -File tests/services/run_services_suites.ps1` → test_services 502/0, m2 130/0, m3 161/0, integration exit=2 BLOCKED_NOT_INTEGRATED (71 passes, 0 failures, blockers I1–I4); OVERALL exit=2. Simulated integration run exit=2 with I2 PASS_SIMULATED, I3/I4 PASS. 4 gate mutations each caught (exit 1), files restored.
 Commits: 7fe59f926674961e1e7c872294ca6044009e04d0 (gate code/tests/contract docs) PUSHED origin/main; diff vs origin empty. Docs/requests/handoff: 47c187bd2e39947a0584b893878dc3cb91e778eb PUSHED origin/main.
 Dependencies: 02 S1 (blocking), S3 when 01 enables placements; 01 Q2–Q5 + retention; 07 runs the gate.
 M5: 56cd600e628f3acb092ba461c58b6ae80635db4e PUSHED; runner OVERALL exit=2 (integration 146/0, blockers I1–I4). Open gap: rewarded late-callback drop vs AdMob policy (DD1 → 01).
 M6: 3afb2592fd3f051fdc9cf990ea07e3f279c1b715 PUSHED; runner OVERALL exit=2 (listing 615/0).
 Quota: 13.72% of 10000.
+M7: 996952fb43a2e34e36b1043aca7c052c301ac1c8 PUSHED; runner OVERALL exit=2 (listing 783/0, integration 146/0 + blockers I1–I4).

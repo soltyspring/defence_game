@@ -1,64 +1,52 @@
-# 06-services handoff
-Updated: 2026-10-31 (M6 complete; M4 blocker still open)
-Status: M4 COMPLETE. **BLOCKER: 02 S1/S2 unanswered → the game does not register `Services` and does not persist service state. There is NO game-integration evidence.** M3 evidence = real `src/core/save.gd` in isolation. No real ads, billing, consent SDK or remote analytics; everything runs in `disabled` mode (verified D1–D6 every gate run). No monetization decision; none invented.
-Session: same Kiro window, resumed after the 08:21–08:22 authExpiryRetry failure under the new login. Session ID not exposed to the agent. HISTORICAL QUOTA CHECKPOINT sections in coordinator-to-06-services.md are previous-account records; not acted on.
+# 06-services handoff — CHECKPOINT (user stop, 2026-10-31)
+Updated: 2026-10-31 ~09:35 KST
+Status: **STOPPED at a safe point by user instruction.** M7 complete and pushed. No work in progress; working tree for 06 paths is clean except this handoff/status (committed in the checkpoint commit). No Godot or emulator processes started by 06 are running (checked: `Get-Process Godot*` returned none).
+Session ID: not exposed to the agent (same Kiro window throughout; never closed or restarted).
+Nothing is live: no ad SDK, billing library, consent SDK, server, account or key. All services run in `disabled` mode. No monetization decision exists; none was invented.
 
-## Ownership (unchanged)
-src/services/**, docs/services/**, tests/services/**, coordination/status/06-services.md, coordination/handoffs/06-services.md, coordination/requests/06-services-to-*.md.
+## Ownership
+src/services/**, docs/services/**, tests/services/**, coordination/status/06-services.md, coordination/handoffs/06-services.md, coordination/requests/06-services-to-*.md. User questions only via 01, one at a time.
 
-## Resume check (this session)
-- Work tree: clean for 06 paths at resume (M3 fully pushed: 5d61d0d, 078df2e, 1f6e57c). The failed 08:21 request had left nothing half-written.
-- coordinator-to-06-services.md: 30 lines, latest = 3× HISTORICAL QUOTA CHECKPOINT (do not stop). No new 06 task beyond the user's M4 review.
-- 02: no 02→06 reply; `Services` absent from project.godot and src/core. 02 handoff lists "06 S1–S3/S5 Services autoload … open". 02 DID ship S4 `battle_uid` (battle.gd:65/74/210).
-- Requests to 06: 09-research-product, 10-research-systems (both handled in M3).
+## User decisions processed
+- Q1 theme: A "빵집 기사단 vs 곰팡이 군단" (coordinator-to-06-services.md, 2026-10-31 09:03 KST; literal "모두 고치고 A) 빵집 기사단 vs 곰팡이 군단이걸로"). DECISIONS.md still showed Q1 PENDING when last read; 01 asked to record it.
+- Monetization (Q2–Q5): not asked, not decided. D9 DEFAULT (disabled) applies.
 
-## Completed (M4)
-- `src/services/services.gd`: `attach_save(save, events, options)`, `ensure_bound()` (rebinds when `Save.load_progress()` replaced progress; called every frame), auto-attach in `_ready` when it is the autoload `/root/Services` and `/root/Save` exists. So 02 S1 (one project.godot line) is enough; mode stays disabled.
-- `tests/services/test_services_integration.gd`: game integration gate. Exit 0 = integrated + pass, 2 = BLOCKED, 1 = failure. Groups: disabled_mode (D1–D6), integration_contract (I1–I6), binding_failure_injection (R1, R2, R3, R6, R8, R9, R14, R15, P1), binding_process_death (R4, R5, R7 via child process), state_table_sync, hygiene (player's user://save.json(.bak) hash unchanged). `-- --simulate-integration` exercises the game-binding path with a test-added node; never counted as game evidence.
-- `tests/services/integration_child.gd`: process-death child using the game autoloads.
-- `tests/services/run_services_suites.ps1`: runs all 4 suites sequentially, OVERALL exit 0/2/1.
-- `docs/services/SAVE_INTEGRATION_CONTRACT.md` (02 steps, gate, I1–I6, fault-injection methods, isolation), `docs/services/REWARD_STATE_TABLE.md` (R1–R16, P1–P6, D1–D6; doc-synced by the test), SERVICES.md v0.4 §7 blocker note.
-- Requests: 02 M4 update (S1/S2 marked BLOCKING, one-line change, acceptance = runner exit 0), 07 M4 update (treat exit 2 as open blocker; accept rows only with binding=game and game_evidence=true).
+## Milestones and commits (all PUSHED to origin/main, verified with `git ls-remote`)
+| M | What | Commits |
+|---|---|---|
+| M1 | Service boundaries, disabled/mock adapters, state machines, contract tests | 17623c1, 9c20763, b7fa3c0 |
+| M2 | Ledger-first fix, cross-instance and corrupt-state fixes, reward policy, telemetry, diagnostics | 0f84461, 708bdb0, 7c43ebd |
+| M3 | Real save.gd isolated tests incl. process death, grant-sink contract enforcement, consent flow, pending-cancel / ack-elsewhere | 5d61d0d, 078df2e, 1f6e57c |
+| M4 | Game Save integration gate (exit 0/2/1), REWARD_STATE_TABLE, SAVE_INTEGRATION_CONTRACT, Services auto-attach/rebind, runner | 7fe59f9, 47c187b, f88ce03 |
+| M5 | RELEASE_READINESS_SERVICES (23 requirements, official URLs, 2026-10-31) + gap table, OPEN_DECISIONS U1–U8 | 56cd600, 07e97ca |
+| M6 | STORE_LISTING_DRAFT ko/en, PRIVACY_POLICY_DRAFT ko/en, metadata lint | 3afb259, e5bd4aa |
+| M7 | NAME_SEARCH_LOG, CONTENT_RATING_DRAFT, DATA_SAFETY_DRAFT, lint groups, C1 → MET (APK targetSdk 36) | 996952fb43a2e34e36b1043aca7c052c301ac1c8 |
+| Checkpoint | this handoff + status | see status file / `git log -- coordination/handoffs/06-services.md` |
 
-## Validation evidence (actual)
-- `pwsh -File tests/services/run_services_suites.ps1` → test_services exit 0 (502/0), test_services_m2 exit 0 (130/0), test_services_m3 exit 0 (161/0), test_services_integration exit 2 `verdict=BLOCKED_NOT_INTEGRATED passes=71 failures=0 blockers=4 binding=bridge_simulated`; OVERALL exit=2. Blockers: I1 autoload missing, I2 store not bound, I3 epoch unverifiable, I4 rebinding unverifiable. I5 NOT_REQUIRED_YET (01 enables nothing). I6 PASS (real battle_uid generator).
-- Simulated run (`-- --simulate-integration`): exit 2, I2 PASS_SIMULATED, I3 PASS, I4 PASS (stale before frame: true, rebound after one `_process`), all R/P rows PASS with binding=services_node_simulated, game_evidence=false.
-- Gate mutations (each exit 1, file hash restored): no per-frame rebind → I4 FAIL; disabled mode honouring 01 flags → D2 FAIL ×2; ledger written after sink → R8 FAIL ×4; table row renamed in doc → state_table_sync FAIL.
-- Isolation: user://svc_int_test absent after runs; hygiene group PASS.
-- Readback: after fetch, `git diff origin/main` on the committed paths is empty.
+## M7 details (this task)
+- Name search (2026-10-31 09:15–09:25): Play search page is JS-only (no results) → web search restricted to play.google.com + general web search. No app/game with any of the 6 candidate titles found; similar concepts: Rottenlands (mold-creature tower defense), A Baker's Dungeon (Steam), many bakery sims; CookieRun: Kingdom noted as concept-level comparison. **KIPRIS: NOT_CHECKED** (home page loads, trademark query URL timed out, search is browser-only, OpenAPI needs a key — not added). Manual steps listed in NAME_SEARCH_LOG.md §4.
+- Content rating draft: answers per IARC topic with evidence and confirmer; expected outcome is an estimate only. **Open:** human-looking characters (current pre-theme art has warm-skin soldiers; hero head baker may stay human) could move PEGI 3/7 → 12. Change table for ads, purchases, random items, online/chat, location, redesign, children.
+- Data safety draft (disabled mode): "No" collected/shared. Evidence: `aapt dump permissions build/qa/apk_head/defence-debug.apk` (09:03 build) → no permissions; badging targetSdk 36, minSdk 24; export INTERNET=false; no network code in src/; services D1 nothing live. Caveat: release AAB must be re-checked. Change table for ads, IAP, verification server, analytics, accounts.
 
-## Strongest reasons to reject / untested
-- No game integration: the gate is BLOCKED by design until 02 registers the autoload. Until it exits 0, claim only "isolated save.gd + simulated binding".
-- Auto-attach inside services.gd means 02 S1 also activates S2 behaviour; 02 may prefer explicit `attach_save`. Both are documented.
-- Rebinding drops in-flight ad/purchase sessions (their grants would be refused as stale anyway). Ledger prevents duplicates.
-- Desktop Windows only; mocks only; no grant sink exists in the game (S3).
-- D6 reads a 02/04 file (export_presets.cfg); if they enable INTERNET the gate fails D6 by design.
+## Validation (actual, last run before checkpoint)
+`pwsh -File tests/services/run_services_suites.ps1` → test_services 502/0, test_services_m2 130/0, test_services_m3 161/0, test_services_listing 783/0 (incl. name_search_log 93, content_rating_draft 50, data_safety_draft 25), test_services_integration exit 2 BLOCKED_NOT_INTEGRATED (146 passes, 0 failures, blockers I1–I4). OVERALL exit=2. Mutation checks done in M2–M6 (all caught); none run for the M7 lint groups (not done before the stop).
 
-## Git
-- M1: 17623c1, 9c20763, b7fa3c0. M2: 0f84461, 708bdb0, 7c43ebd. M3: 5d61d0d, 078df2e, 1f6e57c. All PUSHED.
-- M4 gate: 7fe59f926674961e1e7c872294ca6044009e04d0 `[Feat] 게임 Save 연동 게이트(차단 표시·실패 주입·프로세스 종료)와 보상 중복/유실 상태표, Services 자동 연결·재바인딩 추가` (6 files) → PUSHED origin/main (ls-remote = 7fe59f9…).
-- M4 docs/requests/handoff: 47c187bd2e39947a0584b893878dc3cb91e778eb `[Docs] 서비스 M4 연동 차단 요청·07 게이트 안내·아키텍처 문서와 상태 인수인계 갱신` (5 files) → PUSHED origin/main (ls-remote = 47c187b…).
+## Unfinished / open
+- **BLOCKER (02):** `Services` autoload not in project.godot → integration gate cannot reach exit 0. One line requested repeatedly (06-services-to-02-engine.md S1). No reply seen.
+- M7 lint groups have no mutation check yet.
+- KIPRIS and live Play name search: user/professional must do by hand.
+- Rating: human-looking-character question for 01/03.
+- DD1 (late reward callback vs AdMob delivery rule) awaits 01.
+- Requests to 01/02/04/07/10 all QUEUED (no acknowledgements seen).
 
-## M5 (2026-10-31): release readiness list + gap table (docs only, nothing installed)
-- `docs/services/RELEASE_READINESS_SERVICES.md`: 23 requirements (B1–B9 billing, A1–A6 ads/consent, V1–V5 privacy, C1–C3 platform/account), each with official URL and check date 2026-10-31, paraphrased. §2 gap table per ID with status MET(mock)/PARTIAL/MISSING/N/A-YET/UNVERIFIED, evidence file/test and owner.
-- Key facts found: Play Billing v7 deadline 2026-08-31 passed (v8 supported to 2027-08-31, latest 9.1.0 of 2026-06-18); acknowledge/consume within 3 days or auto-refund; server verification recommended (Purchases.products:get, purchaseToken as unique key); voided purchases via API (30 days) or RTDN; EEA/UK/CH ads need a certified TCF CMP; AD_ID permission for API 33+; Families rules if children/unknown age; Data safety form + privacy policy (Console AND in-app) required even with no data collected; new apps must target API 36 since 2026-08-31; personal accounts after 2023-11-13 need 12 testers × 14 days.
-- Not verified: Korean PIPA text (law.go.kr did not render; secondary source reports amendments effective 2026-09-11) → V5 marked for legal review. Merchant setup page not checked (C3 note). Godot billing plugin's bundled library version not listed on its README (B9).
-- Real gap found: AdMob rewarded policy requires delivering a promised reward on completion, but services drop a reward callback that arrives after the ad closed (R11). Routed to 01 as design decision DD1; code unchanged.
-- `docs/services/OPEN_DECISIONS.md`: user questions U1–U8 in order (01 asks one at a time) + 01 design decisions DD1–DD3.
-- `test_services_integration.gd` group `readiness_doc_sync` (75 checks): same IDs in §1/§2, https source + date per requirement, fixed status set, consecutive U-numbers. 3 doc mutations each caught (exit 1), restored.
-- Validation: runner OVERALL exit=2 (502/0, 130/0, 161/0, integration 146 passes / 0 failures / blockers I1–I4).
-- Commit: 56cd600e628f3acb092ba461c58b6ae80635db4e `[Docs] 광고·결제·개인정보 출시 요건 목록(공식 출처·확인일)과 코드 대조표, 사용자 결정 순서와 문서 동기화 검사 추가` (4 files) → PUSHED origin/main.
-- Requests: 01 M5 (decision queue U1–U8, DD1), 04 M5 (B8, B9, A1, A2, V2, C1 inputs). QUEUED.
-## M6 (2026-10-31): store listing + privacy policy drafts; gate re-run
-- User decision processed: Q1 theme A "빵집 기사단 vs 곰팡이 군단" (coordinator-to-06-services.md, 09:03 KST, literal answer "모두 고치고 A) 빵집 기사단 vs 곰팡이 군단이걸로"). DECISIONS.md not yet updated by 01 (asked in request).
-- `docs/services/STORE_LISTING_DRAFT.md`: policy/limits table with official sources (answer/9859152 limits 30/80/4000; answer/9898842 metadata rules), ko/en title candidates (3 each, 6–29 chars), short descriptions (ko 45, en 79 chars), full descriptions (ko 528, en 1001 chars), claim→evidence table. Not claimed: meta upgrades (no upgrade screen), play-time numbers, age suitability. Unit names are placeholders. No trademark search.
-- `docs/services/PRIVACY_POLICY_DRAFT.md`: ko/en template for the no-data disabled build, [광고/결제/분석 활성화 시] blocks, [법률 확인 필요] marks, placeholders, change summary table.
-- `tests/services/test_services_listing.gd` (615 checks): lengths, emoji, repeated special chars, ranking/promo/program words (ko+en), ALL CAPS, keyword repetition ≤5, keyword-list lines, testimonial quotes, monetization change markers, claim evidence rows, policy title/required items/markers/ko-en placeholder and block parity. 7 mutations each caught (exit 1), files restored.
-- `OPEN_DECISIONS.md` U9 store title (independent). Runner now includes the listing suite.
-- Gate re-run: project.godot still has no `Services` → integration exit 2 (146 passes, 0 failures, I1–I4). Exit 0 NOT reached; cannot be reached by 06.
-- Validation: runner OVERALL exit=2: 502/0, 130/0, 161/0, listing 615/0, integration 146/0 + 4 blockers.
-- Commit: 3afb2592fd3f051fdc9cf990ea07e3f279c1b715 `[Docs] 빵집 기사단 스토어 등록 문구 초안(한·영)과 개인정보처리방침 템플릿, 메타데이터 정책 검사 추가` (5 files) → PUSHED origin/main.
-## Next task (06)
-1. When 02 adds the autoload line: run `pwsh -File tests/services/run_services_suites.ps1`; require OVERALL exit 0 and every R/P row `binding=game`, then update SAVE_INTEGRATION_CONTRACT.md status and REWARD_STATE_TABLE.md "Game binding" column with the evidence.
-2. If the gate fails after integration: fix 06-side causes; route 02-side causes with the failing row ID.
-3. Otherwise idle on this blocker; no new monetization work without 01 decisions.
+## Exact next steps when resumed
+1. Read coordinator-to-06-services.md (latest section), DECISIONS.md, quota usage.json, any 02→06 reply.
+2. `git fetch` + `git status` for 06 paths (expect clean).
+3. If project.godot has `Services=`: run `pwsh -File tests/services/run_services_suites.ps1`; require OVERALL exit 0 and every R/P row `binding=game`, then update SAVE_INTEGRATION_CONTRACT.md status and REWARD_STATE_TABLE.md "Game binding" column; commit.
+4. Optional: mutation-check the M7 lint groups (remove a KIPRIS row, flip INTERNET in a temp copy is NOT allowed — use a test-only override instead).
+5. When 01 publishes themed unit names: replace `[이름 확정 대기]` / `[NAMES PENDING]` in STORE_LISTING_DRAFT.md and rerun the listing lint.
+
+## Errors seen this session (all handled)
+- Publish-Task.ps1 fails if its stderr is redirected (`2>&1`, `2>$null`) because git fetch writes progress to stderr under ErrorActionPreference=Stop. Call it without redirection.
+- Helper refused once with "Index is not empty" (another role's staged files); waited, did not touch foreign index entries.
+- Auth expiry (08:21–08:22, previous account) left no partial files.
