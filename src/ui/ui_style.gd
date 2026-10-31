@@ -138,6 +138,47 @@ static func reset_fonts() -> void:
 	font_sources.clear()
 	_digit_cell.clear()
 	_theme = null
+	_prewarmed = false
+
+## 08 R5: rasterise every glyph the UI can show, once per (font, size), at a loading point (main menu
+## mount) so no new Hangul glyph is rasterised mid-battle (measured +9.4 ms hitch on first boss toast).
+## Strings: the active locale's data/text table + UI fallbacks + digits. Returns elapsed msec.
+static var _prewarmed := false
+static var prewarm_ms := 0.0
+static func prewarm_fonts() -> float:
+	if _prewarmed:
+		return 0.0
+	_prewarmed = true
+	var t0 := Time.get_ticks_usec()
+	var UiTextS = load("res://src/ui/ui_text.gd")
+	var chars := {}
+	var add := func(s: String) -> void:
+		for ch in s:
+			chars[ch] = true
+	for loc in ["ko", "en"]:
+		var p := "res://data/text/%s.json" % loc
+		if FileAccess.file_exists(p):
+			var j := JSON.new()
+			if j.parse(FileAccess.get_file_as_string(p)) == OK and j.data is Dictionary:
+				for k in j.data.get("strings", {}):
+					add.call(str(j.data.strings[k]))
+	for k in UiTextS.FALLBACK_KO:
+		add.call(str(UiTextS.FALLBACK_KO[k]))
+	for k in UiTextS.FALLBACK_EN:
+		add.call(str(UiTextS.FALLBACK_EN[k]))
+	add.call("0123456789+-/.:%xv… ")
+	var all := "".join(chars.keys())
+	var ascii := ""
+	for ch in chars:
+		if ch.unicode_at(0) < 128:
+			ascii += ch
+	for pair in [[&"ui", [12, 24]], [&"bold", [12, 24, 36]], [&"num", [10, 20]]]:
+		var f := font(pair[0])
+		for sz in pair[1]:
+			var s: String = ascii if pair[0] == &"num" else all
+			f.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz)   # shapes + rasterises into the cache
+	prewarm_ms = (Time.get_ticks_usec() - t0) / 1000.0
+	return prewarm_ms
 
 static func shadow_px(size: int) -> int:
 	return 2 if size >= 24 else 1
@@ -155,6 +196,22 @@ static func fit_text(text: String, max_w: float, size: int, kind: StringName = &
 
 static func text_width(text: String, size: int, kind: StringName = &"ui") -> float:
 	return font(kind).get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
+
+## Multi-line fit used by wrapping buttons (round tiles) and by tests/07 checks:
+## single line if it fits (with the 10 px Latin step), else word-wrap at the same size up to max_lines;
+## only the last line is ellipsized if still too long. Returns {"lines": PackedStringArray, "size": int,
+## "kind": StringName, "truncated": bool}.
+static func fit_lines(text: String, max_w: float, size: int, max_lines := 2, kind: StringName = &"ui") -> Dictionary:
+	var one: Array = fit_label(text, max_w, size, kind)
+	if one[0] == text or max_lines <= 1:
+		return {"lines": PackedStringArray([one[0]]), "size": one[1], "kind": one[2], "truncated": one[0] != text}
+	var w := wrap_text(text, max_w, size, kind)
+	if w.size() <= max_lines:
+		return {"lines": w, "size": size, "kind": kind, "truncated": false}
+	var out := w.slice(0, max_lines - 1)
+	var rest := " ".join(w.slice(max_lines - 1))
+	out.append(fit_text(rest, max_w, size, kind)[0])
+	return {"lines": out, "size": size, "kind": kind, "truncated": true}
 
 ## Greedy word wrap at spaces (Korean words are space-separated too); a single over-long word is
 ## broken by characters. Never changes the font size.
@@ -188,6 +245,7 @@ static func wrap_text(text: String, max_w: float, size: int, kind: StringName = 
 static func fit_label(text: String, max_w: float, size: int, kind: StringName = &"ui") -> Array:
 	if text_width(text, size, kind) <= max_w:
 		return [text, size, kind]
+	font(&"num")   # make sure the numerals font is loaded before checking its source (07 QA-B009: fresh start → ellipsis)
 	if size == FONT_S and _is_numeric(text) and font_sources.get(&"num", "").begins_with("bundled") and text_width(text, NUM_S, &"num") <= max_w:
 		return [text, NUM_S, &"num"]
 	var f: Array = fit_text(text, max_w, size, kind)

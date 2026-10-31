@@ -520,6 +520,18 @@ func test_korean_text_fit() -> void:
 	for ch in "0123456789+-/.:%xv":
 		check(fnum.has_char(ch.unicode_at(0)), "numerals font has '%s'" % ch)
 	report["digit_cell"] = {"num10": UiStyle.digit_cell(10, &"num"), "bold12": UiStyle.digit_cell(12, &"bold")}
+	# 07 QA-B009/B010 root cause: fit_label on a FRESH font state (numerals font not loaded yet) used to
+	# ellipsize instead of stepping down to Galmuri9 10. Must give the same answer as a warm state.
+	UiStyle.reset_fonts()
+	var cold: Array = UiStyle.fit_label("Heavy Footsteps", 83.0, 12)
+	var warm: Array = UiStyle.fit_label("Heavy Footsteps", 83.0, 12)
+	check(cold == warm and cold[0] == "Heavy Footsteps" and cold[1] == 10, "fit_label cold == warm, no ellipsis via 10 px Latin step (cold %s warm %s)" % [cold, warm])
+	# 08 R5 pre-warm: runs once, then no-op; second call costs 0
+	UiStyle.reset_fonts()
+	var ms: float = UiStyle.prewarm_fonts()
+	check(ms > 0.0 and UiStyle.prewarm_fonts() == 0.0, "font prewarm runs once (%.1f ms) and is idempotent" % ms)
+	report["prewarm_ms_headless"] = ms
+	fu = UiStyle.font(&"ui"); fb = UiStyle.font(&"bold"); fnum = UiStyle.font(&"num")
 	# --- slot widths from the real layout code, narrow and wide
 	var layouts := {
 		"640x360_notch_both": HudLayout.compute(Vector2(640, 360), Rect2(34, 0, 572, 360), 5, 3, 40.0),
@@ -534,8 +546,10 @@ func test_korean_text_fit() -> void:
 		for id in ["worker", "melee_basic", "ranged_basic", "tank", "fast", "siege"]:
 			items.append(["unit.%s.name" % id, card_w, 12, &"ui", "card@" + lname])
 	var tile_w := floorf((640 - 2 * 50 - 4 * 6) / 5.0) - 6   # round_select tile at 640 wide
+	var tile_w_notch := floorf((572 - 2 * 50 - 4 * 6) / 5.0) - 6   # 34 px notches both sides (07 TH-FIT-ROUND)
 	for i in range(1, 11):
-		items.append(["round.r%02d.name" % i, tile_w, 12, &"ui", "round_tile"])
+		items.append(["round.r%02d.name" % i, tile_w, 12, &"ui", "round_tile", 2])
+		items.append(["round.r%02d.name" % i, tile_w_notch, 12, &"ui", "round_tile_notch", 2])
 	for k in ["ui.resume", "ui.retry", "ui.settings", "ui.menu"]:
 		items.append([k, 150 - 6, 12, &"ui", "pause_menu"])
 	for k in ["ui.menu", "ui.retry", "ui.next"]:
@@ -563,8 +577,10 @@ func test_korean_text_fit() -> void:
 			if txt == it[0]:
 				check(false, "[%s] missing text key %s" % [loc, it[0]])
 				continue
-			var fit: Array = UiStyle.fit_label(txt, it[1], it[2], it[3])   # what TouchButton actually draws
-			var truncated: bool = fit[0] != txt
+			var max_lines: int = it[5] if it.size() > 5 else 1
+			var fl: Dictionary = UiStyle.fit_lines(txt, it[1], it[2], max_lines, it[3])   # what TouchButton actually draws
+			var fit: Array = [" / ".join(fl.lines), fl.size, fl.kind]
+			var truncated: bool = fl.truncated
 			var w: float = UiStyle.text_width(txt, it[2], it[3])
 			rows.append({"key": it[0], "where": it[4], "text": txt, "width": w, "max_w": it[1], "size": it[2], "font": str(it[3]), "drawn": fit[0], "drawn_size": fit[1], "drawn_font": str(fit[2]), "truncated": truncated})
 			if loc == "ko":

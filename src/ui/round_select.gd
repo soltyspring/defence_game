@@ -25,6 +25,7 @@ func _build() -> void:
 	for i in COLS * ROWS:
 		var t: Control = TouchButton.new()
 		t.font_size = UiStyle.FONT_S
+		t.wrap_lines = 2
 		t.tapped.connect(_on_tile.bind(i))
 		add_child(t)
 		tiles.append(t)

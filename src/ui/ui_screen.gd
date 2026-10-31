@@ -47,6 +47,7 @@ func _enter_tree() -> void:
 	theme = UiStyle.theme()
 
 func _ready() -> void:
+	UiStyle.prewarm_fonts()   # once per process (08 R5): no glyph rasterisation hitch later in battle
 	get_viewport().size_changed.connect(_on_resize)
 	_build()
 	_connect_bus()

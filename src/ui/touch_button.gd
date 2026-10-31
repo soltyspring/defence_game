@@ -90,6 +90,9 @@ func _notification(what: int) -> void:
 ## row is dropped when an icon is present (icon + cost), and text-only buttons centre one 12 px line.
 var last_text_drawn := ""          # QA: text after ellipsis, as actually drawn
 var last_text_truncated := false
+var last_line_count := 1
+## Max name lines (round tiles use 2: long theme names wrap instead of ellipsizing, 07 QA-B010)
+var wrap_lines := 1
 
 func _draw() -> void:
 	var r := Rect2(Vector2.ZERO, size)
@@ -129,10 +132,18 @@ func _draw() -> void:
 			last_text_drawn = text
 			last_text_truncated = false
 		else:
-			var fit := UiStyle.fit_label(text, size.x - 6, font_size)
-			last_text_drawn = fit[0]
-			last_text_truncated = fit[0] != text
-			UiStyle.draw_text_centered(self, fit[0], Vector2(size.x / 2, name_y) + off, fit[1], tc, true, fit[2])
+			var fl: Dictionary = UiStyle.fit_lines(text, size.x - 6, font_size, wrap_lines)
+			var lines: PackedStringArray = fl.lines
+			last_text_drawn = " ".join(lines)
+			last_text_truncated = bool(fl.truncated)
+			last_line_count = lines.size()
+			var lh := 14.0
+			# single line: as before; several lines: centred block (or bottom-anchored under an icon)
+			var y0: float = name_y - (lines.size() - 1) * lh / 2.0
+			if has_visual and lines.size() > 1:
+				y0 = name_y - (lines.size() - 1) * lh
+			for li in lines.size():
+				UiStyle.draw_text_centered(self, lines[li], Vector2(size.x / 2, y0 + li * lh) + off, fl.size, tc, true, fl.kind)
 	if has_sub:
 		UiStyle.draw_number(self, sub_text, Vector2(size.x / 2, cost_y) + off, UiStyle.NUM_S, UiStyle.C_GOLD if not disabled else UiStyle.C_TEXT_DIM, 0)
 	if cooldown_ratio > 0.0:
