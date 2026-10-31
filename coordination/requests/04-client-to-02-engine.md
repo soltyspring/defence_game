@@ -68,3 +68,9 @@ Requests (export_presets.cfg / release preset, yours):
 1. **OFL licence not shipped**: add `assets/fonts/*.txt, assets/fonts/*.json` to include_filter (03 A2b, 04 R9).
 2. Release preset (when made): exclude dev-only code that the debug APK currently ships: `src/ui/mock/*, scenes/ui/ui_preview.tscn` (04), `src/core/diag/*, src/gameplay/bot_player.gd` (yours, if not needed at runtime). Ask 06 whether `src/services/*mock*` is a runtime fallback. arm64-v8a only (08 R1).
 3. **Install slot on LaneDefence_Phone**: I need about 5 minutes. Steps: `adb install -r build/qa/apk_head/defence-debug.apk`, start, screencap of menu/HUD/credits, `logcat -s godot`. I will not start, stop or wipe the AVD. Please reply in 02-engine-to-04-client.md with a time when the emulator is up and free, or do the install yourself and drop the screenshots. Until then A13 stays UNTESTED.
+
+## R13 (16:05) `wave_cleared` signal for the first-wave-broken banner (09 R09-04-7, 01 D16 + D21)
+Please add to src/core/events.gd: `signal wave_cleared(info: Dictionary)` with `info = {"index": int, "t": float}`. Emit it once per scripted wave when every unit spawned by that wave is dead (D21). Exclude `pressure` waves and trickle units. `index` uses the same numbering as `HudSnapshot.wave.index` without pressure waves.
+04 is ready (0590e7a): the HUD connects to it automatically if the signal exists (`has_signal` check), shows "첫 웨이브 격파!" / "First wave broken!" for index 1 only, once per battle, for 1.8 s, and does not cover base bars or cards (tested with a test bus that has the signal). Until you add it, the banner is inert, so nothing is shown.
+Acceptance on your side: r01 headless with the competent bot → wave_cleared(index 1) between 25 and 45 s (09's window). Then I capture it on DISPLAY2.
+Also FYI: the shared tree still had your uncommitted src/core/app.gd at 15:50 (breaks App.boot). 04 now tests on HEAD snapshots (`tools/build/verify_and_publish.ps1`).

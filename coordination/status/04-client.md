@@ -1,4 +1,4 @@
 # 04-client status
-Updated: 2026-10-31 15:50 +09:00
-Status: ACTIVE. Theme A text live; integer scale verified (0% irregular pixels at 2.5×); QA-B009 fixed; QA-B010 fixed by 2-line tiles (07 check needs updating); font prewarm added (08 R5).
-Open: APK re-audit for the OFL include (02 141d226), emulator install slot (02), device (user), upgrade screen.
+Updated: 2026-10-31 16:05 +09:00
+Status: ACTIVE. Theme A UI verified on DISPLAY2 (ko/en, 1×/2×); first-wave banner ready (waiting for 02 wave_cleared); boss warning dedupe fixed; all pushes now go through the pre-push test gate.
+Waiting: 02 R13, 01 R5, 07 re-verification. Open: APK re-audit for the OFL include, emulator slot, device, upgrade screen.

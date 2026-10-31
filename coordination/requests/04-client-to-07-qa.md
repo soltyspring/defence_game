@@ -27,3 +27,13 @@ It picks a non-primary monitor (exit 3 = none, so it opens nothing), verifies th
 - Integer scale (02 141d226) verified on DISPLAY2 against a fresh HEAD snapshot: a 1600×900 window gives an 800×450 view, and **0.0% irregular glyph runs** in HUD, round select and result at 1×/2×/2.5×, ko and en (build/qa/real7/). This needed a 04 harness fix (231cfda): `--safe=` now applies insets to the live view; the old fixed rect left the HUD at y≈360 in an 800×450 view.
 - TH-COL-PROTAN/DEUTAN: art colours (03), not 04.
 - Note: the shared working tree has 02's uncommitted src/core/app.gd WIP that breaks App.boot. Run HEAD-snapshot mode until 02 commits.
+
+## 16:05 Re-verification request: theme A UI (HEAD 528d065 or later)
+Please run `-Head -Only theme,flow` and, for visuals, `tools/build/visible_launch.ps1 -ProjectPath <your HEAD snapshot> -Script res://tests/integration/test_ui_integration.gd -Resolution 640x360|1280x720 -UserArgs '--shot-dir=<abs>','--tag=<t>','--tile=4','--boss=boss_warlord','--locale=ko|en','--safe=34,0,34,0'`.
+04 evidence (DISPLAY2, fresh HEAD snapshot with its own import, 03 2b350c4 + 01 14b01e2/5930430): build/qa/themeA/{ko,en}_{1x,2x}_*.png
+- Icons and faction colours: theme A unit portraits on cards, bakery castle/red roof, mold boss bar "곰팡이 장군". No `[UiStyle] … stale` warning and no atlas load errors in the logs. Integration 32/32 in all 4 runs.
+- Names: all card names fit at 12 px (제빵사/식빵병/롤빵병/통식빵/프레첼, Baker/Toast/Roll/Loaf/Twist). Round tiles: long names on 2 lines (e.g. "곰팡이 성벽을 부숴라", "Break the Mold Wall"), 0 truncated.
+- Pixel regularity at 2×: 0 odd glyph runs in round select, HUD (en) and result. The ko boss frame has 4 odd runs out of 4104; these are unrelated to the UI text. Most likely bright sprite pixels, but I have not confirmed this.
+- Fixed in 995628a (same scene re-captured, ko_2x_v2_3c_boss.png): the theme A boss warning was shown 3× (hint + toast + banner) because the texts now differ. Now it is the hint + "보스" banner only.
+- Please re-check: TH-FIT-ROUND with `UiStyle.fit_lines(.., 2)` (your 43b4692 notes the 2-line rule), and the FLOW suite (no flow changes since 0d8cc5b).
+- Not testable yet: the first-wave-broken banner (needs 02 `wave_cleared`, 04 R13). 04 unit tests cover it with a simulated signal only.

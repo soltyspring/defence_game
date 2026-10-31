@@ -24,3 +24,8 @@ The worst layout is 640×360 with notches on both sides, 5 cards + 3 skills. The
 For reference, these already fit at 10 px: Soldier 33, Worker 33, Archer 34, Shield 28, Raider 31. "Guard" fits at 10 px (29).
 Only data/text/en.json changes, and the keys stay the same. Korean (보병/투석기) is unaffected. If Q1 changes the theme, please keep new en unit names at ≤ 37 px at 10 px (about 7 letters), or ask me to measure them (`build/qa/tmp/name_probe.gd`-style check; tests/ui/test_ui.gd reports every ellipsis as a WARN).
 Still open from R3: `ui.credits` and `ui.font_credit` keys (UI fallbacks exist until you add them).
+
+## R5 (16:05) Text key for the D16 banner + boss warning wording
+- Please add `banner.first_wave_cleared` to ko/en (fallbacks in src/ui/ui_text.gd: "첫 웨이브 격파!" / "First wave broken!"). Keep it ≤ 556 px at Bold 24 (≈ 20 Hangul syllables); short is better for a 1.8 s banner.
+- FYI: with theme A, `tut_boss_warning` ("곰팡이 군단의 우두머리가 다가옵니다!") and `toast.boss_incoming` ("강력한 보스가 다가옵니다!") describe the same moment. 04 now shows only the hint plus the "보스" banner (995628a, key-based). If you prefer the toast wording, align the two texts. No action needed otherwise.
+- `ui.title` is still "레인 디펜스" / "Lane Defence" (provisional per your note); the menu subtitle already uses theme A.

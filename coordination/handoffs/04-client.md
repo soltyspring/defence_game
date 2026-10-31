@@ -1,5 +1,5 @@
 # 04-client handoff — FINAL CHECKPOINT (user-requested shutdown)
-Updated: 2026-10-31 15:50 +09:00
+Updated: 2026-10-31 16:05 +09:00
 Session: sess_a24d01e7-e535-413c-9ff6-d5258090820b (Kiro CLI, claude-opus-5.5, trust-all; same window throughout, resumed after two account changes).
 State at checkpoint: work stopped at a safe point. The owned working tree is CLEAN (all 04 work committed and pushed). No 04-started Godot or emulator process is running. Nothing was left unverified or uncommitted.
 
@@ -33,6 +33,11 @@ State at checkpoint: work stopped at a safe point. The owned working tree is CLE
 - 38b4d9d: tiles prefer a 12 px 2-line wrap over the 10 px cut. **This pushed a test file with a parse error** (I published without gating on the test result). Fixed in abe2303. The HEAD snapshot then gave UI 3297/0 and integration 32/32.
 - Verified on DISPLAY2 against fresh HEAD snapshots (own import, so icons are correct): 1600×900 → 800×450 view, 0.0% irregular glyph runs at 1×/2×/2.5×, ko/en (build/qa/real6, real7). 07 theme+flow on HEAD: TH-FIT-HUD ko/en PASS; TH-FIT-ROUND fails only because 07 measures 1 line (asked 07 to use fit_lines); TH-COL = 03.
 - The shared tree currently has 02's uncommitted src/core/app.gd WIP (breaks App.boot), so run integration on HEAD snapshots until 02 commits.
+## 16:05 milestone (theme A verification, D16 banner, pre-push gate)
+- New rule, enforced by a tool: publish only via `tools/build/verify_and_publish.ps1` (HEAD snapshot + overlay of the listed files, then test_ui + integration must pass; full logs in build/qa/gate/). Negative test: an injected parse error was blocked. One unexplained gate failure (14 UI fails at 1215516) did not reproduce in 2 clean reruns at the same SHA; logs are now kept for any recurrence.
+- 319e0d1 gate script; 0590e7a first-wave-broken banner (inert until 02 adds `wave_cleared`, R13); 995628a boss warning shown once (key-based dedupe, since theme texts differ).
+- Theme A verified on DISPLAY2 from fresh HEAD snapshots (03 2b350c4 + 01 text): icons/colours correct, no stale warnings, names fit (cards 12 px, round tiles 2 lines), integration 32/32 ×6 runs. build/qa/themeA/.
+- Waiting: 02 R13 (`wave_cleared`), 01 R5 (`banner.first_wave_cleared` text), 07 re-verification (requested 16:05).
 ## Unfinished / open (not done, do not claim)
 1. Theme-A labels: waiting for 01 to commit data/text. Then: run test_ui (typography gate) + worst-layout ko/en visible captures.
 2. 2.5× (non-integer) pixel text irregular (57–68% odd runs): waiting for 02 `scale_mode="integer"` (04 R9).
@@ -46,4 +51,4 @@ State at checkpoint: work stopped at a safe point. The owned working tree is CLE
 2. If 01 committed theme text: `tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://tests/ui/test_ui.gd` (expect 0 ko/en ellipsis). Then on DISPLAY2: `.\tools\build\visible_launch.ps1 -Script res://tests/integration/test_ui_integration.gd -Resolution 1280x720 -UserArgs '--shot-dir=<abs>','--tag=themeA_ko','--tile=4','--boss=boss_warlord','--locale=ko','--safe=34,0,34,0'` (repeat with en, and at 640x360).
 3. If 02 set integer scale / re-imported: the same command at `-Resolution 1600x900` → expect an 800×450 view and 0% odd glyph runs; check icons in the shared tree (no `[UiStyle] … stale` warning in godot_*.log).
 4. If 02 gives an install slot: `.\tools\build\build_android_debug.ps1`, then install/start/screencap on their AVD only in the agreed slot; record the result in docs/qa/RELEASE_READINESS.md A13.
-5. Commit only verified owned files with coordination/Publish-Task.ps1 (no stderr redirection).
+5. Commit only verified owned files with tools/build/verify_and_publish.ps1 (it runs both suites on a HEAD snapshot, then calls Publish-Task.ps1).
