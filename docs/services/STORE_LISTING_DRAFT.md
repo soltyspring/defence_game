@@ -39,7 +39,24 @@ Play title and App Store app name use the same text. **KIPRIS class 9/41 search:
 
 Not chosen in Q3 (kept for history only, not store text): 빵집 기사단 / Bakery Knights; 빵집 기사단 대 곰팡이 군단 / Bakery Knights vs Mold Legion.
 
-Home-screen label (icon caption) is not a store field. Long names are cut on launchers; whether to set a shorter Android label (e.g. "빵집 기사단") is for 01/04.
+## 2b. Home-screen (launcher) name vs store title — waiting for Q4 (01 asked the user)
+Current launcher name in the build: `Lane Defence` (export_presets.cfg `package/name`, project.godot `config/name`; the 07e97ca APK shows `application-label:'Lane Defence'` in every locale, aapt2 dump badging). **06 does not change it** (02 owns these files, and Q4 is unanswered). Whatever the answer is, `Lane Defence` should not ship, because it matches neither the store title nor the in-game title (`ui.title`).
+
+What Play's rules say (official pages, checked 2026-10-31):
+| Rule (paraphrased) | Source |
+|---|---|
+| The store "App name" is the app's name on Google Play, ≤ 30 characters, one localized name per language | https://support.google.com/googleplay/android-developer/answer/9859152 |
+| Title and other metadata must be accurate and must not mislead; no performance, price or promotion words; no emoji or repeated special characters | https://support.google.com/googleplay/android-developer/answer/9898842 |
+| Title and developer name must not make users download the wrong app or imply a relationship with someone else; do not use another app's name in a misleading way | https://support.google.com/googleplay/android-developer/answer/13393723 (App title, Impersonation) |
+Content was rephrased for compliance with licensing restrictions.
+
+06 found **no rule that the launcher name must equal the store title**. The pages above treat them separately: the store name is set in Play Console, and the launcher name comes from the app. The risk to manage is misleading users. How each Q4 option looks against these rules (06 reading, not legal advice):
+| Q4 option | Launcher name | Same as store title? | Policy reading |
+|---|---|---|---|
+| A | 빵집 기사단 / Bakery Knights | first part of it | fine: a user who installs "빵집 기사단: 곰팡이 디펜스" sees the start of the same name |
+| B | 곰팡이 디펜스 / Mold Defense | second part only | allowed, but weaker: "Mold Defense" alone is a generic phrase and loses the brand word; check it is not another app's name (KIPRIS terms T4/T5/T14 cover it) |
+| C | full title | yes | fine; the launcher cuts it ("빵집 기사단: 곰팡…") |
+Not verified: whether ko and en launcher names can differ in our build. Godot has `application/config/name_localized`, but 06 has not tested it with the prebuilt Android template (02 to confirm). Changing `config/name` also moves desktop `user://` folders (Windows `%APPDATA%/Godot/app_userdata/<name>`); Android saves are not affected (files dir is per package).
 
 ## 2a. App Store subtitle (≤ 30 characters; only if an iOS build is made)
 Says what kind of game it is without repeating the title or making a generic claim.
@@ -64,14 +81,14 @@ Send bread troops, steer the Head Baker and break the Mold Legion's base.
 ## 4. Full description
 Marker `[수익화 결정 시 변경]` / `[CHANGES IF MONETIZED]` = the sentence must be rewritten when ads or purchases are turned on. Remove markers before submission.
 
-Wording choice: the game's own resource and worker names (반죽/Dough, 제빵사, 화덕포) are the same words Bread Defense uses, so the store text describes them by role ("일꾼", "수입", "공성") instead. The in-game names themselves are 01's call (request 06-services-to-01-director.md, Q3 update).
+Wording choice (updated after 01 D25, a262640): the game's resource is now 밀가루 / Flour (it was 반죽 / Dough, Bread Defense's core word). 01 kept 제빵사 (worker) and 화덕포 (siege unit) as generic role nouns, so the store text uses the game's own words and matches what screenshots show. "반죽"/"dough" stay blocked. The lint group `game_text_overlap` checks every ko/en string in data/text against the §7 list and checks that the store text uses the game's resource name.
 
 <!-- BEGIN full.ko -->
 곰팡이 군단이 빵집 마을로 밀려옵니다. 빵집 기사단을 이끌고 한 줄 전장을 밀고 나가 적의 기지를 무너뜨리세요.
 
 한 줄 전장에서 맞붙는 병력 전투
-- 일꾼을 고용해 수입을 늘리고, 모은 자원으로 병사를 출동시킵니다.
-- 지금 병사를 보낼지, 일꾼을 더 고용할지, 강한 병사를 위해 아껴 둘지 고르세요.
+- 꼬마 제빵사를 고용해 밀가루 수입을 늘리고, 모은 밀가루로 병사를 출동시킵니다.
+- 지금 병사를 보낼지, 제빵사를 더 고용할지, 강한 병사를 위해 아껴 둘지 고르세요.
 - 근접, 원거리, 방패, 돌격, 공성 다섯 병종의 빵 병사가 각자 다른 적에 강합니다.
 
 직접 움직이는 영웅, 제빵 대장
@@ -93,8 +110,8 @@ Wording choice: the game's own resource and worker names (반죽/Dough, 제빵�
 The Mold Legion is pushing into the bakery village. Lead the Bakery Knights down a single lane and break the enemy base.
 
 Single-lane army battles
-- Hire workers to raise your income, then spend it to send soldiers into the lane.
-- Choose every few moments: send troops now, hire another worker, or save up for a stronger unit.
+- Hire little bakers to gather more flour, then spend it to send soldiers into the lane.
+- Choose every few moments: send troops now, hire another baker, or save up for a stronger unit.
 - Five kinds of bread soldiers (melee, ranged, shield, rush and siege) each counter different enemies.
 
 A hero you control: the Head Baker
@@ -117,7 +134,7 @@ No ads and no in-app purchases. [CHANGES IF MONETIZED]
 |---|---|
 | 10 rounds | data/rounds/order.json lists r01–r10 |
 | Single lane, destroy the enemy base to win | IMPLEMENTATION_BRIEF.md §2 (core loop, via GDD §3); data/text `tut_destroy_base` ("오른쪽 끝의 적 기지를 부수면 승리!") |
-| 5 ally unit types (melee, ranged, shield, rush, siege); workers raise income | data/units/units.json (melee_basic, ranged_basic, tank, fast, siege); economy.json; `cmd_buy_worker` in INTERFACES.md |
+| 5 ally unit types (melee, ranged, shield, rush, siege); bakers (workers) gather flour | data/units/units.json (melee_basic, ranged_basic, tank, fast, siege); economy.json; `cmd_buy_worker` in INTERFACES.md; data/text `unit.worker.name` 제빵사/Baker, `res.supply` 밀가루/Flour (01 D25, a262640) |
 | Hero you move (제빵 대장 / Head Baker), 3 skills, respawn | data/heroes/hero_captain.json, data/skills/ (slam, rally, barrage), data/text `hero.hero_captain.name`, GDD §4 |
 | Enemy types and 2 bosses | data/units/units.json (e_grunt, e_swarm, e_spitter, e_brute, e_bomber, boss_warlord, boss_overlord); names in data/text `enemy.*` |
 | Up to 3 stars, instant retry | INTERFACES.md BattleResult `stars`, `cmd_retry` |
@@ -137,13 +154,13 @@ Not claimed on purpose: meta upgrades (no finished upgrade screen verified by 06
 
 What differs in our game, and is stated in our text: one horizontal lane with both sides sending troops; workers and income; a hero the player moves; destroying the enemy base to win; a mold legion with named bosses; 10 rounds; offline; no ads or purchases (for now).
 
-The lint group `listing_competitor_overlap` fails if any store field (title, subtitle, short, full) contains one of the phrases below. "Defense"/"디펜스" is shared with every defense game and is allowed (part of the user's title).
+The lint group `listing_competitor_overlap` fails if any store field (title, subtitle, short, full) contains one of the phrases below; `game_text_overlap` applies the same list to every string in data/text/ko.json and en.json, so store text and game text cannot drift apart again. "Defense"/"디펜스" is shared with every defense game and is allowed (part of the user's title). 제빵사 and 화덕 are allowed in both by 01's decision D25 (generic role nouns for our units).
 
 | ko phrase (blocked) | en phrase (blocked) | Why |
 |---|---|---|
 | 빵어전 | bread defense | competitor name |
-| 반죽 | dough | their core path piece; also our resource name |
-| 화덕 | hearth | their base and PvP mode |
+| 반죽 | dough | their core path piece; our resource was renamed to 밀가루/Flour (01 D25) |
+| — (화덕 allowed: our siege unit 화덕포, 01 D25) | hearth | their base and PvP mode |
 | 온기 | warmth | their resource and subtitle |
 | 빵 카드 | bread card | their deck item |
 | 눅눅이 | moistie | their enemy name |
@@ -154,5 +171,5 @@ The lint group `listing_competitor_overlap` fails if any store field (title, sub
 | 대련 | duel | their PvP mode |
 | 따뜻한 빵 | warm bread | their tagline |
 | 타워디펜스, 타워 디펜스 | tower defense | their genre label; not our genre |
-| 제빵사 | assistant | their unit names (en "baker" stays: part of "Bakery" and our hero "Head Baker") |
+| — (제빵사 allowed: our worker unit, 01 D25) | assistant | their unit names (en "baker" stays: part of "Bakery", our worker "Baker" and hero "Head Baker") |
 | 도감 | — | their collection screen |

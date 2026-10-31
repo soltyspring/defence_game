@@ -24,7 +24,9 @@ const BANNED_BRANDS := ["쿠키", "쿠키런", "cookie", "cookierun", "devsister
 ## Signature wording of the similar game "Bread Defense / 빵어전" (ETERNAXCODE; 09 SUCCESS_ANALYSIS §28,
 ## store pages checked 2026-10-31). Store text must not borrow it (STORE_LISTING_DRAFT.md §7).
 ## ko: substring match. en: word-start match (catches plurals), multi-word phrases by substring.
-const COMPETITOR_KO := ["빵어전", "반죽", "화덕", "온기", "빵 카드", "눅눅이", "축축", "홀씨", "불씨", "빵전사", "대련", "따뜻한 빵", "타워디펜스", "타워 디펜스", "제빵사", "도감"]
+const COMPETITOR_KO := ["빵어전", "반죽", "온기", "빵 카드", "눅눅이", "축축", "홀씨", "불씨", "빵전사", "대련", "따뜻한 빵", "타워디펜스", "타워 디펜스", "도감"]
+## Generic role nouns 01 kept for our own units (D25, a262640): allowed in store and game text.
+const ALLOWED_GENERIC_KO := ["제빵사", "화덕"]
 const COMPETITOR_EN := ["bread defense", "dough", "hearth", "warmth", "bread card", "moistie", "damp trail", "spore cloud", "ember", "bread warrior", "duel", "warm bread", "tower defense", "tower defence", "assistant"]
 const STOP_EN := ["the", "and", "a", "an", "to", "of", "for", "your", "you", "or", "with", "from", "each", "any", "such", "as", "by", "in", "on", "no", "every", "then", "into", "after", "use", "up", "per"]
 
@@ -34,9 +36,13 @@ var current := ""
 var report := {"groups": {}, "lengths": {}}
 
 func _initialize() -> void:
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--text-dir="):
+			TEXT_DIR = a.substr("--text-dir=".length())
 	_group("listing_fields", test_listing_fields)
 	_group("listing_wording", test_listing_wording)
 	_group("listing_competitor_overlap", test_competitor_overlap)
+	_group("game_text_overlap", test_game_text_overlap)
 	_group("listing_claim_markers", test_listing_markers)
 	_group("privacy_policy_template", test_policy)
 	_group("name_search_log", test_name_search_log)
@@ -47,6 +53,8 @@ func _initialize() -> void:
 	_group("privacy_site", test_privacy_site)
 	_group("families_and_rating_q2", test_families_rating)
 	_group("kipris_manual_check", test_kipris_manual)
+	_group("privacy_preview", test_privacy_preview)
+	_group("launcher_label_note", test_launcher_label)
 	report.passes = passes
 	report.failures = Array(failures)
 	var f := FileAccess.open("user://services_listing_report.json", FileAccess.WRITE)
@@ -162,7 +170,65 @@ func test_competitor_overlap() -> bool:
 		if w in ["tower defence", "타워 디펜스"]:
 			continue
 		check(s7.contains(w), "§7 table lists blocked phrase '%s'" % w)
+	for w in ALLOWED_GENERIC_KO:
+		check(not COMPETITOR_KO.has(w), "allowed generic noun '%s' is not also blocked" % w)
+		check(s7.contains("%s allowed" % w), "§7 records why '%s' is allowed (01 D25)" % w)
 	return true
+
+const TEXT_DIR_DEFAULT := "res://data/text/"
+var TEXT_DIR := TEXT_DIR_DEFAULT   # `-- --text-dir=<dir/>` reads copies (mutation tests; 01's files are never edited)
+
+func game_strings(lang: String) -> Dictionary:
+	var j := JSON.new()
+	if j.parse(FileAccess.get_file_as_string(TEXT_DIR + lang + ".json")) != OK or not (j.data is Dictionary):
+		return {}
+	return j.data.get("strings", {})
+
+static func competitor_hit(lang: String, s: String) -> String:
+	var low := s.to_lower()
+	for w in COMPETITOR_KO:
+		if s.contains(w):
+			return w
+	for w in COMPETITOR_EN:
+		if (low.contains(w) if w.contains(" ") else RegEx.create_from_string("\\b" + w).search(low) != null):
+			return w
+	return ""
+
+## Every string the player can see in the game (data/text ko/en, 01) is checked against the same
+## Bread Defense list as the store text, and the store text uses the game's own words for the
+## title and the resource, so screenshots and the description say the same thing.
+func test_game_text_overlap() -> bool:
+	for lang in ["ko", "en"]:
+		var strs := game_strings(lang)
+		if not check(strs.size() >= 100, "data/text/%s.json has strings (%d)" % [lang, strs.size()]):
+			continue
+		var hits := 0
+		for k in strs:
+			var w := competitor_hit(lang, str(strs[k]))
+			if w != "":
+				hits += 1
+			check(w == "", "%s game text %s has no Bread Defense wording ('%s' in '%s')" % [lang, k, w, str(strs[k]).left(30)])
+		report.lengths["game_text_hits." + lang] = hits
+		eq_text(str(strs.get("ui.title", "")), WORKING_TITLE[lang], "%s in-game ui.title = store working title" % lang)
+		var res := str(strs.get("res.supply", ""))
+		var full := store_text(block(listing(), "full." + lang))
+		check(res != "" and full.to_lower().contains(res.to_lower()), "%s store text names the in-game resource '%s'" % [lang, res])
+		var worker := str(strs.get("unit.worker.name", ""))
+		check(worker != "" and full.to_lower().contains(worker.to_lower()), "%s store text names the in-game worker '%s'" % [lang, worker])
+		var hero := str(strs.get("hero.hero_captain.name", ""))
+		check(hero != "" and full.contains(hero), "%s store text names the in-game hero '%s'" % [lang, hero])
+	# Generic nouns 01 allowed are really the game's own unit words (otherwise the exception is stale).
+	var ko := game_strings("ko")
+	for w in ALLOWED_GENERIC_KO:
+		var used := false
+		for k in ko:
+			if str(ko[k]).contains(w):
+				used = true
+		check(used, "allowed generic noun '%s' is still used in the game text" % w)
+	return true
+
+func eq_text(a: String, b: String, msg: String) -> bool:
+	return check(a == b, "%s ('%s' vs '%s')" % [msg, a, b])
 
 func test_listing_wording() -> bool:
 	var re_word := RegEx.create_from_string("[A-Za-z][A-Za-z']*")
@@ -687,4 +753,59 @@ func test_kipris_manual() -> bool:
 				check(c[4].strip_edges() == "NOT_CHECKED", "name log KIPRIS row for '%s' stays NOT_CHECKED" % c[1].strip_edges())
 		check(listing().contains("**KIPRIS class 9/41 search: NOT DONE**"), "listing states the KIPRIS search is not done")
 	check(FileAccess.get_file_as_string(NAME_LOG).contains("KIPRIS_MANUAL_CHECK.md"), "name log points to the manual check")
+	return true
+
+# ------------------------------------------------------------------ privacy page preview with the working title
+
+const PREVIEW := "res://docs/services/previews/privacy_preview_working_title.html"
+
+## The preview is the publishable template with ONLY {{APP_NAME}} filled by the Q3 working title,
+## plus a visible "preview only / KIPRIS not checked" banner and robots noindex. It lives outside
+## privacy_site/ so publishing that folder cannot publish the preview. While KIPRIS is not done the
+## publishable template itself keeps {{APP_NAME}} (the final store name is not fixed).
+func test_privacy_preview() -> bool:
+	if not check(FileAccess.file_exists(PREVIEW), "preview exists (run tests/services/make_privacy_preview.ps1)"):
+		return true
+	check(not PREVIEW.contains("/privacy_site/"), "preview is outside privacy_site/")
+	var pv := FileAccess.get_file_as_string(PREVIEW).replace("\r\n", "\n")
+	var src := FileAccess.get_file_as_string(SITE).replace("\r\n", "\n")
+	check(pv.contains("<meta name=\"robots\" content=\"noindex, nofollow\">"), "preview has robots noindex")
+	for s in ["미리보기 전용 — 공개 금지", "KIPRIS 미확인", "작업 제목", "Preview only — do not publish", "KIPRIS not checked", "working title"]:
+		check(pv.contains(s), "preview banner says '%s'" % s)
+	check(not pv.contains("{{APP_NAME}}"), "preview has no {{APP_NAME}} left")
+	check(pv.contains("「%s」" % WORKING_TITLE.ko) and pv.contains("\"%s\"" % WORKING_TITLE.en), "preview names the ko and en working titles")
+	# Reverse the transform; it must give back the template byte for byte (LF).
+	var back := RegEx.create_from_string("(?s)<!-- PREVIEW-BANNER BEGIN -->.*?<!-- PREVIEW-BANNER END -->\\n").sub(pv, "")
+	back = back.replace("<body>\n\n", "<body>\n")
+	back = back.replace("\n<meta name=\"robots\" content=\"noindex, nofollow\"> <!-- PREVIEW-ONLY -->", "")
+	back = back.replace("%s / %s" % [WORKING_TITLE.ko, WORKING_TITLE.en], "{{APP_NAME}}").replace(WORKING_TITLE.ko, "{{APP_NAME}}").replace(WORKING_TITLE.en, "{{APP_NAME}}")
+	check(back == src, "preview = privacy_site/index.html with only {{APP_NAME}} filled (regenerate after template edits)")
+	# The publishable template keeps the placeholder until the final name is fixed after KIPRIS.
+	var kipris_open := FileAccess.get_file_as_string(KIPRIS).contains("| NOT_DONE |")
+	if kipris_open:
+		check(src.contains("{{APP_NAME}}"), "publishable template keeps {{APP_NAME}} while KIPRIS rows are NOT_DONE")
+		check(FileAccess.get_file_as_string(POLICY).contains("{{APP_NAME}}"), "policy draft keeps {{APP_NAME}} while KIPRIS rows are NOT_DONE")
+	return true
+
+## §2b states the launcher name the build really has (02's export preset) and keeps the Q4 options
+## and sources; it never claims the label changed while Q4 is unanswered.
+func test_launcher_label() -> bool:
+	var t := listing()
+	var s2b := t.substr(t.find("## 2b."), t.find("## 2a.") - t.find("## 2b.")) if t.find("## 2b.") >= 0 and t.find("## 2a.") > t.find("## 2b.") else ""
+	if not check(s2b != "", "listing has §2b (launcher name) before §2a"):
+		return true
+	var cfg := ConfigFile.new()
+	if not check(cfg.load("res://export_presets.cfg") == OK, "export_presets.cfg loads"):
+		return true
+	var label := str(cfg.get_value("preset.0.options", "package/name", ""))
+	check(label != "" and s2b.contains("Current launcher name in the build: `%s`" % label), "§2b states the real launcher name '%s'" % label)
+	for url in ["https://support.google.com/googleplay/android-developer/answer/9859152", "https://support.google.com/googleplay/android-developer/answer/9898842", "https://support.google.com/googleplay/android-developer/answer/13393723"]:
+		check(s2b.contains(url), "§2b cites %s" % url)
+	for opt in ["| A |", "| B |", "| C |"]:
+		check(s2b.contains(opt), "§2b covers Q4 option %s" % opt)
+	var uq := FileAccess.get_file_as_string("res://coordination/requests/USER_QUESTION.md")
+	if uq.contains("## Q4") and uq.substr(uq.find("## Q4")).contains("WAITING FOR USER ANSWER"):
+		check(s2b.contains("**06 does not change it**"), "§2b says the label is not changed while Q4 waits")
+	# Store title stays the working title whatever the launcher name becomes.
+	check(titles("ko") == [WORKING_TITLE.ko] and titles("en") == [WORKING_TITLE.en], "store title unchanged by Q4")
 	return true
