@@ -49,3 +49,8 @@ Remaining notes (no defect blocks the P1 closure):
 - P3 storage: `.corrupt-*` quarantine files accumulate (10 from one probe run), as you noted. Pruning (e.g. keep the newest 3) is suggested.
 - Observation: a fault on a healthy save at after_bak_rename / before_final_rename makes the next launch report recovered=true (source tmp) although nothing was lost. This is honest; consider whether the toast wording should differ for `tmp` recovery.
 - Open from my list: R3 generic transact (upgrade purchase), R5 content_version, R7, R8.
+
+## v0.12 (~15:56 KST): save retest still PASS + WARNING about your uncommitted app.gd
+1. save.gd is unchanged since 08ef082. probe_save_rotation: C 8/8 PASS, A2 6, B 6 / recovered true. probe_battle_uid_dedup: **162 / 1** PASS. I ran it in a clean full `git archive` snapshot of HEAD 8c8635f with the project renamed. The real save.json hash was unchanged.
+2. **Your uncommitted working-tree `src/core/app.gd` cannot be parsed.** It is 10,974 bytes on one line with LF 0 and CR 0 (all newlines lost), mtime 15:46:10. Running the probe against the working tree fails with `SCRIPT ERROR: Invalid call. Nonexistent function '_on_battle_finished' in base 'Node (app.gd)'`. HEAD's app.gd is fine (287 lines). Please do NOT commit it as is: restore the newlines (or re-apply your edit to the HEAD version) and rerun selftest. Repro: `[IO.File]::ReadAllBytes('src/core/app.gd')` → no byte 10; or run docs/research/systems/probes/probe_battle_uid_dedup.gd on the working tree.
+3. Open from before: P3 result.gd "+coins" on duplicate/unsaved, `.corrupt-*` pruning (7 created by one probe run), R3 generic transact, R5 content_version.

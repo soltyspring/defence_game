@@ -1,5 +1,5 @@
 # 데이터·백엔드 분석: 성공한 디펜스 게임의 온라인 기능과 우리 게임의 최소 설계
-작성: 10-research-systems · 버전 v0.11 (… v0.10 02 08ef082 세이브 수정의 실행 재검증: 훅 기반 시나리오 B 8/8, battle_uid 162/1, v0.11 재시작 후 무결성 재실행: D17 확인, 테마 이름표 미반영) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
+작성: 10-research-systems · 버전 v0.12 (… v0.11 재시작 후 무결성 재실행: D17 확인, v0.12 테마 A 이름표 검사 통과·세이브 재확인) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
 범위: 경쟁작에서 **관찰되는** 온라인 기능, 그 기능의 **공개 문서화된** 기술, **UNKNOWN**, 우리 오프라인 우선 Godot 게임에 필요한 최소 콘텐츠 DB·세이브·거래 계약. 런타임 코드는 수정하지 않았다. 내부 DB나 비공개 구현에 접근한 적 없다. 게임을 직접 플레이하지 않았다(스토어 텍스트·공개 스크린샷만 확인).
 
 ## 0. 현재 판단 (요약)
@@ -346,7 +346,11 @@ PROBE10_SAVE_ROTATION {"A_recovered":true,"A_unlocked_after_load":6,"A_save_ok":
   - (a) 정상 세이브에서 `after_bak_rename`/`before_final_rename`으로 끊기면 진행도 손실이 없는데도 다음 실행에서 `recovered=true`가 되어 "복구됨" 토스트가 뜬다. 정직한 표시지만 잦으면 잡음이 된다.
   - (b) 격리 파일 `.corrupt-*`가 이 프로브 한 번에 10개 생겼고, 지워지지 않는다. 02도 "not yet pruned"로 적었다. 손상이 반복되는 기기에서는 파일이 계속 쌓인다. P3, 02 판단.
 
-**(2) battle_uid 중복 반영, 합격 기준 162/1** — `probe_battle_uid_dedup.gd`를 그대로 다시 실행했다.
+**v0.12 재확인(2026-10-31 ~15:52 KST):** `src/core/save.gd`는 08ef082 이후 바뀌지 않았다.
+- `probe_save_rotation`: HEAD abe2303 작업 트리에서 실행했다(save.gd는 HEAD와 같음). 결과는 C 8/8 PASS, A2 6, B 6 / recovered true. 장애 지점 4개 모두에서 진행도가 유지되고 복구 알림 조건(`recovered=true`)이 성립했다. 격리 파일은 7개 생겼다.
+- `probe_battle_uid_dedup`: 처음에 작업 트리에서 돌렸더니 `SCRIPT ERROR: Nonexistent function '_on_battle_finished' in base 'Node (app.gd)'`가 나왔다. 원인은 02의 **미커밋 `src/core/app.gd`**다. 줄바꿈이 전부 사라져 10,974바이트가 한 줄(LF 0, CR 0)이 됐고, mtime은 15:46:10이었다. GDScript가 파싱하지 못한다. HEAD의 app.gd는 정상이다(287줄). 그래서 **전체 HEAD 8c8635f를 `git archive`로 풀어 프로젝트 이름을 바꾼 스냅샷**에서 다시 실행했다. 결과는 L1 100/1, L2 **162/1**, 디스크 162/1, `duplicate_applied:false`로 **합격**이다. 실제 save.json 해시는 실행 전후 같았고, 스냅샷은 지웠다.
+
+**(2) battle_uid 중복 반영, 합격 기준 162/1 (v0.10 기록)** — `probe_battle_uid_dedup.gd`를 그대로 다시 실행했다.
 | 층 | 기대값 | 08ef082 이전(a19289b 기록) | 08ef082 이후 |
 |---|---|---|---|
 | L1 `Save.record_result` × 2 | 100 / 1 | 200 / 2 | **100 / 1** |
@@ -441,6 +445,38 @@ v0.2의 PowerShell 검사(§9.1)는 일회성이었다. 이번에는 다시 실�
 - 이름 비교: v0.9 기준선(9ca4a43)과 HEAD 사이에 유닛·영웅·스킬·라운드 표시 이름(ko/en `*.name` 키)과 units.json의 `name`/`name_key` 변경은 **0건**이다. 그 사이 data/text 변경은 cbfb0a8의 `toast.counterattack` 키 추가 1건뿐이다. 즉 **테마 A 이름표는 HEAD에 아직 없다.** 표시 이름은 여전히 보병/대장/첫 경계 같은 중립 이름이다. 테마로 인한 누락·중복 검사는 이름표가 커밋된 뒤에 한다.
 - HEAD의 `docs/design/DECISIONS.md`에는 Q1이 아직 PENDING이다. 사용자 결정(A안, 코디네이터 기록 09:03)을 반영하는 일은 01 소관이다.
 
+**v0.12 테마 A 이름표 검사(2026-10-31 ~15:55 KST):** 01이 14b01e2(text)와 5930430(data `name` 대체값 동기화)을 커밋했고, Q1은 DECIDED로 기록됐다(D20~D22 포함).
+| HEAD | 대상 | ERROR | WARN | INFO | 비고 |
+|---|---|---|---|---|---|
+| abe2303 | 14b01e2 이후, 5930430 이전 | 0 | **26** | 0 | 26건 모두 STALE_NAME(유닛 12·영웅 1·스킬 3·라운드 10): 데이터 `name`이 옛 이름(보병, 대장, 첫 경계 …)으로 남아 있었다 |
+| 43b4692e6f1bb91b22e6e697f90cbdd342692e97 | 5930430 이후 | 0 | **0** | 0 | 대체값 동기화로 STALE_NAME 26→0. 01도 커밋 전에 같은 결과를 보고했다 |
+- 실행 방식은 전과 같다(깨끗한 `git archive` 스냅샷, autoload 없음, 실행 후 삭제). 누락 키: TEXT_REF 122건, TEXT_PARITY 122키(ko/en 같음), 누락 0. DUP_NAME 52건 검사에서 중복 0.
+- STALE_NAME이 실제로 화면에 영향을 주는 경로(코드 읽기): 04의 UI는 `UiText.name_of(kind, id, fallback)`로 `<kind>.<id>.name` 키를 먼저 찾는다. 하지만 02의 대체 UI(`fallback_hud.gd`, `fallback_ui.gd`)는 데이터 `name`을 그대로 쓴다. `battle_info.hero`에는 `name_key`가 없고 `name`만 실린다. 따라서 abe2303 시점에 04 장면이 로드되지 않으면 옛 이름이 보였을 것이다. 지금은 동기화로 해소됐다.
+
+v0.9 기준선(9ca4a43) → HEAD 43b4692 이름 변화(ko / en, 대체값 = ko):
+| id | 전 | 후 |
+|---|---|---|
+| melee_basic | 보병 / Troop | 식빵병 / Toast |
+| ranged_basic | 궁수 / Archer | 롤빵병 / Roll |
+| tank | 방패병 / Shield | 통식빵 / Loaf |
+| fast | 돌격병 / Raider | 프레첼 / Twist |
+| siege | 투석기 / Siege | 화덕포 / Oven |
+| hero_captain | 대장 / Captain | 제빵 대장 / Head Baker |
+| e_grunt | 졸병 / Grunt | 곰팡이 졸개 / Mold Mite |
+| e_swarm | 떼거리 / Swarmling | 초파리 떼 / Fruit Flies |
+| e_spitter | 투척병 / Spitter | 포자 뱉개 / Spore Spitter |
+| e_brute | 거한 / Brute | 썩은 멧돼지 / Rot Boar |
+| e_bomber | 자폭병 / Bomber | 부푼 효모 / Yeast Puff |
+| boss_warlord | 군단장 / Warlord | 곰팡이 장군 / Mold General |
+| boss_overlord | 대군주 / Overlord | 부패 대군주 / Rot Overlord |
+| skill_slam | 내려찍기 / Slam | 밀대 내려찍기 / Slam |
+| skill_rally | 돌격 함성 / Rally | 갓 구운 함성 / Rally |
+| skill_barrage | 일제 포격 / Barrage | 빵가루 포격 / Barrage |
+| r01…r10 | 첫 경계 … 대군주 | 첫 번째 반죽 / First Batch, 초파리의 습격 / Fruit Fly Raid, 포자가 날아온다 / Spores Incoming, 썩은 발굽 소리 / Rotten Hooves, 곰팡이 장군 / The Mold General, 곰팡이 성벽을 부숴라 / Break the Mold Wall, 부풀어 터지는 효모 / Rising Yeast, 끝없는 초파리 / Endless Flies, 곰팡이 총공세 / Mold Onslaught, 부패 대군주 / The Rot Overlord |
+- 26개 ID 모두 ko 이름이 바뀌었다. en은 스킬 3개(Slam/Rally/Barrage)만 그대로다.
+- 종류를 넘어 같은 이름은 전과 같은 두 쌍이다: r05 = boss_warlord("곰팡이 장군", en은 "The Mold General" / "Mold General"), r10 = boss_overlord("부패 대군주"). 보스 라운드가 보스 이름을 따른 것이다. 혼동되는지는 화면 문맥에 달렸다. 이 프로브로는 판정하지 않는다.
+- 이 검사는 키·대체값·중복만 본다. 글자 수가 카드 칸(36.67 px)에 맞는지(D20)는 04/07의 렌더링 검사 영역이다.
+
 ### 9.3 메타 코인 경제 흐름 프로브 (v0.8, 데이터 계산만)
 - 파일: `docs/research/systems/probes/probe_economy_flow.gd` (읽기 전용, 시뮬레이션 없음)
 - 실행 명령: `tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://docs/research/systems/probes/probe_economy_flow.gd --quit-after 600`
@@ -487,6 +523,8 @@ v0.2의 PowerShell 검사(§9.1)는 일회성이었다. 이번에는 다시 실�
 
 **(6) 돈이 남아도는 지점 [DATA + ASSUME 처치 상한]:** 각 라운드 직전에 그때 보이는 업그레이드의 남은 총비용과 누적 수입 상한(HIGH+처치)을 비교했다. **r01~r10 어디에서도 수입이 남은 비용을 넘지 않는다**(예: r10 직전 수입 3,526, 남은 비용 6,280). 첫 클리어 경로에서는 지출처가 없어 돈이 쌓이는 구간이 없다. 잉여는 모든 트랙을 최대로 만든 뒤, 즉 r10 재클리어 약 11~18회 이후에만 생긴다. 그 뒤에는 코인 지출처가 0이고 상한 9,999,999까지 쌓이기만 한다(meta.json currencies.max). 챕터 2나 다른 지출처가 없으면 그 이후의 재플레이 보상은 의미가 없어진다.
 - 남은 비용이 크게 뛰는 시점: r06에서 siege 트랙(820)이 보이면서 5,460→6,280이 된다.
+
+**01 결정 D22(v0.12에 반영):** (a) 의도 기준값을 r05 전 660→**640**으로 낮췄다. 그래서 LOW 경로의 부족분 20과 r04 재클리어 1회가 사라진다. 계산상 LOW 640 = 의도 640. (b) L5는 의도된 재플레이 전용 숙련 구간이고, 챕터 1은 LOW 예산으로 깰 수 있어야 한다(01 시뮬레이션 A4 대기). (c) MVP에는 최대 레벨 이후 지출처가 없고, 코인은 상한까지 쌓인다(B29 백로그). 10은 이 결정을 다시 계산하지 않았다. 5930430의 `ECONOMY.md` 변경을 데이터로 다시 확인하는 일은 이 프로브를 HEAD에서 재실행하면 된다.
 
 **(7) 레벨 하나를 사려면 재클리어가 몇 번 필요한가 [DATA]:** 잔액 0에서 시작해 그 트랙이 처음 보이는 라운드만 반복할 때의 값이다. 비싼 끝에서는 hero/supply/energy L5가 r01을 10회, worker L4가 r01을 8회, melee L5가 r01을 9회 반복해야 한다. r10만 반복하면 모든 레벨이 1~2회다. 이 수치는 "이른 라운드 반복은 비효율적"이라는 데이터 사실만 말한다. 플레이어가 실제로 그렇게 행동하는지는 말하지 않는다.
 

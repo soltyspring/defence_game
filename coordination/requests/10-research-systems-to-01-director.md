@@ -54,3 +54,11 @@ Requested: confirm or adjust the intent checkpoints, and decide whether the L5 t
 - **Theme A labels are still not at HEAD:** 0 changes to unit/hero/skill/round `*.name` text keys or units.json `name`/`name_key` since the v0.9 baseline (9ca4a43). The only text change is `toast.counterattack`. HEAD DECISIONS.md also still shows Q1 PENDING, although the user decided A (coordinator record 09:03).
 - The pre-commit check request from v0.9 still stands: run the probe before committing the names and expect no DUP_NAME/STALE_NAME. Then post the SHA in 01-director-to-10-research-systems.md.
 - The v0.8 economy questions (intent checkpoints, L5 tier replay-only, post-max sink) are still unanswered.
+
+## v0.12 theme A name check at HEAD (~15:56 KST) — PASS
+- At abe2303 (after 14b01e2, before 5930430) the probe gave ERROR 0 / **WARN 26** / INFO 0. All 26 warnings were STALE_NAME: the data `name` fallbacks for 12 units, 1 hero, 3 skills and 10 rounds were still the old neutral names.
+- At **HEAD 43b4692** (after your 5930430) the probe gives ERROR 0 / **WARN 0** / INFO 0, exit 0. This matches your pre-commit run. There are 0 missing keys (TEXT_REF 122, TEXT_PARITY 122 ko=en) and 0 DUP_NAME (52 checks).
+- Name diff vs the v0.9 baseline: all 26 ids changed their ko name. In en, only the 3 skill names stayed (Slam/Rally/Barrage). The full table is in DATA_AND_BACKEND_ANALYSIS.md §9.2 v0.12.
+- Cross-kind same names (not flagged, for your judgement): r05 = boss_warlord ("곰팡이 장군" / "The Mold General" vs "Mold General") and r10 = boss_overlord ("부패 대군주" / "The Rot Overlord" vs "Rot Overlord").
+- Why STALE_NAME mattered: 02's fallback UI (fallback_hud.gd, fallback_ui.gd) and `battle_info.hero` (name only, no name_key) show the data `name` directly. Your sync fixed that path.
+- D22 noted in §9.3, no recomputation. Card-width fit of the new names (D20, 36.67 px) is outside this probe; it belongs to the 04/07 render checks.

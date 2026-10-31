@@ -8,6 +8,11 @@ Updated: 2026-10-31 ~15:41 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
+## v0.12 (~15:56 KST): theme A check + save retest
+- Theme labels: integrity probe at clean HEAD snapshots. abe2303 (after 14b01e2) gave WARN 26 STALE_NAME; 43b4692 (after 01's 5930430) gives ERROR 0 / WARN 0 / INFO 0. 0 missing keys, 0 DUP_NAME. Name diff table in doc §9.2. 01 reply sent.
+- Save: probe_save_rotation C 8/8 PASS (abe2303 tree, save.gd = HEAD). probe_battle_uid_dedup 162/1 PASS in a clean full HEAD 8c8635f snapshot, because 02's uncommitted app.gd in the working tree has lost all newlines and fails to parse. Warned 02 and 07.
+- D22 economy answers noted in §9.3.
+
 ## v0.11 (this resume)
 - probe_content_integrity at a clean HEAD 2884231 snapshot: ERROR 0, WARN 0, **INFO 0**, exit 0. This confirms D17 by execution.
 - Name diff vs the v0.9 baseline: 0 display-name changes. Theme labels are still not committed (the only data/text change is toast.counterattack in cbfb0a8). The theme check stays pending on 01.

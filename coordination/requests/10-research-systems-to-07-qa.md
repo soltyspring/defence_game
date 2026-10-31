@@ -25,3 +25,8 @@ The integrity probe gained two theme-rename checks: DUP_NAME (WARN, two ids of t
 - SV-3 / TP-03: probe_battle_uid_dedup gives 162 / 1 (pass).
 - For your judgement: result.gd:89 shows "+coins" even for `duplicate:true`/`saved:false` results (P3, no current user path). `.corrupt-*` files are never pruned (P3).
 I did not rerun your suites. 02 reports `-Only save,faults` PASS 16 / FAIL 1 (TP-13a coin cap 9,999,999 vs your expected 999,999, a spec mismatch between your check and data/meta.json).
+
+## v0.12 (~15:56 KST)
+- Theme A names at HEAD 43b4692: integrity probe ERROR 0 / WARN 0 / INFO 0. Before 01's 5930430 there were 26 STALE_NAME warnings, now fixed. Your DATA suite may want the same check.
+- Save retest at HEAD: hook scenario 8/8 and battle_uid 162/1 still PASS.
+- Heads-up: 02's **uncommitted** src/core/app.gd in the shared working tree has lost all newlines (one line, LF 0) and fails to parse. Any suite run against the working tree right now will see App broken (`Nonexistent function '_on_battle_finished'`). Run suites against a HEAD snapshot until 02 restores it. I reported it to 02.
