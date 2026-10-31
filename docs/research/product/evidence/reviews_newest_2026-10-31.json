@@ -1,0 +1,26 @@
+{
+  "_about": "09 review classification. The Google Play public web endpoint (batchexecute UsvDTd, sort = NEWEST) was queried with hl=ko, gl=kr on 2026-10-31 ~10:05 KST. 100 newest reviews per app, Android only, Korean store locale. Only counts and keyword rules are kept here. Review texts are third-party content and stay in a local temp folder.",
+  "limits": [
+    "NOT representative: only users who write reviews, and newest-first sorting overweights recent incidents (e.g. an outage week).",
+    "The 100 newest reviews cover very different time windows: Lucky Defense 7 days, Random Dice 2 25 days, Random Dice ~2 months, 궁수키우기 RPG and 아처키우기 ~2 years, CatWar2 ~5 years. Counts are NOT comparable across apps.",
+    "Keyword multi-label classifier. A manual read of 32 randomly drawn 1-3 star reviews found 3 clearly wrong labels caused by incidental words (the game name 운빨 -> balance; 못깨 -> balance; 주작 -> liveops). Matchmaking/AFK-partner complaints have no category. Precision was not measured. Use the numbers to rank complaint types inside one app, not as rates.",
+    "Developer replies were not analysed. App Store was not sampled."
+  ],
+  "rules_regex": {
+    "ads": "광고|광고제거|광제|광고 ?보|광고가|광고를",
+    "pay": "현질|과금|결제|유료|비싸|가격|패키지|돈|월정액|vip|패스|무과금|소과금|과금러",
+    "balance": "밸런스|난이도|너무 어렵|어려워|어렵|못깨|못 깨|안깨|막힘|막혀|사기캐|너프|상향|하향|확률|운빨|뽑기|가챠",
+    "progress": "초기화|날아|사라졌|사라짐|복구|데이터|계정|기록이|진행이|세이브|저장",
+    "bug": "버그|튕|팅김|오류|에러|렉|랙|멈춤|멈춰|로딩|접속|서버|실행이? ?안|꺼짐|꺼져|강제종료",
+    "control": "조작|컨트롤|터치|드래그|버튼|손가락|오토|자동|배속|속도|느려|느림|UI|ui|불편",
+    "liveops": "업데이트|업뎃|운영|방치|소통|이벤트|신규|패치|핵|매크로|고객센터|문의"
+  },
+  "apps": {
+    "com.GameDuo.MadArcher": {"n": 100, "dates": "2024-03-21..2026-10-24", "stars": {"1": 38, "2": 8, "3": 7, "4": 3, "5": 44}, "neg_1to3": {"pay": 18, "bug": 14, "liveops": 13, "progress": 8, "control": 7, "ads": 5, "balance": 3}},
+    "com.ohm1004.Defense": {"n": 100, "dates": "2024-09-22..2026-10-28", "stars": {"1": 11, "2": 1, "3": 3, "4": 6, "5": 79}, "neg_1to3": {"control": 4, "pay": 3, "bug": 3, "balance": 1, "progress": 1, "ads": 1}},
+    "com.percent.royaldice": {"n": 100, "dates": "2026-08-22..2026-10-26", "stars": {"1": 33, "2": 6, "3": 7, "4": 5, "5": 49}, "neg_1to3": {"liveops": 15, "bug": 11, "pay": 8, "balance": 5, "progress": 5, "ads": 2, "control": 2}},
+    "com.percent.aos.randomdice2": {"n": 100, "dates": "2026-10-02..2026-10-27", "stars": {"1": 29, "2": 7, "3": 11, "4": 7, "5": 46}, "neg_1to3": {"pay": 16, "liveops": 14, "balance": 9, "bug": 5, "progress": 3, "ads": 3, "control": 3}},
+    "com.percent.aos.luckydefense": {"n": 100, "dates": "2026-10-23..2026-10-30", "stars": {"1": 34, "2": 4, "3": 10, "4": 6, "5": 46}, "neg_1to3": {"liveops": 13, "pay": 11, "bug": 10, "control": 7, "ads": 6, "balance": 6, "progress": 5}},
+    "com.westriversw.CatWar2": {"n": 100, "dates": "2021-09-26..2026-10-28", "stars": {"1": 5, "2": 1, "3": 5, "4": 18, "5": 71}, "neg_1to3": {"control": 2, "pay": 1, "balance": 1}}
+  }
+}

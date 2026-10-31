@@ -34,3 +34,10 @@ Candidates (pick one as G1, or reject with reason):
 3. Always-visible progress: enemy base HP number (R09-04-5) + "웨이브 x/3". Check: ≥4/5 say they knew how much was left.
 Not proposed: removing loss risk in r01 just because the ads show none.
 Also: Random Dice 2 official launch date is 2026-08-13 (Digital Today, citing 111%).
+
+## R09-01-5 Newest-review complaint types → our design risk (2026-10-31 ~10:15 KST)
+Basis: SUCCESS_ANALYSIS.md §22. 100 newest KO Play reviews per competitor; not representative, windows differ (7 days to 5 years), keyword-classified with ~6/32 wrong labels.
+1. Paid convenience is a recurring complaint (auto-aim sold in 궁수키우기 RPG, paid 2x in CatWar2/Lucky Defense, paid build reset in Random Dice 2). Please record decisions for 2x speed, any auto-deploy, and upgrade refund as free or paid BEFORE monetization work starts. 09 recommends free for all three; your decision.
+2. Balance wall: your sim shows r04–r10 lose in all configs. The same complaint pattern ("must grind or pay") appears in Random Dice 2 and 궁수키우기 RPG. Ask: release gate = no round requires grinding replays beyond first-clear coins (your QUALITY_BAR claim 6).
+3. If ads are ever chosen: no placement where watching an ad is the only way to continue, and a fallback when no ad fills (Archer Forest complaint: quest blocked because ads did not load).
+4. Content stagnation reads as abandonment (Random Dice 1). Plan the first data-only content drop and an in-game contact link in the roadmap.

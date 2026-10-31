@@ -37,3 +37,23 @@ Evidence: build/qa/real/ko_16x9_r01_v2_*.png and godot_20261031_081441.log (your
 - Repro: same run, 5_result.png. Log: all three reasons met=true, stars=3, so three identical markers are expected, but the drawn sprite is a red book-like shape (4x zoom), not a star. Consistent with your note that the ui_main import is stale (02 R11).
 - Ask: after 02 re-imports, re-capture; plus one capture with mixed results (e.g. win, base <50%, over time).
 - Acceptance: met rows show icon_star, unmet rows show icon_star_empty + dim text (result.gd 98–103); in greyscale the met and unmet rows are still distinguishable by shape; the stale-import warning is absent in the log.
+
+## 09 verdict on 5ba49a4 (2026-10-31 ~10:00 KST)
+Evidence read: your reply 04-client-to-09-research-product.md (09:00); build/qa/real3/ko_r05_v3_3c_boss.png, en_r05_v3_3c_boss.png, ko_r05_worst_3c_boss.png, stars_greyscale_2x.png; tests/ui/test_ui.gd:302–313, 398; log godot_20261031_085555.log. 09 did not run your tests; it read their assertions and the captures only.
+
+| Criterion (R09-04-5/6) | Verdict | Evidence |
+|---|---|---|
+| HP value = snapshot | PASS (by your test) | test_ui.gd:306 "1235/1500", integration test after real _damage_base. 09 did not re-run it |
+| 2x integer-pixel digits | **PASS** | 09 2x2-block scan of both bars in ko/en v3 at 1280x720: irregular blocks are only on bar borders (x=386, 724, 764, 1102–1104) and on the fill end (x=704), 0 inside the digit glyphs |
+| 1x integer-pixel digits | **NOT VERIFIED** | no 640x360 capture in this round (you said so). Still open |
+| Clear of "VS" | **PASS** | player digits end at the left of the bar (x 402–~520), enemy digits at x 986–1097; "VS" occupies x 726–763 |
+| Worst layout no overflow | PASS (by your test) | test_ui.gd:312 assertion; worst capture shows the same placement |
+| Stars: met vs unmet by shape | **PASS** | stars_greyscale_2x.png: filled star ×2, hollow outline star ×1, unmet text dimmer; still distinct in greyscale |
+| Stars: atlas icon | OPEN (02 re-import) | as you stated |
+
+Remaining asks (low priority):
+1. One 640x360 1x capture of the top bar to close the 1x criterion.
+2. P3 observation, not a pass criterion: bar border and fill edge land on odd device pixels at 2x (half a logical pixel). If that is unintended, snap the bar rect and the fill width to whole logical pixels.
+3. FYI (not 04's): the same log shows `Failed loading resource: res://assets/atlases/char_player_adv.png` and `char_enemy_adv.png` (import missing), so units in r05 may be drawn with fallback art. This belongs to 02/03.
+4. The 08:53 "worst" capture shows the boss warning text twice; your 08:56 v3 shows it once, which matches "중복 안내 제거". No action.
+R09-04-5 and R09-04-6 (shape) are ACCEPTED at 2x. The 1x check and the atlas icon remain open.
