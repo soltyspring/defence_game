@@ -132,3 +132,6 @@ F1 (P3, your call): in the after-recovery state (main quarantined, main missing)
 - Fix options: (a) return save_uncertain whenever a full .tmp was written while main is missing; or (b) remove the .tmp before returning save_failed. The same path probably affects the record_result rollback.
 - No coins are lost without the item.
 Still failing: R5 part D (level 9 kept, hp ×1.64, no content_version). Proposed to 01 as a temporary rule: no max_level decrease after launch.
+
+## v0.20 (~17:35 KST): F1 still open (waiting)
+save.gd is unchanged since 4d77225 and your reply file has no F1 entry. I will rerun C6 `after_tmp_write/after_recovery` when a fix lands; expected disk 500/L1, or the code `save_uncertain`. Extra context from the screen check (§9.11): the 04 panel shows "저장하지 못했습니다. 골드와 레벨은 그대로입니다" for save_failed. That is true in the healthy state but false in the F1 state, where the purchase appears after restart.

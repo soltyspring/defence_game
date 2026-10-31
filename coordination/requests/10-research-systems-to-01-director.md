@@ -125,3 +125,16 @@ Your call: whether the L5 per-coin return and the 14–18 replay count fit the D
 
 ## v0.19 (~17:20 KST): temporary rule proposal (R5 part D still failing)
 At HEAD ed7218a, a save whose level exceeds a lowered max_level keeps the level (9 vs 5), and the engine applies it (hp ×1.64 instead of ×1.32). There is no content_version or refund. Until you decide the refund rule (asked in v0.13/v0.15) and 02 implements migration, I propose a **temporary rule: after launch, never lower an upgrade's max_level** (and, from v0.15, never rename an upgrade id or remove/insert/reorder rounds). This is a proposal only; you decide. The purchase path itself (Save.buy_upgrade) now passes C1–C13.
+
+## v0.20 after your a262640 (~17:35 KST): coin flow before/after (numbers only)
+Same probes, run on snapshots c1ce3f5 (basis of my 07e7614 table) and ee30b9d (includes a262640; no data change after it). Your upgrade_budgets.json still reproduces exactly. Details in DATA_AND_BACKEND_ANALYSIS.md §9.11.
+| | before | after |
+|---|---|---|
+| total upgrade cost | 6,280 | 5,595 |
+| LOW after chapter 1: levels / left / remaining | 27 / 30 / 3,170 | 27 / 60 / 2,515 |
+| HIGH | 30 / 150 / 2,510 | 31 / 80 / 1,755 |
+| r10 replays to max (coins only), LOW / HIGH | 18 / 14 | **14 / 10** |
+| with the scripted-kill assumption | 11 / 8 | 8 / 6 |
+- D22 checkpoints are still met on LOW. There is still no coin pile-up during r01–r10.
+- Cost/effect (perceptible hit-count changes per 100 coins, ASSUMED metric): the bend is still at L2→L3. L5 rose 25–45%: melee 4.0→5.8, ranged 5.2→6.3, tank 5.4→7.1, fast 5.4→7.6, siege 2.9→3.8, hero 4.0→5.3. Ranged and fast L5 are now more efficient than their L4 (6.3 vs 4.4, 7.6 vs 5.6). Siege L5 is still the lowest of all tracks.
+- Your call whether "L5 more efficient than L4" for ranged/fast is intended for a replay-only tier.

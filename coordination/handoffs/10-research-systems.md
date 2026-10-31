@@ -8,6 +8,12 @@ Updated: 2026-10-31 ~15:41 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
+## v0.20 (~17:36 KST): a262640 recompute + upgrade panel screen check
+- Economy before (c1ce3f5) vs after (ee30b9d): cost 6,280→5,595, LOW/HIGH r10 replays 18/14→14/10. L5 per-100-coin efficiency 2.9–5.4 → 3.8–7.6; ranged/fast L5 now beat L4. 01 request sent.
+- probe_upgrade_ui.gd run via 04 visible_launch on DISPLAY2 (HEAD 8104970 snapshot): 5 cases, text and coins match Save. P3 notes (stale menu wallet behind the modal, save_failed toast not visible, uncertain reuses the save_failed toast) sent to 04. Evidence in docs/research/systems/evidence/upgrade_ui_8104970/.
+- F1: not fixed (save.gd last 4d77225). Waiting; 02 note added.
+- Scratch outputs are in docs/research/systems/.local_inspect (git-ignored) because %TEMP% files vanished.
+
 ## v0.19 (~17:22 KST): buy_upgrade C1–C13 automated
 - probe_upgrade_transaction.gd: part E (C6–C13, C5b) and a 120 s watchdog. Run at a clean origin/main ed7218a full snapshot: 14/14 PASS (2.0 s).
 - F1 (P3): in the after-recovery state, an after_tmp_write failure returns save_failed but the .tmp is adopted on reload (440/L2). Sent to 02.
