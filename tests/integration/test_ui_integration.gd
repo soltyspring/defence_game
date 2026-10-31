@@ -161,8 +161,38 @@ func _run() -> void:
 	check(up != null and up.visible, "round select → upgrades panel opens")
 	if up != null:
 		var real_api: bool = up.purchase_available()
-		var any_btn: bool = not up.buy_buttons.is_empty()
-		check(real_api or (any_btn and up.buy_buttons[0].disabled and up.status_text != ""), "upgrade buy %s (Save.buy_upgrade %s)" % ["active" if real_api else "inactive with notice", "present" if real_api else "missing"])
+		check(real_api, "real engine exposes the purchase contract (Events.cmd_buy_upgrade / upgrade_result)")
+		if real_api and up.rows.size() >= 3:
+			# real purchases on the isolated test save (02 Save.buy_upgrade through App)
+			var id0 := str(up.rows[0].id)
+			var lv0: int = save.upgrade_level(id0)
+			var cost0: int = save.upgrade_cost(id0, lv0 + 1)
+			save.progress.coins = cost0 + 5
+			up._refresh()
+			await _frames(1)
+			check(not up.buy_buttons[0].disabled, "buy button enabled with enough coins")
+			up._lock_until_ms = 0
+			tap(up.buy_buttons[0])
+			tap(up.buy_buttons[0])          # double tap in the same frame
+			await _frames(2)
+			check(up.status_code == "ok" and save.upgrade_level(id0) == lv0 + 1 and int(save.progress.coins) == 5, "real purchase ok once: level %d→%d, coins %d (double tap ignored)" % [lv0, save.upgrade_level(id0), int(save.progress.coins)])
+			await shot("2b_upgrade_ok")
+			up._lock_until_ms = 0
+			var id1 := str(up.rows[1].id)
+			var lv1: int = save.upgrade_level(id1)
+			tap(up.buy_buttons[1])
+			await _frames(2)
+			check(up.status_code == "not_enough_coins" and save.upgrade_level(id1) == lv1 and int(save.progress.coins) == 5, "real not_enough_coins: nothing charged (%s)" % up.status_text)
+			await shot("2c_upgrade_coins")
+			var id2 := str(up.rows[2].id)
+			var calls: int = up.buy_calls
+			save.progress.upgrades[id2] = int(up.rows[2].max_level)   # test-only setup on the isolated save
+			up._refresh()
+			up._lock_until_ms = 0
+			tap(up.buy_buttons[2])
+			await _frames(2)
+			check(up.status_code == "max_level" and up.buy_calls == calls and up.buy_buttons[2].disabled, "real max level: no request sent, button disabled")
+			await shot("2d_upgrade_max")
 		await shot("2b_upgrades")
 		tap(up.btn_close)
 		await _frames(2)
@@ -263,6 +293,23 @@ func _run() -> void:
 	tap(hud.pause_buttons[0])
 	await _seconds(0.3)
 	check(not sim.paused and sim.t > t_paused, "resume continues sim (t %.2f→%.2f)" % [t_paused, sim.t])
+	if tile == 0:
+		# 02 R6 + 01 D21: pressure waves excluded from the HUD count; first-wave banner on the real signal.
+		var last_snap: Dictionary = snaps.back()
+		check(int(last_snap.get("wave", {}).get("total", -1)) == 3, "r01 HUD wave total = 3 (pressure waves excluded): %s" % [last_snap.get("wave")])
+		var fired := []
+		events.wave_cleared.connect(func(info): fired.append(info))
+		var guard := 0
+		while fired.is_empty() and sim.t < 120.0 and not sim.ended and guard < 400:
+			for k in 30:                      # fast-forward the REAL sim, 0.5 s per frame
+				sim.step(1.0 / 60.0)
+			guard += 1
+			await process_frame
+		await _frames(2)
+		check(not fired.is_empty() and int(fired[0].index) == 1, "real wave_cleared(index 1) fired at t=%.1f s (%s)" % [float(fired[0].t) if not fired.is_empty() else -1.0, fired])
+		check(hud.wave_cleared_shown and hud.banner_label.text == hud.UiText.t("banner.first_wave_cleared"), "HUD first-wave banner shown on the real signal ('%s')" % hud.banner_label.text)
+		await shot("3e_wave_cleared")
+		check(fired.size() == 1, "wave_cleared fired once so far (%d)" % fired.size())
 	# win → result
 	# shortcut: apply lethal damage through the sim's own base-damage path (same code a siege hit uses)
 	sim._damage_base(sim.SIDE_ENEMY, sim.enemy_base.hp + 1.0)

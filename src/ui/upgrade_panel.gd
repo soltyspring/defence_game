@@ -14,9 +14,15 @@ const UiStyle := preload("res://src/ui/ui_style.gd")
 const UiText := preload("res://src/ui/ui_text.gd")
 const TouchButton := preload("res://src/ui/touch_button.gd")
 
-## Injection points (tests / preview). Default: /root/Content, /root/Save.
+## Injection points (tests / preview). Default: /root/Content, /root/Save, /root/Events.
 var content: Object
 var save: Object
+var bus: Object
+## Double-tap guard: after any purchase attempt the panel ignores further buy taps for this long
+## (a second tap after a synchronous success would otherwise buy the NEXT level = 2 charges).
+const BUY_LOCK_MS := 400
+var _lock_until_ms := 0
+var buy_calls := 0            # QA: purchase requests actually sent
 var target := 40.0
 var panel_rect := Rect2()
 var page := 0
@@ -41,7 +47,15 @@ func _content() -> Object:
 func _save() -> Object:
 	return save if save != null else get_node_or_null("/root/Save")
 
+func _bus() -> Object:
+	return bus if bus != null else get_node_or_null("/root/Events")
+
+## 02 R7 (INTERFACES §3 v1.5): Events.cmd_buy_upgrade → Events.upgrade_result. Direct
+## Save.buy_upgrade is the fallback (tests / preview without the bus contract).
 func purchase_available() -> bool:
+	var b := _bus()
+	if b != null and b.has_signal("cmd_buy_upgrade") and b.has_signal("upgrade_result"):
+		return true
 	var s := _save()
 	return s != null and s.has_method("buy_upgrade")
 
@@ -55,6 +69,9 @@ func coins() -> int:
 	return int(progress().get("coins", 0))
 
 func level_of(id: String) -> int:
+	var sv := _save()
+	if sv != null and sv.has_method("upgrade_level"):
+		return int(sv.upgrade_level(id))   # authoritative (02)
 	var ups = progress().get("upgrades", {})
 	var start := 1
 	var c := _content()
@@ -81,6 +98,9 @@ func visible_upgrades() -> Array:
 	return out
 
 func next_cost(u: Dictionary) -> int:
+	var sv := _save()
+	if sv != null and sv.has_method("upgrade_cost"):
+		return int(sv.upgrade_cost(str(u.id), level_of(str(u.id)) + 1))   # -1 = no further level
 	var lv := level_of(str(u.id))
 	var costs: Array = u.get("costs", [])
 	var i := lv - int(_content().meta.get("upgrade_level_start", 1)) if _content() != null else lv - 1
@@ -208,13 +228,32 @@ func _on_buy(slot: int) -> void:
 	if not purchase_available():
 		_set_status("unavailable", u)
 		return
-	var code := str(_save().buy_upgrade(id, level_of(id) + 1))
+	var now := Time.get_ticks_msec()
+	if now < _lock_until_ms:
+		return                              # double tap: ignored, exactly one request per press
+	_lock_until_ms = now + BUY_LOCK_MS
+	var to := level_of(id) + 1
+	var code := ""
+	var b := _bus()
+	buy_calls += 1
+	if b != null and b.has_signal("cmd_buy_upgrade") and b.has_signal("upgrade_result"):
+		var got := {}
+		var cb := func(r: Dictionary) -> void:
+			if str(r.get("id", "")) == id:
+				got.merge(r)
+		b.connect("upgrade_result", cb)
+		b.emit_signal("cmd_buy_upgrade", id, to)   # synchronous in 02's App (R7)
+		b.disconnect("upgrade_result", cb)
+		code = str(got.get("code", "no_reply"))
+	else:
+		code = str(_save().buy_upgrade(id, to))
 	_set_status(code, u)
 	_refresh()
 
 const STATUS_KIND := {
 	"ok": "good", "already_applied": "good", "max_level": "info", "not_enough_coins": "warn",
-	"save_failed": "error", "read_only": "error", "locked": "warn", "unknown_id": "error", "unavailable": "info",
+	"save_failed": "error", "save_uncertain": "error", "read_only": "error", "locked": "warn", "unknown_id": "error",
+	"invalid_level": "error", "no_reply": "error", "unavailable": "info",
 }
 
 func _set_status(code: String, u: Dictionary) -> void:
@@ -228,6 +267,8 @@ func _set_status(code: String, u: Dictionary) -> void:
 			status_text = UiText.t("ui.upgrade_max")
 		"save_failed", "read_only":
 			status_text = UiText.t("ui.upgrade_save_failed")
+		"save_uncertain":
+			status_text = UiText.t("ui.upgrade_save_uncertain")
 		"unavailable":
 			status_text = UiText.t("ui.upgrade_unavailable")
 		"locked":

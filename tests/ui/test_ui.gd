@@ -880,6 +880,7 @@ func test_qaj3_and_upgrades() -> void:
 		fs.costs[u.id] = int(u.costs[0])
 	panel.content = content
 	panel.save = fs
+	panel.bus = Node.new()   # no purchase signals → direct FakeSave path (never the real Events/Save)
 	root.add_child(panel)
 	panel.open(Vector2(640, 360), Rect2(0, 0, 640, 360), 40.0)
 	await _frames(1)
@@ -896,17 +897,19 @@ func test_qaj3_and_upgrades() -> void:
 	var c0: int = fs.progress.coins
 	tap(panel.buy_buttons[0])
 	check(panel.status_code == "ok" and fs.calls.back() == [str(first.id), 2] and fs.progress.coins == c0 - fs.costs[first.id], "buy → ok, to_level 2, coins spent (%s %s)" % [panel.status_code, fs.calls.back()])
-	# not enough coins
+	# not enough coins (each case is a separate press → clear the 400 ms double-tap lock)
 	fs.progress.coins = 0
+	panel._lock_until_ms = 0
 	tap(panel.buy_buttons[1])
 	await _frames(1)
 	check(panel.status_code == "not_enough_coins" and panel.status_text.contains(str(int(panel.rows[1].costs[0]))), "not enough coins → shows missing amount (%s)" % panel.status_text)
 	# save failed
 	fs.progress.coins = 9999
 	fs.next_code = "save_failed"
+	panel._lock_until_ms = 0
 	tap(panel.buy_buttons[1])
 	await _frames(1)
-	check(panel.status_code == "save_failed" and panel.status_text == UiText.t("ui.upgrade_save_failed") and panel.status_kind_drawn == "error", "save_failed → distinct error message")
+	check(panel.status_code == "save_failed" and panel.status_text == UiText.t("ui.upgrade_save_failed") and P.STATUS_KIND["save_failed"] == "error", "save_failed → distinct error message")
 	# max level (UI-side, no call)
 	fs.next_code = ""
 	fs.progress.upgrades[str(panel.rows[2].id)] = int(panel.rows[2].max_level)
@@ -919,7 +922,25 @@ func test_qaj3_and_upgrades() -> void:
 		panel._set_status(code, panel.rows[0])
 		msgs[code] = [panel.status_text, P.STATUS_KIND.get(code)]
 	check(msgs.values().map(func(m): return m[0]).duplicate().size() == 4 and msgs.ok[0] != msgs.not_enough_coins[0] and msgs.max_level[0] != msgs.save_failed[0] and msgs.ok[1] != msgs.save_failed[1], "the four results have different text and kinds (%s)" % [msgs])
+	# double tap in the same frame → exactly one purchase request
+	fs.progress.coins = 9999
+	panel._lock_until_ms = 0
+	var calls_before: int = fs.calls.size()
+	tap(panel.buy_buttons[0])
+	tap(panel.buy_buttons[0])
+	check(fs.calls.size() == calls_before + 1, "double tap → one buy_upgrade call (%d)" % (fs.calls.size() - calls_before))
+	# bus contract path (02 R7): cmd_buy_upgrade → upgrade_result, on a private bus
+	var pbus: Node = EventsScript.new()
+	root.add_child(pbus)
+	var seen := []
+	pbus.cmd_buy_upgrade.connect(func(id, to): seen.append([id, to]); pbus.upgrade_result.emit({"id": id, "to_level": to, "code": "save_uncertain", "coins": 1, "level": to - 1}))
+	panel.bus = pbus
+	panel._lock_until_ms = 0
+	tap(panel.buy_buttons[0])
+	check(seen.size() == 1 and panel.status_code == "save_uncertain" and P.STATUS_KIND["save_uncertain"] == "error" and panel.status_text == UiText.t("ui.upgrade_save_uncertain"), "bus path: cmd_buy_upgrade sent once, upgrade_result code shown (%s %s)" % [seen, panel.status_code])
+	pbus.queue_free()
 	# inactive without the 02 contract
+	panel.bus = Node.new()
 	panel.save = Node.new()
 	panel.open(Vector2(640, 360), Rect2(0, 0, 640, 360), 40.0)
 	check(not panel.purchase_available() and panel.buy_buttons[0].disabled and panel.status_text == UiText.t("ui.upgrade_unavailable"), "no Save.buy_upgrade → inactive buttons + notice")

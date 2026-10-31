@@ -126,6 +126,7 @@ func open_upgrades() -> void:
 		upgrade_panel.closed.connect(func(): queue_redraw())
 		add_child(upgrade_panel)
 	move_child(upgrade_panel, -1)
+	upgrade_panel.bus = bus   # same bus as the screen (private bus in tests/preview)
 	upgrade_panel.open(view, safe, target)
 
 func modal_open() -> bool:
