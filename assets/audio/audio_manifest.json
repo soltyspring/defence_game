@@ -1,7 +1,7 @@
 {
  "version": 1,
  "generator": "tools/audio/synth.py",
- "generator_version": 3,
+ "generator_version": 4,
  "technique": "deterministic numpy synthesis (oscillators/noise/envelopes/filters); no samples, no AI services",
  "license": "Original work created for this project by the 05-audio worker with tools/audio/synth.py. No third-party samples, loops, presets, downloaded audio or AI audio services were used, so no third-party licence or attribution applies. Rights belong to the project owner; the public licence (if any) is the project owner’s decision and has not been chosen.",
  "provenance": {
@@ -87,16 +87,16 @@
   },
   "ui_confirm": {
    "bus": "UI",
-   "vol_db": -7,
+   "vol_db": -8,
    "max": 1,
    "gap": 0.05,
    "prio": 7,
    "pitch": 0.0,
-   "faction": "neutral",
-   "desc": "rising two-note chime",
+   "faction": "bakery",
+   "desc": "whisk swish + small tray bell (01 R1)",
    "provenance": {
     "recipes": [
-     "r_ui_confirm"
+     "r34_ui_confirm"
     ],
     "seeds": [
      1003
@@ -109,10 +109,10 @@
    "variants": [
     {
      "file": "ui_confirm.wav",
-     "seconds": 0.2,
-     "bytes": 8864,
+     "seconds": 0.32,
+     "bytes": 14156,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -11.85
+     "rms_dbfs": -16.39
     }
    ]
   },
@@ -248,6 +248,7 @@
    "prio": 1,
    "pitch": 0.08,
    "faction": "neutral",
+   "group": "hit",
    "desc": "fallback hit when the target side is unknown (v2 crack)",
    "provenance": {
     "recipes": [
@@ -319,6 +320,7 @@
    "prio": 1,
    "pitch": 0.07,
    "faction": "bakery",
+   "group": "hit",
    "desc": "a bread soldier is hit: dry crust crunch",
    "provenance": {
     "recipes": [
@@ -370,6 +372,7 @@
    "prio": 1,
    "pitch": 0.08,
    "faction": "mold",
+   "group": "hit",
    "desc": "a mold unit is hit: wet squish + bubble",
    "provenance": {
     "recipes": [
@@ -421,6 +424,7 @@
    "prio": 1,
    "pitch": 0.08,
    "faction": "neutral",
+   "group": "hit",
    "desc": "ranged impact fallback",
    "provenance": {
     "recipes": [
@@ -818,17 +822,17 @@
   },
   "skill_barrage": {
    "bus": "SFX",
-   "vol_db": -4,
+   "vol_db": -5,
    "max": 1,
    "gap": 0.2,
    "prio": 9,
    "pitch": 0.0,
    "duck": -5,
    "faction": "bakery",
-   "desc": "falling whistle (0.8 s) + 3 impacts",
+   "desc": "crumb-shell volley: 5 oven-cannon launches, impacts rain from 0.8 s (01 R1)",
    "provenance": {
     "recipes": [
-     "r_skill_barrage"
+     "r34_skill_barrage"
     ],
     "seeds": [
      1032
@@ -843,7 +847,7 @@
      "seconds": 1.6,
      "bytes": 70604,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -17.44
+     "rms_dbfs": -21.55
     }
    ]
   },
@@ -1262,5 +1266,10 @@
   "invalid_level": "ui_error",
   "unavailable": "ui_error",
   "no_reply": "ui_error"
+ },
+ "groups": {
+  "hit": {
+   "min_gap": 0.36
+  }
  }
 }

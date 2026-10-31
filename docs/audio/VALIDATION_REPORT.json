@@ -35,15 +35,15 @@
    "ch": 1,
    "bits": 16,
    "rate": 22050,
-   "seconds": 0.2,
+   "seconds": 0.32,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -11.85,
+   "rms_dbfs": -16.39,
    "clipped": 0,
-   "dc": 0.00054,
+   "dc": -0.0,
    "edge_first": 0.0,
    "edge_last": 0.0,
-   "hf300_share": 0.982,
-   "mix_level_db": -18.8
+   "hf300_share": 1.0,
+   "mix_level_db": -24.4
   },
   "ui_error.wav": {
    "cue": "ui_error",
@@ -472,13 +472,13 @@
    "rate": 22050,
    "seconds": 1.6,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -17.44,
+   "rms_dbfs": -21.55,
    "clipped": 0,
    "dc": -0.0,
    "edge_first": 0.0,
    "edge_last": 0.0,
-   "hf300_share": 0.434,
-   "mix_level_db": -21.4
+   "hf300_share": 0.938,
+   "mix_level_db": -26.6
   },
   "skill_heal.wav": {
    "cue": "skill_heal",
@@ -687,11 +687,11 @@
   }
  },
  "budgets": {
-  "disk_bytes_total": 1559625,
+  "disk_bytes_total": 1564917,
   "disk_budget": 2500000,
-  "sfx_pcm_resident_bytes": 972180,
+  "sfx_pcm_resident_bytes": 977472,
   "sfx_pcm_budget": 2097152,
-  "worst_case_sfx_sum_db": 24.9,
+  "worst_case_sfx_sum_db": 24.8,
   "note": "worst case = every SFX/UI cue at max instances, peaks aligned; runtime voice caps (SFX pool 12, UI pool 3) plus Master limiter keep real output below this"
  },
  "failures": [],

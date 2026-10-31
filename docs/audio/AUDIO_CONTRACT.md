@@ -1,5 +1,5 @@
 # AUDIO_CONTRACT.md — audio event contract, mixer and budgets (owner: 05-audio)
-Version 1.4 (2026-10-31; v1.4 = upgrade sounds from the engine reply Events.upgrade_result, already_applied silent; v1.1 = off-screen policy, alert category, prepare_quit; v1.2 = theme cues hit_bread/hit_mold/hit_base_mold, `target_side` hit param; v1.3 = wave_cleared cue, upgrade_result cues, off-screen max attenuation −5 dB). Godot 4.7.2 / GDScript. Additive changes only without a version bump.
+Version 1.5 (2026-10-31; v1.5 = shared cue groups (hit min_gap 0.36 s), tray-bell/whisk ui_confirm, crumb-shell barrage; v1.4 = upgrade sounds from the engine reply Events.upgrade_result, already_applied silent; v1.1 = off-screen policy, alert category, prepare_quit; v1.2 = theme cues hit_bread/hit_mold/hit_base_mold, `target_side` hit param; v1.3 = wave_cleared cue, upgrade_result cues, off-screen max attenuation −5 dB). Godot 4.7.2 / GDScript. Additive changes only without a version bump.
 Reads: docs/contracts/ENGINE.md v1.0, INTERFACES.md v1.0. Nothing here changes 02/04 files; integration is requested in `coordination/requests/05-audio-to-*.md`.
 
 ## 1. Files
@@ -67,7 +67,8 @@ No double playback after integration: each derived category (`ui`, `command`, `d
 - Pools are allocated once at boot (no per-play node creation): **SFX 12**, **UI 3**, stinger 1, music 2 (cross-fade). Godot's WAV playback is cheap ("hundreds of simultaneous voices … are fine" per the docs); 12 is a provisional mobile clarity limit, not a CPU limit.
 - Per cue (manifest): `max` simultaneous instances, `gap` minimum retrigger interval, `prio` 0–10, `pitch` random ±jitter, `vol_db` mix gain, `duck` music duck dB.
 - Pool full: steal the lowest-priority, oldest voice if its priority ≤ the new cue's; otherwise drop the new cue (counted in `stats.dropped_voices`). Combat hits (prio 1) never displace skills, boss or hero cues (8–10).
-- Variants (hit_melee ×3) never repeat the same file twice in a row; pitch jitter ±8 %.
+- Variants never repeat the same file twice in a row; pitch jitter ±8 %.
+- Cue groups (v1.5): manifest `groups` + per-cue `group`. Group `hit` (hit_bread, hit_mold, hit_melee, hit_arrow) has `min_gap` 0.36 s shared across its cues (counted in `stats.dropped_group`). Chosen by the same-seed A/B in HIT_DENSITY_AB.md (83 → 49 hits/min); not yet confirmed by listening.
 - Ducking: music only; attack 60 dB/s, release 14 dB/s; deepest active request wins. Boss −8 dB, hero death −6, skills −3…−5, wave −4.
 - Volume taper: slider v ∈ [0,1] → gain v² (0.5 = −12 dB); 0 mutes the bus.
 

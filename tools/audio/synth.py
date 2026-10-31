@@ -35,7 +35,7 @@ SFX_SR = 22050          # mono 16-bit PCM; chip-style SFX do not need >11 kHz ba
 MUSIC_SR = 44100        # stereo, encoded to Ogg Vorbis (streamed, not decompressed into RAM)
 SFX_PEAK = 10 ** (-1.0 / 20)    # -1 dBFS sample peak ceiling
 MUSIC_PEAK = 10 ** (-3.0 / 20)  # -3 dBFS before lossy encode (leaves inter-sample/encoder headroom)
-GENERATOR_VERSION = 3
+GENERATOR_VERSION = 4
 
 # ----------------------------------------------------------------------------------------------
 # DSP primitives
@@ -765,25 +765,63 @@ def r31_upgrade_save_failed(rng):
     return mix(seq([(0.0, a), (0.14, b)], 0.35), burst(rng, 0.04, 0.01, 1500, 6000) * 0.5)
 
 
+# --- v3.4: 01 R1 timbre requests (tray-bell/whisk UI confirm, crumb-shell barrage) -----------------
+def whisk(rng, dur=0.09, up=True):
+    """Kitchen whisk swish: band-passed noise whose band sweeps up (or down) fast."""
+    n = n_samples(dur, SR)
+    lo = ramp(1800, 4500, n) if up else ramp(4500, 1800, n)
+    x = bandpass(noise(n, rng), lo, lo * 2.0, SR)
+    return x * env_adsr(n, SR, 0.01, dur * 0.3, 0.6, dur * 0.4)
+
+
+def r34_ui_confirm(rng):
+    """UI confirm (01 R1: 'tray-bell or whisk'): quick whisk swish up, then a small bright tray bell (A6) with a
+    softer partial a fifth up. 0.32 s, dry, clearly 'yes' but not as big as wave_cleared."""
+    out = np.zeros(n_samples(0.32, SR))
+    place(out, whisk(rng, 0.08, True) * 0.45, 0)
+    place(out, bell(midi_hz(93), 0.26, 0.08, bright=1.2) * 0.7, n_samples(0.06, SR))
+    place(out, bell(midi_hz(100), 0.2, 0.06) * 0.25, n_samples(0.075, SR))
+    return out
+
+
+def r34_skill_barrage(rng):
+    """Barrage (01 R1: 'a crumb-shell volley'): five oven-cannon 'pfoomp' launches in a rolling volley, a soft
+    rising whistle while the shells fly, then a rain of crumb-shell impacts starting at 0.8 s (data delay 0.8 s):
+    each impact = crust crack + small knock + crumb shower. 1.6 s."""
+    out = np.zeros(n_samples(1.6, SR))
+    for i in range(5):
+        n = n_samples(0.12, SR)
+        puff = bandpass(noise(n, rng), 500, 2200, SR) * env_adsr(n, SR, 0.004, 0.03, 0.4, 0.07)
+        launch = mix(puff * 0.6, thump(300 - 15 * i, 200, 0.08, 0.025, drive=2.0) * 0.25)
+        place(out, launch * (0.8 + 0.05 * i), n_samples(0.03 + 0.09 * i, SR))
+    n = n_samples(0.6, SR)
+    place(out, osc(ramp(900, 1600, n), n, SR, "sine") * env_adsr(n, SR, 0.08, 0.1, 0.5, 0.2) * 0.12, n_samples(0.2, SR))
+    for i, (dt, p) in enumerate([(0.80, 1.0), (0.88, 0.9), (0.95, 1.1), (1.03, 0.95), (1.10, 1.05)]):
+        hit = mix(burst(rng, 0.04, 0.01, 1500 * p, 6000), thump(380 * p, 250 * p, 0.07, 0.02, drive=2.0) * 0.3,
+                  crumbs(rng, 0.25, 22, 1600, 7000) * 0.6)
+        place(out, hit * (1.0 - 0.08 * i), n_samples(dt, SR))
+    return out
+
+
 CUES = {
     # faction: bakery (player side), mold (enemy side), neutral (UI/flow). desc = sound design intent.
     "ui_tap":          dict(r=[r_ui_tap], bus="UI", vol_db=-8, max=2, gap=0.03, prio=6, pitch=0.03, faction="neutral", desc="short square tick"),
     "ui_back":         dict(r=[r_ui_back], bus="UI", vol_db=-8, max=1, gap=0.05, prio=6, pitch=0.0, faction="neutral", desc="two falling ticks"),
-    "ui_confirm":      dict(r=[r_ui_confirm], bus="UI", vol_db=-7, max=1, gap=0.05, prio=7, pitch=0.0, faction="neutral", desc="rising two-note chime"),
+    "ui_confirm":      dict(r=[r34_ui_confirm], bus="UI", vol_db=-8, max=1, gap=0.05, prio=7, pitch=0.0, faction="bakery", desc="whisk swish + small tray bell (01 R1)"),
     "ui_error":        dict(r=[r_ui_error], bus="UI", vol_db=-9, max=1, gap=0.25, prio=6, pitch=0.0, faction="neutral", desc="double low buzz"),
     "deploy":          dict(r=[r3_deploy], bus="SFX", vol_db=-7, max=2, gap=0.06, prio=7, pitch=0.04, faction="bakery", desc="oven-door bell + crust footsteps"),
     "worker_buy":      dict(r=[r3_worker_buy], bus="SFX", vol_db=-9, max=1, gap=0.1, prio=7, pitch=0.0, faction="bakery", desc="shop bell ka-ching"),
     "gold_tick":       dict(r=[r_gold_tick], bus="SFX", vol_db=-13, max=2, gap=0.09, prio=2, pitch=0.05, faction="bakery", desc="coin glint"),
     "hit_melee":       dict(r=[lambda g, v=v: r_hit_melee(g, v) for v in range(5)],
-                            bus="SFX", vol_db=-7, max=2, gap=0.26, prio=1, pitch=0.08, faction="neutral",
+                            bus="SFX", vol_db=-7, max=2, gap=0.26, prio=1, pitch=0.08, faction="neutral", group="hit",
                             desc="fallback hit when the target side is unknown (v2 crack)"),
     "hit_bread":       dict(r=[lambda g, v=v: r3_hit_bread(g, v) for v in range(3)],
-                            bus="SFX", vol_db=-8, max=2, gap=0.22, prio=1, pitch=0.07, faction="bakery",
+                            bus="SFX", vol_db=-8, max=2, gap=0.22, prio=1, pitch=0.07, faction="bakery", group="hit",
                             desc="a bread soldier is hit: dry crust crunch"),
     "hit_mold":        dict(r=[lambda g, v=v: r3_hit_mold(g, v) for v in range(3)],
-                            bus="SFX", vol_db=-7, max=2, gap=0.22, prio=1, pitch=0.08, faction="mold",
+                            bus="SFX", vol_db=-7, max=2, gap=0.22, prio=1, pitch=0.08, faction="mold", group="hit",
                             desc="a mold unit is hit: wet squish + bubble"),
-    "hit_arrow":       dict(r=[r_hit_arrow], bus="SFX", vol_db=-10, max=2, gap=0.05, prio=1, pitch=0.08, faction="neutral", desc="ranged impact fallback"),
+    "hit_arrow":       dict(r=[r_hit_arrow], bus="SFX", vol_db=-10, max=2, gap=0.05, prio=1, pitch=0.08, faction="neutral", group="hit", desc="ranged impact fallback"),
     "shoot_arrow":     dict(r=[r_shoot_arrow], bus="SFX", vol_db=-12, max=2, gap=0.06, prio=1, pitch=0.08, faction="bakery", desc="baguette thrower whoosh"),
     "shoot_rock":      dict(r=[r_shoot_rock], bus="SFX", vol_db=-10, max=1, gap=0.12, prio=2, pitch=0.06, faction="bakery", desc="oven cannon puff + thunk"),
     "shoot_spit":      dict(r=[r3_shoot_spit], bus="SFX", vol_db=-11, max=2, gap=0.08, prio=1, pitch=0.08, faction="mold", desc="spore spit: wet ptoo + bubbles"),
@@ -796,7 +834,7 @@ CUES = {
     "hero_respawn":    dict(r=[r_hero_respawn], bus="SFX", vol_db=-8, max=1, gap=1.0, prio=8, pitch=0.0, faction="bakery", desc="rising sparkle arpeggio"),
     "skill_slam":      dict(r=[r_skill_slam], bus="SFX", vol_db=-4, max=1, gap=0.2, prio=9, pitch=0.0, duck=-4, faction="bakery", desc="rolling-pin ground pound"),
     "skill_rally":     dict(r=[r_skill_rally], bus="SFX", vol_db=-6, max=1, gap=0.2, prio=9, pitch=0.0, duck=-4, faction="bakery", desc="brass-like rally horn"),
-    "skill_barrage":   dict(r=[r_skill_barrage], bus="SFX", vol_db=-4, max=1, gap=0.2, prio=9, pitch=0.0, duck=-5, faction="bakery", desc="falling whistle (0.8 s) + 3 impacts"),
+    "skill_barrage":   dict(r=[r34_skill_barrage], bus="SFX", vol_db=-5, max=1, gap=0.2, prio=9, pitch=0.0, duck=-5, faction="bakery", desc="crumb-shell volley: 5 oven-cannon launches, impacts rain from 0.8 s (01 R1)"),
     "skill_heal":      dict(r=[r_skill_heal], bus="SFX", vol_db=-7, max=1, gap=0.2, prio=9, pitch=0.0, duck=-3, faction="bakery", desc="warm sine arpeggio"),
     "skill_cast":      dict(r=[r_skill_cast], bus="SFX", vol_db=-7, max=1, gap=0.2, prio=8, pitch=0.0, duck=-3, faction="bakery", desc="rising cast"),
     "wave_incoming":   dict(r=[r3_wave_incoming], bus="SFX", vol_db=-7, max=1, gap=1.0, prio=8, pitch=0.0, duck=-4, faction="bakery", desc="bakery alarm bell tolls twice + drum roll"),
@@ -813,6 +851,9 @@ CUES = {
 SKILL_KIND_CUE = {"aoe_damage": "skill_slam", "rally": "skill_rally", "meteor": "skill_barrage",
                   "heal_allies": "skill_heal", "summon": "skill_cast"}
 PROJECTILE_CUE = {"arrow": "shoot_arrow", "rock": "shoot_rock", "spit": "shoot_spit"}
+# Shared rate limits (v3.4). "hit": minimum seconds between ANY two hit cues (bread/mold/fallbacks), so the
+# faction split does not double hit density. Value chosen by the same-seed A/B in docs/audio/HIT_DENSITY_AB.md.
+CUE_GROUPS = {"hit": {"min_gap": 0.36}}   # same-seed A/B: 83 -> 49 hits/min (target 48-56); NOT yet confirmed by listening
 # 04 upgrade_panel result codes -> cue (semantic Events.sfx &"upgrade_result" {"code": code}); key name requested from 04 (C5)
 # "" = intentionally silent (already_applied = repeated tap of a finished purchase; the first tap already sounded)
 UPGRADE_RESULT_CUE = {"ok": "ui_upgrade_ok", "already_applied": "", "not_enough_coins": "ui_upgrade_no_coins",
@@ -1046,7 +1087,7 @@ def main() -> int:
                   "neutral": "UI and fallback cues"},
         "sfx_format": {"codec": "pcm_s16le", "rate": SFX_SR, "channels": 1},
         "cues": {}, "music": {}, "skill_kind_cue": SKILL_KIND_CUE, "projectile_cue": PROJECTILE_CUE,
-        "upgrade_result_cue": UPGRADE_RESULT_CUE,
+        "upgrade_result_cue": UPGRADE_RESULT_CUE, "groups": CUE_GROUPS,
     }
     seed = 1000
     for cue, c in CUES.items():

@@ -47,6 +47,11 @@ var _v_prio: Dictionary = {}    # AudioStreamPlayer -> int
 var _v_start: Dictionary = {}   # AudioStreamPlayer -> float (clock)
 var _v_end: Dictionary = {}     # AudioStreamPlayer -> float (clock)
 var _last_play: Dictionary = {} # cue -> clock
+## Shared rate limit across related cues (v3.4): manifest "groups": {name: {"min_gap": s}}, cue "group": name.
+## Example: hit_bread/hit_mold/hit_melee/hit_arrow share group "hit" so splitting hits by faction does not
+## double the hit density. group_gap is a runtime copy (tests may override it).
+var group_gap: Dictionary = {}   # group -> min seconds between ANY two cues of the group
+var _group_last: Dictionary = {} # group -> clock
 var _last_variant: Dictionary = {}
 
 var _clock := 0.0
@@ -63,7 +68,7 @@ var _bus_idx := {}
 var _lowpass_slot := -1
 var bridge: Node = null
 
-var stats := {"played": 0, "dropped_gap": 0, "dropped_max": 0, "dropped_voices": 0, "dropped_offscreen": 0, "attenuated_offscreen": 0,
+var stats := {"played": 0, "dropped_gap": 0, "dropped_max": 0, "dropped_voices": 0, "dropped_offscreen": 0, "attenuated_offscreen": 0, "dropped_group": 0,
 	"stolen": 0, "missing": 0, "peak_voices": 0, "load_ms": 0, "resident_sfx_bytes": 0}
 
 func _ready() -> void:
@@ -153,6 +158,8 @@ func _load_manifest() -> void:
 	var m: Dictionary = j.data
 	skill_kind_cue = m.get("skill_kind_cue", {})
 	projectile_cue = m.get("projectile_cue", {})
+	for g in m.get("groups", {}):
+		group_gap[str(g)] = float(m.groups[g].get("min_gap", 0.0))
 	upgrade_result_cue = m.get("upgrade_result_cue", {})
 	var pcm := 0
 	for cue in m.get("cues", {}):
@@ -246,6 +253,11 @@ func play(cue: StringName, params: Dictionary = {}) -> bool:
 	if _last_play.has(cue) and _clock - float(_last_play[cue]) < gap:
 		stats.dropped_gap += 1
 		return false
+	var grp := str(c.get("group", ""))
+	if grp != "" and float(group_gap.get(grp, 0.0)) > 0.0 and _group_last.has(grp) \
+			and _clock - float(_group_last[grp]) < float(group_gap[grp]):
+		stats.dropped_group += 1
+		return false
 	if cue_instances(cue) >= int(c.get("max", 1)):
 		stats.dropped_max += 1
 		return false
@@ -286,6 +298,7 @@ func play(cue: StringName, params: Dictionary = {}) -> bool:
 	_v_start[p] = _clock
 	_v_end[p] = _clock + s.get_length() / p.pitch_scale + 0.02
 	_last_play[cue] = _clock
+	if grp != "": _group_last[grp] = _clock
 	stats.played += 1
 	stats.peak_voices = maxi(stats.peak_voices, active_voices())
 	var dk := float(c.get("duck", 0.0))
