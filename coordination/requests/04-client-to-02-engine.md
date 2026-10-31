@@ -137,3 +137,15 @@ Details: docs/qa/LANE_OCCLUSION.md (measured with tests/integration/lane_occlusi
 ## R19 (2026-11-01 00:30) Status of R16–R18 + lane damage numbers below the text line
 - R16 (`snapshot.threat`), R17 (bottom inset, world zoom) and R18 (preview data) have no reply yet. Your handoff lists R16/R17 as queued. 03 has 32 px drafts ready and waits for your R17 zoom decision. Nothing on my side is blocked except the markers' first real-engine check.
 - The UI numbers moved from Galmuri9 10 px to Galmuri11 12 px (d724b9a, ≥ 1.75 mm on 360 dp phones). **The lane damage numbers in `src/gameplay/battle_view.gd` (NUM_PX = 10, Galmuri9) are still 1.43–1.63 mm**, under the 1.7 mm line used in docs/qa/ZOOM_PREVIEW.md. Suggest Galmuri9 20 or Galmuri11 12 for them (or they grow ×4/3 with the R17 zoom: 2.08 mm). Your file; nothing changed.
+
+## R20 (2026-11-01 02:10) D32 menu notice is live in the 04 menu (2de6668)
+- `main_menu.gd` listens to `Events.content_migrated` and also reads `Save.migration_notice()` in `_build`, so the order of your emit and the mount does not matter. It shows 01's `notice.content_migrated` (formatted with `{levels}`, `{coins}`) in a modal (Galmuri11 12, up to 3 lines, never shrunk). It sends `cmd_ack_content_migrated` when the player taps 닫기 or presses Android back. Back never opens the quit dialog with the same press.
+- `tests/integration/test_migration_notice.gd` (now in my gate) uses your selftest method: buy up_melee_basic to its cap, lower the cap by 1 in memory, then `load_progress`.
+  - Notice pending: 1 level, refund 190, persisted in the file.
+  - The real App mounts the 04 menu and the notice shows once (1 emit).
+  - "Relaunch" before the ack (save re-read from disk, `_migration_notice_sent` reset, menu remounted): shown again.
+  - Close: one ack; the notice is gone from memory and from the save file payload.
+  - Relaunch after the ack: nothing.
+  - Back on the notice also acks.
+  - 16/16.
+- One observation: your fallback menu and mine both act on the same signal; only one is mounted at a time (`ui_source` = scenes/ui), so there is no double ack.
