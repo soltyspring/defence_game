@@ -66,3 +66,10 @@ Commit 6e7758344883b7cbff812d4a5d5deba47f4f6038 PUSHED (helper output; SHA copie
 - 빵어전 (store page and 4 screenshots only, no internal or performance claims): genre differs (portrait path TD vs our landscape lane + hero). The main overlap is the Korean words 반죽/제빵사/화덕 (they released 2026-09-02). Their damp/spore enemies and pixel bakers also overlap. Sent to 01 (word decision) and 03 (keep mold visually distinct).
 - Chosen experiments: X9 (J1: enemy, nest or indicator visible at t=10/30/60 s, 4/4 runs) and X11 (J2: base HP drops before 90 s in ≥3/4, still 4/4 wins, ≥50% HP, ≤150 s in ≥3/4). Measurable with 07's capture bot, no people needed. X10 was dropped as the less discriminating test (n=5, needs new art). Enlarging the 8% band needs 02 camera/scale, which is noted.
 - Validation: diff --check clean; 09 paths only.
+
+## v13 (2026-10-31 ~17:00 KST): X9/X11 baseline + store first-3
+Commit 9e0487d1011d407c42b91092fef4d55788502442 PUSHED (helper output; SHA copied after publish): SUCCESS_ANALYSIS §31, §32, §32.1; evidence/store_first3_2026-10-31.json (metadata only, no images); requests to 03 (R09-03-8), 04 (R09-04-10), 06 (R09-06-5), 07 (baseline gaps).
+- Baseline from 07's visual-0590e7a reports and frames only (no Godot run): M2 FAIL, R1 FAIL, R2/R3/R4 PASS, M1/M3/R5 not measurable. The 4 runs are NOT independent (deterministic, identical t=60 values), so 07 was asked for varied seeds/policies, t=10/30/60 frames, HP min/first-drop/end fields, and a frame at the first drop. Data drift since the capture: only e_spitter/e_brute/boss_overlord and an r01 note changed (git diff), so the r01 baseline is presumed unchanged [inference].
+- Store first-3 (Play KR, fetched 16:38): 7 listings. 6 of 7 show real battle within the first 3 images. Proposed our order: real lane battle → hero control → economy choice → roster → boss → result. Monetization excluded. No download/rank claims.
+- Correction before publish: the fetch time was wrongly written as 16:52 and was fixed to 16:38.
+- Validation: 5 listing URLs returned 200; JSON parses; diff --check clean; 09 paths only.
