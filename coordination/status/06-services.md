@@ -7,7 +7,7 @@ Status: COMPLETE except the emulator install check.
 - **Emulator:** WAITING. No device, no 02 slot. When it comes, it runs inside heavy_run.
 - Q2 DEFERRED. Nothing published.
 Current task: none. Next: see handoff.
-Commits: 96e996245591795a75b03a580cd74de230cc3be0 [Test] PUSHED; docs in the next [Docs].
+Commits: 96e996245591795a75b03a580cd74de230cc3be0 [Test], 287ad661adcb35b9b73184c0b3be3d10538a1e5c [Docs] PUSHED.
 Previous: 29d31be / e78c790 / 6303e18 (isolation, AAB rerun).
 --- History (older entries, not current) ---
 (22:57 resume entry) Updated: 2026-10-31 ~23:08 KST (resumed; isolation committed; AAB rerun verified; emulator WAITING)

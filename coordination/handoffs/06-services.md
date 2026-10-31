@@ -15,7 +15,7 @@ Updated: 2026-10-31 ~23:33 KST (resumed after the 23:08:55 blue screen; heavy_ru
 - Run: heavy_run '06-services-suites', lock acquired after 308 s wait, 23:30:44 end.
 - Results: 502/0, 130/0, 161/0, listing 1831/0, m8 26/0, m10 81/0, android 189/0 (VERIFIED_DEBUG_ONLY / release WAITING), upgrade 927/0, integration PASS_INTEGRATED 156/0. OVERALL exit 0.
 - SVC06_ISOLATION isolated=true; 0 writes to the real folder; real save unchanged; 0 other Godot processes at start.
-- Commit: 96e996245591795a75b03a580cd74de230cc3be0 [Test] (heavy_run guard). Docs: this handoff/status, next [Docs] commit.
+- Commit: 96e996245591795a75b03a580cd74de230cc3be0 [Test] (heavy_run guard); 287ad661adcb35b9b73184c0b3be3d10538a1e5c [Docs] (this resume record, status, 02 request).
 ## Earlier resume (22:57) for reference
 Updated earlier: 2026-10-31 ~23:08 KST (resumed after the 97% stop at 20:27; new account, quota ~0.4% at 22:57)
 ## Resume check (22:57)
