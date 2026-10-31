@@ -302,11 +302,11 @@ func _draw() -> void:
 		var name_w := r.size.x - 76 - 8 - 130
 		var nm: Array = UiStyle.fit_text(display_name(u), name_w, UiStyle.FONT_S)
 		UiStyle.draw_text_left(self, nm[0], Vector2(r.position.x + 6, r.position.y + 12), UiStyle.FONT_S, UiStyle.C_TEXT)
-		UiStyle.draw_number(self, effect_text(u), Vector2(r.position.x + 6, r.position.y + 29), UiStyle.NUM_S, UiStyle.C_HP_PLAYER, -1)
+		UiStyle.draw_number(self, effect_text(u), Vector2(r.position.x + 6, r.position.y + 29), UiStyle.NUM_READ, UiStyle.C_HP_PLAYER, -1, UiStyle.NUM_READ_KIND)
 		var lv := level_of(str(u.id))
 		var mx := int(u.get("max_level", 1))
 		var lx := r.end.x - 76 - 8 - 124
-		UiStyle.draw_number(self, "Lv %d/%d" % [lv, mx], Vector2(lx, r.get_center().y), UiStyle.NUM_S, UiStyle.C_TEXT_DIM, -1)
+		UiStyle.draw_number(self, "Lv %d/%d" % [lv, mx], Vector2(lx, r.get_center().y), UiStyle.NUM_READ, UiStyle.C_TEXT_DIM, -1, UiStyle.NUM_READ_KIND)
 		if not is_max(u):
 			var cost := next_cost(u)
 			var col := UiStyle.C_GOLD if coins() >= cost else UiStyle.C_HP_ENEMY

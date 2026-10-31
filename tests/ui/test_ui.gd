@@ -70,6 +70,7 @@ func _run() -> void:
 	await test_threat_marker()
 	test_chrome_palette()
 	test_safe_area_display()
+	await test_readable_numbers()
 	for s in SECTIONS:
 		check(done.has(s), "section %s ran to completion (aborted by a script error otherwise)" % s)
 	print("[test_ui] passed=%d failed=%d" % [passes, failures.size()])
@@ -79,7 +80,7 @@ func _run() -> void:
 		print("  - " + f)
 	quit(1 if failures.size() > 0 else 0)
 
-const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard", "back_once", "wave_cleared", "upgrades", "title", "redraw_pattern", "threat_marker", "chrome", "safe_display"]
+const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard", "back_once", "wave_cleared", "upgrades", "title", "redraw_pattern", "threat_marker", "chrome", "safe_display", "readable_numbers"]
 var done := {}
 
 func test_compile_all(dir_path: String) -> void:
@@ -1167,3 +1168,48 @@ func test_safe_area_display() -> void:
 		var lane_bottom := v.y - HudLayout.GROUND_FROM_BOTTOM + 7.0
 		check(top >= lane_bottom, "HUD row top %.0f ≥ lowest unit sprite %.0f (view %s, target %.0f): 0 px covered" % [top, lane_bottom, v, c[1]])
 	done["safe_display"] = true
+
+# ---------------------------------------------------------------- readable numbers (≥ 1.7 mm on 360–412 dp phones)
+
+func test_readable_numbers() -> void:
+	# docs/qa/ZOOM_PREVIEW.md text table: Galmuri9 10 px digits (ink 9 px) were 1.43–1.63 mm. UI numbers now use
+	# NUM_READ = Galmuri11 12 px (ink 11 px = 1.75 mm at k=3 on a 360 dp / density 3.0 phone).
+	check(UiStyle_.NUM_READ == 12 and UiStyle_.NUM_READ_KIND == &"ui", "NUM_READ = Galmuri11 12 (%d, %s)" % [UiStyle_.NUM_READ, UiStyle_.NUM_READ_KIND])
+	var mm := 11.0 * 3.0 / (3.0 * 160.0) * 25.4
+	check(mm >= 1.7, "NUM_READ ink 11 px → %.2f mm on the smallest target phone (line 1.7)" % mm)
+	# no UI script draws numbers with the 10 px Galmuri9 cut any more (static scan)
+	var offenders := []
+	var stack := ["res://src/ui"]
+	while not stack.is_empty():
+		var d: String = stack.pop_back()
+		var da := DirAccess.open(d)
+		if da == null:
+			continue
+		for sub in da.get_directories():
+			stack.append(d.path_join(sub))
+		for f in da.get_files():
+			if f.ends_with(".gd") and f != "ui_style.gd":
+				var src := FileAccess.get_file_as_string(d.path_join(f))
+				if src.contains("UiStyle.NUM_S"):
+					offenders.append(f)
+	check(offenders.is_empty(), "no UI number drawn with Galmuri9 10 px (UiStyle.NUM_S users: %s)" % [offenders])
+	# fixed cells keep readouts stable at the new size
+	check(UiStyle_.number_width("1111/1111", 12, &"ui") == UiStyle_.number_width("8888/8888", 12, &"ui"), "NUM_READ fixed digit cells (1111 vs 8888)")
+	# HP numbers still fit their bar half in the narrowest top bar (640 + notches, target 48)
+	SafeArea.override_view_size = Vector2(640, 360)
+	SafeArea.override_safe_rect = Rect2(34, 0, 572, 360)
+	var hud: Control = _mount("res://scenes/ui/hud.tscn")
+	bus.battle_started.emit(MockEngine.sample_info(5, 3))
+	await _frames()
+	bus.hud_snapshot.emit({"gold": 120, "gold_max": 999, "income": 6.0, "cards": [], "skills": [], "army": {"player": 12, "cap": 36},
+		"player_base": {"hp": 1800.0, "hp_max": 1800.0}, "enemy_base": {"hp": 2400.0, "hp_max": 2400.0}, "wave": {"index": 2, "total": 4, "next_in": 9.0}})
+	await _frames(2)
+	var t: Control = hud.top
+	var bases: Rect2 = hud.layout.bases
+	var half := floorf((bases.size.x - 18) / 2)
+	check(t.base_labels.player == "1800/1800" and t.base_labels.enemy == "2400/2400", "full hp/max shown at NUM_READ in the narrowest bar (%s / %s)" % [t.base_labels.player, t.base_labels.enemy])
+	check((t.base_label_rects.player as Rect2).end.x <= bases.position.x + half and (t.base_label_rects.enemy as Rect2).position.x >= bases.position.x + half + 18, "HP labels stay in their bar half, clear of VS (%s %s, half %.0f)" % [t.base_label_rects.player, t.base_label_rects.enemy, half])
+	hud.queue_free()
+	SafeArea.override_safe_rect = Rect2(0, 0, 640, 360)
+	await _frames()
+	done["readable_numbers"] = true

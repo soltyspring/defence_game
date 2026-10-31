@@ -57,62 +57,62 @@
    }
   },
   {
-   "item": "resource cap / income digits (Galmuri9)",
-   "font": "Galmuri9.ttf",
-   "px": 10,
-   "ink_px": 9,
+   "item": "resource cap / income digits (NUM_READ)",
+   "font": "Galmuri11.ttf",
+   "px": 12,
+   "ink_px": 11,
    "devices": {
     "360x800dp": {
-     "mm": 1.43,
-     "ok": false
+     "mm": 1.75,
+     "ok": true
     },
     "393x873dp": {
-     "mm": 1.56,
-     "ok": false
+     "mm": 1.9,
+     "ok": true
     },
     "412x915dp": {
-     "mm": 1.63,
-     "ok": false
+     "mm": 2.0,
+     "ok": true
     }
    }
   },
   {
-   "item": "base HP numbers 1500/1500 (Galmuri9)",
-   "font": "Galmuri9.ttf",
-   "px": 10,
-   "ink_px": 9,
+   "item": "base HP numbers 1500/1500 (NUM_READ)",
+   "font": "Galmuri11.ttf",
+   "px": 12,
+   "ink_px": 11,
    "devices": {
     "360x800dp": {
-     "mm": 1.43,
-     "ok": false
+     "mm": 1.75,
+     "ok": true
     },
     "393x873dp": {
-     "mm": 1.56,
-     "ok": false
+     "mm": 1.9,
+     "ok": true
     },
     "412x915dp": {
-     "mm": 1.63,
-     "ok": false
+     "mm": 2.0,
+     "ok": true
     }
    }
   },
   {
-   "item": "army count 5/36 (Galmuri9)",
-   "font": "Galmuri9.ttf",
-   "px": 10,
-   "ink_px": 9,
+   "item": "army count 5/36 (NUM_READ)",
+   "font": "Galmuri11.ttf",
+   "px": 12,
+   "ink_px": 11,
    "devices": {
     "360x800dp": {
-     "mm": 1.43,
-     "ok": false
+     "mm": 1.75,
+     "ok": true
     },
     "393x873dp": {
-     "mm": 1.56,
-     "ok": false
+     "mm": 1.9,
+     "ok": true
     },
     "412x915dp": {
-     "mm": 1.63,
-     "ok": false
+     "mm": 2.0,
+     "ok": true
     }
    }
   },
@@ -177,42 +177,62 @@
    }
   },
   {
-   "item": "card cost 30 (Galmuri9)",
-   "font": "Galmuri9.ttf",
-   "px": 10,
-   "ink_px": 9,
+   "item": "card cost 30 (NUM_READ)",
+   "font": "Galmuri11.ttf",
+   "px": 12,
+   "ink_px": 11,
    "devices": {
     "360x800dp": {
-     "mm": 1.43,
-     "ok": false
+     "mm": 1.75,
+     "ok": true
     },
     "393x873dp": {
-     "mm": 1.56,
-     "ok": false
+     "mm": 1.9,
+     "ok": true
     },
     "412x915dp": {
-     "mm": 1.63,
-     "ok": false
+     "mm": 2.0,
+     "ok": true
     }
    }
   },
   {
-   "item": "card badge / worker count (Galmuri9)",
-   "font": "Galmuri9.ttf",
-   "px": 10,
-   "ink_px": 9,
+   "item": "card badge / worker count (NUM_READ)",
+   "font": "Galmuri11.ttf",
+   "px": 12,
+   "ink_px": 11,
    "devices": {
     "360x800dp": {
-     "mm": 1.43,
-     "ok": false
+     "mm": 1.75,
+     "ok": true
     },
     "393x873dp": {
-     "mm": 1.56,
-     "ok": false
+     "mm": 1.9,
+     "ok": true
     },
     "412x915dp": {
-     "mm": 1.63,
-     "ok": false
+     "mm": 2.0,
+     "ok": true
+    }
+   }
+  },
+  {
+   "item": "upgrade Lv / effect, menu version (NUM_READ)",
+   "font": "Galmuri11.ttf",
+   "px": 12,
+   "ink_px": 11,
+   "devices": {
+    "360x800dp": {
+     "mm": 1.75,
+     "ok": true
+    },
+    "393x873dp": {
+     "mm": 1.9,
+     "ok": true
+    },
+    "412x915dp": {
+     "mm": 2.0,
+     "ok": true
     }
    }
   },

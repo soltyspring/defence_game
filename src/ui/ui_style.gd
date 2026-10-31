@@ -44,6 +44,11 @@ const FONT_XL := 36
 # Galmuri9 numerals grid: 10 / 20 only.
 const NUM_S := 10
 const NUM_L := 20
+## Smallest number style used in the UI (docs/qa/ZOOM_PREVIEW.md text table, Codex review of aec9c1f): Galmuri11 12 px
+## digits, ink 11 px = 1.75 mm on a 360 dp phone at k=3 (density 3.0), 1.90 / 2.00 mm on 393 / 412 dp. Galmuri9 10 px
+## (ink 9 px = 1.43–1.63 mm) was under the 1.7 mm line, so it is no longer used for numbers.
+const NUM_READ := 12
+const NUM_READ_KIND := &"ui"
 const ALLOWED_SIZES := {&"ui": [12, 24, 36], &"bold": [12, 24, 36], &"num": [10, 20]}
 
 static var _theme: Theme

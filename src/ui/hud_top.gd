@@ -49,7 +49,7 @@ func _hp_text(b: Dictionary, max_w: float) -> String:
 		return ""
 	var hp := ceili(maxf(0.0, float(b.get("hp", 0))))
 	var full := "%d/%d" % [hp, ceili(float(b.get("hp_max", 0)))]
-	return full if UiStyle.number_width(full, UiStyle.NUM_S) <= max_w else str(hp)
+	return full if UiStyle.number_width(full, UiStyle.NUM_READ, UiStyle.NUM_READ_KIND) <= max_w else str(hp)
 
 func _init() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -74,12 +74,12 @@ func _draw_resources(r: Rect2) -> void:
 	var ename := UiText.t("res.energy")
 	var name_w := maxf(UiStyle.text_width(sname, UiStyle.FONT_S), UiStyle.text_width(ename, UiStyle.FONT_S))
 	var income_txt := "+%.1f/s" % income
-	var income_w := UiStyle.number_width(income_txt, UiStyle.NUM_S)
+	var income_w := UiStyle.number_width(income_txt, UiStyle.NUM_READ, UiStyle.NUM_READ_KIND)
 	# Stable-width readout: current gold right-aligned in a slot as wide as the cap's digits.
 	var digits := maxi(3, str(maxi(gmax, gold)).length())
 	var slot := UiStyle.digit_cell(UiStyle.FONT_M, &"bold") * digits
 	var cap_txt := "/%d" % gmax if gmax > 0 else ""
-	var cap_w := UiStyle.number_width(cap_txt, UiStyle.NUM_S)
+	var cap_w := UiStyle.number_width(cap_txt, UiStyle.NUM_READ, UiStyle.NUM_READ_KIND)
 	var avail := r.size.x - 20 - 6
 	# priority: amount > resource name > income rate (the name must stay visible, QA-J3)
 	var show_name := name_w + 4 + slot + cap_w <= avail
@@ -92,9 +92,9 @@ func _draw_resources(r: Rect2) -> void:
 	var gx := nx
 	UiStyle.draw_number(self, "%d" % gold, Vector2(gx + slot, y1), UiStyle.FONT_M, UiStyle.C_GOLD, 1, &"bold")
 	if gmax > 0:
-		UiStyle.draw_number(self, cap_txt, Vector2(gx + slot, y1), UiStyle.NUM_S, UiStyle.C_TEXT_DIM, -1)
+		UiStyle.draw_number(self, cap_txt, Vector2(gx + slot, y1), UiStyle.NUM_READ, UiStyle.C_TEXT_DIM, -1, UiStyle.NUM_READ_KIND)
 	if show_income:
-		UiStyle.draw_number(self, income_txt, Vector2(r.end.x - 6, y1), UiStyle.NUM_S, UiStyle.C_TEXT_DIM, 1)
+		UiStyle.draw_number(self, income_txt, Vector2(r.end.x - 6, y1), UiStyle.NUM_READ, UiStyle.C_TEXT_DIM, 1, UiStyle.NUM_READ_KIND)
 	gold_slot_debug = Rect2(gx, y1 - 6, slot, 12)
 	income_rect = Rect2(r.end.x - 6 - income_w, y1 - 6, income_w, 12) if show_income else Rect2()
 	var mana := float(snap.get("mana", 0))
@@ -115,7 +115,7 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 	var pb: Dictionary = snap.get("player_base", {})
 	var eb: Dictionary = snap.get("enemy_base", {})
 	var half := floorf((r.size.x - 18) / 2)
-	var h := 14.0
+	var h := 16.0   # 14 px inner: Galmuri11 12 digits (ink 11) + 1 px shadow on the dark plate
 	var y := r.position.y + 4
 	var pr := float(pb.get("hp", 1)) / maxf(1.0, float(pb.get("hp_max", 1)))
 	var er := float(eb.get("hp", 1)) / maxf(1.0, float(eb.get("hp_max", 1)))
@@ -128,26 +128,26 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 	var w := floorf(inner.size.x * clampf(er, 0, 1))
 	if w > 0:
 		UiStyle.draw_hatch(self, Rect2(inner.end.x - w, inner.position.y, w, inner.size.y), UiStyle.C_HP_ENEMY)   # pattern: not hue alone (QA-B013)
-	UiStyle.draw_number(self, "VS", Vector2(r.position.x + half + 9, y + h / 2), UiStyle.NUM_S, UiStyle.C_TEXT_DIM, 0)
-	# exact HP numbers (09 R09-04-5): fixed-cell Galmuri9 10 inside each bar, at the OUTER end so they
-	# never touch "VS"; "hp/max" when it fits, else "hp". Bar is 14 high → 12 px inner > 10 px glyph line.
+	UiStyle.draw_number(self, "VS", Vector2(r.position.x + half + 9, y + h / 2), UiStyle.NUM_READ, UiStyle.C_TEXT_DIM, 0, UiStyle.NUM_READ_KIND)
+	# exact HP numbers (09 R09-04-5): fixed-cell Galmuri11 12 digits (NUM_READ, ≥ 1.7 mm on phones) inside each bar, at
+	# the OUTER end so they never touch "VS"; "hp/max" when it fits, else "hp". Bar is 16 high → 14 px inner.
 	base_labels.player = _hp_text(pb, half - 8)
 	base_labels.enemy = _hp_text(eb, half - 8)
 	var cy := y + h / 2
 	# solid backing plate under the digits so the enemy stripes never run through glyph strokes; same
 	# plate on both bars so only the bar fill differs. (Correction: the "8 read as 3" given as the reason
 	# in commit 5eab876 was wrong — r05 enemy base HP really is 1300 in data, c15e43a.)
-	var pw := UiStyle.number_width(base_labels.player, UiStyle.NUM_S)
-	var ew0 := UiStyle.number_width(base_labels.enemy, UiStyle.NUM_S)
+	var pw := UiStyle.number_width(base_labels.player, UiStyle.NUM_READ, UiStyle.NUM_READ_KIND)
+	var ew0 := UiStyle.number_width(base_labels.enemy, UiStyle.NUM_READ, UiStyle.NUM_READ_KIND)
 	var plate := Color(0.05, 0.05, 0.08, 0.78)
 	if pw > 0:
 		draw_rect(Rect2(r.position.x + 2, y + 2, pw + 4, h - 4), plate)
 	if ew0 > 0:
 		draw_rect(Rect2(er_rect.end.x - 6 - ew0, y + 2, ew0 + 4, h - 4), plate)
-	UiStyle.draw_number(self, base_labels.player, Vector2(r.position.x + 4, cy), UiStyle.NUM_S, UiStyle.C_TEXT, -1)
-	UiStyle.draw_number(self, base_labels.enemy, Vector2(er_rect.end.x - 4, cy), UiStyle.NUM_S, UiStyle.C_TEXT, 1)
-	base_label_rects.player = Rect2(r.position.x + 4, y, UiStyle.number_width(base_labels.player, UiStyle.NUM_S), h)
-	var ew := UiStyle.number_width(base_labels.enemy, UiStyle.NUM_S)
+	UiStyle.draw_number(self, base_labels.player, Vector2(r.position.x + 4, cy), UiStyle.NUM_READ, UiStyle.C_TEXT, -1, UiStyle.NUM_READ_KIND)
+	UiStyle.draw_number(self, base_labels.enemy, Vector2(er_rect.end.x - 4, cy), UiStyle.NUM_READ, UiStyle.C_TEXT, 1, UiStyle.NUM_READ_KIND)
+	base_label_rects.player = Rect2(r.position.x + 4, y, UiStyle.number_width(base_labels.player, UiStyle.NUM_READ, UiStyle.NUM_READ_KIND), h)
+	var ew := UiStyle.number_width(base_labels.enemy, UiStyle.NUM_READ, UiStyle.NUM_READ_KIND)
 	base_label_rects.enemy = Rect2(er_rect.end.x - 4 - ew, y, ew, h)
 	var wave: Dictionary = snap.get("wave", {})
 	var txt := round_title
@@ -161,7 +161,7 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 		UiStyle.draw_text_centered(self, UiStyle.fit_text(txt, wr.size.x - 70, UiStyle.FONT_S)[0], wr.get_center(), UiStyle.FONT_S, UiStyle.C_TEXT)
 	var army: Dictionary = snap.get("army", {})
 	if not army.is_empty():
-		UiStyle.draw_number(self, "%d/%d" % [int(army.get("player", 0)), int(army.get("cap", 0))], Vector2(r.position.x, wr.get_center().y), UiStyle.NUM_S, UiStyle.C_HP_PLAYER, -1)
+		UiStyle.draw_number(self, "%d/%d" % [int(army.get("player", 0)), int(army.get("cap", 0))], Vector2(r.position.x, wr.get_center().y), UiStyle.NUM_READ, UiStyle.C_HP_PLAYER, -1, UiStyle.NUM_READ_KIND)
 	_draw_boss(layout.get("boss", Rect2()))
 
 ## Boss HP bar (HudSnapshot.boss, 02 R6) while a boss is alive: name (Galmuri11 12) + bar + hp numbers.

@@ -138,6 +138,6 @@ func _draw() -> void:
 		UiStyle.draw_glyph(self, &"coin", Vector2(safe.position.x + 14, safe.position.y + 14), 5)
 	UiStyle.draw_number(self, str(int(p.get("coins", 0))), Vector2(safe.position.x + 25, safe.position.y + 14), UiStyle.FONT_M, UiStyle.C_GOLD, -1, &"bold")
 	var ver := str(ProjectSettings.get_setting("application/config/version", ""))
-	UiStyle.draw_number(self, "v" + ver, Vector2(safe.end.x - 6, safe.end.y - 10), UiStyle.NUM_S, UiStyle.C_TEXT_DIM, 1)
+	UiStyle.draw_number(self, "v" + ver, Vector2(safe.end.x - 6, safe.end.y - 10), UiStyle.NUM_READ, UiStyle.C_TEXT_DIM, 1, UiStyle.NUM_READ_KIND)
 	if _notice != "":
 		UiStyle.draw_text_centered(self, _notice, Vector2(safe.get_center().x, safe.end.y - 24), UiStyle.FONT_S, UiStyle.C_ACCENT)

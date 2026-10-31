@@ -187,13 +187,13 @@ func _draw() -> void:
 			for li in lines.size():
 				UiStyle.draw_text_centered(self, lines[li], Vector2(size.x / 2, y0 + li * lh) + off, fl.size, tc, true, fl.kind)
 	if has_sub:
-		UiStyle.draw_number(self, sub_text, Vector2(size.x / 2, cost_y) + off, UiStyle.NUM_S, UiStyle.C_GOLD if not disabled else UiStyle.C_TEXT_DIM, 0)
+		UiStyle.draw_number(self, sub_text, Vector2(size.x / 2, cost_y) + off, UiStyle.NUM_READ, UiStyle.C_GOLD if not disabled else UiStyle.C_TEXT_DIM, 0, UiStyle.NUM_READ_KIND)
 	if cooldown_ratio > 0.0:
 		var inner := r.grow(-2)
 		var h := ceilf(inner.size.y * clampf(cooldown_ratio, 0, 1))
 		draw_rect(Rect2(inner.position, Vector2(inner.size.x, h)), Color(0, 0, 0, 0.55))
 	if badge != "":
-		UiStyle.draw_number(self, badge, Vector2(size.x - 4, 9), UiStyle.NUM_S, UiStyle.C_ACCENT, 1)
+		UiStyle.draw_number(self, badge, Vector2(size.x - 4, 9), UiStyle.NUM_READ, UiStyle.C_ACCENT, 1, UiStyle.NUM_READ_KIND)
 	if disabled and dim_reason != "":
 		var dr := Rect2(Vector2(2, size.y / 2 - 8), Vector2(size.x - 4, 16))
 		draw_rect(dr, UiStyle.C_TOAST_BG)

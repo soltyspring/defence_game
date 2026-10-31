@@ -265,6 +265,9 @@ func _run() -> void:
 	await _frames(2)
 	await shot("3_hud")
 	check(not toasts_seen.has("not_enough_gold"), "no 'not enough supply' toast from real play so far (toasts: %s)" % [toasts_seen])
+	# readable numbers (≥ 1.7 mm): HUD numbers use NUM_READ = Galmuri11 12 px; log the drawn HP label boxes and font size
+	var US := load("res://src/ui/ui_style.gd")
+	check(int(US.NUM_READ) == 12, "HUD numbers drawn at NUM_READ %d px (%s); HP label rects %s / %s; card cost '%s'" % [US.NUM_READ, US.NUM_READ_KIND, hud.top.base_label_rects.player, hud.top.base_label_rects.enemy, hud.card_buttons[0].sub_text])
 	# base HP numbers follow a real base hit
 	sim._damage_base(sim.SIDE_PLAYER, 100.0)
 	await _seconds(0.25)
