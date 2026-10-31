@@ -3,6 +3,7 @@
 - 5 variants × 10 seeds × 2 bots (none/LOW), isolated, one per heavy_run: d38_a…e.json/.md. No variant meets all 3 criteria. Splash and knockback (and boss speed) create the block; the length is structural.
 - D38: keep the boss values; recommend (NOT applied) r05 time_3 260 → 300 as a target change. D39: zoom warning-time opinion, no data change. Replies 04 R9, 03 R5.
 - Incident: variant c's tool call timed out right after lock acquisition. The wrapper survived and the result was kept, but 08's run overlapped my last ~90 s; NOTE added to heavy_run.log. Variants d/e then ran as detached processes.
+- Git: b98cb31 [Design] D38/D39 + evidence → PUSHED origin/main.
 - D36 remains on hold for 02's R10/R11 bot-stall answer. Q5 unanswered (D28 = default only). No data change in this task.
 ## TASK 2026-11-01 — QA-B019 fix: ui.distance_m
 - Added `ui.distance_m` = "%dm" to data/text/ko.json and en.json, the same as 04's fallback. "m" reads the same in ko and en, so the unit is unchanged. Appended at the end, so existing key order is unchanged; LF line endings; JSON round-trip identical apart from the new key.
