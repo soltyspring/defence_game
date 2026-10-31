@@ -111,5 +111,31 @@
   },
   "disk_bytes": 1559625,
   "align": "77/115"
+ },
+ "v3.3-target_side": {
+  "integrated_lufs": -21.7,
+  "peak_dbfs": -3.0,
+  "clipped": 0,
+  "buried_pct": 7.3,
+  "at_risk_pct": 4.7,
+  "buried_hp300_pct": 5.7,
+  "median_sfx_minus_music_db": 8.7,
+  "mix_hp300_loss_db": 0.8,
+  "low_heavy": [],
+  "fatigue": [],
+  "top_repeat": {
+   "hit_bread": {
+    "per_min": 46,
+    "max_1s": 3,
+    "gaps_lt_150ms": 0
+   },
+   "hit_mold": {
+    "per_min": 40,
+    "max_1s": 3,
+    "gaps_lt_150ms": 0
+   }
+  },
+  "disk_bytes": 1559625,
+  "align": "89/144"
  }
 }

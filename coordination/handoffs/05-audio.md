@@ -1,6 +1,29 @@
 # 05-audio handoff
-Updated: 2026-10-31 ~18:1x (static/doc task during 08's 18:00–18:30 quiet window: no Godot run)
+Updated: 2026-10-31 ~18:5x (v3.3 verified after 08's quiet window)
 Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all.
+## v3.3 verification (after 18:30)
+1. The WIP from the quiet window (bridge ranged/siege pitch offsets + runner target_side gate) was verified with `pwsh tools/audio/run_godot_checks.ps1 -Integration -BattleSeconds 80 -Record -RecordSeconds 60` (sandbox from HEAD b4b33a7) → **GODOT AUDIO CHECKS PASS**:
+   - hits: hit_mold 23, hit_bread 32, fallback hit_melee 0, hit_arrow 0
+   - deploy 14 = 14, skill 7 = 7, wave_cleared 1 = 1, upgrade 2 = 2, hero 1 = 1/1
+   - 0 same-frame duplicates, peak SFX 4/12, audio-class exit leaks 0
+   - New selftest assertion: the real voice `pitch_scale` is ranged ×1.15 / siege ×0.85 / melee ×1.0 within the ±8 % jitter. Selftest PASS (separate run).
+   - The first attempt at 18:35 really ran, but its console output was swallowed (PowerShell table formatting). It was rerun for a readable verdict and the rerun is the evidence used.
+2. **r02 re-recorded** (60 s, after 02 A9). `mix_report.py --label=v3.3-target_side`:
+
+   | | v3-theme | v3.1 | v3.3 |
+   |---|---|---|---|
+   | Buried | 7.5 % | 7.8 % | 7.3 % |
+   | At risk | 3.9 % | 3.5 % | 4.7 % |
+   | Buried ≥ 300 Hz | 5.4 % | 5.5 % | 5.7 % |
+   | Integrated loudness | −22.4 | −22.3 | −21.7 LUFS |
+   | Clipped samples | 0 | 0 | 0 |
+
+   - Hits now split by faction in the recording: hit_bread 46, hit_mold 40, hit_melee 0, hit_arrow 0.
+   - Observation (not a fix): each faction cue has its own 0.22 s gap, so total hit sounds rose from about 44–49/min (one neutral cue) to 86/min. No cue exceeds the fatigue heuristic, but this needs a human listen.
+   - One run per version, with different battles (App seeds with randi()).
+3. Music variation → question candidate sent to 01 (`05-audio-to-01-director.md`; recommendation B = boss minor variant), queued behind the open Q5. NOT implemented.
+4. The 01 R1 timbre gaps found while reading the request (backlog): fruit-fly buzz, rally cheer + oven whoosh, crumb-shell barrage, tray-bell/whisk UI confirm, folk menu motif.
+Not verified: human listening, Android device.
 ## v3.3 (static, quiet window) — Codex review of 15851e2/5758d0b/dcfaaf9/af491c2
 Rule acknowledged: SHAs are written only after Publish-Task prints them.
 1. **02 A9 target_side**: present since 09508b1 (17:30). Format: `target_side` = victim side; coalescing key `melee:<side>`, `<ranged|siege>:<side>`.
