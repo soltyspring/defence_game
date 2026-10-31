@@ -1,5 +1,5 @@
 # 데이터·백엔드 분석: 성공한 디펜스 게임의 온라인 기능과 우리 게임의 최소 설계
-작성: 10-research-systems · 버전 v0.12 (… v0.11 재시작 후 무결성 재실행: D17 확인, v0.12 테마 A 이름표 검사 통과·세이브 재확인) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
+작성: 10-research-systems · 버전 v0.13 (v0.13 §9.4 업그레이드 트랜잭션·content_version, … v0.11 재시작 후 무결성 재실행: D17 확인, v0.12 테마 A 이름표 검사 통과·세이브 재확인) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
 범위: 경쟁작에서 **관찰되는** 온라인 기능, 그 기능의 **공개 문서화된** 기술, **UNKNOWN**, 우리 오프라인 우선 Godot 게임에 필요한 최소 콘텐츠 DB·세이브·거래 계약. 런타임 코드는 수정하지 않았다. 내부 DB나 비공개 구현에 접근한 적 없다. 게임을 직접 플레이하지 않았다(스토어 텍스트·공개 스크린샷만 확인).
 
 ## 0. 현재 판단 (요약)
@@ -527,6 +527,48 @@ v0.9 기준선(9ca4a43) → HEAD 43b4692 이름 변화(ko / en, 대체값 = ko):
 **01 결정 D22(v0.12에 반영):** (a) 의도 기준값을 r05 전 660→**640**으로 낮췄다. 그래서 LOW 경로의 부족분 20과 r04 재클리어 1회가 사라진다. 계산상 LOW 640 = 의도 640. (b) L5는 의도된 재플레이 전용 숙련 구간이고, 챕터 1은 LOW 예산으로 깰 수 있어야 한다(01 시뮬레이션 A4 대기). (c) MVP에는 최대 레벨 이후 지출처가 없고, 코인은 상한까지 쌓인다(B29 백로그). 10은 이 결정을 다시 계산하지 않았다. 5930430의 `ECONOMY.md` 변경을 데이터로 다시 확인하는 일은 이 프로브를 HEAD에서 재실행하면 된다.
 
 **(7) 레벨 하나를 사려면 재클리어가 몇 번 필요한가 [DATA]:** 잔액 0에서 시작해 그 트랙이 처음 보이는 라운드만 반복할 때의 값이다. 비싼 끝에서는 hero/supply/energy L5가 r01을 10회, worker L4가 r01을 8회, melee L5가 r01을 9회 반복해야 한다. r10만 반복하면 모든 레벨이 1~2회다. 이 수치는 "이른 라운드 반복은 비효율적"이라는 데이터 사실만 말한다. 플레이어가 실제로 그렇게 행동하는지는 말하지 않는다.
+
+### 9.4 업그레이드 구매 트랜잭션(R3 일반화)과 content_version(R5) (v0.13, 실행 증거)
+- 프로브: `docs/research/systems/probes/probe_upgrade_transaction.gd`
+- 실행 명령: `tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://docs/research/systems/probes/probe_upgrade_transaction.gd --quit-after 900`
+- 실행 대상: **깨끗한 전체 HEAD 스냅샷** ab00170d75b51541cccfc4c55e39829cc55f95cd. `git archive` 전체를 풀고 프로젝트 이름을 바꾼 뒤 `--import`로 실행했다. 실제 autoload를 쓰되, Save 경로는 `user://probe10/`로 돌렸다. 작업 트리에는 02·05·06의 미커밋 변경이 있어서 쓰지 않았다. 스냅샷과 사용자 폴더는 실행 후 지웠다.
+
+**(A) 구매 API: 없음(NOT_IMPLEMENTED).** HEAD의 Save/App에는 `buy_upgrade` 계열 메서드가 없고, `Events`에도 `cmd_buy_upgrade` 신호가 없다. `git grep`으로도 `progress.upgrades`에 쓰는 코드가 `_migrate` 정규화 하나뿐임을 확인했다. 04 handoff에도 "upgrade screen (P1) not implemented"라고 적혀 있다. 따라서 업그레이드 구매가 원자적인지는 **아직 시험할 대상이 없다.** 아래 (B)는 지금 있는 저장 함수를 그대로 쓰는 구현이 어떻게 실패하는지 보여 주고, (C)는 구현이 들어왔을 때 쓸 합격 기준이다.
+
+**(B) 현재 save.gd로 "직접 수정 + save_progress()"를 하면(실행):** 코인 100에서 up_melee_basic L2(60)를 사는 흉내를 냈다. `progress`를 직접 바꾸고 `_fault="after_tmp_write"`로 쓰기를 실패시켰다.
+| 단계 | 메모리 | 디스크 |
+|---|---|---|
+| 구매 전 | 100 / L1 | 100 / L1 |
+| 저장 실패 직후(`save_progress()`=false) | **40 / L2** (롤백 없음) | 100 / L1 |
+| 관계없는 `set_setting("sfx")` 뒤 | 40 / L2 | **40 / L2** |
+- 호출자는 실패를 받았는데, 다음 아무 저장에서 구매가 확정된다(`phantom_purchase_persisted_later: true`). UI가 "저장 실패, 다시 시도"를 보여 주고 사용자가 다시 누르면 **두 번 차감**된다. `save_progress()`는 실패해도 `revision`만 되돌린다. `record_result`만 자기 필드를 롤백한다. 그래서 구매는 반드시 `record_result`처럼 자기 롤백을 갖는 전용 함수여야 한다.
+
+**(C) 합격 기준(제안 계약 `Save.buy_upgrade(upgrade_id, to_level) -> code`)과 기준 자체의 검증:** 스냅샷의 save.gd에만 임시로 두 구현을 붙여 같은 시험을 돌렸다. 저장소에는 넣지 않았다. 하나는 참조 구현(검사 → 차감·레벨 → 저장 실패 시 롤백, 같은 `to_level` 재호출은 `already_applied`), 다른 하나는 단순 구현(검사·롤백 없음)이다.
+| 시험 | 기대값 | 참조 구현 | 단순 구현 |
+|---|---|---|---|
+| C1 같은 구매 두 번(`to_level`=2 ×2) | 500→440, L2, 두 번째 `already_applied` | PASS | **FAIL**: 340 / L3(두 번 차감) |
+| C2 쓰기 실패(`after_tmp_write`) | 메모리·디스크 500 / L1, `save_failed` | PASS | **FAIL**: 메모리 440 / L2, 코드 `ok` |
+| C3 마지막 rename 전 종료(`before_final_rename`) | 재로드가 (500, L1) 또는 (440, L2) 중 하나 | PASS(440, L2) | PASS (save.gd의 원자적 쓰기 덕분) |
+| C4 경계값: 코인 = 비용(60) / 비용−1(59) | 0 / L2 `ok`, 59 / L1 `not_enough_coins` | PASS | **FAIL**: 59에서도 `ok`. 코인이 −1이 됐다가 로드 시 0으로 클램프돼 **사실상 공짜 구매** |
+| C5 최대 레벨 초과 | 코인 불변, `max_level` | PASS | PASS |
+- 기준이 두 구현을 구별한다(참조 5/5, 단순 2/5). 따라서 빈 검사가 아니다. 참조 구현은 `locked`(대상 미해금) 검사를 하지 않았다. 해금 규칙(DATA_SCHEMA "Visible only when target unlocked")은 02/04가 정해야 한다.
+- C3 주의: `before_final_rename`에서 참조 구현은 `save_failed`를 반환하고 메모리를 롤백한다. 그런데 디스크의 `.tmp`가 다음 실행에서 채택되어 구매가 적용된다(440, L2). 실제 프로세스 종료라면 문제가 없다. 프로세스가 살아 있는 상태에서 이 지점의 실패를 사용자에게 "실패"로 보여 주면, 재시작 후 구매가 적용돼 있는 불일치가 생긴다. 이 지점은 사실상 "적용 여부 불명"으로 다루는 것이 정확하다.
+
+**(D) R5 content_version 관련 실행 증거:** 저장된 `up_melee_basic` 레벨이 현재 `max_level`(5)보다 큰 9인 세이브를 만들었다. 리밸런스로 최대 레벨이 낮아진 상황을 가정한 것이다.
+| 항목 | 기대(DATA_SCHEMA/RELEASE_DESIGN_REVIEW 규칙) | 실제(HEAD) |
+|---|---|---|
+| 로드 후 레벨 | max_level로 클램프 + 제거된 레벨 비용 환불 | **9 유지**(`_migrate`는 1..99로만 클램프) |
+| 전투 hp 배율(`_upgrade_mult`) | 1.32(L5 상한) | **1.64**(L9로 계산) |
+| 알 수 없는 업그레이드 `up_retired_xyz` | 무시·보존 | 보존(규칙과 일치) |
+| 알 수 없는 라운드 별 `r99_retired` | 무시·보존 | 보존(규칙과 일치) |
+| 세이브의 `content_version` | 있어야 버전 차이를 감지 | **없음** |
+- 이 클램프·환불 누락은 지금 사용자 경로로는 생기지 않는다. 구매 API가 없어 레벨이 1을 넘을 수 없기 때문이다. 구매 기능이 생기고 그 뒤 리밸런스가 일어나면 나타난다. RELEASE_DESIGN_REVIEW §3의 "Rebalance lowers an upgrade's max_level → Clamp the level and refund"가 구현되지 않은 상태다.
+
+**R5 content_version 검사 제안(02 구현, 01 데이터, 07 수용):**
+1. 정의: `content_version = "c<schema>-" + sha256(정렬된 data/**/*.json 경로+내용)[:12]`. Content가 로드할 때 계산한다. `game_config.data_version`(사람이 붙이는 이름)과는 별개로, 내용이 바뀌면 반드시 달라지는 값이다.
+2. 세이브: 성공한 저장마다 `progress.content_version`을 기록한다. 로드할 때 현재 값과 다르면 `content_changed`로 표시하고 아래 3을 실행한다. 분석 이벤트 후보로 `content_migrated{from_prefix,to_prefix}`가 있다(06 스키마, 01 승인).
+3. 버전이 바뀌었을 때 할 일(데이터 기반, 버전 번호 비교가 아닌 내용 비교): (a) 각 `upgrades[id]`를 현재 `max_level`로 클램프하고 초과 레벨의 비용 합을 환불한다. 환불은 `applied` 키 `refund:<content_version>:<id>`로 한 번만 한다. (b) `data/migrations.json`(01 백로그)의 `renames`를 적용한다. (c) 알 수 없는 ID는 보존한다. (d) `unlocked_round`가 순서 인덱스라는 문제(R8)는 라운드 ID 기반 해금으로 바꾸기 전까지 `order.json` 변경을 금지 조건으로 둔다.
+4. 실행 검사(07 TP-05에 해당): 이 프로브의 (D)를 합격 기준으로 쓴다. 기대값은 레벨 5, 환불 = L6~L9 비용 합(현재 데이터에 그 레벨의 비용이 없으므로 01이 "제거된 레벨" 비용 규칙을 정해야 한다), hp 배율 1.32, 알 수 없는 ID 보존, `content_version` 기록이다. 추가 변이: `max_level` 축소, 업그레이드 ID 이름 변경(+migrations), 라운드 삽입. 무결성 프로브(§9.2)와 같은 스냅샷 방식으로 돌린다.
 
 ## 10. 출처 (모두 2026-10-31 KST 접근)
 | ID | 출처 | URL | 한계 |

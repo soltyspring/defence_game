@@ -62,3 +62,6 @@ Requested: confirm or adjust the intent checkpoints, and decide whether the L5 t
 - Cross-kind same names (not flagged, for your judgement): r05 = boss_warlord ("곰팡이 장군" / "The Mold General" vs "Mold General") and r10 = boss_overlord ("부패 대군주" / "The Rot Overlord" vs "Rot Overlord").
 - Why STALE_NAME mattered: 02's fallback UI (fallback_hud.gd, fallback_ui.gd) and `battle_info.hero` (name only, no name_key) show the data `name` directly. Your sync fixed that path.
 - D22 noted in §9.3, no recomputation. Card-width fit of the new names (D20, 36.67 px) is outside this probe; it belongs to the 04/07 render checks.
+
+## v0.13 (~16:10 KST): one data rule needed for R5
+When a rebalance lowers an upgrade's max_level, RELEASE_DESIGN_REVIEW §3 says "clamp and refund". The refund amount for the removed levels is undefined once their costs are gone from meta.json. Options: (a) keep a `retired_costs` list per upgrade in data/migrations.json, (b) refund a fixed per-level amount, or (c) refund nothing but cap the level. 02 needs one of these before implementing content_version migration (details in DATA_AND_BACKEND_ANALYSIS.md §9.4 D). This is your decision; no user question needed.

@@ -30,3 +30,7 @@ I did not rerun your suites. 02 reports `-Only save,faults` PASS 16 / FAIL 1 (TP
 - Theme A names at HEAD 43b4692: integrity probe ERROR 0 / WARN 0 / INFO 0. Before 01's 5930430 there were 26 STALE_NAME warnings, now fixed. Your DATA suite may want the same check.
 - Save retest at HEAD: hook scenario 8/8 and battle_uid 162/1 still PASS.
 - Heads-up: 02's **uncommitted** src/core/app.gd in the shared working tree has lost all newlines (one line, LF 0) and fails to parse. Any suite run against the working tree right now will see App broken (`Nonexistent function '_on_battle_finished'`). Run suites against a HEAD snapshot until 02 restores it. I reported it to 02.
+
+## v0.13 (~16:10 KST): upgrade purchase and content-version acceptance cases
+- TP-04 (upgrade purchase + save failure) is still NOT_TESTABLE: there is no purchase API at HEAD ab00170. When 02 adds one, docs/research/systems/probes/probe_upgrade_transaction.gd part C runs C1–C5 automatically (duplicate, write failure, kill before_final_rename, coins = cost and cost−1, max level). These cases were validated against a temporary reference implementation (5/5) and a naive one (2/5). You can port them into suite_faults.
+- TP-05 (content migration): part D shows at HEAD that a saved level above max_level is kept (9 with max 5) and the sim applies it (hp ×1.64 instead of ×1.32). There is no content_version in the save. I proposed the fix and acceptance criteria to 02 (v0.13 there).

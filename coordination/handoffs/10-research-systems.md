@@ -8,6 +8,15 @@ Updated: 2026-10-31 ~15:41 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
+## v0.13 (~16:12 KST): R3 upgrade transaction + R5 content_version
+- New probe docs/research/systems/probes/probe_upgrade_transaction.gd, run in a clean full HEAD ab00170 snapshot (renamed project, `--import`, Save redirected to user://probe10).
+- A: no purchase API, so the purchase itself cannot be tested.
+- B: executed a naive direct edit + save_progress() with an R6 fault. Memory stays 40/L2 and a later set_setting persists it, i.e. a double-charge risk.
+- C: acceptance C1–C5 auto-runs when an API exists. The cases were validated with temporary reference/naive implementations patched into snapshot copies only: 5/5 vs 2/5 (the naive one double-charges, has no rollback, and lets 59 coins buy a 60 item).
+- D: a level above max_level is kept (9 vs 5) and applied (hp_mult 1.64 vs 1.32); no content_version.
+- R5 proposal and acceptance sent to 02; TP-04/TP-05 notes to 07; refund-rule decision request to 01. Doc §9.4.
+- Next on resume: when `buy_upgrade` (or another candidate name) exists, rerun the probe in a clean snapshot; when content_version lands, check part D for level 5 / 1.32.
+
 ## v0.12 (~15:56 KST): theme A check + save retest
 - Theme labels: integrity probe at clean HEAD snapshots. abe2303 (after 14b01e2) gave WARN 26 STALE_NAME; 43b4692 (after 01's 5930430) gives ERROR 0 / WARN 0 / INFO 0. 0 missing keys, 0 DUP_NAME. Name diff table in doc §9.2. 01 reply sent.
 - Save: probe_save_rotation C 8/8 PASS (abe2303 tree, save.gd = HEAD). probe_battle_uid_dedup 162/1 PASS in a clean full HEAD 8c8635f snapshot, because 02's uncommitted app.gd in the working tree has lost all newlines and fails to parse. Warned 02 and 07.
