@@ -8,44 +8,51 @@ M = max momentary K-weighted loudness over 100 ms (BS.1770 K filter; short SFX a
 | ui_back | ui_back.wav | UI | -8 | -10.9 | -18.9 | -0.7 | 6 |
 | ui_confirm | ui_confirm.wav | UI | -7 | -8.5 | -15.5 | +2.7 | 7 |
 | ui_error | ui_error.wav | UI | -9 | -8.5 | -17.5 | +0.7 | 6 |
-| deploy | deploy.wav | SFX | -6 | -10.5 | -16.5 | +3.5 | 7 |
-| worker_buy | worker_buy.wav | SFX | -7 | -6.1 | -13.1 | +6.9 | 7 |
-| gold_tick | gold_tick.wav | SFX | -13 | -9.0 | -22.0 | -2.0 | 2 |
-| hit_melee | hit_melee_1.wav | SFX | -7 | -14.8 | -21.8 | -1.8 | 1 |
-| hit_melee | hit_melee_2.wav | SFX | -7 | -14.5 | -21.5 | -1.5 | 1 |
-| hit_melee | hit_melee_3.wav | SFX | -7 | -14.9 | -21.9 | -1.9 | 1 |
-| hit_melee | hit_melee_4.wav | SFX | -7 | -14.0 | -21.0 | -1.0 | 1 |
-| hit_melee | hit_melee_5.wav | SFX | -7 | -13.0 | -20.0 | +0.0 | 1 |
-| hit_arrow | hit_arrow.wav | SFX | -10 | -15.2 | -25.2 | -5.2 | 1 |
-| shoot_arrow | shoot_arrow.wav | SFX | -12 | -11.5 | -23.5 | -3.5 | 1 |
-| shoot_rock | shoot_rock.wav | SFX | -10 | -12.9 | -22.9 | -2.9 | 2 |
-| shoot_spit | shoot_spit.wav | SFX | -11 | -11.3 | -22.3 | -2.3 | 1 |
-| hit_base | hit_base.wav | SFX | -9 | -12.1 | -21.1 | -1.1 | 5 |
-| explosion | explosion.wav | SFX | -8 | -10.4 | -18.4 | +1.6 | 5 |
-| death_ally | death_ally.wav | SFX | -12 | -10.5 | -22.5 | -2.5 | 3 |
-| death_enemy | death_enemy.wav | SFX | -12 | -9.5 | -21.5 | -1.5 | 3 |
-| hero_death | hero_death.wav | SFX | -5 | -10.9 | -15.9 | +4.1 | 9 |
-| hero_respawn | hero_respawn.wav | SFX | -8 | -9.7 | -17.7 | +2.3 | 8 |
-| skill_slam | skill_slam.wav | SFX | -4 | -10.9 | -14.9 | +5.1 | 9 |
-| skill_rally | skill_rally.wav | SFX | -6 | -10.8 | -16.8 | +3.2 | 9 |
-| skill_barrage | skill_barrage.wav | SFX | -4 | -14.0 | -18.0 | +2.0 | 9 |
-| skill_heal | skill_heal.wav | SFX | -7 | -9.9 | -16.9 | +3.1 | 9 |
-| skill_cast | skill_cast.wav | SFX | -7 | -8.8 | -15.8 | +4.2 | 8 |
-| wave_incoming | wave_incoming.wav | SFX | -6 | -9.4 | -15.4 | +4.6 | 8 |
-| boss_incoming | boss_incoming.wav | SFX | -4 | -11.5 | -15.5 | +4.5 | 10 |
-| stinger_win | stinger_win.wav | Music | -3 | -9.8 | -12.8 | -0.2 | 10 |
-| stinger_defeat | stinger_defeat.wav | Music | -3 | -9.5 | -12.5 | +0.2 | 10 |
+| deploy | deploy.wav | SFX | -7 | -7.8 | -14.8 | +5.8 | 7 |
+| worker_buy | worker_buy.wav | SFX | -9 | -8.9 | -17.9 | +2.7 | 7 |
+| gold_tick | gold_tick.wav | SFX | -13 | -9.0 | -22.0 | -1.4 | 2 |
+| hit_melee | hit_melee_1.wav | SFX | -7 | -14.8 | -21.8 | -1.2 | 1 |
+| hit_melee | hit_melee_2.wav | SFX | -7 | -14.5 | -21.5 | -0.9 | 1 |
+| hit_melee | hit_melee_3.wav | SFX | -7 | -14.9 | -21.9 | -1.3 | 1 |
+| hit_melee | hit_melee_4.wav | SFX | -7 | -14.0 | -21.0 | -0.4 | 1 |
+| hit_melee | hit_melee_5.wav | SFX | -7 | -13.0 | -20.0 | +0.6 | 1 |
+| hit_bread | hit_bread_1.wav | SFX | -8 | -14.4 | -22.4 | -1.8 | 1 |
+| hit_bread | hit_bread_2.wav | SFX | -8 | -13.8 | -21.8 | -1.2 | 1 |
+| hit_bread | hit_bread_3.wav | SFX | -8 | -15.4 | -23.4 | -2.8 | 1 |
+| hit_mold | hit_mold_1.wav | SFX | -7 | -13.8 | -20.8 | -0.2 | 1 |
+| hit_mold | hit_mold_2.wav | SFX | -7 | -13.1 | -20.1 | +0.5 | 1 |
+| hit_mold | hit_mold_3.wav | SFX | -7 | -12.7 | -19.7 | +0.9 | 1 |
+| hit_arrow | hit_arrow.wav | SFX | -10 | -15.6 | -25.6 | -5.0 | 1 |
+| shoot_arrow | shoot_arrow.wav | SFX | -12 | -11.2 | -23.2 | -2.6 | 1 |
+| shoot_rock | shoot_rock.wav | SFX | -10 | -13.5 | -23.5 | -2.9 | 2 |
+| shoot_spit | shoot_spit.wav | SFX | -11 | -11.8 | -22.8 | -2.2 | 1 |
+| hit_base | hit_base.wav | SFX | -9 | -12.6 | -21.6 | -1.0 | 5 |
+| hit_base_mold | hit_base_mold.wav | SFX | -9 | -11.4 | -20.4 | +0.2 | 5 |
+| explosion | explosion.wav | SFX | -8 | -10.9 | -18.9 | +1.7 | 5 |
+| death_ally | death_ally.wav | SFX | -12 | -12.2 | -24.2 | -3.6 | 3 |
+| death_enemy | death_enemy.wav | SFX | -12 | -11.0 | -23.0 | -2.4 | 3 |
+| hero_death | hero_death.wav | SFX | -5 | -10.9 | -15.9 | +4.7 | 9 |
+| hero_respawn | hero_respawn.wav | SFX | -8 | -9.8 | -17.8 | +2.8 | 8 |
+| skill_slam | skill_slam.wav | SFX | -4 | -11.0 | -15.0 | +5.6 | 9 |
+| skill_rally | skill_rally.wav | SFX | -6 | -10.8 | -16.8 | +3.8 | 9 |
+| skill_barrage | skill_barrage.wav | SFX | -4 | -11.7 | -15.7 | +4.9 | 9 |
+| skill_heal | skill_heal.wav | SFX | -7 | -9.9 | -16.9 | +3.7 | 9 |
+| skill_cast | skill_cast.wav | SFX | -7 | -9.0 | -16.0 | +4.6 | 8 |
+| wave_incoming | wave_incoming.wav | SFX | -7 | -9.5 | -16.5 | +4.1 | 8 |
+| boss_incoming | boss_incoming.wav | SFX | -4 | -10.1 | -14.1 | +6.5 | 10 |
+| stinger_win | stinger_win.wav | Music | -3 | -8.1 | -11.1 | +1.0 | 10 |
+| stinger_defeat | stinger_defeat.wav | Music | -3 | -10.1 | -13.1 | -1.0 | 10 |
 
-Bus medians: UI -18.2, SFX -20.0, Music -12.7
+Bus medians: UI -18.2, SFX -20.6, Music -12.1
 
 ## Review list (|Δ| > 6 dB)
-- worker_buy.wav (SFX): Δ +6.9 dB
+- boss_incoming.wav (SFX): Δ +6.5 dB
 
 ## Music
 | Track | Ungated loudness (LUFS) | Max momentary 400 ms | vol_db | Mix |
 |---|---|---|---|---|
-| music_battle | -11.4 | -10.2 | -10 | -21.4 |
-| music_menu | -17.0 | -14.6 | -9 | -26.0 |
+| music_battle | -15.2 | -14.0 | -12 | -27.2 |
+| music_menu | -18.3 | -15.3 | -9 | -27.3 |
 
 Images: previews/sfx_contact_sheet.png, previews/music_overview.png.
 Limit: these are measurements, not a listening judgement.

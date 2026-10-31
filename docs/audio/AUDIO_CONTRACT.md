@@ -1,5 +1,5 @@
 # AUDIO_CONTRACT.md — audio event contract, mixer and budgets (owner: 05-audio)
-Version 1.1 (2026-10-31; v1.1 = off-screen policy, alert category, prepare_quit). Godot 4.7.2 / GDScript. Additive changes only without a version bump.
+Version 1.2 (2026-10-31; v1.1 = off-screen policy, alert category, prepare_quit; v1.2 = theme cues hit_bread/hit_mold/hit_base_mold, `target_side` hit param). Godot 4.7.2 / GDScript. Additive changes only without a version bump.
 Reads: docs/contracts/ENGINE.md v1.0, INTERFACES.md v1.0. Nothing here changes 02/04 files; integration is requested in `coordination/requests/05-audio-to-*.md`.
 
 ## 1. Files
@@ -29,10 +29,10 @@ Anyone (02 gameplay, 04 UI) may emit. Audio is the only listener. `cue` is eithe
 
 | Semantic cue | params | Resolves to |
 |---|---|---|
-| `&"hit"` | `kind`: `melee`/`ranged`/`siege`, `x` | `hit_arrow` (ranged) else `hit_melee` |
+| `&"hit"` | `kind`: `melee`/`ranged`/`siege`, `x`, **`target_side`**: `player`/`enemy` (v1.2, requested A9) | victim decides the material: `target_side` enemy → `hit_mold`, player → `hit_bread`; without it `hit_arrow` (ranged) else `hit_melee` |
 | `&"shoot"` | `projectile`: `arrow`/`rock`/`spit`, `x` | manifest `projectile_cue` (default `shoot_arrow`) |
 | `&"death"` | `side`: `player`/`enemy`, `x`, `boss` | `death_ally` / `death_enemy` |
-| `&"base_hit"` | `side`: base that was damaged | `hit_base` (enemy base: higher pitch, −2 dB) |
+| `&"base_hit"` | `side`: base that was damaged | player → `hit_base` (bakery tower), enemy → `hit_base_mold` (mold hive) |
 | `&"skill"` | `skill`: skill id | by `Content.skills[id].kind` via manifest `skill_kind_cue` (`aoe_damage`→`skill_slam`, `rally`→`skill_rally`, `meteor`→`skill_barrage`, `heal_allies`→`skill_heal`, `summon`/unknown→`skill_cast`) |
 | `&"explosion"` | `x` | `explosion` |
 
@@ -72,11 +72,20 @@ No double playback after integration: each derived category (`ui`, `command`, `d
 UI: `ui_tap`, `ui_back`, `ui_confirm`, `ui_error`. Economy: `deploy`, `worker_buy`, `gold_tick`. Combat: `hit_melee`(3 variants), `hit_arrow`, `shoot_arrow`, `shoot_rock`, `shoot_spit`, `hit_base`, `explosion`, `death_ally`, `death_enemy`. Hero: `hero_death`, `hero_respawn`, `skill_slam`, `skill_rally`, `skill_barrage` (whistle 0.8 s matches `skill_barrage.delay`), `skill_heal`, `skill_cast`. Flow: `wave_incoming`, `boss_incoming`, `stinger_win`, `stinger_defeat`. Music: `music_menu`, `music_battle`.
 Style is theme-neutral (chip/arcade timbres). When Q1 (theme) is decided, timbres can be re-voiced in `synth.py` without changing cue ids.
 
+## 5b. Theme (Q1 = A, user-decided 2026-10-31 09:03): bakery knights vs mold legion
+Factions must be told apart by ear; the rule is applied in `tools/audio/synth.py` (v3) and recorded per cue as `faction` + `desc` in the manifest.
+| Faction | Palette | Cues |
+|---|---|---|
+| Bakery (player) | warm, bouncy, DRY: oven/shop bells, crust crunch, wooden knocks, major keys, accordion lead | deploy, worker_buy, gold_tick, hit_bread, death_ally, hit_base, shoot_arrow (baguette), shoot_rock (oven cannon), wave_incoming (alarm bell), hero/skills, stinger_win, music_menu, music_battle |
+| Mold (enemy) | wet, sticky, slow: squelch (sweeping formant band-pass), bubble pops, wobbling/sagging pitch, minor/tritone | hit_mold, death_enemy, shoot_spit, explosion (spore bomber), hit_base_mold, boss_incoming, stinger_defeat |
+Character of the big moments: **boss_incoming** = slimy menace (oozing tritone drone sagging in pitch, three squelch stomps, a boil of bubbles; ducks music −8 dB). **stinger_win** = proud, cheerful bakery fanfare ending on an oven-bell double ding with crumb confetti. **stinger_defeat** = the tune sinks: chromatic fall in a wobbling voice whose low-pass closes like dough going soggy, then bubbles take over. **music_battle** = bakery street-band march (C major, 140 BPM; accordion lead, bell arpeggio, plucked bass). **music_menu** = morning bakery (F major, 105 BPM; music-box bell melody).
+Listening files: `previews/listen/battle_preview_30s.mp3` (engine recording) and `previews/listen/theme_showcase.mp3` (+ `.txt` timestamps; offline A/B of faction pairs, boss, win, defeat).
+
 ## 6. Budgets (PROVISIONAL; measured values from VALIDATION_REPORT.json / audio_selftest)
 | Item | Budget | Measured (2026-10-31) |
 |---|---|---|
-| Disk, all audio source files | ≤ 2.5 MB | 1,348,388 B (SFX WAV ~0.79 MB + 2 OGG ~0.56 MB) |
-| SFX resident in RAM after import | ≤ 2 MiB | 160,960 B (Godot default QOA import; raw PCM would be 792,254 B) |
+| Disk, all audio source files | ≤ 2.5 MB | v3 theme: 1,460,181 B (38 SFX WAV ≈ 0.87 MB + 2 OGG ≈ 0.59 MB); v1 was 1,348,388 B |
+| SFX resident in RAM after import | ≤ 2 MiB | v3: 177,560 B (Godot default QOA import; raw PCM 872,956 B); v1 160,960 B |
 | Music resident | streamed Ogg, compressed packets only | 2 files, 101 / 91 kbps |
 | SFX voices | 12 + UI 3 | selftest stress: peak 12, never exceeded |
 | `play()` CPU | — | 3.5–4.2 µs/call on desktop (proxy only; device not measured) |

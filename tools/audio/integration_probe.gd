@@ -117,7 +117,7 @@ func _on_battle_started(info: Dictionary) -> void:
 ## Accumulate BattleSim.stats per sim instance (engine truth for command cues), read-only.
 func _track_sim() -> void:
 	var app := get_node_or_null("/root/App")
-	var b = app.battle if app else null
+	var b = app.get("battle") if app else null    # get(): no error spam if App failed to compile
 	var s = b.sim if b and is_instance_valid(b) else null
 	if s != _sim:
 		_flush_sim()
@@ -143,7 +143,16 @@ func _set_phase(p: String) -> void:
 	rep.phases.append({"t": snappedf(t, 0.1), "phase": p})
 
 func _process(delta: float) -> void:
-	if A == null or _reported: return
+	if _reported:
+		# Fallback: App normally quits at --quit-after. If it has not done so 4 s later (App broken or its
+		# quit path hung), quit ourselves with code 3 so the harness sees a failure instead of a hang.
+		t += delta
+		if _report_at > 0.0 and t >= _report_at + 4.5:
+			push_error("AudioProbe: App did not quit; probe fallback quit(3)")
+			_report_at = -1.0
+			get_tree().quit(3)
+		return
+	if A == null: return
 	t += delta
 	_phase_t += delta
 	if _report_at > 0.0 and t >= _report_at:

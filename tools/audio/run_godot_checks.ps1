@@ -7,7 +7,7 @@
 #   pwsh tools/audio/run_godot_checks.ps1 -Integration  # + simulated 02 request A1 (Audio autoload, exact line),
 #                                                       #   02 global selftest, leak attribution, bounded real battle
 # Exit code 0 = all pass. Integration report: tools/audio/_render/integration/*.json (git-ignored via .gdignore dir)
-param([switch]$Integration, [int]$BattleSeconds = 95, [switch]$Record, [int]$RecordSeconds = 60)
+param([switch]$Integration, [int]$BattleSeconds = 95, [switch]$Record, [int]$RecordSeconds = 60, [switch]$EngineSelftest)
 if ($Record) { $Integration = $true }
 $ErrorActionPreference = 'Continue'   # Godot writes diagnostics to stderr; judge by exit codes
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
@@ -21,7 +21,22 @@ $outDir = Join-Path $root 'tools\audio\_render\integration'
 New-Item -ItemType Directory -Path $outDir -Force | Out-Null
 
 # --- project copy (read-only use of other owners' files)
-$proj = Get-Content (Join-Path $root 'project.godot') -Raw
+# Foreign files come from the COMMITTED HEAD (git archive), not the live worktree: other workers' in-progress
+# edits (e.g. a half-written src/core/app.gd) otherwise break the sandbox. 05-owned paths (src/audio,
+# assets/audio, tools/audio) are then overlaid from the worktree so the code under test is the current one.
+$headSha = (& git -C $root rev-parse --short HEAD).Trim()
+$tar = Join-Path ([IO.Path]::GetTempPath()) 'defence_audio_sandbox_head.tar'
+& git -C $root archive --format=tar -o $tar HEAD -- project.godot src data scenes assets $(if (Test-Path (Join-Path $root 'icon.svg')) { 'icon.svg' })
+if ($LASTEXITCODE -ne 0) { Write-Error 'git archive failed'; exit 2 }
+& tar -xf $tar -C $sb
+Remove-Item $tar -Force
+foreach ($d in @('src\audio', 'assets\audio')) {
+  $dst = Join-Path $sb $d
+  if (Test-Path $dst) { Remove-Item -LiteralPath $dst -Recurse -Force }
+  Copy-Item (Join-Path $root $d) $dst -Recurse
+}
+"foreign files from HEAD $headSha; 05 paths from worktree"
+$proj = Get-Content (Join-Path $sb 'project.godot') -Raw
 $proj = $proj -replace '(\[application\]\r?\n)', "`$1config/use_custom_user_dir=true`nconfig/custom_user_dir_name=""defence_audio_sandbox""`n"
 if ($Integration) {
   if ($proj -notmatch '(?m)^Audio=') {
@@ -31,11 +46,6 @@ if ($Integration) {
   $proj = $proj -replace '(?m)^(App="\*res://src/core/app\.gd")\r?$', "`$1`nAudioProbe=""*res://tools/audio/integration_probe.gd"""
 }
 Set-Content (Join-Path $sb 'project.godot') $proj -NoNewline -Encoding utf8
-if (Test-Path (Join-Path $root 'icon.svg')) { Copy-Item (Join-Path $root 'icon.svg') $sb }
-foreach ($d in @('src', 'data', 'scenes', 'assets')) {
-  $src = Join-Path $root $d
-  if (Test-Path $src) { Copy-Item $src (Join-Path $sb $d) -Recurse }
-}
 New-Item -ItemType Directory -Path (Join-Path $sb 'tools\audio') -Force | Out-Null
 foreach ($f in @('audio_selftest.gd', 'integration_probe.gd', 'leak_probe.gd')) { Copy-Item (Join-Path $root "tools\audio\$f") (Join-Path $sb 'tools\audio') }
 Get-ChildItem $sb -Recurse -Filter '*.import' | Remove-Item -Force
@@ -43,13 +53,28 @@ Get-ChildItem $sb -Recurse -Filter '*.import' | Remove-Item -Force
 "autoloads: " + ((Get-Content (Join-Path $sb 'project.godot') | Select-String '^\w+="\*res://') -join ' | ')
 
 $fail = 0
-function Run([string]$label, [string[]]$a, [int]$expect = 0) {
-  $o = & $godot @a 2>&1 | ForEach-Object { "$_" }
-  $c = $LASTEXITCODE
-  Set-Content (Join-Path $outDir "$label.log") ($o -join "`n") -Encoding utf8
-  return @{ code = $c; out = $o }
+# Every Godot call has a hard wall-clock limit. On timeout ONLY this call's own process tree is killed
+# (the console wrapper and its child Godot, found by parent PID); other workers' Godot processes are untouched.
+function Run([string]$label, [string[]]$a, [int]$timeoutSec = 180) {
+  $log = Join-Path $outDir "$label.log"
+  $errf = "$log.err"
+  $q = $a | ForEach-Object { if ($_ -match '\s') { '"' + $_ + '"' } else { $_ } }
+  $p = Start-Process -FilePath $godot -ArgumentList $q -NoNewWindow -PassThru -RedirectStandardOutput $log -RedirectStandardError $errf
+  $null = $p.Handle   # keep a handle so ExitCode is available after exit
+  $timedOut = -not $p.WaitForExit($timeoutSec * 1000)
+  if ($timedOut) {
+    Get-CimInstance Win32_Process -Filter "ParentProcessId=$($p.Id)" | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
+    Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
+    $p.WaitForExit(5000) | Out-Null
+  }
+  $o = @(Get-Content $log -ErrorAction SilentlyContinue) + @(Get-Content $errf -ErrorAction SilentlyContinue)
+  Set-Content $log ($o -join "`n") -Encoding utf8
+  Remove-Item $errf -ErrorAction SilentlyContinue
+  $c = if ($timedOut) { 124 } else { $p.ExitCode }
+  if ($timedOut) { "TIMEOUT $label after ${timeoutSec}s: killed own process tree PID $($p.Id)" | Write-Host }
+  return @{ code = $c; out = $o; timeout = $timedOut }
 }
-$r = Run 'import' @('--headless', '--path', $sb, '--import')
+$r = Run 'import' @('--headless', '--path', $sb, '--import') 300
 "import exit=$($r.code)"
 foreach ($s in @('res://src/audio/audio_manager.gd', 'res://src/audio/audio_event_bridge.gd', 'res://tools/audio/audio_selftest.gd', 'res://tools/audio/integration_probe.gd', 'res://tools/audio/leak_probe.gd')) {
   $r = Run ('parse_' + [IO.Path]::GetFileNameWithoutExtension($s)) @('--headless', '--path', $sb, '--check-only', '--script', $s)
@@ -63,8 +88,11 @@ $sl = ($r.out | Select-String -Pattern '(\d+) ObjectDB instances were leaked' | 
 if ($sl) { $fail++ }
 
 if ($Integration) {
-  # 02 global selftest (compiles every script under res://src incl. src/audio) — read-only use of 02's test
-  $r = Run 'engine_selftest' @('--headless', '--path', $sb, '-s', 'res://src/core/diag/selftest.gd')
+  # 02 global selftest (compiles every script under res://src incl. src/audio) — read-only use of 02's test.
+  # Opt-in (-EngineSelftest): it now runs multi-round balance sims for > 3 min; QUOTA_POLICY asks not to rerun
+  # heavy suites needlessly. Audio scripts are parse-checked above on every run.
+  if (-not $EngineSelftest) { "engine selftest SKIPPED (use -EngineSelftest)" } else {
+  $r = Run 'engine_selftest' @('--headless', '--path', $sb, '-s', 'res://src/core/diag/selftest.gd') 900
   $rep = Join-Path $userDir 'selftest_report.json'
   if (Test-Path $rep) {
     $j = Get-Content $rep -Raw | ConvertFrom-Json
@@ -73,6 +101,7 @@ if ($Integration) {
     if ($audioFails.Count -gt 0) { $fail++; $audioFails }
     Copy-Item $rep (Join-Path $outDir 'engine_selftest_report.json')
   } else { "engine selftest produced no report (exit=$($r.code))"; $fail++ }
+  }
   # leak attribution: baseline vs audio vs repeated create/free
   foreach ($m in @('empty', 'audio', 'cycle', 'quit_direct', 'quit_prepared')) {
     $r = Run "leak_$m" @('--headless', '--path', $sb, '-s', 'res://tools/audio/leak_probe.gd', '--', "--mode=$m")
@@ -84,12 +113,13 @@ if ($Integration) {
     if ($m -in @('empty', 'audio', 'cycle', 'quit_prepared') -and ([int]"0$leak" -gt 0 -or [int]"0$res" -gt 0)) { $fail++; "  ^ unexpected exit leak" }
   }
   # bounded real battle through main scene (no --autoplay: App pauses on focus loss like a player build)
-  $r = Run 'battle' @('--headless', '--verbose', '--path', $sb, '--', "--round=r02", "--quit-after=$BattleSeconds")
+  $r = Run 'battle' @('--headless', '--verbose', '--path', $sb, '--', "--round=r02", "--quit-after=$BattleSeconds") ($BattleSeconds + 60)
   $bl = ($r.out | Select-String -Pattern '(\d+) ObjectDB instances were leaked' | ForEach-Object { $_.Matches[0].Groups[1].Value }) -join ''
   # classify: audio classes are ours; GDScript/RefCounted leaks reproduce WITHOUT the Audio autoload
   # (engine-side, reported to 02 as A8), so they are reported but do not fail the audio gate
   $lk = @($r.out | Select-String -Pattern 'Leaked instance: (\w+)' | ForEach-Object { $_.Matches[0].Groups[1].Value })
   $audioLk = @($lk | Where-Object { $_ -match 'Audio|Ogg' })
+  if ($r.timeout) { $fail++; "  ^ battle run TIMED OUT (hung quit path?)" }
   "battle exit=$($r.code) exit_leaked_objects=$(if($bl){$bl}else{0}) audio_class_leaks=$($audioLk.Count) foreign_classes=$((@($lk | Where-Object { $_ -notmatch 'Audio|Ogg' }) | Sort-Object -Unique) -join ',')"
   if ($audioLk.Count -gt 0) { $fail++; "  ^ audio objects leaked at exit: $($audioLk -join ',')" }
   $ir = Join-Path $userDir 'audio_integration_report.json'
@@ -102,7 +132,7 @@ if ($Integration) {
     if (@($ij.same_frame_duplicates).Count -gt 0) { $fail++; "  ^ duplicate cues in one frame" }
     if ([int]$ij.max_active_sfx -gt 12 -or [int]$ij.max_music_playing -gt 2) { $fail++; "  ^ voice/player bound exceeded" }
     $cc = $ij.cue_counts
-    $combat = 0; foreach ($k in 'hit_melee','hit_arrow','shoot_arrow','shoot_rock','shoot_spit','death_enemy','death_ally','hit_base','explosion') { if ($cc.$k) { $combat += [int]$cc.$k } }
+    $combat = 0; foreach ($k in 'hit_melee','hit_arrow','hit_mold','hit_bread','shoot_arrow','shoot_rock','shoot_spit','death_enemy','death_ally','hit_base','hit_base_mold','explosion') { if ($cc.$k) { $combat += [int]$cc.$k } }
     "battle combat cues=$combat kills=$($ij.engine_truth.kills) deploy cues=$($cc.deploy)/engine $($ij.engine_truth.deployed) skill cues=$([int]$cc.skill_slam + [int]$cc.skill_rally + [int]$cc.skill_barrage + [int]$cc.skill_heal + [int]$cc.skill_cast)/engine $($ij.engine_truth.skills_cast) dropped_offscreen=$($ij.audio_snapshot.dropped_offscreen) attenuated=$($ij.audio_snapshot.attenuated_offscreen)"
     if ($ij.events_has_sfx -and [int]$ij.engine_truth.kills -gt 0 -and $combat -eq 0) { $fail++; "  ^ combat happened but no combat cue was audible" }
     if ([int]$cc.deploy -ne [int]$ij.engine_truth.deployed) { $fail++; "  ^ deploy cue count != engine deployed" }
@@ -117,7 +147,7 @@ if ($Integration) {
 if ($Record) {
   # 60 s real-mix recording of one clean battle (no pause/focus/retry phases). Post-limiter Master + pre-fader stems.
   $q = $RecordSeconds + 4
-  $r = Run 'record' @('--headless', '--path', $sb, '--', "--round=r02", "--quit-after=$q", '--probe-mode=record', "--record-seconds=$RecordSeconds")
+  $r = Run 'record' @('--headless', '--path', $sb, '--', "--round=r02", "--quit-after=$q", '--probe-mode=record', "--record-seconds=$RecordSeconds") ($q + 60)
   $recOut = Join-Path $root 'tools\audio\_render\recording'
   New-Item -ItemType Directory -Path $recOut -Force | Out-Null
   $n = 0
@@ -125,6 +155,7 @@ if ($Record) {
     $src = Join-Path $userDir $fn
     if (Test-Path $src) { Copy-Item $src $recOut -Force; $n++ }
   }
+  if ($r.timeout) { $fail++; "  ^ record run TIMED OUT" }
   "record exit=$($r.code) files_copied=$n -> $recOut"
   if ($n -lt 5) { $fail++; "  ^ recording missing" }
 }

@@ -15,7 +15,7 @@ const CATEGORIES := {
 	"ui": [&"ui_tap", &"ui_back", &"ui_confirm", &"ui_error"],
 	"command": [&"deploy", &"worker_buy", &"skill_slam", &"skill_rally", &"skill_barrage", &"skill_heal", &"skill_cast"],
 	"death": [&"death_ally", &"death_enemy"],
-	"base": [&"hit_base"],
+	"base": [&"hit_base", &"hit_base_mold"],
 	"gold": [&"gold_tick"],
 	"hero": [&"hero_death", &"hero_respawn"],
 	"alert": [&"wave_incoming", &"boss_incoming"],
@@ -73,12 +73,19 @@ func skill_cue(skill_id: String) -> StringName:
 func resolve(cue: StringName, params: Dictionary) -> StringName:
 	match cue:
 		&"hit":
+			# Theme v3: the VICTIM decides the material (bread crunches, mold squishes). Needs
+			# params.target_side from 02 (request A9); without it, fall back to the neutral cues.
+			var ts := str(params.get("target_side", ""))
+			if ts == "enemy" and audio.cues.has(&"hit_mold"): return &"hit_mold"
+			if ts == "player" and audio.cues.has(&"hit_bread"): return &"hit_bread"
 			return &"hit_arrow" if str(params.get("kind", "melee")) == "ranged" else &"hit_melee"
 		&"shoot":
 			return StringName(audio.projectile_cue.get(str(params.get("projectile", "arrow")), "shoot_arrow"))
 		&"death":
 			return &"death_ally" if str(params.get("side", "enemy")) == "player" else &"death_enemy"
 		&"base_hit":
+			# enemy base = mold hive (wet), player base = bakery tower (dry)
+			if str(params.get("side", "")) == "enemy" and audio.cues.has(&"hit_base_mold"): return &"hit_base_mold"
 			return &"hit_base"
 		&"skill":
 			return skill_cue(str(params.get("skill", "")))
@@ -90,7 +97,7 @@ func _on_direct(cue: StringName, params: Dictionary) -> void:
 		if derived[cat] and CATEGORIES[cat].has(c):
 			derived[cat] = false
 	if c == &"hit_base" and str(params.get("side", "")) == "enemy":
-		params = params.merged({"pitch": 1.12, "vol_db": -2.0})
+		params = params.merged({"pitch": 1.12, "vol_db": -2.0})   # only if hit_base_mold is absent
 	audio.play(c, params)
 
 # ------------------------------------------------------------ derived cues
@@ -184,7 +191,7 @@ func _on_hud(s: Dictionary) -> void:
 		if derived.base and (pb < _prev.pb - 0.5):
 			audio.play(&"hit_base", {"vol_db": 1.0})
 		elif derived.base and (eb < _prev.eb - 0.5):
-			audio.play(&"hit_base", {"pitch": 1.12, "vol_db": -2.0})
+			audio.play(resolve(&"base_hit", {"side": "enemy"}))
 		if derived.death and ae < _prev.ae: audio.play(&"death_enemy")
 		if derived.death and ap < _prev.ap: audio.play(&"death_ally")
 		# bounty: gold rose more than ~0.1 s of income (+1 rounding slack)

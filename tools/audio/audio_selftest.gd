@@ -70,7 +70,7 @@ func _run() -> void:
 		_ok(_bus(b) >= 0, "bus %s missing" % b)
 		_ok(AudioServer.get_bus_send(_bus(b)) == &"Master", "bus %s not routed to Master" % b)
 	_ok(A.load_errors.is_empty(), "load errors: %s" % str(A.load_errors))
-	_ok(A.cues.size() >= 27, "cue count %d" % A.cues.size())
+	_ok(A.cues.size() >= 30, "cue count %d" % A.cues.size())
 	_ok(A.music_defs.has(&"music_battle") and A.music_defs.has(&"music_menu"), "music defs")
 	rep.imported = ResourceLoader.exists("res://assets/audio/sfx/ui_tap.wav")
 	rep.resident_sfx_bytes = A.stats.resident_sfx_bytes
@@ -195,6 +195,14 @@ func _run() -> void:
 	_ok(br.resolve(&"hit", {"kind": "ranged"}) == &"hit_arrow", "semantic hit ranged")
 	_ok(br.resolve(&"death", {"side": "player"}) == &"death_ally", "semantic death player")
 	_ok(br.resolve(&"skill", {"skill": "skill_rally"}) == &"skill_rally", "semantic skill rally")
+	# theme v3: victim side picks the material; base side picks bakery tower vs mold hive
+	_ok(br.resolve(&"hit", {"kind": "melee", "target_side": "enemy"}) == &"hit_mold", "hit on mold -> hit_mold")
+	_ok(br.resolve(&"hit", {"kind": "ranged", "target_side": "player"}) == &"hit_bread", "hit on bread -> hit_bread")
+	_ok(br.resolve(&"hit", {"kind": "melee"}) == &"hit_melee", "hit without side -> neutral fallback")
+	_ok(br.resolve(&"base_hit", {"side": "enemy"}) == &"hit_base_mold", "enemy base -> hive")
+	_ok(br.resolve(&"base_hit", {"side": "player"}) == &"hit_base", "player base -> bakery tower")
+	for cue in [&"hit_mold", &"hit_bread", &"hit_base_mold"]:
+		_ok(A.cues.has(cue), "manifest missing %s" % cue)
 	A.advance(5.0)
 	p0 = A.stats.played
 	E.emit_signal("sfx", &"skill", {"skill": "skill_slam"})

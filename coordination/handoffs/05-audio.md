@@ -1,51 +1,68 @@
-# 05-audio handoff — USER CHECKPOINT (stop requested)
-Updated: 2026-10-31 (stopped at a safe point on user instruction; no new work started)
-Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all. Same session, no window restart.
-Processes: none of mine running. The Godot processes PID 49528/43864 are 06's `tests/services/test_services_integration.gd` and were left untouched.
+# 05-audio handoff
+Updated: 2026-10-31 ~16:45 (theme v3 milestone: validated, committing)
+Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Same session resumed after the user restart and the window split. Model claude-opus-5.5, trust-all.
 
-## Ownership
-assets/audio/**, src/audio/**, tools/audio/**, docs/audio/**, own status/handoff, requests 05-audio-to-*.
+## Resume check (09:23 checkpoint)
+Compared the worktree with `origin/checkpoint/quota-20261031-092323/05-audio` (d24c7f2). synth.py and VALIDATION_REPORT.json were byte-identical, and the local recordings and baseline were present. Nothing was lost. "HISTORICAL QUOTA CHECKPOINT" sections were ignored as instructed.
+Decisions processed: Q1 = A, bakery knights vs mold legion (user, 09:03); D1–D19. Requests: coordinator-to-05-audio including the theme note.
 
-## Task in progress (from the reviewer: 10449ee/2fae4a3 reviewed)
-(1) Hero death/respawn cue verification in the probe. (2) Reduce the "nobody has listened" gap: record 60 s of a real-mix battle, measure loudness, clipping, masking, low-frequency content and repetition fatigue, and prepare a 30 s preview for the user.
+## Steering 15:5x (coordinator: hung run)
+- My sandbox Godot (PIDs 31292/8152, record run) plus its pwsh runner (56132) were stopped. The PIDs the coordinator reported (1076/45240) had already exited. No other worker's Godot was touched.
+- Root cause: the runner copied the LIVE worktree, including 02's mid-edit `src/core/app.gd`. App failed to compile (`Nonexistent function 'boot'`), so `--quit-after` never fired and the process idled forever.
+- Fixes in `run_godot_checks.ps1`:
+  - The sandbox is now built from committed HEAD (`git archive`), with only 05 paths overlaid from the worktree.
+  - Every Godot call has a hard wall-clock timeout that kills only its own process tree (console wrapper + child, by parent PID).
+  - The probe quits itself with code 3 if App has not quit 4 s after `--quit-after`.
+  - The 02 engine selftest is now opt-in (`-EngineSelftest`): it now takes > 3 min (balance sims), and QUOTA_POLICY asks for no needless heavy reruns. Audio scripts are still parse-checked on every run.
+- A second issue found: other workers' headless Godot runs on the shared project (`--path .`) briefly hold `assets/audio` files open while they scan and import. This caused one failed OGG write and a false "non-deterministic" result. `synth.py` now writes `*.part`/`*.tmp` files and does an atomic `os.replace` with retries.
 
-## Done and validated (committed in this checkpoint)
-- `tools/audio/integration_probe.gd`: aggressive hero policy (advance while hp > 40 %). If no natural hero death happens, a sandbox-only injection sets hero hp to 1 and walks the hero in, so the kill goes through the real damage → `_kill` → `hero_dead` → `Events.sfx` path; reported as `hero_death_injected`. Record mode (`--probe-mode=record`) runs one clean battle: AudioEffectRecord on Master (post-limiter) plus SFX/UI/Music stems, cue onset log, Music bus gain log.
-- `tools/audio/run_godot_checks.ps1`: hero gates (deaths ≥ 1, hero_death cues = engine deaths, respawn cue ≥ 1) and `-Record [-RecordSeconds 60]`.
-  - Validation: `pwsh tools/audio/run_godot_checks.ps1 -Integration -BattleSeconds 80` → GODOT AUDIO CHECKS PASS. hero: engine deaths 1 (injected) = hero_death cues 1, hero_respawn cues 1. Combat cues 73 / kills 8, deploy 14 = 14, skill 7 = 7, 0 same-frame duplicates, peak SFX voices 4, audio-class exit leaks 0, engine selftest 66/66.
-  - Honesty note: the hero death was injected (hp = 1); natural deaths in 75–80 s were 0.
-- `-Record` run (r02, 60 s, project autoload + 02 emitters): recording OK, 134 cues logged.
-- `tools/audio/mix_report.py` → `docs/audio/MIX_REPORT.md`, `docs/audio/previews/mix_timeline.png`, `docs/audio/previews/listen/battle_mix_60s.wav` (exact engine Master output, 10.5 MB), `docs/audio/previews/listen/battle_preview_30s.mp3` (22–52 s, 10 cue kinds / 95 cues, 192 kbps, 0.3 s fades only; for the user to listen to), plus `listen/.gdignore`.
-- Measured findings (CURRENT committed assets, v1):
-  - Integrated −21.4 LUFS; peak −3.39 dBFS; true peak −3.23 dBTP; 0 clipped samples; limiter never engaged.
-  - SFX buried under music (≤ 0 dB) in 127/326 = 39 % of active windows, plus 21 % at risk; with a 300 Hz high-pass (phone proxy) 28 % buried. Median SFX − music is +1.2 dB full band.
-  - LOW-HEAVY (> 50 % of energy below 300 Hz): hit_melee 1–3, wave_incoming 78 %, music_battle 70 %, shoot_rock, boss_incoming, stinger_defeat. The whole mix loses 3.6 dB under a 300 Hz high-pass.
-  - Fatigue: hit_melee 70/min, max 5 in 1 s, 12 gaps < 150 ms, 9 plays per file per 10 s, only 3 variants.
-  - Caveat: aligning the cue log to the audio matched only 59/134 cues within 30 ms, so the "which cues were buried" list is approximate. Level, clipping and masking-percentage figures come from the audio itself and do not depend on that alignment.
+## Milestones this session (all validated)
+1. **v2 mix fix**, committed ccf3033 (PUSHED): hit_melee with 5 variants, body above 300 Hz, gap 0.26 s; lighter wave/rock/music bass.
+2. **v3 theme** (this commit):
+   - synth v3 bakery and mold palettes.
+   - New cues `hit_bread` (3 variants), `hit_mold` (3), `hit_base_mold`.
+   - Re-voiced: deploy, worker_buy, death_ally, death_enemy, shoot_spit, explosion, hit_base, wave_incoming, boss_incoming, stinger_win, stinger_defeat, both music loops (accordion/bell/pluck voices; battle bass an octave higher; music_battle vol −12).
+   - The manifest now records licence, provenance (tool, recipes, seeds, encoder, reproduce command), theme, and per-cue `faction`/`desc`.
+   - Bridge: the victim side decides the material (`target_side`, requested from 02 as A9); `base_hit` side picks the bakery tower or the mold hive (also in HUD-derived base hits).
+   - Selftest checks the faction mapping. AUDIO_CONTRACT v1.2 adds a §5b theme table and the character of boss/win/defeat.
 
-## NOT validated — left in the worktree (do not commit as-is)
-- `tools/audio/synth.py` (v2 fixes for the findings, NOT regenerated or measured yet):
-  - hit_melee: 5 variants, body moved above 300 Hz plus a 220 Hz high-pass, vol −9 → −7, max 3 → 2, gap 0.045 → 0.26.
-  - wave_incoming: drum and horn raised in pitch.
-  - shoot_rock: high-passed.
-  - battle music: bass 0.42 → 0.26, kick 0.6 → 0.42.
-  - GENERATOR_VERSION 2.
-- `docs/audio/mix_summary_before.json` (v1 baseline numbers for the before/after comparison) and `tools/audio/_render/baseline_v1/` (local copy, never committed).
-- `docs/audio/VALIDATION_REPORT.json` (rewritten by a run without `--determinism`; do not commit this weaker report).
+## Validation (actual)
+- `python tools/audio/validate.py --determinism` → PASS: 38 SFX + 2 loops, 0 differing files on rerun, loops exact length, all ≥ 25 % energy ≥ 300 Hz, peaks ≤ −1 dBFS.
+- `pwsh tools/audio/run_godot_checks.ps1 -Integration -BattleSeconds 80 -Record -RecordSeconds 60` (sandbox from HEAD a9223df) → GODOT AUDIO CHECKS PASS:
+  - Selftest PASS with 0 exit leaks; leak cycle 0 / quit_direct 0 / quit_prepared 0 (02's A7 is in).
+  - 7 battles; deploy 14 = 14, skill 7 = 7; 41 combat cues / 8 kills; hero death 1 (injected) = cue 1, respawn cue 1.
+  - 0 same-frame duplicates; max SFX voices 4/12, music players ≤ 2; audio-class exit leaks 0. The remaining 4 GDScript/RefCounted objects are engine-side (A8).
+  - Engine selftest skipped (opt-in).
+- `python tools/audio/mix_report.py --label=v3-theme` on the 60 s engine recording (r02):
 
-## Exact next steps
-1. `python tools/audio/synth.py` then `python tools/audio/validate.py --determinism` (must PASS; check that hit_melee_4/5 exist and that the manifest has 5 hit_melee files).
-2. `python tools/audio/preview.py` (LOUDNESS.md), then `pwsh tools/audio/run_godot_checks.ps1 -Integration -BattleSeconds 80 -Record`, then `python tools/audio/mix_report.py`.
-3. Compare against `docs/audio/mix_summary_before.json`. Targets (internal): buried < 15 %, no LOW-HEAVY combat cue, hit_melee max ≤ 4/s and no gaps < 150 ms, still 0 clipping. Move the new numbers into MIX_REPORT.md under a "before → after" section and keep the v1 numbers.
-4. Improve the cue alignment in mix_report.py: log the audio-clock time (`AudioServer.get_time_since_last_mix()` + mixed frames) in the probe instead of wall clock.
-5. Publish, then ask 01 (one question at a time) to have the user listen to `docs/audio/previews/listen/battle_preview_30s.mp3`.
+  | Version | Integrated | Buried (SFX ≤ music) | At risk | Buried ≥ 300 Hz | Low-heavy files | Fatigue flags | Disk |
+  |---|---|---|---|---|---|---|---|
+  | v1 | −21.4 LUFS | 39.0 % | 21.2 % | 27.6 % | 8 | hit_melee | 1,348,388 B |
+  | v2 | −21.2 LUFS | 30.3 % | 20.7 % | 14.7 % | 2 | none | 1,365,556 B |
+  | v3-theme | −22.4 LUFS | **7.5 %** | 3.9 % | 5.4 % | **0** | none | 1,460,181 B |
+
+  Peak −2.9 dBFS, 0 clipped samples.
+- Budgets: disk 1.46 MB ≤ 2.5 MB; SFX resident after QOA import 177,560 B ≤ 2 MiB; voices within pools; `play()` 3.2 µs desktop.
+- Listening files:
+  - `docs/audio/previews/listen/battle_preview_30s.mp3`: engine recording, 22–52 s.
+  - `battle_mix_60s.wav`: the full 60 s engine recording.
+  - `theme_showcase.mp3` + `.txt`: offline A/B of faction pairs, boss, win, defeat; peak −1.01 dBFS, 0 full-scale samples.
+
+## Honest limits
+- The battle recording mostly uses the neutral `hit_melee`, because 02 does not send `target_side` yet (A9). The bread/mold hit distinction is audible only in the showcase until then. No boss appeared in the 60 s r02 recording; boss, win and defeat are in the showcase only.
+- Cue-log alignment is 59/111 within 40 ms, so the per-cue "buried" attribution is approximate; the percentages come from the audio itself.
+- Nobody has listened yet. No Android device evidence. Desktop headless Dummy driver.
 
 ## Git
-- Earlier: 67de63b, 067c594, ba38f2d, 5e21a23, c79add3, 10449ee, 2fae4a3, all PUSHED.
-- Checkpoint: 6045b374f8d5d4b22ea91b0727e6123563b33275 "[Test] 영웅 사망·부활 소리 검증과 실전 믹스 60초 녹음·측정 보고서, 30초 미리듣기 추가" → PUSHED origin/main (10 files).
+- Earlier: 67de63b, 067c594, ba38f2d, 5e21a23, c79add3, 10449ee, 2fae4a3, 6045b37, 1946d0f, ccf3033 (v2), all PUSHED.
+- v3 theme commit: SHA recorded in the status file after push.
 
 ## Open requests
-02: A7 (`prepare_quit` on the quit path), A8 (engine RefCounted exit leak, not audio). 04: C1 sliders, C2 UI cues. Q1 theme pending (01).
+- 02: A8 (engine RefCounted exit leak), A9 (`target_side` on hit cues).
+- 04: C1 (sliders), C2 (UI cues).
+- A human listening pass of `theme_showcase.mp3` and `battle_preview_30s.mp3`, via 01, one question at a time.
 
-## Strongest remaining reasons a reviewer could reject the audio
-Nobody has listened yet (the preview now exists for that). Measured masking is 39 % with low-heavy combat sounds in the shipped v1 assets (fix drafted, not verified). No Android device evidence.
+## Next task (05)
+1. After 02 A9: rerun `-Integration -Record` and `mix_report.py --label=v3-a9`. Expect `hit_mold`/`hit_bread` in the cue counts, and re-measure masking (squish/crunch have a different level from hit_melee).
+2. Optional: a boss-round recording (r05 or r10) to measure boss_incoming plus the music duck in a real mix.
+3. Act on human listening feedback when it arrives.

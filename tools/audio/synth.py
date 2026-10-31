@@ -35,7 +35,7 @@ SFX_SR = 22050          # mono 16-bit PCM; chip-style SFX do not need >11 kHz ba
 MUSIC_SR = 44100        # stereo, encoded to Ogg Vorbis (streamed, not decompressed into RAM)
 SFX_PEAK = 10 ** (-1.0 / 20)    # -1 dBFS sample peak ceiling
 MUSIC_PEAK = 10 ** (-3.0 / 20)  # -3 dBFS before lossy encode (leaves inter-sample/encoder headroom)
-GENERATOR_VERSION = 2
+GENERATOR_VERSION = 3
 
 # ----------------------------------------------------------------------------------------------
 # DSP primitives
@@ -182,7 +182,22 @@ def to_pcm16(x: np.ndarray, rng: np.random.Generator) -> np.ndarray:
     return np.clip(np.round(x * 32767.0 + d), -32768, 32767).astype("<i2")
 
 
+def replace_retry(tmp: Path, dst: Path, tries: int = 40) -> None:
+    """Atomic replace with retries: other workers' headless Godot runs on the shared project scan and
+    reimport assets/audio, briefly holding files open on Windows (seen as EINVAL/permission errors)."""
+    import time
+    for i in range(tries):
+        try:
+            os.replace(tmp, dst)
+            return
+        except OSError:
+            time.sleep(0.25)
+    raise OSError(f"could not replace {dst} (file held open by another process)")
+
+
 def write_wav(path: Path, x: np.ndarray, sr: int, seed: int) -> None:
+    final = path
+    path = path.with_name(path.name + ".tmp")
     path.parent.mkdir(parents=True, exist_ok=True)
     rng = np.random.default_rng(seed + 991)
     ch = 1 if x.ndim == 1 else x.shape[1]
@@ -192,6 +207,7 @@ def write_wav(path: Path, x: np.ndarray, sr: int, seed: int) -> None:
         w.setsampwidth(2)
         w.setframerate(sr)
         w.writeframes(pcm.tobytes())
+    replace_retry(path, final)
 
 # ----------------------------------------------------------------------------------------------
 # SFX recipes (mono, SFX_SR). Each returns float array; final normalisation + edge fades applied.
@@ -485,37 +501,266 @@ def r_stinger_defeat(rng):
 #   gap: minimum seconds between triggers ; prio: 0..10 (voice stealing; higher wins) ;
 #   pitch: +- random pitch scale jitter ; duck: music duck dB while playing (0 = none)
 # ----------------------------------------------------------------------------------------------
-CUES = {
-    "ui_tap":          dict(r=[r_ui_tap], bus="UI", vol_db=-8, max=2, gap=0.03, prio=6, pitch=0.03),
-    "ui_back":         dict(r=[r_ui_back], bus="UI", vol_db=-8, max=1, gap=0.05, prio=6, pitch=0.0),
-    "ui_confirm":      dict(r=[r_ui_confirm], bus="UI", vol_db=-7, max=1, gap=0.05, prio=7, pitch=0.0),
-    "ui_error":        dict(r=[r_ui_error], bus="UI", vol_db=-9, max=1, gap=0.25, prio=6, pitch=0.0),
-    "deploy":          dict(r=[r_deploy], bus="SFX", vol_db=-6, max=2, gap=0.06, prio=7, pitch=0.04),
-    "worker_buy":      dict(r=[r_worker_buy], bus="SFX", vol_db=-7, max=1, gap=0.1, prio=7, pitch=0.0),
-    "gold_tick":       dict(r=[r_gold_tick], bus="SFX", vol_db=-13, max=2, gap=0.09, prio=2, pitch=0.05),
-    "hit_melee":       dict(r=[lambda g, v=v: r_hit_melee(g, v) for v in range(5)],
-                            bus="SFX", vol_db=-7, max=2, gap=0.26, prio=1, pitch=0.08),
-    "hit_arrow":       dict(r=[r_hit_arrow], bus="SFX", vol_db=-10, max=2, gap=0.05, prio=1, pitch=0.08),
-    "shoot_arrow":     dict(r=[r_shoot_arrow], bus="SFX", vol_db=-12, max=2, gap=0.06, prio=1, pitch=0.08),
-    "shoot_rock":      dict(r=[r_shoot_rock], bus="SFX", vol_db=-10, max=1, gap=0.12, prio=2, pitch=0.06),
-    "shoot_spit":      dict(r=[r_shoot_spit], bus="SFX", vol_db=-11, max=2, gap=0.08, prio=1, pitch=0.08),
-    "hit_base":        dict(r=[r_hit_base], bus="SFX", vol_db=-9, max=1, gap=0.35, prio=5, pitch=0.05),
-    "explosion":       dict(r=[r_explosion], bus="SFX", vol_db=-8, max=2, gap=0.12, prio=5, pitch=0.06),
-    "death_ally":      dict(r=[lambda g: r_death(g, False)], bus="SFX", vol_db=-12, max=2, gap=0.08, prio=3, pitch=0.06),
-    "death_enemy":     dict(r=[lambda g: r_death(g, True)], bus="SFX", vol_db=-12, max=2, gap=0.07, prio=3, pitch=0.08),
-    "hero_death":      dict(r=[r_hero_death], bus="SFX", vol_db=-5, max=1, gap=1.0, prio=9, pitch=0.0, duck=-6),
-    "hero_respawn":    dict(r=[r_hero_respawn], bus="SFX", vol_db=-8, max=1, gap=1.0, prio=8, pitch=0.0),
-    "skill_slam":      dict(r=[r_skill_slam], bus="SFX", vol_db=-4, max=1, gap=0.2, prio=9, pitch=0.0, duck=-4),
-    "skill_rally":     dict(r=[r_skill_rally], bus="SFX", vol_db=-6, max=1, gap=0.2, prio=9, pitch=0.0, duck=-4),
-    "skill_barrage":   dict(r=[r_skill_barrage], bus="SFX", vol_db=-4, max=1, gap=0.2, prio=9, pitch=0.0, duck=-5),
-    "skill_heal":      dict(r=[r_skill_heal], bus="SFX", vol_db=-7, max=1, gap=0.2, prio=9, pitch=0.0, duck=-3),
-    "skill_cast":      dict(r=[r_skill_cast], bus="SFX", vol_db=-7, max=1, gap=0.2, prio=8, pitch=0.0, duck=-3),
-    "wave_incoming":   dict(r=[r_wave_incoming], bus="SFX", vol_db=-6, max=1, gap=1.0, prio=8, pitch=0.0, duck=-4),
-    "boss_incoming":   dict(r=[r_boss_incoming], bus="SFX", vol_db=-4, max=1, gap=2.0, prio=10, pitch=0.0, duck=-8),
-    "stinger_win":     dict(r=[r_stinger_win], bus="Music", vol_db=-3, max=1, gap=1.0, prio=10, pitch=0.0),
-    "stinger_defeat":  dict(r=[r_stinger_defeat], bus="Music", vol_db=-3, max=1, gap=1.0, prio=10, pitch=0.0),
-}
+# ----------------------------------------------------------------------------------------------
+# v3 THEME (Q1 = A, user-decided 2026-10-31 09:03): bakery knights (player) vs mold legion (enemy).
+# Sound palette rule, so factions are told apart by ear:
+#   BAKERY = warm + bouncy + DRY: oven bells (inharmonic sine partials), crust crunch (bright, short,
+#            dry noise grains), wooden/rolling-pin thunks, major keys, accordion/brass-like leads.
+#   MOLD   = wet + sticky + SLOW: squelch (noise through a moving formant band-pass), bubble pops
+#            (fast rising sine chirps), sticky low-passed tails, minor/tritone, wobbling pitch.
+# Both palettes keep most energy above 300 Hz (phone loudspeakers), validated by validate.py/mix_report.py.
+# v1/v2 recipes above are kept so earlier versions can be regenerated for A/B comparison.
+# ----------------------------------------------------------------------------------------------
 
+def bell(f, dur, tau=None, bright=1.0):
+    """Small oven/shop bell: inharmonic partials (1, 2.756, 5.404) with faster-decaying upper partials."""
+    n = n_samples(dur, SR)
+    tau = tau or dur * 0.45
+    s = osc(f, n, SR, "sine") * env_exp(n, SR, tau, 0.001)
+    s += 0.5 * bright * osc(f * 2.756, n, SR, "sine") * env_exp(n, SR, tau * 0.55, 0.001)
+    s += 0.25 * bright * osc(f * 5.404, n, SR, "sine") * env_exp(n, SR, tau * 0.3, 0.001)
+    return s
+
+
+def crumbs(rng, dur, count, lo=1800, hi=7000, gain=1.0):
+    """Dry crust crackle: `count` tiny noise grains (3-9 ms) scattered over `dur` seconds."""
+    out = np.zeros(n_samples(dur, SR))
+    for _ in range(count):
+        g = n_samples(rng.uniform(0.003, 0.009), SR)
+        grain = bandpass(noise(g, rng), lo, hi, SR) * env_exp(g, SR, g / SR * 0.35, 0.0003)
+        place(out, grain * rng.uniform(0.4, 1.0) * gain, int(rng.uniform(0, 0.85) * len(out)))
+    return out
+
+
+def bubble(f0, dur=0.035, rise=2.2):
+    """Wet bubble pop: short sine chirp rising in pitch (the classic 'bloop' of a bursting bubble)."""
+    n = n_samples(dur, SR)
+    return osc(ramp(f0, f0 * rise, n), n, SR, "sine") * env_adsr(n, SR, 0.002, dur * 0.4, 0.4, dur * 0.4)
+
+
+def squelch(rng, dur, f_start, f_peak, f_end, wet=0.6):
+    """Sticky squelch: noise through a band (one octave) whose centre sweeps start -> peak -> end."""
+    n = n_samples(dur, SR)
+    k = n // 3
+    centre = np.concatenate([ramp(f_start, f_peak, k), ramp(f_peak, f_end, n - k)])
+    x = noise(n, rng)
+    x = lowpass(highpass(x, centre * 0.7, SR), centre * 1.4, SR)
+    body = osc(centre * 0.5, n, SR, "sine") * 0.35          # gooey tonal component following the sweep
+    e = env_adsr(n, SR, 0.004, dur * 0.25, 0.55, dur * 0.5)
+    return lowpass((x + body * wet) * e, 3500, SR)
+
+
+# --- bakery side ------------------------------------------------------------------------------
+def r3_deploy(rng):
+    """Bakery troop marches out of the oven: oven-door bell (G6/D7) + two dry crust footsteps + puff."""
+    out = np.zeros(n_samples(0.42, SR))
+    place(out, bell(midi_hz(91), 0.35, 0.12) * 0.55, 0)
+    place(out, bell(midi_hz(98), 0.3, 0.1) * 0.35, n_samples(0.06, SR))
+    for t0 in (0.1, 0.22):
+        step = mix(crumbs(rng, 0.05, 7, 1500, 6000), thump(420, 260, 0.05, 0.015) * 0.3)
+        place(out, step * 0.8, n_samples(t0, SR))
+    n = n_samples(0.2, SR)
+    puff = bandpass(noise(n, rng), 600, 2500, SR) * env_adsr(n, SR, 0.02, 0.05, 0.4, 0.12) * 0.25
+    place(out, puff, 0)
+    return out
+
+
+def r3_worker_buy(rng):
+    """Little baker hired: shop bell 'ka-ching' (two bell strikes up a fourth) + coin glint."""
+    out = np.zeros(n_samples(0.45, SR))
+    place(out, bell(midi_hz(84), 0.25, 0.08) * 0.6, 0)
+    place(out, bell(midi_hz(89), 0.4, 0.16) * 0.7, n_samples(0.07, SR))
+    place(out, blip(2349, 2349, 0.06, "sine", tau=0.025) * 0.25, n_samples(0.12, SR))
+    return out
+
+
+def r3_hit_bread(rng, var):
+    """Mold hits a bread soldier: crisp crust crunch + small wooden-ish knock (dry, bright, short)."""
+    p = [1.0, 0.9, 1.1][var]
+    crunch = crumbs(rng, 0.06, 12 + 3 * var, 1600 * p, 7500)
+    knock = thump(480 * p, 330 * p, 0.05, 0.014, drive=1.5) * 0.35
+    return highpass(mix(crunch, knock), 250, SR)
+
+
+def r3_death_ally(rng):
+    """Bread soldier crumbles: long dry crackle that thins out + soft warm falling 'aww' (triangle)."""
+    out = crumbs(rng, 0.32, 40, 1200, 6500) * np.linspace(1.0, 0.3, n_samples(0.32, SR))
+    n = n_samples(0.25, SR)
+    tone = osc(ramp(midi_hz(79), midi_hz(72), n), n, SR, "tri") * env_adsr(n, SR, 0.01, 0.05, 0.6, 0.12) * 0.35
+    return mix(out, tone)
+
+
+def r3_hit_base_bakery(rng):
+    """Player bakery tower hit: wooden crack + crust shower + low (but >300 Hz-led) knock."""
+    knock = thump(330, 200, 0.2, 0.06, drive=2.5) * 0.4
+    crack = burst(rng, 0.05, 0.012, 1200, 5000) * 0.8
+    return mix(knock, crack, seq([(0.02, crumbs(rng, 0.3, 30, 1500, 6000) * 0.6)], 0.34))
+
+
+def r3_wave_incoming(rng):
+    """Bakery alarm bell tolls twice (watchtower bell, E6) over a short march-drum roll: 'they're coming'."""
+    out = np.zeros(n_samples(1.0, SR))
+    for i, t0 in enumerate((0.0, 0.32)):
+        place(out, bell(midi_hz(76), 0.6, 0.25, bright=1.3) * (0.7 - 0.15 * i), n_samples(t0, SR))
+    for i in range(6):
+        place(out, burst(rng, 0.05, 0.015, 900, 5000) * (0.2 + 0.05 * i), n_samples(0.5 + i * 0.06, SR))
+    place(out, thump(260, 160, 0.15, 0.05) * 0.3, n_samples(0.86, SR))
+    return out
+
+
+def r3_stinger_win(rng):
+    """Bakery victory: bouncy major fanfare (warm square lead, low-passed), oven-bell double ding on the
+    final chord, crust confetti. Character: proud, cheerful, short (2.8 s)."""
+    out = np.zeros(n_samples(2.8, SR))
+    lead = [(0.0, "G4", 0.11), (0.11, "C5", 0.11), (0.22, "E5", 0.11), (0.33, "G5", 0.28),
+            (0.62, "E5", 0.11), (0.73, "G5", 0.14), (0.9, "C6", 1.5)]
+    for t0, nm, d in lead:
+        n = n_samples(d, SR)
+        f = midi_hz(note_midi(nm))
+        if d > 1:
+            f = f * (1 + 0.007 * np.sin(2 * np.pi * 5.5 * np.arange(n) / SR) * np.linspace(0, 1, n))
+        s = (osc(f, n, SR, "square", 0.3) + 0.5 * osc(f * 1.003, n, SR, "saw")) * env_adsr(n, SR, 0.006, 0.05, 0.7, min(0.4, d * 0.4))
+        place(out, lowpass(s, 3200, SR) * 0.4, n_samples(t0, SR))
+    for nm in ("C4", "E4", "G4"):
+        n = n_samples(1.7, SR)
+        place(out, osc(midi_hz(note_midi(nm)), n, SR, "tri") * env_adsr(n, SR, 0.02, 0.2, 0.6, 0.6) * 0.22, n_samples(0.9, SR))
+    for i in range(6):
+        place(out, burst(rng, 0.06, 0.02, 800, 6000) * (0.22 + 0.05 * i), n_samples(0.6 + i * 0.05, SR))
+    place(out, bell(midi_hz(96), 1.2, 0.45) * 0.4, n_samples(0.9, SR))
+    place(out, bell(midi_hz(103), 1.0, 0.35) * 0.3, n_samples(1.15, SR))
+    place(out, crumbs(rng, 1.2, 60, 3000, 9000) * np.linspace(0.6, 0.0, n_samples(1.2, SR)), n_samples(0.95, SR))
+    return out
+
+
+# --- mold side ---------------------------------------------------------------------------------
+def r3_hit_mold(rng, var):
+    """Bread soldier hits mold: short wet squish + one bubble (soft, sticky, no bright crack)."""
+    p = [1.0, 0.88, 1.14][var]
+    s = squelch(rng, 0.09, 700 * p, 1600 * p, 500 * p, wet=0.5)
+    return highpass(mix(s, seq([(0.03 + 0.01 * var, bubble(420 * p, 0.03) * 0.45)], 0.1)), 250, SR)
+
+
+def r3_death_enemy(rng):
+    """Mold blob bursts: big squelch, then a fizz of 4 bubbles of falling size (rising pitch)."""
+    out = np.zeros(n_samples(0.42, SR))
+    place(out, squelch(rng, 0.22, 500, 1400, 350, wet=0.7), 0)
+    for i, (t0, f) in enumerate([(0.12, 380), (0.18, 520), (0.25, 690), (0.31, 900)]):
+        place(out, bubble(f * rng.uniform(0.92, 1.08), 0.03) * (0.5 - 0.08 * i), n_samples(t0, SR))
+    n = len(out)
+    fizz = bandpass(noise(n, rng), 3000, 7000, SR) * env_adsr(n, SR, 0.1, 0.1, 0.3, 0.2) * 0.08
+    return out + fizz
+
+
+def r3_shoot_spit(rng):
+    """Spore spitter: wet 'ptoo' (squelch up) + 2 bubbles trailing."""
+    out = np.zeros(n_samples(0.18, SR))
+    place(out, squelch(rng, 0.1, 400, 1800, 900, wet=0.4), 0)
+    place(out, bubble(500, 0.025) * 0.4, n_samples(0.07, SR))
+    place(out, bubble(650, 0.025) * 0.3, n_samples(0.11, SR))
+    return out
+
+
+def r3_explosion(rng):
+    """Spore bomber bursts: wet splat (squelch) + mid-band boom + spore hiss + bubbles raining down."""
+    n = n_samples(0.7, SR)
+    body = lowpass(noise(n, rng), ramp(3500, 400, n), SR) * env_exp(n, SR, 0.15, 0.002)
+    out = mix(body, thump(180, 90, 0.45, 0.14) * 0.35, squelch(rng, 0.3, 300, 1200, 250, wet=0.8) * 0.9)
+    for i in range(6):
+        place(out, bubble(rng.uniform(350, 900), 0.03) * 0.3, n_samples(0.15 + 0.07 * i, SR))
+    hiss = highpass(noise(n, rng), 4000, SR) * env_adsr(n, SR, 0.05, 0.1, 0.25, 0.4) * 0.1
+    return mix(out, hiss)
+
+
+def r3_hit_base_mold(rng):
+    """Enemy mold hive hit: heavy wet thud (squelch, slower) + gooey wobble + bubbles."""
+    out = mix(squelch(rng, 0.35, 380, 1200, 330, wet=0.6), thump(260, 170, 0.25, 0.08, drive=2.0) * 0.14)
+    for t0, f in [(0.12, 420), (0.2, 560)]:
+        place(out, bubble(f, 0.03) * 0.35, n_samples(t0, SR))
+    return out
+
+
+def r3_boss_incoming(rng):
+    """Mold boss rises: oozing tritone drone (D4/G#4 detuned saws, low-passed and slowly bending down),
+    three heavy squelch stomps, a growing bubble boil. Character: slimy menace, not a horror scream."""
+    total = 2.0
+    out = np.zeros(n_samples(total, SR))
+    n = n_samples(1.7, SR)
+    t = np.arange(n) / SR
+    bend = 1 - 0.03 * np.clip(t / 1.7, 0, 1) + 0.006 * np.sin(2 * np.pi * 3.1 * t)    # oozy pitch sag + wobble
+    drone = np.zeros(n)
+    for m, g in ((62, 1.0), (68, 0.7), (74, 0.3)):
+        f = midi_hz(m) * bend
+        drone += (osc(f * 0.995, n, SR, "saw") + osc(f * 1.005, n, SR, "saw")) * 0.5 * g
+    drone = lowpass(drone, ramp(600, 1800, n), SR) * env_adsr(n, SR, 0.25, 0.2, 0.8, 0.5)
+    place(out, drone * 0.45, n_samples(0.15, SR))
+    for t0 in (0.0, 0.55, 1.1):
+        place(out, mix(squelch(rng, 0.25, 350, 1000, 300, wet=0.6), thump(200, 130, 0.3, 0.1) * 0.12), n_samples(t0, SR))
+    for i in range(14):
+        tt = 0.4 + 1.4 * (i / 14) ** 0.7
+        place(out, bubble(rng.uniform(300, 800), rng.uniform(0.025, 0.045)) * (0.15 + 0.02 * i), n_samples(tt, SR))
+    return out
+
+
+def r3_stinger_defeat(rng):
+    """Mold wins: the bakery tune collapses — descending chromatic line in a wet, wobbling voice whose
+    low-pass closes like dough going soggy, then bubbles take over. Mid register (no sub-heavy drone)."""
+    out = np.zeros(n_samples(3.0, SR))
+    for i, (nm, d) in enumerate([("E5", 0.38), ("D#5", 0.38), ("D5", 0.38), ("C#5", 1.5)]):
+        n = n_samples(d, SR)
+        f = midi_hz(note_midi(nm)) * (1 + 0.015 * np.sin(2 * np.pi * 4.5 * np.arange(n) / SR))
+        if i == 3:
+            f = f * ramp(1.0, 0.9, n)
+        s = osc(f, n, SR, "square", 0.3) * 0.6 + osc(f * 0.5, n, SR, "tri") * 0.4
+        cut = ramp(2400, 700, n) if i == 3 else 2400 - 350 * i
+        s = lowpass(s, cut, SR) * env_adsr(n, SR, 0.02, 0.08, 0.7, 0.2 if i < 3 else 0.8)
+        place(out, s * 0.55, n_samples(i * 0.42, SR))
+    n = n_samples(2.6, SR)
+    place(out, osc(midi_hz(note_midi("C#4")), n, SR, "tri") * env_adsr(n, SR, 0.3, 0.2, 0.5, 1.0) * 0.18, 0)
+    for i in range(10):
+        place(out, bubble(rng.uniform(280, 700), 0.035) * 0.22, n_samples(1.5 + 0.12 * i, SR))
+    place(out, squelch(rng, 0.4, 300, 700, 220, wet=0.8) * 0.5, n_samples(1.26, SR))
+    return out
+
+
+CUES = {
+    # faction: bakery (player side), mold (enemy side), neutral (UI/flow). desc = sound design intent.
+    "ui_tap":          dict(r=[r_ui_tap], bus="UI", vol_db=-8, max=2, gap=0.03, prio=6, pitch=0.03, faction="neutral", desc="short square tick"),
+    "ui_back":         dict(r=[r_ui_back], bus="UI", vol_db=-8, max=1, gap=0.05, prio=6, pitch=0.0, faction="neutral", desc="two falling ticks"),
+    "ui_confirm":      dict(r=[r_ui_confirm], bus="UI", vol_db=-7, max=1, gap=0.05, prio=7, pitch=0.0, faction="neutral", desc="rising two-note chime"),
+    "ui_error":        dict(r=[r_ui_error], bus="UI", vol_db=-9, max=1, gap=0.25, prio=6, pitch=0.0, faction="neutral", desc="double low buzz"),
+    "deploy":          dict(r=[r3_deploy], bus="SFX", vol_db=-7, max=2, gap=0.06, prio=7, pitch=0.04, faction="bakery", desc="oven-door bell + crust footsteps"),
+    "worker_buy":      dict(r=[r3_worker_buy], bus="SFX", vol_db=-9, max=1, gap=0.1, prio=7, pitch=0.0, faction="bakery", desc="shop bell ka-ching"),
+    "gold_tick":       dict(r=[r_gold_tick], bus="SFX", vol_db=-13, max=2, gap=0.09, prio=2, pitch=0.05, faction="bakery", desc="coin glint"),
+    "hit_melee":       dict(r=[lambda g, v=v: r_hit_melee(g, v) for v in range(5)],
+                            bus="SFX", vol_db=-7, max=2, gap=0.26, prio=1, pitch=0.08, faction="neutral",
+                            desc="fallback hit when the target side is unknown (v2 crack)"),
+    "hit_bread":       dict(r=[lambda g, v=v: r3_hit_bread(g, v) for v in range(3)],
+                            bus="SFX", vol_db=-8, max=2, gap=0.22, prio=1, pitch=0.07, faction="bakery",
+                            desc="a bread soldier is hit: dry crust crunch"),
+    "hit_mold":        dict(r=[lambda g, v=v: r3_hit_mold(g, v) for v in range(3)],
+                            bus="SFX", vol_db=-7, max=2, gap=0.22, prio=1, pitch=0.08, faction="mold",
+                            desc="a mold unit is hit: wet squish + bubble"),
+    "hit_arrow":       dict(r=[r_hit_arrow], bus="SFX", vol_db=-10, max=2, gap=0.05, prio=1, pitch=0.08, faction="neutral", desc="ranged impact fallback"),
+    "shoot_arrow":     dict(r=[r_shoot_arrow], bus="SFX", vol_db=-12, max=2, gap=0.06, prio=1, pitch=0.08, faction="bakery", desc="baguette thrower whoosh"),
+    "shoot_rock":      dict(r=[r_shoot_rock], bus="SFX", vol_db=-10, max=1, gap=0.12, prio=2, pitch=0.06, faction="bakery", desc="oven cannon puff + thunk"),
+    "shoot_spit":      dict(r=[r3_shoot_spit], bus="SFX", vol_db=-11, max=2, gap=0.08, prio=1, pitch=0.08, faction="mold", desc="spore spit: wet ptoo + bubbles"),
+    "hit_base":        dict(r=[r3_hit_base_bakery], bus="SFX", vol_db=-9, max=1, gap=0.35, prio=5, pitch=0.05, faction="bakery", desc="bakery tower hit: wooden crack + crust shower"),
+    "hit_base_mold":   dict(r=[r3_hit_base_mold], bus="SFX", vol_db=-9, max=1, gap=0.35, prio=5, pitch=0.05, faction="mold", desc="mold hive hit: heavy wet thud"),
+    "explosion":       dict(r=[r3_explosion], bus="SFX", vol_db=-8, max=2, gap=0.12, prio=5, pitch=0.06, faction="mold", desc="spore bomber burst: splat + hiss + bubbles"),
+    "death_ally":      dict(r=[r3_death_ally], bus="SFX", vol_db=-12, max=2, gap=0.08, prio=3, pitch=0.06, faction="bakery", desc="bread crumbles: dry crackle + soft falling tone"),
+    "death_enemy":     dict(r=[r3_death_enemy], bus="SFX", vol_db=-12, max=2, gap=0.07, prio=3, pitch=0.08, faction="mold", desc="mold bursts: squelch + bubble fizz"),
+    "hero_death":      dict(r=[r_hero_death], bus="SFX", vol_db=-5, max=1, gap=1.0, prio=9, pitch=0.0, duck=-6, faction="bakery", desc="head baker falls: 4-note falling triangle line"),
+    "hero_respawn":    dict(r=[r_hero_respawn], bus="SFX", vol_db=-8, max=1, gap=1.0, prio=8, pitch=0.0, faction="bakery", desc="rising sparkle arpeggio"),
+    "skill_slam":      dict(r=[r_skill_slam], bus="SFX", vol_db=-4, max=1, gap=0.2, prio=9, pitch=0.0, duck=-4, faction="bakery", desc="rolling-pin ground pound"),
+    "skill_rally":     dict(r=[r_skill_rally], bus="SFX", vol_db=-6, max=1, gap=0.2, prio=9, pitch=0.0, duck=-4, faction="bakery", desc="brass-like rally horn"),
+    "skill_barrage":   dict(r=[r_skill_barrage], bus="SFX", vol_db=-4, max=1, gap=0.2, prio=9, pitch=0.0, duck=-5, faction="bakery", desc="falling whistle (0.8 s) + 3 impacts"),
+    "skill_heal":      dict(r=[r_skill_heal], bus="SFX", vol_db=-7, max=1, gap=0.2, prio=9, pitch=0.0, duck=-3, faction="bakery", desc="warm sine arpeggio"),
+    "skill_cast":      dict(r=[r_skill_cast], bus="SFX", vol_db=-7, max=1, gap=0.2, prio=8, pitch=0.0, duck=-3, faction="bakery", desc="rising cast"),
+    "wave_incoming":   dict(r=[r3_wave_incoming], bus="SFX", vol_db=-7, max=1, gap=1.0, prio=8, pitch=0.0, duck=-4, faction="bakery", desc="bakery alarm bell tolls twice + drum roll"),
+    "boss_incoming":   dict(r=[r3_boss_incoming], bus="SFX", vol_db=-4, max=1, gap=2.0, prio=10, pitch=0.0, duck=-8, faction="mold", desc="oozing tritone drone + squelch stomps + boiling bubbles"),
+    "stinger_win":     dict(r=[r3_stinger_win], bus="Music", vol_db=-3, max=1, gap=1.0, prio=10, pitch=0.0, faction="bakery", desc="bouncy major fanfare + oven-bell ding"),
+    "stinger_defeat":  dict(r=[r3_stinger_defeat], bus="Music", vol_db=-3, max=1, gap=1.0, prio=10, pitch=0.0, faction="mold", desc="tune sinks into a soggy wobble, bubbles take over"),
+}
 # Engine mapping hints consumed by the runtime bridge (data-driven, so 01 can add skills without code).
 SKILL_KIND_CUE = {"aoe_damage": "skill_slam", "rally": "skill_rally", "meteor": "skill_barrage",
                   "heal_allies": "skill_heal", "summon": "skill_cast"}
@@ -530,9 +775,25 @@ MSR = MUSIC_SR
 def m_tone(f, dur, shape, duty=0.5, a=0.004, d=0.05, s=0.7, r=0.03, vib=0.0, vib_delay=0.15):
     n = n_samples(dur + r, MSR)
     ff = np.full(n, f, dtype=np.float64)
+    t = np.arange(n) / MSR
     if vib > 0:
-        t = np.arange(n) / MSR
         ff *= 1 + vib * np.sin(2 * np.pi * 5.6 * t) * np.clip((t - vib_delay) / 0.1, 0, 1)
+    # v3 bakery voices
+    if shape == "accordion":   # street-band accordion: two detuned saws, gentle bellows tremolo, warm low-pass
+        sig = 0.5 * (osc(ff * 0.997, n, MSR, "saw") + osc(ff * 1.003, n, MSR, "saw"))
+        sig = lowpass(sig, 2200, MSR) * (1 + 0.07 * np.sin(2 * np.pi * 5.2 * t))
+        return sig * env_adsr(n, MSR, max(a, 0.012), d, s, r)
+    if shape == "bell":        # music-box / shop bell: inharmonic partials, struck decay
+        tau = max(0.12, dur * 0.7)
+        sig = osc(ff, n, MSR, "sine") * env_exp(n, MSR, tau, 0.001)
+        sig += 0.4 * osc(ff * 2.756, n, MSR, "sine") * env_exp(n, MSR, tau * 0.5, 0.001)
+        sig += 0.18 * osc(ff * 5.404, n, MSR, "sine") * env_exp(n, MSR, tau * 0.25, 0.001)
+        return sig
+    if shape == "pluck":       # pizzicato / wooden pluck: triangle + fast decay
+        return osc(ff, n, MSR, "tri") * env_exp(n, MSR, 0.09, 0.002)
+    if shape == "pluckbass":   # plucked bass with audible upper harmonics (phone speakers drop the fundamental)
+        sig = osc(ff, n, MSR, "tri") * 0.55 + osc(ff, n, MSR, "square", 0.2) * 0.45
+        return lowpass(sig, 2200, MSR) * env_exp(n, MSR, 0.1, 0.002)
     return osc(ff, n, MSR, shape, duty) * env_adsr(n, MSR, a, d, s, r)
 
 
@@ -604,8 +865,8 @@ def render_loop(spec: dict, seed: int) -> np.ndarray:
         for i, step in enumerate(spec["bass"]):
             if step is None:
                 continue
-            m = root - 12 + step if spec.get("bass_low", True) else root + step
-            put(m_tone(midi_hz(m), beat_sec * 0.42, "tri", a=0.003, d=0.06, s=0.8, r=0.02), b0 + i * 0.5, 0.0, spec["g_bass"])
+            m = (root - 12 + step if spec.get("bass_low", True) else root + step) + spec.get("bass_oct", 0)
+            put(m_tone(midi_hz(m), beat_sec * 0.42, spec.get("bass_shape", "tri"), a=0.003, d=0.06, s=0.8, r=0.02), b0 + i * 0.5, 0.0, spec["g_bass"])
         # arpeggio (16ths) over chord tones
         if spec["g_arp"] > 0:
             tones = [root + 12 + iv for iv in ivs] + [root + 24]
@@ -660,10 +921,11 @@ BATTLE = dict(
         "D5:1 G5:0.5 B5:0.5 D6:1 B5:1", "G5:1 F5:0.5 D5:0.5 B4:1 r:1",
     ],
     bass=[0, 0, 12, 0, 7, 0, 12, 7], bass_low=False,
-    arp_order=[0, 1, 2, 3, 2, 1], arp16=True, arp_shape="square",
+    # v3 theme: bakery street-band march. Accordion lead, music-box bell arpeggio, plucked bass.
+    arp_order=[0, 1, 2, 3, 2, 1], arp16=True, arp_shape="bell", bass_shape="pluckbass", bass_oct=12,
     drums=dict(kick=(0, 6, 8, 10), snare=(4, 12), hat=(0, 2, 4, 6, 8, 10, 12, 14), open=(14,)),
-    fills=True, lead_shape="square", echo=0.25, soft_clip=True,
-    g_bass=0.26, g_arp=0.07, g_kick=0.42, g_snare=0.32, g_hat=0.07, g_lead=0.2,
+    fills=True, lead_shape="accordion", echo=0.2, soft_clip=True,
+    g_bass=0.24, g_arp=0.05, g_kick=0.22, g_snare=0.3, g_hat=0.07, g_lead=0.24,
 )
 
 MENU = dict(
@@ -676,15 +938,18 @@ MENU = dict(
         "D5:1 F5:1 Bb5:1 A5:1", "G5:1.5 E5:0.5 C5:1 G4:1",
     ],
     bass=[0, None, None, None, 7, None, None, None], bass_low=False,
-    arp_order=[0, 1, 2, 3, 2, 1, 0, 2], arp16=False, arp_shape="tri",
+    # v3 theme: morning bakery. Music-box bell lead, plucked arpeggio, soft pad.
+    arp_order=[0, 1, 2, 3, 2, 1, 0, 2], arp16=False, arp_shape="pluck", bass_shape="pluck",
     drums=dict(kick=(0, 8), hat=(4, 12)), fills=False,
-    lead_shape="tri", echo=0.3, soft_clip=False,
+    lead_shape="bell", echo=0.3, soft_clip=False,
     g_bass=0.4, g_arp=0.12, g_pad=0.06, g_kick=0.3, g_snare=0.0, g_hat=0.05, g_lead=0.3,
 )
 
 MUSIC = {
-    "music_battle": dict(spec=BATTLE, seed=7001, vol_db=-10),
-    "music_menu": dict(spec=MENU, seed=7002, vol_db=-9),
+    "music_battle": dict(spec=BATTLE, seed=7001, vol_db=-12, faction="bakery",
+                         desc="bakery street-band march, C major 140 BPM: accordion lead, bell arpeggio, plucked bass"),
+    "music_menu": dict(spec=MENU, seed=7002, vol_db=-9, faction="bakery",
+                       desc="morning bakery, F major 105 BPM: music-box bell melody, plucked chords, soft pad"),
 }
 
 
@@ -694,9 +959,13 @@ def encode_ogg(src: Path, dst: Path, quality: float) -> bool:
         print("WARN: ffmpeg not found; music OGG skipped", file=sys.stderr)
         return False
     dst.parent.mkdir(parents=True, exist_ok=True)
+    tmp = dst.with_name(dst.name + ".part")   # unknown extension: Godot never imports it
     cmd = [ff, "-hide_banner", "-loglevel", "error", "-y", "-i", str(src), "-map_metadata", "-1",
-           "-fflags", "+bitexact", "-flags:a", "+bitexact", "-c:a", "libvorbis", "-q:a", str(quality), str(dst)]
-    return subprocess.run(cmd).returncode == 0
+           "-fflags", "+bitexact", "-flags:a", "+bitexact", "-c:a", "libvorbis", "-q:a", str(quality), "-f", "ogg", str(tmp)]
+    if subprocess.run(cmd).returncode != 0:
+        return False
+    replace_retry(tmp, dst)
+    return True
 
 
 def stats(x: np.ndarray) -> dict:
@@ -710,7 +979,18 @@ def main() -> int:
     manifest = {
         "version": 1, "generator": "tools/audio/synth.py", "generator_version": GENERATOR_VERSION,
         "technique": "deterministic numpy synthesis (oscillators/noise/envelopes/filters); no samples, no AI services",
-        "license": "original work for this project", "sfx_format": {"codec": "pcm_s16le", "rate": SFX_SR, "channels": 1},
+        "license": ("Original work created for this project by the 05-audio worker with tools/audio/synth.py. "
+                    "No third-party samples, loops, presets, downloaded audio or AI audio services were used, so no "
+                    "third-party licence or attribution applies. Rights belong to the project owner; the public "
+                    "licence (if any) is the project owner\u2019s decision and has not been chosen."),
+        "provenance": {"tool": "tools/audio/synth.py", "python": "3.11 + numpy", "encoder": "ffmpeg libvorbis q3 (music only, bitexact)",
+                       "reproduce": "python tools/audio/synth.py && python tools/audio/validate.py --determinism",
+                       "deterministic": True},
+        "theme": {"decision": "Q1 = A, bakery knights (player) vs mold legion (enemy); user-decided 2026-10-31 09:03",
+                  "bakery": "warm, bouncy, dry: oven/shop bells, crust crunch, wooden knocks, major keys, accordion lead",
+                  "mold": "wet, sticky, slow: squelch (sweeping formant band), bubble pops, wobbling pitch, minor/tritone",
+                  "neutral": "UI and fallback cues"},
+        "sfx_format": {"codec": "pcm_s16le", "rate": SFX_SR, "channels": 1},
         "cues": {}, "music": {}, "skill_kind_cue": SKILL_KIND_CUE, "projectile_cue": PROJECTILE_CUE,
     }
     seed = 1000
@@ -726,6 +1006,8 @@ def main() -> int:
             files.append(f"res://assets/audio/sfx/{name}")
             info.append({"file": name, "seconds": round(len(x) / SR, 3), "bytes": (SFX_DIR / name).stat().st_size, **stats(x)})
         entry = {k: v for k, v in c.items() if k != "r"}
+        entry["provenance"] = {"recipes": [getattr(rc, "__name__", "lambda") for rc in c["r"]],
+                               "seeds": list(range(seed - len(c["r"]) + 1, seed + 1))}
         entry.setdefault("duck", 0)
         entry["files"] = files
         entry["variants"] = info
@@ -743,6 +1025,8 @@ def main() -> int:
             "file": f"res://assets/audio/music/{mid}.ogg", "bus": "Music", "vol_db": m["vol_db"], "loop": True,
             "bpm": m["spec"]["bpm"], "bars": len(m["spec"]["chords"]), "loop_samples": len(st), "rate": MSR,
             "seconds": round(len(st) / MSR, 3), "samples_per_beat": spb, "encoded": ok,
+            "faction": m.get("faction", ""), "desc": m.get("desc", ""),
+            "provenance": {"recipe": "render_loop", "seed": m["seed"], "encoder": "libvorbis q3"},
             "bytes": ogg.stat().st_size if ok else 0, **stats(st),
         }
         print(f"{mid}: {len(st) / MSR:.2f}s loop, ogg={'ok' if ok else 'SKIPPED'}")

@@ -1,0 +1,14 @@
+Theme showcase (offline concatenation of shipped assets at manifest gain +6 dB, each item capped at -1 dBFS peak; NOT an engine recording)
+  0.00s  BAKERY  a bread soldier is hit (crust crunch)  [hit_bread, vol_db -8]
+  0.66s  MOLD    a mold unit is hit (wet squish)  [hit_mold, vol_db -7]
+  1.36s  BAKERY  bread soldier dies (crumble)  [death_ally, vol_db -12]
+  2.28s  MOLD    mold blob dies (squelch + bubbles)  [death_enemy, vol_db -12]
+  3.30s  BAKERY  bakery tower hit  [hit_base, vol_db -9]
+  4.24s  MOLD    mold hive hit  [hit_base_mold, vol_db -9]
+  5.19s  BAKERY  troop deployed (oven bell)  [deploy, vol_db -7]
+  6.21s  MOLD    spore spitter shot  [shoot_spit, vol_db -11]
+  6.99s  BAKERY  wave alarm bell  [wave_incoming, vol_db -7]
+  8.59s  MOLD    boss incoming  [boss_incoming, vol_db -4]
+ 11.19s  BAKERY  victory  [stinger_win, vol_db -3]
+ 14.59s  MOLD    defeat  [stinger_defeat, vol_db -3]
+peak -1.01 dBFS, full-scale samples: 0

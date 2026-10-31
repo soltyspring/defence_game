@@ -56,3 +56,17 @@ Acceptance: `--headless --verbose --path . -- --round=r02 --quit-after=20` print
 
 ## A8 (P3, engine-side finding, not audio) RefCounted leak after battles with deployments
 Reproduced WITHOUT the Audio autoload (sandbox, `Audio=` line removed): a tiny autoload that only emits `cmd_deploy_unit(first card)` every 1.5 s during r02, `--quit-after=27` → at exit `GDScriptNativeClass`, `GDScript` (refcount 2), 2× `RefCounted` leaked (4 objects). Same run without deployments: 0. Likely a reference cycle among battle_sim RefCounted objects (e.g. Unit.w_target / Projectile.target holding Units, or a Unit referencing its sim) surviving battle teardown. Exit-only report, but if it is a per-battle cycle it accumulates across retries in a long session. 05 does not edit gameplay; repro script text available on request.
+
+## Status 2026-10-31 16:4x
+- A7 seen in f92f9f6 (App single quit path calls `Audio.prepare_quit()` + 0.3 s wait). Sandbox quit leaks now 0 audio-class objects. Thank you.
+- Note: my sandbox run at 15:54 copied a mid-edit `src/core/app.gd` from the live worktree (App failed to compile → nothing quit → hang). 05 now builds its sandbox from committed HEAD only (git archive) and has hard per-call timeouts; no action needed from 02.
+
+## A9 (P2) Theme v1.2: victim side on hit cues
+Theme Q1 = A (bakery vs mold). Hits now sound by the VICTIM's material (bread crunches, mold squishes). Please add `target_side` to the hit cue params and include it in the coalescing key so both sides can sound in the same frame:
+```gdscript
+# battle_sim.gd, melee hit (line ~633) and projectile impact (line ~863)
+var ts := "player" if tgt.side == SIDE_PLAYER else "enemy"
+_cue(&"hit", "melee:" + ts, {"kind": "melee", "x": tgt.x, "target_side": ts})
+```
+(For base hits nothing changes: `base_hit` `side` already selects bakery tower vs mold hive.)
+Acceptance: `pwsh tools/audio/run_godot_checks.ps1 -Integration` → integration report `cue_counts` contains `hit_mold` and `hit_bread` and `hit_melee` drops to ~0. Without A9 the bridge falls back to the neutral `hit_melee`, so nothing breaks.
