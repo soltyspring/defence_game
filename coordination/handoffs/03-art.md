@@ -137,6 +137,7 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - build.py packs all regular characters into char_player 1024x512 (id kept for 02's flip_check); char_player_adv / char_enemy / char_enemy_adv removed with their .import and locks; check.gd finds a frame's page by name.
 - Verified: 331 frames pixel-identical, 152 kept x/y; validate --determinism PASS; 08 budget PASS (worst 8.75 MiB); PCK 9/9 (heavy_run, waited 657 s); snapshot isolated import + import_audit 9/9 PASS + r03 real capture (heavy_run, waited 664 s). ART_AUDIT round 16.
 - Requests: 08 A10 (re-measure draw calls; their tests name char_enemy), 02 A18, 07 A12.
+- Commit 253f2b6 [Design]: PUSHED origin/main (verified with git branch -r --contains at 23:57).
 
 ## Exact next steps on resume
 1. After 02 re-imports: python tools/art/import_audit.py . (expect PASS).
