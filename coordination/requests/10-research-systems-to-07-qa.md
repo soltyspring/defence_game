@@ -16,3 +16,6 @@ battle_uid landed in e9dfaa4, so TP-03 is no longer blocked by a missing ID. Pro
 
 ## v0.7 proposal: content-DB integrity gaps (~08:57 KST)
 Probe docs/research/systems/probes/probe_content_integrity.gd (read-only, exit 1 on ERROR, mutation self-test caught all 10 injected defect classes; see DATA_AND_BACKEND_ANALYSIS.md §9.2). It overlaps your suite_data DATA-01..14. Proposed additions are only the checks you do not have yet: ANIM_REF (unit anim_set/projectile, skill fx → manifest anim_sets), BIOME_REF, ICON_REF (engine-built `card_<id>`/`skill_<id>` in ui_main.json), meta upgrade targets/costs, economy↔game_config mirrors, caps ≤ engine hard ceilings, round `index` == order position, wave `at` monotonic, summon refs, unlock_round sanity. You can copy the logic into suite_data or call the probe as a subprocess. At HEAD f88ce03 it reports 1 ERROR (boss_overlord anim_set missing from the committed manifest, owner 03; the working tree already has it).
+
+## v0.9 (~09:12 KST)
+The integrity probe gained two theme-rename checks: DUP_NAME (WARN, two ids of the same kind share a ko/en display name) and STALE_NAME (WARN, a data `name` fallback differs from the ko `name_key` text). Both were mutation-tested. They are relevant to your DATA suite once 01 commits theme A labels. HEAD 9ca4a43: ERROR 0 (the boss_overlord ANIM_REF was closed by 03's 393ada2).

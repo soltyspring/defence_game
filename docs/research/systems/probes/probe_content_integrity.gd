@@ -357,6 +357,38 @@ func _initialize() -> void:
 	for k in en:
 		if not ko.has(k): _f("ERROR", "TEXT_PARITY", "01", "data/text/ko.json", "key '%s' only in en" % k)
 
+	# ---------- display names (theme-rename risks) ----------
+	# NAMES: id -> {ko, en, fallback} for every unit/hero/skill/round, printed so before/after a retheme can be diffed.
+	# DUP_NAME (WARN): two different ids show the same text in one locale (players cannot tell them apart).
+	# STALE_NAME (WARN): the data `name` fallback differs from the ko text of `name_key` (a renamed label whose
+	# fallback still shows the old name if the text table fails to load).
+	var name_rows := {}
+	var named: Array = []
+	for id in units: named.append(["unit", id, units[id], uf])
+	for id in heroes: named.append(["hero", id, heroes[id], "data/heroes/%s.json" % id])
+	for id in skills: named.append(["skill", id, skills[id], "data/skills/%s.json" % id])
+	for rid in rounds: named.append(["round", rid, rounds[rid], round_files[rid]])
+	var by_text := {"ko": {}, "en": {}}
+	for n in named:
+		var d: Dictionary = n[2]
+		var key := str(d.get("name_key", ""))
+		var row := {"kind": n[0], "fallback": str(d.get("name", ""))}
+		for loc in TEXT_LOCALES:
+			var txt := str(texts[loc].get(key, "")) if key != "" else ""
+			row[loc] = txt
+			if txt != "":
+				var bucket: String = n[0] + ":" + txt
+				if by_text[loc].has(bucket):
+					_f("WARN", "DUP_NAME", "01", n[3], "%s '%s' shows the same %s name '%s' as '%s'" % [n[0], n[1], loc, txt, by_text[loc][bucket]])
+				else:
+					by_text[loc][bucket] = n[1]
+			_tick("DUP_NAME")
+		_tick("STALE_NAME")
+		if key != "" and row.fallback != "" and row.ko != "" and row.fallback != row.ko:
+			_f("WARN", "STALE_NAME", "01", n[3], "%s '%s' fallback name '%s' != ko text '%s'" % [n[0], n[1], row.fallback, row.ko])
+		name_rows[n[1]] = row
+	print("CI NAMES ", JSON.stringify(name_rows))
+
 	# ---------- version fields (proposal-level: DATA_SCHEMA does not mandate them yet) ----------
 	var vfiles := {"data/units/units.json": units_doc, "data/rounds/order.json": order_doc, "data/economy.json": economy,
 		"data/meta.json": meta, "data/game_config.json": cfg}

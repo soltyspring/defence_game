@@ -39,3 +39,11 @@ Labels: [DATA] = data arithmetic, [RULE] = app.gd reward rule, [ASSUME] = 10's a
 6. Kill coins vs your text [DATA]: ECONOMY.md says "kill gold ≈ 20–60 per round". The scripted spawns alone give 12 (r01) to 138 (r10, boss_overlord 60), and trickle adds more. Your budgets ignore kill coins (stated in the file). Adding the scripted ceiling moves the HIGH state before r10 from 27 levels/90 left to 28 levels/216 left (up_hero 3→4).
 7. Early-round grinding is inefficient [DATA]: from zero, hero/supply/energy L5 needs 10 replays of r01; any level costs 1–2 replays of r10.
 Requested: confirm or adjust the intent checkpoints, and decide whether the L5 tier is meant to be replay-only and whether a post-max sink is needed. 10 changed no data files.
+
+## v0.9 theme A recheck (~09:12 KST, HEAD 9ca4a43) — STATUS: waiting for your name-label commit
+- The coordinator recorded at 09:03 that Q1 is DECIDED by the user = A "빵집 기사단 vs 곰팡이 군단". HEAD docs/design/DECISIONS.md still shows Q1 PENDING; recording it is your step.
+- Theme labels are NOT at HEAD yet. data/text/*.json last changed in 67bf9ca, and names are still neutral (보병/Troop, 궁수/Archer, 졸병/Grunt...). Your working tree changes units/heroes/skills/rounds but no text file. So there is nothing theme-related to check yet. The pre-theme baseline at HEAD is ERROR 0, WARN 0, INFO 1 (schema_version).
+- New theme-rename checks were added to the probe (WARN, mutation-tested): DUP_NAME (two ids of the same kind with the same ko or en name) and STALE_NAME (a data `name` fallback that differs from the ko text of its `name_key`; the old name would show if the text table fails to load). The probe also prints a `CI NAMES` line with ko/en/fallback for all 26 ids, as a diffable baseline.
+- Request: before you commit the theme labels, run
+  `tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://docs/research/systems/probes/probe_content_integrity.gd --quit-after 600`
+  and expect exit 0 with no DUP_NAME or STALE_NAME lines. If you rename via text keys only, also update or empty each data `name` fallback, otherwise STALE_NAME fires for every renamed id. Please post the SHA in a 01-director-to-10-research-systems.md line; 10 will rerun at HEAD and report the before/after name diff.

@@ -8,6 +8,11 @@ Git protocol acknowledged. DECISIONS D1–D12 DEFAULT, Q1 PENDING. Unchanged, an
 - ~08:52: review order "content-DB integrity probe while waiting for R6" read and STARTED. Quota 860.31/10000 = 8.60% at 08:54. Done in 1aaea61.
 - ~09:00: review order "meta-coin economy flow probe from HEAD data, compare with 01 upgrade_budgets.json" read and STARTED. Done as v0.8 (see below). Quota 1134.72/10000 = 11.35% at 09:02.
 
+## v0.9 (theme A recheck, ~09:13 KST)
+- User decision: Q1 = A (bakery knights vs mold legion), DECIDED by the user. Source: coordinator-to-01-director.md "USER DECISION 2026-10-31 09:03 KST". HEAD DECISIONS.md still reads PENDING; 01 owns recording it. 10 did not edit it.
+- Theme labels are not committed yet (data/text last changed in 67bf9ca). Rerun at HEAD 9ca4a43: ERROR 0, WARN 0, INFO 1. The v0.7 boss_overlord ERROR is closed (03 393ada2).
+- Added DUP_NAME and STALE_NAME checks plus a `CI NAMES` baseline line to probe_content_integrity.gd (mutation-tested 3/3). Requests sent to 01 (run before commit, post the SHA), 03 (item 1 closed), 07 (new checks). Doc §9.2 updated. During this edit I damaged the §9.3 heading, then repaired it and verified the heading order.
+
 ## v0.8 (economy flow)
 - Probe docs/research/systems/probes/probe_economy_flow.gd, run on a clean HEAD 07e97ca snapshot (data + budgets only, no autoloads).
 - It reproduces 01's greedy budgets exactly (20/20 entries, diff 0).
@@ -30,7 +35,7 @@ NOT READY at f88ce03. Not rerun. Same reason (02 R1/R2/R6 not done).
 6ab1d48 · 9e3953f · 462991a · 14f7084 · 3c8cddb · c4a3d93 · 198e40a · 2aa6d28 · 9ca89e0 · a19289b · 1aaea61 (v0.7) · v0.8: SHA in the final report
 
 ## Exact next steps
-1. After 03 commits the manifest: rerun the integrity probe at HEAD and expect ERROR 0. Update §9.2.
+1. After 01 commits the theme A labels: rerun probe_content_integrity at HEAD (clean snapshot), diff `CI NAMES` against the v0.9 baseline in §9.2, and report missing/duplicate/stale names to 01.
 2. When R6 lands: rerun probe_save_rotation scenario B through the hook.
 3. When applied_battles lands: rerun probe_battle_uid_dedup and expect 162 / 1.
 4. Wait for 01's reply on the v0.8 economy questions (intent checkpoints, L5 replay-only, post-max sink).

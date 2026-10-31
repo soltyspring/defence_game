@@ -1,5 +1,5 @@
 # 데이터·백엔드 분석: 성공한 디펜스 게임의 온라인 기능과 우리 게임의 최소 설계
-작성: 10-research-systems · 버전 v0.8 (v0.1 증거 보고서, v0.2 §9.1, v0.3 SV-1 실행 재현·§5.8, v0.4~v0.5 회신 추적, v0.6 battle_uid 중복 적용 재현, v0.7 §9.2 콘텐츠 참조 무결성, v0.8 §9.3 메타 코인 경제 흐름) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
+작성: 10-research-systems · 버전 v0.9 (v0.1 증거 보고서, v0.2 §9.1, v0.3 SV-1 실행 재현·§5.8, v0.4~v0.5 회신 추적, v0.6 battle_uid 중복 적용 재현, v0.7 §9.2 콘텐츠 참조 무결성, v0.8 §9.3 메타 코인 경제 흐름, v0.9 테마 A 이후 재실행·이름 검사 추가) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
 범위: 경쟁작에서 **관찰되는** 온라인 기능, 그 기능의 **공개 문서화된** 기술, **UNKNOWN**, 우리 오프라인 우선 Godot 게임에 필요한 최소 콘텐츠 DB·세이브·거래 계약. 런타임 코드는 수정하지 않았다. 내부 DB나 비공개 구현에 접근한 적 없다. 게임을 직접 플레이하지 않았다(스토어 텍스트·공개 스크린샷만 확인).
 
 ## 0. 현재 판단 (요약)
@@ -394,6 +394,16 @@ v0.2의 PowerShell 검사(§9.1)는 일회성이었다. 이번에는 다시 실�
 - 07 `tests/acceptance/suite_data.gd` DATA-01~14가 이미 다루는 것: order 존재, 도달 가능성, 유닛·영웅·스킬 교차 참조와 진영, P0 라운드 수치, 유닛 스탯 부호, 텍스트 키 ko/en, 자리표시자, src의 ui/toast 키.
 - 03 `tools/art/validate.py` `check_data_refs`가 따라가는 것은 키 이름이 `sprite`/`vfx`/`fx`/`icon`인 값뿐이다. `anim_set`, `projectile`과 엔진이 만드는 `card_<id>`/`skill_<id>`는 보지 않는다. 그래서 03 검증이 "data refs PASS"를 보고하는 동안에도 boss_overlord 누락이 남아 있었다.
 - 이 프로브만 추가로 잡는 것: ANIM_REF(anim_set, projectile), BIOME_REF, ICON_REF, 업그레이드 대상·비용, MIRROR, caps 상한, index↔order 위치, 웨이브 순서, summon 참조, unlock_round, schema_version. 07/02에는 이 차이만 넣자고 제안한다.
+
+**v0.9 재실행: 테마 A 확정 이후(2026-10-31 ~09:10 KST, HEAD 9ca4a43d2e7ff70a9f0002e0f4812131548cdd95)**
+- 사용자 결정: 코디네이터가 09:03에 Q1 = A안 "빵집 기사단 vs 곰팡이 군단"으로 확정했다고 `coordinator-to-01-director.md`에 기록했다. 다만 HEAD의 `docs/design/DECISIONS.md`에는 Q1이 아직 PENDING이다. 기록하는 일은 01 소관이라 10은 고치지 않았다.
+- **테마 이름표는 HEAD에 아직 반영되지 않았다.** `data/text/*.json`의 마지막 커밋은 67bf9ca(D13 영문 축약)이다. 표시 이름은 여전히 중립 이름(보병/Troop, 궁수/Archer, 방패병/Shield, 졸병/Grunt 등)이다. 01의 작업 트리에는 units/heroes/skills/rounds의 미커밋 변경이 있지만 text 파일은 바뀌지 않았다. 따라서 "테마 변경으로 생긴 누락·중복" 검사는 **아직 할 대상이 없다.** 대신 반영 전 기준선을 고정했다.
+- 결과: **ERROR 0, WARN 0, INFO 1**(schema_version 15/21), exit 0. **v0.7의 ERROR(boss_overlord anim_set)는 03의 393ada2로 닫혔다**(HEAD manifest anim_sets 32→33).
+- 테마 변경에 대비해 검사 2종을 추가했다. 모두 WARN이고, 변이 시험으로 확인했다. 시험 방법은 ko/en에서 tank 이름을 melee와 같은 값으로 바꾸는 것이었고, DUP_NAME 2건과 STALE_NAME 1건이 잡혔다.
+  - **DUP_NAME:** 같은 종류(유닛/영웅/스킬/라운드) 안에서 서로 다른 ID가 같은 표시 이름을 쓰는 경우. 플레이어가 둘을 구별할 수 없다.
+  - **STALE_NAME:** 데이터의 `name` 대체값이 `name_key`의 ko 텍스트와 다른 경우. 이름표만 바꾸고 대체값을 남겨 두면, 텍스트 로드가 실패했을 때 옛 이름이 보인다.
+  - 기준선 `CI NAMES` 출력(26개 ID의 ko/en/대체값)을 이 프로브가 매번 출력한다. 01이 이름표를 커밋하면 같은 명령의 출력과 비교해 바뀐 이름, 누락, 중복을 확인한다.
+- HEAD 기준 이름 중 종류를 넘어 같은 것: r05 라운드와 boss_warlord가 둘 다 "군단장"/"(The) Warlord", r10과 boss_overlord가 둘 다 "대군주"/"(The) Overlord"다. 라운드가 보스 이름을 따른 것이라 의도로 보이고, DUP_NAME 대상(같은 종류 안)이 아니다.
 
 ### 9.3 메타 코인 경제 흐름 프로브 (v0.8, 데이터 계산만)
 - 파일: `docs/research/systems/probes/probe_economy_flow.gd` (읽기 전용, 시뮬레이션 없음)
