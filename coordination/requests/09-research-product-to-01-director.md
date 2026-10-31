@@ -75,3 +75,12 @@ For Q2 (A free + rewarded ads + ad removal / B paid / C chapter purchase):
 - Store screenshots (Play KR, 2026-10-31) show risk as a visible object or number: PvZ lawnmowers + house, Random Dice 3 hearts, 궁수키우기 RPG wall HP "1484/2020", Lucky Defense "28/118". Whether their FIRST level can be lost is UNOBSERVED. So there is evidence for "make risk visible", not for "make r01 hard".
 - X11 proposal for your QA-J2 decision: keep r01 easy but require that base HP visibly drops at least once in waves 1–2. Write your numeric rule in ROUNDS.md; 07 checks it with the capture bot.
 - X9 (QA-J1): every compared game shows enemies already on screen. r01 trickle starts at 12 s on a 1600 px lane. If 04's off-screen indicator is not enough at t=30 s, a shorter r01 lane or an earlier/closer first spawn is a data lever only you can pull.
+
+## R09-01-11 Q3 title material (search 2026-10-31 16:16 KST, SUCCESS_ANALYSIS.md §28) — neutral, no recommendation
+Recorded: Q2 = 보류 (user, 16:09). §26 stays as reference only; no monetization UI.
+For Q3 candidates A 빵집 기사단 / Bakery Knights, B …: 곰팡이 디펜스 / …: Mold Defense, C … 대 곰팡이 군단 / … vs Mold Legion:
+- Length: ko 6/15/15, en 14/28/29 characters incl. spaces. All within the 30-character limit of the Play title and the App Store app name (official docs). The home-screen label can be set separately and shorter (android:label, CFBundleDisplayName). Truncation length per device was NOT verified.
+- Search (Play KR/US top 5, App Store KR/US top 5): no app with any of the three titles. Neighbours: A → Cookie Run Kingdom, bakery tycoons, knight RPGs. B → bakery tycoons plus a farm TD. C → war/knight games.
+- Genre word in the title: only B has one ("디펜스/Defense"). A relies on the subtitle and screenshots. C signals a versus battle but not "defence".
+- NEW overlap you should see before asking the user: "Bread Defense / 빵어전" (ETERNAXCODE; App Store KR release 2026-09-02; Play com.eternaxcode.bbangeojeon, 10+ installs). It is a pixel tower defence with bread cards, "Dough" as a resource, damp "Moisties" and spore clouds, and a mode that sends warriors to the opposing hearth. It is tiny in scale, but the concept and the word "Dough" overlap with ours. B's English title would share "Defense" with it.
+- Trademark: KIPRIS (classes 9/41) must still be done by a person; this is not a trademark search.

@@ -1,0 +1,474 @@
+{
+ "fetched_at_kst": "2026-10-31 16:16",
+ "results": {
+  "A|빵집 기사단|play-KR": {
+   "top5": [
+    "냥냥 기사단-1000뽑기 증정",
+    "마신 기사단: 전쟁의 시작",
+    "요정의 빵 공방",
+    "제빵왕 (빵집키우기)",
+    "쿠키런: 킹덤"
+   ],
+   "genres_ios": []
+  },
+  "A|빵집 기사단|play-US": {
+   "top5": [
+    "CookieRun: Kingdom",
+    "Cafeland - Restaurant Cooking",
+    "Baking Bustle: Cooking game",
+    "Cooking Drive",
+    "Cooking Diary® Restaurant Game"
+   ],
+   "genres_ios": []
+  },
+  "A|빵집 기사단|ios-kr": {
+   "top5": [],
+   "genres_ios": []
+  },
+  "A|빵집 기사단|ios-us": {
+   "top5": [],
+   "genres_ios": []
+  },
+  "A|Bakery Knights|play-KR": {
+   "top5": [
+    "Knights - Medieval PvP Game",
+    "KNIGHTS",
+    "퀸즈나이츠 : 압도적 타격감 방치형 RPG",
+    "Knight's Legend: Rogue Kings",
+    "요정의 빵 공방"
+   ],
+   "genres_ios": []
+  },
+  "A|Bakery Knights|play-US": {
+   "top5": [
+    "KNIGHTS",
+    "25 Magic Knight Ln",
+    "Knights of Braveland",
+    "Knights - Medieval PvP Game",
+    "Fairy Bakery Workshop"
+   ],
+   "genres_ios": []
+  },
+  "A|Bakery Knights|ios-kr": {
+   "top5": [
+    "쿠킹 참 레스토랑 게임",
+    "Croissant Knights - Stickers"
+   ],
+   "genres_ios": [
+    "Games",
+    "Stickers"
+   ]
+  },
+  "A|Bakery Knights|ios-us": {
+   "top5": [
+    "My Sweet Bakery!",
+    "Flour Bakery Rewards",
+    "85C Bakery Cafe",
+    "Bakery Story",
+    "Merge Bakery"
+   ],
+   "genres_ios": [
+    "Games",
+    "Food & Drink",
+    "Food & Drink",
+    "Games",
+    "Games"
+   ]
+  },
+  "B|빵집 기사단: 곰팡이 디펜스|play-KR": {
+   "top5": [
+    "곰표 베이커리 - 힐링 머지 타이쿤",
+    "냥냥 기사단-1000뽑기 증정",
+    "포켓빵을 숨겼다",
+    "마이 베이커리 타운 : 베이커리 키우기 게임",
+    "운빨존많겜"
+   ],
+   "genres_ios": []
+  },
+  "B|빵집 기사단: 곰팡이 디펜스|play-US": {
+   "top5": [
+    "Bear Bakery - Cooking Tycoon",
+    "Bread Barbershop Bakery Town",
+    "Bread Bear: Cook with Me",
+    "Raccoon Bread Inc: Idle Tycoon",
+    "Harvest King: Farm TD Strategy"
+   ],
+   "genres_ios": []
+  },
+  "B|빵집 기사단: 곰팡이 디펜스|ios-kr": {
+   "top5": [],
+   "genres_ios": []
+  },
+  "B|빵집 기사단: 곰팡이 디펜스|ios-us": {
+   "top5": [],
+   "genres_ios": []
+  },
+  "B|Bakery Knights: Mold Defense|play-KR": {
+   "top5": [
+    "아서왕의 기사들 - 마피아 게임",
+    "Knights - Medieval PvP Game",
+    "뽀록 마법 디펜스: 협동 듀오",
+    "Knights of Braveland",
+    "블레이드 워: 삼국"
+   ],
+   "genres_ios": []
+  },
+  "B|Bakery Knights: Mold Defense|play-US": {
+   "top5": [
+    "Knights of Arthur - Mafia Game",
+    "Knights - Medieval PvP Game",
+    "Knights of Braveland",
+    "Raise Your Knights:New Server!",
+    "Lords & Knights - Medieval MMO"
+   ],
+   "genres_ios": []
+  },
+  "B|Bakery Knights: Mold Defense|ios-kr": {
+   "top5": [],
+   "genres_ios": []
+  },
+  "B|Bakery Knights: Mold Defense|ios-us": {
+   "top5": [
+    "My Sweet Bakery!",
+    "My Bakery Town : Bake & Build",
+    "Realm Defense: Hero Legends TD",
+    "Bakery Story",
+    "Bakery Town"
+   ],
+   "genres_ios": [
+    "Games",
+    "Games",
+    "Games",
+    "Games",
+    "Games"
+   ]
+  },
+  "C|빵집 기사단 대 곰팡이 군단|play-KR": {
+   "top5": [
+    "곰표 베이커리 - 힐링 머지 타이쿤",
+    "냥냥 기사단-1000뽑기 증정",
+    "브레드이발소 베이커리타운 만들기",
+    "마신 기사단: 전쟁의 시작",
+    "당근 - 당신 근처의 지역 생활 커뮤니티"
+   ],
+   "genres_ios": []
+  },
+  "C|빵집 기사단 대 곰팡이 군단|play-US": {
+   "top5": [
+    "Bear Bakery - Cooking Tycoon",
+    "Bread Bear: Cook with Me",
+    "Bear's Restaurant",
+    "Potion Punch 2: Cooking Quest",
+    "Animal Restaurant"
+   ],
+   "genres_ios": []
+  },
+  "C|빵집 기사단 대 곰팡이 군단|ios-kr": {
+   "top5": [],
+   "genres_ios": []
+  },
+  "C|빵집 기사단 대 곰팡이 군단|ios-us": {
+   "top5": [],
+   "genres_ios": []
+  },
+  "C|Bakery Knights vs Mold Legion|play-KR": {
+   "top5": [
+    "War of Legions",
+    "배틀 시뮬레이터 : 기사 대 드래곤",
+    "Knight Legion: Rpg strategy",
+    "Knights - Medieval PvP Game",
+    "Battle Legion - 대규모 전투"
+   ],
+   "genres_ios": []
+  },
+  "C|Bakery Knights vs Mold Legion|play-US": {
+   "top5": [
+    "Battle Sim: Knights vs Dragons",
+    "War of Legions",
+    "Knight Legion: Rpg strategy",
+    "Knights - Medieval PvP Game",
+    "Knights of Braveland"
+   ],
+   "genres_ios": []
+  },
+  "C|Bakery Knights vs Mold Legion|ios-kr": {
+   "top5": [],
+   "genres_ios": []
+  },
+  "C|Bakery Knights vs Mold Legion|ios-us": {
+   "top5": [
+    "My Sweet Bakery!",
+    "My Bakery Town : Bake & Build",
+    "Bakery Blitz: Baking Mania",
+    "Flour Bakery Rewards",
+    "Bakery Story"
+   ],
+   "genres_ios": [
+    "Games",
+    "Games",
+    "Games",
+    "Food & Drink",
+    "Games"
+   ]
+  },
+  "kw|빵 디펜스|play-KR": {
+   "top5": [
+    "벙커 디펜스: 빠른 무한 물량 막기",
+    "네코맨서: 타워 디펜스",
+    "아케인 아레나: 타워 디펜스",
+    "던라이트(Dunlight) : 랜덤 디펜스",
+    "Kingdom Rush 킹덤 러쉬 전략형 타워 디펜스"
+   ],
+   "genres_ios": []
+  },
+  "kw|빵 디펜스|play-US": {
+   "top5": [
+    "Bunker Defense: 100M Survival",
+    "Arcane Arena: Tower Defense TD",
+    "Nekomancer: Tower Defense",
+    "Dunlight : Random Defense",
+    "Raid Rush: Tower Defense TD"
+   ],
+   "genres_ios": []
+  },
+  "kw|빵 디펜스|ios-kr": {
+   "top5": [
+    "빵어전"
+   ],
+   "genres_ios": [
+    "Games"
+   ]
+  },
+  "kw|빵 디펜스|ios-us": {
+   "top5": [
+    "Bread Defense"
+   ],
+   "genres_ios": [
+    "Games"
+   ]
+  },
+  "kw|곰팡이 디펜스|play-KR": {
+   "top5": [
+    "뿅뿅마법단",
+    "벙커 디펜스: 빠른 무한 물량 막기",
+    "뽀록 마법 디펜스: 협동 듀오",
+    "기어몬: 타워 디펜스",
+    "매직 디펜스 : 타워디펜스&로그라이크"
+   ],
+   "genres_ios": []
+  },
+  "kw|곰팡이 디펜스|play-US": {
+   "top5": [
+    "Wizzy Animals : Defense",
+    "Egg Defense",
+    "Mage Defense",
+    "Magic Defense: Co-op Wizard TD",
+    "Goddess TD: Tower Defense"
+   ],
+   "genres_ios": []
+  },
+  "kw|곰팡이 디펜스|ios-kr": {
+   "top5": [],
+   "genres_ios": []
+  },
+  "kw|곰팡이 디펜스|ios-us": {
+   "top5": [],
+   "genres_ios": []
+  },
+  "kw|bakery defense|play-KR": {
+   "top5": [
+    "Bakery Manager: Stores Tycoon",
+    "매직 디펜스 : 타워디펜스&로그라이크",
+    "치명적 달콤함: 리벤지&머지",
+    "War Strategy: Tower Defense TD",
+    "Kingdom Rush 킹덤 러쉬 전략형 타워 디펜스"
+   ],
+   "genres_ios": []
+  },
+  "kw|bakery defense|play-US": {
+   "top5": [
+    "Marys bakery",
+    "Bakery Manager: Stores Tycoon",
+    "Magic Defense: TD",
+    "Ceaseless Defense",
+    "Bloons TD 6 NETFLIX"
+   ],
+   "genres_ios": []
+  },
+  "kw|bakery defense|ios-kr": {
+   "top5": [
+    "빵어전"
+   ],
+   "genres_ios": [
+    "Games"
+   ]
+  },
+  "kw|bakery defense|ios-us": {
+   "top5": [
+    "My Sweet Bakery!",
+    "Flour Bakery Rewards",
+    "Bakery Story",
+    "Bakesy: Home Bakery Biz App",
+    "Bakery Town"
+   ],
+   "genres_ios": [
+    "Games",
+    "Food & Drink",
+    "Games",
+    "Business",
+    "Games"
+   ]
+  },
+  "kw|mold defense|play-KR": {
+   "top5": [
+    "마법사 디펜스",
+    "벙커 디펜스: 빠른 무한 물량 막기",
+    "Mold Identifier: Al Scan & ID",
+    "Digfender: Tower Defense TD",
+    "판타지 타워: 캐슬 디펜스"
+   ],
+   "genres_ios": []
+  },
+  "kw|mold defense|play-US": {
+   "top5": [
+    "Mold Identifier: Al Scan & ID",
+    "Robo Defense",
+    "Mold Finder AI, Inspection",
+    "Digfender: Tower Defense TD",
+    "Mage Defense"
+   ],
+   "genres_ios": []
+  },
+  "kw|mold defense|ios-kr": {
+   "top5": [
+    "Ночной холодильник",
+    "Bir Kase Yoğurt"
+   ],
+   "genres_ios": [
+    "Games",
+    "Games"
+   ]
+  },
+  "kw|mold defense|ios-us": {
+   "top5": [
+    "Idle : Mold Farm",
+    "Mold Finder AI, Inspection",
+    "Mold Identifier: AI Fungus ID",
+    "Mold Identifier",
+    "Mold Identifier: AI Inspection"
+   ],
+   "genres_ios": [
+    "Games",
+    "Lifestyle",
+    "Reference",
+    "Utilities",
+    "Utilities"
+   ]
+  },
+  "kw|라인 디펜스|play-KR": {
+   "top5": [
+    "와글와글 군단: 전략 픽셀 라인 디펜스",
+    "몽글뭉치: 라인 디펜스",
+    "라인 히어로즈 디펜스",
+    "스투 랜덤 디펜스 : S2RD (제작: 계피사탕)",
+    "사악한 타워 - 방치형 타워 디펜스"
+   ],
+   "genres_ios": []
+  },
+  "kw|라인 디펜스|play-US": {
+   "top5": [
+    "Demon Raid 2: Tower Defense",
+    "UnderDark: Defense",
+    "Waggle Squad: Pixel Defense",
+    "Last Bunker: 1945",
+    "Planet Defense: Space TD"
+   ],
+   "genres_ios": []
+  },
+  "kw|라인 디펜스|ios-kr": {
+   "top5": [
+    "레인저스 x `코드 기아스 반역의 를르슈` 콜라보",
+    "햄찌의 냥이 방어전: 라인 디펜스",
+    "카툰워즈3",
+    "클래시 로얄 (Clash Royale)",
+    "Kingdom Rush: 킹덤 러쉬 전략형 타워 디펜스"
+   ],
+   "genres_ios": [
+    "Games",
+    "Games",
+    "Games",
+    "Games",
+    "Games"
+   ]
+  },
+  "kw|라인 디펜스|ios-us": {
+   "top5": [
+    "LINE Rangers & CODE GEASS",
+    "Cartoon Wars 3",
+    "Hamzzi Cats: Line Defense",
+    "E.D.E.N : The Last Line",
+    "World War Zombie Frontier Line"
+   ],
+   "genres_ios": [
+    "Games",
+    "Games",
+    "Games",
+    "Games",
+    "Games"
+   ]
+  },
+  "kw|lane defense|play-KR": {
+   "top5": [
+    "Lane Defense : Element Odyssey",
+    "Lane Defense: Zombie Siege TD",
+    "타워디펜스: 끝없는전쟁",
+    "Sector Defense: Roguelike TD",
+    "레이드 러시: 타워 디펜스"
+   ],
+   "genres_ios": []
+  },
+  "kw|lane defense|play-US": {
+   "top5": [
+    "Lane Defense: Summon & Merge",
+    "Lane Defense : Element Odyssey",
+    "Crazy Defense Heroes - TD Game",
+    "Tower Defense: Infinite War",
+    "Lane Defense: Zombie Siege TD"
+   ],
+   "genres_ios": []
+  },
+  "kw|lane defense|ios-kr": {
+   "top5": [
+    "Defend The Dam - Active Lane Defense",
+    "방석 사수! - 고양이 레인 디펜스",
+    "Incoming! Goblins Attack TD",
+    "머지 레인: 타워 디펜스",
+    "Lane Buster"
+   ],
+   "genres_ios": [
+    "Games",
+    "Games",
+    "Games",
+    "Games",
+    "Games"
+   ]
+  },
+  "kw|lane defense|ios-us": {
+   "top5": [
+    "Steampunk Defense",
+    "The Battle Cats",
+    "Defend:Idle Tower Defense Game",
+    "Kingdom Wars Defense!",
+    "Days Bygone: Castle Defense"
+   ],
+   "genres_ios": [
+    "Games",
+    "Games",
+    "Games",
+    "Games",
+    "Games"
+   ]
+  }
+ },
+ "_about": "09 Q3 title search. Google Play web search (hl/gl KR ko, US en) top 5 titles and iTunes Search API (country kr/us, entity software) top 5. Search result titles only, no third-party content beyond app names. Rankings are personalised and change over time."
+}
