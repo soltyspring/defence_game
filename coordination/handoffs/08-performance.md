@@ -27,6 +27,11 @@
   trimming changes, the HUD at scale 2, and a soak. All blocked on 02 P10 and a device.
 - Validation: job exit 0; 14/14 runs (3 imports, 8 timing, 1 breakdown, 2 UI captures) CLEAN and isolated; real save unchanged. sprite_fill_static static vs in-game bbox share
   (42/38 % vs 42/37 %) agree. Parse/compile OK. No new Godot run after the crash.
+- Commit: `99352192165dbfa93aba65a6acf7ddf7d656d7de` `[Test] 폰 해상도(2400·2340x1080, 3배) GPU 채움 비교(…)`, 13 files.
+  Publish-Task.ps1 printed `PUSHED 9935219… origin/main` (e2404af..9935219). After the push, `git ls-remote origin refs/heads/main`
+  returned exactly this SHA; `git cat-file -t` = commit; `git branch -r --contains` = origin/main.
+- Next: re-run `phone_fill_matrix.ps1` (detached, one job) only when one of these lands: 02's zoom flag, 02's clear-rect skip,
+  03's trimmed frames, or 04's oversampling fix. For 04's fix, add a 1600×720 window (scale 2) to cover 720-high phones.
 
 ## M16 — 03 A19 D1 32 px roster: performance preview before release (2026-11-01 00:55–02:1x KST)
 - **H3:** 08 has no uncommitted H3. H3 is 02's change to `battle_sim.gd`, and 02 has neither committed it (origin/main 1aec5fe) nor
