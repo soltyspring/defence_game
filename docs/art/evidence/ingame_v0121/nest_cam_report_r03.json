@@ -1,0 +1,40 @@
+{
+ "shots": [
+  {
+   "cam_x": 230.0,
+   "name": "hero_close_06s",
+   "nest_left_x": 1612.0,
+   "nest_px_on_screen": 0.0,
+   "paused": false,
+   "t": 6.15,
+   "view_w": 640.0
+  },
+  {
+   "cam_x": 1316.0,
+   "name": "vis24",
+   "nest_left_x": 1612.0,
+   "nest_px_on_screen": 24.0,
+   "paused": false,
+   "t": 6.33,
+   "view_w": 640.0
+  },
+  {
+   "cam_x": 1332.0,
+   "name": "vis40",
+   "nest_left_x": 1612.0,
+   "nest_px_on_screen": 40.0,
+   "paused": false,
+   "t": 6.5,
+   "view_w": 640.0
+  },
+  {
+   "cam_x": 1388.0,
+   "name": "vis96",
+   "nest_left_x": 1612.0,
+   "nest_px_on_screen": 96.0,
+   "paused": false,
+   "t": 6.67,
+   "view_w": 640.0
+  }
+ ]
+}

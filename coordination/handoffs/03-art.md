@@ -1,5 +1,5 @@
 # 03-art handoff
-Updated: 2026-10-31 18:04 +09:00 (real time from Get-Date). Q1 = A DECIDED; Q3 working title 빵집 기사단: 곰팡이 디펜스 (store name pending KIPRIS); Q2 business model DEFERRED (no ad/purchase UI). Art version 0.12.1.
+Updated: 2026-10-31 18:45 +09:00 (real time from Get-Date). Q1 = A DECIDED; Q3 working title 빵집 기사단: 곰팡이 디펜스 (store name pending KIPRIS); Q2 business model DEFERRED (no ad/purchase UI). Art version 0.12.1.
 
 ## Session
 - Kiro CLI session ID: not visible from inside the session, so I cannot record it. Codex should read it from coordination/.runtime/quota/sessions.json / the launcher.
@@ -95,7 +95,12 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - NOT verified for this change: Godot readability render, exported-PCK check, real-game capture (after 18:30).
 - Commit 6949499 [Design]: PUSHED origin/main (verified with git branch -r --contains at 18:04). 07 A7 re-verify request written after the push.
 
+## Milestone 14 (this session): Godot checks after the 18:30 quiet window
+- HEAD 31164c8 snapshot (%TEMP%\art03_v0121, import only there). Readability v0121: Godot = composite, only crowd fails (A23, 02). PCK 12/12 + 3 fonts, no raw PNG, 1,263,084 B.
+- Real game (DISPLAY2, EXIT_0, no black or paused frames): logo, bakery buttons, 제빵 대장, 식빵병, village visible. Nest captured with tools/art/godot_check/nest_cam.gd (camera pan like a drag): dL* 28.5-39.0, min dE76 28.5-43.8, all pass. Evidence docs/art/evidence/ingame_v0121/.
+- No failure to fix.
+
 ## Exact next steps on resume
-1. After 18:30: `pwsh tools/art/run_godot_pack_check.ps1`, `run_godot_readability.ps1 -Tag v0121`, and a HEAD-snapshot capture on the secondary monitor (nest on screen, toast knight + hero close up). Record results in ART_AUDIT round 11.
-2. A26 for the remaining allies (tank 통식빵, fast 프레첼, siege 화덕포 detail), same contract.
-3. Read incoming *-to-03-art.md (04 title_block line, edge indicator; 08 menu model).
+1. A26 for the remaining allies (tank 통식빵, fast 프레첼, siege 화덕포), same contract; the hero's apron emblem is too small at 1x (consider a larger loaf mark).
+2. Read incoming *-to-03-art.md (04 edge indicator wiring with icon_nest, 08 menu model, 07/09 results).
+3. After 02 re-imports: validate.py --import-cache in the main tree.

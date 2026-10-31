@@ -1,0 +1,82 @@
+{
+ "snapshot": "git archive HEAD 31164c8 (includes 6949499 art and 04's 31164c8 client changes) in %TEMP%\\art03_v0121; --import only there (validate --import-cache: all pages match); main-tree .godot untouched",
+ "display": "tools/build/visible_launch.ps1 on \\\\.\\DISPLAY2, 1280x720, all 5 runs EXIT_0",
+ "black_frames": "none (mean brightness 74.6 menu, 134-140 battle); PC was not locked",
+ "pause_overlay_frames": "none in this run (checked by the orange continue button test)",
+ "nest_cam": "tools/art/godot_check/nest_cam.gd copied to res://art03_check/ in the snapshot (tools/art has .gdignore). Pans the camera like a drag (_free_cam_t, _cam_x) at t=6 s; no game code changed",
+ "nest_real_metrics": {
+  "r01/vis24": {
+   "nest_px_2x": 5664,
+   "dL_vs_ring": 30.7,
+   "dE76_vs_ring": {
+    "normal": 38.2,
+    "protan": 32.0,
+    "deutan": 37.3,
+    "tritan": 41.2
+   },
+   "paused": false,
+   "mean_brightness": 136.5
+  },
+  "r01/vis40": {
+   "nest_px_2x": 9956,
+   "dL_vs_ring": 28.9,
+   "dE76_vs_ring": {
+    "normal": 35.4,
+    "protan": 28.5,
+    "deutan": 33.6,
+    "tritan": 39.2
+   },
+   "paused": false,
+   "mean_brightness": 136.1
+  },
+  "r01/vis96": {
+   "nest_px_2x": 25948,
+   "dL_vs_ring": 28.5,
+   "dE76_vs_ring": {
+    "normal": 39.4,
+    "protan": 32.2,
+    "deutan": 38.2,
+    "tritan": 42.3
+   },
+   "paused": false,
+   "mean_brightness": 134.4
+  },
+  "r03/vis24": {
+   "nest_px_2x": 5760,
+   "dL_vs_ring": 39.0,
+   "dE76_vs_ring": {
+    "normal": 49.1,
+    "protan": 43.8,
+    "deutan": 49.4,
+    "tritan": 49.7
+   },
+   "paused": false,
+   "mean_brightness": 136.8
+  },
+  "r03/vis40": {
+   "nest_px_2x": 9820,
+   "dL_vs_ring": 33.9,
+   "dE76_vs_ring": {
+    "normal": 45.1,
+    "protan": 38.2,
+    "deutan": 44.4,
+    "tritan": 47.2
+   },
+   "paused": false,
+   "mean_brightness": 136.4
+  },
+  "r03/vis96": {
+   "nest_px_2x": 25708,
+   "dL_vs_ring": 32.8,
+   "dE76_vs_ring": {
+    "normal": 44.2,
+    "protan": 36.8,
+    "deutan": 43.1,
+    "tritan": 46.8
+   },
+   "paused": false,
+   "mean_brightness": 134.5
+  }
+ },
+ "lines": "dL* >= 25 and dE76 >= 20 (same lines as nest_check.py)"
+}

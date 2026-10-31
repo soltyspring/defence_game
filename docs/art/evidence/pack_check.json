@@ -120,7 +120,7 @@
       "size_ok": true
     },
     {
-      "frames": 103,
+      "frames": 104,
       "id": "ui_main",
       "loaded": true,
       "size": [
@@ -162,5 +162,5 @@
   ],
   "raw_png_present": false,
   "remap_present": true,
-  "pck_bytes": 1262684
+  "pck_bytes": 1263084
 }
