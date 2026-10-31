@@ -1,7 +1,25 @@
 # 09-research-product handoff
-Updated: 2026-10-31 ~20:10 KST
+Updated: 2026-11-01 ~00:25 KST
 Session ID: sess_6ce8ebb1-4e45-454d-a561-e0bad09a8be5 · claude-opus-5.5 / trust-all
-Status: MILESTONE DONE (v18): waiting for 07 (R09-07-3, R09-07-2) and 01 (R09-01-17, R09-01-16)
+Status: MILESTONE DONE (v19 resume check): waiting for 01 (R09-01-16, R09-01-17), 07 (R09-07-2, R09-07-3), 04 (D31 rendering)
+
+## v19 (2026-10-31 22:59 – 2026-11-01 00:25 KST): resume after the quota stop (20:27) and the blue screen (23:08)
+Commit d7926633e68cece72f9989eae0de1238eb96cf91 PUSHED (helper output; verified with git show --stat and git branch -r --contains = origin/main). It contains SUCCESS_ANALYSIS §38, the E1_PILOT_SHEET P1/P3 rows and a closing note to 04.
+- Loss check: 20 tracked 09 files, 0 empty or NUL-filled; the 09 work tree was clean. checkpoint/quota-20261031-202729/09-research-product (3291e59) is an empty commit with no diff on 09 paths against HEAD. Nothing lost. The temp notes %TEMP%\r09\fs\obs.md are intact (no NUL).
+- Heavy runs (coordination/heavy_run.ps1, one at a time, waits are normal): (1) '09-import-head07b90c5', waited 689 s: import of a clean git-archive snapshot of HEAD 07b90c5 (%TEMP%\r09\head_07b90c5) through 10's isolated_godot.ps1; exit 0, isolated, real save unchanged, 64 imports, 0 missing. The 5 "Unexpected NUL character" lines at the end of the log also appear in pre-crash imports (09:02, 17:35, 04 gate 23:02), and no text file in the snapshot has NUL, so this is not crash damage. (2) '09-p1-r01-banner-1x', waited 1041 s: 04's visible_launch.ps1 on \\.\DISPLAY2 (placement verified), 640×360, APPDATA isolated, `--round=r01 --autoplay --shots=25..58 --quit-after=60`, EXIT_0. No other Godot run by 09.
+- P1 CLOSED: "첫 웨이브 격파!" is in the 38 s and 39 s frames (HUD wave 1/3, next in 3 s → sim ≈37–38 s, inside D16 25–45 s) and gone at 40 s. At 41 s the same label shows "웨이브 2/3" with no stacking. One seed, competent bot, desktop. The game log has no wave_cleared line; the banner text is only set by hud._on_wave_cleared(1). The banner path files are unchanged up to 4882771.
+- R09-04-5 1×: PASS at 07b90c5 (old Galmuri9 10 digits: crisp, clear of VS and the bar end). 04's d724b9a (00:10) then enlarged the digits to Galmuri11 12; for that I only read 04's committed docs/qa/readable_numbers/ko_640_notch_r05_3_hud.png (clear of VS) and asked 04 for one 640×360 top-bar frame on their next visible run (low priority).
+- Tracking (§38.3): R09-01-17 L1 and R09-01-16 K1 have no 01 reply; D31 rendering is not in src/tests (no `hint.loss` reference at 4882771). D34/D35 reflect R09-01-15 (B/A rejected, F0 kept as a hint candidate, 0.60–0.90 withdrawn). R09-07-2/3 are queued at 07 (not started). E2 r08 peak frame still has no enemy on screen (07 C8). R09-03-4: icon exists (b113085; chef hat + baguette + mold blob, no crown/shield), the 5-person test has not been run. R09-06-3 KIPRIS NOT_CHECKED (person only). The 01 "broken" definition is closed (D21), P2 = yes.
+- Decisions unchanged: Q1 theme A, Q2 보류 (ads/IAP disabled), Q3 title, Q4 home label. Q5 unanswered; D28 is a default, not approval.
+- Validation: table column counts (§38: 1 table, 0 mismatches; E1 sheet: 2 tables, 0 mismatches); git diff --check clean; only 09 paths committed (other roles' uncommitted src/tests/tools edits in the shared tree were not touched or used).
+- Local only (not committed): %TEMP%\r09\head_07b90c5 (snapshot), %TEMP%\r09\p1_07b90c5 (34 frames, sheet.png, top-bar zooms, launch JSON, godot log), %TEMP%\r09\import_07b90c5.log.
+
+## Next
+1. When 01 answers R09-01-17 (L1) or R09-01-16 (K1): update §37.5/§36.7 and, only then, the 04 request file.
+2. When 04 commits the D31 rendering: read the code and 04/07 frames; check the r05-loss-only rule and the fit at 1× (R09-07-3 items 1–2).
+3. When 07 delivers R09-07-2/R09-07-3: fill §36/§37 our-side rows with measured values.
+4. Still open: E2 (07 r08 peak frame with enemies), R09-03-4 (icon test, people), R09-06-3 (KIPRIS, person), E1 pilot P4 (phone) and P5 (recording).
+5. Any Godot/visible run: only inside coordination/heavy_run.ps1, one at a time, isolated APPDATA, DISPLAY2 only, from a clean HEAD snapshot.
 
 ## v18 (2026-10-31 19:10–20:05 KST): first-defeat comparison
 Commit db1bb9b9e060e5d6c8bea6dd55a56bc6615602fb PUSHED (helper output; SHA copied after publish, verified with git show --stat and git branch -r --contains). It contains SUCCESS_ANALYSIS §37, R09-07-3 and R09-01-17.
