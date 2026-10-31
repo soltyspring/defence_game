@@ -27,3 +27,11 @@ battle_sim.gd:417 re-read; git diff --check clean; working tree clean after comm
 3. Still open: 04 1x top-bar capture (R09-04-5), 07 r08 real-HUD frame (E2), 03 icon test (R09-03-4), 06 KIPRIS (R09-06-3).
 4. Stop and checkpoint at ≥97% of a new quota trigger.
 09 runs no Godot or emulator processes.
+
+## v8 (2026-10-31 ~15:55 KST): WORLD.md identity check
+Commit 747e0e22d000f18c2010e9e98e5e10c825a9e8ee PUSHED (helper output). Files: SUCCESS_ANALYSIS.md, reviews evidence JSON, and the requests to 01/02/03/04/06.
+- Q1 confirmed DECIDED in DECISIONS.md (14b01e2). The Q1 items in R09-01-6/7 are closed.
+- §25: 16 KR/US Play name searches found no title containing our names. Low-overlap indies exist (itch.io Food Knight, Steam Toast & Toaster). Risks are first-impression ones: chef-hat hero looks like a tycoon game, card short names 통식빵/프레첼 lose their role, title is still provisional. Child aversion has no direct evidence; comparable mold/food games are rated 전체이용가 on Play KR, PvZ 7+.
+- Correction: my earlier "no 오븐 in unit names" rule was too broad (fixed in the 01/06 requests).
+- Correction: the "~10:xx KST" times in §22/§23 and in the requests were wrong estimates. Actual times are before 09:06/09:18 (commit times). Fixed in place.
+- Requests: R09-01-8, R09-03-5, R09-06-4.
