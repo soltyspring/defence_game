@@ -60,6 +60,7 @@ func _run() -> void:
 	_group("data_isolation", test_data)
 	_group("runtime_direct", test_direct)
 	_group("runtime_app_path", test_app_path)
+	_group("q2_repo_scan", test_q2_repo_scan)
 	save.path = orig_path
 	save.load_progress()
 	_group("hygiene", func() -> bool:
@@ -269,4 +270,52 @@ func test_app_path() -> bool:
 	var s1 := services_state()
 	eq(s1.diag, s0.diag, "Services diagnostics unchanged via App path")
 	eq(s1.data, s0.data, "progress.services unchanged via App path")
+	return true
+
+# ------------------------------------------------------------------ Q2 deferred: repo-wide scan
+
+## Game code outside src/services must not reach ads, billing, receipts or store SDKs while Q2 is
+## deferred (user, 2026-10-31 16:09 KST). Comments are stripped. The battle "kill reward" is not an ad,
+## so plain "rewarded" is not a token here. Also: no addons/ (plugins), no android/ Gradle template
+## with plugin AARs, no enabled plugin flags in export_presets.cfg.
+const Q2_TOKENS := ["Services.ads", "Services.purchases", "/root/Services", "get_singleton(", "JavaClassWrapper",
+	"GodotGooglePlayBilling", "AndroidIAPP", "AdMob", "MobileAds", "purchaseToken", "receipt", "HTTPRequest", "HTTPClient"]
+const Q2_SCAN_DIRS := ["res://src", "res://scenes"]
+
+func _scan_files(dir: String, exts: Array, out: Array) -> void:
+	var d := DirAccess.open(dir)
+	if d == null:
+		return
+	for f in d.get_files():
+		if exts.has(f.get_extension()):
+			out.append(dir.path_join(f))
+	for sub in d.get_directories():
+		_scan_files(dir.path_join(sub), exts, out)
+
+func test_q2_repo_scan() -> bool:
+	var files: Array = []
+	var dirs: Array = Q2_SCAN_DIRS.duplicate()
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--q2-extra-dir="):   # mutation tests: an outside folder with planted files
+			dirs.append(a.substr("--q2-extra-dir=".length()))
+	for d in dirs:
+		_scan_files(d, ["gd", "tscn"], files)
+	files = files.filter(func(p): return not str(p).begins_with("res://src/services/"))
+	check(files.size() >= 30, "game files scanned outside src/services (%d)" % files.size())
+	for p in files:
+		var t := code_only(FileAccess.get_file_as_string(p))
+		for tok in Q2_TOKENS:
+			check(not t.contains(tok), "%s: no '%s' (Q2 deferred)" % [p, tok])
+	check(not DirAccess.dir_exists_absolute("res://addons"), "no addons/ (no ad or billing plugin)")
+	check(not DirAccess.dir_exists_absolute("res://android/plugins"), "no android/plugins (v1 Android plugins)")
+	var cfg := ConfigFile.new()
+	if check(cfg.load("res://export_presets.cfg") == OK, "export_presets.cfg loads"):
+		for sec in cfg.get_sections():
+			if not sec.ends_with(".options"):
+				continue
+			for k in cfg.get_section_keys(sec):
+				if str(k).begins_with("plugins/"):
+					check(cfg.get_value(sec, k) != true, "%s %s plugin not enabled (Q2 deferred)" % [sec, k])
+	var meta = JSON.parse_string(FileAccess.get_file_as_string("res://data/meta.json"))
+	check(meta is Dictionary and (meta.get("iap_catalog", {}) as Dictionary).get("enabled", true) == false, "iap_catalog still disabled")
 	return true
