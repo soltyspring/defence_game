@@ -1,6 +1,6 @@
 {
  "version": 1,
- "art_version": "0.7.0",
+ "art_version": "0.8.0",
  "schema": "INTERFACES.md §5.1 (02-engine) + additive keys",
  "pixel_scale": 1,
  "reference_view": [
@@ -55,7 +55,7 @@
     512,
     512
    ],
-   "disk_bytes": 12226,
+   "disk_bytes": 11937,
    "gpu_bytes": 1048576,
    "biome": "",
    "anim_sets": [
@@ -77,7 +77,7 @@
     512,
     256
    ],
-   "disk_bytes": 5207,
+   "disk_bytes": 5071,
    "gpu_bytes": 524288,
    "biome": "",
    "anim_sets": [
@@ -97,7 +97,7 @@
     512,
     256
    ],
-   "disk_bytes": 5482,
+   "disk_bytes": 5398,
    "gpu_bytes": 524288,
    "biome": "",
    "anim_sets": [
@@ -116,7 +116,7 @@
     512,
     256
    ],
-   "disk_bytes": 5165,
+   "disk_bytes": 5079,
    "gpu_bytes": 524288,
    "biome": "",
    "anim_sets": [
@@ -135,7 +135,7 @@
     512,
     512
    ],
-   "disk_bytes": 6682,
+   "disk_bytes": 6586,
    "gpu_bytes": 1048576,
    "biome": "",
    "anim_sets": [
@@ -153,7 +153,7 @@
     1024,
     512
    ],
-   "disk_bytes": 11568,
+   "disk_bytes": 11481,
    "gpu_bytes": 2097152,
    "biome": "",
    "anim_sets": [
@@ -171,7 +171,7 @@
     512,
     512
    ],
-   "disk_bytes": 10303,
+   "disk_bytes": 10209,
    "gpu_bytes": 1048576,
    "biome": "",
    "anim_sets": [
@@ -191,7 +191,7 @@
     512,
     256
    ],
-   "disk_bytes": 4441,
+   "disk_bytes": 4432,
    "gpu_bytes": 524288,
    "biome": "",
    "anim_sets": [
@@ -224,7 +224,7 @@
     256,
     256
    ],
-   "disk_bytes": 5550,
+   "disk_bytes": 5544,
    "gpu_bytes": 262144,
    "biome": "",
    "anim_sets": [],
@@ -240,7 +240,7 @@
     1024,
     512
    ],
-   "disk_bytes": 7416,
+   "disk_bytes": 7438,
    "gpu_bytes": 2097152,
    "biome": "meadow",
    "anim_sets": [],
@@ -511,7 +511,7 @@
   "license": "Original work created for this project; owned by the project owner. No third-party assets included."
  },
  "totals": {
-  "disk_bytes": 74040,
+  "disk_bytes": 73175,
   "gpu_bytes_all_pages": 9699328,
   "note": "GPU = w*h*4 (RGBA8, lossless import, no mipmaps). See docs/art/ATLAS_BUDGET.md"
  }

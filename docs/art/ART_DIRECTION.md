@@ -1,5 +1,5 @@
 # ART_DIRECTION.md — visual identity and asset contract (owner: 03-art)
-Art version 0.7.0 · 2026-10-31 · Status: **initial production pack, theme still PROVISIONAL** (Q1 pending in coordination/requests/USER_QUESTION.md). The default theme below is a reversible working assumption. The user has not approved it.
+Art version 0.8.0 · 2026-10-31 · Status: **theme DECIDED by the user (Q1 = A "빵집 기사단 vs 곰팡이 군단", 2026-10-31)**. Art 0.8.0 applies it as a palette-level retheme (tools/art/theme.py). Silhouettes, frame sizes, pivots, hit/spawn frames and frame names are unchanged. A bread-specific detail pass (crust scoring, loaf-shaped helmets) is still open.
 
 ## 1. How the art is made (provenance)
 - Tool inventory on this machine: Python 3.11.9, Pillow 11.2.1, numpy 2.2.4. There are **no** image-generation, Aseprite or ImageMagick tools. Godot 4.7.2 is in tools/engine (owned by 02).
@@ -71,3 +71,10 @@ Layers (back to front) with view_y and parallax: `sky` 16×360 (repeat every 16 
 `docs/art/previews/battle_mock_1x.png` and `battle_mock_2x.png` compose the real atlas frames as the engine would (the HUD in them is only a sketch, since 04 owns the real layout). At 1× the factions separate by colour, and every class is identifiable by silhouette. The hero is the tallest figure and has the only red cape. Contact sheets: `docs/art/previews/sheets/<anim_set>.png` (every anim, pink pivot marker), and `docs/art/previews/atlas_<id>.png` (the packed pages at 2×).
 
 ## 9. Atlases, memory and import → see docs/art/ATLAS_CONTRACT.md and the generated docs/art/ATLAS_BUDGET.md.
+
+## 10. Theme A palette rule (art 0.8.0)
+- **Bakery knights (allies), warm and LIGHT:** crust tan/brown armour (baguette blades, bread helmets), egg-wash gold tabards, jam-red cross accents, cream "crumb" faces, a white chef hat on the worker. The hero keeps the only red cape.
+- **Mould legion (enemies), cool and DARK:** mould grey-green skin, blue-mould teal cloth, rotten grey wood, spore-white accents. The bomber keeps its orange fuse (the only hazard accent). The overlord keeps its lilac eyes and orb.
+- New palette entries (appended, older indices unchanged): `D` mould_deep 1e2b30, `l` mould_grey 4b605d, `t` mould_sage 84a08c, `z` spore_white dce8df.
+- Bases: player keep = bakery (dough-brick walls, jam-red roof and banners). Enemy fort = mouldy palisade (grey wood, teal-mould roof). Prop: flour store. Biome front grass = wheat stalks. Spit = spore glob. Siege rock = hard-baked loaf. icon_supply = dough ball (in-round resource "반죽"); icon_worker = chef hat.
+- Separation is measured, not assumed: `python tools/art/cvd_check.py` (Machado 2009 protan/deutan/tritan). Results are in ART_AUDIT A25.

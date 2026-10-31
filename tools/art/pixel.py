@@ -46,6 +46,9 @@ PALETTE_DEF = [
     ("n", "mountain", "4a5d8c"), ("u", "mountain_light", "7287b8"), ("d", "forest_far", "23485a"),
     # translucent shadow (the only non-opaque colour)
     ("_", "shadow", "1b1325"),
+    # mould ramp (theme Q1=A "bakery vs mould", art 0.8.0). Appended so older indices stay stable.
+    ("D", "mould_deep", "1e2b30"), ("l", "mould_grey", "4b605d"), ("t", "mould_sage", "84a08c"),
+    ("z", "spore_white", "dce8df"),
 ]
 SHADOW_ALPHA = 96
 
@@ -80,6 +83,7 @@ RAMPS = {
     "skin": "sSL", "steel": "mMNW", "blue": "bBCc", "gold": "yYZ", "red": "rREe",
     "green": "gGFf", "wood": "wOoT", "purple": "pPVv", "stone": "aAXx", "sky": "iIjJ",
     "crust": "wOoTU",
+    "mould": "Dltz",
 }
 
 

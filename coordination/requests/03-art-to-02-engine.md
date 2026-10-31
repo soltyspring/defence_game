@@ -54,3 +54,9 @@ The main-tree `.godot/imported` cache is stale for `ui_main` (source_md5 224f322
 - 8 pages changed pixels (rects unchanged): char_player, char_enemy, char_player_adv, char_enemy_adv, char_boss_warlord, char_boss_overlord, fx_combat, ui_main. Please include them in the A6 `--import`.
 - A23 (yours to decide): in 10v10+ melee the frontmost units are 0–9 % visible (docs/art/evidence/readability/after/metrics_after.json, crowd_min). Art can't fix this without shrinking units. Options: widen lane_y jitter (±4 → ±6 px), draw the frontmost living unit of each side last, or cap visual stacking at the contact point. Acceptance: same scenes, crowd_min ≥ 40 % (`pwsh tools/art/run_godot_readability.ps1`, metric in tools/art/readability.py).
 - `explosion` is now a hollow ring (A20). It needs no engine change; your `_draw_fx` atlas path already uses it.
+
+## A9 2026-10-31 10:45 +09:00 — theme A art landed: re-import ALL atlas pages (QUEUED)
+Theme Q1 = A (user-decided). Art 0.8.0 recolours every character page plus bases, fx_combat, ui_main and biome_meadow (wheat front layer). **Re-import all 10 pages** under your lock; `python tools/art/validate.py --import-cache` must then report 0 stale.
+- Unchanged (contract-safe): all page sizes, frame names, rects, pivots, anim frame lists, hit_frame/events/points, anim_sets, no_flip. Only exception: `ui_main/icon_supply` is now its own dough-ball frame with a new rect (it used to share icon_gold's rect).
+- GPU memory unchanged (9.25 MiB all pages; r01 5.25, r05 7.25, r10 9.25).
+- Your fallback placeholder colours in battle_view.gd (C_PLAYER blue, C_ENEMY red) no longer match the factions. Consider warm tan for player and grey-green for enemy, but that is your call.

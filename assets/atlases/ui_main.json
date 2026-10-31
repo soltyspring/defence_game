@@ -17,9 +17,9 @@
  "repeat": false,
  "gpu_format": "RGBA8 (lossless, no VRAM compression)",
  "gpu_bytes": 262144,
- "disk_bytes": 5550,
- "unique_regions": 98,
- "occupancy": 0.35,
+ "disk_bytes": 5544,
+ "unique_regions": 99,
+ "occupancy": 0.354,
  "frames": {
   "icon_gold": {
    "x": 31,
@@ -232,8 +232,8 @@
    ]
   },
   "icon_supply": {
-   "x": 31,
-   "y": 147,
+   "x": 100,
+   "y": 124,
    "w": 16,
    "h": 16,
    "pivot": [

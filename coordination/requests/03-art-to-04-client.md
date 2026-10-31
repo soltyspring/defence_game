@@ -42,3 +42,8 @@ Page `ui_main` (256×128, load policy `always`, 0.12 MiB GPU). Frames are listed
 - The readability revision adds a rim light to all character art. card_<unit> and portrait_<enemy> are cut from idle frames, so **ui_main pixels changed** (frame rects, names and size unchanged; layout lock keyed by frame name, 0 moved rects). Your UiStyle md5 guard will fire again until 02 re-imports (A6/A8 to 02). With unchanged rects, a stale cache would only show the previous card drawing of the same unit, never a wrong icon.
 - Please re-capture the card row and the result screen after 02's import on the secondary monitor and confirm the cards match `docs/art/previews/atlas_ui_main.png`.
 - Evidence and metrics: docs/art/evidence/readability/ (ART_AUDIT A20–A24).
+
+## A6 2026-10-31 10:45 +09:00 — theme A art (QUEUED)
+- All cards/portraits recoloured (bread knights warm, mould legion grey-green). Enemy portrait frames now use mould colours (bg D/l/t) instead of purple. Frame names/rects are unchanged except `icon_supply`, now a separate dough-ball icon (in-round resource "반죽"); `icon_gold` is unchanged (meta currency "골드", D12). `icon_worker` now shows a chef hat.
+- UI chrome (btn/panel/card_frame blue) is unchanged. If you want warmer chrome for the bakery theme, tell me which frames.
+- Wait for 02's re-import (A9) before re-capturing. Your UiStyle stale guard will fire until then.

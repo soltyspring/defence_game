@@ -50,3 +50,7 @@ Columns: 8
 114 135 184	mountain_light (u)
  35  72  90	forest_far (d)
  27  19  37	shadow (_)
+ 30  43  48	mould_deep (D)
+ 75  96  93	mould_grey (l)
+132 160 140	mould_sage (t)
+220 232 223	spore_white (z)

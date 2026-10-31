@@ -23,6 +23,24 @@ ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 import numpy as np  # noqa: E402
 from PIL import Image  # noqa: E402
 
+# Z: is a network share: Windows intermittently returns EINVAL (Errno 22) on open("w+b").
+# Retry the write a few times instead of aborting the build (observed 2x on 2026-10-31).
+_orig_save = Image.Image.save
+
+
+def _save_retry(self, fp, *a, **kw):
+    import time
+    for i in range(6):
+        try:
+            return _orig_save(self, fp, *a, **kw)
+        except OSError as e:
+            if getattr(e, "errno", None) != 22 or i == 5:
+                raise
+            time.sleep(0.25 * (i + 1))
+
+
+Image.Image.save = _save_retry
+
 import atlas as atl  # noqa: E402
 import bases  # noqa: E402
 import biome  # noqa: E402
@@ -38,7 +56,7 @@ REL_ATLAS = "assets/atlases"
 PREV = os.path.join(ROOT, "docs", "art", "previews")
 # Layout locks: existing regions keep their page position across rebuilds (see atlas._pack).
 LOCK_DIR = os.path.join(HERE, "layout_lock")
-ART_VERSION = "0.7.0"
+ART_VERSION = "0.8.0"
 
 REQUIRED_CHAR_ANIMS = ("idle", "walk", "attack", "death")
 
@@ -48,6 +66,9 @@ RIM_LIGHT = os.environ.get("ART_RIM", "1") == "1"   # ART_AUDIT A22
 
 def add_char(a: atl.Atlas, sid, body, fn, faction):
     anims = fn()
+    import theme
+    for an in anims.values():
+        an["frames"] = [theme.apply(f.copy(), faction, sid) for f in an["frames"]]
     if RIM_LIGHT:
         from anim import rim_light
         for an in anims.values():
@@ -102,21 +123,25 @@ def build():
             # portrait lives on the boss page: ui_main stays byte-identical (no re-import needed)
             # and the portrait is resident only in r10 (wave preview / boss bar).
             pg.add_image("portrait_boss_overlord",
-                         ui.portrait(sheets["boss_overlord"][0]["idle"]["frames"][0].a, bg="p", rim="P", hi="V").a,
+                         ui.portrait(sheets["boss_overlord"][0]["idle"]["frames"][0].a, bg="D", rim="l", hi="t").a,
                          meta={"kind": "ui_portrait"})
         pages.append(pg)
 
     # --- bases ---------------------------------------------------------------
     bp = atl.Atlas("bases", "base", "battle", "Both bases, 3 damage states each. NOT flipped by engine.")
+    import theme
     for sid, fn, facing in [("base_player", bases.player_keep, "right"), ("base_enemy", bases.enemy_fort, "left")]:
         anims = bases.base_anims(fn)
+        tbl = theme.BAKERY_KEEP if sid == "base_player" else theme.MOULD_FORT
+        for v in anims.values():
+            v["frames"] = [theme.remap_keys(f.copy(), tbl) for f in v["frames"]]
         bp.add_sprite(sid, bases.W, bases.H, bases.PIVOT,
                       {k: dict(frames=[f.a for f in v["frames"]], fps=v["fps"], loop=v["loop"]) for k, v in anims.items()},
                       facing=facing, meta={"kind": "base", "no_flip": True,
                                            "states": {"idle": ">0.5 hp", "damaged": "<=0.5 hp", "ruined": "0 hp"}})
         bp.add_image(sid, anims["idle"]["frames"][0].a, pivot=bases.PIVOT)
         sheets[sid] = (anims, bases.W, bases.H, bases.PIVOT)
-    mine_frames = [bases.mine(0), bases.mine(1)]
+    mine_frames = [theme.remap_keys(bases.mine(i), theme.FLOUR_STORE) for i in (0, 1)]
     bp.add_sprite("prop_mine", bases.MINE_W, bases.MINE_H, bases.MINE_PIVOT,
                   {"idle": dict(frames=[f.a for f in mine_frames], fps=3, loop=True)},
                   facing="right", meta={"kind": "prop", "no_flip": True,
@@ -129,6 +154,10 @@ def build():
     fp = atl.Atlas("fx_combat", "fx", "battle", "Projectiles, impacts, skill FX, shadows. Pivot centre unless noted.")
     for sid, (fn, w, h, piv) in fx.SETS.items():
         anims = fn()
+        tbl = {"spit": theme.SPORE_FX, "hit_spit": theme.SPORE_FX, "rock": theme.DOUGH_ROCK}.get(sid)
+        if tbl:
+            for v in anims.values():
+                v["frames"] = [theme.remap_keys(f.copy(), tbl) for f in v["frames"]]
         fp.add_sprite(sid, w, h, piv,
                       {k: dict(frames=[f.a for f in v["frames"]], fps=v["fps"], loop=v["loop"]) for k, v in anims.items()},
                       facing="right", meta={"kind": "projectile" if sid.startswith("proj_") else "fx"})
@@ -166,7 +195,7 @@ def build():
         up.add_image("card_" + uid, ui.portrait(fr).a)
     for eid, sid in {k: k for k in ("e_grunt", "e_swarm", "e_spitter", "e_brute", "e_bomber", "boss_warlord")}.items():
         fr = sheets[sid][0]["idle"]["frames"][0].a
-        up.add_image("portrait_" + eid, ui.portrait(fr, bg="p", rim="P", hi="V").a)
+        up.add_image("portrait_" + eid, ui.portrait(fr, **theme.ENEMY_PORTRAIT).a)
     pages.append(up)
 
     # --- biome ---------------------------------------------------------------
@@ -175,6 +204,8 @@ def build():
     meadow = biome.build_meadow()
     layer_meta = []
     for name, cv, meta in meadow:
+        if name == "front":
+            theme.remap_keys(cv, theme.WHEAT_FRONT)
         bm.add_image(name, cv.a, pivot=(0, 0), meta={k: v for k, v in meta.items()})
         layer_meta.append(dict(frame=name, **meta, size=[cv.w, cv.h]))
     pages.append(bm)

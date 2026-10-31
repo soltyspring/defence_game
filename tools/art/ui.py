@@ -48,9 +48,9 @@ cCCCCBBbb
 ....b....
 """),
     "icon_worker": S("""
-...YYYY....
-..YZZZZY...
-.yYYYYYYy..
+...WWWW....
+..WWWWWW...
+.xWWWWWWx..
 ..LLLLL....
 .hSLKLS..M.
 .hSSSSs.MN.
@@ -228,7 +228,17 @@ VVVVPPp
 """),
 }
 # aliases (same pixels, deduped in the atlas): 01 names supply/energy, 02 names gold/mana
-ALIASES = {"icon_supply": "icon_gold", "icon_energy": "icon_mana"}
+ALIASES = {"icon_energy": "icon_mana"}
+# theme A: in-round supply = dough ball (01 Q1 option text: resource "반죽")
+ICONS16["icon_supply"] = S("""
+...TTTT...
+.TUUUUUT..
+TUUWUUUUT.
+TUWUUUUUTo
+TUUUUUUUTo
+.TUUUUUTo.
+..oTTTTo..
+""")
 
 
 def icons16():

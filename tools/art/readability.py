@@ -96,7 +96,12 @@ def frame(m, pages, docs, aset, anim, fi):
 
 def background(variant):
     import biome
-    img = np.array(biome.compose_preview(biome.build_meadow(), 640, cam=0).convert("RGB")).astype(float)
+    import theme
+    layers = biome.build_meadow()
+    for name, cv, meta in layers:
+        if name == "front":      # same remap build.py applies (theme A wheat tufts)
+            theme.remap_keys(cv, theme.WHEAT_FRONT)
+    img = np.array(biome.compose_preview(layers, 640, cam=0).convert("RGB")).astype(float)
     o = OVER[variant]
     if o:
         img = img * (1 - o[3]) + np.array(o[:3]) * o[3]

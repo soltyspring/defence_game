@@ -1,5 +1,5 @@
-# 03-art handoff — CHECKPOINT (user-ordered stop)
-Updated: 2026-10-31 10:00 +09:00 · Work STOPPED at a safe boundary. No task was in progress, so nothing is half-written. Q1 theme still PENDING (art = reversible default "Lantern Kingdom vs Bramble Horde", not user-approved). Art version 0.7.0.
+# 03-art handoff
+Updated: 2026-10-31 10:50 +09:00 · Resumed after the user-ordered checkpoint (09:18). Q1 = A **DECIDED by the user** (빵집 기사단 vs 곰팡이 군단). Art version 0.8.0.
 
 ## Session
 - Kiro CLI session ID: not visible from inside the session, so I cannot record it. Codex should read it from coordination/.runtime/quota/sessions.json / the launcher.
@@ -32,6 +32,14 @@ Clean for all 03 paths (assets/, tools/art/, docs/art/, own coordination files) 
 - A23 crowd visibility 0–9 % at the front line (02 layout decision). A22/A21 residual: e_brute 58–59 % and arrow 38 % on the dark variant (03, only for future dark biomes).
 - A17 existing enemy purple ≈ ally blue under deuteranopia (needs 01 approval to repaint). A19 summon frame field (01/02). A15 brute/warlord height (01). A2 font sizes 12/24/36 (04). A3 integer scale_mode (02). A6/A7 markers + prop_mine wiring (02). A9 ribbons (04).
 - No Android device evidence for any art/font. No player tests.
+
+## Milestone 7 (this session): theme A retheme + A17
+- Resume check: the 03 paths were identical to origin/checkpoint/quota-20261031-092323/03-art (git diff empty), so no work was lost. The unstaged files under assets/audio/** belong to 05 and were not touched.
+- Theme applied as a palette remap (tools/art/theme.py, wired into build.py): allies warm/light bread, enemies cool/dark mould; bases (bakery keep / mouldy fort), flour-store prop, spore spit, baked-loaf rock, wheat front layer, dough-ball icon_supply, chef-hat icon_worker, mould-coloured enemy portraits. Palette +4 mould colours (appended).
+- Verified: validate.py --determinism PASS (10 WARNs = main-tree cache stale for all pages; 02 asked A9). Exported PCK 10/10. Geometry unchanged except the icon_supply rect (alias split). CVD: 07-proxy protan 2.67->27.76, deutan 4.25->33.35; mass test <= 4.5 % confusable, luminance step +12.7..+18 L* (docs/art/evidence/cvd/). Readability rerun (theme): no regression.
+- Build fix: build.py retries image writes on Errno 22 (the Z: share failed twice mid-build).
+- Notified 01 (A4, naming proposals), 02 (A9 re-import all pages), 04 (A6), 07 (A1 new file), 08 (A4).
+- Open: A26 bread detail pass (palette-only retheme so far); main-tree recapture after the 02 re-import; A21/A22 dark residuals; A23 (02).
 
 ## Exact next steps on resume
 1. Read coordinator-to-03-art.md, DECISIONS.md (Q1 first: re-theme takes priority), and incoming *-to-03-art.md.

@@ -1,0 +1,78 @@
+{
+ "proxy_07": {
+  "normal": {
+   "closest_pair": [
+    "worker",
+    "e_bomber"
+   ],
+   "dE76": 33.72,
+   "pass_ge_2.3": true
+  },
+  "protan": {
+   "closest_pair": [
+    "worker",
+    "e_grunt"
+   ],
+   "dE76": 27.76,
+   "pass_ge_2.3": true
+  },
+  "deutan": {
+   "closest_pair": [
+    "worker",
+    "e_grunt"
+   ],
+   "dE76": 33.35,
+   "pass_ge_2.3": true
+  },
+  "tritan": {
+   "closest_pair": [
+    "worker",
+    "e_bomber"
+   ],
+   "dE76": 32.94,
+   "pass_ge_2.3": true
+  }
+ },
+ "mass_03": {
+  "normal": {
+   "ally_mass_confusable_pct": 4.4,
+   "enemy_mass_confusable_pct": 3.5,
+   "ally_any_pct": 7.8,
+   "enemy_any_pct": 4.6,
+   "mean_L_ally": 59.2,
+   "mean_L_enemy": 43.2,
+   "dL_ally_minus_enemy": 16.0,
+   "pass": true
+  },
+  "protan": {
+   "ally_mass_confusable_pct": 4.5,
+   "enemy_mass_confusable_pct": 3.8,
+   "ally_any_pct": 47.3,
+   "enemy_any_pct": 31.6,
+   "mean_L_ally": 56.6,
+   "mean_L_enemy": 43.9,
+   "dL_ally_minus_enemy": 12.7,
+   "pass": true
+  },
+  "deutan": {
+   "ally_mass_confusable_pct": 4.4,
+   "enemy_mass_confusable_pct": 3.8,
+   "ally_any_pct": 21.4,
+   "enemy_any_pct": 4.6,
+   "mean_L_ally": 60.7,
+   "mean_L_enemy": 42.7,
+   "dL_ally_minus_enemy": 18.0,
+   "pass": true
+  },
+  "tritan": {
+   "ally_mass_confusable_pct": 4.4,
+   "enemy_mass_confusable_pct": 3.5,
+   "ally_any_pct": 7.8,
+   "enemy_any_pct": 4.6,
+   "mean_L_ally": 58.9,
+   "mean_L_enemy": 43.4,
+   "dL_ally_minus_enemy": 15.5,
+   "pass": true
+  }
+ }
+}
