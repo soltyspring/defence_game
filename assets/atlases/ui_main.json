@@ -17,7 +17,7 @@
  "repeat": false,
  "gpu_format": "RGBA8 (lossless, no VRAM compression)",
  "gpu_bytes": 262144,
- "disk_bytes": 5733,
+ "disk_bytes": 5828,
  "unique_regions": 100,
  "occupancy": 0.358,
  "frames": {
@@ -321,6 +321,54 @@
     12
    ]
   },
+  "card_frame": {
+   "x": 27,
+   "y": 179,
+   "w": 20,
+   "h": 24,
+   "pivot": [
+    10,
+    12
+   ],
+   "nine_slice": [
+    6,
+    6,
+    6,
+    6
+   ]
+  },
+  "card_frame_disabled": {
+   "x": 3,
+   "y": 179,
+   "w": 20,
+   "h": 24,
+   "pivot": [
+    10,
+    12
+   ],
+   "nine_slice": [
+    6,
+    6,
+    6,
+    6
+   ]
+  },
+  "card_frame_selected": {
+   "x": 3,
+   "y": 207,
+   "w": 20,
+   "h": 24,
+   "pivot": [
+    10,
+    12
+   ],
+   "nine_slice": [
+    6,
+    6,
+    6,
+    6
+   ]
+  },
   "btn": {
    "x": 31,
    "y": 67,
@@ -385,22 +433,6 @@
     5
    ]
   },
-  "panel": {
-   "x": 215,
-   "y": 3,
-   "w": 24,
-   "h": 24,
-   "pivot": [
-    12,
-    12
-   ],
-   "nine_slice": [
-    8,
-    8,
-    8,
-    8
-   ]
-  },
   "panel_dark": {
    "x": 75,
    "y": 31,
@@ -417,52 +449,20 @@
     8
    ]
   },
-  "card_frame": {
-   "x": 27,
-   "y": 179,
-   "w": 20,
+  "panel": {
+   "x": 215,
+   "y": 3,
+   "w": 24,
    "h": 24,
    "pivot": [
-    10,
+    12,
     12
    ],
    "nine_slice": [
-    6,
-    6,
-    6,
-    6
-   ]
-  },
-  "card_frame_disabled": {
-   "x": 3,
-   "y": 179,
-   "w": 20,
-   "h": 24,
-   "pivot": [
-    10,
-    12
-   ],
-   "nine_slice": [
-    6,
-    6,
-    6,
-    6
-   ]
-  },
-  "card_frame_selected": {
-   "x": 3,
-   "y": 207,
-   "w": 20,
-   "h": 24,
-   "pivot": [
-    10,
-    12
-   ],
-   "nine_slice": [
-    6,
-    6,
-    6,
-    6
+    8,
+    8,
+    8,
+    8
    ]
   },
   "bar_frame": {

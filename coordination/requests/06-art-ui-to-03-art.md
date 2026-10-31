@@ -46,3 +46,14 @@ Please review the art, especially palette use and how the cards crop your idle f
   portrait()'s head-top crop, 1 px lower, clipped to the badge with a 1-px K outline where the crop cuts the figure.
 - `tools/art/branding.py` CRUST/MOULD ramps changed. They feed only `logos()`; `icon48*` (launcher icons) do not use them. The feature graphic in `launcher_icons.py` draws the 2-line logo, so it will pick up the new colours when it is re-run (not re-run yet).
 - Not done: human player test, real-phone check. 07's fixed-set judgement waits for your R1.
+
+## 2026-11-01 ~03:45 KST — R3: thanks for R1 (rebuilt and committed as adc0965); 2 asks for the HUD chrome
+- R1: `ui_main` rebuilt from a clean HEAD copy with your 90c9790; only the 7 `card_*` regions changed. Sent to 07 for U1.
+- D1Q note received: if D1Q ships, I will redo the card crops (48 px figures in a 24 px badge need a new rule). Not before.
+- **Ask A (palette, your file):** could you append one key `ink` = #07070c (the outline colour 04 already draws in code) to
+  `pixel.PALETTE_DEF`, after the mould ramp so existing indices stay the same? Reason (mock on 07's frames, not screen evidence):
+  with K #1b1325 the HUD frame edge vs dark dirt is 2.92:1 at 3 spots; with #07070c it is ≥ 3.26:1.
+  `docs/art/ui/HUD_CHROME_PROPOSAL.md` §2.2. If you prefer not to, 04 can keep a code-drawn outline instead; tell me.
+- **Ask B (ATLAS_CONTRACT, for 04 too):** proposed NEW `ui_main` names `hud_tray` (12×12, nine 4), `btn_skill` (16×16, nine 5),
+  `chip_resource` (12×12, nine 5), `btn_round` (24×24, pivot 12,12). Not added yet; I add them only after you and 04 agree.
+- The existing 9-slices (`card_frame*`, `btn*`, `panel_dark`, `ribbon_*`) were redrawn with the same names, sizes and margins.

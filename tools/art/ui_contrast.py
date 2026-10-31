@@ -37,7 +37,12 @@ TEXT = {"C_TEXT": (0.96, 0.94, 0.88), "C_TEXT_DIM": (0.66, 0.68, 0.74), "C_GOLD"
 TEXT_PAIRS = [("btn", "C_TEXT"), ("btn_pressed", "C_TEXT"), ("btn_disabled", "C_TEXT_DIM"),
               ("btn_gold", "K_dark_text"), ("panel", "K_dark_text"), ("panel_dark", "C_TEXT"),
               ("panel_dark", "C_GOLD"), ("card_frame", "C_TEXT"), ("card_frame", "C_GOLD"),
-              ("card_frame_disabled", "C_TEXT_DIM"), ("card_frame_selected", "K_dark_text")]
+              ("card_frame_disabled", "C_TEXT_DIM"), ("card_frame_selected", "C_TEXT"), ("card_frame_selected", "C_GOLD")]
+# ui-art 1.1 (06-art-ui): the selected card keeps the crust centre and shows a gold ring, so its text stays C_TEXT/C_GOLD
+# (was butter fill + dark text). States are compared at the drawn size (mean colour of the frame 9-slice-stretched to
+# the HUD size), because ringed frames are not represented by their centre pixel.
+DRAWN = {"card_frame": (50, 56), "card_frame_disabled": (50, 56), "card_frame_selected": (50, 56),
+         "btn": (52, 52), "btn_disabled": (52, 52), "btn_pressed": (52, 52), "btn_gold": (80, 28)}
 STATE_PAIRS = [("btn", "btn_disabled"), ("btn", "btn_pressed"), ("card_frame", "card_frame_disabled"),
                ("card_frame", "card_frame_selected"), ("btn", "btn_gold")]
 ALLY_CARDS = ["card_worker", "card_melee_basic", "card_ranged_basic", "card_tank", "card_fast", "card_siege",
@@ -88,6 +93,17 @@ def main(out=None):
         cr = crop(n)
         return cr[cr.shape[0] // 2, cr.shape[1] // 2, :3].astype(float)
 
+    def drawn_mean(n):
+        """Mean opaque colour of frame n stretched like a NinePatchRect (corners kept) to its HUD size."""
+        cr = crop(n)
+        l, t, r, b = doc["frames"][n].get("nine_slice", [0, 0, 0, 0])
+        w, h = DRAWN.get(n, (cr.shape[1], cr.shape[0]))
+        sh, sw = cr.shape[:2]
+        xs = np.concatenate([np.arange(l), l + (np.arange(w - l - r) * (sw - l - r) // max(1, w - l - r)), np.arange(sw - r, sw)])
+        ys = np.concatenate([np.arange(t), t + (np.arange(h - t - b) * (sh - t - b) // max(1, h - t - b)), np.arange(sh - b, sh)])
+        d = cr[ys][:, xs]
+        return d[d[..., 3] > 0][:, :3].astype(float).mean(axis=0)
+
     def bg(n):
         """Portrait/badge background. Square portraits: the inner top-right pixel (as before). 06-art-ui 1.0 shaped
         card badges are transparent there, so then: most common opaque non-outline colour 2 px inside the silhouette."""
@@ -121,7 +137,7 @@ def main(out=None):
         if not ok:
             fails.append(("text", fr, tk, r))
     for a, b in STATE_PAIRS:
-        de, dl = sep(fill(a), fill(b))
+        de, dl = sep(drawn_mean(a), drawn_mean(b))
         ok = min(de.values()) >= 10 and dl >= 10
         rep["states"].append({"a": a, "b": b, "dE76": de, "dL": dl, "pass": ok})
         if not ok:

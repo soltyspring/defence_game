@@ -1,0 +1,4836 @@
+{
+ "note": "PROPOSAL MOCK on 07 baseline ad47eda frames; not screen evidence",
+ "all_dimmed_alpha": 0.45,
+ "tags": {
+  "ko": {
+   "as_captured": {
+    "2_r01_t10": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 9.33,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      },
+      "hud_px_pct_before": 10.05,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 410,
+        "wcag": 3.48
+       },
+       {
+        "el": "card",
+        "x": 464,
+        "wcag": 3.7
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.33
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.63
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 410,
+        "wcag": 3.54
+       },
+       {
+        "el": "card",
+        "x": 464,
+        "wcag": 3.46
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 2.98
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.25
+       }
+      ],
+      "before": {
+       "hud_px_pct": 10.05,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 9.33,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      },
+      "hud_px_pct_before": 10.05,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 820,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 928,
+        "wcag": 3.7
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.45
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.64
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 820,
+        "wcag": 3.58
+       },
+       {
+        "el": "card",
+        "x": 928,
+        "wcag": 3.46
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.09
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.26
+       }
+      ],
+      "before": {
+       "hud_px_pct": 10.05,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 44,
+      "after": 0
+     }
+    },
+    "3_r01_t30": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 9.49,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      },
+      "hud_px_pct_before": 10.12,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 410,
+        "wcag": 3.44
+       },
+       {
+        "el": "card",
+        "x": 464,
+        "wcag": 3.59
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.66
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.3
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 410,
+        "wcag": 3.49
+       },
+       {
+        "el": "card",
+        "x": 464,
+        "wcag": 3.34
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.28
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 2.96
+       }
+      ],
+      "before": {
+       "hud_px_pct": 10.12,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 9.49,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      },
+      "hud_px_pct_before": 10.12,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 820,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 928,
+        "wcag": 3.61
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.67
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.4
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 820,
+        "wcag": 3.56
+       },
+       {
+        "el": "card",
+        "x": 928,
+        "wcag": 3.37
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.29
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.04
+       }
+      ],
+      "before": {
+       "hud_px_pct": 10.12,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 44,
+      "after": 0
+     }
+    },
+    "4_r06_t46": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 13.77,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 11.7,
+       "cards_min_dE_deutan": 3.1,
+       "cards_min_shape_dL": 18.9,
+       "cards_pairs_failing_u1": 0,
+       "cards_pairs_failing_u1_list": []
+      },
+      "hud_px_pct_before": 15.28,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 246,
+        "wcag": 3.5
+       },
+       {
+        "el": "card",
+        "x": 300,
+        "wcag": 3.32
+       },
+       {
+        "el": "card",
+        "x": 354,
+        "wcag": 3.56
+       },
+       {
+        "el": "card",
+        "x": 408,
+        "wcag": 3.45
+       },
+       {
+        "el": "card",
+        "x": 462,
+        "wcag": 3.3
+       },
+       {
+        "el": "card",
+        "x": 516,
+        "wcag": 3.65
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.62
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.48
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.53
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.63
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 246,
+        "wcag": 3.57
+       },
+       {
+        "el": "card",
+        "x": 300,
+        "wcag": 3.14
+       },
+       {
+        "el": "card",
+        "x": 354,
+        "wcag": 3.43
+       },
+       {
+        "el": "card",
+        "x": 408,
+        "wcag": 3.3
+       },
+       {
+        "el": "card",
+        "x": 462,
+        "wcag": 3.12
+       },
+       {
+        "el": "card",
+        "x": 516,
+        "wcag": 3.4
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.24
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.12
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.16
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.25
+       }
+      ],
+      "before": {
+       "hud_px_pct": 15.28,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 0.6,
+       "cards_min_dE_deutan": 0.6,
+       "cards_min_shape_dL": 9.2,
+       "cards_pairs_failing_u1": 6,
+       "cards_pairs_failing_u1_list": [
+        "식빵병 / 롤빵병",
+        "식빵병 / 통식빵",
+        "식빵병 / 화덕포",
+        "롤빵병 / 통식빵",
+        "롤빵병 / 화덕포",
+        "통식빵 / 화덕포"
+       ]
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 13.77,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 11.7,
+       "cards_min_dE_deutan": 3.1,
+       "cards_min_shape_dL": 16.7,
+       "cards_pairs_failing_u1": 0,
+       "cards_pairs_failing_u1_list": []
+      },
+      "hud_px_pct_before": 15.28,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 492,
+        "wcag": 3.49
+       },
+       {
+        "el": "card",
+        "x": 600,
+        "wcag": 3.33
+       },
+       {
+        "el": "card",
+        "x": 708,
+        "wcag": 3.57
+       },
+       {
+        "el": "card",
+        "x": 816,
+        "wcag": 3.46
+       },
+       {
+        "el": "card",
+        "x": 924,
+        "wcag": 3.35
+       },
+       {
+        "el": "card",
+        "x": 1032,
+        "wcag": 3.68
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.62
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.6
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.51
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.71
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 492,
+        "wcag": 3.55
+       },
+       {
+        "el": "card",
+        "x": 600,
+        "wcag": 3.15
+       },
+       {
+        "el": "card",
+        "x": 708,
+        "wcag": 3.48
+       },
+       {
+        "el": "card",
+        "x": 816,
+        "wcag": 3.32
+       },
+       {
+        "el": "card",
+        "x": 924,
+        "wcag": 3.2
+       },
+       {
+        "el": "card",
+        "x": 1032,
+        "wcag": 3.43
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.24
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.22
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.14
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.32
+       }
+      ],
+      "before": {
+       "hud_px_pct": 15.28,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 0.6,
+       "cards_min_dE_deutan": 0.6,
+       "cards_min_shape_dL": 8.0,
+       "cards_pairs_failing_u1": 6,
+       "cards_pairs_failing_u1_list": [
+        "식빵병 / 롤빵병",
+        "식빵병 / 통식빵",
+        "식빵병 / 화덕포",
+        "롤빵병 / 통식빵",
+        "롤빵병 / 화덕포",
+        "통식빵 / 화덕포"
+       ]
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 44,
+      "after": 0
+     }
+    },
+    "5_r08_peak": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 15.11,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 14.9,
+       "cards_min_dE_deutan": 3.1,
+       "cards_min_shape_dL": 15.8,
+       "cards_pairs_failing_u1": 0,
+       "cards_pairs_failing_u1_list": []
+      },
+      "hud_px_pct_before": 16.18,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 220,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 274,
+        "wcag": 3.55
+       },
+       {
+        "el": "card",
+        "x": 328,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 382,
+        "wcag": 3.57
+       },
+       {
+        "el": "card",
+        "x": 436,
+        "wcag": 3.64
+       },
+       {
+        "el": "card",
+        "x": 490,
+        "wcag": 3.41
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.54
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.62
+       },
+       {
+        "el": "skill",
+        "x": 610,
+        "wcag": 3.4
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.26
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.7
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 220,
+        "wcag": 3.59
+       },
+       {
+        "el": "card",
+        "x": 274,
+        "wcag": 3.45
+       },
+       {
+        "el": "card",
+        "x": 328,
+        "wcag": 3.38
+       },
+       {
+        "el": "card",
+        "x": 382,
+        "wcag": 3.46
+       },
+       {
+        "el": "card",
+        "x": 436,
+        "wcag": 3.55
+       },
+       {
+        "el": "card",
+        "x": 490,
+        "wcag": 3.13
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.17
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.24
+       },
+       {
+        "el": "skill",
+        "x": 610,
+        "wcag": 3.04
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 2.92
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.31
+       }
+      ],
+      "before": {
+       "hud_px_pct": 16.18,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 3.6,
+       "cards_min_dE_deutan": 3.7,
+       "cards_min_shape_dL": 5.0,
+       "cards_pairs_failing_u1": 1,
+       "cards_pairs_failing_u1_list": [
+        "통식빵 / 화덕포"
+       ]
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 15.11,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 14.9,
+       "cards_min_dE_deutan": 3.1,
+       "cards_min_shape_dL": 15.6,
+       "cards_pairs_failing_u1": 0,
+       "cards_pairs_failing_u1_list": []
+      },
+      "hud_px_pct_before": 16.18,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 440,
+        "wcag": 3.51
+       },
+       {
+        "el": "card",
+        "x": 548,
+        "wcag": 3.6
+       },
+       {
+        "el": "card",
+        "x": 656,
+        "wcag": 3.56
+       },
+       {
+        "el": "card",
+        "x": 764,
+        "wcag": 3.59
+       },
+       {
+        "el": "card",
+        "x": 872,
+        "wcag": 3.63
+       },
+       {
+        "el": "card",
+        "x": 980,
+        "wcag": 3.37
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.58
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.68
+       },
+       {
+        "el": "skill",
+        "x": 1220,
+        "wcag": 3.41
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.33
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.71
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 440,
+        "wcag": 3.57
+       },
+       {
+        "el": "card",
+        "x": 548,
+        "wcag": 3.53
+       },
+       {
+        "el": "card",
+        "x": 656,
+        "wcag": 3.43
+       },
+       {
+        "el": "card",
+        "x": 764,
+        "wcag": 3.5
+       },
+       {
+        "el": "card",
+        "x": 872,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 980,
+        "wcag": 3.11
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.2
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.3
+       },
+       {
+        "el": "skill",
+        "x": 1220,
+        "wcag": 3.05
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 2.98
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.32
+       }
+      ],
+      "before": {
+       "hud_px_pct": 16.18,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 3.6,
+       "cards_min_dE_deutan": 3.7,
+       "cards_min_shape_dL": 5.0,
+       "cards_pairs_failing_u1": 1,
+       "cards_pairs_failing_u1_list": [
+        "통식빵 / 화덕포"
+       ]
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 101,
+      "after": 57
+     }
+    },
+    "6_r10_boss": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 17.45,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 14.9,
+       "cards_min_dE_deutan": 3.1,
+       "cards_min_shape_dL": 15.8,
+       "cards_pairs_failing_u1": 0,
+       "cards_pairs_failing_u1_list": []
+      },
+      "hud_px_pct_before": 18.55,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 220,
+        "wcag": 3.5
+       },
+       {
+        "el": "card",
+        "x": 274,
+        "wcag": 3.32
+       },
+       {
+        "el": "card",
+        "x": 328,
+        "wcag": 3.54
+       },
+       {
+        "el": "card",
+        "x": 382,
+        "wcag": 3.41
+       },
+       {
+        "el": "card",
+        "x": 436,
+        "wcag": 3.33
+       },
+       {
+        "el": "card",
+        "x": 490,
+        "wcag": 3.62
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.66
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.53
+       },
+       {
+        "el": "skill",
+        "x": 610,
+        "wcag": 3.53
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.6
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.4
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 220,
+        "wcag": 3.54
+       },
+       {
+        "el": "card",
+        "x": 274,
+        "wcag": 3.12
+       },
+       {
+        "el": "card",
+        "x": 328,
+        "wcag": 3.41
+       },
+       {
+        "el": "card",
+        "x": 382,
+        "wcag": 3.27
+       },
+       {
+        "el": "card",
+        "x": 436,
+        "wcag": 3.17
+       },
+       {
+        "el": "card",
+        "x": 490,
+        "wcag": 3.35
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.27
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.16
+       },
+       {
+        "el": "skill",
+        "x": 610,
+        "wcag": 3.16
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.22
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.04
+       }
+      ],
+      "before": {
+       "hud_px_pct": 18.55,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 1.4,
+       "cards_min_dE_deutan": 1.4,
+       "cards_min_shape_dL": 5.0,
+       "cards_pairs_failing_u1": 2,
+       "cards_pairs_failing_u1_list": [
+        "식빵병 / 롤빵병",
+        "통식빵 / 화덕포"
+       ]
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 17.45,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 14.9,
+       "cards_min_dE_deutan": 3.1,
+       "cards_min_shape_dL": 15.6,
+       "cards_pairs_failing_u1": 0,
+       "cards_pairs_failing_u1_list": []
+      },
+      "hud_px_pct_before": 18.55,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 440,
+        "wcag": 3.47
+       },
+       {
+        "el": "card",
+        "x": 548,
+        "wcag": 3.33
+       },
+       {
+        "el": "card",
+        "x": 656,
+        "wcag": 3.59
+       },
+       {
+        "el": "card",
+        "x": 764,
+        "wcag": 3.45
+       },
+       {
+        "el": "card",
+        "x": 872,
+        "wcag": 3.37
+       },
+       {
+        "el": "card",
+        "x": 980,
+        "wcag": 3.64
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.75
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.57
+       },
+       {
+        "el": "skill",
+        "x": 1220,
+        "wcag": 3.6
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.65
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.49
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 440,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 548,
+        "wcag": 3.13
+       },
+       {
+        "el": "card",
+        "x": 656,
+        "wcag": 3.47
+       },
+       {
+        "el": "card",
+        "x": 764,
+        "wcag": 3.34
+       },
+       {
+        "el": "card",
+        "x": 872,
+        "wcag": 3.22
+       },
+       {
+        "el": "card",
+        "x": 980,
+        "wcag": 3.38
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.36
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.19
+       },
+       {
+        "el": "skill",
+        "x": 1220,
+        "wcag": 3.23
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.27
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.13
+       }
+      ],
+      "before": {
+       "hud_px_pct": 18.55,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 1.4,
+       "cards_min_dE_deutan": 1.4,
+       "cards_min_shape_dL": 5.0,
+       "cards_pairs_failing_u1": 2,
+       "cards_pairs_failing_u1_list": [
+        "식빵병 / 롤빵병",
+        "통식빵 / 화덕포"
+       ]
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 90,
+      "after": 0
+     }
+    }
+   },
+   "all_dimmed": {
+    "2_r01_t10": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 9.65,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      },
+      "hud_px_pct_before": 10.05,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 410,
+        "wcag": 3.48
+       },
+       {
+        "el": "card",
+        "x": 464,
+        "wcag": 3.7
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.33
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.63
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 410,
+        "wcag": 3.54
+       },
+       {
+        "el": "card",
+        "x": 464,
+        "wcag": 3.46
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 2.98
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.25
+       }
+      ],
+      "before": {
+       "hud_px_pct": 10.05,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 9.65,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      },
+      "hud_px_pct_before": 10.05,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 820,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 928,
+        "wcag": 3.7
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.45
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.64
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 820,
+        "wcag": 3.58
+       },
+       {
+        "el": "card",
+        "x": 928,
+        "wcag": 3.46
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.09
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.26
+       }
+      ],
+      "before": {
+       "hud_px_pct": 10.05,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 44,
+      "after": 0
+     }
+    },
+    "3_r01_t30": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 9.64,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      },
+      "hud_px_pct_before": 10.12,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 410,
+        "wcag": 3.44
+       },
+       {
+        "el": "card",
+        "x": 464,
+        "wcag": 3.59
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.66
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.3
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 410,
+        "wcag": 3.49
+       },
+       {
+        "el": "card",
+        "x": 464,
+        "wcag": 3.34
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.28
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 2.96
+       }
+      ],
+      "before": {
+       "hud_px_pct": 10.12,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 9.64,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      },
+      "hud_px_pct_before": 10.12,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 820,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 928,
+        "wcag": 3.61
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.67
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.4
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 820,
+        "wcag": 3.56
+       },
+       {
+        "el": "card",
+        "x": 928,
+        "wcag": 3.37
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.29
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.04
+       }
+      ],
+      "before": {
+       "hud_px_pct": 10.12,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 44,
+      "after": 0
+     }
+    },
+    "4_r06_t46": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 15.36,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 5.3,
+       "cards_min_dE_deutan": 1.5,
+       "cards_min_shape_dL": 9.8,
+       "cards_pairs_failing_u1": 4,
+       "cards_pairs_failing_u1_list": [
+        "식빵병 / 롤빵병",
+        "식빵병 / 통식빵",
+        "롤빵병 / 화덕포",
+        "통식빵 / 프레첼"
+       ]
+      },
+      "hud_px_pct_before": 15.28,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 246,
+        "wcag": 3.5
+       },
+       {
+        "el": "card",
+        "x": 300,
+        "wcag": 3.32
+       },
+       {
+        "el": "card",
+        "x": 354,
+        "wcag": 3.56
+       },
+       {
+        "el": "card",
+        "x": 408,
+        "wcag": 3.45
+       },
+       {
+        "el": "card",
+        "x": 462,
+        "wcag": 3.3
+       },
+       {
+        "el": "card",
+        "x": 516,
+        "wcag": 3.65
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.62
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.48
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.53
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.63
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 246,
+        "wcag": 3.57
+       },
+       {
+        "el": "card",
+        "x": 300,
+        "wcag": 3.14
+       },
+       {
+        "el": "card",
+        "x": 354,
+        "wcag": 3.43
+       },
+       {
+        "el": "card",
+        "x": 408,
+        "wcag": 3.3
+       },
+       {
+        "el": "card",
+        "x": 462,
+        "wcag": 3.12
+       },
+       {
+        "el": "card",
+        "x": 516,
+        "wcag": 3.4
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.24
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.12
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.16
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.25
+       }
+      ],
+      "before": {
+       "hud_px_pct": 15.28,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 0.6,
+       "cards_min_dE_deutan": 0.6,
+       "cards_min_shape_dL": 9.2,
+       "cards_pairs_failing_u1": 6,
+       "cards_pairs_failing_u1_list": [
+        "식빵병 / 롤빵병",
+        "식빵병 / 통식빵",
+        "식빵병 / 화덕포",
+        "롤빵병 / 통식빵",
+        "롤빵병 / 화덕포",
+        "통식빵 / 화덕포"
+       ]
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 15.36,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 5.3,
+       "cards_min_dE_deutan": 1.5,
+       "cards_min_shape_dL": 9.0,
+       "cards_pairs_failing_u1": 5,
+       "cards_pairs_failing_u1_list": [
+        "식빵병 / 롤빵병",
+        "식빵병 / 통식빵",
+        "식빵병 / 화덕포",
+        "롤빵병 / 화덕포",
+        "통식빵 / 프레첼"
+       ]
+      },
+      "hud_px_pct_before": 15.28,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 492,
+        "wcag": 3.49
+       },
+       {
+        "el": "card",
+        "x": 600,
+        "wcag": 3.33
+       },
+       {
+        "el": "card",
+        "x": 708,
+        "wcag": 3.57
+       },
+       {
+        "el": "card",
+        "x": 816,
+        "wcag": 3.46
+       },
+       {
+        "el": "card",
+        "x": 924,
+        "wcag": 3.35
+       },
+       {
+        "el": "card",
+        "x": 1032,
+        "wcag": 3.68
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.62
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.6
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.51
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.71
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 492,
+        "wcag": 3.55
+       },
+       {
+        "el": "card",
+        "x": 600,
+        "wcag": 3.15
+       },
+       {
+        "el": "card",
+        "x": 708,
+        "wcag": 3.48
+       },
+       {
+        "el": "card",
+        "x": 816,
+        "wcag": 3.32
+       },
+       {
+        "el": "card",
+        "x": 924,
+        "wcag": 3.2
+       },
+       {
+        "el": "card",
+        "x": 1032,
+        "wcag": 3.43
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.24
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.22
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.14
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.32
+       }
+      ],
+      "before": {
+       "hud_px_pct": 15.28,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 0.6,
+       "cards_min_dE_deutan": 0.6,
+       "cards_min_shape_dL": 8.0,
+       "cards_pairs_failing_u1": 6,
+       "cards_pairs_failing_u1_list": [
+        "식빵병 / 롤빵병",
+        "식빵병 / 통식빵",
+        "식빵병 / 화덕포",
+        "롤빵병 / 통식빵",
+        "롤빵병 / 화덕포",
+        "통식빵 / 화덕포"
+       ]
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 44,
+      "after": 0
+     }
+    },
+    "5_r08_peak": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 15.99,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 5.3,
+       "cards_min_dE_deutan": 1.5,
+       "cards_min_shape_dL": 9.8,
+       "cards_pairs_failing_u1": 4,
+       "cards_pairs_failing_u1_list": [
+        "식빵병 / 롤빵병",
+        "식빵병 / 통식빵",
+        "롤빵병 / 화덕포",
+        "통식빵 / 프레첼"
+       ]
+      },
+      "hud_px_pct_before": 16.18,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 220,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 274,
+        "wcag": 3.55
+       },
+       {
+        "el": "card",
+        "x": 328,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 382,
+        "wcag": 3.57
+       },
+       {
+        "el": "card",
+        "x": 436,
+        "wcag": 3.64
+       },
+       {
+        "el": "card",
+        "x": 490,
+        "wcag": 3.41
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.54
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.62
+       },
+       {
+        "el": "skill",
+        "x": 610,
+        "wcag": 3.4
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.26
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.7
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 220,
+        "wcag": 3.59
+       },
+       {
+        "el": "card",
+        "x": 274,
+        "wcag": 3.45
+       },
+       {
+        "el": "card",
+        "x": 328,
+        "wcag": 3.38
+       },
+       {
+        "el": "card",
+        "x": 382,
+        "wcag": 3.46
+       },
+       {
+        "el": "card",
+        "x": 436,
+        "wcag": 3.55
+       },
+       {
+        "el": "card",
+        "x": 490,
+        "wcag": 3.13
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.17
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.24
+       },
+       {
+        "el": "skill",
+        "x": 610,
+        "wcag": 3.04
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 2.92
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.31
+       }
+      ],
+      "before": {
+       "hud_px_pct": 16.18,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 3.6,
+       "cards_min_dE_deutan": 3.7,
+       "cards_min_shape_dL": 5.0,
+       "cards_pairs_failing_u1": 1,
+       "cards_pairs_failing_u1_list": [
+        "통식빵 / 화덕포"
+       ]
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 15.99,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 5.3,
+       "cards_min_dE_deutan": 1.5,
+       "cards_min_shape_dL": 9.0,
+       "cards_pairs_failing_u1": 5,
+       "cards_pairs_failing_u1_list": [
+        "식빵병 / 롤빵병",
+        "식빵병 / 통식빵",
+        "식빵병 / 화덕포",
+        "롤빵병 / 화덕포",
+        "통식빵 / 프레첼"
+       ]
+      },
+      "hud_px_pct_before": 16.18,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 440,
+        "wcag": 3.51
+       },
+       {
+        "el": "card",
+        "x": 548,
+        "wcag": 3.6
+       },
+       {
+        "el": "card",
+        "x": 656,
+        "wcag": 3.56
+       },
+       {
+        "el": "card",
+        "x": 764,
+        "wcag": 3.59
+       },
+       {
+        "el": "card",
+        "x": 872,
+        "wcag": 3.63
+       },
+       {
+        "el": "card",
+        "x": 980,
+        "wcag": 3.37
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.58
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.68
+       },
+       {
+        "el": "skill",
+        "x": 1220,
+        "wcag": 3.41
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.33
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.71
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 440,
+        "wcag": 3.57
+       },
+       {
+        "el": "card",
+        "x": 548,
+        "wcag": 3.53
+       },
+       {
+        "el": "card",
+        "x": 656,
+        "wcag": 3.43
+       },
+       {
+        "el": "card",
+        "x": 764,
+        "wcag": 3.5
+       },
+       {
+        "el": "card",
+        "x": 872,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 980,
+        "wcag": 3.11
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.2
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.3
+       },
+       {
+        "el": "skill",
+        "x": 1220,
+        "wcag": 3.05
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 2.98
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.32
+       }
+      ],
+      "before": {
+       "hud_px_pct": 16.18,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 3.6,
+       "cards_min_dE_deutan": 3.7,
+       "cards_min_shape_dL": 5.0,
+       "cards_pairs_failing_u1": 1,
+       "cards_pairs_failing_u1_list": [
+        "통식빵 / 화덕포"
+       ]
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 101,
+      "after": 57
+     }
+    },
+    "6_r10_boss": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 18.41,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 5.3,
+       "cards_min_dE_deutan": 1.5,
+       "cards_min_shape_dL": 9.8,
+       "cards_pairs_failing_u1": 4,
+       "cards_pairs_failing_u1_list": [
+        "식빵병 / 롤빵병",
+        "식빵병 / 통식빵",
+        "롤빵병 / 화덕포",
+        "통식빵 / 프레첼"
+       ]
+      },
+      "hud_px_pct_before": 18.55,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 220,
+        "wcag": 3.5
+       },
+       {
+        "el": "card",
+        "x": 274,
+        "wcag": 3.32
+       },
+       {
+        "el": "card",
+        "x": 328,
+        "wcag": 3.54
+       },
+       {
+        "el": "card",
+        "x": 382,
+        "wcag": 3.41
+       },
+       {
+        "el": "card",
+        "x": 436,
+        "wcag": 3.33
+       },
+       {
+        "el": "card",
+        "x": 490,
+        "wcag": 3.62
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.66
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.53
+       },
+       {
+        "el": "skill",
+        "x": 610,
+        "wcag": 3.53
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.6
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.4
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 220,
+        "wcag": 3.54
+       },
+       {
+        "el": "card",
+        "x": 274,
+        "wcag": 3.12
+       },
+       {
+        "el": "card",
+        "x": 328,
+        "wcag": 3.41
+       },
+       {
+        "el": "card",
+        "x": 382,
+        "wcag": 3.27
+       },
+       {
+        "el": "card",
+        "x": 436,
+        "wcag": 3.17
+       },
+       {
+        "el": "card",
+        "x": 490,
+        "wcag": 3.35
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.27
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.16
+       },
+       {
+        "el": "skill",
+        "x": 610,
+        "wcag": 3.16
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.22
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.04
+       }
+      ],
+      "before": {
+       "hud_px_pct": 18.55,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 1.4,
+       "cards_min_dE_deutan": 1.4,
+       "cards_min_shape_dL": 5.0,
+       "cards_pairs_failing_u1": 2,
+       "cards_pairs_failing_u1_list": [
+        "식빵병 / 롤빵병",
+        "통식빵 / 화덕포"
+       ]
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 18.41,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 5.3,
+       "cards_min_dE_deutan": 1.5,
+       "cards_min_shape_dL": 9.0,
+       "cards_pairs_failing_u1": 5,
+       "cards_pairs_failing_u1_list": [
+        "식빵병 / 롤빵병",
+        "식빵병 / 통식빵",
+        "식빵병 / 화덕포",
+        "롤빵병 / 화덕포",
+        "통식빵 / 프레첼"
+       ]
+      },
+      "hud_px_pct_before": 18.55,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 440,
+        "wcag": 3.47
+       },
+       {
+        "el": "card",
+        "x": 548,
+        "wcag": 3.33
+       },
+       {
+        "el": "card",
+        "x": 656,
+        "wcag": 3.59
+       },
+       {
+        "el": "card",
+        "x": 764,
+        "wcag": 3.45
+       },
+       {
+        "el": "card",
+        "x": 872,
+        "wcag": 3.37
+       },
+       {
+        "el": "card",
+        "x": 980,
+        "wcag": 3.64
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.75
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.57
+       },
+       {
+        "el": "skill",
+        "x": 1220,
+        "wcag": 3.6
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.65
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.49
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 440,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 548,
+        "wcag": 3.13
+       },
+       {
+        "el": "card",
+        "x": 656,
+        "wcag": 3.47
+       },
+       {
+        "el": "card",
+        "x": 764,
+        "wcag": 3.34
+       },
+       {
+        "el": "card",
+        "x": 872,
+        "wcag": 3.22
+       },
+       {
+        "el": "card",
+        "x": 980,
+        "wcag": 3.38
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.36
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.19
+       },
+       {
+        "el": "skill",
+        "x": 1220,
+        "wcag": 3.23
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.27
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.13
+       }
+      ],
+      "before": {
+       "hud_px_pct": 18.55,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 1.4,
+       "cards_min_dE_deutan": 1.4,
+       "cards_min_shape_dL": 5.0,
+       "cards_pairs_failing_u1": 2,
+       "cards_pairs_failing_u1_list": [
+        "식빵병 / 롤빵병",
+        "통식빵 / 화덕포"
+       ]
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 90,
+      "after": 0
+     }
+    }
+   }
+  },
+  "en": {
+   "as_captured": {
+    "2_r01_t10": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 9.26,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      },
+      "hud_px_pct_before": 10.01,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 410,
+        "wcag": 3.48
+       },
+       {
+        "el": "card",
+        "x": 464,
+        "wcag": 3.7
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.33
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.63
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 410,
+        "wcag": 3.54
+       },
+       {
+        "el": "card",
+        "x": 464,
+        "wcag": 3.46
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 2.98
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.25
+       }
+      ],
+      "before": {
+       "hud_px_pct": 10.01,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 9.26,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      },
+      "hud_px_pct_before": 10.01,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 820,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 928,
+        "wcag": 3.7
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.45
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.64
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 820,
+        "wcag": 3.58
+       },
+       {
+        "el": "card",
+        "x": 928,
+        "wcag": 3.46
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.09
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.26
+       }
+      ],
+      "before": {
+       "hud_px_pct": 10.01,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 44,
+      "after": 0
+     }
+    },
+    "3_r01_t30": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 9.43,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      },
+      "hud_px_pct_before": 10.08,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 410,
+        "wcag": 3.44
+       },
+       {
+        "el": "card",
+        "x": 464,
+        "wcag": 3.59
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.66
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.3
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 410,
+        "wcag": 3.49
+       },
+       {
+        "el": "card",
+        "x": 464,
+        "wcag": 3.34
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.28
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 2.96
+       }
+      ],
+      "before": {
+       "hud_px_pct": 10.08,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 9.43,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      },
+      "hud_px_pct_before": 10.08,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 820,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 928,
+        "wcag": 3.61
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.67
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.4
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 820,
+        "wcag": 3.56
+       },
+       {
+        "el": "card",
+        "x": 928,
+        "wcag": 3.37
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.29
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.04
+       }
+      ],
+      "before": {
+       "hud_px_pct": 10.08,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 44,
+      "after": 0
+     }
+    },
+    "4_r06_t46": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 13.52,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 11.7,
+       "cards_min_dE_deutan": 3.1,
+       "cards_min_shape_dL": 18.9,
+       "cards_pairs_failing_u1": 0,
+       "cards_pairs_failing_u1_list": []
+      },
+      "hud_px_pct_before": 15.23,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 246,
+        "wcag": 3.5
+       },
+       {
+        "el": "card",
+        "x": 300,
+        "wcag": 3.32
+       },
+       {
+        "el": "card",
+        "x": 354,
+        "wcag": 3.56
+       },
+       {
+        "el": "card",
+        "x": 408,
+        "wcag": 3.45
+       },
+       {
+        "el": "card",
+        "x": 462,
+        "wcag": 3.3
+       },
+       {
+        "el": "card",
+        "x": 516,
+        "wcag": 3.65
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.62
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.48
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.53
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.63
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 246,
+        "wcag": 3.57
+       },
+       {
+        "el": "card",
+        "x": 300,
+        "wcag": 3.14
+       },
+       {
+        "el": "card",
+        "x": 354,
+        "wcag": 3.43
+       },
+       {
+        "el": "card",
+        "x": 408,
+        "wcag": 3.3
+       },
+       {
+        "el": "card",
+        "x": 462,
+        "wcag": 3.12
+       },
+       {
+        "el": "card",
+        "x": 516,
+        "wcag": 3.4
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.24
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.12
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.16
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.25
+       }
+      ],
+      "before": {
+       "hud_px_pct": 15.23,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 0.6,
+       "cards_min_dE_deutan": 0.6,
+       "cards_min_shape_dL": 9.2,
+       "cards_pairs_failing_u1": 6,
+       "cards_pairs_failing_u1_list": [
+        "Toast / Roll",
+        "Toast / Loaf",
+        "Toast / Oven",
+        "Roll / Loaf",
+        "Roll / Oven",
+        "Loaf / Oven"
+       ]
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 13.52,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 11.7,
+       "cards_min_dE_deutan": 3.1,
+       "cards_min_shape_dL": 16.7,
+       "cards_pairs_failing_u1": 0,
+       "cards_pairs_failing_u1_list": []
+      },
+      "hud_px_pct_before": 15.23,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 492,
+        "wcag": 3.49
+       },
+       {
+        "el": "card",
+        "x": 600,
+        "wcag": 3.33
+       },
+       {
+        "el": "card",
+        "x": 708,
+        "wcag": 3.57
+       },
+       {
+        "el": "card",
+        "x": 816,
+        "wcag": 3.46
+       },
+       {
+        "el": "card",
+        "x": 924,
+        "wcag": 3.35
+       },
+       {
+        "el": "card",
+        "x": 1032,
+        "wcag": 3.68
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.62
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.6
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.51
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.71
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 492,
+        "wcag": 3.55
+       },
+       {
+        "el": "card",
+        "x": 600,
+        "wcag": 3.15
+       },
+       {
+        "el": "card",
+        "x": 708,
+        "wcag": 3.48
+       },
+       {
+        "el": "card",
+        "x": 816,
+        "wcag": 3.32
+       },
+       {
+        "el": "card",
+        "x": 924,
+        "wcag": 3.2
+       },
+       {
+        "el": "card",
+        "x": 1032,
+        "wcag": 3.43
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.24
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.22
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.14
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.32
+       }
+      ],
+      "before": {
+       "hud_px_pct": 15.23,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 0.6,
+       "cards_min_dE_deutan": 0.6,
+       "cards_min_shape_dL": 8.0,
+       "cards_pairs_failing_u1": 6,
+       "cards_pairs_failing_u1_list": [
+        "Toast / Roll",
+        "Toast / Loaf",
+        "Toast / Oven",
+        "Roll / Loaf",
+        "Roll / Oven",
+        "Loaf / Oven"
+       ]
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 44,
+      "after": 0
+     }
+    },
+    "5_r08_peak": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 14.95,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 14.9,
+       "cards_min_dE_deutan": 3.1,
+       "cards_min_shape_dL": 15.8,
+       "cards_pairs_failing_u1": 0,
+       "cards_pairs_failing_u1_list": []
+      },
+      "hud_px_pct_before": 16.14,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 220,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 274,
+        "wcag": 3.55
+       },
+       {
+        "el": "card",
+        "x": 328,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 382,
+        "wcag": 3.57
+       },
+       {
+        "el": "card",
+        "x": 436,
+        "wcag": 3.64
+       },
+       {
+        "el": "card",
+        "x": 490,
+        "wcag": 3.41
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.54
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.62
+       },
+       {
+        "el": "skill",
+        "x": 610,
+        "wcag": 3.4
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.26
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.7
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 220,
+        "wcag": 3.59
+       },
+       {
+        "el": "card",
+        "x": 274,
+        "wcag": 3.45
+       },
+       {
+        "el": "card",
+        "x": 328,
+        "wcag": 3.38
+       },
+       {
+        "el": "card",
+        "x": 382,
+        "wcag": 3.46
+       },
+       {
+        "el": "card",
+        "x": 436,
+        "wcag": 3.55
+       },
+       {
+        "el": "card",
+        "x": 490,
+        "wcag": 3.13
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.17
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.24
+       },
+       {
+        "el": "skill",
+        "x": 610,
+        "wcag": 3.04
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 2.92
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.31
+       }
+      ],
+      "before": {
+       "hud_px_pct": 16.14,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 3.6,
+       "cards_min_dE_deutan": 3.7,
+       "cards_min_shape_dL": 5.0,
+       "cards_pairs_failing_u1": 1,
+       "cards_pairs_failing_u1_list": [
+        "Loaf / Oven"
+       ]
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 14.95,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 14.9,
+       "cards_min_dE_deutan": 3.1,
+       "cards_min_shape_dL": 15.6,
+       "cards_pairs_failing_u1": 0,
+       "cards_pairs_failing_u1_list": []
+      },
+      "hud_px_pct_before": 16.14,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 440,
+        "wcag": 3.51
+       },
+       {
+        "el": "card",
+        "x": 548,
+        "wcag": 3.6
+       },
+       {
+        "el": "card",
+        "x": 656,
+        "wcag": 3.56
+       },
+       {
+        "el": "card",
+        "x": 764,
+        "wcag": 3.59
+       },
+       {
+        "el": "card",
+        "x": 872,
+        "wcag": 3.63
+       },
+       {
+        "el": "card",
+        "x": 980,
+        "wcag": 3.37
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.58
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.68
+       },
+       {
+        "el": "skill",
+        "x": 1220,
+        "wcag": 3.41
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.33
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.71
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 440,
+        "wcag": 3.57
+       },
+       {
+        "el": "card",
+        "x": 548,
+        "wcag": 3.53
+       },
+       {
+        "el": "card",
+        "x": 656,
+        "wcag": 3.43
+       },
+       {
+        "el": "card",
+        "x": 764,
+        "wcag": 3.5
+       },
+       {
+        "el": "card",
+        "x": 872,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 980,
+        "wcag": 3.11
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.2
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.3
+       },
+       {
+        "el": "skill",
+        "x": 1220,
+        "wcag": 3.05
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 2.98
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.32
+       }
+      ],
+      "before": {
+       "hud_px_pct": 16.14,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 3.6,
+       "cards_min_dE_deutan": 3.7,
+       "cards_min_shape_dL": 5.0,
+       "cards_pairs_failing_u1": 1,
+       "cards_pairs_failing_u1_list": [
+        "Loaf / Oven"
+       ]
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 101,
+      "after": 57
+     }
+    },
+    "6_r10_boss": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 17.34,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 14.9,
+       "cards_min_dE_deutan": 3.1,
+       "cards_min_shape_dL": 15.8,
+       "cards_pairs_failing_u1": 0,
+       "cards_pairs_failing_u1_list": []
+      },
+      "hud_px_pct_before": 18.56,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 220,
+        "wcag": 3.5
+       },
+       {
+        "el": "card",
+        "x": 274,
+        "wcag": 3.32
+       },
+       {
+        "el": "card",
+        "x": 328,
+        "wcag": 3.54
+       },
+       {
+        "el": "card",
+        "x": 382,
+        "wcag": 3.41
+       },
+       {
+        "el": "card",
+        "x": 436,
+        "wcag": 3.33
+       },
+       {
+        "el": "card",
+        "x": 490,
+        "wcag": 3.62
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.66
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.53
+       },
+       {
+        "el": "skill",
+        "x": 610,
+        "wcag": 3.53
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.6
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.4
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 220,
+        "wcag": 3.54
+       },
+       {
+        "el": "card",
+        "x": 274,
+        "wcag": 3.12
+       },
+       {
+        "el": "card",
+        "x": 328,
+        "wcag": 3.41
+       },
+       {
+        "el": "card",
+        "x": 382,
+        "wcag": 3.27
+       },
+       {
+        "el": "card",
+        "x": 436,
+        "wcag": 3.17
+       },
+       {
+        "el": "card",
+        "x": 490,
+        "wcag": 3.35
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.27
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.16
+       },
+       {
+        "el": "skill",
+        "x": 610,
+        "wcag": 3.16
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.22
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.04
+       }
+      ],
+      "before": {
+       "hud_px_pct": 18.56,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 1.4,
+       "cards_min_dE_deutan": 1.4,
+       "cards_min_shape_dL": 5.0,
+       "cards_pairs_failing_u1": 2,
+       "cards_pairs_failing_u1_list": [
+        "Toast / Roll",
+        "Loaf / Oven"
+       ]
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 17.34,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 14.9,
+       "cards_min_dE_deutan": 3.1,
+       "cards_min_shape_dL": 15.6,
+       "cards_pairs_failing_u1": 0,
+       "cards_pairs_failing_u1_list": []
+      },
+      "hud_px_pct_before": 18.56,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 440,
+        "wcag": 3.47
+       },
+       {
+        "el": "card",
+        "x": 548,
+        "wcag": 3.33
+       },
+       {
+        "el": "card",
+        "x": 656,
+        "wcag": 3.59
+       },
+       {
+        "el": "card",
+        "x": 764,
+        "wcag": 3.45
+       },
+       {
+        "el": "card",
+        "x": 872,
+        "wcag": 3.37
+       },
+       {
+        "el": "card",
+        "x": 980,
+        "wcag": 3.64
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.75
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.57
+       },
+       {
+        "el": "skill",
+        "x": 1220,
+        "wcag": 3.6
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.65
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.49
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 440,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 548,
+        "wcag": 3.13
+       },
+       {
+        "el": "card",
+        "x": 656,
+        "wcag": 3.47
+       },
+       {
+        "el": "card",
+        "x": 764,
+        "wcag": 3.34
+       },
+       {
+        "el": "card",
+        "x": 872,
+        "wcag": 3.22
+       },
+       {
+        "el": "card",
+        "x": 980,
+        "wcag": 3.38
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.36
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.19
+       },
+       {
+        "el": "skill",
+        "x": 1220,
+        "wcag": 3.23
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.27
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.13
+       }
+      ],
+      "before": {
+       "hud_px_pct": 18.56,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 1.4,
+       "cards_min_dE_deutan": 1.4,
+       "cards_min_shape_dL": 5.0,
+       "cards_pairs_failing_u1": 2,
+       "cards_pairs_failing_u1_list": [
+        "Toast / Roll",
+        "Loaf / Oven"
+       ]
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 44,
+      "after": 0
+     }
+    }
+   },
+   "all_dimmed": {
+    "2_r01_t10": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 9.61,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      },
+      "hud_px_pct_before": 10.01,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 410,
+        "wcag": 3.48
+       },
+       {
+        "el": "card",
+        "x": 464,
+        "wcag": 3.7
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.33
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.63
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 410,
+        "wcag": 3.54
+       },
+       {
+        "el": "card",
+        "x": 464,
+        "wcag": 3.46
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 2.98
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.25
+       }
+      ],
+      "before": {
+       "hud_px_pct": 10.01,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 9.61,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      },
+      "hud_px_pct_before": 10.01,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 820,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 928,
+        "wcag": 3.7
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.45
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.64
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 820,
+        "wcag": 3.58
+       },
+       {
+        "el": "card",
+        "x": 928,
+        "wcag": 3.46
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.09
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.26
+       }
+      ],
+      "before": {
+       "hud_px_pct": 10.01,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 44,
+      "after": 0
+     }
+    },
+    "3_r01_t30": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 9.61,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      },
+      "hud_px_pct_before": 10.08,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 410,
+        "wcag": 3.44
+       },
+       {
+        "el": "card",
+        "x": 464,
+        "wcag": 3.59
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.66
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.3
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 410,
+        "wcag": 3.49
+       },
+       {
+        "el": "card",
+        "x": 464,
+        "wcag": 3.34
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.28
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 2.96
+       }
+      ],
+      "before": {
+       "hud_px_pct": 10.08,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 9.61,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      },
+      "hud_px_pct_before": 10.08,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 820,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 928,
+        "wcag": 3.61
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.67
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.4
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 820,
+        "wcag": 3.56
+       },
+       {
+        "el": "card",
+        "x": 928,
+        "wcag": 3.37
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.29
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.04
+       }
+      ],
+      "before": {
+       "hud_px_pct": 10.08,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": null,
+       "cards_min_dE_normal": null,
+       "cards_min_dE_deutan": null,
+       "cards_min_shape_dL": null,
+       "cards_pairs_failing_u1": null,
+       "cards_pairs_failing_u1_list": null
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 44,
+      "after": 0
+     }
+    },
+    "4_r06_t46": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 15.31,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 5.3,
+       "cards_min_dE_deutan": 1.5,
+       "cards_min_shape_dL": 9.8,
+       "cards_pairs_failing_u1": 4,
+       "cards_pairs_failing_u1_list": [
+        "Toast / Roll",
+        "Toast / Loaf",
+        "Roll / Oven",
+        "Loaf / Twist"
+       ]
+      },
+      "hud_px_pct_before": 15.23,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 246,
+        "wcag": 3.5
+       },
+       {
+        "el": "card",
+        "x": 300,
+        "wcag": 3.32
+       },
+       {
+        "el": "card",
+        "x": 354,
+        "wcag": 3.56
+       },
+       {
+        "el": "card",
+        "x": 408,
+        "wcag": 3.45
+       },
+       {
+        "el": "card",
+        "x": 462,
+        "wcag": 3.3
+       },
+       {
+        "el": "card",
+        "x": 516,
+        "wcag": 3.65
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.62
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.48
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.53
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.63
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 246,
+        "wcag": 3.57
+       },
+       {
+        "el": "card",
+        "x": 300,
+        "wcag": 3.14
+       },
+       {
+        "el": "card",
+        "x": 354,
+        "wcag": 3.43
+       },
+       {
+        "el": "card",
+        "x": 408,
+        "wcag": 3.3
+       },
+       {
+        "el": "card",
+        "x": 462,
+        "wcag": 3.12
+       },
+       {
+        "el": "card",
+        "x": 516,
+        "wcag": 3.4
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.24
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.12
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.16
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.25
+       }
+      ],
+      "before": {
+       "hud_px_pct": 15.23,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 0.6,
+       "cards_min_dE_deutan": 0.6,
+       "cards_min_shape_dL": 9.2,
+       "cards_pairs_failing_u1": 6,
+       "cards_pairs_failing_u1_list": [
+        "Toast / Roll",
+        "Toast / Loaf",
+        "Toast / Oven",
+        "Roll / Loaf",
+        "Roll / Oven",
+        "Loaf / Oven"
+       ]
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 15.31,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 5.3,
+       "cards_min_dE_deutan": 1.5,
+       "cards_min_shape_dL": 9.0,
+       "cards_pairs_failing_u1": 5,
+       "cards_pairs_failing_u1_list": [
+        "Toast / Roll",
+        "Toast / Loaf",
+        "Toast / Oven",
+        "Roll / Oven",
+        "Loaf / Twist"
+       ]
+      },
+      "hud_px_pct_before": 15.23,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 492,
+        "wcag": 3.49
+       },
+       {
+        "el": "card",
+        "x": 600,
+        "wcag": 3.33
+       },
+       {
+        "el": "card",
+        "x": 708,
+        "wcag": 3.57
+       },
+       {
+        "el": "card",
+        "x": 816,
+        "wcag": 3.46
+       },
+       {
+        "el": "card",
+        "x": 924,
+        "wcag": 3.35
+       },
+       {
+        "el": "card",
+        "x": 1032,
+        "wcag": 3.68
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.62
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.6
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.51
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.71
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 492,
+        "wcag": 3.55
+       },
+       {
+        "el": "card",
+        "x": 600,
+        "wcag": 3.15
+       },
+       {
+        "el": "card",
+        "x": 708,
+        "wcag": 3.48
+       },
+       {
+        "el": "card",
+        "x": 816,
+        "wcag": 3.32
+       },
+       {
+        "el": "card",
+        "x": 924,
+        "wcag": 3.2
+       },
+       {
+        "el": "card",
+        "x": 1032,
+        "wcag": 3.43
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.24
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.22
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.14
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.32
+       }
+      ],
+      "before": {
+       "hud_px_pct": 15.23,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 0.6,
+       "cards_min_dE_deutan": 0.6,
+       "cards_min_shape_dL": 8.0,
+       "cards_pairs_failing_u1": 6,
+       "cards_pairs_failing_u1_list": [
+        "Toast / Roll",
+        "Toast / Loaf",
+        "Toast / Oven",
+        "Roll / Loaf",
+        "Roll / Oven",
+        "Loaf / Oven"
+       ]
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 44,
+      "after": 0
+     }
+    },
+    "5_r08_peak": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 15.95,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 5.3,
+       "cards_min_dE_deutan": 1.5,
+       "cards_min_shape_dL": 9.8,
+       "cards_pairs_failing_u1": 4,
+       "cards_pairs_failing_u1_list": [
+        "Toast / Roll",
+        "Toast / Loaf",
+        "Roll / Oven",
+        "Loaf / Twist"
+       ]
+      },
+      "hud_px_pct_before": 16.14,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 220,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 274,
+        "wcag": 3.55
+       },
+       {
+        "el": "card",
+        "x": 328,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 382,
+        "wcag": 3.57
+       },
+       {
+        "el": "card",
+        "x": 436,
+        "wcag": 3.64
+       },
+       {
+        "el": "card",
+        "x": 490,
+        "wcag": 3.41
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.54
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.62
+       },
+       {
+        "el": "skill",
+        "x": 610,
+        "wcag": 3.4
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.26
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.7
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 220,
+        "wcag": 3.59
+       },
+       {
+        "el": "card",
+        "x": 274,
+        "wcag": 3.45
+       },
+       {
+        "el": "card",
+        "x": 328,
+        "wcag": 3.38
+       },
+       {
+        "el": "card",
+        "x": 382,
+        "wcag": 3.46
+       },
+       {
+        "el": "card",
+        "x": 436,
+        "wcag": 3.55
+       },
+       {
+        "el": "card",
+        "x": 490,
+        "wcag": 3.13
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.17
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.24
+       },
+       {
+        "el": "skill",
+        "x": 610,
+        "wcag": 3.04
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 2.92
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.31
+       }
+      ],
+      "before": {
+       "hud_px_pct": 16.14,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 3.6,
+       "cards_min_dE_deutan": 3.7,
+       "cards_min_shape_dL": 5.0,
+       "cards_pairs_failing_u1": 1,
+       "cards_pairs_failing_u1_list": [
+        "Loaf / Oven"
+       ]
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 15.95,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 5.3,
+       "cards_min_dE_deutan": 1.5,
+       "cards_min_shape_dL": 9.0,
+       "cards_pairs_failing_u1": 5,
+       "cards_pairs_failing_u1_list": [
+        "Toast / Roll",
+        "Toast / Loaf",
+        "Toast / Oven",
+        "Roll / Oven",
+        "Loaf / Twist"
+       ]
+      },
+      "hud_px_pct_before": 16.14,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 440,
+        "wcag": 3.51
+       },
+       {
+        "el": "card",
+        "x": 548,
+        "wcag": 3.6
+       },
+       {
+        "el": "card",
+        "x": 656,
+        "wcag": 3.56
+       },
+       {
+        "el": "card",
+        "x": 764,
+        "wcag": 3.59
+       },
+       {
+        "el": "card",
+        "x": 872,
+        "wcag": 3.63
+       },
+       {
+        "el": "card",
+        "x": 980,
+        "wcag": 3.37
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.58
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.68
+       },
+       {
+        "el": "skill",
+        "x": 1220,
+        "wcag": 3.41
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.33
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.71
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 440,
+        "wcag": 3.57
+       },
+       {
+        "el": "card",
+        "x": 548,
+        "wcag": 3.53
+       },
+       {
+        "el": "card",
+        "x": 656,
+        "wcag": 3.43
+       },
+       {
+        "el": "card",
+        "x": 764,
+        "wcag": 3.5
+       },
+       {
+        "el": "card",
+        "x": 872,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 980,
+        "wcag": 3.11
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.2
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.3
+       },
+       {
+        "el": "skill",
+        "x": 1220,
+        "wcag": 3.05
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 2.98
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.32
+       }
+      ],
+      "before": {
+       "hud_px_pct": 16.14,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 3.6,
+       "cards_min_dE_deutan": 3.7,
+       "cards_min_shape_dL": 5.0,
+       "cards_pairs_failing_u1": 1,
+       "cards_pairs_failing_u1_list": [
+        "Loaf / Oven"
+       ]
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 101,
+      "after": 57
+     }
+    },
+    "6_r10_boss": {
+     "1x": {
+      "after": {
+       "hud_px_pct": 18.42,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 5.3,
+       "cards_min_dE_deutan": 1.5,
+       "cards_min_shape_dL": 9.8,
+       "cards_pairs_failing_u1": 4,
+       "cards_pairs_failing_u1_list": [
+        "Toast / Roll",
+        "Toast / Loaf",
+        "Roll / Oven",
+        "Loaf / Twist"
+       ]
+      },
+      "hud_px_pct_before": 18.56,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 220,
+        "wcag": 3.5
+       },
+       {
+        "el": "card",
+        "x": 274,
+        "wcag": 3.32
+       },
+       {
+        "el": "card",
+        "x": 328,
+        "wcag": 3.54
+       },
+       {
+        "el": "card",
+        "x": 382,
+        "wcag": 3.41
+       },
+       {
+        "el": "card",
+        "x": 436,
+        "wcag": 3.33
+       },
+       {
+        "el": "card",
+        "x": 490,
+        "wcag": 3.62
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.66
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.53
+       },
+       {
+        "el": "skill",
+        "x": 610,
+        "wcag": 3.53
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.6
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.4
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 220,
+        "wcag": 3.54
+       },
+       {
+        "el": "card",
+        "x": 274,
+        "wcag": 3.12
+       },
+       {
+        "el": "card",
+        "x": 328,
+        "wcag": 3.41
+       },
+       {
+        "el": "card",
+        "x": 382,
+        "wcag": 3.27
+       },
+       {
+        "el": "card",
+        "x": 436,
+        "wcag": 3.17
+       },
+       {
+        "el": "card",
+        "x": 490,
+        "wcag": 3.35
+       },
+       {
+        "el": "move",
+        "x": 38,
+        "wcag": 3.27
+       },
+       {
+        "el": "move",
+        "x": 98,
+        "wcag": 3.16
+       },
+       {
+        "el": "skill",
+        "x": 610,
+        "wcag": 3.16
+       },
+       {
+        "el": "skill",
+        "x": 662,
+        "wcag": 3.22
+       },
+       {
+        "el": "skill",
+        "x": 714,
+        "wcag": 3.04
+       }
+      ],
+      "before": {
+       "hud_px_pct": 18.56,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 1.4,
+       "cards_min_dE_deutan": 1.4,
+       "cards_min_shape_dL": 5.0,
+       "cards_pairs_failing_u1": 2,
+       "cards_pairs_failing_u1_list": [
+        "Toast / Roll",
+        "Loaf / Oven"
+       ]
+      }
+     },
+     "2x": {
+      "after": {
+       "hud_px_pct": 18.42,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 5.3,
+       "cards_min_dE_deutan": 1.5,
+       "cards_min_shape_dL": 9.0,
+       "cards_pairs_failing_u1": 5,
+       "cards_pairs_failing_u1_list": [
+        "Toast / Roll",
+        "Toast / Loaf",
+        "Toast / Oven",
+        "Roll / Oven",
+        "Loaf / Twist"
+       ]
+      },
+      "hud_px_pct_before": 18.56,
+      "ground_before": [
+       {
+        "el": "worker",
+        "x": 440,
+        "wcag": 3.47
+       },
+       {
+        "el": "card",
+        "x": 548,
+        "wcag": 3.33
+       },
+       {
+        "el": "card",
+        "x": 656,
+        "wcag": 3.59
+       },
+       {
+        "el": "card",
+        "x": 764,
+        "wcag": 3.45
+       },
+       {
+        "el": "card",
+        "x": 872,
+        "wcag": 3.37
+       },
+       {
+        "el": "card",
+        "x": 980,
+        "wcag": 3.64
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.75
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.57
+       },
+       {
+        "el": "skill",
+        "x": 1220,
+        "wcag": 3.6
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.65
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.49
+       }
+      ],
+      "ground_after": [
+       {
+        "el": "worker",
+        "x": 440,
+        "wcag": 3.52
+       },
+       {
+        "el": "card",
+        "x": 548,
+        "wcag": 3.13
+       },
+       {
+        "el": "card",
+        "x": 656,
+        "wcag": 3.47
+       },
+       {
+        "el": "card",
+        "x": 764,
+        "wcag": 3.34
+       },
+       {
+        "el": "card",
+        "x": 872,
+        "wcag": 3.22
+       },
+       {
+        "el": "card",
+        "x": 980,
+        "wcag": 3.38
+       },
+       {
+        "el": "move",
+        "x": 76,
+        "wcag": 3.36
+       },
+       {
+        "el": "move",
+        "x": 196,
+        "wcag": 3.19
+       },
+       {
+        "el": "skill",
+        "x": 1220,
+        "wcag": 3.23
+       },
+       {
+        "el": "skill",
+        "x": 1324,
+        "wcag": 3.27
+       },
+       {
+        "el": "skill",
+        "x": 1428,
+        "wcag": 3.13
+       }
+      ],
+      "before": {
+       "hud_px_pct": 18.56,
+       "hud_on_units_pct": 0.0,
+       "cards_on_screen": 5,
+       "cards_min_dE_normal": 1.4,
+       "cards_min_dE_deutan": 1.4,
+       "cards_min_shape_dL": 5.0,
+       "cards_pairs_failing_u1": 2,
+       "cards_pairs_failing_u1_list": [
+        "Toast / Roll",
+        "Loaf / Oven"
+       ]
+      }
+     },
+     "g3_1x_px_differing": {
+      "before": 44,
+      "after": 0
+     }
+    }
+   }
+  }
+ },
+ "baseline_art_metrics_json": {
+  "ko_1x": {
+   "1_menu": {
+    "hud_px_pct": null,
+    "hud_on_units_pct": null,
+    "cards_min_dE_normal": null,
+    "cards_min_dE_deutan": null,
+    "cards_min_shape_dL": null,
+    "cards_pairs_failing_u1": null
+   },
+   "2_r01_t10": {
+    "hud_px_pct": 10.05,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": null,
+    "cards_min_dE_deutan": null,
+    "cards_min_shape_dL": null,
+    "cards_pairs_failing_u1": null
+   },
+   "3_r01_t30": {
+    "hud_px_pct": 10.12,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": null,
+    "cards_min_dE_deutan": null,
+    "cards_min_shape_dL": null,
+    "cards_pairs_failing_u1": null
+   },
+   "4_r06_t46": {
+    "hud_px_pct": 15.28,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": 0.6,
+    "cards_min_dE_deutan": 0.6,
+    "cards_min_shape_dL": 9.2,
+    "cards_pairs_failing_u1": 6
+   },
+   "5_r08_peak": {
+    "hud_px_pct": 16.18,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": 3.6,
+    "cards_min_dE_deutan": 3.7,
+    "cards_min_shape_dL": 5.0,
+    "cards_pairs_failing_u1": 1
+   },
+   "6_r10_boss": {
+    "hud_px_pct": 18.55,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": 1.4,
+    "cards_min_dE_deutan": 1.4,
+    "cards_min_shape_dL": 5.0,
+    "cards_pairs_failing_u1": 2
+   },
+   "7_result": {
+    "hud_px_pct": null,
+    "hud_on_units_pct": null,
+    "cards_min_dE_normal": null,
+    "cards_min_dE_deutan": null,
+    "cards_min_shape_dL": null,
+    "cards_pairs_failing_u1": null
+   }
+  },
+  "en_1x": {
+   "1_menu": {
+    "hud_px_pct": null,
+    "hud_on_units_pct": null,
+    "cards_min_dE_normal": null,
+    "cards_min_dE_deutan": null,
+    "cards_min_shape_dL": null,
+    "cards_pairs_failing_u1": null
+   },
+   "2_r01_t10": {
+    "hud_px_pct": 10.01,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": null,
+    "cards_min_dE_deutan": null,
+    "cards_min_shape_dL": null,
+    "cards_pairs_failing_u1": null
+   },
+   "3_r01_t30": {
+    "hud_px_pct": 10.08,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": null,
+    "cards_min_dE_deutan": null,
+    "cards_min_shape_dL": null,
+    "cards_pairs_failing_u1": null
+   },
+   "4_r06_t46": {
+    "hud_px_pct": 15.23,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": 0.6,
+    "cards_min_dE_deutan": 0.6,
+    "cards_min_shape_dL": 9.2,
+    "cards_pairs_failing_u1": 6
+   },
+   "5_r08_peak": {
+    "hud_px_pct": 16.14,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": 3.6,
+    "cards_min_dE_deutan": 3.7,
+    "cards_min_shape_dL": 5.0,
+    "cards_pairs_failing_u1": 1
+   },
+   "6_r10_boss": {
+    "hud_px_pct": 18.56,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": 1.4,
+    "cards_min_dE_deutan": 1.4,
+    "cards_min_shape_dL": 5.0,
+    "cards_pairs_failing_u1": 2
+   },
+   "7_result": {
+    "hud_px_pct": null,
+    "hud_on_units_pct": null,
+    "cards_min_dE_normal": null,
+    "cards_min_dE_deutan": null,
+    "cards_min_shape_dL": null,
+    "cards_pairs_failing_u1": null
+   }
+  },
+  "ko_2x": {
+   "1_menu": {
+    "hud_px_pct": null,
+    "hud_on_units_pct": null,
+    "cards_min_dE_normal": null,
+    "cards_min_dE_deutan": null,
+    "cards_min_shape_dL": null,
+    "cards_pairs_failing_u1": null
+   },
+   "2_r01_t10": {
+    "hud_px_pct": 10.05,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": null,
+    "cards_min_dE_deutan": null,
+    "cards_min_shape_dL": null,
+    "cards_pairs_failing_u1": null
+   },
+   "3_r01_t30": {
+    "hud_px_pct": 10.12,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": null,
+    "cards_min_dE_deutan": null,
+    "cards_min_shape_dL": null,
+    "cards_pairs_failing_u1": null
+   },
+   "4_r06_t46": {
+    "hud_px_pct": 15.28,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": 0.6,
+    "cards_min_dE_deutan": 0.6,
+    "cards_min_shape_dL": 8.0,
+    "cards_pairs_failing_u1": 6
+   },
+   "5_r08_peak": {
+    "hud_px_pct": 16.18,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": 3.6,
+    "cards_min_dE_deutan": 3.7,
+    "cards_min_shape_dL": 5.0,
+    "cards_pairs_failing_u1": 1
+   },
+   "6_r10_boss": {
+    "hud_px_pct": 18.55,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": 1.4,
+    "cards_min_dE_deutan": 1.4,
+    "cards_min_shape_dL": 5.0,
+    "cards_pairs_failing_u1": 2
+   },
+   "7_result": {
+    "hud_px_pct": null,
+    "hud_on_units_pct": null,
+    "cards_min_dE_normal": null,
+    "cards_min_dE_deutan": null,
+    "cards_min_shape_dL": null,
+    "cards_pairs_failing_u1": null
+   }
+  },
+  "en_2x": {
+   "1_menu": {
+    "hud_px_pct": null,
+    "hud_on_units_pct": null,
+    "cards_min_dE_normal": null,
+    "cards_min_dE_deutan": null,
+    "cards_min_shape_dL": null,
+    "cards_pairs_failing_u1": null
+   },
+   "2_r01_t10": {
+    "hud_px_pct": 10.01,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": null,
+    "cards_min_dE_deutan": null,
+    "cards_min_shape_dL": null,
+    "cards_pairs_failing_u1": null
+   },
+   "3_r01_t30": {
+    "hud_px_pct": 10.08,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": null,
+    "cards_min_dE_deutan": null,
+    "cards_min_shape_dL": null,
+    "cards_pairs_failing_u1": null
+   },
+   "4_r06_t46": {
+    "hud_px_pct": 15.23,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": 0.6,
+    "cards_min_dE_deutan": 0.6,
+    "cards_min_shape_dL": 8.0,
+    "cards_pairs_failing_u1": 6
+   },
+   "5_r08_peak": {
+    "hud_px_pct": 16.14,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": 3.6,
+    "cards_min_dE_deutan": 3.7,
+    "cards_min_shape_dL": 5.0,
+    "cards_pairs_failing_u1": 1
+   },
+   "6_r10_boss": {
+    "hud_px_pct": 18.56,
+    "hud_on_units_pct": 0.0,
+    "cards_min_dE_normal": 1.4,
+    "cards_min_dE_deutan": 1.4,
+    "cards_min_shape_dL": 5.0,
+    "cards_pairs_failing_u1": 2
+   },
+   "7_result": {
+    "hud_px_pct": null,
+    "hud_on_units_pct": null,
+    "cards_min_dE_normal": null,
+    "cards_min_dE_deutan": null,
+    "cards_min_shape_dL": null,
+    "cards_pairs_failing_u1": null
+   }
+  }
+ },
+ "verdict": {
+  "worst": {
+   "ground_min_wcag": 2.92,
+   "u1_failing_pairs": 5,
+   "u2_max_pp_increase": 0.08,
+   "u3_max_pct": 0.0,
+   "g3_max_px": 0
+  },
+  "where": {
+   "ground_min_wcag": "ko/as_captured/5_r08_peak/1x",
+   "u2_max_pp_increase": "ko/all_dimmed/4_r06_t46/1x",
+   "u1_failing_pairs": "ko/all_dimmed/4_r06_t46/2x"
+  },
+  "pass": {
+   "ground_min_wcag": false,
+   "u1_failing_pairs": false,
+   "u2_max_pp_increase": true,
+   "u3_max_pct": true,
+   "g3_max_px": true
+  },
+  "all_pass": false
+ }
+}

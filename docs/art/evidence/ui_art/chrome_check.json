@@ -1,0 +1,395 @@
+{
+ "card_frame": {
+  "source": [
+   20,
+   24
+  ],
+  "margins": [
+   6,
+   6,
+   6,
+   6
+  ],
+  "drawn": [
+   50,
+   56
+  ],
+  "stretch_safe": true,
+  "stretch_axis": "xy",
+  "on_battlefield": true,
+  "detail": {
+   "top": true,
+   "bottom": true,
+   "corners_fit": true,
+   "left": true,
+   "right": true,
+   "centre_flat": true
+  },
+  "edge_vs_dirt": 4.06,
+  "proposed_new_name": false,
+  "edge_vs_dirt_before": 2.84
+ },
+ "card_frame_disabled": {
+  "source": [
+   20,
+   24
+  ],
+  "margins": [
+   6,
+   6,
+   6,
+   6
+  ],
+  "drawn": [
+   50,
+   56
+  ],
+  "stretch_safe": true,
+  "stretch_axis": "xy",
+  "on_battlefield": true,
+  "detail": {
+   "top": true,
+   "bottom": true,
+   "corners_fit": true,
+   "left": true,
+   "right": true,
+   "centre_flat": true
+  },
+  "edge_vs_dirt": 4.06,
+  "proposed_new_name": false,
+  "edge_vs_dirt_before": 3.06
+ },
+ "card_frame_selected": {
+  "source": [
+   20,
+   24
+  ],
+  "margins": [
+   6,
+   6,
+   6,
+   6
+  ],
+  "drawn": [
+   50,
+   56
+  ],
+  "stretch_safe": true,
+  "stretch_axis": "xy",
+  "on_battlefield": true,
+  "detail": {
+   "top": true,
+   "bottom": true,
+   "corners_fit": true,
+   "left": true,
+   "right": true,
+   "centre_flat": true
+  },
+  "edge_vs_dirt": 4.06,
+  "proposed_new_name": false,
+  "edge_vs_dirt_before": 1.48
+ },
+ "btn": {
+  "source": [
+   16,
+   16
+  ],
+  "margins": [
+   5,
+   5,
+   5,
+   5
+  ],
+  "drawn": [
+   52,
+   52
+  ],
+  "stretch_safe": true,
+  "stretch_axis": "xy",
+  "on_battlefield": true,
+  "detail": {
+   "top": true,
+   "bottom": true,
+   "corners_fit": true,
+   "left": true,
+   "right": true,
+   "centre_flat": true
+  },
+  "edge_vs_dirt": 4.06,
+  "proposed_new_name": false,
+  "edge_vs_dirt_before": 2.84
+ },
+ "btn_pressed": {
+  "source": [
+   16,
+   16
+  ],
+  "margins": [
+   5,
+   5,
+   5,
+   5
+  ],
+  "drawn": [
+   52,
+   52
+  ],
+  "stretch_safe": true,
+  "stretch_axis": "xy",
+  "on_battlefield": true,
+  "detail": {
+   "top": true,
+   "bottom": true,
+   "corners_fit": true,
+   "left": true,
+   "right": true,
+   "centre_flat": true
+  },
+  "edge_vs_dirt": 4.06,
+  "proposed_new_name": false,
+  "edge_vs_dirt_before": 3.29
+ },
+ "btn_disabled": {
+  "source": [
+   16,
+   16
+  ],
+  "margins": [
+   5,
+   5,
+   5,
+   5
+  ],
+  "drawn": [
+   52,
+   52
+  ],
+  "stretch_safe": true,
+  "stretch_axis": "xy",
+  "on_battlefield": true,
+  "detail": {
+   "top": true,
+   "bottom": true,
+   "corners_fit": true,
+   "left": true,
+   "right": true,
+   "centre_flat": true
+  },
+  "edge_vs_dirt": 4.06,
+  "proposed_new_name": false,
+  "edge_vs_dirt_before": 3.36
+ },
+ "btn_gold": {
+  "source": [
+   16,
+   16
+  ],
+  "margins": [
+   5,
+   5,
+   5,
+   5
+  ],
+  "drawn": [
+   80,
+   28
+  ],
+  "stretch_safe": true,
+  "stretch_axis": "xy",
+  "on_battlefield": false,
+  "detail": {
+   "top": true,
+   "bottom": true,
+   "corners_fit": true,
+   "left": true,
+   "right": true,
+   "centre_flat": true
+  },
+  "edge_vs_dirt": 1.48,
+  "proposed_new_name": false,
+  "edge_vs_dirt_before": 1.48
+ },
+ "panel_dark": {
+  "source": [
+   24,
+   24
+  ],
+  "margins": [
+   8,
+   8,
+   8,
+   8
+  ],
+  "drawn": [
+   380,
+   120
+  ],
+  "stretch_safe": true,
+  "stretch_axis": "xy",
+  "on_battlefield": false,
+  "detail": {
+   "top": true,
+   "bottom": true,
+   "corners_fit": true,
+   "left": true,
+   "right": true,
+   "centre_flat": true
+  },
+  "edge_vs_dirt": 3.67,
+  "proposed_new_name": false,
+  "edge_vs_dirt_before": 3.5
+ },
+ "ribbon_victory": {
+  "source": [
+   32,
+   16
+  ],
+  "margins": [
+   8,
+   4,
+   8,
+   4
+  ],
+  "drawn": [
+   160,
+   16
+  ],
+  "stretch_safe": true,
+  "stretch_axis": "x",
+  "on_battlefield": false,
+  "detail": {
+   "top": true,
+   "bottom": true,
+   "corners_fit": true,
+   "centre_uniform_x": true
+  },
+  "edge_vs_dirt": 1.48,
+  "proposed_new_name": false,
+  "edge_vs_dirt_before": 1.5
+ },
+ "ribbon_defeat": {
+  "source": [
+   32,
+   16
+  ],
+  "margins": [
+   8,
+   4,
+   8,
+   4
+  ],
+  "drawn": [
+   160,
+   16
+  ],
+  "stretch_safe": true,
+  "stretch_axis": "x",
+  "on_battlefield": false,
+  "detail": {
+   "top": true,
+   "bottom": true,
+   "corners_fit": true,
+   "centre_uniform_x": true
+  },
+  "edge_vs_dirt": 1.67,
+  "proposed_new_name": false,
+  "edge_vs_dirt_before": 2.77
+ },
+ "hud_tray": {
+  "source": [
+   12,
+   12
+  ],
+  "margins": [
+   4,
+   4,
+   4,
+   4
+  ],
+  "drawn": [
+   80,
+   56
+  ],
+  "stretch_safe": true,
+  "stretch_axis": "xy",
+  "on_battlefield": true,
+  "detail": {
+   "top": true,
+   "bottom": true,
+   "corners_fit": true,
+   "left": true,
+   "right": true,
+   "centre_flat": true
+  },
+  "edge_vs_dirt": 4.06,
+  "proposed_new_name": true
+ },
+ "btn_skill": {
+  "source": [
+   16,
+   16
+  ],
+  "margins": [
+   5,
+   5,
+   5,
+   5
+  ],
+  "drawn": [
+   48,
+   48
+  ],
+  "stretch_safe": true,
+  "stretch_axis": "xy",
+  "on_battlefield": true,
+  "detail": {
+   "top": true,
+   "bottom": true,
+   "corners_fit": true,
+   "left": true,
+   "right": true,
+   "centre_flat": true
+  },
+  "edge_vs_dirt": 4.06,
+  "proposed_new_name": true
+ },
+ "chip_resource": {
+  "source": [
+   12,
+   12
+  ],
+  "margins": [
+   5,
+   5,
+   5,
+   5
+  ],
+  "drawn": [
+   72,
+   18
+  ],
+  "stretch_safe": true,
+  "stretch_axis": "xy",
+  "on_battlefield": true,
+  "detail": {
+   "top": true,
+   "bottom": true,
+   "corners_fit": true,
+   "left": true,
+   "right": true,
+   "centre_flat": true
+  },
+  "edge_vs_dirt": 4.06,
+  "proposed_new_name": true
+ },
+ "btn_round": {
+  "source": [
+   24,
+   24
+  ],
+  "fixed_size": true,
+  "edge_vs_dirt": 4.06,
+  "proposed_new_name": true,
+  "icon_pause_on_body_wcag": 13.08
+ }
+}

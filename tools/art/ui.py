@@ -354,6 +354,100 @@ def nine(w, h, m, fill, rim, hi, lo, outline="K"):
 
 
 def frames9():
+    """9-slice frames in ui_main (names, sizes and margins fixed by the contract; ui-art 1.1 pixels).
+    None of them is drawn by 04 yet (StyleBoxFlat / draw_pixel_box); 06-art-ui-to-04-client.md proposes the wiring."""
+    out = {}
+    for name, (w, h, m, rings, ch) in CHROME_EXISTING.items():
+        out[name] = (chrome_frame(w, h, rings, ch), (m, m, m, m))
+    out["panel"] = (nine(24, 24, 8, "U", "T", "U", "o"), (8, 8, 8, 8))     # cream parchment (unchanged)
+    _rivets(out["panel_dark"][0], 6)
+    # bars
+    bar = Canvas(12, 8)
+    bar.rect(1, 1, 10, 6, c("a"))
+    bar.hline(1, 10, 0, c("K")); bar.hline(1, 10, 7, c("K")); bar.vline(0, 1, 6, c("K")); bar.vline(11, 1, 6, c("K"))
+    bar.hline(1, 10, 1, c("K"))
+    out["bar_frame"] = (bar, (3, 3, 3, 3))
+    out["ribbon_victory"] = (ribbon("Y", "Z", "y", "o"), (8, 4, 8, 4))   # egg-wash gold; text on it must be dark (K/w)
+    out["ribbon_defeat"] = (ribbon("t", "z", "l", "D"), (8, 4, 8, 4))    # mould wins: sage, dark text
+    return out
+
+
+# --- ui-art 1.1 HUD chrome (bakery). Rings from the outside in; a tuple = (top/left, bottom/right) bevel. ----
+# Every edge is uniform along its length and the centre is one flat colour, so NinePatchRect STRETCH (or TILE)
+# cannot distort pixels; the chamfered corner and any rivet stay inside the margins.
+# Outer 2 px are K on every body that sits on the battlefield (genre P1: thick dark outline), so the edge stays >= 3:1\n# against the dirt next to it (measured on 07's baseline frames, tools/art/ui_art/hud_mock.py).
+CHROME_EXISTING = {
+    #  name:                 (w,  h,  margin, rings (outline -> centre),                         chamfer)
+    "card_frame":           (20, 24, 6, ["K", "K", ("O", "h"), ("T", "y"), "w"], 2),   # baked crust + gold trim
+    "card_frame_disabled":  (20, 24, 6, ["K", "K", ("A", "a"), "K"], 2),               # slate rim, near-black centre (off)
+    "card_frame_selected":  (20, 24, 6, ["K", "K", ("Z", "Y"), "Y", "Y", ("T", "y"), "w"], 2),  # 3-px gold ring, dark edge
+    "btn":                  (16, 16, 5, ["K", "K", ("T", "h"), ("o", "w"), "O"], 2),    # crust button, light text
+    "btn_pressed":          (16, 16, 5, ["K", "K", ("w", "O"), "w"], 2),               # inverted bevel
+    "btn_disabled":         (16, 16, 5, ["K", "K", ("A", "a"), "a"], 2),
+    "btn_gold":             (16, 16, 5, ["K", ("Z", "y"), ("Z", "Y"), "Y"], 2),         # primary; dark text on it
+    "panel_dark":           (24, 24, 8, ["K", "w", ("o", "h"), "w", ("T", "y"), "w"], 3),  # result panel, gold trim
+}
+CHROME_PROPOSED = {   # NEW names: not in ui_main until 03/04 accept the contract change (06-art-ui-to-04-client.md)
+    "hud_tray":      (12, 12, 4, ["K", "K", "w"], 1),          # behind the card group; shows only in the gaps
+    "btn_skill":     (16, 16, 5, ["K", "K", ("I", "n"), "b"], 2),     # night-blue oven-glow plate for skill buttons
+    "chip_resource": (12, 12, 5, ["K", "K", ("O", "h"), "w"], 4),          # pill for flour/energy icon + number
+}
+
+
+def chrome_frame(w: int, h: int, rings: list, chamfer: int = 2) -> Canvas:
+    cv = Canvas(w, h)
+    for y in range(h):
+        for x in range(w):
+            d = min(x, y, w - 1 - x, h - 1 - y,
+                    x + y - chamfer, (w - 1 - x) + y - chamfer, x + (h - 1 - y) - chamfer,
+                    (w - 1 - x) + (h - 1 - y) - chamfer)
+            if d < 0:
+                continue
+            k = rings[min(d, len(rings) - 1)]
+            if isinstance(k, tuple):   # top/left side light, bottom/right side dark (ties go to top/left)
+                k = k[0] if min(x, y) <= min(w - 1 - x, h - 1 - y) else k[1]
+            cv.put(x, y, c(k))
+    return cv
+
+
+def _rivets(cv: Canvas, inset: int):
+    """Butter-gold rivets in the four corners (inside the 9-slice margins)."""
+    for (x, y) in [(inset, inset), (cv.w - 1 - inset, inset), (inset, cv.h - 1 - inset), (cv.w - 1 - inset, cv.h - 1 - inset)]:
+        cv.put(x, y, c("Z"))
+
+
+def ribbon(mid: str, hi: str, lo: str, end: str) -> Canvas:
+    """32x16 result ribbon, 9-slice (8,4,8,4): flat band with a 1-px highlight and shade, folded swallow-tail ends."""
+    rb = Canvas(32, 16)
+    rb.rect(4, 2, 24, 11, c(mid))
+    rb.hline(4, 27, 2, c(hi)); rb.hline(4, 27, 12, c(lo))
+    for x0, d in ((0, 1), (31, -1)):     # folded ends, one shade darker, behind the band
+        for i in range(4):
+            xx = x0 + d * i
+            rb.vline(xx, 4 + (i == 0), 14 - (i == 0), c(end if i < 3 else lo))
+        rb.put(x0, 9, 0); rb.put(x0 + d, 9, 0)
+    rb.outline(c("K"))
+    return rb
+
+
+def chrome_proposed():
+    return {n: (chrome_frame(w, h, r, ch), (m, m, m, m)) for n, (w, h, m, r, ch) in CHROME_PROPOSED.items()}
+
+
+def btn_round(size: int = 24) -> Canvas:
+    """PROPOSED fixed-size round button (pause / speed): dark crust bun, so 04's white icon_pause / icon_speed_*
+    keep >= 4.5:1. Not 9-slice (a circle cannot stretch)."""
+    cv = Canvas(size, size)
+    r = size / 2
+    cv.ellipse(r - 0.5, r - 0.5, r - 0.5, r - 0.5, c("K"))
+    cv.ellipse(r - 0.5, r - 0.5, r - 1.5, r - 1.5, c("K"))     # 2-px dark edge like the 9-slice bodies
+    cv.ellipse(r - 0.5, r - 1.0, r - 2.5, r - 3.0, c("w"))
+    cv.ellipse(r - 3.5, r - 5.0, r * 0.35, r * 0.18, c("O"))
+    return cv
+
+
+def _frames9_v10():
+    """ui-art 1.0 / art 0.11 9-slices, kept for the before/after sheet."""
     out = {}
     m = 5
     out["btn"] = (nine(16, 16, m, "O", "w", "o", "w"), (m, m, m, m))            # crust (art 0.11.0; was blue)

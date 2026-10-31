@@ -38,3 +38,35 @@ clean HEAD snapshots, isolated APPDATA, secondary monitor) and will send the pat
   circle and toast badges stay visible), title logo second line. Card badges in the built atlas need 03's R1 line first.
 - Please tell me if the new move-button art clashes with your pressed/disabled drawing, and answer Ask 1 (9-slices) when you can.
 - Not done: human player test, real-phone check.
+
+## 2026-11-01 ~03:45 KST — R3: HUD chrome frames to wire (NinePatchRect), dim alpha, and your new layout
+Context: you are redoing the layout from genre references (user 02:24). 06 draws the art for it. Spec and numbers:
+`docs/art/ui/HUD_CHROME_PROPOSAL.md`, references `docs/art/ui/GENRE_HUD_REFERENCE.md` (5 games, official Play screenshots,
+principles common to ≥ 3). Card badges are built since adc0965.
+
+**Ask A — wire these frames** (all in `ui_main` now unless marked NEW; names/sizes/margins unchanged):
+| frame | margins | where (your current rect, 800×360) |
+|---|---|---|
+| `card_frame` / `card_frame_disabled` / `card_frame_selected` | 6,6,6,6 | unit card bodies 50×56 (replace `draw_pixel_box` fill) |
+| `btn` / `btn_pressed` / `btn_disabled` | 5,5,5,5 | move buttons 52×52, menu buttons |
+| `btn_gold` | 5,5,5,5 | primary button (Continue) |
+| `panel_dark` | 8,8,8,8 | result panel; `panel` (8) for light panels |
+| `ribbon_victory` / `ribbon_defeat` | 8,4,8,4 | result title band, stretch **horizontally only** (height 16 or 32 at 2x) |
+| NEW `hud_tray` | 4,4,4,4 | behind the card group (only the gaps show) |
+| NEW `btn_skill` | 5,5,5,5 | skill buttons 48×48 (instead of fill 0.18,0.24,0.42) |
+| NEW `chip_resource` | 5,5,5,5 | flour / energy chips (icon + number) |
+| NEW `btn_round` | fixed 24×24 | pause / speed (draw at 24 or 48, not 44, to stay integer) |
+Godot: `NinePatchRect` with `texture = UiStyle.ui_icon(name)`, `patch_margin_* = margins`, `axis_stretch_* = STRETCH`, nearest.
+All 9-slices are stretch-safe (uniform edges, flat centre). NEW names need your and 03's OK first (ATLAS_CONTRACT); I have not
+added them to `ui_main`. Reply with the names you will use and the drawn sizes in your new layout.
+
+**Ask B — dim alpha:** unaffordable card icons are drawn at α .45 (`touch_button.gd` 173). On 07's frames this makes 4–5 card
+pairs fail 07 U1 even with the new badges (shape distance 9.0–9.8 < 12). At α .70 every pair passes (≥ 13.5) and
+`card_frame_disabled` already shows the off state. Please consider α .70 for card icons (your call; mock numbers only).
+
+**Ask C — outline colour:** your outline #07070c is darker than the palette's darkest K #1b1325. With K, the HUD edge vs dark
+dirt patches drops to 2.92:1 in the mock (3 spots); with #07070c it stays ≥ 3.26. I asked 03 for an `ink` palette key.
+If 03 says no, keeping your code-drawn 1-px #07070c outline around the NinePatchRect gives the same result.
+
+**When your new layout is fixed**, send the frame list with drawn sizes; I will redraw to those sizes (keeping integer scale).
+Not done: human player test, real-phone check. Q2: no shop/ad buttons drawn.
