@@ -1,7 +1,18 @@
 # 09-research-product handoff
-Updated: 2026-10-31 ~18:30 KST
+Updated: 2026-10-31 ~19:10 KST
 Session ID: sess_6ce8ebb1-4e45-454d-a561-e0bad09a8be5 · claude-opus-5.5 / trust-all
-Status: MILESTONE DONE (v16): waiting for 01 (R09-01-15) and 02 (R09-02-6)
+Status: MILESTONE DONE (v17): waiting for 07 (R09-07-2) and 01 (R09-01-16, R09-01-15)
+
+## v17 (2026-10-31 18:35–19:10 KST): first-session comparison
+Commit 3a8c340546b8ccb2315044e12a236a705055877d PUSHED (helper output; SHA copied after publish). It contains SUCCESS_ANALYSIS §36, R09-07-2 and R09-01-16.
+- Sources (§36.1): Battle Cats F1 LVI8CNUGnC8 (EN fresh install, PONOS logo at 0:00), F2 7HHzOegdN1c (KR 15.7.0, from title), F3 qYHrq53ondg (KR 15.6.1, edited), S2 kb6u-IRIDFw; Waggle W3 h52yfbelEnE (KR, from title), W4 M3kjYM0UIsw (KR, 2 s step), W5 gZ53Ynwh21c, W6 MPv5uSd53G4, S5 dMlfFTrUx20, W1 QOi2v7jyZFU. 2KMHPReIsZM excluded (not a first launch). 몽글뭉치: none.
+- (a) BC EN 6 screens, about 3:00 (about 2:20 if the story is skipped [calc]). Waggle 3 screens, about 15–20 s from the title. Ours: boot splash (default, duration [U]) → menu → 1 tap → r01 (app.gd boot, main_menu.gd _on_play).
+- (b) Counting rule: one prompt block = 1, from the first battle frame to the second battle start; minimum counts. BC EN 3 modal arrow tips + 1 mascot bubble; Waggle W4 3 + 2, W3 2 + 3 (hand pointer + "TOUCH" at 1:05 on the party screen); ours 4 non-blocking gold text strips, 0 after the result (tutorial_director.gd, hud.gd).
+- (c) BC: XP only, Ok + SNS, then about 8 popups incl. a Start-Up pack offer [monetization]. Waggle: WIN + LV bar + 1 reward, no buttons seen in 5 sources. Ours: result.gd stars/time/kills/reward/first-clear line, 4 buttons; the 4-button version was never captured (07 0590e7a shows 3 buttons, before 6051b3c).
+- Readings: our path is shortest; prompt count is similar but competitors point at targets; competitor results are thin and route to growth screens (already R09-04-11). RELEASE_DESIGN_REVIEW §2.1's 30 s internal target now has observed brackets but no measurement.
+- Design/code gaps [F]: §2.1 item 1 (single Play button, round select hidden until r01 clear) and item 5 (first-upgrade nudge after r02) are not in main_menu.gd/result.gd. Sent to 01.
+- Validation: git diff --check clean; table column counts checked; sources read at 13aade1 are unchanged at 65502e8. Only 09 paths were changed (the untracked coordinator-to-* files are not 09's and were not touched). No Godot was run by 09.
+- Temp files (not committed): %TEMP%\r09\fs\ obs.md ("# first-session task" block), sb_/pg_/crop_ images for the IDs above.
 
 ## v16 (2026-10-31 18:05–18:30 KST): D27 verdict + competitor base damage
 Commit 620472c302ba9f07ca1d1e6b5dc01d826e11bd7d PUSHED (helper output; SHA copied after publish). It contains SUCCESS_ANALYSIS §35, the §34 corrections, R09-01-15 (plus the R09-01-14 correction) and R09-02-6.
