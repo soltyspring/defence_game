@@ -44,3 +44,10 @@ Also copied your 5 new `ui.star_*` fallbacks verbatim into ko/en. Keys are now 1
 - QA-B008: added `toast.save_recovered`, `toast.save_read_only`, `toast.save_failed`, `toast.round_locked` (counterattack and ui.star_* were already added earlier). Every `Events.toast.emit` id in src/ now has ko+en text (scan). The hud.gd mapping "toast → ui.<key>" for save_recovered still works because ui.save_recovered exists.
 - Skill labels on buttons: 밀대 내려찍기 / 갓 구운 함성 / 빵가루 포격 (ko) are longer. If skill buttons show names, check them too (en Slam/Rally/Barrage unchanged).
 - ui.title is unchanged (provisional working title).
+
+## R6 2026-10-31 — Q3 DECIDED, launcher label (Q4 asked), text changes
+- Q3 DECIDED by user (16:19): working title "빵집 기사단: 곰팡이 디펜스" / "Bakery Knights: Mold Defense". `ui.title` ko/en set. Your 1–2 line title fallback applies.
+- Launcher label: your A/B/C proposal is asked to the user as Q4 (01 recommends A). Do not change it until it is answered (the label is 02's export_presets).
+- Supply word renamed 반죽→**밀가루**, Dough→**Flour** (`res.supply`, `toast.not_enough_gold`, worker desc, tut_buy_worker), D25. Widths: 밀가루 36 px, Flour 33 px at 12 px.
+- Added `banner.first_wave_cleared` 첫 웨이브 격파! / First wave broken!. r01 is renamed "첫 번째 굽기".
+- Please rerun your title/typography checks for the new strings.

@@ -4,16 +4,19 @@
 User's words: "모두 고치고 A) 빵집 기사단 vs 곰팡이 군단이걸로". DECIDED = A 빵집 기사단 vs 곰팡이 군단.
 
 ## Q2 — 수익 모델: DEFERRED 2026-10-31 16:09 KST
-User's words: "수익모델은 보류". None of A/B/C is approved (01's recommendation A is not approved). Ads and payments stay disabled.
+User's words: "수익모델은 보류". None of A/B/C is approved. Ads and payments stay disabled.
 
-## Q3 — 게임 제목 (ASKED 2026-10-31)
+## Q3 — 게임 제목: ANSWERED 2026-10-31 16:19 KST (Codex chat)
+User's words: "빵집 기사단: 곰팡이 디펜스". DECIDED = B as the working title. 01's recommendation A was not adopted. The final store name waits for a manual KIPRIS check (classes 9/41).
+
+## Q4 — 홈 화면 아이콘 아래 이름 (ASKED 2026-10-31)
 Status: WAITING FOR USER ANSWER
-질문: 게임 제목을 무엇으로 할까요? 작업 제목입니다. 출시 전에 KIPRIS 상표 조회(9류·41류)를 직접 해 주셔야 확정됩니다. 06의 웹 검색은 예비 조사이고 상표 조회 결과는 없습니다.
+배경: 안드로이드 홈 화면은 아이콘 아래에 약 10~12자만 보여 줍니다. 정하신 제목 "빵집 기사단: 곰팡이 디펜스"(14자)는 대부분의 기기에서 뒷부분이 잘립니다. 게임 안 화면과 스토어에는 전체 제목을 그대로 씁니다.
+질문: 홈 화면 아이콘 아래에는 어떤 이름을 보여 줄까요?
 A) 빵집 기사단 / Bakery Knights (추천)
-   가장 짧아 아이콘·홈 화면에서 잘리지 않습니다. 대신 다른 앱과 이름이 겹칠 위험이 가장 큽니다.
-B) 빵집 기사단: 곰팡이 디펜스 / Bakery Knights: Mold Defense
-   스토어 검색에서 '디펜스' 장르가 바로 보입니다. 홈 화면에서는 뒷부분이 잘립니다.
-C) 빵집 기사단 대 곰팡이 군단 / Bakery Knights vs Mold Legion
-   테마 구도가 그대로 드러납니다. 가장 길어 잘림도 가장 심합니다.
-추천: A를 작업 제목으로 씁니다. 스토어 등록명은 KIPRIS 결과를 본 뒤 B로 바꿀 수 있습니다.
-답변 전 기본값: 화면 제목(ui.title)은 임시 '레인 디펜스'로 둡니다. 기본값은 사용자 승인이 아닙니다.
+   잘리지 않고, 정하신 제목의 앞부분과 같습니다.
+B) 곰팡이 디펜스 / Mold Defense
+   장르가 바로 보입니다. 대신 '빵집'이 빠집니다.
+C) 전체 제목
+   대부분의 기기에서 "빵집 기사단: 곰팡…"처럼 잘립니다.
+답변 전 기본값: 안드로이드 이름 설정은 바꾸지 않습니다(02 소유). 기본값은 사용자 승인이 아닙니다.

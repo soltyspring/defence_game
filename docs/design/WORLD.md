@@ -2,7 +2,7 @@
 Owner: 01-director. Data IDs stay theme-neutral (D1). Only names, art and sound change.
 
 ## 한 쪽 세계관
-밀밭 한가운데 있는 작은 빵집 마을에는 매일 새벽 화덕에 불을 지피는 빵집 기사단이 있다. 기사단은 사람이 아니라 갓 구운 빵들이다. 식빵 기사는 바삭한 귀를 갑옷 삼아 앞장서고, 롤빵 투척병은 따끈한 롤빵을 던지며, 통식빵 방패병은 몸통 하나로 길을 막는다. 이들을 이끄는 사람은 밀대를 든 제빵 대장이다. 꼬마 제빵사들은 뒤에서 쉬지 않고 반죽을 빚는다. 반죽이 곧 병사가 되기 때문이다.
+밀밭 한가운데 있는 작은 빵집 마을에는 매일 새벽 화덕에 불을 지피는 빵집 기사단이 있다. 기사단은 사람이 아니라 갓 구운 빵들이다. 식빵 기사는 바삭한 귀를 갑옷 삼아 앞장서고, 롤빵 투척병은 따끈한 롤빵을 던지며, 통식빵 방패병은 몸통 하나로 길을 막는다. 이들을 이끄는 사람은 밀대를 든 제빵 대장이다. 꼬마 제빵사들은 뒤에서 쉬지 않고 밀가루를 모은다. 밀가루가 곧 병사가 되기 때문이다.
 
 어느 비 오는 여름, 마을 끝의 낡은 창고에서 곰팡이가 피어올랐다. 습기를 먹고 자란 곰팡이 군단은 초파리 떼와 썩은 멧돼지를 앞세워 빵집으로 밀려온다. 군단은 포자를 뱉어 빵을 상하게 하고, 부푼 효모를 굴려 보내 터뜨린다. 그 뒤에는 곰팡이 장군이 있고, 창고 깊은 곳의 둥지에는 모든 것을 썩게 하려는 부패 대군주가 잠들어 있다.
 
@@ -32,10 +32,10 @@ Owner: 01-director. Data IDs stay theme-neutral (D1). Only names, art and sound 
 | skill_slam | 스킬 | 밀대 내려찍기 | Slam | | |
 | skill_rally | 스킬 | 갓 구운 함성 | Rally | | |
 | skill_barrage | 스킬 | 빵가루 포격 | Barrage | | |
-| 자원 supply | 인게임 자원 | 반죽 | Dough | | |
+| 자원 supply | 인게임 자원 | 밀가루 | Flour | | | (D25: 반죽→밀가루, word overlap with 빵어전) |
 | 자원 energy | 영웅 자원 | 기력 | Energy | | |
 | 플레이어 기지 / 적 기지 | | 빵집 / 곰팡이 둥지 | Bakery / Mold Nest | | |
-Unchanged: currency 골드/Gold (D12). ui.title stays a provisional working title. The final title is a separate decision; 09/10 are checking name collisions.
+Unchanged: currency 골드/Gold (D12). Title: working title "빵집 기사단: 곰팡이 디펜스 / Bakery Knights: Mold Defense" (Q3 DECIDED by user); the store name is final only after a manual KIPRIS check.
 
 ## Art/sound direction for 03/05 (requests sent)
 - Silhouettes: 식빵 (square, toasted ears), 롤빵 (round), 통식빵 (tall block), 프레첼 (knot shape on a running mount), 화덕 (dome with chimney). Hero: chef hat plus rolling pin.

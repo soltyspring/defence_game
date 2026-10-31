@@ -1,4 +1,12 @@
 # 01-director handoff
+## TASK 2026-10-31 — Q3 DECIDED, Q4 ASKED, decision replies, r01 opening (D25, D26)
+- Q3 DECIDED by user 16:19 ("빵집 기사단: 곰팡이 디펜스", B; A not adopted). Recorded in DECISIONS + both USER_QUESTION files. ui.title ko/en set. 03/04/06 told.
+- Q4 (launcher label) ASKED; it is the only open question. Q2 stays DEFERRED.
+- Decisions: D7 corrected (36/36/64/48/24); D25 (r01 lane 1100 + wave at 12 s; 900 s cap = loss safety net; 반죽→밀가루/Flour, keep 제빵사/화덕포); D26 (L5 −25%, siege atk 0.12/L, migrations refund rule); r10 enemy base 2000.
+- Validation: 5 seeds × none/LOW/HIGH, all rounds (multi_seed_2026-10-31_d25.md + _d25_r10.md): LOW 50/50 W, all LOW medians ≤ 1.25 × par, idle loses all (r01 248 s), wave-1 cleared 37–47 s. Probe ERROR/WARN/INFO 0. l10n 134/134 ALL_OK (added banner.first_wave_cleared, ui.upgrade_save_uncertain).
+- NOT met: X11 R1 (base hit before 90 s in r01); data is bimodal (BALANCE_DIAGNOSIS Update 3). r02–r04 no base pressure. Upgrades are strictly needed only in r10.
+- Replies: 01→02 R6, →03 R4, →04 R6, →06 R1, →09 R3, →10 R5.
+
 ## TASK 2026-10-31 — Q2 DEFERRED, Q3 ASKED, QA-J2 + length retune (D24), 5-seed check
 - Q2 DEFERRED by user (16:09 "수익모델은 보류"): recorded in DECISIONS.md and both USER_QUESTION files. Ads/IAP stay disabled. Q3 (title) is ASKED and waiting.
 - D24: r01 is a tutorial (QA-J2), with a numeric rule; length rule LOW median ≤ 1.25 × par; retune of bosses and r05/r09/r10 (r10 par 380).

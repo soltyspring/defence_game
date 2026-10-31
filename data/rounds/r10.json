@@ -8,7 +8,7 @@
   "biome": "biome_01",
   "lane_length": 2200,
   "player_base_hp": 2400,
-  "enemy_base_hp": 2300.0,
+  "enemy_base_hp": 2000.0,
   "start_gold": 100,
   "hero": "hero_captain",
   "cards": [
@@ -178,5 +178,5 @@
   ],
   "provisional": true,
   "boss_round": true,
-  "balance_note": "D23 (2026-10-31): enemy_scaling halved; r07-r10 trickle without e_brute and 1.5 s slower; validated at the LOW first-clear budget (docs/design/balance/low_budget_2026-10-31_low.json). D24 (2026-10-31): length/fragility retune, 5-seed check docs/design/balance/multi_seed_2026-10-31_after.json."
+  "balance_note": "D23 (2026-10-31): enemy_scaling halved; r07-r10 trickle without e_brute and 1.5 s slower; validated at the LOW first-clear budget (docs/design/balance/low_budget_2026-10-31_low.json). D24 (2026-10-31): length/fragility retune, 5-seed check docs/design/balance/multi_seed_2026-10-31_after.json. D25: enemy base 2300->2000 after the D26 cost change (multi_seed_2026-10-31_d25_r10.json)."
 }

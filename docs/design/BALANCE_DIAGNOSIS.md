@@ -48,3 +48,17 @@ Script docs/design/balance/multi_seed_sim.gd.txt + summarize_multi_seed.py. Seed
 Before (multi_seed_2026-10-31_before.md): r10 LOW only 3/5 W (worst base 0) and HIGH 4/5. The single-seed D23 claim "10/10 W" was fragile. r05 LOW 5/5 but worst base 0.14 and median 368 s; r09 LOW 410 s; r10 681 s.
 After (multi_seed_2026-10-31_after.md): every round LOW 5/5 W and median ≤ 1.25 × par (r10 par now 380). Worst LOW base: r05 0.40, r10 0.67, others 1.00. Without upgrades: r10 1/5, everything else 5/5. Idle loses everywhere (107–260 s). r01 late starter (45 s): 5/5 W, no base damage (tutorial, D24a).
 Still weak evidence: one bot policy; timing noise only; the "none" budget wins most rounds, so upgrades are only proven necessary for r10. r02–r04 put almost no pressure on an active bot's base. Human pilot needed (D11).
+
+## Update 2026-10-31 (3) — r01 opening, L5 costs, r10 (D25, D26)
+r01 variants (5 seeds, no upgrades, plus an idle player and a 45 s late starter; data in memory):
+| variant | change | competent | late45 | base hit before 90 s |
+|---|---|---|---|---|
+| P (applied) | lane 1100, wave 1 at 12 s ×3, wave 2 40 s ×4, wave 3 75 s ×4, trickle 6 s | 5/5 W, wave-1 clear 37–47 s | 5/5 W | 0/5 |
+| Q | wave 2 35 s ×6 | 5/5 W | 5/5 W | 1/5 (late) |
+| R | lane 1000, earlier waves | 5/5 W | 5/5 W | 0/5 |
+| S | wave 2 45 s ×9 | **1/5 L** | **5/5 L** | when hit, collapse |
+| T | wave 2 ×12 | **4/5 L** | 4/5 L | collapse |
+| U | wave 2 ×7 | 1/5 L | 4/5 L | collapse |
+| V | S + enemy atk ×0.5 | 5/5 W | 5/5 W | 0/5 |
+Reading: once grunts reach the base, the base falls; there is no small-hit middle state in data. X11 R1 is not met.
+Full check after D25/D26 (multi_seed_2026-10-31_d25.md + _d25_r10.md for r10 with enemy base 2000): every round LOW 5/5 W, every LOW median ≤ 1.25 × par. Worst LOW base: r02 1.00, r03 1.00, r04 1.00, r05 0.40, r10 0.69. r02–r04 never hit an active bot's base: pressure there is low (open). Without upgrades only r10 loses (1/5 W). Upgrades matter weakly (open, Codex finding a).

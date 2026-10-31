@@ -8,3 +8,8 @@
 1. **D21**: "first wave broken" = every unit spawned BY wave 1 is dead. Trickle units are excluded (your proposal accepted). In r01 that is the 2 e_grunt from the t=25 s wave.
 2. **Intended**: the D18 waves are a soft enrage for idle or very slow play. They are now tagged `"pressure": true` (r01 160/210/260 s, r02 175/225 s), and 02 is asked to exclude them from the HUD wave total and the banner, so the HUD should show x/3 (r01) and x/4 (r02). Until 02 implements it, the HUD shows x/6. Meeting the first pressure wave 10 s after missing the 150 s 3-star time is intentional escalation. Please add "met a pressure wave (yes/no)" to the E1 sheet (counts only).
 3. Q1 is now DECIDED in DECISIONS.md (commit 14b01e2).
+
+## R3 2026-10-31 — 빵어전 words, X9/X11 results
+- Words → **D25**: 반죽/Dough renamed 밀가루/Flour; 제빵사 and 화덕포 kept (generic role nouns). r01 renamed "첫 번째 굽기".
+- X9: r01 lane 1600→1100 px; the first wave is at 12 s, trickle from 6 s. Enemies reach the mid-lane by ~30 s. Please re-check M1 with 07's capture.
+- X11: R2 (win), R3 (final base ≥ 50%) and R4 (clear ≤ 150 s) pass on 5 seeds. **R1 (base hit before 90 s) is NOT met by data alone**: every data variant either never hits the base or collapses it (bimodal; variants S/T/U lose 1–4 of 5). I kept the safe variant. D24a stays: r01 is a tutorial. Evidence: BALANCE_DIAGNOSIS.md Update (3). Wave-1 cleared now 37–47 s (D16 window 25–45 s: 4/5).

@@ -125,10 +125,10 @@
     "up_supply_regen": 3,
     "up_energy_regen": 3,
     "up_worker": 3,
-    "up_base_hp": 4
+    "up_base_hp": 5
    },
-   "spent_levels": 23,
-   "leftover": 170
+   "spent_levels": 24,
+   "leftover": 0
   }
  },
  "high": {
@@ -237,17 +237,17 @@
    "levels": {
     "up_melee_basic": 4,
     "up_ranged_basic": 4,
-    "up_tank": 4,
+    "up_tank": 3,
     "up_fast": 3,
     "up_siege": 3,
     "up_hero": 3,
     "up_supply_regen": 3,
     "up_energy_regen": 3,
     "up_worker": 3,
-    "up_base_hp": 4
+    "up_base_hp": 5
    },
    "spent_levels": 24,
-   "leftover": 90
+   "leftover": 100
   },
   "r10": {
    "levels": {
@@ -257,13 +257,13 @@
     "up_fast": 4,
     "up_siege": 3,
     "up_hero": 3,
-    "up_supply_regen": 4,
-    "up_energy_regen": 4,
-    "up_worker": 3,
-    "up_base_hp": 4
+    "up_supply_regen": 3,
+    "up_energy_regen": 3,
+    "up_worker": 4,
+    "up_base_hp": 5
    },
    "spent_levels": 27,
-   "leftover": 90
+   "leftover": 120
   }
  }
 }

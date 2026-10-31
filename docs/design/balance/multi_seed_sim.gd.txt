@@ -14,6 +14,9 @@ func _run(sim, bot, seed_v: int, start_delay: float) -> Dictionary:
 	var rng := RandomNumberGenerator.new(); rng.seed = seed_v * 7919 + 13
 	var wait := maxf(start_delay, rng.randf_range(0.0, 3.0))
 	var base_dmg := 0.0
+	var first_hit := -1.0
+	var w1_clear := -1.0
+	var ev_seen := 0
 	var prev: float = float(sim.player_base.hp)
 	while not sim.ended and sim.t < 900.0:
 		if bot != null:
@@ -23,10 +26,17 @@ func _run(sim, bot, seed_v: int, start_delay: float) -> Dictionary:
 				wait = rng.randf_range(0.0, 0.35)
 		sim.step(step)
 		var hp: float = float(sim.player_base.hp)
-		if hp < prev: base_dmg += prev - hp
+		if hp < prev:
+			base_dmg += prev - hp
+			if first_hit < 0.0: first_hit = sim.t
 		prev = hp
+		while ev_seen < sim.events.size():
+			var ev = sim.events[ev_seen]; ev_seen += 1
+			if ev[0] == "wave_cleared" and int(ev[1].get("index", 0)) == 1 and w1_clear < 0.0: w1_clear = float(ev[1].get("t", sim.t))
+		if ev_seen > 4000:
+			sim.events.clear(); ev_seen = 0
 	return {"won": sim.won, "t": snappedf(sim.t, 0.1), "pbase": snappedf(float(sim.player_base.hp) / float(sim.player_base.hp_max), 0.01),
-		"base_dmg": snappedf(base_dmg, 1.0), "stars": int(sim.result().stars) if sim.won else 0}
+		"base_dmg": snappedf(base_dmg, 1.0), "first_base_hit_t": snappedf(first_hit, 0.1), "wave1_cleared_t": snappedf(w1_clear, 0.1), "stars": int(sim.result().stars) if sim.won else 0}
 
 func _initialize() -> void:
 	var a := OS.get_cmdline_user_args()

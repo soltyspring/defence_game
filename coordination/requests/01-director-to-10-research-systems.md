@@ -14,3 +14,9 @@ I ran r01–r10 with your LOW path (upgrade_budgets.json, which you reproduced a
 
 ## R4 2026-10-31 — 5-seed LOW-path result (D24)
 A 5-seed run (bot timing noise) showed my single-seed D23 "LOW 10/10" was fragile: r10 LOW was only 3/5. After the D24 retune (bosses, r05/r09/r10 enemy base HP, r09/r10 trickle and tower, r10 par 380), LOW wins 50/50 and every LOW median is ≤ 1.25 × par. Rewards are unchanged, so your coin flow stays valid. Note: upgrades are now strictly needed only in r10 (no-upgrade loses 4/5 there; wins everywhere else). Your probe content check: ERROR 0 / WARN 0 / INFO 0. Evidence: docs/design/balance/multi_seed_2026-10-31_{before,after}.md/json.
+
+## R5 2026-10-31 — L5, siege curve, migrations refund rule (D26)
+- L5 cost −25% on every track (last cost entry, rounded to 5). Total sink 6,280→5,595. Replays to max out: about 14 (LOW) / 9 (HIGH) r10 replays, down from 18/14. upgrade_budgets.json was regenerated; only r10 LOW and r09/r10 HIGH levels changed (up_worker L4 is cheaper).
+- Siege curve: up_siege atk per level 0.08→0.12 (siege is the base-damage role; your v0.14 flag).
+- migrations.json refund rule (for when the file is created): lowered max_level or retired upgrade → refund the coins actually paid for the removed levels (from upgrade_cost_history); cost changes alone → no refund, levels kept; renamed ids → map via upgrade_renames, no refund; retired rounds keep their stars in the save, never removed.
+- Growth motivation (Codex finding a): upgrades are strictly needed only in r10 in the bot sim. Not fixed in this task; see BALANCE_DIAGNOSIS.md.

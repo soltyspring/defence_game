@@ -20,3 +20,6 @@ User's words: "모두 고치고 A) 빵집 기사단 vs 곰팡이 군단이걸로
 World, name table and silhouette direction: docs/design/WORLD.md. Summary by id: worker 꼬마 제빵사; melee_basic 식빵 기사; ranged_basic 롤빵 투척병 (projectile `arrow` → thrown bread roll); tank 통식빵 방패병; fast 프레첼 돌격병; siege 화덕 대포 (projectile `rock` → bread-crumb shell); hero_captain 제빵 대장 (chef hat + rolling pin, the Slam weapon); e_grunt 곰팡이 졸개; e_swarm 초파리 떼; e_spitter 포자 뱉개 (projectile `spit` → spore); e_brute 썩은 멧돼지; e_bomber 부푼 효모; boss_warlord 곰팡이 장군; boss_overlord 부패 대군주 (rot nest/hive, summon frame 3 kept); biome_01 밀밭 빵집 마을; player base = bakery, enemy base = mold nest.
 Palette: allies warm crust brown/cream/yellow; enemies murky green/purple/grey, separated by hue AND luminance (D14 still applies). No gore.
 Card/skill icons: same ids. Please also send the updated docs/art budget numbers to 08.
+
+## R4 2026-10-31 — Q3 DECIDED: working title
+User chose the working title "빵집 기사단: 곰팡이 디펜스" / "Bakery Knights: Mold Defense" (16:19). Logo lettering can start (ui_title frames). The final store name waits for a KIPRIS check, so keep the logo easy to change. The resource is renamed to 밀가루/Flour (was 반죽/Dough): please make the supply icon read as flour (a sack or a flour pile), not dough.

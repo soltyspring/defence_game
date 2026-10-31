@@ -3,10 +3,10 @@
   "id": "r01",
   "index": 1,
   "chapter": 1,
-  "name": "첫 번째 반죽",
+  "name": "첫 번째 굽기",
   "name_key": "round.r01.name",
   "biome": "biome_01",
-  "lane_length": 1600,
+  "lane_length": 1100.0,
   "player_base_hp": 1500,
   "enemy_base_hp": 800,
   "start_gold": 60,
@@ -17,32 +17,32 @@
   "skills": [],
   "waves": [
     {
-      "at": 25,
-      "spawns": [
-        {
-          "unit": "e_grunt",
-          "count": 2,
-          "interval": 1.5
-        }
-      ]
-    },
-    {
-      "at": 55,
+      "at": 12,
       "spawns": [
         {
           "unit": "e_grunt",
           "count": 3,
-          "interval": 1.5
+          "interval": 1.0
         }
       ]
     },
     {
-      "at": 90,
+      "at": 40,
       "spawns": [
         {
           "unit": "e_grunt",
           "count": 4,
-          "interval": 1.2
+          "interval": 0.7
+        }
+      ]
+    },
+    {
+      "at": 75,
+      "spawns": [
+        {
+          "unit": "e_grunt",
+          "count": 4,
+          "interval": 1.0
         }
       ]
     },
@@ -93,7 +93,7 @@
     "disabled_income": 4.0
   },
   "trickle": {
-    "start": 12,
+    "start": 6,
     "pattern": [
       "e_grunt"
     ],
@@ -137,5 +137,5 @@
   ],
   "provisional": true,
   "pressure_note": "Waves after the designed last wave and a faster trickle floor exist only so that an idle player loses by base destruction (D18). A competent bot finishes before them.",
-  "balance_note": "D23 (2026-10-31): enemy_scaling halved; r07-r10 trickle without e_brute and 1.5 s slower; validated at the LOW first-clear budget (docs/design/balance/low_budget_2026-10-31_low.json)."
+  "balance_note": "D23 (2026-10-31): enemy_scaling halved; r07-r10 trickle without e_brute and 1.5 s slower; validated at the LOW first-clear budget (docs/design/balance/low_budget_2026-10-31_low.json). D25: lane 1100, first wave at 12 s (D16 window), earlier trickle (X9)."
 }

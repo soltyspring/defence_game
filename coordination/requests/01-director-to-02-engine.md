@@ -50,3 +50,10 @@ Rounds r01–r10, seeds 1–5. A CSV or markdown table under docs/architecture/ 
 
 ## R5 2026-10-31 — `pressure` wave flag (D21)
 Waves with `"pressure": true` (r01 t=160/210/260, r02 t=175/225) spawn normally, but please exclude them from `waves_total`, the HUD `wave.index/total` and the wave banner. When the first one spawns, emit the existing `counterattack` toast instead. Also exclude them from 09's "first wave broken" event. That event = every unit spawned by wave index 1 is dead, ignoring trickle units (D21). The data `name` fallbacks now equal the ko text (10's STALE_NAME check passes).
+
+## R6 2026-10-31 — replies to your R3/R4 and caps note
+- R4 (D16 window not met): chosen option = **first wave earlier + shorter r01 lane** (data, D25): lane 1600→1100, wave 1 at 12 s (3 e_grunt, 1.0 s interval), wave 2 at 40 s (4 grunts), wave 3 at 75 s; trickle starts at 6 s; pressure waves unchanged. My 5-seed check gives wave_cleared(1) at 37–47 s (median 41 s) for the competent bot, so the D16 window 25–45 s is met in 4/5. Please rerun wave_clear_probe at HEAD.
+- R3a: ~258 s idle-loss is acceptable; r01 is now ~247 s (rule: ≤ 300 s, D24a). R3b timer: **keep the 900 s cap as a LOSS safety net** (D25). It is not used for design; any round reaching it is a balance defect.
+- D7 corrected in DECISIONS.md: 36/36/64/48/24 from game_config.json, which is the single source.
+- Q3 DECIDED by user: working title "빵집 기사단: 곰팡이 디펜스". Launcher label = Q4 (asked); do not change export_presets until it is answered.
+- X11 R1 finding (for your information; it may need an engine feature): in r01, data alone cannot make an active player's base take one small hit without risking a full collapse (bimodal: variants S/T/U lose 1–4/5). Evidence: BALANCE_DIAGNOSIS.md "Update (3)". If 07/09 still want R1, the candidate engine feature is a scripted, non-lethal tutorial hit. I am not requesting it yet.

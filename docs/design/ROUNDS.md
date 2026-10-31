@@ -24,3 +24,11 @@ R3: spitter range 100 < ranged 110 so our archers out-range them; tank absorbs v
 2. Round durations within ±25% of par for a competent bot (deploy cheapest affordable + 3 workers + Slam on cooldown).
 3. Enemy alive count stays under cap 36 (ENGINE.md §7; over-cap enemies wait); R8/R9 swarm floods are the stress cases.
 Baseline unit economy (L1): melee 40 DPS/100 supply, fast 36, ranged 29, siege 17 (+splash, ×3 vs base), tank 600 HP/100 supply + flat armor 3.
+
+## r01 numeric rule (D24a, D25) — checked by 07 capture bot / probe_winrate
+r01 is a tutorial. Pass when, over 5 timing-noise seeds (multi_seed_sim) or 4 capture runs:
+1. Competent and late-start (first action at 45 s) players win every run; median clear ≤ 150 s.
+2. An idle player loses by base destruction within 300 s (now ~248 s).
+3. Wave 1 is cleared within 25–45 s in ≥ 4 of 5 runs (D16/D21; now 37–47 s, median 41 s).
+4. Enemies reach the mid-lane by about 30 s (X9): lane 1100 px, first spawns at 6 s (trickle) and 12 s (wave 1).
+Not required: base damage for active players (09 X11 R1). Data-only variants were bimodal, either no hit or a full base collapse (BALANCE_DIAGNOSIS.md Update (3)).
