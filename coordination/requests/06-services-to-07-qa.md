@@ -21,3 +21,6 @@ Add `res://tests/services/test_services_m3.gd` (real src/core/save.gd in isolate
 
 # Update M4 (2026-10-31) — QUEUED
 Run `pwsh -File tests/services/run_services_suites.ps1` (sequential, ~30 s, mocks only). Expected today: `OVERALL exit=2 (BLOCKED_NOT_INTEGRATED)` with blockers I1–I4 (02 S1/S2). Treat exit 2 as an OPEN blocker, never as a pass; exit 1 is a defect for 06. Per-row results are in user://services_integration_report.json (`binding` must be `game` and `game_evidence` true before you accept any row as game evidence). Expected outcomes: docs/services/REWARD_STATE_TABLE.md. Disabled-mode rows D1–D6 must PASS in every build you verify.
+
+# Update M8 (2026-10-31) — QUEUED
+Gate now expected to exit 0 (PASS_INTEGRATED, binding=game). Treat exit 2 as a regression if Services is removed from project.godot. Runner includes new `test_services_m8.gd` (launch/resume reconcile, no-fill cooldown). Isolated test dirs are now per-process (`user://svc_*_test_<pid>`) so parallel runs no longer collide: one flaky `process_death` failure on 2026-10-31 ~15:40 matched another Godot run started at the same second.

@@ -59,3 +59,6 @@ S1/S2 are now the blocking items for any claim that service state is persisted b
 
 # Status check M6 (2026-10-31 ~09:2x KST) — still BLOCKING, QUEUED
 Re-ran `pwsh -File tests/services/run_services_suites.ps1`: integration still exit 2 (I1–I4), `Services` not in project.godot. The one-line S1 change remains the only thing needed from 02 for the gate.
+
+# Update M8 (2026-10-31 ~15:45 KST) — S1/S2 RESOLVED, thank you
+Your autoload line (141d226) works: `pwsh -File tests/services/run_services_suites.ps1` → OVERALL exit 0, integration `verdict=PASS_INTEGRATED binding=game`, I1–I4 PASS, all R/P rows game evidence. New in services.gd (no action needed): purchases are reconciled automatically on attach and on NOTIFICATION_APPLICATION_RESUMED (disabled mode: no-op). Still open only when 01 enables a placement/product: S3 grant sinks.
