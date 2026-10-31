@@ -16,11 +16,19 @@
   -gpu swiftshader_indirect. It captures real getprop / wm / meminfo / battery / thermalservice / SurfaceFlinger list and latency
   ×5 / gfxinfo + framestats / top / am start / logcat / screencap into `build/perf/emu_formats_<stamp>/`, then `adb emu kill`
   (own instance only). It waits up to 10 min and touches nothing if a foreign emulator is present.
-  `tests/performance/fixtures/android_real/replay_adb.ps1` (written, not yet used) replays those files for the parser test.
-- Next if interrupted: poll the log for `HEAVY_JOB_DONE`; copy the captured files to
-  `tests/performance/fixtures/android_real/emu_formats/` (+ serial.txt, package.txt, SOURCE.txt); add a replay case to
-  test_device_session.ps1 (facts, PSS, battery, thermal, SF frames, gfxinfo, GLES error → INVALID); fix any parser mismatch;
-  commit; record it as an EMULATOR format check, not a performance result. Do not queue the job a second time.
+  `tests/performance/fixtures/android_real/replay_adb.ps1` (013064a) replays those files for the parser test.
+  - `f041af561e25674043331fb9ac7bff4a003911fc`: replay case in test_device_session.ps1 (11 checks: getprop/wm/meminfo, battery,
+    thermal, cold start, PSS, top CPU, SurfaceFlinger, gfxinfo framestats, screencap stats, scene INVALID = ARGS_NOT_APPLIED because
+    the debug APK has no `[perf08]` ack). SKIPs until `fixtures/android_real/emu_formats/getprop.txt` exists; 41/41 + 1 SKIP.
+  - Dry run 08:01 (not committed, `build/perf/replay_dryrun_1031.ps1`): REAL 2026-10-31 emulator-5580 battery / thermal / meminfo /
+    gfxinfo framestats / am start mixed with synthetic getprop / wm / SF / top. Parsed: battery level 100, 25.0 °C, AC; thermal
+    status 0, battery 30.2 °C, skin 30.1 °C; PSS 165.2 MB; cold start 3458 ms; hwui frames 1; scene INVALID ARGS_NOT_APPLIED.
+    Emulator meminfo reports `Graphics: 0`, which the parser leaves empty (not measured). CPU % untested (synthetic top was wrong).
+  - Queue at 08:02: still QUEUED; 07-art-compare-02ec60f (queued about 07:21) holds the lock.
+- Next if interrupted: poll the log for `HEAVY_JOB_DONE`; copy the captured files (not emu.out/err) to
+  `tests/performance/fixtures/android_real/emu_formats/` (+ serial.txt, package.txt, SOURCE.txt); run
+  `tests/performance/test_device_session.ps1`; fix any parser mismatch; update DEVICE_SESSION.md §4; commit; record it as an
+  EMULATOR format check, not a performance result. Do not queue the job a second time. If it ended EMU_BUSY, requeue once.
 
 ## M18 — one-shot phone kit and all-in static budget (2026-11-01 07:1x – 07:5x KST; no Godot, no emulator)
 - **Phone kit:** new `tools/perf/device_session.ps1`, `device_scenes.json` (r01, r08 `--perf-caps`, r10, each with zoom off and
