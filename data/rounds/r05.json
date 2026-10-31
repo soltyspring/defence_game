@@ -140,8 +140,8 @@
   "gold_max": 350,
   "workers_max": 6,
   "enemy_scaling": {
-    "hp": 1.2,
-    "atk": 1.2
+    "hp": 1.25,
+    "atk": 1.25
   },
   "enemy_tower_atk_mult": 0.5,
   "tutorial": [
@@ -149,5 +149,5 @@
   ],
   "provisional": true,
   "boss_round": true,
-  "balance_note": "D23 (2026-10-31): enemy_scaling halved; r07-r10 trickle without e_brute and 1.5 s slower; validated at the LOW first-clear budget (docs/design/balance/low_budget_2026-10-31_low.json). D24 (2026-10-31): length/fragility retune, 5-seed check docs/design/balance/multi_seed_2026-10-31_after.json. D27: upgrade curve (block at r05), tower ×2 with enemy mult ×0.5. D30: retuned with the fixed bot timing harness (multi_seed_2026-10-31_d30_*)."
+  "balance_note": "D23 (2026-10-31): enemy_scaling halved; r07-r10 trickle without e_brute and 1.5 s slower; validated at the LOW first-clear budget (docs/design/balance/low_budget_2026-10-31_low.json). D24 (2026-10-31): length/fragility retune, 5-seed check docs/design/balance/multi_seed_2026-10-31_after.json. D27: upgrade curve (block at r05), tower ×2 with enemy mult ×0.5. D30: retuned with the fixed bot timing harness (multi_seed_2026-10-31_d30_*). D33: scaling 1.25 (casual LOW 7/10, upper bound 8/10)."
 }

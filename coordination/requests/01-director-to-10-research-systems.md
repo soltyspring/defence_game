@@ -30,3 +30,7 @@ Please rerun probe_economy_flow plus your hit-count/return-per-coin tables at HE
 D28 introduces LOW+2R = first-clear coins plus the replay coins of 2 replays of the previous round, bought cheapest-first (same rule as LOW). Please add it to probe_economy_flow (levels per round, as in upgrade_budgets.json) so 07 and I use the same numbers. Rewards and costs are unchanged since D26. Upgrade effects changed in D27 (+15%/L).
 ## R8 2026-10-31 — D30 data change
 enemy_scaling r02 1.1, r03 1.15, r04 1.15, r05 1.2; r05 enemy base 1000. Rewards and costs are unchanged, so your coin flow is unchanged. My balance tables before D30 used a slowed bot (harness defect); use the d30 files. LOW+2R (`low2r`) is in upgrade_budgets.json; please confirm it matches your computation.
+## R9 2026-10-31 — v0.25 and v0.27 decided (D32, D33)
+- v0.27 → D32: refund = paid coins first (snapshot price as fallback, no compensation); retired upgrade = refund + remove (a); `notice.content_migrated` added to data/text ko/en; primary rule = never lower max_level or retire after launch (a). Option (c) rejected (it blocks rollback releases).
+- v0.25 → D33a: option 1 adopted (ranged hp_mult 0.18). Option 2 rejected (cost order + budget rows change for a small gain). Your integrity probe at the new data (isolated): ERROR 0 / WARN 0 / INFO 0.
+- v0.26: my sims now run through your isolated_godot.ps1 (proof line ISOLATED_GODOT seen). Earlier runs today did not; if they touched the real save, the cause was mine.

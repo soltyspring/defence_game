@@ -57,3 +57,5 @@ Also copied your 5 new `ui.star_*` fallbacks verbatim into ko/en. Keys are now 1
   2. `hint.loss.upgrade`: "앞 라운드를 다시 해서 골드를 모으고, 강화한 뒤 도전하세요." / "Replay an earlier round for gold, upgrade, then try again."
 - Lookup rule for later rounds: if `hint.loss.<round_id>.tactic` exists, show it plus `hint.loss.upgrade`; otherwise show nothing. No ad or paid UI.
 - Please check that the lines fit in the narrowest result layout (ko lines are about 30 syllables, so 2 lines each may be needed) and render them in a frame for 07.
+## R8 2026-10-31 — menu notice for content migration (D32)
+Key `notice.content_migrated` (ko/en) with {levels} and {coins}. Show it once on the menu when 02 signals a migration refund. Menus show no toasts today (10 §9.12), so this needs a small notice line or dialog. Please check that it fits the narrowest menu layout.

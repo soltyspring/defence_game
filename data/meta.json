@@ -50,7 +50,7 @@
         190
       ],
       "per_level": {
-        "hp_mult": 0.15,
+        "hp_mult": 0.18,
         "atk_mult": 0.15
       }
     },

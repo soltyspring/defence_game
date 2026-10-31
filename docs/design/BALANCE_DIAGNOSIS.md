@@ -92,3 +92,13 @@ Re-measurement with the fixed harness (files multi_seed_2026-10-31_d30_*.md; 5 s
 D28 (casual targets) is met on these seeds: r01–r04 5/5 (5 seeds, so ≥ 9/10 is not yet shown at 10 seeds), r05 9/10 and 10/10, r06–r09 5/5, r10 5/5.
 Corrections to earlier claims: (1) "bimodal, no middle state" was measured on the slowed bot. With the fixed bot, partial end states exist, so D29's premise is weaker (02/09 informed). (2) D27's "upgrades shorten r07–r09" also needs a re-read on the d30 tables.
 Still open: r05 lengths 347–374 s exceed 1.25 × par; the r06 "none" row and the D24 length rule for other rounds were not fully re-checked with the fixed bot at 5 seeds for all budgets (the r01–r04/r06 and r07–r10 files have them).
+## Update 2026-10-31 (6) — r05 bounds and length cause (D33)
+Run in an isolated user:// (10's isolated_godot.ps1). Data: r05 scaling 1.25 + ranged hp 0.18. 10 seeds.
+| policy | budget | wins | end base median | boss spawn (s) | boss dead median (s) | boss kill time (s) | after boss (s) | total median (s) |
+|---|---|---|---|---|---|---|---|---|
+| casual | LOW | 7/10 | 0.16 | 95 | 312 | 217 | 59 | 368 |
+| casual | LOW+2R | 8/10 | 0.35 | 95 | 318 | 223 | 57 | 373 |
+| competent | LOW | 8/10 | 0.08 | 95 | 297 | 202 | 75 | 370 |
+| competent | LOW+2R | 10/10 | 0.45 | 95 | 296 | 201 | 60 | 361 |
+| both | none | 0/10 | 0.00 | 95 | — | — | — | — |
+Length cause: about 60% of the round is the boss fight (95 s → ~300 s). Proposal (not applied): boss_warlord hp 1800→1300 (−28%); expected kill time ~150 s and total ~300 s ≤ 325 s. Raising boss atk may be needed to keep the block (to verify with the same 10-seed run).

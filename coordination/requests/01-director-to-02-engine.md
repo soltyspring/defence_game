@@ -75,3 +75,9 @@ I will retune numbers only after your probe results.
 2. Decision rule (pre-set): if F0 alone meets the r02–r04 band (competent LOW end base 0.60–0.90 on ≥ 4/5) and keeps idle loss ≤ 300 s in r01/r02, prefer F0 (a player-skill answer, no new rule) and keep B/A off. Otherwise B25+A30. Note 09's point: the 0.60–0.90 band is an internal target with no competitor basis. Treat it as a hypothesis.
 3. **D30 harness defect (mine):** my multi_seed_sim passed dt = 1/60 to bot.act while calling it every ~0.17 s, so the bot ran ~10× slow. Fixed. With the fixed bot, partial end states DO occur (r03 casual 0.48, r04 0.79), so the cliff may be smaller than my earlier claim. Please do not rely on my D27 tables; use the d30 files.
 4. Data changed (D30): enemy_scaling r02 1.1, r03 1.15, r04 1.15, r05 1.2; r05 enemy base 1000.
+## R9 2026-10-31 — D32 migration rules (10 v0.27): please align R5
+1. Refund when max_level is lowered = coins actually paid for the removed levels (your per-save price record first; snapshot price as fallback). No compensation, no clawback.
+2. Retired upgrade: refund the paid coins and remove the entry (no dormant level).
+3. After a migration that refunded or adjusted anything, emit one signal for 04's menu notice with {levels, coins}. Text key: `notice.content_migrated`.
+4. Design rule: no max_level decrease or retirement after launch, so this path is a dev/test safety net. Keep tests for it.
+Data changes (D33): meta up_ranged_basic hp_mult 0.18; r05 enemy_scaling 1.25.

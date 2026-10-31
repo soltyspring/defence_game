@@ -139,6 +139,7 @@
     "banner.first_wave_cleared": "첫 웨이브 격파!",
     "ui.upgrade_save_uncertain": "저장 결과를 확인하지 못했습니다. 다시 실행해 확인하세요",
     "hint.loss.r05.tactic": "통식빵을 앞세우고 롤빵병으로 곰팡이 장군을 뒤에서 공격하세요.",
-    "hint.loss.upgrade": "앞 라운드를 다시 해서 골드를 모으고, 강화한 뒤 도전하세요."
+    "hint.loss.upgrade": "앞 라운드를 다시 해서 골드를 모으고, 강화한 뒤 도전하세요.",
+    "notice.content_migrated": "업데이트로 강화 상한이 바뀌어 {levels}개 레벨이 조정되었고 {coins} 골드를 돌려드렸습니다."
   }
 }

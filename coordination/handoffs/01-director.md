@@ -1,4 +1,10 @@
 # 01-director handoff
+## TASK 2026-10-31 ~19:30–19:50 — D32 migration rules, D33 ranged/r05 bounds (usage ~91%)
+- D32: refund = paid coins; retired upgrade = refund + remove; notice.content_migrated ko/en; no max_level decrease after launch. Sent to 02 R9, 04 R8, 10 R9.
+- D33: ranged hp_mult 0.18 (10 option 1); r05 scaling 1.25 with upper bounds (casual LOW ≤ 8/10, end base median ≤ 0.6). 10-seed isolated run: casual LOW 7/10, LOW+2R 8/10, none 0/10. The boss fight is ~60% of r05 length; proposal boss hp 1800→1300 (not applied, not run).
+- Validation: 10 probe (isolated) 0/0/0; l10n 137/137 ALL_OK. NOT re-run: r10 and other rounds after the ranged change.
+- Queue: 06 backup B0–B3 question waits until after the Q5 answer. Q5 still ASKED.
+- Next: apply and verify the boss hp proposal (10 seeds, isolated), rerun r10, check the 07 D28 report.
 ## TASK 2026-10-31 after 18:30 — 4-policy re-measurement, harness defect, D30/D31
 - **Own defect found and fixed:** multi_seed_sim passed dt = 1/60 to bot.act while calling it every ~0.17 s, so the bot ran ~10× slow. All D24–D27 multi-seed tables are invalid; the d30 files replace them.
 - Re-measured (fixed): r01–r04 + r06 and r07–r10 at 5 seeds, r05 at 10 seeds; 4 policies (competent none/LOW/opt, casual LOW/LOW+2R). The D27 numbers made r02–r04 losable. Retuned in D30 (r02 1.1, r03 1.15, r04 1.15, r05 1.2, r05 enemy base 1000). D28 met on my seeds (r05 casual LOW 9/10, LOW+2R 10/10, none 0/10).
