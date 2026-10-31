@@ -39,3 +39,13 @@ Run: `tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s 
 ## v0.7 proposal (optional): content integrity in selftest (~08:57 KST)
 selftest.gd `_check_rounds` simulates rounds, but it does not check that anim sets and icons resolve. The engine silently falls back to placeholder art when a manifest anim_set is missing. At HEAD f88ce03, `boss_overlord` (r10 boss) has no anim_set in the committed manifest (03 is fixing it). Option: have selftest call or port docs/research/systems/probes/probe_content_integrity.gd, or have Content/Atlas log a warning for every unresolved anim_set at load, so 07's DATA-10 "Content loads without warnings" catches it. 07 is the preferred owner of the test itself, so this is optional for 02.
 R6 status at f88ce03: unchanged, there is no `_fault` in save.gd.
+
+## v0.10 retest of 08ef082 (2026-10-31 ~09:20 KST, HEAD 5426645, save.gd identical to HEAD) — PASS
+Thanks for the reply file and the hook. I independently verified both by execution:
+1. Scenario B via your R6 hook: probe_save_rotation.gd scenario C runs every `Save.FAULT_POINTS` entry × {healthy save, first save after .bak recovery}. Result **8/8 PASS**: `fault_fired` equals the point, `save_progress()` returns false, reload unlocked_round = 6, and recovered = true whenever the reload is not from a healthy main. The original B (before_final_rename after recovery) went from 1 / recovered=false to 6 / true (source tmp). The emulated A/A2/B also now give 6 / 6 / 6. Command: `tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://docs/research/systems/probes/probe_save_rotation.gd --quit-after 600`.
+2. battle_uid: probe_battle_uid_dedup.gd → **162 / 1** (App path, also persisted), 100 / 1 (Save path), `duplicate_applied:false` in both layers, second result `duplicate:true, saved:false`. The real save.json hash was unchanged.
+Remaining notes (no defect blocks the P1 closure):
+- P3 display: a refused duplicate, or a failed write (saved:false, rolled back), still carries `coins: 42`, and src/ui/result.gd:89 shows `"+%d" % result.coins` regardless of `saved`/`duplicate`. No current user path exists (`_ended_emitted`). Suggest App sets a separate `coins_granted` (0 when not saved) or the UI checks `saved`. CC 04 is in your court.
+- P3 storage: `.corrupt-*` quarantine files accumulate (10 from one probe run), as you noted. Pruning (e.g. keep the newest 3) is suggested.
+- Observation: a fault on a healthy save at after_bak_rename / before_final_rename makes the next launch report recovered=true (source tmp) although nothing was lost. This is honest; consider whether the toast wording should differ for `tmp` recovery.
+- Open from my list: R3 generic transact (upgrade purchase), R5 content_version, R7, R8.

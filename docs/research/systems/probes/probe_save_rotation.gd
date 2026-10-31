@@ -68,6 +68,44 @@ func _initialize() -> void:
 	out["B_recovered_after_crash_reload"] = b2.recovered
 	out["B_note"] = "emulation of save.gd step order; not a fault injected inside save.gd"
 
+	# C (v0.10): REAL in-code faults via 02's R6 hook (Save._fault, debug builds only). For every fault point,
+	# both on a healthy save and on the first save after a .bak recovery. Expected: progress kept (6) and, when
+	# the reload is not from a healthy main, recovered=true (no silent reset). fault_fired proves the hook ran.
+	var has_hook := false
+	var probe_node = SaveS.new()
+	has_hook = "_fault" in probe_node and "FAULT_POINTS" in probe_node
+	probe_node.free()
+	out["C_hook_present"] = has_hook
+	if has_hook:
+		var c_rows := {}
+		for point in SaveS.FAULT_POINTS:
+			for mode in ["healthy", "after_recovery"]:
+				var pc := DIR + "/c_%s_%s.json" % [point, mode]
+				for suf in ["", ".bak", ".tmp"]: _rm(pc + suf)
+				if mode == "healthy":
+					_w(pc, _env(good))
+				else:
+					_w(pc, "{ corrupt")
+					_w(pc + ".bak", _env(good))
+				var c = _mk(pc)
+				var load_rec: bool = c.recovered
+				c._fault = point
+				var ok: bool = c.save_progress()
+				var fired := str(c.fault_fired)
+				var c2 = _mk(pc)
+				c_rows["%s/%s" % [point, mode]] = {"load_recovered": load_rec, "save_returned": ok, "fault_fired": fired,
+					"reload_unlocked": int(c2.progress.unlocked_round), "reload_recovered": c2.recovered,
+					"reload_source": str(c2.get("recovery_source")), "pass": int(c2.progress.unlocked_round) == 6 and fired == point and not ok}
+		out["C_rows"] = c_rows
+		var all_pass := true
+		for k in c_rows: all_pass = all_pass and bool(c_rows[k].pass)
+		out["C_all_pass"] = all_pass
+		# corrupt files are quarantined, never deleted: count them (02 notes they are not pruned yet)
+		var q := 0
+		for fn in DirAccess.get_files_at(DIR):
+			if ".corrupt-" in fn: q += 1
+		out["C_quarantined_files"] = q
+
 	print("PROBE10_SAVE_ROTATION ", JSON.stringify(out))
 	for n in root.get_children():
 		if n is Node and n.get_script() == SaveS: n.free()

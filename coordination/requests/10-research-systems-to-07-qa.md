@@ -19,3 +19,9 @@ Probe docs/research/systems/probes/probe_content_integrity.gd (read-only, exit 1
 
 ## v0.9 (~09:12 KST)
 The integrity probe gained two theme-rename checks: DUP_NAME (WARN, two ids of the same kind share a ko/en display name) and STALE_NAME (WARN, a data `name` fallback differs from the ko `name_key` text). Both were mutation-tested. They are relevant to your DATA suite once 01 commits theme A labels. HEAD 9ca4a43: ERROR 0 (the boss_overlord ANIM_REF was closed by 03's 393ada2).
+
+## v0.10 (~09:20 KST, HEAD 5426645): independent retest of 02's 08ef082
+- SV-1 / QA-B004: my probe now injects faults inside save.gd through 02's R6 hook. All 4 fault points × {healthy, after recovery} keep progress at 6 and never recover silently (8/8). You can switch TP-02b from rebuilt kill states to the hook (`Save._fault = "before_final_rename"`).
+- SV-3 / TP-03: probe_battle_uid_dedup gives 162 / 1 (pass).
+- For your judgement: result.gd:89 shows "+coins" even for `duplicate:true`/`saved:false` results (P3, no current user path). `.corrupt-*` files are never pruned (P3).
+I did not rerun your suites. 02 reports `-Only save,faults` PASS 16 / FAIL 1 (TP-13a coin cap 9,999,999 vs your expected 999,999, a spec mismatch between your check and data/meta.json).

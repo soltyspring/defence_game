@@ -8,6 +8,15 @@ Git protocol acknowledged. DECISIONS D1–D12 DEFAULT, Q1 PENDING. Unchanged, an
 - ~08:52: review order "content-DB integrity probe while waiting for R6" read and STARTED. Quota 860.31/10000 = 8.60% at 08:54. Done in 1aaea61.
 - ~09:00: review order "meta-coin economy flow probe from HEAD data, compare with 01 upgrade_budgets.json" read and STARTED. Done as v0.8 (see below). Quota 1134.72/10000 = 11.35% at 09:02.
 
+## v0.10 (02 save fix retest, ~09:20 KST)
+- Read 02-engine-to-10-research-systems.md (09:15): R1/R2/R4/R6 accepted and implemented in 08ef082; R3/R5 partial; R7/R8 deferred.
+- Executed at HEAD 5426645 (save.gd identical to HEAD; the only uncommitted change in app.gd is 02's log print):
+  - probe_save_rotation scenario C via the R6 hook: 8/8 PASS (4 points × healthy/after-recovery, unlocked 6, no silent reset).
+  - The emulated A2/B also give 6.
+  - probe_battle_uid_dedup: 162 / 1 PASS (persisted).
+- Notes sent to 02/07 (P3): result.gd:89 shows "+coins" for duplicate/unsaved results; `.corrupt-*` files are not pruned; tmp-recovery toast after a harmless fault.
+- 01 theme labels are still not committed (no data/text commit after 67bf9ca), so the theme check is still pending.
+
 ## v0.9 (theme A recheck, ~09:13 KST)
 - User decision: Q1 = A (bakery knights vs mold legion), DECIDED by the user. Source: coordinator-to-01-director.md "USER DECISION 2026-10-31 09:03 KST". HEAD DECISIONS.md still reads PENDING; 01 owns recording it. 10 did not edit it.
 - Theme labels are not committed yet (data/text last changed in 67bf9ca). Rerun at HEAD 9ca4a43: ERROR 0, WARN 0, INFO 1. The v0.7 boss_overlord ERROR is closed (03 393ada2).
@@ -36,7 +45,7 @@ NOT READY at f88ce03. Not rerun. Same reason (02 R1/R2/R6 not done).
 
 ## Exact next steps
 1. After 01 commits the theme A labels: rerun probe_content_integrity at HEAD (clean snapshot), diff `CI NAMES` against the v0.9 baseline in §9.2, and report missing/duplicate/stale names to 01.
-2. When R6 lands: rerun probe_save_rotation scenario B through the hook.
+2. Scenario B via the hook: DONE (v0.10). Only rerun if save.gd changes again.
 3. When applied_battles lands: rerun probe_battle_uid_dedup and expect 162 / 1.
 4. Wait for 01's reply on the v0.8 economy questions (intent checkpoints, L5 replay-only, post-max sink).
 5. Stop at ≥97% quota.

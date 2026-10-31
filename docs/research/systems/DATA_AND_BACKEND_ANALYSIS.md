@@ -1,5 +1,5 @@
 # 데이터·백엔드 분석: 성공한 디펜스 게임의 온라인 기능과 우리 게임의 최소 설계
-작성: 10-research-systems · 버전 v0.9 (v0.1 증거 보고서, v0.2 §9.1, v0.3 SV-1 실행 재현·§5.8, v0.4~v0.5 회신 추적, v0.6 battle_uid 중복 적용 재현, v0.7 §9.2 콘텐츠 참조 무결성, v0.8 §9.3 메타 코인 경제 흐름, v0.9 테마 A 이후 재실행·이름 검사 추가) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
+작성: 10-research-systems · 버전 v0.10 (… v0.9 테마 A 이후 재실행·이름 검사, v0.10 02 08ef082 세이브 수정의 실행 재검증: 훅 기반 시나리오 B 8/8, battle_uid 162/1) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
 범위: 경쟁작에서 **관찰되는** 온라인 기능, 그 기능의 **공개 문서화된** 기술, **UNKNOWN**, 우리 오프라인 우선 Godot 게임에 필요한 최소 콘텐츠 DB·세이브·거래 계약. 런타임 코드는 수정하지 않았다. 내부 DB나 비공개 구현에 접근한 적 없다. 게임을 직접 플레이하지 않았다(스토어 텍스트·공개 스크린샷만 확인).
 
 ## 0. 현재 판단 (요약)
@@ -280,6 +280,7 @@ commit;
 대안 설계(동등하게 가능): 문서형 DB에서 플레이어당 문서 + 처리된 키 하위 컬렉션, 또는 키-값 저장소 + 조건부 쓰기. 경쟁사가 무엇을 쓰는지는 UNKNOWN이고, 이 선택의 핵심은 벤더가 아니라 **고유 키 + 원자적 조건부 쓰기**다.
 
 ### 6.4 세이브 위험(실행 증거 표시)
+**v0.10 상태(HEAD 5426645, 02 08ef082 이후 실행 재검증):** SV-1 **해결 확인**(훅 기반 8/8, 에뮬레이션 A2/B 6). SV-2 해결(02 회신. 07 TP-06 PASS는 02가 SAVE_FAULTS.md에 보고했고 10은 재실행하지 않음). SV-3 **해결 확인**(162/1). 결과 화면의 "+코인" 표시 문제는 남아 있다(아래 프로브 2 v0.10). SV-4는 `record_result`만 롤백이 있고, 범용 transact는 없다. SV-5는 02 보고상 해결이고, 10은 재실행하지 않았다. 아래 표는 발견 당시 기록이다.
 | ID | 관찰(파일·줄) | 영향 | 심각도(제안) | 수정 제안 | 수용 기준 |
 |---|---|---|---|---|---|
 | SV-1 | `save_progress()`는 기존 `.bak`을 지운 뒤 현재 main을 `.bak`으로 옮긴다. main이 손상되어 `.bak`에서 복구한 직후의 첫 저장은 **정상 `.bak`을 지우고 손상된 main을 `.bak`으로 만든다** | **실행 재현(v0.3, 아래 프로브):** 복구 후 저장 성공 → `.bak` 내용이 손상 파일 → main이 다시 손상되면 `unlocked_round` 6→1(`recovered=true`). 저장 중 종료를 흉내 내면 6→1이고 `recovered=false`라서 사용자에게 알림이 없다 | **P1: 07 QA-B004로 등록(OPEN, 02 담당)** | `recovered`이면 손상 main을 `save.json.corrupt-<n>`으로 격리하고 정상 `.bak`은 유지. 로드할 때 검증된 `.tmp`도 후보로 확인(07 QA-O002와 같은 개선) | TP-02: 프로브 시나리오 A2/B에서 `unlocked_round == 6` |
@@ -323,6 +324,36 @@ PROBE10_SAVE_ROTATION {"A_recovered":true,"A_unlocked_after_load":6,"A_save_ok":
 - 원시 출력(발췌): `"L2_app_on_battle_finished":{"after_first":{"clears":1,"coins":162,...},"after_duplicate":{"clears":2,"coins":204,...},"duplicate_applied":true,"expected_coins_if_idempotent":162}`, `"L2_persisted":{"clears":2,"coins":204,"has_applied_battles_key":false}`, `"save_gd_has_fault_hook":false`
 - 한계: 프로브는 `_on_battle_finished`를 직접 두 번 호출했다. 실제 게임에서 두 번 호출되는 경로가 있다는 증거는 아니다. `battle.gd`의 `_ended_emitted`가 같은 Battle 인스턴스에서 두 번째 신호를 막는다(코드 읽기). 이 프로브가 보여주는 것은 **저장 계층에 멱등성 방어가 없다**는 사실이다. 그래서 보상 2배 광고(06 `ad_double_gold`), 전투 재개(R9), 결과 재전송 같은 경로를 추가하면 그 경로가 직접 중복을 막아야 한다.
 - 같은 실행에서 R6 훅 존재 여부도 확인했다: `"_fault" in Save` = false. **시나리오 B의 훅 기반 재실행은 여전히 불가능하다.**
+
+**v0.10 재검증: 02의 08ef082(세이브 수정 + R6 훅 + battle_uid 중복 방지) (2026-10-31 ~09:20 KST, HEAD 5426645)**
+- 실행 조건: `src/core/save.gd`는 HEAD와 같다(`git diff --quiet` 확인). 작업 트리의 `app.gd`에는 02의 미커밋 변경(로그 출력 문구)만 있고, 저장 경로와는 관계가 없다. 실제 `save.json` 해시는 실행 전후 같았고(F33DD39B…), `user://probe10/`는 실행 후 지웠다.
+- 02 회신(`02-engine-to-10-research-systems.md`): R1, R2, R4, R6 수락·구현. R3 부분(battle_uid 단위 멱등. 범용 `Save.transact`는 아직 없음). R5 부분. R7, R8 보류.
+
+**(1) 시나리오 B, 훅 기반 재실행** — `probe_save_rotation.gd`에 시나리오 C를 추가했다(명령은 위 프로브 1과 같다). `Save._fault`를 장애 지점 4개(`after_tmp_write`, `torn_tmp`, `after_bak_rename`, `before_final_rename`)에 각각 걸고, 정상 세이브와 `.bak` 복구 직후 첫 저장 두 경우를 모두 돌렸다. `save_progress()`가 false를 반환하고, 새 Save 노드로 다시 읽는다.
+| 장애 지점 / 상태 | 훅 발동(`fault_fired`) | 재로드 진행도(기대 6) | 재로드 `recovered` | 출처 |
+|---|---|---|---|---|
+| after_tmp_write / 정상 | O | 6 | false (정상 main) | main |
+| after_tmp_write / 복구 후 | O | 6 | true | tmp |
+| torn_tmp / 정상 | O | 6 | false (정상 main) | main |
+| torn_tmp / 복구 후 | O | 6 | true | bak |
+| after_bak_rename / 정상 | O | 6 | true | tmp |
+| after_bak_rename / 복구 후 | O | 6 | true | tmp |
+| **before_final_rename / 정상** | O | 6 | true | tmp |
+| **before_final_rename / 복구 후** (원래 시나리오 B) | O | **6** (전 1) | **true** (전 false) | tmp |
+- **8/8 통과**(`C_all_pass: true`). main이 정상이 아닌 곳에서 읽은 경우는 모두 `recovered=true`라서 조용한 초기화가 없다. 사용자 알림은 `app.gd` 73~74행에서 `Save.recovered`가 true일 때 `toast("save_recovered", {source})`를 띄운다. 이 부분은 코드 읽기이고, 화면 토스트를 실행으로 확인하지는 않았다.
+- 예전 에뮬레이션 시나리오도 회귀 확인했다: A `.bak` 손상 false(전 true), A2 진행도 6(전 1), B 진행도 6 / recovered true(전 1 / false). 02가 SAVE_FAULTS.md에 적은 값과 같다.
+- 관찰 2건, 결함 아님:
+  - (a) 정상 세이브에서 `after_bak_rename`/`before_final_rename`으로 끊기면 진행도 손실이 없는데도 다음 실행에서 `recovered=true`가 되어 "복구됨" 토스트가 뜬다. 정직한 표시지만 잦으면 잡음이 된다.
+  - (b) 격리 파일 `.corrupt-*`가 이 프로브 한 번에 10개 생겼고, 지워지지 않는다. 02도 "not yet pruned"로 적었다. 손상이 반복되는 기기에서는 파일이 계속 쌓인다. P3, 02 판단.
+
+**(2) battle_uid 중복 반영, 합격 기준 162/1** — `probe_battle_uid_dedup.gd`를 그대로 다시 실행했다.
+| 층 | 기대값 | 08ef082 이전(a19289b 기록) | 08ef082 이후 |
+|---|---|---|---|
+| L1 `Save.record_result` × 2 | 100 / 1 | 200 / 2 | **100 / 1** |
+| L2 `App._on_battle_finished` × 2 | 162 / 1 | 204 / 2 | **162 / 1** (두 번째 결과는 `duplicate:true, saved:false`) |
+| L2 디스크 | 162 / 1 | 204 / 2 | **162 / 1**, `applied_battles` 있음 |
+- **합격.** `duplicate_applied:false`가 두 층 모두에서 나왔다.
+- 남은 표시 문제(코드 읽기, P3): 거부된 중복 결과도 `coins: 42`를 그대로 담고 있다. 그런데 `src/ui/result.gd` 89행은 `"+%d" % result.coins`를 `duplicate`/`saved`와 관계없이 표시한다. 그래서 중복이 화면까지 가면 지급되지 않은 "+42"가 보인다. 쓰기 실패(`saved:false`, 롤백됨)일 때도 같다. 정상 플레이에서는 `_ended_emitted`가 중복을 막으므로 지금 사용자 경로는 없다. 수정 방향은 App이 중복·실패 때 `coins_granted: 0`을 따로 싣거나 UI가 `saved`를 확인하는 것이다. 담당 02/04.
 
 ## 7. 위협/실패 사례와 실행 테스트 제안 (07 acceptance, 06 services, 02 훅)
 실행 방식: Godot 헤드리스 `--headless -s res://tests/acceptance/<file>.gd`. 02가 `Save.path` 주입(이미 var)과 쓰기 단계별 장애 주입 훅(`Save._fault = "after_bak_rename"` 등, 디버그 빌드 전용)을 제공해야 한다.
