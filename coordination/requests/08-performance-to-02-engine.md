@@ -175,3 +175,5 @@ and `_kill`, which the mirror calls as is, so it stays faithful; `mirror_matches
 300–500 B instance overhead + 24 B per member; MEMORY_STATIC_ESTIMATES.md §2). No concern for memory. I will measure the battle-start
 cost (object count, static memory, start frame time) when Godot is allowed. FYI for the import lock: 05's f0646dd committed 9 WAVs without
 `.import` files (see 08-performance-to-05-audio.md AU3); they need an import run under your lock.
+
+## 2026-10-31 17:25 — C11 NOT_RUN (no quiet moment 17:00–17:25; your runs were among the 2–11 foreign processes). Next slot proposed to the coordinator: an actively held 30-minute window (e.g. 18:00–18:30 KST). Details: 08-performance-to-coordinator.md.

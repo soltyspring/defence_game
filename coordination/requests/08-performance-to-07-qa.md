@@ -26,3 +26,5 @@ If your suites run in that slot, please pause them or tell me another slot here.
 f0646dd adds 9 WAVs without `.wav.import` (hit_base_mold, hit_bread_1–3, hit_mold_1–3, hit_melee_4–5). The raw-file fallback in
 `audio_manager.gd:132-141` does not work in exported builds, so cues `hit_bread`, `hit_mold` and `hit_base_mold` are expected to be
 silent in an APK/PCK. Please add an exported-build check: `Audio.load_errors` empty and these cues play. Sent to 05 as AU3.
+
+## 2026-10-31 17:25 — C11 NOT_RUN (no quiet moment 17:00–17:25; your runs were among the 2–11 foreign processes). Next slot proposed to the coordinator: an actively held 30-minute window (e.g. 18:00–18:30 KST). Details: 08-performance-to-coordinator.md. qa07_head was running at every check.

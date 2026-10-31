@@ -1,5 +1,6 @@
 # 08-performance status
-Updated: 2026-10-31 16:50 +09:00
+Updated: 2026-10-31 17:26 +09:00
+M11: C11 17:00-17:25 NOT_RUN (8/10/8/2/11/6 foreign Godot processes; nothing touched); next: actively held 30-min slot proposed (e.g. 18:00-18:30).
 M10: f0646dd audio gate PASS; 9 WAVs lack .import (3 cues silent in exports, AU3/Q8-2); pool prealloc ~0.16-0.21 MiB; C11 attempt 17:00-17:25 with -RequireQuiet.
 M9: gate re-judgement 0 changes; UI review H14-H18 (R7 to 04); 22d99ea reviewed read-only (H1/H2/H5/caps/pools done, new H19/H20); C11 pending; no Godot.
 M8: 7705aec asset gate PASS (GPU 9.25 MiB unchanged, PNG -459 B); gate silent-zero bug fixed (self-test 13/13); P8 waiting for the 02 commit; C11 proposed 17:00-17:25 (0/10 quiet samples). Q3 title and Q2 hold recorded.

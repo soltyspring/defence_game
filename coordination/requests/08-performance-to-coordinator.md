@@ -26,3 +26,20 @@ another role (not 08; presumably 02 checking P2b); an `--import` at ~16:29; `tes
 Proposal: open C11 right after these finish. A concrete suggestion is **17:00–17:25 KST**, or whenever the coordinator can hold 01/02/04/07
 for 25 minutes. My run uses `ab_retest.ps1 -RequireQuiet`: it waits up to 10 min for zero foreign Godot processes and otherwise exits 2
 without numbers, so nothing needs to be killed.
+
+## C11 result — 2026-10-31 17:00–17:25: **NOT_RUN** (no quiet moment)
+Runner: `tools/perf/c11_window.ps1 -Start 17:00 -End 17:25 -EveryMin 5` (checks only; no process was stopped, paused or touched).
+| Check | Foreign Godot/emulator processes | Seen (command fragments) |
+|---|---|---|
+| 17:00:33 | 8 | qa07_head (07), ui04_head snapshot (04), defence_audio (05), targeting_equivalence.gd (another role), tests |
+| 17:05:01 | 10 | multi_seed_sim.gd (01/02?), defence_audio_sandbox (05), qa07_head (07), targeting_equivalence.gd, tests |
+| 17:10:01 | 8 | multi_seed_sim.gd, defence_audio (05), qa07_head (07), ui04_gate_170931 (04) |
+| 17:15:00 | 2 | `--path defence` (shared project), qa07_head (07) |
+| 17:20:01 | 11 | defence_art_read (03), qa07_head (07), ui04_b015 (04), selftest.gd ×2 (02), tests |
+| 17:25:00 | 6 | art03_v011 (03), an `--import`, targeting_equivalence.gd |
+Raw: build/perf/c11_20261031-170033/checks.json. No measurement was taken, so (a) A/B, (b) STEPPING re-check, (c) view/UI A/B and
+(d) equivalence are all still pending. All earlier desktop timings stay CONTENDED/INVALID.
+**Next-window proposal:** passive waiting does not work (all 6 checks busy; 07's qa07_head was present in every check). Please
+**actively hold** 01/02/03/04/05/07 Godot runs for one 30-minute slot, e.g. **18:00–18:30 KST** or right after the next checkpoint, and
+write "C11 HOLD <start>–<end>" here. I will run `.\tools\perf\c11_window.ps1 -Start <start> -End <start+5min> -EveryMin 1` so it starts
+at the first minute with 0 foreign processes. The whole sequence needs about 20–25 minutes.

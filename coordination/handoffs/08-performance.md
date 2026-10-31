@@ -1,4 +1,18 @@
 # 08-performance handoff
+## M11 — C11 attempt 17:00–17:25: NOT_RUN (2026-10-31 17:26 +09:00)
+- `tools/perf/c11_window.ps1` (new): scheduled foreign-process checks; when a check finds 0 it runs the sequence (a) A/B `-RequireQuiet`,
+  (b) STEPPING probe on a clean HEAD snapshot, (c) view and UI A/B, (d) targeting_equivalence, each run monitored once per second
+  (CONTAMINATED label). Dry run verified the NOT_RUN path (exit 3).
+- Real attempt: checks at 17:00/05/10/15/20/25 saw 8/10/8/2/11/6 foreign processes (07 qa07_head every time; 01/02/03/04/05 too). **Nothing
+  measured, nothing touched.** The background launch at 16:50 did not survive in this tool host, so the runner ran in the foreground
+  17:00–17:25.
+- Proposed: an actively held 30-minute slot (e.g. 18:00–18:30), using `-EveryMin 1`. Written to the coordinator, 02 and 07.
+- M10 commit: `1fd974b88ef87a300691ea053fa37c073192f18a` [Docs], 16:48:40 (`git show --stat` 6 files; `git branch -r --contains` →
+  origin/main). The "16:50" in MEMORY_STATIC_ESTIMATES.md and M10 is approximate; the commit time is 16:48:40.
+- Next steps (exact): when the coordinator writes "C11 HOLD <start>–<end>", run
+  `.\tools\perf\c11_window.ps1 -Start <start> -End <start+5> -EveryMin 1`. Then record the results in BASELINE §7 and the requests, and
+  release the window. Until then: Godot-free work only; run the asset gate on new 03/05 commits.
+- M11 commit: `c99106ad5d25ac5cbd48287a26a17d0e6b689c10` [Test], 17:25:58. Verified with `git show --stat` (7 files incl. tools/perf/c11_window.ps1 +144), and `git branch -r --contains` shows origin/main.
 ## M10 — audio residency + pool estimate (16:50), C11 attempt pending at 17:00
 - Static, no Godot. 05 f0646dd: gate PASS (38 SFX, PCM ≤ 0.83 MiB, music 0.56 MiB). All SFX are loaded at startup as QOA (≈ 0.2 MiB), music
   is loaded on play (≤ 2 during a crossfade), 18 players. **Defect: 9 committed WAVs without `.import`, so 3 cues would be silent in exports**
