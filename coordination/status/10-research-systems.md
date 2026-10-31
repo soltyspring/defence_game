@@ -8,4 +8,4 @@ Status: v0.32 DONE (02 52f9fa3 re-verified, §9.24).
 - userdata_canary.ps1 is now hash/mtime/size based against a baseline (X1 removed the rewrite signal). 00:57→02:42: save unchanged, no real-folder runs; 214 qa07 removals (07 move, destination not checked).
 - heavy_run.ps1 (coordinator 01:20 install) passes the scope test 4/4. H5 (tool-limit kill → overlap) reported.
 User decisions: Q1 = A; Q2 = 보류; Q3 = "빵집 기사단: 곰팡이 디펜스"; Q4 = "빵집 기사단"; Q5 unanswered (D28 is a default only).
-Pushed: … 4dcb3f6, f8a2b44, v0.32 04a5d6f4c42218a4dbde5dc7b2d3a71ad7d93ce8.
+Pushed: … 4dcb3f6, f8a2b44, v0.32 7f45b5f8e8ad0e606bda63e80569a6983a8767e1.

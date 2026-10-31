@@ -9,7 +9,7 @@ Updated: 2026-11-01 ~02:50 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
 ## v0.32 (~02:50 KST): 52f9fa3 re-verification
-- **Pushed: 04a5d6f4c42218a4dbde5dc7b2d3a71ad7d93ce8** (origin/main). The SHA record itself is a separate [Docs] commit.
+- **Pushed: 7f45b5f8e8ad0e606bda63e80569a6983a8767e1** (origin/main). Correction: the v0.32 commit itself carried a placeholder SHA (04a5d6f…) written before the push. That value never existed; this [Docs] commit replaces it.
 - Heavy jobs: ALWAYS detached, `Start-Process pwsh -File docs/research/systems/.local_inspect/hr_job.ps1 -Job <c|d> -Out <file>`, then poll `<file>.status` in tool calls under 15 min. A direct heavy_run call from a tool call can be killed at 30 min (lock wait counts), and the Godot child then runs outside the lock (01:47 incident).
 - AC driver .local_inspect/run_ac_scenario.ps1 plus probes/ac_evaluate.py <out>. probe_update_scenario.gd now reports upgrade_paid, migration_notice, pre-backups and signals, and has `--mode=ack`.
 - Canary: `userdata_canary.ps1 -SaveBaseline` then compare. The baseline was taken 00:57:29.
