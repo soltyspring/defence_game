@@ -53,13 +53,25 @@ State at checkpoint: work stopped at a safe point. The owned working tree is CLE
 - Gate hardening: a fixed %TEMP%\ui04_gate dir was half-deleted while another process held a file, so tests were "File not found" (17:01; nothing was published). The gate now uses a unique dir per run and checks the snapshot is complete (environment failure = exit 2, distinct from test failure).
 - Logo (19245a5) verified at integer scale on DISPLAY2 ko/en 1×/2×; CVD sims via 07's cvd_sim.gd (build/qa/logo_cvd).
 - Waiting: 02 R13/R14; 01 R5–R7; 07/08 re-verification.
+## 17:26 milestone (dependencies resolved: 02 4d77225 / 22d99ea, 10 e340144)
+- 97c8b9c: upgrade panel calls `Events.cmd_buy_upgrade(id,to_level)` and waits for `Events.upgrade_result` (fallback `Save.buy_upgrade`). The UI never edits Save.progress. Codes map to the 4 message kinds (ok/already_applied → good; not_enough_coins/locked → warn; max_level → info; save_failed/save_uncertain/read_only/unknown_id/invalid_level/no_reply → error). A 400 ms lock (`BUY_LOCK_MS`) makes a double tap one call. Real engine on DISPLAY2: ok once with the second tap ignored (Lv 1→2), not_enough_coins charged nothing, max_level sent no request.
+- 97c8b9c: the first-wave banner listens to the real `wave_cleared`. r01 HUD wave total is 3 (pressure waves excluded). After 01's a262640 the first `wave_cleared` fires at t≈45.0 s with no player action (was ≈67.5 s before a262640).
+- 8104970: `--title-text` forces the text fallback and the log prints the drawn lines. QA-B015 captures from a cb2470a snapshot on DISPLAY2 (build/qa/b015_cb2470a/*_1_menu.png), all read back and checked by eye, no clipping:
+  - en 640+notch (slot 556): "Bakery Knights:"@36 (312 px) + "Mold Defense"@24 (174 px). Same at 1280+notch (2×).
+  - en 640 no notch (slot 624): 1 line @36, 588 px. en 1600+notch (800 wide, slot 716): 1 line @36.
+  - ko all widths: 1 line @36, 456 px.
+  - Logo mode 640+notch ko/en: 2-line logo at integer scale, above the subtitle.
+  The earlier build/qa/b015/ set was taken at 97c8b9c (before the hook), so it does NOT show text mode. Ignore it.
+- 7ed4a5f: 1 of 13 visible runs failed the wave_cleared check. Cause: App pauses the battle on APPLICATION_FOCUS_OUT and `sim.step()` returns while paused, so the fast-forward loop ran out of guard frames at t=36.7 s. The test now resumes the battle if it was paused and logs it. Verified with an injected focus-out (headless, 44/44) and 5 visible runs (44/44). Gate: UI 3354/0, integration 44/0.
+- Not done: 03's per-locale title pages (`ui_title_ko`/`ui_title_en`) are only in the shared tree as uncommitted 03 WIP (committed `ui_title` is shown as deleted there). title_block.gd still reads `ui_title`. Switch after 03 commits.
 ## Unfinished / open (not done, do not claim)
 1. Theme-A labels: waiting for 01 to commit data/text. Then: run test_ui (typography gate) + worst-layout ko/en visible captures.
 2. 2.5× (non-integer) pixel text irregular (57–68% odd runs): waiting for 02 `scale_mode="integer"` (04 R9).
 3. Shared dev-tree import stale (ui_main, char_*_adv, char_boss_*): waiting for 02 `--import` (R11). Fresh snapshots render correctly.
 4. OFL licence text not in the APK; release preset should exclude mock/diag code and ship arm64 only (R12).
 5. APK not installed by 04 on any emulator (02 owns LaneDefence_Phone; slot requested in R12). No physical device; no release key/AAB (user actions).
-6. Not implemented: 2× speed UI, flash-limit/hold-toggle settings. The upgrade screen exists (6051b3c) but cannot purchase until 02 R14.
+6. Not implemented: 2× speed UI, flash-limit/hold-toggle settings. Upgrade purchases work on the real engine since 97c8b9c; not tested on a device.
+7. Title atlas per locale (wait for 03 commit), see 17:26.
 
 ## Exact next steps on resume
 1. Read coordinator-to-04-client.md, DECISIONS.md, 02-engine-to-04-client.md (R9/R11/R12 replies), 01-director-to-04-client.md (theme labels).

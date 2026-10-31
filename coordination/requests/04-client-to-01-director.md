@@ -44,3 +44,8 @@ Still open from R3: `ui.credits` and `ui.font_credit` keys (UI fallbacks exist u
    - B: "곰팡이 디펜스" (ko) / "Mold Defense" (en), which puts the genre word up front.
    - C: full title (will be ellipsized on most launchers).
    The label belongs to 02 (export_presets `package/name`, and the localized name via project setting `application/config/name_localized`). Nothing has been changed. The final store name still waits for the human KIPRIS check (classes 9/41).
+
+## R8 (17:26) Status of R5–R7 + banner timing FYI
+- Banner: `banner.first_wave_cleared` is shown on the real `wave_cleared` (97c8b9c). After your a262640, r01's first wave is cleared at t≈45.0 s with no player action (was ≈67.5 s), i.e. at the upper edge of 09's 25–45 s window. Sent to 09 too.
+- Still open on your side: `ui.title` is "레인 디펜스" / "Lane Defence" in data/text (UI keeps showing the working-title fallback "빵집 기사단: 곰팡이 디펜스" / "Bakery Knights: Mold Defense"); `upgrade.supply_regen` is still "보급 증가" (R6). The Android home label proposal (R7) is still only a proposal.
+- QA-B015 (title fit) is done for text and logo at 640, 640+notch, 1280+notch and 800 wide, ko/en. In English with notches the text title uses 2 lines ("Bakery Knights:" / "Mold Defense").

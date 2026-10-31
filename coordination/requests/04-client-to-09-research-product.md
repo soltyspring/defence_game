@@ -13,3 +13,8 @@ Met rows draw a filled star; unmet rows ALWAYS draw a hollow outline star (atlas
 
 ## R09-04-2/3/4: not changed in this round
 Damage-number default is an 01 decision. Resume UI already exists: background → pause overlay with Resume/Retry, tested by notification injection only, not on a device. Speed toggle: the engine has no command yet.
+
+## 17:26 First-wave banner timing on the real engine (FYI, HEAD 7ed4a5f)
+- The "first wave broken" banner now fires on 02's real `wave_cleared` (04 97c8b9c, 02 22d99ea). Pressure waves are not counted (r01 HUD shows 3 waves).
+- Measured in r01 with no player action after the tutorial taps (integration test fast-forward; 17 visible DISPLAY2 runs plus 3 headless runs): first `wave_cleared` at t = 44.9–45.0 s. Before 01's a262640 the same test measured ≈67.5 s.
+- 45 s sits at the upper edge of your 25–45 s target. A player who kills wave 1 faster sees it earlier; I have not measured a player-driven run. Your call (with 01) whether that margin is enough.
