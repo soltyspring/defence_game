@@ -9,6 +9,9 @@ extends RefCounted
 ## right-hand column above the bottom row.
 
 const GAP := 4.0
+const GROUND_FROM_BOTTOM := 70.0              # 360 - battle_view.ground_y (290), bottom-anchored camera (02)
+const THREAT_ABOVE_GROUND := 34.0             # marker bottom 34 px above the ground row: over 32 px unit heads
+const THREAT_SIZE := Vector2(44, 34)          # = ThreatMarker.SIZE
 
 static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min_target: float) -> Dictionary:
 	var t := maxf(min_target, 40.0)
@@ -85,6 +88,12 @@ static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min
 	out.tutorial = Rect2(Vector2(s.position.x, s.position.y + top_h + 24), Vector2(strip_w, 20.0))
 	out.toast = Rect2(Vector2(s.position.x, s.position.y + top_h + 46), Vector2(strip_w, 20.0))
 	out.banner = Rect2(Vector2(s.position.x, maxf(view.y * 0.36, s.position.y + top_h + 70)), Vector2(strip_w, 32.0))
+	# off-screen threat markers (03 A11): just above the lane row at the screen edges. 02's camera keeps
+	# the ground GROUND_FROM_BOTTOM px above the view bottom (ground_y 290 in the 360 px base view) in
+	# every view height. Right marker stays left of a stacked skill column.
+	var ty := roundf(view.y - GROUND_FROM_BOTTOM - THREAT_ABOVE_GROUND - THREAT_SIZE.y)
+	out.threat_right = Rect2(Vector2(strip_end - THREAT_SIZE.x, ty), THREAT_SIZE)
+	out.threat_left = Rect2(Vector2(s.position.x, ty), THREAT_SIZE)
 	return out
 
 ## All interactive rects, for validation.
@@ -134,4 +143,22 @@ static func validate(l: Dictionary) -> PackedStringArray:
 				problems.append("%s overlaps top readout %d" % [strips[i], k])
 	if l.overflow:
 		problems.append("bottom row overflow")
+	# threat markers: inside safe, clear of every control, strip and top readout, and of each other
+	for key in ["threat_right", "threat_left"]:
+		if not l.has(key):
+			continue
+		var a: Rect2 = l[key]
+		if not safe.encloses(a):
+			problems.append("%s outside safe %s" % [key, a])
+		for ti in rects.size():
+			if a.intersects(rects[ti]):
+				problems.append("%s overlaps touch target %d %s" % [key, ti, rects[ti]])
+		for sk in strips:
+			if a.intersects(l[sk]):
+				problems.append("%s overlaps %s" % [key, sk])
+		for k in fixed.size():
+			if a.intersects(fixed[k]):
+				problems.append("%s overlaps top readout %d" % [key, k])
+	if l.has("threat_right") and (l.threat_right as Rect2).intersects(l.threat_left):
+		problems.append("threat markers overlap each other")
 	return problems

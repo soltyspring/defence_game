@@ -113,6 +113,15 @@ func _capture(dir: String, tag: String) -> void:
 	bus.tutorial_step.emit("tut_deploy_unit")
 	bus.toast.emit("not_enough_gold", {})
 	await _frames(3); await _shot(dir, tag, "3_hud")
+	# 03 A11 edge markers (mock `threat`): t=2.5 above shows the nest marker; enemy ahead, then enemy behind
+	mock.t = 30.0
+	mock._emit_snapshot()
+	await _frames(3); await _shot(dir, tag, "3t_threat_enemy_ahead")
+	mock.t = 60.0
+	mock.hero_x = 900.0
+	mock._emit_snapshot()
+	await _frames(3); await _shot(dir, tag, "3u_threat_enemy_behind")
+	mock.hero_x = 80.0
 	bus.cmd_set_paused.emit(true)
 	await _frames(3); await _shot(dir, tag, "4_pause")
 	bus.cmd_set_paused.emit(false)

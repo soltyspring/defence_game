@@ -39,7 +39,7 @@ var icon: Texture2D:
 		if v != icon:
 			icon = v
 			queue_redraw()
-var fill := Color(0.22, 0.25, 0.33, 0.95):
+var fill: Color = preload("res://src/ui/ui_style.gd").C_PANEL_LIGHT:   # default fill follows the chrome palette (03 A10)
 	set(v):
 		if v != fill:
 			fill = v

@@ -63,6 +63,8 @@ func _run() -> void:
 	await test_qaj3_and_upgrades()
 	await test_title_block()
 	await test_redraw_and_bar_pattern()
+	await test_threat_marker()
+	test_chrome_palette()
 	for s in SECTIONS:
 		check(done.has(s), "section %s ran to completion (aborted by a script error otherwise)" % s)
 	print("[test_ui] passed=%d failed=%d" % [passes, failures.size()])
@@ -72,7 +74,7 @@ func _run() -> void:
 		print("  - " + f)
 	quit(1 if failures.size() > 0 else 0)
 
-const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard", "back_once", "wave_cleared", "upgrades", "title", "redraw_pattern"]
+const SECTIONS := ["compile", "layout", "hud_input", "hud_state", "hud_pause", "result", "round_select", "menu_settings", "korean_text", "atlas_guard", "back_once", "wave_cleared", "upgrades", "title", "redraw_pattern", "threat_marker", "chrome"]
 var done := {}
 
 func test_compile_all(dir_path: String) -> void:
@@ -1034,3 +1036,103 @@ func test_redraw_and_bar_pattern() -> void:
 	hud.queue_free()
 	await _frames()
 	done["redraw_pattern"] = true
+
+# ---------------------------------------------------------------- 03 A11 off-screen threat marker
+
+func test_threat_marker() -> void:
+	var TM := load("res://src/ui/threat_marker.gd")
+	# --- pure rules (r01-like numbers: 640 px view at x 0..640, nest left edge 1012, spawn x 1538)
+	var base := {"view_left": 0.0, "view_right": 640.0, "nest_left": 1012.0, "enemy_visible": false}
+	var r: Dictionary = TM.compute({})
+	check(r.right.kind == "" and r.left.kind == "", "threat: no snapshot field → no markers (inert until 02 R16)")
+	r = TM.compute({"nest_left": 1012.0})
+	check(r.right.kind == "", "threat: without the view range nothing is shown")
+	r = TM.compute(base)
+	check(r.right.kind == "nest" and int(r.right.m) == 24 and r.left.kind == "", "threat: nest off screen → right nest marker, 372 px = 24 m (%s)" % [r])
+	var e := base.duplicate(); e["enemy_right"] = 1538.0
+	r = TM.compute(e)
+	check(r.right.kind == "enemy" and int(r.right.m) == 57, "threat: enemy off screen right and none visible → enemy marker first, 898 px = 57 m (%s)" % [r])
+	e["enemy_visible"] = true
+	r = TM.compute(e)
+	check(r.right.kind == "nest", "threat: an enemy on screen → right marker shows the nest instead (%s)" % [r])
+	var p := base.duplicate(); p.view_left = 412.0; p.view_right = 1035.0     # 23 px of nest visible
+	r = TM.compute(p)
+	check(r.right.kind == "nest" and int(r.right.m) == 1, "threat: < 24 px of nest visible → still marked, min 1 m (%s)" % [r])
+	p.view_left = 413.0; p.view_right = 1036.0                                  # 24 px visible
+	r = TM.compute(p)
+	check(r.right.kind == "", "threat: 24 px of nest visible (03 contrast limit) → no nest marker (%s)" % [r])
+	var b := base.duplicate(); b.view_left = 300.0; b.view_right = 940.0; b["enemy_left"] = 120.0
+	r = TM.compute(b)
+	check(r.left.kind == "enemy" and int(r.left.m) == 12, "threat: enemy behind the camera → left marker, 180 px = 12 m (%s)" % [r])
+	check(TM.metres(50000.0) == 999 and TM.metres(0.0) == 1, "threat: metres clamp to 1..999")
+	# --- layout: 640, 640 + notches, 800 wide, 800x450; markers inside safe and clear of all HUD parts
+	var cases := {"640": [Vector2(640, 360), Rect2(0, 0, 640, 360)], "640_notch": [Vector2(640, 360), Rect2(34, 0, 572, 360)],
+		"800": [Vector2(800, 360), Rect2(0, 0, 800, 360)], "800x450_notch": [Vector2(800, 450), Rect2(34, 0, 732, 450)]}
+	for cname in cases:
+		var v: Vector2 = cases[cname][0]
+		var sf: Rect2 = cases[cname][1]
+		for sk in [0, 3]:
+			var l: Dictionary = HudLayout.compute(v, sf, 5, sk, 40.0)
+			var probs := HudLayout.validate(l)
+			var rr: Rect2 = l.threat_right
+			var rl: Rect2 = l.threat_left
+			var ground := v.y - HudLayout.GROUND_FROM_BOTTOM
+			check(probs.is_empty() and sf.encloses(rr) and sf.encloses(rl) and rr.end.y <= ground - 30.0 and rr.size == TM.SIZE,
+				"threat layout %s skills=%d: right %s left %s above ground %.0f, valid (%s)" % [cname, sk, rr, rl, ground, ", ".join(probs)])
+	# --- mounted HUD: snapshot field drives the markers; change-only redraw; hidden after the battle
+	SafeArea.override_view_size = Vector2(640, 360)
+	SafeArea.override_safe_rect = Rect2(34, 0, 572, 360)
+	var hud: Control = _mount("res://scenes/ui/hud.tscn")
+	bus.battle_started.emit(MockEngine.sample_info(5, 3))
+	await _frames()
+	check(not hud.threat_right.visible and not hud.threat_left.visible, "threat: markers hidden before any snapshot")
+	var s := {"gold": 0, "cards": [], "skills": [], "threat": e.duplicate()}
+	s.threat.enemy_visible = false
+	bus.hud_snapshot.emit(s)
+	await _frames(2)
+	check(hud.threat_right.visible and hud.threat_right.state.kind == "enemy" and hud.threat_right.label() == "57m" and not hud.threat_left.visible,
+		"threat: HUD right marker shows enemy 57m (%s, '%s')" % [hud.threat_right.state, hud.threat_right.label()])
+	check(hud.threat_right.mouse_filter == Control.MOUSE_FILTER_IGNORE, "threat: marker never takes touches (battlefield drag passes)")
+	check(Rect2(hud.threat_right.position, hud.threat_right.size) == (hud.layout.threat_right as Rect2), "threat: marker placed at layout rect %s" % hud.layout.threat_right)
+	var n0: int = hud.threat_right.redraws
+	bus.hud_snapshot.emit(s)
+	bus.hud_snapshot.emit(s)
+	await _frames(2)
+	check(hud.threat_right.redraws == n0, "threat: identical snapshots do not redraw the marker (%d → %d)" % [n0, hud.threat_right.redraws])
+	bus.battle_ended.emit({"round_id": "r01", "won": true, "stars": 1, "time": 5.0})
+	bus.hud_snapshot.emit(s)
+	await _frames()
+	check(not hud.threat_right.visible and not hud.threat_left.visible, "threat: markers hidden after battle end")
+	hud.queue_free()
+	SafeArea.override_safe_rect = Rect2(0, 0, 640, 360)
+	await _frames()
+	done["threat_marker"] = true
+
+# ---------------------------------------------------------------- 03 A10 bakery chrome palette
+
+static func _wcag(a: Color, b: Color) -> float:
+	var lum := func(c: Color) -> float:
+		var ch := [c.r, c.g, c.b]
+		var l := []
+		for v in ch:
+			l.append(v / 12.92 if v <= 0.04045 else pow((v + 0.055) / 1.055, 2.4))
+		return 0.2126 * l[0] + 0.7152 * l[1] + 0.0722 * l[2]
+	var la: float = lum.call(a)
+	var lb: float = lum.call(b)
+	return (maxf(la, lb) + 0.05) / (minf(la, lb) + 0.05)
+
+func test_chrome_palette() -> void:
+	# opaque ratios as published by 03 (docs/art/evidence/ui_bakery/ui_contrast.json), ±0.1
+	var want := [["C_TEXT/C_BG", UiStyle_.C_TEXT, UiStyle_.C_BG, 14.7], ["C_TEXT/C_PANEL", UiStyle_.C_TEXT, UiStyle_.C_PANEL, 12.5],
+		["C_GOLD/C_PANEL", UiStyle_.C_GOLD, UiStyle_.C_PANEL, 9.5], ["C_TEXT/C_PANEL_LIGHT", UiStyle_.C_TEXT, UiStyle_.C_PANEL_LIGHT, 7.2],
+		["C_GOLD/C_PANEL_LIGHT", UiStyle_.C_GOLD, UiStyle_.C_PANEL_LIGHT, 5.5], ["C_TEXT_DIM/C_DISABLED", UiStyle_.C_TEXT_DIM, UiStyle_.C_DISABLED, 5.8]]
+	for w in want:
+		var a: Color = w[1]
+		var b: Color = w[2]
+		b.a = 1.0
+		var got := _wcag(a, b)
+		check(absf(got - float(w[3])) <= 0.1 and got >= 4.5, "chrome %s contrast %.2f (03: %.1f, text ≥ 4.5)" % [w[0], got, w[3]])
+	var tb: Control = load("res://src/ui/touch_button.gd").new()
+	check(tb.fill == UiStyle_.C_PANEL_LIGHT, "default button fill = C_PANEL_LIGHT (%s)" % tb.fill)
+	tb.free()
+	done["chrome"] = true

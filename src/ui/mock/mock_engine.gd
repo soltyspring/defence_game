@@ -191,7 +191,23 @@ func snapshot() -> Dictionary:
 		"player_base": {"hp": player_hp, "hp_max": 1500}, "enemy_base": {"hp": enemy_hp, "hp_max": 1200},
 		"wave": {"index": wave_i, "total": 5, "next_in": 20.0 - fmod(t, 20.0), "boss": wave_i == 5},
 		"army": {"player": army, "enemy": 9, "cap": 36}, "paused": paused,
-		"boss": {"alive": boss_alive, "hp": 820.0, "hp_max": 1400.0, "id": "boss_warlord", "name_key": "enemy.boss_warlord.name"}}
+		"boss": {"alive": boss_alive, "hp": 820.0, "hp_max": 1400.0, "id": "boss_warlord", "name_key": "enemy.boss_warlord.name"},
+		"threat": _mock_threat()}
+
+## Fake `threat` field (04→02 R16 proposal) so the preview shows the edge markers: camera at hero + 60,
+## 640 px view, r01-like nest edge x 1012 (03 A11) and one enemy walking in from x 1538 after 25 s.
+func _mock_threat() -> Dictionary:
+	var cx := clampf(float(hero_x) + 60.0, 230.0, 1330.0)
+	var d := {"view_left": cx - 320.0, "view_right": cx + 320.0, "nest_left": 1012.0, "enemy_visible": false}
+	if t >= 25.0:
+		var ex := 1538.0 - 38.0 * (t - 25.0)
+		if ex > d.view_right:
+			d["enemy_right"] = ex
+		elif ex >= d.view_left:
+			d["enemy_visible"] = true
+		else:
+			d["enemy_left"] = ex
+	return d
 
 func _emit_snapshot() -> void:
 	bus.hud_snapshot.emit(snapshot())

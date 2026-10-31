@@ -5,6 +5,7 @@ extends "res://src/ui/ui_screen.gd"
 ##          cmd_hero_skill, cmd_set_paused, cmd_retry, cmd_open_screen, cmd_set_setting.
 
 const HudLayout := preload("res://src/ui/hud_layout.gd")
+const ThreatMarker := preload("res://src/ui/threat_marker.gd")
 const TOAST_SECONDS := 1.6
 const BANNER_SECONDS := 1.8
 ## Engine toast key → tutorial step that explains the same event (show only the hint; 15:59 theme-A capture
@@ -34,6 +35,8 @@ var unknown_toasts: Array = []     # QA: engine toast keys with no text (not sho
 var pause_layer: Control
 var pause_buttons: Array = []
 var settings_panel: Control
+var threat_right: Control         # ThreatMarker (right edge: enemy ahead / nest)
+var threat_left: Control          # ThreatMarker (left edge: enemy behind the camera)
 
 var _battle_over := false         # after battle_ended: ignore pause state from snapshots (07 QA-B002)
 var _held: Array[int] = []       # stack of held hero directions
@@ -98,6 +101,12 @@ func _build() -> void:
 	banner_label.add_theme_constant_override("shadow_offset_y", 2)
 	banner_label.add_theme_color_override("font_color", UiStyle.C_ACCENT)
 
+	threat_right = ThreatMarker.new()   # off-screen nest/enemy markers (03 A11); below the pause overlay
+	threat_right.side = &"right"
+	add_child(threat_right)
+	threat_left = ThreatMarker.new()
+	threat_left.side = &"left"
+	add_child(threat_left)
 	_build_pause_layer()
 	settings_panel = SettingsPanel.new()
 	settings_panel.hide()
@@ -238,8 +247,18 @@ func _on_snapshot(s: Dictionary) -> void:
 	if wi != _last_wave and _last_wave != -1 and wi > 0:
 		show_banner(UiText.t("ui.boss") if bool(wave.get("boss", false)) else UiText.t("ui.wave") % [wi, int(wave.get("total", 0))])
 	_last_wave = wi
+	_update_threat(s.get("threat", {}))
 	if not _battle_over and s.has("paused") and bool(s.paused) != paused:
 		_on_paused(bool(s.paused))
+
+## 03 A11: snapshot `threat` (02, R16) → edge markers. Missing field = markers hidden (inert until 02).
+func _update_threat(t: Variant) -> void:
+	var td: Dictionary = {}
+	if t is Dictionary and not _battle_over:
+		td = t
+	var d: Dictionary = ThreatMarker.compute(td)
+	threat_right.state = d.right
+	threat_left.state = d.left
 
 func _on_toast(key: String, _args: Dictionary) -> void:
 	var k := "toast." + key
@@ -284,6 +303,7 @@ func _on_tutorial_step(key: String) -> void:
 func _on_battle_ended(_result: Dictionary) -> void:
 	_battle_over = true
 	_on_tutorial_step("")
+	_update_threat({})
 	_release_all_holds()
 	pause_layer.hide()
 	settings_panel.hide()
@@ -446,6 +466,8 @@ func _layout() -> void:
 	_fit_label(toast_label, layout.toast)
 	_fit_label(banner_label, layout.banner)
 	_fit_label(tutorial_label, layout.tutorial)
+	place(threat_right, layout.threat_right)
+	place(threat_left, layout.threat_left)
 	place(pause_layer, Rect2(Vector2.ZERO, view))
 	var bw := 150.0
 	var bh := maxf(target, 40.0)

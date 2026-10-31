@@ -13,9 +13,14 @@ extends RefCounted
 ## - Contrast via whole-pixel drop shadow (1 px at 12, 2 px at 24+), not fractional outlines.
 ## - Resource numbers use fixed digit cells so values do not jitter as they change.
 
-const C_BG := Color(0.09, 0.10, 0.14)
-const C_PANEL := Color(0.13, 0.15, 0.21, 0.92)
-const C_PANEL_LIGHT := Color(0.22, 0.25, 0.33, 0.95)
+# Chrome: bakery palette from 03 A10 (2026-10-31 17:36, tools/art/ui_contrast.py, docs/art/evidence/ui_bakery/
+# ui_contrast.json). Opaque WCAG ratios per 03, re-computed by 04 (build/qa/tmp/chrome_contrast.py):
+# C_TEXT/C_BG 14.65, C_TEXT/C_PANEL 12.45, C_GOLD/C_PANEL 9.45, C_TEXT/C_PANEL_LIGHT 7.22,
+# C_GOLD/C_PANEL_LIGHT 5.49, C_TEXT_DIM/C_DISABLED 5.76 (was 3.65). Alphas unchanged (0.92/0.95), so over
+# the battlefield the panel ratios range e.g. C_GOLD/C_PANEL_LIGHT 5.00-5.73. C_MANA stays blue (03).
+const C_BG := Color(0.1647, 0.1020, 0.0706)              # #2a1a12
+const C_PANEL := Color(0.2392, 0.1451, 0.0980, 0.92)     # #3d2519
+const C_PANEL_LIGHT := Color(0.4314, 0.2706, 0.1569, 0.95)  # #6e4528
 const C_EDGE := Color(0.03, 0.03, 0.05)
 const C_HILITE := Color(1, 1, 1, 0.18)
 const C_TEXT := Color(0.96, 0.94, 0.88)
@@ -25,7 +30,7 @@ const C_MANA := Color(0.35, 0.65, 1.0)
 const C_HP_PLAYER := Color(0.36, 0.85, 0.42)
 const C_HP_ENEMY := Color(0.93, 0.32, 0.30)
 const C_ACCENT := Color(0.98, 0.62, 0.20)
-const C_DISABLED := Color(0.30, 0.31, 0.35, 0.92)
+const C_DISABLED := Color(0.1843, 0.1922, 0.2510, 0.92)  # #2f3140 (03 A10: dE76 >= 33.8 vs active in all CVD sims)
 const C_DIM := Color(0, 0, 0, 0.55)
 const C_STAR := Color(1.0, 0.85, 0.2)
 const C_STAR_OFF := Color(0.30, 0.30, 0.36)
