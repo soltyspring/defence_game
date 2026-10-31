@@ -21,6 +21,9 @@
 - Validation: test_bench_semantics 11/11 PASS, isolation log found, APPDATA restored. drawcall_run on 84c18ab exit 0, isolated, no
   stale-import warning. PowerShell parse 0 errors for the 6 changed scripts. The android_capture menu run exit 0 had 7/7 samples with
   the app and 631 frames.
+- Commit: `b0fb67930f76e8911ef75b568b1f6abc835fc3b7` `[Test] 드로우콜 항목별 분해(…), 에뮬레이터 r08 실행 불가 확인, 성능 실행 전부
+  비공개 사용자 폴더로 격리`, 24 files. Publish-Task.ps1 printed `PUSHED b0fb679… origin/main` (3cbdd23..b0fb679). Checked with
+  `git cat-file -t` = commit and `git branch -r --contains` = origin/main.
 
 ## M13 — C11 quiet window done (2026-10-31 18:00–18:23 KST)
 - First **VALID_QUIET** desktop run. 0 foreign processes at 18:00:01, and all 10 steps were CLEAN under the per-second monitor. Results:
