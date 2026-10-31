@@ -1,6 +1,6 @@
-# 04-client handoff — FINAL CHECKPOINT (user-requested shutdown)
-Updated: 2026-10-31 17:05 +09:00
-Session: sess_a24d01e7-e535-413c-9ff6-d5258090820b (Kiro CLI, claude-opus-5.5, trust-all; same window throughout, resumed after two account changes).
+# 04-client handoff
+Updated: 2026-11-01 00:30 +09:00 (latest section: "2026-11-01 00:30 resume"; the "FINAL CHECKPOINT" text below is historical)
+Session: sess_a24d01e7-e535-413c-9ff6-d5258090820b (Kiro CLI, claude-opus-5.5, trust-all; same window, resumed after account changes, the 20:27 quota stop and the 23:08 blue screen).
 State at checkpoint: work stopped at a safe point. The owned working tree is CLEAN (all 04 work committed and pushed). No 04-started Godot or emulator process is running. Nothing was left unverified or uncommitted.
 
 ## User decisions known to 04
@@ -89,6 +89,24 @@ State at checkpoint: work stopped at a safe point. The owned working tree is CLE
 - tests/integration/zoom_preview.gd: runtime-only combos current / zoom 4/3 / zoom + ×1.5 units on one seeded r06 battle (snapshot 84c18ab, DISPLAY2, isolated APPDATA via new `visible_launch.ps1 -IsolateAppData`; real save hashes unchanged). Enemy visible before engaging 6.0 → 3.9 s; units on screen −10–15 %; both sides visible 73.6 → 72.5 %; soldier 3.6 / 4.9 / 7.3 mm.
 - tools/build/text_screen_size.py: all Galmuri9 10 px numbers (HP, cost, income, army, badges, damage) are 1.43–1.63 mm (< 1.7 mm line); 12 px Hangul labels are 1.75–2.00 mm. The fix is a 04 task, not done yet (needs layout room).
 - Requests: 02 R18, 03, 07, 01 R10 (difficulty impact of 2 s less warning). Nothing decided.
+## 2026-11-01 00:30 resume after the 20:27 quota stop and the 23:08 blue screen (0x50)
+- Loss check: `checkpoint/quota-20261031-202729/04-client` (a9636a2) has 0 file differences from HEAD in 04 paths. After the blue screen the 7 files I was editing were intact: 0 NUL, 0 U+FFFD, same last lines as HEAD, and only my intended diffs.
+- New rule followed: every Godot run went through `coordination/heavy_run.ps1`, one at a time (lock waits of 11–17 min were normal).
+  - Lesson: a scriptblock inherits heavy_run's `$ErrorActionPreference='Stop'`. Godot's harmless stderr line "Unicode parsing error … Unexpected NUL character" (4 per import, present since 17:18, not new corruption) then aborted my 23:53 import after 7 s.
+  - Fix: set `$ErrorActionPreference='Continue'` inside the scriptblock. The aborted run left a START without END in heavy_run.log; the mutex was released.
+- **be2abb3 [Fix]** user:// isolation for every 04 runner (10 v0.26/v0.28): common.ps1 Enter/Exit-IsolatedAppData + Get-IsolationProof; verify_and_publish (gate fails if not proven), run_tests, flake_probe, build_android_debug; visible_launch isolated BY DEFAULT (`-RealUserData` to opt out). Proof: real save.json/.bak hashes unchanged, real logs 5 → 5, test logs print the private user_data_dir.
+- **d724b9a [Fix]** UI numbers Galmuri9 10 px → `UiStyle.NUM_READ` = Galmuri11 12 px (ink 11 px = 1.75 / 1.90 / 2.00 mm on 360 / 393 / 412 dp): base HP (bar 14 → 16 px), cap/income, army, card cost/badge, upgrade Lv/effect, menu version.
+  - Gate (23:41 dry run): UI 3402/0 (layout matrix included, + test_readable_numbers), integration 49/0, isolated.
+  - Published with Publish-Task directly; file hashes were identical to the gated snapshot.
+  - DISPLAY2 capture (640×360 + notches, r05, 2×): digits 22 device px = 11 px ink; card name → cost gap 1 logical px. docs/qa/readable_numbers/.
+  - Lane damage numbers (02 battle_view, Galmuri9 10) are still 1.43–1.63 mm → 02 R19.
+- **1850c3f [Fix]** threat marker distance is the fixed "%dm" (07 QA-B019; 01 R9 withdrawn). Gate/APK snapshots use `git -c core.autocrlf=false -c core.eol=lf archive` (06/10 CRLF finding). Gate UI 3402/0, integration 49/0, isolated.
+- Replies checked: 02 none to R16/R17/R18 (queued in its handoff); 01 none to R10; 03 A15 has 32 px drafts and waits for 02's zoom decision; my C_STAR_OFF note was wrong (unused constant; the hollow star uses C_TEXT_DIM, 6.37:1), corrected to 03.
+- APK not rebuilt (no need; the LF fix applies to the next build).
+## Exact next steps on resume (2026-11-01 00:30)
+1. Wait for 02 R16/R17/R18/R19, 01 R10, 03 after R17. Run Godot only via heavy_run.ps1, with `$ErrorActionPreference='Continue'` inside the block.
+2. When 02 adds `snapshot.threat`: one DISPLAY2 run of the integration test plus a marker frame.
+3. Open 04 items from requests not done yet: menu toast/notice path (10 v0.21/v0.27, 01 R8 D32 `notice.content_migrated`), r05 defeat hint (01 R7 D31), HP-bar fill width rounding (03 A14, optional).
 ## Exact next steps on resume (19:50)
 1. Read the replies to 02 R16/R17/R18, 01 R10 and 03 (unit size).
 2. 04 task: raise the Galmuri9 10 px numbers to ≥ 1.7 mm (Galmuri9 20 or Galmuri11 12), check the layout matrix and captures.

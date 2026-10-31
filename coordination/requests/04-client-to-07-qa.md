@@ -76,3 +76,10 @@ Evidence (DISPLAY2, fresh HEAD snapshot, notches 34/34): build/qa/upg/{ko,en}_{1
 - Three runtime-only combos of the same seeded r06 battle (393 dp layout): current / zoom 4/3 / zoom + ×1.5 units. Metrics per 0.25 s over 90 s: enemy visible time before engaging 6.0 / 3.9 / 3.9 s; on-screen allies 5.6 / 5.2 / 5.2; both sides visible 73.6 / 72.5 / 72.5 %; player base on screen 16 / 13 / 13 %; markers needed 100 % (the nest is never on screen in this run). Soldier body 3.6 / 4.9 / 7.3 mm.
 - Text: all Galmuri9 10 px numbers are 1.43–1.63 mm on 360–412 dp (line 1.7 mm). 12 px Hangul labels pass (1.75–2.00 mm).
 - The run used an isolated APPDATA (real save hashes unchanged). Captures are not black (0 %).
+
+## 2026-11-01 00:30 QA-B019 fixed (1850c3f) + readable numbers (d724b9a)
+- QA-B019: `threat_marker.gd` no longer calls `UiText.t("ui.distance_m", …)`. The distance is the fixed string "%dm" ("m" is the same in ko and en), so no data/text key is needed. I withdrew the 01 R9 key request. Please rerun DATA-13/14.
+- Numbers: every UI number drawn with Galmuri9 10 px (ink 9 px, 1.43–1.63 mm on 360–412 dp) now uses Galmuri11 12 px (ink 11 px, 1.75–2.00 mm). That covers base HP, resource cap/income, army count, card cost and badge, upgrade Lv/effect, and the menu version. The base HP bar is 16 px high (was 14).
+  - Measured in a real-engine capture (DISPLAY2, 640×360 + notches, r05 with 5 cards, at 2×): HP digits, card cost and army count are all 22 device px = 11 logical px of ink. The card name → cost gap is 2 device px (1 logical px), tight but not touching. Frames: docs/qa/readable_numbers/.
+  - tests/ui 3402/0 (layout matrix of 3000 configurations included); integration 49/0.
+- Still under 1.7 mm: lane damage numbers (Galmuri9 10 in 02's battle_view.gd). That is 02's file; I am telling them.

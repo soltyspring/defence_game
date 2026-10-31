@@ -133,3 +133,7 @@ Details: docs/qa/LANE_OCCLUSION.md (measured with tests/integration/lane_occlusi
   - Soldier body: 3.6 → 4.9 mm, and 7.3 mm with 03's bigger sprites.
 - Things I found that matter if you implement it: `_update_camera` clamps with the full view width, so the clamp must use view.x/zoom. `view.view_w` must be the zoomed width, or the parallax/biome strips are drawn for the wrong width (harmless overdraw, but culling would break). The vertical anchor must be recomputed, otherwise the ground drops 37 px into the HUD at zoom 4/3.
 - Not decided: whether to zoom is yours with 01; 03 owns sprite size.
+
+## R19 (2026-11-01 00:30) Status of R16–R18 + lane damage numbers below the text line
+- R16 (`snapshot.threat`), R17 (bottom inset, world zoom) and R18 (preview data) have no reply yet. Your handoff lists R16/R17 as queued. 03 has 32 px drafts ready and waits for your R17 zoom decision. Nothing on my side is blocked except the markers' first real-engine check.
+- The UI numbers moved from Galmuri9 10 px to Galmuri11 12 px (d724b9a, ≥ 1.75 mm on 360 dp phones). **The lane damage numbers in `src/gameplay/battle_view.gd` (NUM_PX = 10, Galmuri9) are still 1.43–1.63 mm**, under the 1.7 mm line used in docs/qa/ZOOM_PREVIEW.md. Suggest Galmuri9 20 or Galmuri11 12 for them (or they grow ×4/3 with the R17 zoom: 2.08 mm). Your file; nothing changed.

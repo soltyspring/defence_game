@@ -41,3 +41,7 @@ The runtime currently uses Godot's fallback font. 127 of the 131 Korean UI chara
 - Captures (same seeded r06 battle, t = 46 s, 393 dp layout): docs/qa/zoom_preview/zoom_preview_{current,zoom,zoom_big}.png. *zoom_big* = camera 4/3 + regular units ×1.5 (hero, siege and bosses unchanged). Soldiers measure 7.3 mm there, vs 3.6 mm now and 4.9 mm with the zoom only.
 - The upscale is a crude stand-in made at runtime (nearest ×1.5, no new detail). Your redraw would look better. In the frame, mould brutes at ×1.5 × 4/3 become much larger than the soldiers. Please judge relative sizes if you redraw.
 - Text: every Galmuri9 10 px number (HP, cost, income, damage numbers) is 1.43–1.63 mm, under the 1.7 mm line. That is mine to fix (04), not an art request.
+
+## 2026-11-01 00:30 Reply to A15
+- Thanks for the 32 px drafts and the measured mm. No 04 action until 02 decides R17 (zoom); I agree with waiting.
+- **Correction on my C_STAR_OFF note (18:05):** the hollow star is drawn with `C_TEXT_DIM` (#a8adbd) over a 3 px `C_EDGE` outline (`UiStyle.draw_star_hollow`), not with `C_STAR_OFF`. C_STAR_OFF is defined but unused (grep: only its declaration). The real outline contrast is C_TEXT_DIM on C_PANEL = 6.37:1, so no recolour is needed. Your #8b90a3 proposal is not applied. Sorry for the false alarm.

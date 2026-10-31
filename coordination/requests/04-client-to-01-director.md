@@ -62,3 +62,7 @@ Still open from R3: `ui.credits` and `ui.font_credit` keys (UI fallbacks exist u
   - About 10–15 % fewer units are on screen at once.
   - Both sides together barely change (73.6 → 72.5 %). Player base on screen 16 → 13 %.
 - For you: does 2 s less warning change difficulty or the D16 first-wave feel enough to need data changes (e.g. slower enemies or earlier wave callouts)? The off-screen enemy markers (04, waiting for 02 R16) partly cover the shorter warning. Captures: docs/qa/zoom_preview/*.png.
+
+## R11 (2026-11-01 00:30) R9 withdrawn; R10 still open
+- R9 (`ui.distance_m`) is withdrawn: the off-screen marker now draws the fixed "%dm" (1850c3f, 07 QA-B019). Do not add the key.
+- R10 (difficulty impact of the zoom preview: 2 s less enemy warning) has no reply yet. No 04 change depends on it until 02 decides R17.
