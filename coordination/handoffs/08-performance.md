@@ -12,7 +12,7 @@
 - Next steps (exact): (1) When 02 commits the WIP: `git archive` snapshot of that commit + `.godot` cache copy, run perf_frame_probe once
   (secondary monitor, CONTENDED label) and require STEPPING. (2) When C11 is granted: the M3 A/B command (`-RequireQuiet`), then the H1/H2
   frame baselines on a HEAD snapshot. (3) Run the asset gate on every new 03/05 asset commit.
-- M8 commit: recorded only after `git show` verification (below).
+- M8 commit: `14f8edcb377c04f22ee835e3dc1b63ec680c7d27` [Test], 16:30:47. Verified with `git show --stat` (9 files incl. tools/perf/asset_budget_check.py and test_asset_budget_check.py), and `git branch -r --contains` shows origin/main.
 ## M7 — "sim did not step" diagnosed (2026-10-31 16:18 +09:00)
 - User decision received: **Q2 monetization = hold** ("수익모델은 보류", 16:09 KST). Ads and billing stay disabled; there is no
   monetization UI. Effect on 08: no ad/billing SDK in APK/memory budgets; nothing to measure there.
