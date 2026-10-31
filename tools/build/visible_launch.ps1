@@ -22,8 +22,9 @@ param(
     [double[]]$ScreenCaptureAt = @(),   # seconds after placement: OS-level grab of the window rect on the secondary display
     [string]$EvidenceDir = '',
     [string]$ProjectPath = '',          # Godot project dir to run (default: this workspace). 07 QA-R5: clean HEAD snapshot, e.g. %TEMP%\qa07_head
-    [string]$IsolateAppData = ''        # 10's isolated_godot.ps1 method: the child gets APPDATA=<dir>, so user:// (save.json) can
-                                        # never resolve to the real player folder %APPDATA%\Godot\app_userdata\<name>
+    [string]$IsolateAppData = '',       # 10's isolated_godot.ps1 method: the child gets APPDATA=<dir>, so user:// (save.json) can
+                                        # never resolve to the real player folder. DEFAULT ON: <EvidenceDir>\appdata_<stamp> (10 v0.28)
+    [switch]$RealUserData               # opt out (not recommended): run with the real %APPDATA% user:// folder
 )
 . "$PSScriptRoot\common.ps1"
 $ErrorActionPreference = 'Stop'
@@ -112,10 +113,14 @@ if ($Scene) { $gargs += $Scene }
 if ($UserArgs.Count -gt 0) { $gargs += '--'; $gargs += $UserArgs }
 Write-Host "launch: $GodotGui $($gargs -join ' ')"
 $prevAppData = $env:APPDATA
+if (-not $IsolateAppData -and -not $RealUserData) { $IsolateAppData = Join-Path $EvidenceDir "appdata_$stamp" }
+$isoStart = Get-Date
 if ($IsolateAppData) {
     New-Item -ItemType Directory -Force $IsolateAppData | Out-Null
     $env:APPDATA = (Resolve-Path $IsolateAppData).Path   # inherited by the child only; restored right after the start
     $evidence['isolated_appdata'] = $env:APPDATA
+} else {
+    $evidence['isolated_appdata'] = 'OFF (-RealUserData)'
 }
 try {
     $p = Start-Process -FilePath $GodotGui -ArgumentList ($gargs | ForEach-Object { if ($_ -match '\s') { '"' + $_ + '"' } else { $_ } }) -PassThru -WorkingDirectory $proj
@@ -192,6 +197,11 @@ if ($ScreenCaptureAt.Count -gt 0) {
 }
 if ($NoWait) { $evidence.result = 'RUNNING'; $evidence | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $EvidenceDir "launch_$stamp.json") -Encoding utf8; exit 0 }
 if (-not $p.WaitForExit($TimeoutSec * 1000)) { Stop-Process -Id $p.Id; $evidence.result = 'TIMEOUT_STOPPED' } else { $evidence.result = "EXIT_$($p.ExitCode)" }
+if ($IsolateAppData) {
+    $pr = Get-IsolationProof (Resolve-Path $IsolateAppData).Path $isoStart
+    $evidence['isolation_proof'] = [ordered]@{ isolated = $pr.isolated; own_logs = $pr.own_logs; real_new_logs_any_process = $pr.real_new_logs_any_process }
+    Write-Host ("user:// isolated={0} own_logs={1} ({2})" -f $pr.isolated, $pr.own_logs, $IsolateAppData)
+}
 $evidence | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $EvidenceDir "launch_$stamp.json") -Encoding utf8
 Write-Host "result: $($evidence.result)  evidence: $(Join-Path $EvidenceDir "launch_$stamp.json")"
 if ($evidence.result -eq 'EXIT_0') { exit 0 } else { exit 5 }

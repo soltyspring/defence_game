@@ -5,12 +5,18 @@ param([switch]$SkipEngine)
 Assert-File $GodotConsole 'Godot console editor'
 Set-Location $Root
 $results = @()
+# user:// isolation (10 v0.26): every suite gets a private APPDATA under build\godot_appdata_<pid>.
+$isoDir = Join-Path $Root ("build\godot_appdata_{0}" -f $PID)
 function Invoke-Suite([string]$Name, [string[]]$GodotArgs) {
     Write-Host "=== $Name ==="
     $prev = $ErrorActionPreference; $ErrorActionPreference = 'Continue'   # Godot writes warnings to stderr
-    $out = & $GodotConsole @GodotArgs 2>&1 | Out-String
+    $t0 = Get-Date
+    $prevAppData = Enter-IsolatedAppData $isoDir
+    try { $out = & $GodotConsole @GodotArgs 2>&1 | Out-String; $code = $LASTEXITCODE } finally { Exit-IsolatedAppData $prevAppData }
     $ErrorActionPreference = $prev
-    $code = $LASTEXITCODE
+    $proof = Get-IsolationProof $isoDir $t0
+    Write-Host ("user:// isolated={0} own_logs={1} ({2})" -f $proof.isolated, $proof.own_logs, $isoDir)
+    if (-not $proof.isolated) { $code = 2; Write-Host 'ISOLATION NOT PROVEN (no Godot log under the private APPDATA): counted as failure' }
     # print summary lines and failures only (full log kept in build/qa/)
     $out -split "`n" | Where-Object { $_ -match '^\[|FAIL|SCRIPT ERROR|Parse Error|passed=' } | Select-Object -Unique | Select-Object -First 40 | ForEach-Object { Write-Host $_.TrimEnd() }
     New-Item -ItemType Directory -Force (Join-Path $Root 'build\qa') | Out-Null

@@ -43,8 +43,10 @@ if (Test-Path $apk) { Remove-Item $apk }
 $log = Join-Path $OutDir 'export.log'
 $ErrorActionPreference = 'Continue'
 $t0 = Get-Date
+$prevAppData = Enter-IsolatedAppData (Join-Path $OutDir 'appdata')   # user:// isolation (10 v0.26)
 & $GodotConsole --headless --path $work --import *> (Join-Path $OutDir 'import.log')
 & $GodotConsole --headless --path $work --export-debug 'Android' $apk *> $log
+Exit-IsolatedAppData $prevAppData
 $exportSec = [math]::Round(((Get-Date) - $t0).TotalSeconds, 1)
 $ErrorActionPreference = 'Stop'
 if (-not (Test-Path $apk)) { Write-Host "EXPORT FAILED, see $log"; Get-Content $log -Tail 20; exit 2 }

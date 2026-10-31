@@ -41,6 +41,10 @@ func _run() -> void:
 	# Gate: a script that fails to compile makes Godot skip code silently (runtime errors do not
 	# throw), which previously let this suite pass while hud.gd was broken. Fail loudly instead.
 	UiText.load_locale("ko")   # deterministic regardless of host locale
+	# user:// evidence for 10 v0.26: 04 runners give Godot a private APPDATA; print where user:// resolved.
+	var real_ad := OS.get_environment("UI04_REAL_APPDATA").replace("\\", "/")
+	var ud := OS.get_user_data_dir()
+	print("[test_ui] user_data_dir=%s%s" % [ud, "  WARNING: REAL user folder (run through tools/build/run_tests.ps1 or verify_and_publish.ps1)" if real_ad != "" and ud.begins_with(real_ad) else ""])
 	# Environment gate: an un-imported project makes every font check fail (14 FAILs seen once at 1215516
 	# when the gate's --import had not completed). Report that cause explicitly.
 	var imported := ResourceLoader.exists("res://assets/fonts/Galmuri11.ttf") and load("res://assets/fonts/Galmuri11.ttf") is FontFile

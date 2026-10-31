@@ -1,6 +1,7 @@
 # Pre-push gate for 04-client (added after the 38b4d9d regression: a test file was pushed with a parse error).
 # 1. git archive HEAD into a scratch dir, 2. overlay ONLY the listed working-tree files, 3. own --import,
-# 4. run tests/ui/test_ui.gd and tests/integration/test_ui_integration.gd there,
+# 4. run tests/ui/test_ui.gd and tests/integration/test_ui_integration.gd there, with a private APPDATA (user://
+#    never resolves to the real player folder; 10 v0.26) and a proof that the runs logged under it,
 # 5. call coordination/Publish-Task.ps1 only if both exit 0 with passed>0 and failed=0.
 # Peers' uncommitted WIP in the shared tree therefore can neither break nor mask the result.
 # Usage: .\tools\build\verify_and_publish.ps1 -Type Fix -Subject '...' -Paths @('src/ui/hud.gd', ...) [-DryRun]
@@ -28,6 +29,11 @@ foreach ($p in $Paths) {
     elseif (Test-Path $dst) { Remove-Item $dst }   # deleted in the working tree
 }
 $ErrorActionPreference = 'Continue'
+# user:// isolation (10 v0.26/v0.28: this gate wrote the REAL save.json at 19:25:58). Private APPDATA inside the
+# scratch snapshot for import + both suites; restored before Publish-Task (git must see the normal profile).
+$isoDir = Join-Path $snap 'appdata'
+$isoStart = Get-Date
+$prevAppData = Enter-IsolatedAppData $isoDir
 # Import must be COMPLETE before testing: the one unexplained 14-failure run (1215516) was reproduced
 # exactly by skipping --import (fonts fall back). Verify every font/atlas import output exists; retry.
 function Test-Imported([string]$dir) {
@@ -44,7 +50,7 @@ for ($attempt = 1; $attempt -le 3 -and $miss.Count -gt 0; $attempt++) {
     $miss = @(Test-Imported $snap)
     Write-Host ("gate import attempt {0}: exit={1} missing={2}" -f $attempt, $LASTEXITCODE, $miss.Count)
 }
-if ($miss.Count -gt 0) { Write-Host "GATE FAILED: import incomplete ($($miss -join ', ')) — environment, not a test result."; exit 2 }
+if ($miss.Count -gt 0) { Exit-IsolatedAppData $prevAppData; Write-Host "GATE FAILED: import incomplete ($($miss -join ', ')) — environment, not a test result."; exit 2 }
 $ok = $true
 foreach ($suite in @(@('ui', 'res://tests/ui/test_ui.gd', '\[test_ui\] passed=(\d+) failed=(\d+)'), @('integration', 'res://tests/integration/test_ui_integration.gd', '\[ui_integration\] passed=(\d+) failed=(\d+)'))) {
     $out = & $GodotConsole --headless --path $snap -s $suite[1] 2>&1 | Out-String
@@ -59,6 +65,10 @@ foreach ($suite in @(@('ui', 'res://tests/ui/test_ui.gd', '\[test_ui\] passed=(\
     ($out -split "`n" | Where-Object { $_ -match '^FAIL|SCRIPT ERROR|Parse Error' } | Select-Object -Unique -First 10) | ForEach-Object { Write-Host "  $_" }
     if ($code -ne 0 -or $pass -le 0 -or $fail -ne 0) { $ok = $false }
 }
+Exit-IsolatedAppData $prevAppData
+$proof = Get-IsolationProof $isoDir $isoStart
+Write-Host ("gate user:// isolated={0} own_logs={1} (private APPDATA {2}); new logs in the real folder from any process: {3}" -f $proof.isolated, $proof.own_logs, $isoDir, $proof.real_new_logs_any_process)
+if (-not $proof.isolated) { Write-Host 'GATE FAILED: no Godot log under the private APPDATA, so isolation is not proven — environment, not a test result.'; exit 2 }
 if (-not $ok) { Write-Host 'GATE FAILED: nothing published.'; exit 1 }
 if ($DryRun) { Write-Host 'GATE PASSED (dry run, not published).'; exit 0 }
 Write-Host 'GATE PASSED: publishing.'

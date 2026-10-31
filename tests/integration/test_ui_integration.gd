@@ -107,6 +107,7 @@ func _run() -> void:
 		_finish()
 		return
 	# isolate progress
+	print("[ui_integration] user_data_dir=%s" % OS.get_user_data_dir())   # 10 v0.26 evidence (private APPDATA via 04 runners)
 	save.path = TEST_SAVE
 	for f in [TEST_SAVE, TEST_SAVE + ".bak", TEST_SAVE + ".tmp"]:
 		if FileAccess.file_exists(f):

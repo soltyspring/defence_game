@@ -8,6 +8,10 @@ param([string]$Sha = 'HEAD', [int]$Runs = 5, [int]$Parallel = 0, [string]$Suite 
 Set-Location $Root
 $full = (& git rev-parse --short $Sha).Trim()
 $snap = Join-Path $env:TEMP "ui04_flake_$full"
+New-Item -ItemType Directory -Force $snap | Out-Null
+$isoDir = Join-Path $snap ("appdata_{0}" -f $PID)   # user:// isolation (10 v0.26); runs keep per-process paths inside it
+$prevAppData = Enter-IsolatedAppData $isoDir
+$isoStart = Get-Date
 if (-not (Test-Path (Join-Path $snap 'project.godot'))) {
     New-Item -ItemType Directory -Force $snap | Out-Null
     & git archive --format=zip -o "$snap.zip" $Sha
@@ -31,6 +35,9 @@ if ($Parallel -gt 0) {
     }
     foreach ($x in $procs) { $x.p.WaitForExit(); $results += [pscustomobject]@{ run = $x.run; exit = $x.p.ExitCode; log = $x.log } }
 }
+Exit-IsolatedAppData $prevAppData
+$proof = Get-IsolationProof $isoDir $isoStart
+Write-Host ("user:// isolated={0} own_logs={1} ({2})" -f $proof.isolated, $proof.own_logs, $isoDir)
 $fails = @{}
 foreach ($r in $results) {
     $txt = if (Test-Path $r.log) { Get-Content $r.log -Raw } else { '' }
