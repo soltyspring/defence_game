@@ -1,5 +1,5 @@
 # 10-research-systems handoff
-Updated: 2026-10-31 ~15:41 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same session (reopened for window separation)
+Updated: 2026-10-31 ~17:56 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same session (reopened for window separation)
 
 ## RESUME after user restart (~15:38 KST)
 - Read: this handoff, coordinator-to-10-research-systems.md (the QUOTA CHECKPOINT text is historical; I did not stop for it), 01-director-to-10-research-systems.md R1 (D17 schema_version, D19 no mid-round resume, #6 rules accepted, migrations.json in backlog).
@@ -7,6 +7,12 @@ Updated: 2026-10-31 ~15:41 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - An interrupted earlier resume attempt left nothing behind. It had only run the probe and a failed name diff (a PowerShell console encoding problem, fixed with UTF-8 output encoding).
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
+
+## v0.22 (~17:56 KST): competitor public policies vs D26/R5 (no Godot)
+- Coordinator decision: 18:00–18:30 KST is 08's quiet window; this task ran no Godot.
+- §9.13 table a1–c6 from S27–S31. Random Dice help center scan: FAQ IDs 1–860 → 26 items, 0 about balance compensation or rollback. Excluded: Discord (login), fandom (unofficial, 403), cafe.naver.com/randomdice (fan cafe, clubid 29999506). Scratch in .local_inspect/hs/ (git-ignored).
+- To 01: D26 refund needs a paid-cost source; proposed a per-buy paid record plus retired_costs; no clawback rule; store note rule. To 02: same contract, idempotent once-per-content_version migration, plus an acceptance case.
+- Next after 18:30: rerun C6 (F1 fix 4b5926d) in a clean snapshot; rerun the economy table only when 01 commits r02–r06; R5 acceptance when 02 lands content_version.
 
 ## v0.21 (~17:41 KST): economy yardstick + menu toast recheck
 - probe_economy_policies.gd + run_economy_policies.ps1 (default: working-tree data; `-Rev HEAD`). At HEAD 40382b0: P0 2,540 unspent before r10; P1 24 levels, card−enemy negative from r06/r08; P2 29 levels, negative from r09. One-line command written in the 01 request.

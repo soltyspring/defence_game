@@ -1,10 +1,11 @@
 # 10-research-systems status
-Updated: 2026-10-31 ~17:41 KST · sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce
-Status: v0.21 DONE.
-- Economy yardstick script (P0/P1/P2 per-round entry table) added with a one-line wrapper for 01; HEAD 40382b0 result recorded.
-- Menu toast recheck on the secondary monitor: not a capture-timing issue. The menus have no toast display (0 changed px over 2.2 s); reported to 04. My earlier §6.4 recovery-notice claim is corrected.
-- F1 still waiting (save.gd last changed 4d77225).
+Updated: 2026-10-31 ~17:56 KST · sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce
+Status: v0.22 DONE (web research only, no Godot run, per the 18:00–18:30 quiet-window decision).
+- §9.13: competitor public policy table (a balance change, b data version/maintenance/update, c mis-grant/rollback) from official Random Dice (operation policy 2023-08-05, terms 2021-07-24, 26 FAQs from an ID 1–860 scan) and GameDuo (company terms, Play notes) documents. Dated case-level notices: UNKNOWN for both (Discord login; no Archer notice channel).
+- Archer identity: gameduo.net/game/archer-forest links com.GameDuo.MadArcher (confirmed). "궁수키우기" = Archer is still an assumption.
+- Compared with D26/R5: refund kept but "actually paid" needs a source (paid record per buy + migrations.json retired_costs). 02's provisional "current costs" has nothing to sum after a max_level cut. New proposals: no clawback for over-grants; a store note for progress-affecting changes. Sent to 01 and 02.
+- F1 fix landed (02 4b5926d). Code read OK; my independent C6 rerun is pending until after 18:30.
+- Economy table not rerun: data/** last commit still a262640.
 User decisions: Q1 = A (DECIDED); Q2 = 보류; Q3 = title "빵집 기사단: 곰팡이 디펜스".
-Quota: 5771.86/10000 = 57.72% at 17:25.
-Validation: policies run exit 0; toast series EXIT_0 on DISPLAY2; LockApp/LogonUI 0 before and after (capture valid); real save.json hash unchanged; temp dirs removed.
-Pushed: … 5239ea9, ff96e43. v0.21: next commit.
+Validation: sources fetched 2026-10-31; no Godot process started; real save.json not touched.
+Pushed: … ff96e43, 6ce976d. v0.22: next commit.

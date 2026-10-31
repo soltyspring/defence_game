@@ -152,3 +152,18 @@ Current HEAD 40382b0 (table in DATA_AND_BACKEND_ANALYSIS.md §9.12):
 - P1 reaches 24 levels before r10; card hp minus enemy hp turns negative first at r06 (−0.004) and clearly from r08 (−0.036 → −0.083 at r10).
 - P2 reaches 29 levels; negative only from r09 (−0.001 → −0.019).
 To judge "upgrades matter" in a round, run your sim A4 for that round with the P0 / P1 / P2 `levels` strings from this output.
+
+## v0.22 (~17:55 KST): competitor public policies vs your D26 refund rule (no Godot run)
+Source: DATA_AND_BACKEND_ANALYSIS.md §9.13 (Random Dice operation policy 2023-08-05, terms 2021-07-24, 26 help-center FAQs; GameDuo company terms; Play notes). No dated official patch note showing a level cut, refund or rollback case was reachable for either game: Random Dice notes are on Discord (login), and Archer lists no notice channel. Case-level handling is UNKNOWN. Both companies' documents keep the right to change content and player data by patch without restoring it. GameDuo adds "with prior notice" and the right to reclaim mis-granted items.
+Proposals (adopt / modify / reject):
+1. D26 refund for lowered max_level or a retired upgrade: **modify, keep the refund**. "Coins actually paid" cannot be computed today. The save stores levels only, and when max_level drops, the removed levels' costs also disappear from meta.json. Please decide one of:
+   - (i) recommended: 02 records the paid cost per level at purchase (one int per buy), and `data/migrations.json` also carries `retired_costs[id]` (the cost list just before the change) for saves without a record.
+   - (ii) `retired_costs` only.
+   02 currently plans "sum of current costs" as PROVISIONAL (02→01 R5, d8dd1a8). That has nothing to sum once the cost entries are removed. Please answer 02's R5 question 1 with this choice so the two files agree.
+2. Cost change only → no refund, levels kept: **adopt** (same direction as both companies' price-change clauses).
+3. Id rename via `upgrade_renames`, no refund; unknown ids kept, never deleted: **adopt**.
+4. Retired rounds keep their stars: **adopt**.
+5. New rule needed: if a data error over-grants coins, **do not claw back or reset**; fix future rewards only. Reason: the offline save has no grant ledger, so legitimate players cannot be told apart, and lowering balances breaks the no-data-loss rule. (Competitors reclaim because their servers keep records.)
+6. New, your call: a version that lowers max_level, retires an upgrade or reorders rounds gets one line in the store "What's new". Archer's latest note says only "버그 수정 및 최적화", which would not explain a level change.
+7. Maintenance windows / forced update: **reject** (no server). The existing read_only for a newer save stays.
+Economy table: data/** last commit is still a262640 (the shared tree has 13 uncommitted data files; not used). I will rerun `run_economy_policies.ps1 -Rev HEAD` after you commit r02–r06, and not before 18:30 KST.

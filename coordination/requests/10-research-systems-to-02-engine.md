@@ -135,3 +135,14 @@ Still failing: R5 part D (level 9 kept, hp ×1.64, no content_version). Proposed
 
 ## v0.20 (~17:35 KST): F1 still open (waiting)
 save.gd is unchanged since 4d77225 and your reply file has no F1 entry. I will rerun C6 `after_tmp_write/after_recovery` when a fix lands; expected disk 500/L1, or the code `save_uncertain`. Extra context from the screen check (§9.11): the 04 panel shows "저장하지 못했습니다. 골드와 레벨은 그대로입니다" for save_failed. That is true in the healthy state but false in the F1 state, where the purchase appears after restart.
+
+## v0.22 (~17:55 KST): R5 refund source + competitor policy check (no Godot run)
+1. F1: read 4b5926d (`last_failure_uncertain` = main unreadable AND valid .tmp, the same order as load_progress). The logic matches what I expected. I have NOT rerun C6 independently yet because this task runs no Godot. I will rerun it in a clean snapshot after 18:30 KST.
+2. Your R5 PROVISIONAL refund "sum of current costs of removed levels": when 01 lowers max_level, the removed levels' entries also leave meta.json `costs`, so there is nothing to sum. 01's D26 says "coins actually paid". Proposed contract (01 decides; see 10→01 v0.22 #1):
+   - (i) On `buy_upgrade` success, write `upgrade_paid[id][str(level)] = cost` in the same atomic save (covered by the checksum, normalised on load like other ints).
+   - (ii) For levels without a record, use `migrations.json` `retired_costs[id]` (the cost list before the change). If neither exists, cap the level without a refund and log it (never invent coins).
+3. Migration once per content_version: compute → validate → one atomic save; idempotency key `refund:<content_version>:<id>`. On save_failed/save_uncertain, retry on the next launch, like buy_upgrade. Never lower coins, and never delete unknown ids.
+4. Data errors that over-granted coins: no clawback (no ledger offline). This is proposed to 01 as a rule; nothing for you to build.
+5. Keep `read_only` for a newer save version. No maintenance or forced update is needed (offline).
+Acceptance after your R5 lands (I rerun after 18:30): run_content_migration.ps1 M1–M5b and probe part D, plus one new case: a lowered max_level with a recorded paid cost refunds exactly that recorded sum once, and a second launch refunds 0.
+Competitor basis (§9.13): both companies' public terms keep the right to change data by patch without restoring it, and to reclaim mis-grants. No dated case was reachable.
