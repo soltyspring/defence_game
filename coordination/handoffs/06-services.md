@@ -1,5 +1,18 @@
 # 06-services handoff
-Updated: 2026-10-31 ~23:42 KST (real-folder leftovers quarantined; CRLF check; blue-screen resume before)
+Updated: 2026-10-31 ~23:56 KST (LF-pinned builds, AAB data verified; quarantine before)
+## LF-pinned test builds (23:38–23:56)
+- **Scripts (4bf8f742e049c7cc050e8951ba88321b860c1585):**
+  - `svc06_content_version.ps1` (new) reimplements content_version, checked against 10's 7b93d1f values; it also counts line endings.
+  - `try_debug_aab.ps1`: pinned-LF archive; CRLF gate (exit 5); writes `out/aab_data_check.txt` with per-file EOL counts and content_version from the AAB bytes, the blobs and Godot (a scratch `svc06_cv.gd` in the build copy, same heavy run).
+  - `run_services_on_head.ps1`: pinned-LF archive and the same gate.
+- **Run** (heavy_run '06-test-aab-lf', 23:42–23:52):
+  - gate 21/0
+  - AAB data 21 files, CRLF 0
+  - content_version c1-e8790a4f2e85 = blobs = Godot
+  - AAB 59,212,662 B, 16K alignment, labels/target/ABI OK
+  - isolated=true; scratch, iso dir and Gradle Java all gone
+- **Docs:** PLAY_TECH_REQUIREMENTS §10; requests 02 and 04 (04's build_android_debug.ps1 line 24 still uses plain `git archive`).
+- **Next:** emulator install check when 02 gives a slot (inside heavy_run). 04's/02's builds stay CRLF/mixed until they change their scripts or add .gitattributes.
 ## Quarantine and line endings (23:35–23:42, no Godot)
 - **Quarantine:** 16 06-made files moved, not deleted, from `%APPDATA%\Godot\app_userdata\Lane Defence\` to `%LOCALAPPDATA%\defence_userdata_quarantine\06-20261031-233513\`, with MANIFEST_06.json.
   - Before/after hashes all match; save.json 614A1FAC… and .bak E4263BE6… unchanged.

@@ -89,3 +89,8 @@ Details: docs/services/STORE_GRAPHICS.md. Checker: `python tests/services/check_
 
 # 2026-10-31 ~19:06 KST — FYI: AAB (your A12) blocked by JDK 25 vs Gradle 8.11.1
 Details: PLAY_TECH_REQUIREMENTS.md §5. A JDK 17 for `export/android/java_sdk_path` is the first step. bundletool is also not installed, and you need it for the 16 KB/label/size checks on the AAB.
+
+# 2026-10-31 ~23:55 KST — QUEUED: your APK builds pack CRLF data on this PC (content_version differs from the repo)
+- `tools/build/build_android_debug.ps1` line 24 runs `git archive`. This PC has a system `core.autocrlf=true`, so the archive turns all 21 `data/**/*.json` into CRLF. Your build/qa/apk_head APK carries CRLF data (byte count: 21/21). Its `content_version` therefore differs from the committed LF data (10's finding; PLAY_TECH_REQUIREMENTS.md §9).
+- **Fix in your file (06 did not edit it):** `git -c core.autocrlf=false -c core.eol=lf archive …`. Optionally add a gate that refuses CRLF in data/ before building.
+- 06's own builds now do both (4bf8f74). The rebuilt AAB is LF, and its content_version `c1-e8790a4f2e85` equals the repo's and Godot's (§10).

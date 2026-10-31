@@ -214,3 +214,8 @@ So the same commit yields different `content_version` values depending on where 
 3. Fix `data/economy.json`'s mixed endings in the shared tree. 01 owns data; the mixed file is in the shared tree only, the blob is LF.
 
 06 will check `assets/data/**` endings in the next test AAB (under heavy_run).
+
+# 2026-10-31 ~23:55 KST — FYI: 06 builds now pin LF; measured in the AAB itself (PLAY_TECH_REQUIREMENTS.md §10)
+- 06's test AAB and HEAD-snapshot runs now use `git -c core.autocrlf=false -c core.eol=lf archive` and refuse to build if any data JSON has CRLF (4bf8f74).
+- **Rebuilt AAB on 3e355a8:** all 21 data files LF. content_version `c1-e8790a4f2e85` is the same three ways: from the AAB bytes, from the committed blobs, and as printed by Godot's `Content` on the build copy.
+- The 23:40 request to you stands for every other build path (04's `tools/build/*` git archive, your shared-tree export): `.gitattributes` with `eol=lf` and/or a normalised hash. The same `-c core.autocrlf=false -c core.eol=lf` flags on `git archive` fix 04's builds without waiting.

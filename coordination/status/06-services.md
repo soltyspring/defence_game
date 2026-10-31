@@ -1,5 +1,17 @@
 # 06-services status
-Updated: 2026-10-31 ~23:42 KST (real-folder leftovers quarantined; CRLF impact on test AAB)
+Updated: 2026-10-31 ~23:56 KST (LF-pinned test builds; AAB data read directly; content_version matches)
+Status: COMPLETE except the emulator install check.
+- **4bf8f74:** 06 build copies use `git -c core.autocrlf=false -c core.eol=lf archive`, plus a gate that refuses a build if any data JSON has CRLF (exit 5).
+- **AAB rebuilt once under heavy_run (3e355a8):** 21/21 data files LF inside the AAB. content_version c1-e8790a4f2e85 is the same from the AAB bytes, the committed blobs and Godot.
+- Labels, target 36, 16 KB and ABI unchanged.
+- No temp folders or Gradle Java processes left.
+- Requests to 02/04 for the other build paths. Emulator still WAITING for 02.
+- Q2 DEFERRED. Nothing published.
+Current task: none. Next: see handoff.
+Commits: 4bf8f742e049c7cc050e8951ba88321b860c1585 [Test] PUSHED; docs in the next [Docs].
+Previous: 95d9b1c / 3e355a8 (quarantine, CRLF table).
+--- History (older entries, not current) ---
+(quarantine entry) Updated: 2026-10-31 ~23:42 KST (real-folder leftovers quarantined; CRLF impact on test AAB)
 Status: COMPLETE except the emulator install check.
 - **Leftovers moved:** 16 files (7 reports and m3dbg1~3) moved to `%LOCALAPPDATA%\defence_userdata_quarantine\06-20261031-233513\`. Hashes verified, save.json/.bak unchanged. Undo: USERDATA_QUARANTINE_06.md.
 - **Line endings:** `git archive` on this PC gives CRLF data (core.autocrlf=true), so 06's test AAB carried CRLF data (inferred from the same input; the AAB itself was deleted). The 02 shared-tree APK has LF plus 1 mixed file. Requests sent to 02 (.gitattributes / normalised content_version).

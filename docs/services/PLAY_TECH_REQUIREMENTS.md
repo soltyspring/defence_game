@@ -165,3 +165,23 @@ Trigger: 10 found that `content_version` (src/core/content.gd, a hash of data/**
 - Play policy: no effect.
 - Release risk: a save made with one build is treated as migrated by another (X1 rewrite, unlock recompute, .bak rotation).
 Request to 02 (root files are 02's): pin line endings for release builds, e.g. `.gitattributes` with `* text=auto eol=lf` (or at least `data/** text eol=lf`). Or make `content_version` normalise `\r\n` → `\n` before hashing. Then build releases only from a checkout verified as LF. 06 will re-read `assets/data/**` bytes in the next test AAB.
+
+## 10. Test AAB rebuilt from an LF-pinned copy; data bytes read from the AAB itself (2026-10-31 23:42–23:52 KST, HEAD 3e355a8)
+**Fix in 06's scripts (4bf8f74):** `try_debug_aab.ps1` and `run_services_on_head.ps1` now build from `git -c core.autocrlf=false -c core.eol=lf archive …`. Before any Godot step, a gate counts `\r\n` in every `data/**/*.json` of the copy. If any file has CRLF (or there are no data files), the script refuses with exit 5 and builds nothing. Static check: the old archive form gave 21/21 CRLF, the pinned form 0/21. This does not depend on 02's `.gitattributes`.
+
+**Run:** one `heavy_run` block '06-test-aab-lf' (lock acquired after a 273 s wait).
+- eol gate: 21 files, CRLF 0
+- `SVC06_ISOLATION isolated=true`: 0 writes to the real folder, real save unchanged
+| Check (read from the AAB, not inferred) | Result |
+|---|---|
+| `assetPackInstallTime/assets/data/**/*.json` entries | 21 (same as committed) |
+| Files with any CRLF | **0** (every file is LF only; e.g. meta.json 216 LF, units.json 370 LF) |
+| content_version from the AAB's data bytes (06 PowerShell reimplementation of `Content._compute_content_version`) | `c1-e8790a4f2e85` |
+| content_version from the committed blobs at 3e355a8 | `c1-e8790a4f2e85` |
+| content_version printed by Godot (`Content.content_version`) on the LF build copy, same heavy run | `c1-e8790a4f2e85` |
+| Match | **all three equal** |
+| AAB | 59,212,662 B, SHA-256 6F6C11CF…183698A2; PAGE_ALIGNMENT_16K |
+| Labels / target / ABI (universal APK) | en/default Bakery Knights, ko 빵집 기사단; target 36; arm64-v8a + x86_64 |
+| arm64 download | 30,404,065–30,415,747 B |
+| Leftovers after the run | %TEMP%\svc06_aab_* deleted, no svc06_iso_* folder, 0 Gradle 8.11.1 / svc06_tools Java processes |
+The PowerShell reimplementation (`tests/services/svc06_content_version.ps1`) was checked first against 10's published values for 7b93d1f (LF `c1-a7b265ce4f6f`, CRLF `c1-ea9c929ba40e`); both reproduce exactly. The §9 inference ("06's AAB carried CRLF") applied to the earlier builds. From 4bf8f74 on, 06 test builds carry LF data, and the value matches the repo. Builds from other paths (04 apk_head, 02's shared tree) are still as in §9 until 02 pins line endings.
