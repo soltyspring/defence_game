@@ -14,3 +14,5 @@ Not done yet (`--qa-seed`, `App.qa_fast_forward`).
 
 ## Regression on this change
 UI integration 31/31; services integration 0 failures (4 BLOCKED: Services autoload); acceptance flow 40 PASS / 4 FAIL (FLOW-04B, 13B, 23, 23B — pre-existing, B001/B002 + counterattack text).
+
+Commit SHA: 08ef08257825c777035401750280c45bd853d3bd (PUSHED origin/main, verified with git rev-parse origin/main).

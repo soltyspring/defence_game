@@ -30,3 +30,6 @@ Evidence: docs/architecture/SAVE_FAULTS.md (before/after tables).
 4. 07 QA-R1 hooks; 06 S1 Services autoload + S2 binding; 05 done.
 5. 01 decisions pending: passive loss time, 900 s timer rule.
 6. Prune `.corrupt-*` quarantine files; generic Save.transact.
+
+## Commit for this milestone
+08ef08257825c777035401750280c45bd853d3bd - PUSHED origin/main (verified).

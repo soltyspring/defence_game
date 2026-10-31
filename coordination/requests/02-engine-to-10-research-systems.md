@@ -13,3 +13,5 @@ Date: 2026-10-31 09:15 +09:00. Evidence: docs/architecture/SAVE_FAULTS.md. Commi
 
 Usage: `s._fault = "before_final_rename"; s.save_progress()` then load a new Save node on the same path.
 Selftest runs every point both on a normal save and on the first save after a recovery (src/core/diag/selftest.gd `_check_save_faults`).
+
+Commit SHA: 08ef08257825c777035401750280c45bd853d3bd (PUSHED origin/main, verified with git rev-parse origin/main).
