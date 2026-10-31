@@ -35,7 +35,7 @@ SFX_SR = 22050          # mono 16-bit PCM; chip-style SFX do not need >11 kHz ba
 MUSIC_SR = 44100        # stereo, encoded to Ogg Vorbis (streamed, not decompressed into RAM)
 SFX_PEAK = 10 ** (-1.0 / 20)    # -1 dBFS sample peak ceiling
 MUSIC_PEAK = 10 ** (-3.0 / 20)  # -3 dBFS before lossy encode (leaves inter-sample/encoder headroom)
-GENERATOR_VERSION = 5
+GENERATOR_VERSION = 6
 
 # ----------------------------------------------------------------------------------------------
 # DSP primitives
@@ -583,17 +583,26 @@ def r3_hit_bread(rng, var):
 
 
 def r3_death_ally(rng):
-    """Bread soldier crumbles: long dry crackle that thins out + soft warm falling 'aww' (triangle)."""
-    out = crumbs(rng, 0.32, 40, 1200, 6500) * np.linspace(1.0, 0.3, n_samples(0.32, SR))
+    """Bread soldier crumbles: crust SNAP onset + crackle that thins out + warm falling 'aww'.
+    v3.7 (PHONE_SPEAKER_CHECK 3-seed diagnosis: masked by other battle SFX at 1-4 kHz, where the v3 recipe had
+    only 3-11 % of its energy): snap = 25 ms 1.6-4.5 kHz crack + 1.7 kHz wooden tock at t=0; crackle band moved
+    to 1.5-4.5 kHz; the 'aww' gains odd harmonics (pulse wave, low-passed 4 kHz) so it is heard on a phone."""
+    n0 = n_samples(0.32, SR)
+    out = crumbs(rng, 0.32, 40, 1500, 4500) * np.linspace(1.0, 0.3, n0)
+    snap = mix(burst(rng, 0.025, 0.006, 1600, 4500) * 0.9, thump(1700, 1250, 0.04, 0.01, drive=2.0) * 0.35)
     n = n_samples(0.25, SR)
-    tone = osc(ramp(midi_hz(79), midi_hz(72), n), n, SR, "tri") * env_adsr(n, SR, 0.01, 0.05, 0.6, 0.12) * 0.35
-    return mix(out, tone)
+    f = ramp(midi_hz(79), midi_hz(72), n)
+    tone = (osc(f, n, SR, "tri") * 0.6 + lowpass(osc(f, n, SR, "square", 0.3), 4000, SR) * 0.4)
+    tone = tone * env_adsr(n, SR, 0.006, 0.05, 0.6, 0.12) * 0.35
+    return mix(seq([(0.0, snap)], 0.05), seq([(0.012, out)], 0.34), seq([(0.012, tone)], 0.27))
 
 
 def r3_hit_base_bakery(rng):
     """Player bakery tower hit: wooden crack + crust shower + low (but >300 Hz-led) knock."""
     knock = thump(330, 200, 0.2, 0.06, drive=2.5) * 0.22
     # v3.5: longer, brighter wood crack so "our base is hit" survives a phone speaker (PHONE_SPEAKER_CHECK)
+    # v3.7: a 1.4 kHz "tock" was tried and REJECTED (offline 3-seed estimate: p10 -1.0 -> -3.4 dB, the tock raised the
+    # peak so the file got quieter after normalisation). v3.7 keeps this recipe and adds an SFX duck in the manifest.
     crack = mix(burst(rng, 0.07, 0.018, 1500, 6000), seq([(0.05, burst(rng, 0.05, 0.012, 1800, 6500) * 0.6)], 0.12))
     return mix(knock, crack, seq([(0.02, crumbs(rng, 0.3, 30, 1500, 6000) * 0.6)], 0.34))
 
@@ -852,10 +861,10 @@ CUES = {
     "shoot_arrow":     dict(r=[r_shoot_arrow], bus="SFX", vol_db=-12, max=2, gap=0.06, prio=1, pitch=0.08, faction="bakery", desc="baguette thrower whoosh"),
     "shoot_rock":      dict(r=[r_shoot_rock], bus="SFX", vol_db=-10, max=1, gap=0.12, prio=2, pitch=0.06, faction="bakery", desc="oven cannon puff + thunk"),
     "shoot_spit":      dict(r=[r3_shoot_spit], bus="SFX", vol_db=-11, max=2, gap=0.08, prio=1, pitch=0.08, faction="mold", desc="spore spit: wet ptoo + bubbles"),
-    "hit_base":        dict(r=[r3_hit_base_bakery], bus="SFX", vol_db=-4.5, max=1, gap=0.35, prio=5, pitch=0.05, faction="bakery", desc="bakery tower hit: wooden crack + crust shower"),
+    "hit_base":        dict(r=[r3_hit_base_bakery], bus="SFX", vol_db=-4.5, max=1, gap=0.35, prio=5, pitch=0.05, duck_sfx=-6, duck_sfx_below=5, faction="bakery", desc="bakery tower hit: wooden crack + crust shower"),
     "hit_base_mold":   dict(r=[r3_hit_base_mold], bus="SFX", vol_db=-9, max=1, gap=0.35, prio=5, pitch=0.05, faction="mold", desc="mold hive hit: heavy wet thud"),
     "explosion":       dict(r=[r3_explosion], bus="SFX", vol_db=-8, max=2, gap=0.12, prio=5, pitch=0.06, faction="mold", desc="spore bomber burst: splat + hiss + bubbles"),
-    "death_ally":      dict(r=[r3_death_ally], bus="SFX", vol_db=-8.5, max=2, gap=0.08, prio=3, pitch=0.06, faction="bakery", desc="bread crumbles: dry crackle + soft falling tone"),
+    "death_ally":      dict(r=[r3_death_ally], bus="SFX", vol_db=-8.5, max=2, gap=0.08, prio=3, pitch=0.06, duck_sfx=-6, duck_sfx_below=3, faction="bakery", desc="bread crumbles: dry crackle + soft falling tone"),
     "death_enemy":     dict(r=[r3_death_enemy], bus="SFX", vol_db=-11, max=2, gap=0.07, prio=3, pitch=0.08, faction="mold", desc="mold bursts: squelch + bubble fizz"),
     "hero_death":      dict(r=[r_hero_death], bus="SFX", vol_db=-5, max=1, gap=1.0, prio=9, pitch=0.0, duck=-6, faction="bakery", desc="head baker falls: 4-note falling triangle line"),
     "hero_respawn":    dict(r=[r_hero_respawn], bus="SFX", vol_db=-8, max=1, gap=1.0, prio=8, pitch=0.0, faction="bakery", desc="rising sparkle arpeggio"),

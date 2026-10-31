@@ -1,7 +1,7 @@
 {
  "version": 1,
  "generator": "tools/audio/synth.py",
- "generator_version": 5,
+ "generator_version": 6,
  "technique": "deterministic numpy synthesis (oscillators/noise/envelopes/filters); no samples, no AI services",
  "license": "Original work created for this project by the 05-audio worker with tools/audio/synth.py. No third-party samples, loops, presets, downloaded audio or AI audio services were used, so no third-party licence or attribution applies. Rights belong to the project owner; the public licence (if any) is the project owner’s decision and has not been chosen.",
  "provenance": {
@@ -548,6 +548,8 @@
    "gap": 0.35,
    "prio": 5,
    "pitch": 0.05,
+   "duck_sfx": -6,
+   "duck_sfx_below": 5,
    "faction": "bakery",
    "desc": "bakery tower hit: wooden crack + crust shower",
    "provenance": {
@@ -641,6 +643,8 @@
    "gap": 0.08,
    "prio": 3,
    "pitch": 0.06,
+   "duck_sfx": -6,
+   "duck_sfx_below": 3,
    "faction": "bakery",
    "desc": "bread crumbles: dry crackle + soft falling tone",
    "provenance": {
@@ -658,10 +662,10 @@
    "variants": [
     {
      "file": "death_ally.wav",
-     "seconds": 0.32,
-     "bytes": 14156,
+     "seconds": 0.34,
+     "bytes": 15038,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -16.41
+     "rms_dbfs": -15.52
     }
    ]
   },

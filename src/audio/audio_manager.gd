@@ -52,6 +52,13 @@ var _last_play: Dictionary = {} # cue -> clock
 ## double the hit density. group_gap is a runtime copy (tests may override it).
 var group_gap: Dictionary = {}   # group -> min seconds between ANY two cues of the group
 var _group_last: Dictionary = {} # group -> clock
+## Danger-cue SFX duck (v3.7): a cue with manifest "duck_sfx" (dB, negative) and "duck_sfx_below" (priority) lowers
+## every SFX voice with priority < duck_sfx_below that is playing or starts while it sounds. Reason (measured in
+## PHONE_SPEAKER_CHECK.md): death_ally / hit_base were masked by OTHER battle SFX, never by the music.
+var _sfxduck_db := 0.0
+var _sfxduck_below := 0
+var _sfxduck_until := 0.0
+var _v_duck: Dictionary = {}   # AudioStreamPlayer -> dB currently applied by the SFX duck
 var _last_variant: Dictionary = {}
 
 var _clock := 0.0
@@ -68,7 +75,7 @@ var _bus_idx := {}
 var _lowpass_slot := -1
 var bridge: Node = null
 
-var stats := {"played": 0, "dropped_gap": 0, "dropped_max": 0, "dropped_voices": 0, "dropped_offscreen": 0, "attenuated_offscreen": 0, "dropped_group": 0,
+var stats := {"played": 0, "dropped_gap": 0, "dropped_max": 0, "dropped_voices": 0, "dropped_offscreen": 0, "attenuated_offscreen": 0, "dropped_group": 0, "sfx_ducked": 0, "sfx_duck_events": 0,
 	"stolen": 0, "missing": 0, "peak_voices": 0, "load_ms": 0, "resident_sfx_bytes": 0}
 
 func _ready() -> void:
@@ -263,6 +270,9 @@ func play(cue: StringName, params: Dictionary = {}) -> bool:
 		return false
 	var prio := int(c.get("prio", 1))
 	var vol := float(c.get("vol_db", 0.0)) + float(params.get("vol_db", 0.0))
+	var sduck := 0.0
+	if bus == "SFX" and _clock < _sfxduck_until and prio < _sfxduck_below:
+		sduck = _sfxduck_db
 	if params.has("x"):
 		var att := _offscreen_atten(float(params.x))
 		if att <= -80.0 and prio < 5:
@@ -289,7 +299,7 @@ func play(cue: StringName, params: Dictionary = {}) -> bool:
 	var jit := float(c.get("pitch", 0.0))
 	var pitch := float(params.get("pitch", 1.0)) * (1.0 + (_rng.randf_range(-jit, jit) if jit > 0.0 else 0.0))
 	p.stream = s
-	p.volume_db = vol
+	p.volume_db = vol + sduck
 	p.pitch_scale = clampf(pitch, 0.25, 4.0)
 	p.stream_paused = false
 	p.play()
@@ -301,6 +311,11 @@ func play(cue: StringName, params: Dictionary = {}) -> bool:
 	if grp != "": _group_last[grp] = _clock
 	stats.played += 1
 	stats.peak_voices = maxi(stats.peak_voices, active_voices())
+	_v_duck[p] = sduck
+	if sduck < 0.0: stats.sfx_ducked += 1
+	var dsd := float(c.get("duck_sfx", 0.0))
+	if dsd < 0.0:
+		_start_sfx_duck(dsd, int(c.get("duck_sfx_below", prio)), s.get_length() / p.pitch_scale, p)
 	var dk := float(c.get("duck", 0.0))
 	if dk < 0.0: duck(dk, s.get_length())
 	cue_played.emit(cue, _sfx.find(p))
@@ -331,6 +346,23 @@ func _offscreen_atten(x: float) -> float:
 	if d <= 0.0: return 0.0
 	if d > OFFSCREEN_DROP_SCREENS * half * 2.0: return -80.0
 	return -offscreen_max_atten_db * minf(1.0, d / half)
+
+## Apply the danger-cue duck to voices already playing (lower priority only), and remember it for new ones.
+func _start_sfx_duck(db: float, below: int, dur: float, owner: AudioStreamPlayer) -> void:
+	stats.sfx_duck_events += 1
+	_sfxduck_db = minf(db, _sfxduck_db) if _clock < _sfxduck_until else db
+	_sfxduck_below = maxi(below, _sfxduck_below) if _clock < _sfxduck_until else below
+	_sfxduck_until = maxf(_sfxduck_until, _clock + dur)
+	for v in _sfx:
+		if v == owner or not _voice_busy(v) or int(_v_prio.get(v, 99)) >= _sfxduck_below: continue
+		var extra := _sfxduck_db - float(_v_duck.get(v, 0.0))
+		if extra < 0.0:
+			v.volume_db += extra
+			_v_duck[v] = _sfxduck_db
+			stats.sfx_ducked += 1
+
+func sfx_duck_active() -> bool:
+	return _clock < _sfxduck_until
 
 func stop_all_sfx() -> void:
 	for p in _sfx + _ui:

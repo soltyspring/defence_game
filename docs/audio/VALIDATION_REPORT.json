@@ -380,15 +380,15 @@
    "ch": 1,
    "bits": 16,
    "rate": 22050,
-   "seconds": 0.32,
+   "seconds": 0.34,
    "peak_dbfs": -1.0,
-   "rms_dbfs": -16.41,
+   "rms_dbfs": -15.52,
    "clipped": 0,
-   "dc": -0.0,
+   "dc": -2e-05,
    "edge_first": 0.0,
    "edge_last": 0.0,
    "hf300_share": 1.0,
-   "mix_level_db": -24.9
+   "mix_level_db": -24.0
   },
   "death_enemy.wav": {
    "cue": "death_enemy",
@@ -687,9 +687,9 @@
   }
  },
  "budgets": {
-  "disk_bytes_total": 1567123,
+  "disk_bytes_total": 1568005,
   "disk_budget": 2500000,
-  "sfx_pcm_resident_bytes": 979678,
+  "sfx_pcm_resident_bytes": 980560,
   "sfx_pcm_budget": 2097152,
   "worst_case_sfx_sum_db": 25.1,
   "note": "worst case = every SFX/UI cue at max instances, peaks aligned; runtime voice caps (SFX pool 12, UI pool 3) plus Master limiter keep real output below this"
