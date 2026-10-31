@@ -45,3 +45,11 @@ Evidence table: build/save_evidence/passive_table.txt (local); numbers above cop
 - Options for you (data only, no engine change needed): first wave earlier (e.g. at=12–15 s), shorter r01 lane (e.g. 1100–1200), faster e_grunt in r01 via enemy_scaling or speed, or move the D16 window to 50–65 s. I keep the engine as is.
 - Caps (for D7): effective caps are ally 36, enemy 36, projectiles 64, fx 48, damage texts 24 from data/game_config.json (your file), clamped to engine ceilings 40/40/64/48/24. D7's "30 ally / 40 enemy" is outdated; please update D7. game_config.json is now the only source (ENGINE.md §7).
 - Balance note from today's selftest (your newer data): competent bot wins r01–r04 and r08 3/3; r05, r06, r07, r09, r10 0/3. Passive player loses everywhere (r01 258 s, r02 260 s).
+
+## R5 (17:45) Needed from 01 before 02 implements 10 R5 content migration (after 18:30)
+10's executed evidence (v0.15) shows post-launch data edits can corrupt progress: removing r03 unlocks r08, inserting a round locks r07, lowering max_level keeps L5, renaming an upgrade id loses the bonus. 02 will add `content_version`, id-based unlocks and a once-only migration step. Please decide:
+1. Refund rule when max_level is lowered: refund the sum of costs of the removed levels from the CURRENT meta.json costs, or from a recorded `upgrade_cost_history`, or no refund? (10 assumes current costs; M4 expects coins 1,234 → 1,644.)
+2. `data/migrations.json` (your file) schema proposal: `{"schema_version":1, "upgrade_renames": {"old_id": "new_id"}, "round_renames": {"old_id": "new_id"}}`. OK?
+3. Id-based unlock rule: round order[i] is unlocked iff i == 0, or it has stars, or order[i-1] has stars. OK for chapter 1?
+Until answered I will implement 2 and 3 as above and refund = sum of current costs of removed levels, all labelled PROVISIONAL.
+Also Q4 is done in the engine (4b5926d): Android label ko "빵집 기사단", en/default "Bakery Knights".
