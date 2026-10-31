@@ -1,6 +1,8 @@
 extends SceneTree
 ## 04-client REAL-ENGINE test of the menu notice for a content migration (01 D32, 02 52f9fa3). Exit 0 = pass.
-##   tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s res://tests/integration/test_migration_notice.gd
+##   Run it only with a private APPDATA (it writes user:// files), e.g. inside coordination/heavy_run_detached.ps1:
+##   . .\tools\build\common.ps1; $p = Enter-IsolatedAppData "$PWD\build\godot_appdata_mig"; & $GodotConsole --headless --path . -s res://tests/integration/test_migration_notice.gd; Exit-IsolatedAppData $p
+##   (tools/build/verify_and_publish.ps1 runs it that way.)
 ## Data changes are emulated IN MEMORY on the Content autoload, the same way as 02's selftest _check_content_migration
 ## (meta + content_version, restored at the end); data files are never written. The save lives in a per-process
 ## user:// file; 04 runners also give Godot a private APPDATA (be2abb3), so the real player save is never touched.
@@ -149,5 +151,18 @@ func _restore(meta: Dictionary, cv: String) -> void:
 func _finish() -> void:
 	for f in [TEST_SAVE, TEST_SAVE + ".bak", TEST_SAVE + ".tmp"]:
 		if FileAccess.file_exists(f): DirAccess.remove_absolute(ProjectSettings.globalize_path(f))
+	# 10 v0.33 P3: Save also keeps a pre-migration copy "<name>.pre-<content_version>.json"; the pid in the name means
+	# save.gd's keep-2 pruning never removes it, so delete this run's copies here.
+	var pre := TEST_SAVE.get_file().get_basename() + ".pre-"
+	var d := DirAccess.open("user://")
+	if d != null:
+		for fn in d.get_files():
+			if fn.begins_with(pre) and fn.ends_with(".json"):
+				DirAccess.remove_absolute(ProjectSettings.globalize_path("user://" + fn))
+		var left := 0
+		for fn in d.get_files():
+			if fn.begins_with(TEST_SAVE.get_file().get_basename()):
+				left += 1
+		check(left == 0, "no test save files left in user:// (left=%d)" % left)
 	print("[migration_notice] passed=%d failed=%d" % [passes, failures.size()])
 	quit(1 if failures.size() > 0 else 0)
