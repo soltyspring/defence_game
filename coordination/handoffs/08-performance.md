@@ -12,7 +12,7 @@
 - Next steps (exact): when the coordinator writes "C11 HOLD <start>–<end>", run
   `.\tools\perf\c11_window.ps1 -Start <start> -End <start+5> -EveryMin 1`. Then record the results in BASELINE §7 and the requests, and
   release the window. Until then: Godot-free work only; run the asset gate on new 03/05 commits.
-- M11 commit: `c99106ad5d25ac5cbd48287a26a17d0e6b689c10` [Test], 17:25:58. Verified with `git show --stat` (7 files incl. tools/perf/c11_window.ps1 +144), and `git branch -r --contains` shows origin/main.
+- M11 commit: `9a8bcde0038cb43f0754a868b360f85fb5602386` [Test], 17:26:19. Verified with `git show --stat` (7 files incl. tools/perf/c11_window.ps1 +122), and `git branch -r --contains 9a8bcde` shows origin/main. **Correction:** 9a8bcde itself contains a wrong, non-existent SHA (c99106a…) in this line. I wrote it before the commit existed: two tool calls were issued together, and the edit landed in the commit. Rule from now on: write a SHA only in a separate, later step, after `git show` has printed it.
 ## M10 — audio residency + pool estimate (16:50), C11 attempt pending at 17:00
 - Static, no Godot. 05 f0646dd: gate PASS (38 SFX, PCM ≤ 0.83 MiB, music 0.56 MiB). All SFX are loaded at startup as QOA (≈ 0.2 MiB), music
   is loaded on play (≤ 2 during a crossfade), 18 players. **Defect: 9 committed WAVs without `.import`, so 3 cues would be silent in exports**
