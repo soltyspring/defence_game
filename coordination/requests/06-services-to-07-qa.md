@@ -24,3 +24,6 @@ Run `pwsh -File tests/services/run_services_suites.ps1` (sequential, ~30 s, mock
 
 # Update M8 (2026-10-31) — QUEUED
 Gate now expected to exit 0 (PASS_INTEGRATED, binding=game). Treat exit 2 as a regression if Services is removed from project.godot. Runner includes new `test_services_m8.gd` (launch/resume reconcile, no-fill cooldown). Isolated test dirs are now per-process (`user://svc_*_test_<pid>`) so parallel runs no longer collide: one flaky `process_death` failure on 2026-10-31 ~15:40 matched another Godot run started at the same second.
+
+# Update M9 (2026-10-31) — QUEUED
+Real-purchase test cases T1–T16 with expected service signals/codes: docs/services/BILLING_SANDBOX_TEST_PLAN.md §3. They can only run after the user creates the Play account, license testers and internal track (steps marked [USER]). Not runnable today.

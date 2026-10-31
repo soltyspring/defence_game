@@ -30,3 +30,6 @@ New facts worth knowing for planning: Play Billing v7 is past its 2026-08-31 dea
 - Theme A (빵집 기사단 vs 곰팡이 군단) was relayed to 06 as a user decision (coordinator-to-06-services.md, 2026-10-31 09:03 KST). DECISIONS.md still shows Q1 PENDING at the time of writing; please record it so every role reads the same source.
 - docs/services/STORE_LISTING_DRAFT.md: ko/en title candidates (≤30 chars), short (≤80) and full descriptions, lint-checked. Unit names in it are your GDD §1 illustrative names, marked [이름 확정 대기]; please replace with your final themed names. Title choice added as OPEN_DECISIONS.md U9 (needs a trademark/name search first; one question at a time).
 - docs/services/PRIVACY_POLICY_DRAFT.md: ko/en template for the current no-data build, with [광고/결제 활성화 시] blocks and [법률 확인 필요] marks; placeholders need U2/U3 answers.
+
+# Update M9 (2026-10-31) — QUEUED
+For U6 (purchase verification), 06 prepared: docs/services/NO_SERVER_MINIMUM.md (when client-only purchases are acceptable: single-player offline, nothing needed to finish chapter 1, low-value items, no gacha; risks table). 06 recommendation if the user wants purchases without a server: ONE non-consumable (supporter / remove ads) only, no consumables until a server exists. Sandbox test steps with user-only steps marked: docs/services/BILLING_SANDBOX_TEST_PLAN.md. Still one question at a time, after U1.

@@ -1,5 +1,5 @@
 # 06-services handoff
-Updated: 2026-10-31 ~15:50 KST (resumed after user checkpoint; M8 complete)
+Updated: 2026-10-31 (M9 complete)
 Status: **M8 COMPLETE. Game Save integration gate PASSES (exit 0, binding=game)** after 02 registered the Services autoload (141d226). Resume check: worktree for 06 paths clean, checkpoint branch checkpoint/quota-20261031-092323/06-services (726e22a) has no diff vs HEAD for 06 paths → nothing lost. No Godot processes left running by 06.
 Session ID: not exposed to the agent (same Kiro window throughout; never closed or restarted).
 Nothing is live: no ad SDK, billing library, consent SDK, server, account or key. All services run in `disabled` mode. No monetization decision exists; none was invented.
@@ -22,6 +22,7 @@ src/services/**, docs/services/**, tests/services/**, coordination/status/06-ser
 | M6 | STORE_LISTING_DRAFT ko/en, PRIVACY_POLICY_DRAFT ko/en, metadata lint | 3afb259, e5bd4aa |
 | M7 | NAME_SEARCH_LOG, CONTENT_RATING_DRAFT, DATA_SAFETY_DRAFT, lint groups, C1 → MET (APK targetSdk 36) | 996952fb43a2e34e36b1043aca7c052c301ac1c8 |
 | M8 | Integration gate exit 0 on the real game wiring; launch/resume purchase reconcile; no-fill offer cooldown; brand-word lint; per-process test dirs (flaky collision fix); 8 mutations caught | d33a27bc22c33279f67a2134257e9ec7a5a10b6d |
+| M9 | Billing prep: plugin candidates (both Billing 9.1.0, not installed), license-tester + internal-track test plan T1–T16 with [USER] steps, no-server minimum bar and risks, billing_docs lint (75 checks, 5 mutations caught) | 82108f86b612c1dbc5bae725be58a72cfea90d42 |
 | Checkpoint | this handoff + status | see status file / `git log -- coordination/handoffs/06-services.md` |
 
 ## M7 details (this task)
@@ -44,6 +45,9 @@ Mutations (each exit 1, hash restored): M7 lint — KIPRIS row removed, invalid 
 - DD1 (late reward callback vs AdMob delivery rule) awaits 01.
 - Requests to 01/02/04/07/10 all QUEUED (no acknowledgements seen).
 
+## M9 validation (actual)
+Runner OVERALL exit=0: 502/0, 130/0, 161/0, listing 968/0 (billing_docs 75), m8 26/0, integration PASS_INTEGRATED 156/0 binding=game. The billing_docs check first failed on 9 vague test-case expectations (prose instead of codes/signals); the plan was rewritten with exact signals and rerun green. 5 doc mutations each caught (exit 1), restored.
+Open from M9: plugin purchase fields (signature/JSON/quantity) unverified; quantity not handled by purchase_service (keep multi-quantity off); client-side verifier not written (needs U6 = C).
 ## Exact next steps when resumed
 1. Read coordinator-to-06-services.md (latest section), DECISIONS.md, quota, replies to 06.
 2. `pwsh -File tests/services/run_services_suites.ps1` must stay OVERALL exit 0.

@@ -31,3 +31,6 @@ docs/services/RELEASE_READINESS_SERVICES.md §2 lists items in your area: B8 pur
 # Update M6 (2026-10-31) — QUEUED
 - Privacy policy template: docs/services/PRIVACY_POLICY_DRAFT.md. Play requires a link or the text inside the app (V2). Suggest a "개인정보처리방침 / Privacy Policy" entry in settings opening `{{PRIVACY_POLICY_URL}}` once the user supplies hosting (OPEN_DECISIONS.md U3).
 - Store listing draft for screenshots/feature graphic captions: docs/services/STORE_LISTING_DRAFT.md. Screenshots must show the real build (Metadata policy).
+
+# Update M9 (2026-10-31) — QUEUED, input only (no install before user approval)
+Billing plugin candidates (checked 2026-10-31, both MIT, both Billing 9.1.0): GodotGooglePlayBilling 3.3.0 (the plugin the Godot docs link) and AndroidIAPP v2.2. Both need the Android Gradle build (export_presets.cfg:25 is false today). When approved, please verify on a real export: merged manifest contains com.android.vending.BILLING and com.google.android.play.billingclient.version, and which purchase fields (signature, original JSON, quantity) the plugin exposes. Details: docs/services/BILLING_PLUGIN_CANDIDATES.md, setup steps S7/S10 in BILLING_SANDBOX_TEST_PLAN.md.
