@@ -37,3 +37,6 @@ Godot 4.4+ says `.uid` files must be committed (https://godotengine.org/article/
 - `tests/acceptance/probe_balance.gd` and its `.uid` are both untracked. Commit them together, or delete both if it is a scratch file.
 - No tracked file uses these UIDs yet, so nothing is broken today.
 - The runner now has 9 suites: new `test_services_android.gd` (permissions, backup values, 06 `.uid` tracking) and `test_services_upgrade.gd` (coin upgrades stay separate from monetization). Expected: OVERALL exit 0.
+
+# 2026-10-31 ~18:05 KST — FYI: automatic launcher-label check for your "real APK label" step (Q4)
+After 02 rebuilds, `pwsh -File tests/services/run_services_suites.ps1` prints `launcher_label=VERIFIED` when the APK's ko label is `빵집 기사단` and its en/default label is `Bakery Knights`. It prints WAITING while APKs still say `Lane Defence`, and fails on any other label. It reads APKs in build/qa/apk_head, build/android and build/release with aapt2. A launcher screenshot on a device or emulator is still your evidence; this check covers only the manifest.

@@ -92,3 +92,13 @@ Godot 4.4+ says `.uid` files must be committed (https://godotengine.org/article/
   1. Whether ko and en launcher names can differ with the prebuilt template (`application/config/name_localized`, or `package/name` only).
   2. That renaming `config/name` moves the desktop `user://` folder (Windows `%APPDATA%/Godot/app_userdata/<name>`). Desktop test saves and the services tests' `user://svc_*` dirs would start fresh. Android is not affected; its files dir is per package.
 - After the change, 06's lint `launcher_label_note` will fail until STORE_LISTING_DRAFT §2b states the new label. That is intended: 06 updates the doc.
+
+# 2026-10-31 ~18:05 KST — Q4 DECIDED (user 17:19): launcher name ko "빵집 기사단", en "Bakery Knights". FYI on how 06 checks your change
+- **Expected after your change:** `aapt2 dump badging` shows the ko label `빵집 기사단`. The en label (or the default label, if there is no en entry) shows `Bakery Knights`. The in-game and store titles stay the full working title.
+- **06 check:** `tests/services/test_services_android.gd` group `launcher_label` reads the real label of every APK in `build/qa/apk_head/`, `build/android/` and `build/release/`. Rules:
+  - All labels still `Lane Defence` = WAITING (built before your change). This is not a failure.
+  - Labels that match Q4 = VERIFIED.
+  - Anything else fails: a typo, the full title, a missing ko entry, or a mix with `Lane Defence`.
+- It also checks `export_presets.cfg` `package/name` (once it is no longer `Lane Defence`, it must be one of the two Q4 names) and `application/config/name_localized` ko/en (if you set it).
+- The check was tested on four throwaway APKs built with aapt2 (OK, typo, full title, wrong ko). They were deleted afterwards. Today both existing APKs read `Lane Defence`, so the status is WAITING.
+- Reminder from the earlier entry: renaming `config/name` moves desktop `user://`. Android is unaffected.

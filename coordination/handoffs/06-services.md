@@ -1,5 +1,5 @@
 # 06-services handoff
-Updated: 2026-10-31 ~17:50 KST (D25 terms, game-text check, privacy preview, Q4 launcher note; .uid audit before)
+Updated: 2026-10-31 ~18:05 KST (Q4 launcher name recorded and checked; D25 terms before)
 Status: **M8 COMPLETE. Game Save integration gate PASSES (exit 0, binding=game)** after 02 registered the Services autoload (141d226). Resume check: worktree for 06 paths clean, checkpoint branch checkpoint/quota-20261031-092323/06-services (726e22a) has no diff vs HEAD for 06 paths → nothing lost. No Godot processes left running by 06.
 Session ID: not exposed to the agent (same Kiro window throughout; never closed or restarted).
 Nothing is live: no ad SDK, billing library, consent SDK, server, account or key. All services run in `disabled` mode. No monetization decision exists; none was invented.
@@ -32,6 +32,7 @@ src/services/**, docs/services/**, tests/services/**, coordination/status/06-ser
 | Backup | SAVE_BACKUP_POLICY.md: current values (allowBackup=false from Godot 4.7.2 template, no dataExtractionRules/fullBackupContent, hasFragileUserData=false, prebuilt template, user:// = getFilesDir, save.json/.bak/.tmp/.corrupt, ledger in same file), scenarios S1–S8 all NOT TESTED, options B0–B3 (rec. B0 now, B1 with Gradle), B1 rule XML, device test plan; DATA_SAFETY §2b; privacy [백업 활성화 시]/[IF BACKUP ENABLED]; test_services_android.gd (91 checks: preset permissions, APK binary-manifest + aapt2 AD_ID/BILLING/INTERNET/NETWORK_STATE absent, doc vs preset/save.gd/APK values, consistency), release_preset=WAITING; 12 mutations caught | 5fc46e1854460885150ce773a355d7bc0f0f892d, 082e9ca45def5f0255cdd707de1f74eda59886a1 |
 | UID/upgrade | GODOT_UID_AUDIT.md (Godot 4.4+ rule: commit .uid; 19 untracked at start → 10 committed 4, 06 committed 4, 12 left for 02/04/07 via requests); godot_uid_tracked group in test_services_android; test_services_upgrade.gd (static scan of save.gd buy_upgrade/app.gd/04 panel, meta.json coin-only upgrades + iap disabled + gems disabled, runtime direct + App path: Services diagnostics and progress.services unchanged, result keys only id/to_level/code/coins/level); 8 mutations on temp copies (no other role's file edited); 01 hosting question candidate (not executed); SAVE_BACKUP_POLICY 10 cross-check | f59587cc763c4bc7fdaf8c9b8c35101d3e9fd7a8, 8f58a1c22c53253883a43dc5d570517afd0076db |
 | D25/Q4 | Store text on 01 D25 words; §7 split blocked vs allowed generic (제빵사, 화덕); lint game_text_overlap (data/text ko/en vs block list, ui.title = working title, store names resource/worker/hero); privacy preview with working title + KIPRIS banner (make_privacy_preview.ps1, lint privacy_preview reverse-transform); §2b launcher name vs store title with Play sources, label unchanged (`Lane Defence`, 02); lint launcher_label_note; 10 mutations caught | 78318a24d4ff5393b7135ad7b778660e17d9adc8 |
+| Q4 | Launcher name decision recorded (§2b launcher blocks, NAME_SEARCH_LOG, OPEN_DECISIONS U10, KIPRIS search-first note); lint: launcher = store title before ":", brand/Bread Defense clean, KIPRIS §3 rows + no-space forms, name-log rows; android launcher_label: aapt2 badging (UTF-8 via temp file) OLD=WAITING / OK=VERIFIED / else FAIL, preset package/name + name_localized checks | c0218449596086c29a3fecd91078e5930effcfb6, 2193dcb6a87598fa00c4eca62f33999df83a3a2e |
 | Checkpoint | this handoff + status | see status file / `git log -- coordination/handoffs/06-services.md` |
 
 ## M7 details (this task)
@@ -79,10 +80,20 @@ Privacy hosting: nothing created or published. One question candidate in 06-serv
 ## D25/preview/Q4 validation (actual)
 Runner OVERALL exit=0 (listing 1775/0). Mutations (exit 1 with expected message): 반죽 back in res.supply and "Warmth" in an en string (temp copies via `--text-dir=`), en ui.title "Lane Defence", store text without the resource word, "dough" in store text, 제빵사 exception note removed, preview banner "KIPRIS 미확인" removed, preview body drift vs template, {{APP_NAME}} filled in the template, §2b claiming the label changed. 3 mutation set-ups were wrong on the first run (expected-message text, one mutation left the second 밀가루) and were fixed in the script, not in the lint.
 Found: USER_QUESTION Q4 says the title is 14자; lint counts 15 (sent to 01). 04's 97c8b9c (panel wired to cmd_buy_upgrade) still passes test_services_upgrade.
+## Q4 validation (actual)
+- Runner OVERALL exit=0.
+- Label check proof: four throwaway APKs were built with `aapt2 compile/link` against android-36 android.jar (labels: OK, typo, full title, wrong ko) and copied briefly into build/android. Results: OK → `launcher_label=VERIFIED`, exit 0; the other three → FAIL. All four were deleted afterwards.
+- Found on the way:
+  1. OS.execute's captured stdout loses Korean on Windows (UTF-8 probe), so badging is read through a redirected temp file.
+  2. Passing the redirect through `cmd /c` broke quoting (every label read as NONE), so the command now runs from a tiny temp .cmd file.
+  3. The KIPRIS launcher check first matched the §5 summary rows, which let one mutation through; it is now tied to the §3 term-row format and that mutation is caught.
+- Q2 deferred and nothing published remain true.
 ## Exact next steps when resumed
 1. Read coordinator-to-06-services.md (latest section), DECISIONS.md, quota, replies to 06.
 2. Runner must stay OVERALL exit 0 (9 suites).
-3. Q4 answered and 02 changes the label → update STORE_LISTING_DRAFT §2b current label (lint launcher_label_note enforces).
+3. When 02 rebuilds with the Q4 label: expect launcher_label=VERIFIED, then update STORE_LISTING §2b "Current launcher name in the build" (lint launcher_label_note follows package/name).
+4. KIPRIS done by a person → final name; then P3 fill and drop the preview.
+## Older next steps (D25 / preview) → update STORE_LISTING_DRAFT §2b current label (lint launcher_label_note enforces).
 4. 01 renames game words again → store text §4/§5 and COMPETITOR_*/ALLOWED_GENERIC_KO follow (lint game_text_overlap enforces).
 5. privacy_site/index.html edited → rerun `pwsh -File tests/services/make_privacy_preview.ps1` (lint privacy_preview enforces).
 6. KIPRIS done by a person → final name; then fill {{APP_NAME}} in the template (P3) and drop the preview.
