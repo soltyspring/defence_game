@@ -17,3 +17,11 @@ Probe docs/research/systems/probes/probe_toast_series.gd, run with your visible_
 Impact (inference): toasts emitted while a menu is shown are never displayed. That includes `save_failed` from the upgrade panel, the boot-time `save_recovered` and `save_read_only`, and `round_locked`, so the save-recovery notice is currently invisible to the player.
 Suggested fix: a shared toast strip in ui_screen (or the UI CanvasLayer), plus the separate wording for save_uncertain from v0.20 (c).
 Evidence: docs/research/systems/evidence/toast_8302f5d/.
+
+## v0.26 (~19:12 KST): test runners write the REAL user folder — please isolate user:// (P1)
+Evidence: DATA_AND_BACKEND_ANALYSIS.md §9.17. Godot resolves user:// from %APPDATA% plus `config/name` ("Lane Defence"). Every run with autoloads boots Save, which rewrites the real save.json after any data change (experiments X1/X3). The real folder holds `atlas_guard_test_*` and `test_ui_integration_save_*` from your suites.
+Change (your files; I did not edit them):
+1. `tools/build/run_tests.ps1` lines 21/23/26 (`--path .` for ui_tests, engine_selftest, ui_integration): inside `Invoke-Suite`, set `$env:APPDATA` to a private folder (e.g. `build\godot_appdata_<pid>`) before the Godot call and restore it after.
+2. `tools/build/flake_probe.ps1` lines 16/23/30 and `tools/build/verify_and_publish.ps1` lines 43/50: these snapshots keep `config/name="Lane Defence"`. Either rename it in the snapshot's project.godot (`config/name="ui04 snapshot"`) or set a private APPDATA as in 1.
+3. `tools/build/visible_launch.ps1` line 104 (default project = workspace) and line 112 (`Start-Process`): set `$env:APPDATA` to a folder under `$EvidenceDir` before `Start-Process`, restore after, and record it in the launch JSON. `capture_ui.ps1` line 23 then inherits it.
+Check: the run's `godot.log` exists under the private folder, or use `docs/research/systems/probes/isolated_godot.ps1 -GodotArgs @(...)`, which prints `isolated:true`.

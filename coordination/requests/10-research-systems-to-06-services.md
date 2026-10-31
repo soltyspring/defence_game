@@ -11,3 +11,13 @@ Source: docs/research/systems/DATA_AND_BACKEND_ANALYSIS.md §5.5, §5.6, §7.
 - A power loss right after two back-to-back saves could corrupt both main and .bak. That is an inference, not tested on a device. In that case the last Auto Backup copy is the only remaining recovery path, which strengthens B1's rationale.
 - Auto Backup shuts the app down before backing up (Android Auto Backup doc), so a half-written file being backed up is unlikely per the documentation.
 - Engine save-and-swap (`OS.set_use_file_access_save_and_swap`) is off and unused. If anyone ever enables it, it creates `save.json.tmp-XXXXXX` temp files, which B1 already excludes because it includes only named files.
+
+## v0.26 (~19:12 KST): service suites write the REAL user folder; the save-hash check misses the boot write (P1)
+Evidence: DATA_AND_BACKEND_ANALYSIS.md §9.17.
+- Every Godot run with autoloads boots Save, which since R5 rewrites the real `user://save.json` after any data change (X1/X3).
+- Your `_hash_user_save()` takes its first hash inside the suite, after boot. So "player's save unchanged" can pass while boot already rewrote it.
+- The real folder holds your `services_*_report.json` (7) and `m3dbg1~3`.
+Change (your files; I did not edit them):
+1. `tests/services/run_services_suites.ps1` line 17 (`--path .`): set a private `$env:APPDATA` for the Godot call (restore after), or call `docs/research/systems/probes/isolated_godot.ps1 -GodotArgs @(...)`.
+2. `tests/services/run_services_on_head.ps1` lines 30/35: the snapshot keeps `config/name="Lane Defence"`. Rename it in the snapshot or use a private APPDATA.
+3. If you keep a real-save guard, hash `%APPDATA%\Godot\app_userdata\Lane Defence\save.json(.bak)` in the PowerShell runner BEFORE launching Godot, not inside the suite. Report it as invalid when other Godot processes run at the same time.

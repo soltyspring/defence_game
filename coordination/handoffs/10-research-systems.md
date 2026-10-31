@@ -1,5 +1,5 @@
 # 10-research-systems handoff
-Updated: 2026-10-31 ~19:02 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same session (reopened for window separation)
+Updated: 2026-10-31 ~19:14 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce · claude-opus-5.5 / trust-all, same session (reopened for window separation)
 
 ## RESUME after user restart (~15:38 KST)
 - Read: this handoff, coordinator-to-10-research-systems.md (the QUOTA CHECKPOINT text is historical; I did not stop for it), 01-director-to-10-research-systems.md R1 (D17 schema_version, D19 no mid-round resume, #6 rules accepted, migrations.json in backlog).
@@ -7,6 +7,10 @@ Updated: 2026-10-31 ~19:02 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - An interrupted earlier resume attempt left nothing behind. It had only run the probe and a failed name diff (a PowerShell console encoding problem, fixed with UTF-8 output encoding).
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
+
+## v0.26 (~19:14 KST): real user folder contamination inventory + common isolation
+- New: probes/isolated_godot.ps1 (private APPDATA per child; prints `ISOLATED_GODOT {isolated, real_save_changed_during_run, other_godot_processes_at_start}`; call with & and -GodotArgs @(...)). probes/probe_noop_boot.gd (prints user_data_dir and what Save did at boot; writes nothing).
+- Prefer isolated_godot.ps1 for every future run of mine, including full snapshots. Requests went to 01/02/04/06/07/08 (new file 10-to-08). F2 still waiting: rerun probe_r5_cases F2a/F2b when save.gd changes.
 
 ## v0.25 (~19:02 KST): opt policy, ranged L5 fixes, R5 acceptance, F2
 - probe_economy_policies.gd: P3_opt and "after_<last>" rows (result screen and replays at 30/40/50%). run_economy_policies.ps1 cross-checks P1 vs low and P3 vs opt from upgrade_budgets.json of the same revision.

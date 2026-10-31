@@ -226,3 +226,14 @@ Source: DATA_AND_BACKEND_ANALYSIS.md §9.16 (2). Each what-if changed meta.json 
   - Cheapest-first now buys ranged L5 earlier, so upgrade_budgets.json low r10 and high r09/r10 change (3 diffs). You would regenerate it and rerun your sim.
 - The metric weighs every enemy row equally (ASSUME). Whether a player notices the inversion is not something I estimate.
 Also: I implemented your `policy_opt` (P3_opt); it matches your opt table r01–r10 exactly (0 diffs), and P1 matches `low` (0 diffs). Still open: the refund-source decision (A/B/AB). Note that 02's R5 now records prices automatically per save (B-like); see the 10→02 v0.25 note.
+
+## v0.26 (~19:12 KST): your sims write the REAL player save — please isolate user:// (P1)
+Evidence: DATA_AND_BACKEND_ANALYSIS.md §9.17.
+- Godot puts user:// at %APPDATA%\Godot\app_userdata\Lane Defence (engine source).
+- Any run with autoloads boots Save, which since R5 rewrites save.json once after any data change. That includes your `-s` sims.
+- Experiment X3: a no-op boot with edited data (melee max_level 5→3) clamped a save from L5 to L3 and refunded 350, permanently. A sim run on the shared tree with in-progress data edits therefore changes the real player save.
+Change (your files; I did not edit them):
+1. `docs/design/balance/sweep.ps1` line 11 (`Start-Process … '--path',$root …`): before it, set `$old=$env:APPDATA; $env:APPDATA=(Join-Path $OutDir 'godot_appdata')`, and restore `$env:APPDATA=$old` after `WaitForExit`. Start-Process inherits the environment.
+2. The "Run:" comments in confirm_sim/paired_sim/probe_sim/verify_files.gd.txt line 6 and low_budget_sim.gd.txt line 9: run through `& docs/research/systems/probes/isolated_godot.ps1 -GodotArgs @('--headless','--path','.','-s',"$env:TEMP\x.gd",'--','<out.json>')`, or set APPDATA as in 1.
+3. Keep output paths explicit (as sweep does). The `user://…` defaults then land in the private folder.
+Check: the run's `godot.log` appears under the private folder (the wrapper prints `isolated:true`).

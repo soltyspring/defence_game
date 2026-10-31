@@ -210,3 +210,15 @@ Source: DATA_AND_BACKEND_ANALYSIS.md §9.16 (3). New probe: docs/research/system
   - String prices in a junk snapshot refund 0 silently, without the refund_unknown warning.
   - The old part D shape (same content_version, L9 → hp 2.20) only happens by editing the file; clamping to max_level in `_migrate` would close it.
 - Regression in the same snapshot: transaction C1–C13/C5b PASS (C6 8/8), rotation C 8/8, dedup 162/1, 14 load cases the same as v0.17.
+
+## v0.26 (~19:12 KST): boot-time rewrite of the real save by every test run (P1) + F2 still waiting
+Evidence: DATA_AND_BACKEND_ANALYSIS.md §9.17. Experiments X1–X3 used a private APPDATA, an unrenamed HEAD snapshot and a no-op `-s` script:
+- X1: a boot on a save with an older content_version rewrites it (revision 5→6, new content_version, new .bak), even though nothing needed migrating (`prev_cv != ""` always saves).
+- X2: the same save booted again is not written.
+- X3: with edited data (melee max 3), a no-op boot clamps L5→L3 and refunds 350.
+So every Godot run on the shared tree, or on an unrenamed snapshot, rewrites the real `%APPDATA%\Godot\app_userdata\Lane Defence\save.json`. With in-progress data edits it applies that data's caps for good. The real save.json changed at 18:47, 18:50, 19:06 and 19:07 today.
+Requests (your files):
+1. Run instructions in `src/core/diag/selftest.gd` line 3, `pressure_cue_probe.gd` line 4, `passive_probe.gd` line 3 and `wave_clear_probe.gd` line 3: use a private APPDATA, via `& docs/research/systems/probes/isolated_godot.ps1 -GodotArgs @('--headless','--path','.','-s','res://src/core/diag/selftest.gd')` or `$env:APPDATA=<private>` for that process.
+2. Optional engine guard (your decision): when the main loop is a `-s`/`--script` SceneTree, or the user args contain `--isolated-save`, Save must not rewrite the default `user://save.json` during `_ready()`. That is, skip `_apply_content_migration` writes, or point the default path to `user://test_boot_save.json`. Cost: R5 checks must then run in a private folder, which they already should.
+3. Optional: when nothing changed (`prev_cv != cur_cv` but `changed == false`), consider stamping on the next normal save instead of writing during load. That removes X1 for the common case.
+F2: save.gd is still 7f2886c, so I am waiting. When it lands I rerun probe_r5_cases F2a/F2b and expect 9/9.

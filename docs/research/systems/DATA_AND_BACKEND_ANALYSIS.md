@@ -1,5 +1,5 @@
 # 데이터·백엔드 분석: 성공한 디펜스 게임의 온라인 기능과 우리 게임의 최소 설계
-작성: 10-research-systems · 버전 v0.25 (v0.25 §9.16 01 opt 정책 구현·대조, 원거리 L5 역전 원인과 수정안, R5 수용 실행·F2 발견, v0.24 §9.15 D27 데이터 경제표·효과표 재실행·F1 독립 재실행·09 코인 흐름 회신, v0.23 §9.14 환불 근거 두 방식의 JSON 형식·장단점·테스트, v0.22 §9.13 경쟁작 공식 문서의 밸런스 변경·업데이트·오지급 처리와 D26 대조, v0.21 §9.12 정책별 경제 기준표·메뉴 토스트 미표시, v0.20 §9.11 a262640 재계산·업그레이드 화면 확인, v0.19 §9.10 buy_upgrade C1~C13, v0.18 §9.9 엔진 저장 내구성 판정·경쟁작 기기 변경 정책, v0.17 §9.8 저장 원자성 점검, v0.16 §9.7 챕터 1 코인 흐름·비용 대비 효과, v0.15 §9.6 데이터 버전 변경과 세이브, v0.14 §9.5 업그레이드 효과 곡선, v0.13 §9.4 업그레이드 트랜잭션·content_version, … v0.11 재시작 후 무결성 재실행: D17 확인, v0.12 테마 A 이름표 검사 통과·세이브 재확인) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
+작성: 10-research-systems · 버전 v0.26 (v0.26 §9.17 실제 사용자 폴더 오염 경로 전수 조사와 공통 격리 방법, v0.25 §9.16 01 opt 정책 구현·대조, 원거리 L5 역전 원인과 수정안, R5 수용 실행·F2 발견, v0.24 §9.15 D27 데이터 경제표·효과표 재실행·F1 독립 재실행·09 코인 흐름 회신, v0.23 §9.14 환불 근거 두 방식의 JSON 형식·장단점·테스트, v0.22 §9.13 경쟁작 공식 문서의 밸런스 변경·업데이트·오지급 처리와 D26 대조, v0.21 §9.12 정책별 경제 기준표·메뉴 토스트 미표시, v0.20 §9.11 a262640 재계산·업그레이드 화면 확인, v0.19 §9.10 buy_upgrade C1~C13, v0.18 §9.9 엔진 저장 내구성 판정·경쟁작 기기 변경 정책, v0.17 §9.8 저장 원자성 점검, v0.16 §9.7 챕터 1 코인 흐름·비용 대비 효과, v0.15 §9.6 데이터 버전 변경과 세이브, v0.14 §9.5 업그레이드 효과 곡선, v0.13 §9.4 업그레이드 트랜잭션·content_version, … v0.11 재시작 후 무결성 재실행: D17 확인, v0.12 테마 A 이름표 검사 통과·세이브 재확인) · 기준일 2026-10-31 KST · 모든 출처 접근일 2026-10-31
 범위: 경쟁작에서 **관찰되는** 온라인 기능, 그 기능의 **공개 문서화된** 기술, **UNKNOWN**, 우리 오프라인 우선 Godot 게임에 필요한 최소 콘텐츠 DB·세이브·거래 계약. 런타임 코드는 수정하지 않았다. 내부 DB나 비공개 구현에 접근한 적 없다. 게임을 직접 플레이하지 않았다(스토어 텍스트·공개 스크린샷만 확인).
 
 ## 0. 현재 판단 (요약)
@@ -1214,6 +1214,65 @@ HEAD 40382b0 결과(`-Rev HEAD`, exit 0, 업그레이드 총비용 5,595). "카�
   - 옛 파트 D 모양(같은 content_version에서 L9, hp 2.20)은 세이브 파일을 직접 고쳐야만 생긴다. R5는 버전이 같으면 돌지 않으므로 그대로 남는다. 이것은 P3 선택 사항이다(`_migrate`에서 언제나 max_level로 자르기).
 - 회귀(같은 스냅샷): `probe_upgrade_transaction` C1~C13·C5b 통과(C6 8/8), `probe_save_rotation` C 8/8, `probe_battle_uid_dedup` 162/1, `probe_save_load_cases` 14건 모두 v0.17과 같은 복구 결과.
 
+### 9.17 실제 사용자 폴더(Lane Defence) 오염 경로 전수 조사와 공통 격리 방법 (v0.26)
+조사 기준은 origin/main 65502e8, 19:00~19:12 KST다. 저장소 파일은 읽기만 했다. Godot 실행은 모두 내 비공개 APPDATA에서만 했고, 실제 사용자 폴더에는 아무것도 쓰지 않았다.
+
+**(1) 메커니즘: 실행만 해도 실제 세이브가 바뀐다**
+- 엔진 소스(4.7.2-stable, S23 계열):
+  - `platform/windows/os_windows.cpp` 2417~2425행: `get_config_path()`·`get_data_path()`는 **APPDATA 환경 변수**를 그대로 쓴다. 2508행: `get_user_data_dir(p)`는 `get_data_path()/p`다.
+  - `core/os/os.cpp` 338~353행: user:// = `<data>/Godot/app_userdata/<application/config/name>`이다. 단, `use_custom_user_dir`가 켜져 있으면 `<data>/<custom_user_dir_name>`이다.
+  - `config/name_localized`(4b5926d)는 이 경로에 쓰이지 않는다.
+  - 결론: 공유 작업 트리나 이름을 바꾸지 않은 스냅샷을 실행하면 user://는 **실제 `%APPDATA%\Godot\app_userdata\Lane Defence`**가 된다.
+- `-s` 스크립트로 실행해도 autoload가 올라온다. 그러면 Save의 `_ready()`가 `user://save.json`을 로드하고, R5(7f2886c)부터는 content_version이 다르면 **로드 중에 다시 저장**한다(`prev_cv`가 비어 있지 않으면 바꿀 것이 없어도 저장한다).
+- 비공개 APPDATA 실험(`probes/isolated_godot.ps1` + `probes/probe_noop_boot.gd`, 이름을 바꾸지 않은 HEAD 7132525 스냅샷):
+| 실험 | 시작 세이브 | 아무것도 하지 않는 부팅 1회 뒤 | 판정 |
+|---|---|---|---|
+| X1 데이터 버전이 다름 | revision 5, content_version `c1-old000000`, 코인 777 | revision **6**, content_version = 현재 데이터, `.bak` 새로 생김 | 부팅만으로 세이브와 백업이 바뀐다 |
+| X2 같은 세이브로 한 번 더 부팅 | (X1 결과) | 해시 같음 | 버전이 같으면 쓰지 않는다 |
+| X3 편집 중인 데이터(근접 상한 5→3)로 부팅 | 근접 L5, 코인 777, 옛 버전 | 근접 **L3**, 코인 **1,127**(+350), 새 버전으로 기록 | **편집 중인 data/**로 아무 스크립트를 실행해도 실제 세이브의 레벨이 깎이고 환불된다. 데이터를 되돌려도 레벨은 돌아오지 않는다** |
+  - 세 실험 모두 `OS.get_user_data_dir()` = 비공개 폴더였고, 그 실행의 `logs/godot.log`가 비공개 폴더에 생겼다(격리 증거).
+- 실제 폴더 관찰(이름·수정 시각만 읽음): `save.json`이 19:07, `.bak`이 19:06에도 바뀌었다.
+  - `selftest_save.json` + `.corrupt-*` 15개(08:57~18:53), `selftest_faults/`, `qa07/`, `perf/`, `services_*_report.json` 7개, `atlas_guard_test`, `m3dbg1~3`, `probe10/`(17:38, 02가 내 프로브를 공유 트리에서 실행한 것), `logs/`가 있다.
+  - 공유 트리에서 도는 테스트가 모두 같은 폴더를 쓰고 있다는 뜻이다.
+
+**(2) 실행 스크립트 전수 표** — Godot을 띄우는 저장소 파일 전체를 조사했다. "부팅 쓰기"는 autoload Save가 실제 `save.json`을 로드하면서 다시 쓸 수 있는 경우다. 테스트 안에서 `save.path`를 바꾸는 것은 부팅 **이후**라 부팅 쓰기를 막지 못한다.
+| 담당 | 파일(실행 줄) | 프로젝트 / user:// | 부팅 쓰기 | 스크립트가 직접 쓰는 user:// 파일 | 격리 |
+|---|---|---|---|---|---|
+| 01 | `docs/design/balance/sweep.ps1`(11) → multi_seed_sim | 공유 트리(`--path $root`) / 실제 | 예 | `user://multi_seed.json`(기본값, 보통 인자로 TEMP) | **아님** |
+| 01 | `confirm_sim`·`paired_sim`·`probe_sim`·`verify_files.gd.txt`(6), `low_budget_sim.gd.txt`(9)의 Run 안내 | `--path .` / 실제 | 예 | `user://paired_sim.json` 등 기본 출력 | **아님** |
+| 02 | `src/core/diag/selftest.gd`(3), `pressure_cue_probe.gd`(4), `passive_probe.gd`(3), `wave_clear_probe.gd`(3)의 Run 안내 | `--path .` / 실제 | 예 | selftest: `selftest_report.json`, `selftest_save.json`(+.bak·.corrupt-*), `selftest_faults/` | **아님** |
+| 02 | `tools/build/build_android_debug.ps1`(46·47) | 아카이브 사본, import·export만 | 아니오(게임 미실행) | — | 해당 없음 |
+| 02 | 로컬 스냅샷 "It02 <sha>" | 이름 바꾼 사본 | — | — | 격리(관찰) |
+| 03 | `tools/art/run_godot_*.ps1` | 자체 프로젝트 `defence-art-check`(autoload 없음) | 아니오 | `defence-art-check/…` | **격리** |
+| 04 | `tools/build/run_tests.ps1`(21·23·26): ui_tests, engine_selftest, ui_integration | `--path .` / 실제 | 예 | `atlas_guard_test_<pid>`, `test_ui_integration_save_<pid>.json`, selftest 파일 | **아님** |
+| 04 | `tools/build/flake_probe.ps1`(16·23·30), `verify_and_publish.ps1`(43·50) | 아카이브 사본, 이름 그대로 / 실제 | 예 | 같은 테스트 파일 | **아님** |
+| 04 | `tools/build/visible_launch.ps1`(104·107·112; 기본값은 작업 트리), `capture_ui.ps1`(23, visible_launch 사용) | 호출자 경로 / 사본 이름에 따름. 기본은 실제 | 예. 메인 장면이면 전투 결과까지 저장될 수 있음 | 스크립트별 | **기본값은 아님** |
+| 05 | `tools/audio/run_godot_checks.ps1` | 아카이브 사본 + `use_custom_user_dir`(`defence_audio_sandbox`) | 아니오 | 자체 폴더 | **격리** |
+| 06 | `tests/services/run_services_suites.ps1`(17) | `--path .` / 실제 | 예 | `services_*_report.json`, `svc_*_test_<pid>/` | **아님**. 스위트의 `_hash_user_save` 비교는 부팅 뒤에 첫 해시를 재므로 부팅 쓰기를 못 잡는다 |
+| 06 | `tests/services/run_services_on_head.ps1`(30·35) | 아카이브 사본, 이름 그대로 / 실제 | 예 | 같음 | **아님** |
+| 07 | `tools/qa/run_acceptance.ps1`(65·76·82·97; 기본 `.`, `-Head`는 `qa07_head` 사본) | 두 경우 모두 이름 그대로 / 실제 | 예 | `qa07/…`(스위트별 세이브·faults·purchase) | **아님** |
+| 08 | `tools/perf/run_perf.ps1`(44·49·95·117~123), `tests/performance/test_bench_semantics.ps1`(26) | `--path .` / 실제 | 예 | `perf/perf_save.json` | **아님** |
+| 08 | `tools/perf/ab_retest.ps1`(77·81), `c11_window.ps1`(61·97·116·128·130) | 아카이브 사본, 이름 그대로 / 실제 | 예 | `perf/…` | **아님** |
+| 10 | `probes/run_content_migration.ps1`, `run_economy_policies.ps1`, `.local_inspect/run_snapshot.ps1` | 사본, 이름 `Probe10 …`로 변경 | 자체 폴더 | 자체 폴더 | **격리** |
+- 요약: 격리된 쪽은 03·05·10이다. 01·02(진단 실행 안내)·04·06·07·08의 Godot 실행은 실제 폴더를 쓴다.
+
+**(3) 공통 격리 방법(권고)**
+- **방법 A(권장, 모든 실행에 적용 가능): 자식 프로세스에만 비공개 APPDATA를 준다.**
+  - PowerShell 예: `$old=$env:APPDATA; $env:APPDATA=$priv; & $godot …; $env:APPDATA=$old`. `Start-Process`도 현재 환경을 물려받는다.
+  - 또는 래퍼 `docs/research/systems/probes/isolated_godot.ps1 -GodotArgs @(...)`를 쓴다.
+  - 엔진이 APPDATA만 보므로 user://는 실제 폴더로 갈 수 없다. 공유 트리, 사본, 화면 실행 모두 같은 방식으로 된다.
+  - `--import`도 이 방식이면 편집기 설정을 비공개 폴더에 만든다.
+- 방법 B(사본 전용): 사본의 project.godot에서 `config/name`을 바꾸거나(10, 02 "It02 …", 03 "… snapshot"), `use_custom_user_dir`를 켠다(05). 공유 project.godot은 절대 고치지 않는다(app.gd 83행 주석: 이름을 바꾸면 데스크톱 user:// 폴더가 옮겨진다).
+- 방법 C(불충분): 스크립트 안에서 `save.path`를 바꾸는 것만으로는 부족하다. 부팅 쓰기(X1·X3)와 다른 파일 쓰기를 막지 못한다.
+- 확인 방법:
+  - 1순위는 그 실행의 `godot.log`가 비공개 폴더에 생겼는지(래퍼가 자동으로 확인).
+  - 2순위는 실행 전후 실제 `save.json`·`.bak` 해시 비교다. 다른 Godot 프로세스가 같이 돌면 남의 쓰기 때문에 의미가 없으므로, 래퍼는 그 수를 함께 적는다.
+  - "Godot 명령은 사용자 폴더 격리 없이 실행하지 않는다"를 각 문서의 Run 안내에 적는다.
+- 02 엔진 쪽 방어(선택, 02 판단): `-s`/`--script` 실행이거나 `OS.get_cmdline_user_args()`에 `--isolated-save`가 있으면, Save가 부팅 때 실제 `user://save.json`을 다시 쓰지 않게 한다. 대가: 그 경로로 R5를 확인하는 테스트는 비공개 폴더에서 해야 한다.
+
+**(4) F2 재확인**: save.gd의 마지막 변경은 여전히 7f2886c(18:43)다. F2 수정은 아직 없으므로 **대기**한다. 수정이 들어오면 `probe_r5_cases.gd`의 F2a·F2b를 다시 돌려 9/9를 확인한다.
+**(5) .gd.uid**: `probe_r5_cases.gd.uid`(uid://dgt02sxyrkkqk)와 `probe_noop_boot.gd.uid`(uid://b36hgdlu6xa1n)는 비공개 APPDATA에서 한 깨끗한 import(이름 그대로인 HEAD 사본)로 만들었다. 저장소의 다른 uid와 겹치지 않는다(`git grep` 0건).
+
 ## 10. 출처 (모두 2026-10-31 KST 접근)
 | ID | 출처 | URL | 한계 |
 |---|---|---|---|
@@ -1248,3 +1307,4 @@ HEAD 40382b0 결과(`-Rev HEAD`, exit 0, 업그레이드 총비용 5,595). "카�
 | S29 | 랜덤다이스 도움말 센터 FAQ: 224(업데이트 버튼), 750(모든 상자, 25.02.20), 811(크루레이드 정산), 816(협동 카드 미지급), 843(시즌 랭킹 보상, 25.02.20). FAQ ID 1~860 전수 조회 결과 26건 | https://111percent.helpshift.com/hc/ko/3-random-dice-pvp-defense/faq/811-crew-raid-ranking-calculation-time-and-criteria-gmt9/ (다른 항목은 같은 경로에 ID-slug) | 대부분 게시일 표기 없음. ID 860 초과는 조회하지 않음 |
 | S30 | Play "새로운 기능": 랜덤다이스(업데이트 2026-02-11), 아처키우기(업데이트 2026-09-17) | https://play.google.com/store/apps/details?id=com.percent.royaldice&hl=ko · https://play.google.com/store/apps/details?id=com.GameDuo.MadArcher&hl=ko | 최신 노트 하나만 보임. 이전 노트 기록 없음 |
 | S31 | 게임듀오 자사 게임 페이지 "아처키우기" | https://gameduo.net/game/archer-forest | 게시일 없음. 공지 채널 링크 없음 |
+| S32 | Godot 4.7.2-stable 소스: platform/windows/os_windows.cpp(get_config_path·get_data_path·get_user_data_dir, 2417~2425·2508행), core/os/os.cpp(OS::get_user_data_dir, 338~353행) | https://github.com/godotengine/godot/blob/4.7.2-stable/platform/windows/os_windows.cpp · https://github.com/godotengine/godot/blob/4.7.2-stable/core/os/os.cpp | 소스 읽기와 비공개 APPDATA 실험 X1~X3으로 확인. Android 경로와는 무관 |

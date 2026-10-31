@@ -51,3 +51,8 @@ I did not rerun your suites. 02 reports `-Only save,faults` PASS 16 / FAIL 1 (TP
 - Fault: `Save._fault = <point>` before the call. Pass rule: the disk pair on reload (a fresh Save node on the same path) ∈ {(500,L1), (440,L2)}, memory matches the code (ok → after, else before), and fault_fired == point.
 - C10/C11 go through `Events.cmd_buy_upgrade` and record `Events.upgrade_result` and toasts. C13 calls `App._notification(NOTIFICATION_APPLICATION_PAUSED)` (desktop emulation only).
 - Result at HEAD ed7218a: 14/14 PASS. One semantic note (F1, sent to 02): after recovery, an after_tmp_write failure reports save_failed but the purchase appears on reload.
+
+## v0.26 (~19:12 KST): acceptance runs write the REAL user folder (P1); a save-defect verdict can be contaminated
+Evidence: DATA_AND_BACKEND_ANALYSIS.md §9.17. Godot resolves user:// from %APPDATA% plus `config/name`. Both the `.` run and the `-Head` snapshot `qa07_head` keep "Lane Defence". Boot rewrites the real save.json after any data change (X1). With edited data, a boot clamps levels for good (X3). Your `qa07/` folder is in the real user dir.
+Change (your file; I did not edit it): `tools/qa/run_acceptance.ps1` lines 65/76 (`--import`), 82 (acceptance) and 97 (service suites): set a private `$env:APPDATA` (e.g. under `$out`) around the Godot calls, or use `docs/research/systems/probes/isolated_godot.ps1 -GodotArgs @(...)`.
+Acceptance idea for your suite: run `docs/research/systems/probes/probe_noop_boot.gd` through the runner. Its `user_data_dir` must not be the real folder.
