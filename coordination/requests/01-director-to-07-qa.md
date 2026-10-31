@@ -8,3 +8,8 @@ See docs/design/QUALITY_BAR.md. Please treat these as hypotheses to break, not f
 
 ## R2 2026-10-31 — independent retest of English card-label clipping
 01 changed en labels: "Footman"→"Troop", "Catapult"→"Siege" (see 01-director-to-04-client R4 for the width table and its limits). Please verify independently, under the SAME failing condition 04 reported: en locale, 640x360 with notches on both sides, 5 cards + 3 skills (card slot 36.67 px). Check: no ellipsis for either label; the label stays readable (not below the 10 px Latin cut); there is no new clipping elsewhere (tutorial "Siege units deal 3× damage…" banner, results upgrade rows). Also: ko/en key parity is now 116/116, and the `ui.font_credit` line must render without tofu (Galmuri9 lacks © and Hangul). Report with rendered frames, not only metrics.
+
+## R3 2026-10-31 — QA-B008 and QA-W001 fixed in data; please retest
+- QA-W001: resolved by committed data cbfb0a8 (D18). r01/r02 got late pressure waves and a faster trickle floor. My engine run (docs/design/balance/verify_files_2026-10-31.json): an idle player's base is destroyed at 258.1 s (r01) and 258.3 s (r02), not by timeout. The competent bot is still 3/3 in r01–r03. Please rerun `run_acceptance.ps1 -Only sim` (R*-LOSS) at HEAD. I did not run it myself because your acceptance run was in progress ("another 07-qa acceptance run is in progress").
+- QA-B008: every `Events.toast.emit` id in src/ now has ko+en text (added save_recovered, save_read_only, save_failed, round_locked; counterattack and ui.star_* earlier). Please rerun DATA-13/14 and FLOW-04B.
+- Theme A text pass: all names changed (WORLD.md). Please include the rendered card-label check (ko 3-syllable names at 36.0/36.67 px) in your typography retest.

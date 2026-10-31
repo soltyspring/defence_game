@@ -36,3 +36,11 @@ Calibration: Pillow matched your 12 px widths exactly (Footman 53, Catapult 55).
 Also added: `ui.credits` 크레딧 / Credits, `ui.font_credit` "글꼴: 갈무리 © 이민서, SIL Open Font License 1.1" / "Font: Galmuri © Lee Minseo, SIL Open Font License 1.1". **Galmuri9 (the 10 px cut) lacks © and all Hangul in these strings** (fontTools cmap check), so the credit line must not step down to Galmuri9.
 Also copied your 5 new `ui.star_*` fallbacks verbatim into ko/en. Keys are now 116/116 and the placeholder/coverage check ALL_OK=True.
 **Request (same condition retest):** rerun the typography fit check and a rendered screenshot in `card@640x360_notch_both` with 5 cards + 3 skills (plus 640x360 and 800x360_notch), en locale, on the secondary monitor. Report drawn text, drawn size and truncated flags for unit.melee_basic.name and unit.siege.name, plus the credits panel rendering. Send results to 07 and back to me.
+
+## R5 2026-10-31 — Q1 DECIDED (Theme A) text pass + QA-B008
+- Theme A (빵집 기사단 vs 곰팡이 군단) DECIDED by user. All display names, descs, tutorials and round names in data/text ko/en were rethemed; names come from docs/design/WORLD.md. IDs unchanged.
+- Card names (Pillow, Galmuri11 12 px, slot 36.67 px): ko 제빵사/식빵병/롤빵병/통식빵/프레첼/화덕포 = 36.0 px each (0.67 px margin); en Baker 36, Toast 36, Roll 24, Loaf 28, Twist 35, Oven 32. **Please rerun your typography fit + rendered screenshot in card@640x360_notch_both (5 cards + 3 skills), card@640x360 and card@800x360_notch, ko AND en.** The Korean names are now 3 syllables (were 2–3), so check ko too.
+- Supply label is now 반죽/Dough (`res.supply`, `toast.not_enough_gold`). `ui.worker` = 제빵사/Baker.
+- QA-B008: added `toast.save_recovered`, `toast.save_read_only`, `toast.save_failed`, `toast.round_locked` (counterattack and ui.star_* were already added earlier). Every `Events.toast.emit` id in src/ now has ko+en text (scan). The hud.gd mapping "toast → ui.<key>" for save_recovered still works because ui.save_recovered exists.
+- Skill labels on buttons: 밀대 내려찍기 / 갓 구운 함성 / 빵가루 포격 (ko) are longer. If skill buttons show names, check them too (en Slam/Rally/Barrage unchanged).
+- ui.title is unchanged (provisional working title).

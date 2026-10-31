@@ -14,3 +14,9 @@ Gameplay sizes (footprint width px, height guidance): swarm 12 (small, ~16 tall)
 - A19 → **D15**: `summon.summon_frame: 3` added to boss_overlord in data/units/units.json. 02 is asked to implement it.
 - Heights (A2): current heights are accepted, because bulk carries the threat at 1×. Revisit only if 07's readability check fails.
 - Font/title lettering: no brand requirement yet. The title is provisional until Q1.
+
+## R3 2026-10-31 — Q1 DECIDED by user: Theme A 빵집 기사단 vs 곰팡이 군단
+User's words: "모두 고치고 A) 빵집 기사단 vs 곰팡이 군단이걸로" (DECISIONS.md Q1). Please retheme from "Lantern Kingdom vs Bramble Horde" to this theme. **Keep all ids, frame sizes, pivots, hit frames and timing** (D1).
+World, name table and silhouette direction: docs/design/WORLD.md. Summary by id: worker 꼬마 제빵사; melee_basic 식빵 기사; ranged_basic 롤빵 투척병 (projectile `arrow` → thrown bread roll); tank 통식빵 방패병; fast 프레첼 돌격병; siege 화덕 대포 (projectile `rock` → bread-crumb shell); hero_captain 제빵 대장 (chef hat + rolling pin, the Slam weapon); e_grunt 곰팡이 졸개; e_swarm 초파리 떼; e_spitter 포자 뱉개 (projectile `spit` → spore); e_brute 썩은 멧돼지; e_bomber 부푼 효모; boss_warlord 곰팡이 장군; boss_overlord 부패 대군주 (rot nest/hive, summon frame 3 kept); biome_01 밀밭 빵집 마을; player base = bakery, enemy base = mold nest.
+Palette: allies warm crust brown/cream/yellow; enemies murky green/purple/grey, separated by hue AND luminance (D14 still applies). No gore.
+Card/skill icons: same ids. Please also send the updated docs/art budget numbers to 08.
