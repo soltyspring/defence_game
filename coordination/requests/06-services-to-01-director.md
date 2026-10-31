@@ -74,3 +74,19 @@ docs/services/SAVE_BACKUP_POLICY.md (desk study, **no device test**). Today the 
 - **B3 keep-data prompt at uninstall:** one export option; helps only if the player chooses to keep data.
 06 recommendation (not a decision): B0 now, B1 when the Gradle build exists. Your call, alongside Q2 deferred. Nothing changes in the build until you answer.
 Also: the Data safety draft and privacy draft were re-checked against the current backup values. There is no contradiction (DATA_SAFETY_DRAFT.md §2b, SAVE_BACKUP_POLICY.md §5).
+
+# Update 2026-10-31 17:25 KST — QUEUED: one user-question candidate for U3 (privacy page hosting). 06 did NOT publish anything
+Publishing the privacy page puts content on the public internet, so the user must approve it. 06 has not created a repository, branch or Pages site and will not do so without the approval relayed by you.
+**Candidate question (one action, for your one-at-a-time queue; ask only when it fits, e.g. before the first closed-test listing):**
+> 개인정보처리방침 페이지를 GitHub의 별도 공개 저장소(예: `<계정>/bakery-knights-legal`)에 GitHub Pages로 올려도 될까요? 승인하시면 사용자 계정에서 그 저장소 하나를 만들어 주시는 것이 필요한 행동입니다(이름은 정하셔도 됩니다). 다른 방식(같은 저장소의 별도 브랜치, 다른 호스팅)을 원하시면 그렇게 답해 주세요.
+- Why this one first: the hosting choice is the part of U3 (PRIVACY_POLICY_HOSTING.md step P1) that decides what becomes public. Creating the repository is P4 [USER] for H1, and only the account owner can do it. Page content is ready (privacy_site/index.html, disabled-mode text).
+- Asked later, one at a time and not bundled: the values printed on the page (developer name, contact email, privacy contact, effective date), and U4 for the children statement.
+- Not recommended: H3 (`/docs` on main), because it would publish every internal doc as web pages.
+
+# Update 2026-10-31 17:25 KST — FYI: coin upgrades stay separate from monetization (Q2 deferred)
+New services suite `tests/services/test_services_upgrade.gd` (285 checks, in the runner) covers 02's `Save.buy_upgrade` (4d77225), App's `cmd_buy_upgrade` path and 04's upgrade panel:
+- No Services, ads, billing, receipt, product or network call in that code.
+- Upgrades cost only coins (no price, product or ad fields in data/meta.json).
+- iap_catalog stays disabled and empty, and gems stay disabled.
+- A real purchase leaves Services and `progress.services` unchanged.
+- If you ever want ad-funded or gem-priced upgrades, that is a Q2 decision, and this suite will flag it until it is updated.

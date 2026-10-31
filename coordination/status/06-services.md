@@ -1,10 +1,10 @@
 # 06-services status
-Updated: 2026-10-31 16:58 KST (backup/restore study)
-Status: BACKUP STUDY COMPLETE (desk study, **no device test**). Current build: allowBackup=false (Godot template), no dataExtractionRules/fullBackupContent, hasFragileUserData=false → save survives updates only. Options B0–B3 to 01 (06 rec. B0 now, B1 with Gradle). Data safety/privacy: no contradiction. Release preset: WAITING (04 R12-2 → 02). Q2 DEFERRED. Gate PASS. Nothing live.
+Updated: 2026-10-31 17:30 KST (.uid audit, upgrade isolation, hosting question)
+Status: COMPLETE. (1) .uid policy confirmed (Godot 4.4+ article: commit them); repo audit: 12 untracked .uid left for 02 (2), 04 (3), 07 (7, incl. probe_balance with untracked script); 10 committed its 4 (e340144); 06's 4 committed. (2) 02 Save.buy_upgrade / App cmd_buy_upgrade / 04 panel verified separate from Services/ads/billing (test_services_upgrade 285/0, 8 mutations caught). (3) Privacy hosting NOT executed; one user-question candidate sent to 01. Q2 DEFERRED. Gate PASS. Nothing live.
 Current task: none. Next: see handoff.
-Validation (latest): runner → 502/0, m2 130/0, m3 161/0, listing 1483/0, m8 26/0, m10 81/0, android 91/0 (release_preset=WAITING, 2 APKs checked, aapt2 yes), integration PASS_INTEGRATED 156/0 binding=game; OVERALL exit=0. 12 android-check mutations each caught (exit 1); 02's export_presets.cfg never edited (temp copy via --presets=).
-Backup: 5fc46e1854460885150ce773a355d7bc0f0f892d [Docs], 082e9ca45def5f0255cdd707de1f74eda59886a1 [Test] PUSHED.
-Previous: Q3 follow-up f0d80e0 / c1ce3f5.
+Validation (latest): runner 9 suites → 502/0, 130/0, 161/0, listing 1483/0, m8 26/0, m10 81/0, android 176/0 (incl. godot_uid_tracked), upgrade 285/0, integration PASS_INTEGRATED 156/0 binding=game; OVERALL exit=0.
+Commits: f59587cc763c4bc7fdaf8c9b8c35101d3e9fd7a8 [Test], 8f58a1c22c53253883a43dc5d570517afd0076db [Docs] PUSHED.
+Previous: backup study 5fc46e1 / 082e9ca / 104c5b9.
 Q3: f0d80e0a27692cdb891ff5b56f5ea67afd3dc334 PUSHED (listing, KIPRIS_MANUAL_CHECK, NAME_SEARCH_LOG, OPEN_DECISIONS U9, lint).
 Older M4 line (kept): commits 7fe59f9 / 47c187b; integration then exit=2 BLOCKED (resolved in M8).
 Dependencies: 02 S1 (blocking), S3 when 01 enables placements; 01 Q2–Q5 + retention; 07 runs the gate.
@@ -19,3 +19,4 @@ M11: e5099bdd7b911bd703ae9866b125c28173fde197 PUSHED; runner OVERALL exit=0 (lis
 M12: 98e757b15ce2e30dba6b2426715dd58115af22bb PUSHED; runner OVERALL exit=0 (listing 1087/0).
 Q3: f0d80e0a27692cdb891ff5b56f5ea67afd3dc334 PUSHED; runner OVERALL exit=0 (listing 1482/0). Quota 40.2% at start.
 Backup study: 5fc46e1 + 082e9ca PUSHED; runner OVERALL exit=0 (android 91/0). Quota 45.2% at start.
+UID/upgrade: f59587c + 8f58a1c PUSHED; runner OVERALL exit=0 (android 176/0, upgrade 285/0). Quota 50.4% at start.

@@ -50,3 +50,8 @@ Data safety: I confirmed your A7/C1 result (no permissions, no INTERNET) against
   - Today it passes on your 07e97ca APK: `allowBackup=false`, no rules, `hasFragileUserData=false`, target 36, no permissions.
 - **Release preset R12-2:** not present yet (`release_preset=WAITING`). When you or 02 build a release APK/AAB, please put it under `build/release/` (or tell 06 the path) so the same check runs on it. Please also add AD_ID and BILLING to your A7 aapt2 check. For an AAB, run it on the universal APK from bundletool.
 - **Player-visible effect for your QA notes:** progress is lost on reinstall, on "clear data" and on a new phone (except some device-to-device transfers). A tester who replaces a debug APK with a Play-signed build must uninstall first, so they start over (S7). Nothing has been tested on a device.
+
+# 2026-10-31 17:25 KST — QUEUED: 3 untracked Godot .uid files in your paths (06 did not commit them)
+Godot 4.4+ says `.uid` files must be committed (https://godotengine.org/article/uid-changes-coming-to-godot-4-4/). Audit: docs/services/GODOT_UID_AUDIT.md.
+- `src/ui/title_block.gd.uid`, `src/ui/upgrade_panel.gd.uid`, `tests/ui/redraw_probe.gd.uid`. All three scripts are tracked. Please add the `.uid` files to your next Publish-Task `-Paths`. No tracked file uses these UIDs yet.
+- FYI: `tests/services/test_services_upgrade.gd` reads your upgrade_panel.gd (comments stripped). It fails if the panel code references Services, billing, receipt, token, sku, product, rewarded/show_ad, iap, gems, shell_open or HTTP. Your word "purchase" for the coin spend is allowed. It passes today.

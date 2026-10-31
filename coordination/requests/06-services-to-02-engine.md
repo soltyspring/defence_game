@@ -78,3 +78,10 @@ Full study: docs/services/SAVE_BACKUP_POLICY.md (desk study; no device test run)
   - Export to a path or name containing "release" (or an .aab), so the check picks it up automatically.
   - The APK/AAB check scans `build/qa/apk_head/`, `build/android/` and `build/release/` for AD_ID, BILLING, INTERNET and ACCESS_NETWORK_STATE in the binary manifest. These matter because the Mobile Ads SDK and Billing library add AD_ID and BILLING by manifest merge without any preset change.
 - The mutation tests for this lint use a temp copy of export_presets.cfg (`-- --presets=<path>`). Your file was never edited.
+
+# 2026-10-31 17:25 KST — QUEUED: 2 untracked Godot .uid files in your paths (06 did not commit them)
+Godot 4.4+ says `.uid` files must be committed (https://godotengine.org/article/uid-changes-coming-to-godot-4-4/). Without them, UID references break on other clones and Godot falls back to paths with warnings. Your `.gitignore` already allows them. Audit: docs/services/GODOT_UID_AUDIT.md.
+- `src/core/diag/flip_check.gd.uid`, `src/core/diag/wave_clear_probe.gd.uid`. Both scripts are tracked (22d99ea). Please add them to your next Publish-Task `-Paths`.
+- No tracked file uses these UIDs yet, so nothing is broken today.
+- Suggestion for everyone: list `<script>.gd.uid` next to `<script>.gd` in `-Paths`. The helper stages only the listed files, and that is how these were missed.
+- FYI: `Save.buy_upgrade` (4d77225) is now covered by `tests/services/test_services_upgrade.gd`. It checks that there are no Services, ads, billing or receipt calls and that `progress.services` is unchanged after a real purchase. It passes. The mutation tests use temp copies of save.gd and app.gd; your files were not edited.

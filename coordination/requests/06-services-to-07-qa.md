@@ -30,3 +30,10 @@ Real-purchase test cases T1–T16 with expected service signals/codes: docs/serv
 
 # Update M10 (2026-10-31) — QUEUED
 Runner now includes `test_services_m10.gd` (multi-quantity consumables: q=1, q=3, duplicate callbacks, invalid/over-limit quantities, crash during grant and sink-saves-then-fails on the autoload Save in an isolated dir). Expected: OVERALL exit 0. New state-table row P7; real-device case T17 in BILLING_SANDBOX_TEST_PLAN.md.
+
+# 2026-10-31 17:25 KST — QUEUED: 7 untracked Godot .uid files in tests/acceptance (06 did not commit them)
+Godot 4.4+ says `.uid` files must be committed (https://godotengine.org/article/uid-changes-coming-to-godot-4-4/). Audit: docs/services/GODOT_UID_AUDIT.md.
+- Scripts tracked, `.uid` missing: capture_crowd, capture_m8, capture_narrow, capture_visual, cvd_sim, probe_r01_risk (`tests/acceptance/<name>.gd.uid`).
+- `tests/acceptance/probe_balance.gd` and its `.uid` are both untracked. Commit them together, or delete both if it is a scratch file.
+- No tracked file uses these UIDs yet, so nothing is broken today.
+- The runner now has 9 suites: new `test_services_android.gd` (permissions, backup values, 06 `.uid` tracking) and `test_services_upgrade.gd` (coin upgrades stay separate from monetization). Expected: OVERALL exit 0.
