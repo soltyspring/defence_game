@@ -89,3 +89,20 @@ Points for your decision (I edit no data):
 (d) the LOW path is +0.5–6 %p ahead of enemy scaling in r03–r07 and 2–6.5 %p behind in r08–r10, so your sim A4 should focus on r08–r10;
 (e) QA-J2: the first r01 play is always at L1 (0 coins), so upgrades cannot explain or fix r01's lack of risk; that is a wave/base-data question.
 L5 mastery (D22): L5 is the first level where some hit counts change (ranged/fast vs swarm, hero vs r01 grunt, melee vs r10 spitter), so the tier has a measurable effect, not only +8%p.
+
+## v0.15 content changes after launch (~16:40 KST, HEAD a9223df). Executed in snapshot copies only; your data untouched.
+Summary (details in DATA_AND_BACKEND_ANALYSIS.md §9.6). Today an existing save behaves as follows:
+| Change | Effect on an existing save |
+|---|---|
+| remove a round | later round unlocked without clearing (r08 opens when r03 is removed); its stars are kept but leave the chapter total (14→12) |
+| insert a round | an already-unlocked round becomes locked (r07 locks when r02b is inserted) |
+| reorder rounds | no effect between cleared rounds; same problems as above in uncleared ranges |
+| lower max_level | level stays above the cap and keeps its bonus; no refund |
+| rename an upgrade id | the old level is orphaned and the bonus is lost |
+| rename a unit id | safe |
+| numeric changes | safe (the save stores ids and levels only) |
+Requests (your decisions; no user question needed):
+1. Until 02 implements content_version migration (contract sent to 02), mark these as forbidden post-launch data changes: round removal/insert/reorder, max_level decrease, upgrade id rename.
+2. data/migrations.json fields proposed: upgrade_renames, round_renames, retired_rounds, upgrade_cost_history. It can stay in the backlog, but the shape is now concrete.
+3. Refund rule (pending since v0.13): with upgrade_cost_history, refund the costs of the removed levels (e.g. melee 5→3 refunds 160+250 = 410). Please confirm or pick another rule.
+4. Should stars of retired rounds count toward chapter star totals (the 30★ chapter-2 gate in ECONOMY.md §3)?

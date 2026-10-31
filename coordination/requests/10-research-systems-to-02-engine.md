@@ -66,3 +66,20 @@ Run: `tools/engine/Godot_v4.7.2-stable_win64_console.exe --headless --path . -s 
    Note on C3: at before_final_rename the verified .tmp is adopted on the next launch, so a live-process failure there should be treated as "outcome unknown", not "failed".
 4. **R5 evidence (executed):** a save with up_melee_basic = 9 (max_level 5) loads as 9 (`_migrate` clamps to 1..99 only), and BattleSim `_upgrade_mult("unit:melee_basic","hp_mult")` returns **1.64** instead of 1.32 at the cap. There is no `content_version` in the save. RELEASE_DESIGN_REVIEW §3 "clamp + refund" is not implemented. There is no user path today because levels cannot exceed 1 without the purchase API.
    Proposal: Content computes `content_version = "c<schema>-" + sha256(sorted data/**/*.json)[:12]`. Save records it on each successful save. On mismatch, clamp each upgrade to max_level and refund once (key `refund:<content_version>:<id>`), apply data/migrations.json renames, keep unknown ids, and do not reorder order.json until unlocks are id-based (R8). Acceptance: probe part D → level 5, hp_mult 1.32, unknown ids kept, content_version present.
+
+## v0.15 R5 content migration: executed evidence + minimal contract (~16:40 KST, HEAD a9223df)
+Driver: `powershell -NoProfile -File docs/research/systems/probes/run_content_migration.ps1`. It runs probe_content_migration.gd in throwaway `git archive` snapshot copies with mutated data only. A legacy save fixture is kept in %TEMP%. Repo data and the real save are untouched. Full table: DATA_AND_BACKEND_ANALYSIS.md §9.6.
+Fixture: r01–r06 cleared (14★), unlocked_round 7, coins 1,234, melee L5 / ranged L3 / tank L2. Results after load (identical after save → reload):
+- M1 remove r03 → **r08 becomes unlocked** without clearing r07 (index-based unlocked_round); r03 stars kept but the chapter total drops 14→12.
+- M2 insert r02b after r02 → **r07 becomes locked** (progress regression).
+- M3 swap r04/r05 → no effect here (both cleared).
+- M4 melee max_level 5→3 → level stays 5, engine hp_mult 1.32 (cap would be 1.16), no refund.
+- M5a unit id rename (target updated) → safe.
+- M5b upgrade id rename → old key kept as an orphan and the melee bonus is lost (new track at L1).
+Coins never changed, and unknown keys are preserved (good).
+Minimal contract (proposal):
+1. Save field `content_version` = "c1-" + sha256(sorted data/**/*.json)[:12], computed by Content.load_all and written on every successful save. Save field `migrations_applied: Array[String]` (once-only keys `mig:<from>:<to>`, `refund:<to>:<id>`).
+2. ID-based unlock: order[i] is unlocked iff i == 0, or stars has order[i], or stars has order[i-1]. Recompute unlocked_round from it for compatibility.
+3. On a content_version mismatch, in one atomic save: apply data/migrations.json `upgrade_renames` (keep the higher level on collision) and `round_renames`; clamp levels to max_level and refund via `upgrade_cost_history` (01 decides the rule; if there is no history, refund 0 and log error content/refund_unknown); recompute unlocks; record content_version and the keys. Roll back like record_result on a failed write.
+Acceptance (same driver): M1 r08 locked; M2 r02b and r03–r07 unlocked; M4 L3, coins 1,644, hp_mult 1.16, no second refund on reload; M5b (with a rename entry) up_toast_knight L5, hp_mult 1.32; content_version present in all variants.
+Until this exists: please treat round removal/insert/reorder, lowering max_level and upgrade id renames as release-blocking data changes after launch. Unit id renames and numeric tuning are safe.

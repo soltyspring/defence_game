@@ -8,6 +8,12 @@ Updated: 2026-10-31 ~15:41 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
+## v0.15 (~16:41 KST): content version change vs existing saves
+- New probe docs/research/systems/probes/probe_content_migration.gd plus driver run_content_migration.ps1. It works in throwaway HEAD a9223df snapshot copies with mutated data and a %TEMP% legacy save fixture.
+- Results: M1 round removal skips ahead (r08 unlocked) and drops chapter stars 14→12. M2 insert locks r07. M3 swap has no effect here. M4 max_level 5→3 keeps L5 (hp 1.32), no refund. M5a unit rename is safe. M5b upgrade rename orphans the level and loses the bonus. Coins are never changed; unknown keys are kept.
+- Minimal R5 contract (fields content_version and migrations_applied, ID-based unlock rule, migrations.json shape, refund rule, atomic order, acceptance values) sent to 02. Decisions requested from 01. TP-05 driver sent to 07. Doc §9.6.
+- The first driver run aborted (PS5 turns native stderr into an error under `Stop`). Fixed with `Continue` and reran clean.
+
 ## v0.14 (~16:26 KST): upgrade effect curve
 - User decision recorded: Q2 monetization = 보류 ("수익모델은 보류"). The economy is reviewed as clearable without monetization.
 - New probe docs/research/systems/probes/probe_upgrade_effect.gd (real BattleSim setup/deploy/_spawn_enemy/income + `_damage` formula), run at a clean HEAD ea16a8e snapshot without autoloads, exit 0.
