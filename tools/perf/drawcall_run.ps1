@@ -1,29 +1,49 @@
 # 08-performance draw-call breakdown runner (DESKTOP PROXY; counts are renderer-side, timings are not reported). Owner: 08-performance.
 # 1. git-archive snapshot of -Rev in build/perf/dc_<sha> (+ tests/performance/*.gd), with its OWN --import, because the shared
 #    .godot/imported can hold other roles' uncommitted textures (UiStyle then disables icons as "stale import").
-# 2. tests/performance/perf_drawcall_probe.gd on the secondary monitor (autoplay + stress), then perf_batch_micro.gd.
-# Every Godot call runs with a private APPDATA (perf_isolation.ps1, 10 v0.26 P1), so user:// never touches the real player folder.
-# Usage: .\tools\perf\drawcall_run.ps1 [-Rev origin/main] [-Round r08] [-Warmup 35] [-Phase 2.5] [-SkipMicro]
-# Output: build/perf/drawcalls_<round>_<sha>_<stamp>.json, build/perf/batch_micro_<sha>_<stamp>.json (git-ignored). Exit 0 / 1 error / 3 not isolated.
-param([string]$Rev = 'origin/main', [string]$Round = 'r08', [double]$Warmup = 35, [double]$Phase = 2.5, [switch]$SkipMicro)
+# 2. tests/performance/perf_drawcall_probe.gd on the secondary monitor (autoplay + stress), then perf_batch_micro.gd, then (optional,
+#    -Equivalence) tests/performance/targeting_equivalence.gd headless on the same snapshot.
+# Every Godot call goes through 10's isolation wrapper docs/research/systems/probes/isolated_godot.ps1 (private APPDATA, proof = the run's
+# own godot.log under it, real save hashes before/after), so user:// never touches the real player folder (10 v0.26 P1). If that file
+# is missing, the same mechanism from perf_isolation.ps1 is used. Calls are serial (one Godot at a time from this script).
+# Usage: .\tools\perf\drawcall_run.ps1 [-Rev origin/main] [-Round r08] [-Warmup 35] [-Phase 2.5] [-SkipMicro] [-Equivalence]
+# Output: build/perf/drawcalls_<round>_<sha>_<stamp>.json, batch_micro_<sha>_<stamp>.json, equivalence_<sha>_<stamp>.json (git-ignored).
+# Exit 0 / 1 error / 3 not isolated.
+param([string]$Rev = 'origin/main', [string]$Round = 'r08', [double]$Warmup = 35, [double]$Phase = 2.5, [switch]$SkipMicro, [switch]$Equivalence)
 $ErrorActionPreference = 'Stop'
 $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 Set-Location $Root
 $Godot = Join-Path $Root 'tools\engine\Godot_v4.7.2-stable_win64_console.exe'
 . (Join-Path $PSScriptRoot 'perf_isolation.ps1')
+Assert-HeavyRun 'drawcall_run.ps1'   # machine-wide lock (coordination/heavy_run.ps1)
+$Iso10 = Join-Path $Root 'docs\research\systems\probes\isolated_godot.ps1'
 $sha = (& git rev-parse --short $Rev).Trim()
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $snap = Join-Path $Root "build\perf\dc_$sha"
 $pa = New-PerfAppData $Root 'drawcall_run'
 $t0 = Get-Date
+$script:isoFail = @()
 
 function Invoke-G([string]$Name, [string[]]$GArgs) {
     $log = Join-Path $Root "build\perf\${Name}_${sha}_$stamp.log"
-    Enter-PerfAppData $pa
     $prev = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
-    try { & $Godot @GArgs *> $log } finally { $ErrorActionPreference = $prev; Exit-PerfAppData }
-    $code = $LASTEXITCODE
-    Write-Host "[dc_run] $Name exit=$code log=$log"
+    if (Test-Path $Iso10) {
+        # fresh save per run; keep the shader cache in the kept work dir
+        Get-ChildItem -Path (Join-Path $pa 'iso10') -Recurse -Filter 'save.json*' -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
+        try { $o = & $Iso10 -GodotArgs $GArgs -WorkDir (Join-Path $pa 'iso10') -Keep -TimeoutSec 900 2>&1 | Out-String } finally { $ErrorActionPreference = $prev }
+        $code = $LASTEXITCODE
+        Set-Content -LiteralPath $log -Value $o -Encoding utf8
+        $line = ($o -split "`r?`n" | Where-Object { $_ -like 'ISOLATED_GODOT *' } | Select-Object -Last 1)
+        $iso = if ($line) { ($line.Substring(15) | ConvertFrom-Json) } else { $null }
+        $ok = $iso -and $iso.isolated
+        if (-not $ok) { $script:isoFail += $Name }
+        Write-Host "[dc_run] $Name exit=$code isolated=$([bool]$ok) proof=$(if ($iso) { $iso.isolation_proof_log } else { '' }) real_save_changed_during_run=$(if ($iso) { $iso.real_save_changed_during_run } else { '?' }) log=$log"
+    } else {
+        Enter-PerfAppData $pa
+        try { & $Godot @GArgs *> $log } finally { $ErrorActionPreference = $prev; Exit-PerfAppData }
+        $code = $LASTEXITCODE
+        Write-Host "[dc_run] $Name exit=$code (perf_isolation fallback) log=$log"
+    }
     return $code
 }
 
@@ -56,7 +76,15 @@ if (-not $SkipMicro) {
     $mo = Join-Path $Root "build\perf\batch_micro_${sha}_$stamp.json"
     if ((Invoke-G 'dc_micro' @('--screen', "$idx", '--resolution', '1280x720', '--path', $snap, '-s', 'res://tests/performance/perf_batch_micro.gd', '--', "--bm-out=$mo")) -ne 0) { exit 1 }
 }
-$proof = Test-PerfIsolation $pa $t0
+if ($Equivalence) {
+    # sim-only, deterministic: load does not change the verdict (02 asked for a re-check after each battle_sim.gd change)
+    $eo = Join-Path $Root "build\perf\equivalence_${sha}_$stamp.json"
+    $ec = Invoke-G 'dc_equivalence' @('--headless', '--path', $snap, '-s', 'res://tests/performance/targeting_equivalence.gd', '--', "--out=$eo")
+    $el = Get-Content (Join-Path $Root "build\perf\dc_equivalence_${sha}_$stamp.log") -ErrorAction SilentlyContinue | Where-Object { $_ -match 'EQUIVALENT|DIVERGES' } | Select-Object -Last 1
+    Write-Host "[dc_run] equivalence exit=$ec $el"
+    if ($ec -ne 0) { exit 1 }
+}
+$proof = if (Test-Path $Iso10) { if ($script:isoFail.Count -eq 0) { "10 isolated_godot.ps1: all runs isolated ($((Join-Path $pa 'iso10').Replace($Root, '.')))" } else { '' } } else { Test-PerfIsolation $pa $t0 }
 $j = Get-Content $out -Raw | ConvertFrom-Json
 $stale = Select-String -Path (Join-Path $Root "build\perf\dc_probe_${sha}_$stamp.log") -Pattern 'import is stale' -Quiet
 Write-Host "[dc_run] rev=$sha foreign_godot_at_start=$foreign class=$($j.evidence_class) stale_import_warning=$stale isolation_log=$(if ($proof) { $proof.Replace($Root, '.') } else { 'NONE' })"
@@ -70,5 +98,5 @@ $refs = @($j.rows | Where-Object { $_.phase -match '^(view_only|hud_only)#' } | 
 Write-Host "[dc_run] $($refs -join '; ')"
 foreach ($h in $j.hud_children) { Write-Host ("[dc_run] hud child {0,-12} {1,-30} {2}" -f $h.name, $h.script, $h.text) }
 if ($stale) { Write-Warning 'UiStyle reported a stale import in the snapshot: HUD rows were measured without icons' }
-if (-not $proof) { Write-Host 'NOT_ISOLATED: no godot log under the private APPDATA'; exit 3 }
+if (-not $proof) { Write-Host "NOT_ISOLATED: $(if ($script:isoFail.Count) { 'no isolation proof for ' + ($script:isoFail -join ', ') } else { 'no godot log under the private APPDATA' })"; exit 3 }
 exit 0

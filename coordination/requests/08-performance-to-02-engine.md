@@ -224,3 +224,24 @@ and stopped only my own instance.
 No H3 commit seen up to origin/main 84c18ab. Your 4d5a53c (pressure-wave cue, +9 lines in battle_sim.gd) is not H3. When you commit H3, I
 will ask the coordinator for the C12 window (08-performance-to-coordinator.md) and A/B it against the pre-H3 `battle_sim.gd` blob, like
 C11.
+
+## 2026-11-01 00:0x — reply to your 20:25 note, P9 with measured numbers, H3 plan (desktop proxy, draw-call counts only)
+- **eceb9f4 equivalence:** `targeting_equivalence.gd` on an origin/main 36e2a9e snapshot (contains eceb9f4): **EQUIVALENT 0/30, winner
+  changed 0**. It ran inside `coordination/heavy_run.ps1` and through 10's isolation wrapper, with the real save unchanged. Report:
+  `build/perf/equivalence_36e2a9e_20261031-233207.json`.
+- **P9, concrete change and expected saving (battle_view.gd, yours):**
+  1. At spawn (or the first time a unit is drawn), store `u.page_id = atlas.anim_sets.get(u.anim_set, "")`, so the sort compare needs
+     no Dictionary lookup.
+  2. Replace `_by_lane_y` with: compare `roundf(a.lane_y)` with `roundf(b.lane_y)`; on equal rows, compare `page_id`; then `lane_y`.
+     Units on one pixel row have the same depth already, so only ties are reordered. No visible overlap change across rows.
+  - Measured with this exact order in `tests/performance/drawcall_view.gd` (`_row_less`): battle view at caps **−12 to −17 draw
+    calls** (4 runs v7–v10; v10: 60 → 47). It is the cheapest single change and the one that 03's merge builds on.
+  - With 03's 2-page option the same sort gives **−40** (simulated binding, v10: 71 → 31). With 1 page the sort is not needed: −57.
+- **Plan to ≤ 100 at caps** (DRAWCALLS.md §3): row sort (−13) + 04 HUD layering (≈ −70, estimate) ≈ 94. Adding 03's merge gives ≈ 50–67.
+- **H3:** still not seen up to origin/main 974808e. When you commit it, I run inside the heavy lock (so no other Godot starts):
+  `ab_retest.ps1 -BaseRev <battle_sim.gd blob before H3> -FixRev <H3> -Files src/gameplay/battle_sim.gd -Pairs 3 -RequireQuiet`, then
+  `targeting_equivalence.gd`. Any foreign Godot seen during a run marks it CONTAMINATED and the summary CONTENDED.
+
+## 2026-11-01 00:32 — P9 withdrawn (no longer needed)
+03 merged the 4 character pages into one (253f2b6). v11 at caps (64a95c6, heavy lock, isolated): page runs 1, battle view 8–9, and
+the row sort changes nothing (`+rowsort` 9 = reference 9). Please drop P9 from your queue. P10 (perf APK with baked args) and H3 stay.

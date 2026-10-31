@@ -21,6 +21,7 @@ $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $Out = Join-Path $Root "build\perf\$stamp"
 New-Item -ItemType Directory -Force $Out | Out-Null
 . (Join-Path $PSScriptRoot 'perf_isolation.ps1')
+if (-not $SkipBench -or $Frame -or $Font) { Assert-HeavyRun 'run_perf.ps1' }   # machine-wide lock (coordination/heavy_run.ps1)
 $PerfAppData = New-PerfAppData $Root 'run_perf'   # private user:// (10 v0.26 P1)
 $t0Run = Get-Date
 $sha = (& git rev-parse --short HEAD 2>$null)

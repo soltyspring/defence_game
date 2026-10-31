@@ -12,6 +12,7 @@ $Godot = Join-Path $Root 'tools\engine\Godot_v4.7.2-stable_win64_console.exe'
 $tmp = Join-Path $Root 'build\perf\semantics'
 New-Item -ItemType Directory -Force $tmp | Out-Null
 . (Join-Path $Root 'tools\perf\perf_isolation.ps1')
+Assert-HeavyRun '..\..\tests\performance\test_bench_semantics.ps1'   # machine-wide lock (coordination/heavy_run.ps1)
 $PerfAppData = New-PerfAppData $Root 'semantics'   # private user:// (10 v0.26 P1)
 $t0Iso = Get-Date
 # sc = selfcheck input, mode = strict flag, exit = expected exit, budgets = expected verdict, af/pf = expected adopted/provisional fails

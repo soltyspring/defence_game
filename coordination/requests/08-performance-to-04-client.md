@@ -87,3 +87,38 @@ child, with the battle view hidden. HUD alone measured 103–143 (it varies with
   layer order there.
 - Budget: BUDGETS.md battle ≤ 100 draw calls (low-end, provisional). Units (02 P9 / 03 A9, ≈ −50) and the HUD are the only two parts big
   enough to reach it. I re-measure your commit with `tools/perf/drawcall_run.ps1` (isolated user://).
+
+## R8 update — 2026-11-01 00:0x: concrete layer order per control, expected savings, and how your NUM_READ WIP affects it
+v10 (origin/main 36e2a9e, r08 at caps, inside the heavy lock, isolated user://): HUD alone 103–114, `hud_top` 48, each card button 9,
+worker 6, skills 2–3, pause/camera 0–2, Labels 0. Unchanged since v9. New micro-check rows (`perf_batch_micro.gd`, 12 repeats in one
+`_draw`):
+- card label ui 12 + cost **num 10** (HEAD), interleaved: **24**
+- card label ui 12 + cost **ui 12** (your WIP `NUM_READ` / `NUM_READ_KIND`), interleaved: **1**
+- one font at 12 px and 24 px, interleaved: **24**. A glyph cache is one font at one size, so sizes count as separate textures.
+
+So your readability change (numbers in ui 12) also removes a texture switch in every place that puts a number next to ui-12 text. My
+estimate is −1 to −2 per card button. That is measured in the micro-check only, not on the HUD.
+
+**Ask (yours: hud_top.gd, touch_button.gd).** Inside each `_draw`, emit commands in 4 passes and keep the positions as they are:
+1. All plain rects: `draw_pixel_box`, `draw_bar`, `draw_hatch`, plates and the VS divider area.
+2. All `ui_main` icons. Every HUD icon (cards, skills, pause, camera, supply, energy) is on that one page.
+3. All text in one font and size (ui 12, which includes the NUM_READ numbers), then bold 12, then any other size.
+4. Overlays that must stay on top: the cooldown shade and the dim-reason toast rect, then their text.
+
+Expected saving (estimate from the micro-check, one draw call per pass and texture): `hud_top` 48 → ≈ 6–8 (**≈ −40**); card
+buttons 9 → ≈ 4 each (×5), worker 6 → 3, skills 3 → 2: **≈ −30**. Together ≈ −70, which brings the HUD from ≈ 110 to ≈ 40. Even with
+only 02's row sort, that gives a frame of ≈ 94, under the ≤ 100 low-end target. With 03's page merge it is ≈ 50–67 (DRAWCALLS.md §3).
+Simplest code shape: collect the per-row items into small arrays during layout and draw them pass by pass. A per-frame allocation is
+not needed if you reuse the arrays (H15 already limits redraws to changes).
+Acceptance: `hud_top` ≤ 10 and each card button ≤ 5 in `drawcall_run.ps1` on your commit (I run it in the heavy lock).
+
+## R8 — 2026-11-01 00:32: the HUD is now the only large draw-call cost; correction about NUM_READ
+v11 (origin/main 64a95c6, after 03's one-page merge and your d724b9a; r08 at caps, inside the heavy lock, isolated, 0 foreign Godot):
+whole frame **132**, battle view 8–9, **HUD alone 114–125**. `hud_top` **56** (48–50 in v6–v10). Card buttons 9–10, worker 7, skills 2–3.
+- **Correction to my 00:0x note:** the HUD does not show the −1 to −2 per card button that I estimated for ui-12 numbers. Card buttons
+  stayed at 9–10, and `hud_top` rose by 8. The only HUD code changes between v10 (36e2a9e) and v11 are your d724b9a and 1850c3f
+  (threat markers are hidden in this scene). So the +8 most likely comes from d724b9a, but I have not isolated the mechanism. Your
+  readability goal stands. Please do not revert for draw calls; the layering below covers it.
+- With units solved, **≤ 100 at caps now depends only on the HUD layering** (4 passes: rects, `ui_main` icons, text per font and size,
+  overlays). The estimate is still ≈ −70, which would give a frame of ≈ 62. Acceptance as before: `hud_top` ≤ 10 and card button ≤ 5.
+  I will measure your commit with `drawcall_run.ps1` in the heavy lock.

@@ -75,3 +75,31 @@ gives 49–60 page runs per frame, and the measured draw calls follow the run co
   the commit with `asset_budget_check.py --rev` and re-measure with `tools/perf/drawcall_run.ps1`.
 - Gate update: your aee329b, b113085 and the other commits up to 84c18ab: **PASS** (worst battle 9.25 MiB, all pages 9.50 MiB, menu
   0.50 MiB, 43 SFX 0.93 MiB, music 0.56 MiB; page sizes unchanged).
+
+## A9 update — 2026-11-01 00:0x: the page-merge saving is now measured (simulated binding), plus a concrete choice
+Method: in v10 (origin/main 36e2a9e, r08 at caps, inside the heavy lock, isolated user://), `tests/performance/drawcall_view.gd` draws
+every character sprite with one shared page texture, or one per side, and keeps its own region rect. The pixels are wrong on purpose:
+the GPU sees exactly the texture changes your merged atlas would cause, so the count needs no repack. Battle view, 02's draw order:
+
+| Pages for the 9 character anim sets | Battle view draw calls | Saving | GPU RGBA8 |
+|---|---|---|---|
+| today: 4 pages (char_player 512², 3 × 512×256) | 58–71 | – | 2.5 MiB |
+| **A: one 1024×512 page** | **9** | **−57** | 2.0 MiB |
+| B: two 512² pages, player side / enemy side | 46 | −23 (−40 with 02's P9 row sort) | 2.0 MiB |
+
+- Ask: option **A** if your packer fits 315 360 used px into 1024×512 (60 % full, from your JSON `occupancy`). Otherwise option B. Bosses
+  keep their own pages (1 extra draw call each while alive).
+- Data contract: only the JSON `anim_sets` mapping changes (9 sets → the new page id). 02's `Atlas` reads it, and battle_view needs no
+  change. The `load_policy` becomes `battle` for the merged page, so a basic-only round holds +0.5 MiB and the worst battle drops 9.25 →
+  8.75 MiB. All caps still pass.
+- After your commit I run `asset_budget_check.py --rev <sha>` and `drawcall_run.ps1` on it. Acceptance: battle view ≤ 15 draw calls at
+  caps (option A) or ≤ 50 (option B).
+- Gate: every commit up to origin/main 974808e is PASS (no asset or data change since 1da1f8c; worst battle 9.25 MiB, all pages
+  9.50 MiB, menu 0.50 MiB).
+
+## A9 — DONE and measured (2026-11-01 00:32): 253f2b6 meets the acceptance
+- Gate `asset_budget_check.py --range 974808e..origin/main`: 253f2b6 **PASS**. Worst battle 9.25 → **8.75 MiB**, all pages 9.50 →
+  9.00 MiB, menu 0.50 MiB. 05's 4d6f9bd also PASS (SFX 0.94 MiB).
+- Draw calls (v11, origin/main 64a95c6, r08 at caps, inside the heavy lock, isolated user://, 0 foreign Godot): character page runs
+  per frame 49–61 → **1**. Battle view 58–71 → **8–9** (acceptance ≤ 15 met). Whole frame 177 → **132**. That matches the simulated
+  −57 exactly. Thank you; no further page work is needed for draw calls.

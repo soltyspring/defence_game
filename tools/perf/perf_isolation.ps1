@@ -32,3 +32,21 @@ function Test-PerfIsolation([string]$Dir, [datetime]$Since) {
     if ($l) { return $l.FullName }
     return ''
 }
+
+# Machine-wide heavy-run lock (coordination/heavy_run.ps1, rule since the 23:09 blue screen): every Godot / emulator / long measurement
+# must run inside it. heavy_run.ps1 runs the script block in the same pwsh process and logs "START <label> pid=<PID>" / "END ... pid=<PID>",
+# so "inside" = the last START/END line for this $PID is a START. Tools call Assert-HeavyRun before their first heavy step.
+function Test-InHeavyRun {
+    $root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+    $log = Join-Path $root 'coordination\.runtime\heavy_run.log'
+    if (-not (Test-Path $log)) { return $false }
+    $mine = @(Get-Content -LiteralPath $log -Tail 400 -Encoding utf8 -ErrorAction SilentlyContinue | Where-Object { $_ -match " (START|END) .* pid=$PID( |$)" })
+    if ($mine.Count -eq 0) { return $false }
+    return ($mine[-1] -match ' START ')
+}
+
+function Assert-HeavyRun([string]$Tool) {
+    if (Test-InHeavyRun) { return }
+    Write-Host "NOT_LOCKED: $Tool starts Godot/emulator work. Run it via: & .\coordination\heavy_run.ps1 -Label '08-<task>' -Script { & .\tools\perf\$Tool ... }"
+    exit 4
+}

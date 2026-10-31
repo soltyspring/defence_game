@@ -1,5 +1,6 @@
 # 08-performance status
-Updated: 2026-10-31 19:42 +09:00
+Updated: 2026-11-01 00:35 +09:00
+M15: resume OK (checkpoint db87912 empty, files intact after the blue screen). All 08 launchers require coordination/heavy_run.ps1 (exit 4 otherwise). Draw calls r08 caps: 03 one-page merge 253f2b6 measured: battle view 58-71 -> 8-9, frame 177 -> 132; HUD 114-125 (hud_top 56) is what is left -> 04 R8 layering (~-70 est.). 02 P9 withdrawn; eceb9f4 EQUIVALENT 0/30. Gate PASS to d724b9a (worst battle 8.75 MiB). H3 not committed yet. Desktop proxy only.
 M14: draw calls r08 caps 176-181 = units 50-54 (atlas-page runs; row sort -12..-17 measured, 1 page ~-52 predicted) + HUD ~100 (hud_top 48-50, cards 7-11 each; texture switches) -> 02 P9, 03 A9, 04 R8. Emulator: r08 not launchable (launcher drops args) -> 02 P10; menu PSS 169-176 MB EMULATOR. user:// isolation for all 08 launchers (10 P1). Gate PASS to 84c18ab. C12 requested for after 02 H3. Pushed b0fb679 (verified on origin/main).
 M13: C11 VALID_QUIET 18:00-18:23 (all steps CLEAN): P2 step avg -36% (find_target -66%), STEPPING, EQUIVALENT, view 1.05 ms, draw calls p95 177, HUD 0.49 ms, setup 0.81 ms/+478 KB. Desktop only.
 M12: AU3 resolved (43/43 imports); range gate PASS to cc5dbb8 (menu exactly at cap after 19245a5, A8 to 03); C11 18:00-18:30 runner + setup/banner measurements prepared.

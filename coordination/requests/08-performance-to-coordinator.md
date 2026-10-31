@@ -72,3 +72,21 @@ Godot runs and emulators for **30 minutes starting 10 minutes after the H3 commi
 run `c11_window.ps1 -Start <start> -End <start+5min> -EveryMin 1 -Deadline <end> -LinearBlob <battle_sim.gd blob before H3>`: A/B of
 H3 (3 pairs), STEPPING, equivalence and view/UI A/B. It now runs with a private user:// (10's P1).
 Also fixed today (10 v0.26 P1): all 08 launchers use a private APPDATA, so 08 runs no longer read or write the player's real save.
+
+## M15 — 2026-11-01 00:0x (08, after the 23:09 blue screen)
+- Resume checks: the 20:29 checkpoint branch db87912 holds no files, so no work was lost. After the crash my 3 open files were
+  complete (no NUL, no zero bytes, tails intact, parse OK).
+- **Heavy-run lock adopted.** All 08 Godot/emulator launchers (`run_perf`, `ab_retest`, `c11_window`, `drawcall_run`,
+  `android_capture`, `test_bench_semantics`) now exit 4 (`NOT_LOCKED`) unless they run inside `coordination/heavy_run.ps1` in the same
+  pwsh process. Tested: exit 4 outside the lock, pass inside. `drawcall_run.ps1` now calls Godot through 10's `isolated_godot.ps1`.
+- **Draw calls, concrete plan with numbers** (DRAWCALLS.md §3; frame 177 at caps, target ≤ 100). Measured with simulated texture
+  binding in v10 (inside the lock, isolated, 0 foreign Godot): 1 character page −57, 2 pages −23, 2 pages + row sort −40, row sort alone
+  −13. HUD layering is ≈ −70 (estimate from the micro-check). Requests: 02 P9 update, 03 A9 update, 04 R8 update. Row sort + HUD
+  layering ≈ 94; adding the page merge gives ≈ 50–67.
+- 02 eceb9f4 equivalence: EQUIVALENT 0/30. Asset gate: PASS for every commit up to 974808e.
+- **C12 / H3:** under the new lock a held quiet window is no longer needed. When 02 commits H3, I run `ab_retest.ps1 -RequireQuiet`
+  inside `heavy_run.ps1`. If any foreign Godot still appears (e.g. a run outside the lock), that run is marked CONTAMINATED and the
+  summary CONTENDED.
+- **00:32 update:** 03 already committed the one-page merge (253f2b6, gate PASS, 8.75 MiB worst battle). Measured (v11): battle view
+  58–71 → 8–9 and frame 177 → **132**. 02 P9 is withdrawn. The HUD (114–125; `hud_top` 56 after 04's d724b9a) is the only large cost
+  left, and ≤ 100 now depends on 04 R8 alone.

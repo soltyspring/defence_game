@@ -6,6 +6,7 @@ extends SceneTree
 ## with the reference phase measured right before it):
 ##   all | view_only#n, view_only-<cat> (HUD hidden; cat = background, bases, units, bars, projectiles, fx, texts)
 ##       | view_only#n, view_only+pagesort (experiment floor) | view_only#n, view_only+rowsort (tie-only reorder candidate)
+##       | view_only#n, view_only+merge1sim / +merge2sim / +merge2sim_row (SIMULATED page merge: one or two shared textures, counts only)
 ##       | hud_only#n, hud_only-<child> (battle view hidden; one direct HUD child hidden; children identified by script/text in the report)
 ## "delta" = reference median minus phase median. Batching makes deltas non-additive. Unit page runs per frame are counted for the
 ## shipped pages and for hypothetical merged pages (drawcall_view.gd `runs`).
@@ -119,7 +120,7 @@ func _swap_view(battle) -> void:
 	# phase measured immediately before it. Reference phases get a "#n" suffix so every phase has its own samples.
 	PHASES = ["all"]
 	var n := 0
-	for k in VIEW_CATS + ["+pagesort", "+rowsort"]:
+	for k in VIEW_CATS + ["+pagesort", "+rowsort", "+merge1sim", "+merge2sim", "+merge2sim_row"]:
 		PHASES.append("view_only#%d" % n)
 		PHASES.append(("view_only-" + k) if not k.begins_with("+") else "view_only" + k)   # +pagesort / +rowsort: drawcall_view.gd sort modes
 		n += 1
@@ -135,7 +136,8 @@ func _apply_phase(app, name: String) -> void:
 	_mine.visible = true
 	if app.ui_layer: app.ui_layer.visible = true
 	for c in _hud_children: c.visible = true
-	_mine.set_sort_mode("page" if name == "view_only+pagesort" else ("row" if name == "view_only+rowsort" else "lane"))
+	_mine.set_sort_mode("page" if name == "view_only+pagesort" else ("row" if (name == "view_only+rowsort" or name == "view_only+merge2sim_row") else "lane"))
+	_mine.tex_mode = "merge1" if name == "view_only+merge1sim" else ("merge2" if name.begins_with("view_only+merge2sim") else "real")   # SIMULATED binding, counts only
 	if name.begins_with("view_only"):   # "view_only#n" = reference
 		if app.ui_layer: app.ui_layer.visible = false
 		if name.begins_with("view_only-"): _mine.cats[name.substr(10)] = false   # "+pagesort" / "#n" keep all cats on

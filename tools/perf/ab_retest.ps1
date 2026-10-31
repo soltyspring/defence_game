@@ -28,6 +28,7 @@ $Out = Join-Path $Root "build\perf\ab_$stamp"
 New-Item -ItemType Directory -Force $Out | Out-Null
 $fixSha = (& git rev-parse --short $FixRev).Trim()
 . (Join-Path $PSScriptRoot 'perf_isolation.ps1')
+Assert-HeavyRun 'ab_retest.ps1'   # machine-wide lock (coordination/heavy_run.ps1)
 $PerfAppData = New-PerfAppData $Root 'ab_retest'   # private user:// (10 v0.26 P1)
 function New-Snapshot([string]$dir) {
     New-Item -ItemType Directory -Force $dir | Out-Null

@@ -9,7 +9,10 @@ extends SceneTree
 const UiStyle := preload("res://src/ui/ui_style.gd")
 const N := 12
 const MODES := ["empty", "rects", "texts_same_font", "numbers_bold_m", "rect_text_interleaved", "rects_then_texts",
-	"text_s_number_m_interleaved", "texts_s_then_numbers_m", "icons", "rect_icon_text_interleaved", "rects_icons_texts_grouped"]
+	"text_s_number_m_interleaved", "texts_s_then_numbers_m", "icons", "rect_icon_text_interleaved", "rects_icons_texts_grouped",
+	"ui12_text_num10_cost_interleaved", "ui12_text_ui12_number_interleaved", "ui12_ui24_same_font_interleaved"]
+## The last three answer "is it the font, the size, or both?": a card label (ui 12) + cost number in the HEAD style (num kind, 10 px),
+## the same with 04's NUM_READ style (ui kind, 12 px), and one font at two sizes. Godot keeps one glyph cache texture per font size.
 
 class Painter extends Control:
 	var mode := "empty"
@@ -47,6 +50,18 @@ class Painter extends Control:
 				for i in N: draw_rect(Rect2(8 + i * 40, y0, 30, 12), Color(0.3, 0.3, 0.4))
 				for i in N: UiStyle.draw_ui_icon(self, "icon_supply", Vector2(20 + i * 40, y0 + 90))
 				for i in N: UiStyle.draw_text_left(self, "가%d" % i, Vector2(8 + i * 40, y0 + 30), UiStyle.FONT_S)
+			"ui12_text_num10_cost_interleaved":
+				for i in N:
+					UiStyle.draw_text_left(self, "가%d" % i, Vector2(8 + i * 40, y0 + 30), UiStyle.FONT_S)
+					UiStyle.draw_number(self, "%d" % (i * 7), Vector2(8 + i * 40, y0 + 60), 10, UiStyle.C_GOLD, -1, &"num")
+			"ui12_text_ui12_number_interleaved":
+				for i in N:
+					UiStyle.draw_text_left(self, "가%d" % i, Vector2(8 + i * 40, y0 + 30), UiStyle.FONT_S)
+					UiStyle.draw_number(self, "%d" % (i * 7), Vector2(8 + i * 40, y0 + 60), 12, UiStyle.C_GOLD, -1, &"ui")
+			"ui12_ui24_same_font_interleaved":
+				for i in N:
+					UiStyle.draw_text_left(self, "가%d" % i, Vector2(8 + i * 40, y0 + 30), 12)
+					UiStyle.draw_text_left(self, "나%d" % i, Vector2(8 + i * 40, y0 + 70), 24)
 
 var _p: Painter
 var _i := 0

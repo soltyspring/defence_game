@@ -1,4 +1,38 @@
 # 08-performance handoff
+## M15 — resume after the 23:09 blue screen; draw-call reduction plan with numbers (2026-10-31 22:58 – 2026-11-01 00:2x KST)
+- **Resume check:** the 20:29 checkpoint `checkpoint/quota-20261031-202729/08-performance` (db87912) has no file changes vs ae6f9af,
+  and M14 (b0fb679, cfa0c28) is on main, so no work was lost. After the crash, my 3 open files (`drawcall_view.gd`,
+  `perf_drawcall_probe.gd`, `drawcall_run.ps1`) were complete: no NUL, no zero bytes, tails intact, parse OK.
+- **Heavy-run lock:** `tools/perf/perf_isolation.ps1` gained `Test-InHeavyRun`/`Assert-HeavyRun`, which read
+  `coordination/.runtime/heavy_run.log` for this pwsh PID. run_perf, ab_retest, c11_window (unless -DryRun), drawcall_run,
+  android_capture (after device detection) and test_bench_semantics exit 4 `NOT_LOCKED` outside `coordination/heavy_run.ps1`. Tested:
+  exit 4 outside, True inside the same process, False after the lock ends. A child pwsh inside the lock reads False, so call the tools
+  with `&` directly in the script block.
+- **Simulated page merge (counts only):** `drawcall_view.gd` `tex_mode` merge1/merge2 binds character sprites to one shared or one
+  per-side texture with their own region rects (wrong pixels by design). New probe phases `+merge1sim`, `+merge2sim` and
+  `+merge2sim_row`; 3 new micro rows for font size/kind.
+- **v10** (origin/main 36e2a9e; one lock, serial: import → probe → micro → equivalence; 23:32–23:41; 0 foreign Godot at start;
+  10's `isolated_godot.ps1` for every call; real save unchanged): frame 177, units −55, hud_top −48, cards 9 each. Merge: 1 page view
+  9 (**−57**), 2 pages 46 (−23), 2 pages + row 31 (−40), row 47 (−13). Micro: ui12 label + num10 cost 24, ui12 + ui12 1, ui 12/24 px 24
+  (each size is its own glyph texture). Equivalence on 36e2a9e (contains 02 eceb9f4): **EQUIVALENT 0/30**.
+- **Requests with numbers:** 02 P9 update (exact compare, −12 to −17; −40 with 2 pages), 03 A9 update (option A one 1024×512 page
+  −57, option B −23/−40; acceptance view ≤ 15 / ≤ 50), 04 R8 update (4-pass layer order; hud_top ≈ −40, buttons ≈ −30, estimate; their
+  NUM_READ WIP removes a font switch; acceptance hud_top ≤ 10, card ≤ 5). Plan in DRAWCALLS.md §3: row sort + HUD layers ≈ 94; with
+  the page merge ≈ 50–67. Coordinator M15 note. 06 download size recorded in BUDGETS.md (reply file 08-performance-to-06-services.md).
+- **H3:** not committed up to origin/main 7daaed5 (00:16 check). Plan: inside heavy_run, `ab_retest.ps1 -BaseRev <pre-H3 blob> -FixRev <H3>
+  -Files src/gameplay/battle_sim.gd -Pairs 3 -RequireQuiet`, then `targeting_equivalence.gd` (or `drawcall_run.ps1 -Equivalence`).
+  Label CONTENDED/CONTAMINATED if any foreign Godot is seen.
+- **v11 after 03's merge** (03 committed A9 option A in 253f2b6 at 23:57, while I wrote the request; origin/main 64a95c6, one lock,
+  00:28–00:32, 0 foreign, isolated, real save unchanged): battle view 58–71 → **8–9**, page runs 1, frame 177 → **132**. HUD alone
+  114–125 and `hud_top` 56 (+8 vs v10, after 04's d724b9a; mechanism not isolated). My micro estimate for ui-12 numbers (−1 to −2 per
+  card) was not confirmed, and I corrected it in the 04 file. 02 P9 withdrawn. ≤ 100 now depends on 04 R8 alone.
+- **Gate:** ae6f9af..974808e PASS (no asset/data commit), and 974808e..d724b9a PASS: 03 253f2b6 worst battle 9.25 → 8.75 MiB, all
+  pages 9.00 MiB; 05 4d6f9bd SFX 0.94 MiB.
+- **Validation:** test_bench_semantics **11/11 PASS** inside the lock (00:14, isolation log found, real save 614A1FAC unchanged).
+  drawcall_run v10 exit 0, isolated. PowerShell parse 0 errors for perf_isolation, run_perf, ab_retest, c11_window, drawcall_run,
+  android_capture and test_bench_semantics. Lock-guard test exit 4 / pass.
+- Not touched: 04's uncommitted hud_top/touch_button/ui_style edits (read-only diff only) and other roles' WIP.
+
 ## M14 — draw-call breakdown, emulator check, user:// isolation (2026-10-31 18:47–19:40 KST)
 - **(1) Draw calls** (DRAWCALLS.md). New `tests/performance/drawcall_view.gd` (test-only subclass of 02's battle_view: category
   switches, page-run counter, row/page sort modes), `perf_drawcall_probe.gd` (interleaved reference phases, HUD children identified

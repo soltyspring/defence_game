@@ -29,6 +29,9 @@ $devs = @(& $Adb devices | Select-Object -Skip 1 | Where-Object { $_ -match '\td
 if ($devs.Count -eq 0) { Write-Host 'NO_DEVICE: adb lists no authorised device. No phone evidence captured.'; exit 2 }
 if ($Serial -eq '') { $Serial = $devs[0] }
 if ($devs -notcontains $Serial) { Write-Host "NO_DEVICE: serial $Serial not attached ($($devs -join ', '))."; exit 2 }
+# A capture runs for -Seconds (default 300) against an emulator or phone: heavy work, so it must hold the machine-wide lock.
+. (Join-Path $PSScriptRoot 'perf_isolation.ps1')
+Assert-HeavyRun 'android_capture.ps1'
 
 ## adb calls survive a shared-server restart by another tool ("daemon not running" / "device not found" for a few seconds): retry up to 3x.
 function Sh([string]$cmd) {

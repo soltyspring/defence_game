@@ -100,7 +100,36 @@ func _draw_workers() -> void:
 func _draw_unit(u) -> void:
 	if cats.units:
 		drawn.units += 1
+		_cur_page = _page(u)
 		super(u)
+		_cur_page = ""
+
+## SIMULATED page merge (counts only, WRONG PIXELS): bind every character-unit sprite to one shared page texture ("merge1") or to one
+## texture per side ("merge2": player pages -> char_player, enemy pages -> char_enemy), keeping each sprite's own region rect. The GPU
+## then sees the texture changes a merged atlas would cause, so RENDER_TOTAL_DRAW_CALLS_IN_FRAME shows what 03 A9 would save without a
+## repack. Workers, bases, projectiles and fx keep their real textures (_cur_page is "" for them).
+var tex_mode := "real"
+var _cur_page := ""
+
+func _sim_tex(real_tex: Texture2D) -> Texture2D:
+	if tex_mode == "real" or _cur_page == "" or not CHAR_PAGES.has(_cur_page) or atlas == null: return real_tex
+	var target := "char_player"
+	if tex_mode == "merge2" and (_cur_page == "char_enemy" or _cur_page == "char_enemy_adv"): target = "char_enemy"
+	var p = atlas.pages.get(target)
+	if p == null or p.tex == null: return real_tex
+	return p.tex
+
+func _blit_rec(rec, i: int, pos: Vector2, flip: bool, mod: Color) -> void:
+	if tex_mode == "real" or _cur_page == "":
+		super(rec, i, pos, flip, mod)
+		return
+	var r: Rect2 = rec.rects[i]
+	var pv: Vector2 = rec.pivots[i]
+	var t := _sim_tex(rec.tex)
+	if flip:
+		draw_texture_rect_region(t, Rect2(pos.x - (r.size.x - pv.x), pos.y - pv.y, -r.size.x, r.size.y), r, mod)
+	else:
+		draw_texture_rect_region(t, Rect2(pos - pv, r.size), r, mod)
 
 func _hp_bar(center: Vector2, w: float, ratio: float, side: int) -> void:
 	if cats.bars:

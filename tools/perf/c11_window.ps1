@@ -25,6 +25,8 @@ $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $Out = Join-Path $Root "build\perf\c11_$stamp"
 New-Item -ItemType Directory -Force $Out | Out-Null
 . (Join-Path $PSScriptRoot 'perf_isolation.ps1')
+# Inside the machine-wide lock no other heavy run starts, so use -Start/-End = now (do not hold the lock while waiting for a slot).
+if (-not $DryRun) { Assert-HeavyRun 'c11_window.ps1' }
 $PerfAppData = New-PerfAppData $Root 'c11_window'   # private user:// (10 v0.26 P1)
 function Log([string]$m) { $l = "[c11 $(Get-Date -Format 'HH:mm:ss')] $m"; Write-Host $l; Add-Content -LiteralPath (Join-Path $Out 'c11.log') -Value $l -Encoding utf8 }
 function Get-Foreign([int[]]$own) {
