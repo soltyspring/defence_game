@@ -227,7 +227,7 @@ def build():
     card_map = {k: k for k in ("worker", "melee_basic", "ranged_basic", "tank", "fast", "siege", "hero_captain")}
     for uid, sid in card_map.items():
         fr = sheets[sid][0]["idle"]["frames"][0].a
-        up.add_image("card_" + uid, ui.portrait(fr).a)
+        up.add_image("card_" + uid, ui.card(uid, fr).a)
     for eid, sid in {k: k for k in ("e_grunt", "e_swarm", "e_spitter", "e_brute", "e_bomber", "boss_warlord")}.items():
         fr = sheets[sid][0]["idle"]["frames"][0].a
         up.add_image("portrait_" + eid, ui.portrait(fr, **theme.ENEMY_PORTRAIT).a)
