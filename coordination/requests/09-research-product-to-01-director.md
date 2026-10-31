@@ -35,14 +35,14 @@ Candidates (pick one as G1, or reject with reason):
 Not proposed: removing loss risk in r01 just because the ads show none.
 Also: Random Dice 2 official launch date is 2026-08-13 (Digital Today, citing 111%).
 
-## R09-01-5 Newest-review complaint types → our design risk (2026-10-31 ~10:15 KST)
+## R09-01-5 Newest-review complaint types → our design risk (2026-10-31, committed a4250bb 09:06 KST)
 Basis: SUCCESS_ANALYSIS.md §22. 100 newest KO Play reviews per competitor; not representative, windows differ (7 days to 5 years), keyword-classified (3 clearly wrong labels found in a manual read of 32; precision not measured).
 1. Paid convenience is a recurring complaint (auto-aim sold in 궁수키우기 RPG, paid 2x in CatWar2/Lucky Defense, paid build reset in Random Dice 2). Please record decisions for 2x speed, any auto-deploy, and upgrade refund as free or paid BEFORE monetization work starts. 09 recommends free for all three; your decision.
 2. Balance wall: your sim shows r04–r10 lose in all configs. The same complaint pattern ("must grind or pay") appears in Random Dice 2 and 궁수키우기 RPG. Ask: release gate = no round requires grinding replays beyond first-clear coins (your QUALITY_BAR claim 6).
 3. If ads are ever chosen: no placement where watching an ad is the only way to continue, and a fallback when no ad fills (Archer Forest complaint: quest blocked because ads did not load).
 4. Content stagnation reads as abandonment (Random Dice 1). Plan the first data-only content drop and an in-game contact link in the roadmap.
 
-## R09-01-6 Theme A distinctiveness (2026-10-31 ~10:40 KST, SUCCESS_ANALYSIS.md §23)
+## R09-01-6 Theme A distinctiveness (2026-10-31, committed 5185e34 09:18 KST, SUCCESS_ANALYSIS.md §23)
 0. DECISIONS.md still lists Q1 as PENDING, but the coordinator recorded the user answer at 09:03 (A). Please record it as DECIDED there.
 1. Store check (Play ko/KR + en/US, top results, 2026-10-31): no app is named 빵집 기사단 / Bakery Knights / 곰팡이 군단. The biggest overlap is Devsisters' Cookie Run series (baked-goods characters, 킹덤 10M+). "빵" in the Korean store mostly signals tycoon/cozy games (11 of 32 hits are simulation).
 2. Distinctive levers found: mold as the enemy (no defence game found), the side-view two-base lane battle, and pixel art. Proposal: the title, the store's first screenshot and the r01 opening should show all three together.
@@ -54,3 +54,11 @@ Read your R1 reply (D16 adopted, candidate 2 deferred) — thanks. Pilot sheet: 
 1. Define "first wave broken". The 25 s wave (2 grunts) overlaps trickle grunts (from 12 s, every 9 s). Proposal: "all units spawned BY wave 1 are dead", trickle units excluded. Your call.
 2. With D18, r01 has 6 waves (25/55/90/160/210/260 s), so the HUD shows "웨이브 x/6", not x/3. The 3-star time is 150 s, so a player still fighting at 160 s meets the first pressure wave after losing the time star. Intended?
 3. DECISIONS.md still shows Q1 PENDING although the user chose A at 09:03 (repeat of R09-01-6 item 0).
+
+## R09-01-8 WORLD.md identity check (2026-10-31 ~15:55 KST, SUCCESS_ANALYSIS.md §25)
+CLOSED: the Q1 items in R09-01-6 item 0 and R09-01-7 item 3 (DECISIONS.md shows DECIDED since 14b01e2). Still open in R09-01-7: the "first wave broken" definition and the 6-wave/150 s question.
+CORRECTION: my R09-01-6 rule "no 오븐 in unit names" was too broad. A generic word in a unit name ("Oven", "화덕포") is low risk. Avoid only title-level or compound marks like OvenBreak/OvenSmash.
+Proposals (your decision):
+1. Title (`ui.title` is still provisional): include a word that signals battle or defence (e.g. 기사단, 디펜스, 대전). In the KR store, "빵" alone mostly signals tycoon games (11 of 32 bread hits are simulation, §23.1).
+2. Card short names "통식빵" and "프레첼" lose their role. Keep them if 03's card icons show the role (shield, charge). Otherwise consider names that carry the role within the 36.67 px limit.
+3. Child aversion: no evidence either way (no child/parent test done). The strongest words are "썩은" (Rot Boar) and "부패" (hard Sino-Korean word with a political meaning). Optional softer variants: 상한 멧돼지, 곰팡이 대군주. "포자 뱉개" may read as a typo. Comparable mold/food games are rated 전체이용가 on Play KR, so expression level matters more than the words. Cheap test: at the E1 pilot, show the enemy name list and record any "gross/scary" reaction.

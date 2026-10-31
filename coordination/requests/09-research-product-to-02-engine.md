@@ -14,7 +14,7 @@ Date: 2026-10-31 KST · Source: docs/research/product/SUCCESS_ANALYSIS.md v2 §1
 ## R09-02-3 E4 sim (deferred)
 After r04+ balance is fixed (01 checkpoint), run baseline vs "pick 1 of 3 boost between waves" over seeds; report worst-seed outcome.
 
-## R09-02-4 Review-derived risks in 02 scope (2026-10-31 ~10:15 KST, SUCCESS_ANALYSIS.md §22)
+## R09-02-4 Review-derived risks in 02 scope (2026-10-31, committed a4250bb 09:06 KST, SUCCESS_ANALYSIS.md §22)
 - Progress loss is the most damaging complaint in competitor samples (Random Dice: 3 years of data reset 2026-10-17; device migration lost 90%). Our matching defect: backup rotation (10 SV-1 reproduced, 07 B004 P1). Ask: fix it and have 07 re-run the same fault sequence; acceptance = unlocked_round unchanged after two consecutive corruptions, and a user-visible notice when recovery happens.
 - 04's capture log godot_20261031_085555.log shows `Failed loading resource: res://assets/atlases/char_player_adv.png` and `char_enemy_adv.png` (import missing). Please re-import with 03; acceptance = no Failed loading in a real r05 run.
 - 2x speed: 04 reports no engine command exists. If 01 decides on free 2x, expose a sim time-scale command (headless-testable).

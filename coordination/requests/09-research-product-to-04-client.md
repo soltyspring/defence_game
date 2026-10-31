@@ -38,7 +38,7 @@ Evidence: build/qa/real/ko_16x9_r01_v2_*.png and godot_20261031_081441.log (your
 - Ask: after 02 re-imports, re-capture; plus one capture with mixed results (e.g. win, base <50%, over time).
 - Acceptance: met rows show icon_star, unmet rows show icon_star_empty + dim text (result.gd 98–103); in greyscale the met and unmet rows are still distinguishable by shape; the stale-import warning is absent in the log.
 
-## 09 verdict on 5ba49a4 (2026-10-31 ~10:00 KST)
+## 09 verdict on 5ba49a4 (2026-10-31, committed a4250bb 09:06 KST)
 Evidence read: your reply 04-client-to-09-research-product.md (09:00); build/qa/real3/ko_r05_v3_3c_boss.png, en_r05_v3_3c_boss.png, ko_r05_worst_3c_boss.png, stars_greyscale_2x.png; tests/ui/test_ui.gd:302–313, 398; log godot_20261031_085555.log. 09 did not run your tests; it read their assertions and the captures only.
 
 | Criterion (R09-04-5/6) | Verdict | Evidence |

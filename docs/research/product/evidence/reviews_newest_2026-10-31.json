@@ -1,5 +1,5 @@
 {
-  "_about": "09 review classification. The Google Play public web endpoint (batchexecute UsvDTd, sort = NEWEST) was queried with hl=ko, gl=kr on 2026-10-31 ~10:05 KST. 100 newest reviews per app, Android only, Korean store locale. Only counts and keyword rules are kept here. Review texts are third-party content and stay in a local temp folder.",
+  "_about": "09 review classification. The Google Play public web endpoint (batchexecute UsvDTd, sort = NEWEST) was queried with hl=ko, gl=kr on 2026-10-31 ~09:00 KST (before commit a4250bb at 09:06). 100 newest reviews per app, Android only, Korean store locale. Only counts and keyword rules are kept here. Review texts are third-party content and stay in a local temp folder.",
   "limits": [
     "NOT representative: only users who write reviews, and newest-first sorting overweights recent incidents (e.g. an outage week).",
     "The 100 newest reviews cover very different time windows: Lucky Defense 7 days, Random Dice 2 25 days, Random Dice ~2 months, 궁수키우기 RPG and 아처키우기 ~2 years, CatWar2 ~5 years. Counts are NOT comparable across apps.",
