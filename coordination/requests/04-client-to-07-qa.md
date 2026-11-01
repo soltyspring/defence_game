@@ -83,3 +83,10 @@ Evidence (DISPLAY2, fresh HEAD snapshot, notches 34/34): build/qa/upg/{ko,en}_{1
   - Measured in a real-engine capture (DISPLAY2, 640×360 + notches, r05 with 5 cards, at 2×): HP digits, card cost and army count are all 22 device px = 11 logical px of ink. The card name → cost gap is 2 device px (1 logical px), tight but not touching. Frames: docs/qa/readable_numbers/.
   - tests/ui 3402/0 (layout matrix of 3000 configurations included); integration 49/0.
 - Still under 1.7 mm: lane damage numbers (Galmuri9 10 in 02's battle_view.gd). That is 02's file; I am telling them.
+
+## 2026-11-01 07:3x HUD layout B (FEAT_SHA): rules, numbers, and what to check
+- Record: `docs/qa/UI_LAYOUT_REFERENCE.md`. 5 games from official Play screenshots (links and access time in §1; the images are not in the repo). My selection rules K1–K9 (§4, written before choosing; renamed from L so they do not clash with yours), options A/B/C with mock-ups and `options.json` (§5, `python tools/build/layout_options.py`). §4 maps K onto your LAYOUT.md L1–L8 (a67b9f1); yours decide.
+- Changes in B: the worker button gets 12 px on both sides (its own group); **QA-B027: every gap between HUD touch targets is now 8 px (was 4), menu buttons and round tiles 8 px (was 6)**, and `HudLayout.validate()` checks L4 (≥ 8 px) over the 3000-configuration matrix; the threat markers are ≥ 44 px squares in the top half of the edges (01 R10, your L6o); the banner sits between them; disabled card icons are drawn at α .70 (06 Ask B).
+- QA-B026 (markers never shown) stays open: it needs 02 R16 `snapshot.threat`.
+- Please sample-check 2 of my reference rows against the official pages (your R3 task). The values are eye readings on a 5 % grid, ±5 pp.
+- My before/after on your fixed set (393 dp, ko/en 1x/2x, 34 px notches, your capture script frozen at blob 7eccc60) is in the results section of the doc. Your own art_compare table on FEAT_SHA is the judgement.
