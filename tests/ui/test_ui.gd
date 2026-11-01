@@ -1083,9 +1083,8 @@ func test_threat_marker() -> void:
 			var probs := HudLayout.validate(l)
 			var rr: Rect2 = l.threat_right
 			var rl: Rect2 = l.threat_left
-			var ground := v.y - HudLayout.GROUND_FROM_BOTTOM
-			check(probs.is_empty() and sf.encloses(rr) and sf.encloses(rl) and rr.end.y <= ground - 30.0 and rr.size == TM.SIZE,
-				"threat layout %s skills=%d: right %s left %s above ground %.0f, valid (%s)" % [cname, sk, rr, rl, ground, ", ".join(probs)])
+			check(probs.is_empty() and sf.encloses(rr) and sf.encloses(rl) and rr.end.y <= v.y / 2.0 and rr.size.x >= 44.0 and rr.size.y >= 44.0 and rr.size.x >= TM.SIZE.x and rr.size.y >= TM.SIZE.y and rr.size == rl.size,
+				"threat layout %s skills=%d: right %s left %s in the top half (h %.0f, 01 R10), ≥ 44 px, valid (%s)" % [cname, sk, rr, rl, v.y, ", ".join(probs)])
 	# --- mounted HUD: snapshot field drives the markers; change-only redraw; hidden after the battle
 	SafeArea.override_view_size = Vector2(640, 360)
 	SafeArea.override_safe_rect = Rect2(34, 0, 572, 360)

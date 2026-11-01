@@ -133,10 +133,10 @@ func _layout() -> void:
 	var cx := safe.get_center().x
 	var y := safe.position.y + safe.size.y * 0.50
 	place(btn_play, Rect2(cx - bw / 2, y, bw, bh + 6))
-	var w3 := floorf((bw - 12) / 3.0)
+	var w3 := floorf((bw - 16) / 3.0)   # 8 px between the three buttons (07 LAYOUT L4 / QA-B027: 8 dp)
 	place(btn_select, Rect2(cx - bw / 2, y + bh + 14, w3, bh))
-	place(btn_upgrades, Rect2(cx - bw / 2 + w3 + 6, y + bh + 14, w3, bh))
-	place(btn_settings, Rect2(cx - bw / 2 + 2 * (w3 + 6), y + bh + 14, w3, bh))
+	place(btn_upgrades, Rect2(cx - bw / 2 + w3 + 8, y + bh + 14, w3, bh))
+	place(btn_settings, Rect2(cx - bw / 2 + 2 * (w3 + 8), y + bh + 14, w3, bh))
 	place(quit_layer, Rect2(Vector2.ZERO, view))
 	quit_layer.title_y = safe.get_center().y - 30
 	for i in quit_buttons.size():

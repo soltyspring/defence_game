@@ -170,7 +170,9 @@ func _draw() -> void:
 		var k := maxf(1.0, floorf(avail / maxf(isize.x, isize.y)))
 		var dsz := isize * k
 		var ir := Rect2((icon_c - dsz / 2).round(), dsz)
-		draw_texture_rect(icon, ir, false, Color(1, 1, 1, 0.45) if disabled else Color.WHITE)
+		# disabled: grey body + dim cost show the off state; the icon stays at α .70 so unit pairs remain
+		# distinguishable (06 R3 Ask B: at .45, 4–5 card pairs fail 07 U1 shape distance; at .70 all ≥ 13.5)
+		draw_texture_rect(icon, ir, false, Color(1, 1, 1, 0.70) if disabled else Color.WHITE)
 	elif glyph != &"":
 		UiStyle.draw_glyph(self, glyph, icon_c, minf(size.x, icon_bottom) * 0.22, tc)
 	# ---- pass 3: text (name + cost share Galmuri11 12 = one glyph cache)

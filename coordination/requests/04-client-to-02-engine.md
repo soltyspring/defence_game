@@ -149,3 +149,8 @@ Details: docs/qa/LANE_OCCLUSION.md (measured with tests/integration/lane_occlusi
   - Back on the notice also acks.
   - 16/16.
 - One observation: your fallback menu and mine both act on the same signal; only one is mounted at a time (`ui_source` = scenes/ui), so there is no double ack.
+
+## R21 (2026-11-01 07:3x) HUD layout B and the bottom inset (adds numbers to R17)
+- New layout B (FEAT_SHA, docs/qa/UI_LAYOUT_REFERENCE.md): the threat markers moved to the top half of the edges (01 R10). Nothing in the bottom row moved.
+- Layout check over 150 configurations (5 cards + 3 skills): with a 12 px bottom inset (gesture bar), the unit cards start 4 px inside the lane band (top y 288 vs band end 292 at 360 px height), in all 60 such configurations. Raising the ground by the bottom inset is your camera (R17), so I left it.
+- Still waiting: R16 (`snapshot.threat`), R17, R18, R19.
