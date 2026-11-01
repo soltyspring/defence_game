@@ -1,0 +1,1 @@
+01-director 세션을 새 Kiro 로그인으로 복구했습니다. coordination/handoffs/01-director.md와 coordinator-to-01-director.md 최신 지시를 읽으세요. Q1 테마 질문은 여전히 유일한 미응답 질문이니 사용자 답을 지어내지 마세요. 그동안 04가 보고한 영문 라벨 Footman/Catapult 잘림의 축약안을 의미를 유지해 제안하고 04/07에 같은 조건 재검증을 요청하세요. 밸런스 WIP는 검증 전 커밋하지 마세요. 검증한 본인 파일만 Publish-Task.ps1로 커밋·푸시하고 SHA를 보고하세요.

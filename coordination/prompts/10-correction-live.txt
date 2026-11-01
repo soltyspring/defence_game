@@ -1,0 +1,1 @@
+역할 정정: 당신은 10-research-systems이며 직전 09 지시는 오배송입니다. coordination/requests/coordinator-to-10-research-systems.md의 08:09 정정과 본인 인수인계를 읽고 10 소유 경로만 사용하세요. 02 R1~R9, 07 SV-1, 01 5~6 회신을 확인하고 02의 R6 fault hook이 준비됐으면 scenario B를 재실행해 증거를 정리하세요. 준비되지 않았으면 정확한 대기 원인과 담당자 요청을 갱신하세요. 검증된 산출물은 Publish-Task.ps1로 본인 명시 파일만 커밋·푸시하고 실제 SHA를 보고하세요. 읽음과 시작을 기록하세요.
