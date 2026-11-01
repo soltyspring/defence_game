@@ -1,0 +1,470 @@
+{
+ "note": "PROPOSAL MOCK on 07's real e8c6d96 frames (only the 24x24 card icons swapped); not screen evidence",
+ "cap": "build/qa07/art_compare/e8c6d96/cap",
+ "tag": "ko_1x",
+ "U1": {
+  "K0_alpha45/T1_off": {
+   "4_r06_t46": {
+    "cards_disabled": [],
+    "cards_min_dE_normal": 11.7,
+    "cards_min_dE_deutan": 3.4,
+    "cards_min_shape_dL": 17.5,
+    "cards_pairs_failing_u1": 0,
+    "cards_pairs_failing_u1_list": []
+   },
+   "5_r08_peak": {
+    "cards_disabled": [
+     "식빵병",
+     "롤빵병",
+     "통식빵",
+     "프레첼",
+     "화덕포"
+    ],
+    "cards_min_dE_normal": 5.4,
+    "cards_min_dE_deutan": 3.6,
+    "cards_min_shape_dL": 8.9,
+    "cards_pairs_failing_u1": 2,
+    "cards_pairs_failing_u1_list": [
+     "롤빵병 / 화덕포",
+     "통식빵 / 프레첼"
+    ]
+   },
+   "6_r10_boss": {
+    "cards_disabled": [
+     "식빵병",
+     "롤빵병",
+     "통식빵",
+     "프레첼",
+     "화덕포"
+    ],
+    "cards_min_dE_normal": 5.4,
+    "cards_min_dE_deutan": 3.6,
+    "cards_min_shape_dL": 8.9,
+    "cards_pairs_failing_u1": 2,
+    "cards_pairs_failing_u1_list": [
+     "롤빵병 / 화덕포",
+     "통식빵 / 프레첼"
+    ]
+   }
+  },
+  "K1_alpha70/T1_off": {
+   "4_r06_t46": {
+    "cards_disabled": [],
+    "cards_min_dE_normal": 11.7,
+    "cards_min_dE_deutan": 3.4,
+    "cards_min_shape_dL": 17.5,
+    "cards_pairs_failing_u1": 0,
+    "cards_pairs_failing_u1_list": []
+   },
+   "5_r08_peak": {
+    "cards_disabled": [
+     "식빵병",
+     "롤빵병",
+     "통식빵",
+     "프레첼",
+     "화덕포"
+    ],
+    "cards_min_dE_normal": 8.0,
+    "cards_min_dE_deutan": 5.3,
+    "cards_min_shape_dL": 13.4,
+    "cards_pairs_failing_u1": 0,
+    "cards_pairs_failing_u1_list": []
+   },
+   "6_r10_boss": {
+    "cards_disabled": [
+     "식빵병",
+     "롤빵병",
+     "통식빵",
+     "프레첼",
+     "화덕포"
+    ],
+    "cards_min_dE_normal": 8.0,
+    "cards_min_dE_deutan": 5.3,
+    "cards_min_shape_dL": 13.4,
+    "cards_pairs_failing_u1": 0,
+    "cards_pairs_failing_u1_list": []
+   }
+  },
+  "K2_grey_off_badge/T1_off": {
+   "4_r06_t46": {
+    "cards_disabled": [],
+    "cards_min_dE_normal": 11.7,
+    "cards_min_dE_deutan": 3.4,
+    "cards_min_shape_dL": 17.5,
+    "cards_pairs_failing_u1": 0,
+    "cards_pairs_failing_u1_list": []
+   },
+   "5_r08_peak": {
+    "cards_disabled": [
+     "식빵병",
+     "롤빵병",
+     "통식빵",
+     "프레첼",
+     "화덕포"
+    ],
+    "cards_min_dE_normal": 0.2,
+    "cards_min_dE_deutan": 0.2,
+    "cards_min_shape_dL": 11.9,
+    "cards_pairs_failing_u1": 1,
+    "cards_pairs_failing_u1_list": [
+     "통식빵 / 프레첼"
+    ]
+   },
+   "6_r10_boss": {
+    "cards_disabled": [
+     "식빵병",
+     "롤빵병",
+     "통식빵",
+     "프레첼",
+     "화덕포"
+    ],
+    "cards_min_dE_normal": 0.2,
+    "cards_min_dE_deutan": 0.2,
+    "cards_min_shape_dL": 11.9,
+    "cards_pairs_failing_u1": 1,
+    "cards_pairs_failing_u1_list": [
+     "통식빵 / 프레첼"
+    ]
+   }
+  },
+  "K3_dark_badge/T1_off": {
+   "4_r06_t46": {
+    "cards_disabled": [],
+    "cards_min_dE_normal": 11.7,
+    "cards_min_dE_deutan": 3.4,
+    "cards_min_shape_dL": 17.5,
+    "cards_pairs_failing_u1": 0,
+    "cards_pairs_failing_u1_list": []
+   },
+   "5_r08_peak": {
+    "cards_disabled": [
+     "식빵병",
+     "롤빵병",
+     "통식빵",
+     "프레첼",
+     "화덕포"
+    ],
+    "cards_min_dE_normal": 6.5,
+    "cards_min_dE_deutan": 6.3,
+    "cards_min_shape_dL": 9.9,
+    "cards_pairs_failing_u1": 1,
+    "cards_pairs_failing_u1_list": [
+     "통식빵 / 프레첼"
+    ]
+   },
+   "6_r10_boss": {
+    "cards_disabled": [
+     "식빵병",
+     "롤빵병",
+     "통식빵",
+     "프레첼",
+     "화덕포"
+    ],
+    "cards_min_dE_normal": 6.5,
+    "cards_min_dE_deutan": 6.3,
+    "cards_min_shape_dL": 9.9,
+    "cards_pairs_failing_u1": 1,
+    "cards_pairs_failing_u1_list": [
+     "통식빵 / 프레첼"
+    ]
+   }
+  },
+  "K0_alpha45/T1_on": {
+   "4_r06_t46": {
+    "cards_disabled": [],
+    "cards_min_dE_normal": 11.7,
+    "cards_min_dE_deutan": 3.4,
+    "cards_min_shape_dL": 19.3,
+    "cards_pairs_failing_u1": 0,
+    "cards_pairs_failing_u1_list": []
+   },
+   "5_r08_peak": {
+    "cards_disabled": [
+     "식빵병",
+     "롤빵병",
+     "통식빵",
+     "프레첼",
+     "화덕포"
+    ],
+    "cards_min_dE_normal": 5.8,
+    "cards_min_dE_deutan": 4.5,
+    "cards_min_shape_dL": 9.7,
+    "cards_pairs_failing_u1": 2,
+    "cards_pairs_failing_u1_list": [
+     "롤빵병 / 화덕포",
+     "통식빵 / 프레첼"
+    ]
+   },
+   "6_r10_boss": {
+    "cards_disabled": [
+     "식빵병",
+     "롤빵병",
+     "통식빵",
+     "프레첼",
+     "화덕포"
+    ],
+    "cards_min_dE_normal": 5.8,
+    "cards_min_dE_deutan": 4.5,
+    "cards_min_shape_dL": 9.7,
+    "cards_pairs_failing_u1": 2,
+    "cards_pairs_failing_u1_list": [
+     "롤빵병 / 화덕포",
+     "통식빵 / 프레첼"
+    ]
+   }
+  },
+  "K1_alpha70/T1_on": {
+   "4_r06_t46": {
+    "cards_disabled": [],
+    "cards_min_dE_normal": 11.7,
+    "cards_min_dE_deutan": 3.4,
+    "cards_min_shape_dL": 19.3,
+    "cards_pairs_failing_u1": 0,
+    "cards_pairs_failing_u1_list": []
+   },
+   "5_r08_peak": {
+    "cards_disabled": [
+     "식빵병",
+     "롤빵병",
+     "통식빵",
+     "프레첼",
+     "화덕포"
+    ],
+    "cards_min_dE_normal": 8.6,
+    "cards_min_dE_deutan": 6.7,
+    "cards_min_shape_dL": 14.6,
+    "cards_pairs_failing_u1": 0,
+    "cards_pairs_failing_u1_list": []
+   },
+   "6_r10_boss": {
+    "cards_disabled": [
+     "식빵병",
+     "롤빵병",
+     "통식빵",
+     "프레첼",
+     "화덕포"
+    ],
+    "cards_min_dE_normal": 8.6,
+    "cards_min_dE_deutan": 6.7,
+    "cards_min_shape_dL": 14.6,
+    "cards_pairs_failing_u1": 0,
+    "cards_pairs_failing_u1_list": []
+   }
+  },
+  "K2_grey_off_badge/T1_on": {
+   "4_r06_t46": {
+    "cards_disabled": [],
+    "cards_min_dE_normal": 11.7,
+    "cards_min_dE_deutan": 3.4,
+    "cards_min_shape_dL": 19.3,
+    "cards_pairs_failing_u1": 0,
+    "cards_pairs_failing_u1_list": []
+   },
+   "5_r08_peak": {
+    "cards_disabled": [
+     "식빵병",
+     "롤빵병",
+     "통식빵",
+     "프레첼",
+     "화덕포"
+    ],
+    "cards_min_dE_normal": 0.2,
+    "cards_min_dE_deutan": 0.2,
+    "cards_min_shape_dL": 13.7,
+    "cards_pairs_failing_u1": 0,
+    "cards_pairs_failing_u1_list": []
+   },
+   "6_r10_boss": {
+    "cards_disabled": [
+     "식빵병",
+     "롤빵병",
+     "통식빵",
+     "프레첼",
+     "화덕포"
+    ],
+    "cards_min_dE_normal": 0.2,
+    "cards_min_dE_deutan": 0.2,
+    "cards_min_shape_dL": 13.7,
+    "cards_pairs_failing_u1": 0,
+    "cards_pairs_failing_u1_list": []
+   }
+  },
+  "K3_dark_badge/T1_on": {
+   "4_r06_t46": {
+    "cards_disabled": [],
+    "cards_min_dE_normal": 11.7,
+    "cards_min_dE_deutan": 3.4,
+    "cards_min_shape_dL": 19.3,
+    "cards_pairs_failing_u1": 0,
+    "cards_pairs_failing_u1_list": []
+   },
+   "5_r08_peak": {
+    "cards_disabled": [
+     "식빵병",
+     "롤빵병",
+     "통식빵",
+     "프레첼",
+     "화덕포"
+    ],
+    "cards_min_dE_normal": 7.4,
+    "cards_min_dE_deutan": 7.3,
+    "cards_min_shape_dL": 10.8,
+    "cards_pairs_failing_u1": 1,
+    "cards_pairs_failing_u1_list": [
+     "통식빵 / 프레첼"
+    ]
+   },
+   "6_r10_boss": {
+    "cards_disabled": [
+     "식빵병",
+     "롤빵병",
+     "통식빵",
+     "프레첼",
+     "화덕포"
+    ],
+    "cards_min_dE_normal": 7.4,
+    "cards_min_dE_deutan": 7.3,
+    "cards_min_shape_dL": 10.8,
+    "cards_pairs_failing_u1": 1,
+    "cards_pairs_failing_u1_list": [
+     "통식빵 / 프레첼"
+    ]
+   }
+  }
+ },
+ "S1": {
+  "K0_alpha45/T1_off": {
+   "tank": {
+    "S1_min": 9.4,
+    "signals": [
+     "S2b",
+     "S2c"
+    ]
+   },
+   "siege": {
+    "S1_min": 9.2,
+    "signals": [
+     "S2b",
+     "S2c"
+    ]
+   }
+  },
+  "K1_alpha70/T1_off": {
+   "tank": {
+    "S1_min": 8.3,
+    "signals": [
+     "S2b",
+     "S2c"
+    ]
+   },
+   "siege": {
+    "S1_min": 8.0,
+    "signals": [
+     "S2b",
+     "S2c"
+    ]
+   }
+  },
+  "K2_grey_off_badge/T1_off": {
+   "tank": {
+    "S1_min": 8.9,
+    "signals": [
+     "S2a",
+     "S2b",
+     "S2c"
+    ]
+   },
+   "siege": {
+    "S1_min": 7.9,
+    "signals": [
+     "S2b",
+     "S2c"
+    ]
+   }
+  },
+  "K3_dark_badge/T1_off": {
+   "tank": {
+    "S1_min": 10.1,
+    "signals": [
+     "S2a",
+     "S2b",
+     "S2c"
+    ]
+   },
+   "siege": {
+    "S1_min": 9.3,
+    "signals": [
+     "S2b",
+     "S2c"
+    ]
+   }
+  },
+  "K0_alpha45/T1_on": {
+   "tank": {
+    "S1_min": 9.2,
+    "signals": [
+     "S2b",
+     "S2c"
+    ]
+   },
+   "siege": {
+    "S1_min": 9.2,
+    "signals": [
+     "S2b",
+     "S2c"
+    ]
+   }
+  },
+  "K1_alpha70/T1_on": {
+   "tank": {
+    "S1_min": 8.2,
+    "signals": [
+     "S2b",
+     "S2c"
+    ]
+   },
+   "siege": {
+    "S1_min": 8.0,
+    "signals": [
+     "S2b",
+     "S2c"
+    ]
+   }
+  },
+  "K2_grey_off_badge/T1_on": {
+   "tank": {
+    "S1_min": 8.8,
+    "signals": [
+     "S2a",
+     "S2b",
+     "S2c"
+    ]
+   },
+   "siege": {
+    "S1_min": 7.9,
+    "signals": [
+     "S2b",
+     "S2c"
+    ]
+   }
+  },
+  "K3_dark_badge/T1_on": {
+   "tank": {
+    "S1_min": 9.8,
+    "signals": [
+     "S2a",
+     "S2b",
+     "S2c"
+    ]
+   },
+   "siege": {
+    "S1_min": 9.3,
+    "signals": [
+     "S2b",
+     "S2c"
+    ]
+   }
+  }
+ },
+ "recover_err_max": 0
+}

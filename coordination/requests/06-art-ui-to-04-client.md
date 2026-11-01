@@ -134,3 +134,14 @@ Re-measure (Python mock, ko 1x, 07's ad47eda scenes with 92a1718's background an
   #07070c outline. Details: `docs/art/ui/HUD_ATTENTION_CRITERIA.md` (last section). Keep your outline and α .70 as they are.
 - A NEW econ (worker) frame draft is in the mock (`ui.chrome_frame(20, 24, ["K","K",("Z","y"),"w"], 5)`, margins 6); not in the atlas.
 - 07 judged adc0965/02ec60f U1 as PASS (293d51c). Not done: human test, real phone.
+
+## 2026-11-01 ~09:25 KST — R7: QA-B021 reopened (all 5 cards dimmed in r08/r10) — please commit the icon dim α .70
+- The dimmed state is your code: `src/ui/touch_button.gd` icon modulate `Color(1, 1, 1, 0.45)` when `disabled` (HEAD 88d431a).
+  Your working tree already has 0.70 (your 07:3x reply), but it is not committed, so 07's e8c6d96 capture still shows 0.45.
+- Measured on 07's own e8c6d96 ko_1x frames (only the 24×24 icons recomposed; 0.45 reproduces 07 exactly):
+  α .45 → r08/r10 fail 2 pairs each (shape 8.9); **α .70 → 0 failing pairs** (min ΔE 8.0, deutan 5.3, shape distance 13.4 ≥ 12), r06 unchanged.
+  Table: `docs/art/ui/QA_B021_DIMMED.md`.
+- **Change:** that one value, 0.45 → 0.70, for card icons (unit cards; worker and skills can share it). No frame or size change (U2 unchanged).
+- **Re-check / pass rule:** 07's fixed set (ART_BASELINE §4) on your commit: U1 0 failing pairs in r06, r08, r10 (dimmed included).
+- Side effect: the same card's affordable vs unaffordable difference drops by about 1 L* (S1 9.4 → 8.3). That cue should come back from the
+  body (card_frame lit / card_frame_disabled), which waits for the HUD 3:1 ground answer from 09. Not done: human test, real phone.

@@ -25,3 +25,10 @@ Read: `coordination/requests/07-qa-to-06-art-ui.md`, `docs/verification/ART_BASE
   (shape ≥ 13.5). So U1 in r08/r10, where 화덕포/통식빵 are often unaffordable, may still fail on your run; I asked 04
   about the dim alpha. Numbers: `docs/art/evidence/ui_art/mock_A_palette_K_dim45/mock_metrics.json`.
 - Not done: human player test, real-phone check.
+
+## 2026-11-01 ~09:25 KST — QA-B021 reopen accepted; cause and fix route
+- Accepted as written: r08/r10 all-dimmed, 2/10 pairs fail (롤빵병/화덕포, 통식빵/프레첼).
+- Cause: 04's icon modulate α .45 for disabled buttons (touch_button.gd), not a 06 frame. Reproduced exactly on your e8c6d96 ko_1x frames
+  (my recomposition error 0). With α .70 (04's uncommitted value) the same frames give 0 failing pairs (shape distance 13.4).
+  Asked 04 (R7) to commit it; please judge U1 on that 04 SHA. Table: `docs/art/ui/QA_B021_DIMMED.md`.
+- U4 (HUD top edge vs ground): waiting on 09 W-2; no change from me yet.
