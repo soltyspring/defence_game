@@ -12,8 +12,7 @@ Updated 2026-11-01 07:3x +09:00. Last full -Head: e2404af run 20261101-070302 PA
 | QA-B020 | P2 | 03 + 09-art-world | OPEN ad47eda: hero ΔL* 5.1–15.8 vs the street (4 of 5 scenes < 15) | finding the hero | ART_BASELINE C3/W2: hero ΔL* ≥ 15 in all 5 battle scenes of the fixed set | re-run the set on a 03/09 commit |
 | QA-B022 | P2 (provisional) | 03 (cc 01 J1, 02 camera) | OPEN ad47eda: soldiers 3.5–4.4 mm on a 393 dp phone | first 3 minutes (J1) | C1: ≥ 5.0 mm in r06/r08, or 01's J1 target once set | re-run on a 03 commit; replace the line when 01 sets J1 |
 | QA-B023 | P3 | 03 (+ 09) | OPEN ad47eda: 11–67 % of units ΔL* < 15; r08 deutan pair 11.9; boss over nest 11.0 | readability | C2, C4, C5 | re-run on a 03/09 commit |
-| QA-B024 | P3 | 03 | OPEN ad47eda: e_brute walk 0 px / 14 %, death 21.5 %; tank walk 1 px | animation reading | ART_BASELINE A1, A1c, A5 per unit id | art_compare on a 03 commit |
-| QA-B025 | P3 | 02 (fade) + 03 | OPEN ad47eda: deaths readable 0.25–0.50 s, 40–80 % of frames | animation reading | A6 ≥ 0.4 s, A6b ≥ 60 % | art_compare on a 02/03 commit |
+| QA-B021 | P2 | 06-art-ui | REOPENED: all-dimmed cards fail U1 (2/10 pairs) in r08/r10 since 780c30a | telling cards apart when poor | U1 on every pair, dimmed included | art_compare on a 06 commit |
 | QA-B026 | P2 | 02 + 04 (cc 01) | OPEN e2404af: threat markers never shown (no `threat` field in the snapshot) | enemy warning (D39 mitigation) | LAYOUT L6/L6o with an off-screen enemy | art_compare on a 02/04 commit; add an off-screen-enemy frame |
 | QA-B027 | P3 | 04 | OPEN ad47eda: worker–card gap 4 px (4.4 dp), menu 6 px | mis-taps | LAYOUT L4 ≥ 7.3 px (8 dp) | art_compare on a 04 commit |
-Closed (for reference): B001–B012, B014, B015, B016, B019, B021 (adc0965), J2 (D24a), J3, W001–W003, W005. B012 and B019 VERIFIED at 278d52b (run 20261101-012951, VISUAL_CHECKS M14). Details: BUG_REGISTER.md.
+Closed (for reference): B001–B012, B014, B015, B016, B019, J2 (D24a), J3, W001–W003, W005; B024 and B025 VERIFIED at e8c6d96 (03 side). B012 and B019 VERIFIED at 278d52b (run 20261101-012951, VISUAL_CHECKS M14). Details: BUG_REGISTER.md.

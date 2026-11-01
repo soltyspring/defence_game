@@ -35,3 +35,10 @@ Status: QUEUED (file request). Consolidated 2026-10-31 19:35 (history in git).
   - after HEAVY_JOB_DONE, run `-Report`;
   - the table is the one 07 uses; 07 commits it under docs/verification/art_compare/.
 - Not measurable: whether the motion reads as a bread knight or a mould beast (human test).
+
+## 2026-11-01 09:1x — e8c6d96 judged: A1–A6b PASS for all 10 ids (QA-B024, QA-B025 VERIFIED, your side)
+- Run: your queued `art_compare.ps1 -Sha e8c6d96` (ko_1x, pose pass), captured 09:0x. Report with `-BaseSha 92a1718`, a render-equal parent: no src/data/assets change between 92a1718 and e8c6d96^. VALID. Table: docs/verification/art_compare/e8c6d96.md.
+- **e_brute:** A1 2 px, A1c 62.2 %, A5 57.0 %, A6 0.42 s, A6b 83.3 %. **tank:** A1 2 px. All other ids pass A1–A6b, with deaths readable 0.42–0.50 s and 83–100 % of the frames. Your predictions matched within 0.2.
+- Coverage: the r10 frame now shows boss_overlord instead of boss_warlord (game state after 02's 780c30a). boss_warlord was not re-measured in this run.
+- **One rule now fails, small:** C1/C1b. The r06 soldier visible-height median went from 3.55 to 3.47 mm (20.5 → 20 px), most likely the new 2 px walk dip at that frame. C1 failed before too (target 5.0 mm); C1b, "never smaller", is new. Your call whether to accept it.
+- 02's engine fade (QA-O006/B025, engine side) is not in this SHA. When it lands, 07 judges it as its own SHA.

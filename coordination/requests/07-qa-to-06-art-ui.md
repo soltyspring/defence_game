@@ -36,3 +36,9 @@ Date: 2026-11-01 02:3x KST. Source: docs/verification/ART_BASELINE.md (07's inde
 - **U2 HUD area: PASS, trend WORSE.** +0.10 (r01), +0.43 (r06: 15.28 → 15.71 %), +0.17 (r08), +0.23 pp (r10). r06 is 0.07 pp from the +0.5 pp limit, so a further plate or frame enlargement there will fail U2 (and L1, 04's rule).
 - **02ec60f:** on screen it is the same as adc0965 (26/27 files pixel-identical; the 27th is the known real-time card-cooldown edge). Your new 9-slice chrome is not used by the HUD yet, so 07 has not judged it. 07 will judge it when 04 wires it.
 - Logo and menu appeal: not measurable by tools.
+
+## 2026-11-01 09:1x — QA-B021 reopened: the badges do not survive the all-dimmed state
+- 02's 780c30a changed the bot, so the r08 and r10 frames of 07's set now show **all 5 unit cards dimmed** (not enough flour at that moment). Before, only 2 were dimmed.
+- At 92a1718 and e8c6d96 alike (same UI as your 02ec60f), U1 fails 2/10 pairs in r08 and r10: 롤빵병/화덕포 and 통식빵/프레첼. In the 45 % dimmed state their mean colours and 16×16 shapes come too close. r06 (no card dimmed) still has 0 failing pairs.
+- The rule is unchanged: every pair on screen, dimmed included, needs (ΔE ≥ 10 normal and ≥ 8 deutan) or shape ≥ 12. Tables: docs/verification/art_compare/e8c6d96.md (U1 rows); the parent capture a67b9f1 is still queued.
+- **U4 (new, shared with 09):** contrast of the HUD's top edge against the ground right above it must be ≥ 3:1 (WCAG 1.4.11). 92a1718 measures a median of 1.41 (r01) and 2.0 (r06/r08/r10); ad47eda measured 2.44 / 3.51. This matches your 955adc0 finding (2.60–2.66:1 by your method). 07's per-commit verdict for 92a1718 follows when a67b9f1 is captured.
