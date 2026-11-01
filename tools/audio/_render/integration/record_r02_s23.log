@@ -1,0 +1,263 @@
+WorkerThreadPool: 8 threads, 2 max low-priority.
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Using "default" pen tablet driver...
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+CORE API HASH: 2004498165
+EDITOR API HASH: 1696660745
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://src/core/events.gd remapped: res://src/core/events.gd
+Completed load for: 'res://src/core/events.gd' remapped 'res://src/core/events.gd' at thread -1
+Loading resource: res://src/core/perf.gd remapped: res://src/core/perf.gd
+Completed load for: 'res://src/core/perf.gd' remapped 'res://src/core/perf.gd' at thread -1
+Loading resource: res://src/core/content.gd remapped: res://src/core/content.gd
+Completed load for: 'res://src/core/content.gd' remapped 'res://src/core/content.gd' at thread -1
+Loading resource: res://src/core/atlas.gd remapped: res://src/core/atlas.gd
+Completed load for: 'res://src/core/atlas.gd' remapped 'res://src/core/atlas.gd' at thread -1
+Loading resource: res://src/core/save.gd remapped: res://src/core/save.gd
+Completed load for: 'res://src/core/save.gd' remapped 'res://src/core/save.gd' at thread -1
+Loading resource: res://src/services/services.gd remapped: res://src/services/services.gd
+Completed load for: 'res://src/services/services.gd' remapped 'res://src/services/services.gd' at thread -1
+Loading resource: res://src/audio/audio_manager.gd remapped: res://src/audio/audio_manager.gd
+Completed load for: 'res://src/audio/audio_manager.gd' remapped 'res://src/audio/audio_manager.gd' at thread -1
+Loading resource: res://src/core/app.gd remapped: res://src/core/app.gd
+Completed load for: 'res://src/core/app.gd' remapped 'res://src/core/app.gd' at thread -1
+Loading resource: res://tools/audio/integration_probe.gd remapped: res://tools/audio/integration_probe.gd
+Completed load for: 'res://tools/audio/integration_probe.gd' remapped 'res://tools/audio/integration_probe.gd' at thread -1
+MbedTLS: Some X509 certificates could not be parsed (1 certificates skipped).
+Loaded system CA certificates
+Loading resource: res://scenes/gameplay/main.tscn remapped: res://scenes/gameplay/main.tscn
+Loading resource: res://src/gameplay/main.gd remapped: res://src/gameplay/main.gd
+Completed load for: 'res://src/gameplay/main.gd' remapped 'res://src/gameplay/main.gd' at thread -1
+Completed load for: 'res://scenes/gameplay/main.tscn' remapped 'res://scenes/gameplay/main.tscn' at thread -1
+Loading resource: res://assets/audio/sfx/ui_tap.wav remapped: res://assets/audio/sfx/ui_tap.wav
+Loading resource: res://.godot/imported/ui_tap.wav-4a38cec733012b92a340d3d4c414cdba.sample remapped: res://.godot/imported/ui_tap.wav-4a38cec733012b92a340d3d4c414cdba.sample
+Completed load for: 'res://assets/audio/sfx/ui_tap.wav' remapped 'res://assets/audio/sfx/ui_tap.wav' at thread -1
+Loading resource: res://assets/audio/sfx/ui_back.wav remapped: res://assets/audio/sfx/ui_back.wav
+Loading resource: res://.godot/imported/ui_back.wav-7828a6716341f445bbcfdb137145d0bd.sample remapped: res://.godot/imported/ui_back.wav-7828a6716341f445bbcfdb137145d0bd.sample
+Completed load for: 'res://assets/audio/sfx/ui_back.wav' remapped 'res://assets/audio/sfx/ui_back.wav' at thread -1
+Loading resource: res://assets/audio/sfx/ui_confirm.wav remapped: res://assets/audio/sfx/ui_confirm.wav
+Loading resource: res://.godot/imported/ui_confirm.wav-0d3d53b2792a81661738b7f98deb4ff5.sample remapped: res://.godot/imported/ui_confirm.wav-0d3d53b2792a81661738b7f98deb4ff5.sample
+Completed load for: 'res://assets/audio/sfx/ui_confirm.wav' remapped 'res://assets/audio/sfx/ui_confirm.wav' at thread -1
+Loading resource: res://assets/audio/sfx/ui_error.wav remapped: res://assets/audio/sfx/ui_error.wav
+Loading resource: res://.godot/imported/ui_error.wav-7e011cd889247bd877c76169be1a8ffb.sample remapped: res://.godot/imported/ui_error.wav-7e011cd889247bd877c76169be1a8ffb.sample
+Completed load for: 'res://assets/audio/sfx/ui_error.wav' remapped 'res://assets/audio/sfx/ui_error.wav' at thread -1
+Loading resource: res://assets/audio/sfx/deploy.wav remapped: res://assets/audio/sfx/deploy.wav
+Loading resource: res://.godot/imported/deploy.wav-dccdbce7a11dc333006d2e418a3a81d7.sample remapped: res://.godot/imported/deploy.wav-dccdbce7a11dc333006d2e418a3a81d7.sample
+Completed load for: 'res://assets/audio/sfx/deploy.wav' remapped 'res://assets/audio/sfx/deploy.wav' at thread -1
+Loading resource: res://assets/audio/sfx/worker_buy.wav remapped: res://assets/audio/sfx/worker_buy.wav
+Loading resource: res://.godot/imported/worker_buy.wav-7b1b0f73f701a2abb9f4e9b6a8390fb3.sample remapped: res://.godot/imported/worker_buy.wav-7b1b0f73f701a2abb9f4e9b6a8390fb3.sample
+Completed load for: 'res://assets/audio/sfx/worker_buy.wav' remapped 'res://assets/audio/sfx/worker_buy.wav' at thread -1
+Loading resource: res://assets/audio/sfx/gold_tick.wav remapped: res://assets/audio/sfx/gold_tick.wav
+Loading resource: res://.godot/imported/gold_tick.wav-3d52ebb371c8c58627a87af25002c300.sample remapped: res://.godot/imported/gold_tick.wav-3d52ebb371c8c58627a87af25002c300.sample
+Completed load for: 'res://assets/audio/sfx/gold_tick.wav' remapped 'res://assets/audio/sfx/gold_tick.wav' at thread -1
+Loading resource: res://assets/audio/sfx/gold_tick_v2.wav remapped: res://assets/audio/sfx/gold_tick_v2.wav
+Loading resource: res://.godot/imported/gold_tick_v2.wav-04cb6673c10d9deeb633a7ba8a94c061.sample remapped: res://.godot/imported/gold_tick_v2.wav-04cb6673c10d9deeb633a7ba8a94c061.sample
+Completed load for: 'res://assets/audio/sfx/gold_tick_v2.wav' remapped 'res://assets/audio/sfx/gold_tick_v2.wav' at thread -1
+Loading resource: res://assets/audio/sfx/hit_melee_1.wav remapped: res://assets/audio/sfx/hit_melee_1.wav
+Loading resource: res://.godot/imported/hit_melee_1.wav-962e24a336dbda998473763b79b74c5a.sample remapped: res://.godot/imported/hit_melee_1.wav-962e24a336dbda998473763b79b74c5a.sample
+Completed load for: 'res://assets/audio/sfx/hit_melee_1.wav' remapped 'res://assets/audio/sfx/hit_melee_1.wav' at thread -1
+Loading resource: res://assets/audio/sfx/hit_melee_2.wav remapped: res://assets/audio/sfx/hit_melee_2.wav
+Loading resource: res://.godot/imported/hit_melee_2.wav-ff7d9cd253820b0bbdba731616b05271.sample remapped: res://.godot/imported/hit_melee_2.wav-ff7d9cd253820b0bbdba731616b05271.sample
+Completed load for: 'res://assets/audio/sfx/hit_melee_2.wav' remapped 'res://assets/audio/sfx/hit_melee_2.wav' at thread -1
+Loading resource: res://assets/audio/sfx/hit_melee_3.wav remapped: res://assets/audio/sfx/hit_melee_3.wav
+Loading resource: res://.godot/imported/hit_melee_3.wav-05d07a5fcb0548f87635b848509b6e2d.sample remapped: res://.godot/imported/hit_melee_3.wav-05d07a5fcb0548f87635b848509b6e2d.sample
+Completed load for: 'res://assets/audio/sfx/hit_melee_3.wav' remapped 'res://assets/audio/sfx/hit_melee_3.wav' at thread -1
+Loading resource: res://assets/audio/sfx/hit_melee_4.wav remapped: res://assets/audio/sfx/hit_melee_4.wav
+Loading resource: res://.godot/imported/hit_melee_4.wav-2330c3ae26f5bc27a972578aeaa56da7.sample remapped: res://.godot/imported/hit_melee_4.wav-2330c3ae26f5bc27a972578aeaa56da7.sample
+Completed load for: 'res://assets/audio/sfx/hit_melee_4.wav' remapped 'res://assets/audio/sfx/hit_melee_4.wav' at thread -1
+Loading resource: res://assets/audio/sfx/hit_melee_5.wav remapped: res://assets/audio/sfx/hit_melee_5.wav
+Loading resource: res://.godot/imported/hit_melee_5.wav-492092a554c24d66e285d53ce3578a0d.sample remapped: res://.godot/imported/hit_melee_5.wav-492092a554c24d66e285d53ce3578a0d.sample
+Completed load for: 'res://assets/audio/sfx/hit_melee_5.wav' remapped 'res://assets/audio/sfx/hit_melee_5.wav' at thread -1
+Loading resource: res://assets/audio/sfx/hit_bread_1.wav remapped: res://assets/audio/sfx/hit_bread_1.wav
+Loading resource: res://.godot/imported/hit_bread_1.wav-efc1098874a1ad0efcb5830bb7cfdfd6.sample remapped: res://.godot/imported/hit_bread_1.wav-efc1098874a1ad0efcb5830bb7cfdfd6.sample
+Completed load for: 'res://assets/audio/sfx/hit_bread_1.wav' remapped 'res://assets/audio/sfx/hit_bread_1.wav' at thread -1
+Loading resource: res://assets/audio/sfx/hit_bread_2.wav remapped: res://assets/audio/sfx/hit_bread_2.wav
+Loading resource: res://.godot/imported/hit_bread_2.wav-c2c93771463a56ebccb84828aa6c2a98.sample remapped: res://.godot/imported/hit_bread_2.wav-c2c93771463a56ebccb84828aa6c2a98.sample
+Completed load for: 'res://assets/audio/sfx/hit_bread_2.wav' remapped 'res://assets/audio/sfx/hit_bread_2.wav' at thread -1
+Loading resource: res://assets/audio/sfx/hit_bread_3.wav remapped: res://assets/audio/sfx/hit_bread_3.wav
+Loading resource: res://.godot/imported/hit_bread_3.wav-a62f232fdc952b2aa631f901a7f245e4.sample remapped: res://.godot/imported/hit_bread_3.wav-a62f232fdc952b2aa631f901a7f245e4.sample
+Completed load for: 'res://assets/audio/sfx/hit_bread_3.wav' remapped 'res://assets/audio/sfx/hit_bread_3.wav' at thread -1
+Loading resource: res://assets/audio/sfx/hit_mold_1.wav remapped: res://assets/audio/sfx/hit_mold_1.wav
+Loading resource: res://.godot/imported/hit_mold_1.wav-58dc9db73ab744ca58e9e8209538b60a.sample remapped: res://.godot/imported/hit_mold_1.wav-58dc9db73ab744ca58e9e8209538b60a.sample
+Completed load for: 'res://assets/audio/sfx/hit_mold_1.wav' remapped 'res://assets/audio/sfx/hit_mold_1.wav' at thread -1
+Loading resource: res://assets/audio/sfx/hit_mold_2.wav remapped: res://assets/audio/sfx/hit_mold_2.wav
+Loading resource: res://.godot/imported/hit_mold_2.wav-f776f0dff95e92e46903978c6cf2ff36.sample remapped: res://.godot/imported/hit_mold_2.wav-f776f0dff95e92e46903978c6cf2ff36.sample
+Completed load for: 'res://assets/audio/sfx/hit_mold_2.wav' remapped 'res://assets/audio/sfx/hit_mold_2.wav' at thread -1
+Loading resource: res://assets/audio/sfx/hit_mold_3.wav remapped: res://assets/audio/sfx/hit_mold_3.wav
+Loading resource: res://.godot/imported/hit_mold_3.wav-9cb4b27a6e31d4d2ffb405077a45069a.sample remapped: res://.godot/imported/hit_mold_3.wav-9cb4b27a6e31d4d2ffb405077a45069a.sample
+Completed load for: 'res://assets/audio/sfx/hit_mold_3.wav' remapped 'res://assets/audio/sfx/hit_mold_3.wav' at thread -1
+Loading resource: res://assets/audio/sfx/hit_arrow.wav remapped: res://assets/audio/sfx/hit_arrow.wav
+Loading resource: res://.godot/imported/hit_arrow.wav-fdf59088b8b5cb2352ba287a5e2ae6c6.sample remapped: res://.godot/imported/hit_arrow.wav-fdf59088b8b5cb2352ba287a5e2ae6c6.sample
+Completed load for: 'res://assets/audio/sfx/hit_arrow.wav' remapped 'res://assets/audio/sfx/hit_arrow.wav' at thread -1
+Loading resource: res://assets/audio/sfx/shoot_arrow.wav remapped: res://assets/audio/sfx/shoot_arrow.wav
+Loading resource: res://.godot/imported/shoot_arrow.wav-77bfd866c9c9f7fc5a20065c5f8846ef.sample remapped: res://.godot/imported/shoot_arrow.wav-77bfd866c9c9f7fc5a20065c5f8846ef.sample
+Completed load for: 'res://assets/audio/sfx/shoot_arrow.wav' remapped 'res://assets/audio/sfx/shoot_arrow.wav' at thread -1
+Loading resource: res://assets/audio/sfx/shoot_arrow_v2.wav remapped: res://assets/audio/sfx/shoot_arrow_v2.wav
+Loading resource: res://.godot/imported/shoot_arrow_v2.wav-de308d8f03bbf89012624af7f3cb5b8f.sample remapped: res://.godot/imported/shoot_arrow_v2.wav-de308d8f03bbf89012624af7f3cb5b8f.sample
+Completed load for: 'res://assets/audio/sfx/shoot_arrow_v2.wav' remapped 'res://assets/audio/sfx/shoot_arrow_v2.wav' at thread -1
+Loading resource: res://assets/audio/sfx/shoot_rock.wav remapped: res://assets/audio/sfx/shoot_rock.wav
+Loading resource: res://.godot/imported/shoot_rock.wav-64d682d40c7bd6876888d0d34e7c9ed2.sample remapped: res://.godot/imported/shoot_rock.wav-64d682d40c7bd6876888d0d34e7c9ed2.sample
+Completed load for: 'res://assets/audio/sfx/shoot_rock.wav' remapped 'res://assets/audio/sfx/shoot_rock.wav' at thread -1
+Loading resource: res://assets/audio/sfx/shoot_spit.wav remapped: res://assets/audio/sfx/shoot_spit.wav
+Loading resource: res://.godot/imported/shoot_spit.wav-e277d63952da527d3cbc54363e8cd8e9.sample remapped: res://.godot/imported/shoot_spit.wav-e277d63952da527d3cbc54363e8cd8e9.sample
+Completed load for: 'res://assets/audio/sfx/shoot_spit.wav' remapped 'res://assets/audio/sfx/shoot_spit.wav' at thread -1
+Loading resource: res://assets/audio/sfx/shoot_spit_v2.wav remapped: res://assets/audio/sfx/shoot_spit_v2.wav
+Loading resource: res://.godot/imported/shoot_spit_v2.wav-d407448e15f6ec06f6df5b7cddc85d91.sample remapped: res://.godot/imported/shoot_spit_v2.wav-d407448e15f6ec06f6df5b7cddc85d91.sample
+Completed load for: 'res://assets/audio/sfx/shoot_spit_v2.wav' remapped 'res://assets/audio/sfx/shoot_spit_v2.wav' at thread -1
+Loading resource: res://assets/audio/sfx/shoot_spit_v3.wav remapped: res://assets/audio/sfx/shoot_spit_v3.wav
+Loading resource: res://.godot/imported/shoot_spit_v3.wav-30547c43f0679f5de2c87df3498a7cba.sample remapped: res://.godot/imported/shoot_spit_v3.wav-30547c43f0679f5de2c87df3498a7cba.sample
+Completed load for: 'res://assets/audio/sfx/shoot_spit_v3.wav' remapped 'res://assets/audio/sfx/shoot_spit_v3.wav' at thread -1
+Loading resource: res://assets/audio/sfx/hit_base.wav remapped: res://assets/audio/sfx/hit_base.wav
+Loading resource: res://.godot/imported/hit_base.wav-51648cbc75d4409b7ca3d0307e71b141.sample remapped: res://.godot/imported/hit_base.wav-51648cbc75d4409b7ca3d0307e71b141.sample
+Completed load for: 'res://assets/audio/sfx/hit_base.wav' remapped 'res://assets/audio/sfx/hit_base.wav' at thread -1
+Loading resource: res://assets/audio/sfx/hit_base_mold.wav remapped: res://assets/audio/sfx/hit_base_mold.wav
+Loading resource: res://.godot/imported/hit_base_mold.wav-ed0284648bcd768dfa649f6474c514bb.sample remapped: res://.godot/imported/hit_base_mold.wav-ed0284648bcd768dfa649f6474c514bb.sample
+Completed load for: 'res://assets/audio/sfx/hit_base_mold.wav' remapped 'res://assets/audio/sfx/hit_base_mold.wav' at thread -1
+Loading resource: res://assets/audio/sfx/explosion.wav remapped: res://assets/audio/sfx/explosion.wav
+Loading resource: res://.godot/imported/explosion.wav-f11908070a3c16e9f40ac8490560a261.sample remapped: res://.godot/imported/explosion.wav-f11908070a3c16e9f40ac8490560a261.sample
+Completed load for: 'res://assets/audio/sfx/explosion.wav' remapped 'res://assets/audio/sfx/explosion.wav' at thread -1
+Loading resource: res://assets/audio/sfx/death_ally.wav remapped: res://assets/audio/sfx/death_ally.wav
+Loading resource: res://.godot/imported/death_ally.wav-7723e7d2d5e06abc3e8de6a7f3bb12bf.sample remapped: res://.godot/imported/death_ally.wav-7723e7d2d5e06abc3e8de6a7f3bb12bf.sample
+Completed load for: 'res://assets/audio/sfx/death_ally.wav' remapped 'res://assets/audio/sfx/death_ally.wav' at thread -1
+Loading resource: res://assets/audio/sfx/death_enemy.wav remapped: res://assets/audio/sfx/death_enemy.wav
+Loading resource: res://.godot/imported/death_enemy.wav-f04c0089fadbd47f55c46be506bb3e23.sample remapped: res://.godot/imported/death_enemy.wav-f04c0089fadbd47f55c46be506bb3e23.sample
+Completed load for: 'res://assets/audio/sfx/death_enemy.wav' remapped 'res://assets/audio/sfx/death_enemy.wav' at thread -1
+Loading resource: res://assets/audio/sfx/death_enemy_v2.wav remapped: res://assets/audio/sfx/death_enemy_v2.wav
+Loading resource: res://.godot/imported/death_enemy_v2.wav-418dd7262f30698c6b322faeaaefc2dd.sample remapped: res://.godot/imported/death_enemy_v2.wav-418dd7262f30698c6b322faeaaefc2dd.sample
+Completed load for: 'res://assets/audio/sfx/death_enemy_v2.wav' remapped 'res://assets/audio/sfx/death_enemy_v2.wav' at thread -1
+Loading resource: res://assets/audio/sfx/hero_death.wav remapped: res://assets/audio/sfx/hero_death.wav
+Loading resource: res://.godot/imported/hero_death.wav-c2fecee1689e04810aedc6ec54619f60.sample remapped: res://.godot/imported/hero_death.wav-c2fecee1689e04810aedc6ec54619f60.sample
+Completed load for: 'res://assets/audio/sfx/hero_death.wav' remapped 'res://assets/audio/sfx/hero_death.wav' at thread -1
+Loading resource: res://assets/audio/sfx/hero_respawn.wav remapped: res://assets/audio/sfx/hero_respawn.wav
+Loading resource: res://.godot/imported/hero_respawn.wav-75769e258a24cf61be99106c44f495dd.sample remapped: res://.godot/imported/hero_respawn.wav-75769e258a24cf61be99106c44f495dd.sample
+Completed load for: 'res://assets/audio/sfx/hero_respawn.wav' remapped 'res://assets/audio/sfx/hero_respawn.wav' at thread -1
+Loading resource: res://assets/audio/sfx/skill_slam.wav remapped: res://assets/audio/sfx/skill_slam.wav
+Loading resource: res://.godot/imported/skill_slam.wav-461e3c162a5e6d3499ace111b1d3543b.sample remapped: res://.godot/imported/skill_slam.wav-461e3c162a5e6d3499ace111b1d3543b.sample
+Completed load for: 'res://assets/audio/sfx/skill_slam.wav' remapped 'res://assets/audio/sfx/skill_slam.wav' at thread -1
+Loading resource: res://assets/audio/sfx/skill_rally.wav remapped: res://assets/audio/sfx/skill_rally.wav
+Loading resource: res://.godot/imported/skill_rally.wav-9e20d0dbcf81bbe1a18fa575338c6012.sample remapped: res://.godot/imported/skill_rally.wav-9e20d0dbcf81bbe1a18fa575338c6012.sample
+Completed load for: 'res://assets/audio/sfx/skill_rally.wav' remapped 'res://assets/audio/sfx/skill_rally.wav' at thread -1
+Loading resource: res://assets/audio/sfx/skill_barrage.wav remapped: res://assets/audio/sfx/skill_barrage.wav
+Loading resource: res://.godot/imported/skill_barrage.wav-09007523fd8cd91e60b25338ae83e51b.sample remapped: res://.godot/imported/skill_barrage.wav-09007523fd8cd91e60b25338ae83e51b.sample
+Completed load for: 'res://assets/audio/sfx/skill_barrage.wav' remapped 'res://assets/audio/sfx/skill_barrage.wav' at thread -1
+Loading resource: res://assets/audio/sfx/skill_heal.wav remapped: res://assets/audio/sfx/skill_heal.wav
+Loading resource: res://.godot/imported/skill_heal.wav-b7f1a88ca7d98a4fd8e561af6bf5da17.sample remapped: res://.godot/imported/skill_heal.wav-b7f1a88ca7d98a4fd8e561af6bf5da17.sample
+Completed load for: 'res://assets/audio/sfx/skill_heal.wav' remapped 'res://assets/audio/sfx/skill_heal.wav' at thread -1
+Loading resource: res://assets/audio/sfx/skill_cast.wav remapped: res://assets/audio/sfx/skill_cast.wav
+Loading resource: res://.godot/imported/skill_cast.wav-58e9df95b44d98e7261f5ef6e4ae788a.sample remapped: res://.godot/imported/skill_cast.wav-58e9df95b44d98e7261f5ef6e4ae788a.sample
+Completed load for: 'res://assets/audio/sfx/skill_cast.wav' remapped 'res://assets/audio/sfx/skill_cast.wav' at thread -1
+Loading resource: res://assets/audio/sfx/wave_incoming.wav remapped: res://assets/audio/sfx/wave_incoming.wav
+Loading resource: res://.godot/imported/wave_incoming.wav-7f3595058e82ab3e5092d90bc4e3dfa8.sample remapped: res://.godot/imported/wave_incoming.wav-7f3595058e82ab3e5092d90bc4e3dfa8.sample
+Completed load for: 'res://assets/audio/sfx/wave_incoming.wav' remapped 'res://assets/audio/sfx/wave_incoming.wav' at thread -1
+Loading resource: res://assets/audio/sfx/boss_incoming.wav remapped: res://assets/audio/sfx/boss_incoming.wav
+Loading resource: res://.godot/imported/boss_incoming.wav-8d4279cd825a0cdecee9e866f9203bd9.sample remapped: res://.godot/imported/boss_incoming.wav-8d4279cd825a0cdecee9e866f9203bd9.sample
+Completed load for: 'res://assets/audio/sfx/boss_incoming.wav' remapped 'res://assets/audio/sfx/boss_incoming.wav' at thread -1
+Loading resource: res://assets/audio/sfx/stinger_win.wav remapped: res://assets/audio/sfx/stinger_win.wav
+Loading resource: res://.godot/imported/stinger_win.wav-de3bcf91b046e692f975b22a9f65945f.sample remapped: res://.godot/imported/stinger_win.wav-de3bcf91b046e692f975b22a9f65945f.sample
+Completed load for: 'res://assets/audio/sfx/stinger_win.wav' remapped 'res://assets/audio/sfx/stinger_win.wav' at thread -1
+Loading resource: res://assets/audio/sfx/wave_cleared.wav remapped: res://assets/audio/sfx/wave_cleared.wav
+Loading resource: res://.godot/imported/wave_cleared.wav-b1c7cfa410199795a010c16c084d88cd.sample remapped: res://.godot/imported/wave_cleared.wav-b1c7cfa410199795a010c16c084d88cd.sample
+Completed load for: 'res://assets/audio/sfx/wave_cleared.wav' remapped 'res://assets/audio/sfx/wave_cleared.wav' at thread -1
+Loading resource: res://assets/audio/sfx/ui_upgrade_ok.wav remapped: res://assets/audio/sfx/ui_upgrade_ok.wav
+Loading resource: res://.godot/imported/ui_upgrade_ok.wav-19ec6a16ed68a4ace5ed8c374cacb722.sample remapped: res://.godot/imported/ui_upgrade_ok.wav-19ec6a16ed68a4ace5ed8c374cacb722.sample
+Completed load for: 'res://assets/audio/sfx/ui_upgrade_ok.wav' remapped 'res://assets/audio/sfx/ui_upgrade_ok.wav' at thread -1
+Loading resource: res://assets/audio/sfx/ui_upgrade_no_coins.wav remapped: res://assets/audio/sfx/ui_upgrade_no_coins.wav
+Loading resource: res://.godot/imported/ui_upgrade_no_coins.wav-1e605b73ebcf5600543d0477ab3f59d7.sample remapped: res://.godot/imported/ui_upgrade_no_coins.wav-1e605b73ebcf5600543d0477ab3f59d7.sample
+Completed load for: 'res://assets/audio/sfx/ui_upgrade_no_coins.wav' remapped 'res://assets/audio/sfx/ui_upgrade_no_coins.wav' at thread -1
+Loading resource: res://assets/audio/sfx/ui_upgrade_max.wav remapped: res://assets/audio/sfx/ui_upgrade_max.wav
+Loading resource: res://.godot/imported/ui_upgrade_max.wav-39c3b285c70ecb8f69ea573be124378b.sample remapped: res://.godot/imported/ui_upgrade_max.wav-39c3b285c70ecb8f69ea573be124378b.sample
+Completed load for: 'res://assets/audio/sfx/ui_upgrade_max.wav' remapped 'res://assets/audio/sfx/ui_upgrade_max.wav' at thread -1
+Loading resource: res://assets/audio/sfx/ui_upgrade_save_failed.wav remapped: res://assets/audio/sfx/ui_upgrade_save_failed.wav
+Loading resource: res://.godot/imported/ui_upgrade_save_failed.wav-ddecfc602d7c7b4f2a86580472c3bc95.sample remapped: res://.godot/imported/ui_upgrade_save_failed.wav-ddecfc602d7c7b4f2a86580472c3bc95.sample
+Completed load for: 'res://assets/audio/sfx/ui_upgrade_save_failed.wav' remapped 'res://assets/audio/sfx/ui_upgrade_save_failed.wav' at thread -1
+Loading resource: res://assets/audio/sfx/stinger_defeat.wav remapped: res://assets/audio/sfx/stinger_defeat.wav
+Loading resource: res://.godot/imported/stinger_defeat.wav-bb77ff038233f9dd8e9266e771109c48.sample remapped: res://.godot/imported/stinger_defeat.wav-bb77ff038233f9dd8e9266e771109c48.sample
+Completed load for: 'res://assets/audio/sfx/stinger_defeat.wav' remapped 'res://assets/audio/sfx/stinger_defeat.wav' at thread -1
+Loading resource: res://assets/atlases/ui_main.png remapped: res://assets/atlases/ui_main.png
+Loading resource: res://.godot/imported/ui_main.png-b8d0216391e4b08a56e7bd555a45b7f3.ctex remapped: res://.godot/imported/ui_main.png-b8d0216391e4b08a56e7bd555a45b7f3.ctex
+Completed load for: 'res://assets/atlases/ui_main.png' remapped 'res://assets/atlases/ui_main.png' at thread -1
+Loading resource: res://scenes/gameplay/battle.tscn remapped: res://scenes/gameplay/battle.tscn
+Loading resource: res://src/gameplay/battle.gd remapped: res://src/gameplay/battle.gd
+Completed load for: 'res://src/gameplay/battle.gd' remapped 'res://src/gameplay/battle.gd' at thread -1
+Completed load for: 'res://scenes/gameplay/battle.tscn' remapped 'res://scenes/gameplay/battle.tscn' at thread -1
+Loading resource: res://scenes/ui/hud.tscn remapped: res://scenes/ui/hud.tscn
+Loading resource: res://src/ui/hud.gd remapped: res://src/ui/hud.gd
+Completed load for: 'res://src/ui/hud.gd' remapped 'res://src/ui/hud.gd' at thread -1
+Completed load for: 'res://scenes/ui/hud.tscn' remapped 'res://scenes/ui/hud.tscn' at thread -1
+Loading resource: res://assets/fonts/Galmuri11.ttf remapped: res://assets/fonts/Galmuri11.ttf
+Loading resource: res://.godot/imported/Galmuri11.ttf-dc494bdf43221ea4068442166ca7b6a4.fontdata remapped: res://.godot/imported/Galmuri11.ttf-dc494bdf43221ea4068442166ca7b6a4.fontdata
+Completed load for: 'res://assets/fonts/Galmuri11.ttf' remapped 'res://assets/fonts/Galmuri11.ttf' at thread -1
+Loading resource: res://assets/fonts/Galmuri11-Bold.ttf remapped: res://assets/fonts/Galmuri11-Bold.ttf
+Loading resource: res://.godot/imported/Galmuri11-Bold.ttf-3a23d149e7b99ee54cc37134f38f9040.fontdata remapped: res://.godot/imported/Galmuri11-Bold.ttf-3a23d149e7b99ee54cc37134f38f9040.fontdata
+Completed load for: 'res://assets/fonts/Galmuri11-Bold.ttf' remapped 'res://assets/fonts/Galmuri11-Bold.ttf' at thread -1
+Loading resource: res://assets/fonts/Galmuri9.ttf remapped: res://assets/fonts/Galmuri9.ttf
+Loading resource: res://.godot/imported/Galmuri9.ttf-98ce197f22f89047170858fe1b62fb4f.fontdata remapped: res://.godot/imported/Galmuri9.ttf-98ce197f22f89047170858fe1b62fb4f.fontdata
+Completed load for: 'res://assets/fonts/Galmuri9.ttf' remapped 'res://assets/fonts/Galmuri9.ttf' at thread -1
+Loading resource: res://assets/atlases/char_player.png remapped: res://assets/atlases/char_player.png
+Loading resource: res://.godot/imported/char_player.png-a822b4a4d58c09b9090b7f17c9f835e2.ctex remapped: res://.godot/imported/char_player.png-a822b4a4d58c09b9090b7f17c9f835e2.ctex
+Completed load for: 'res://assets/atlases/char_player.png' remapped 'res://assets/atlases/char_player.png' at thread -1
+Loading resource: res://assets/atlases/bases.png remapped: res://assets/atlases/bases.png
+Loading resource: res://.godot/imported/bases.png-7cea66318d28e7c4ad5e2a7f61e1cbf8.ctex remapped: res://.godot/imported/bases.png-7cea66318d28e7c4ad5e2a7f61e1cbf8.ctex
+Completed load for: 'res://assets/atlases/bases.png' remapped 'res://assets/atlases/bases.png' at thread -1
+Loading resource: res://assets/atlases/fx_combat.png remapped: res://assets/atlases/fx_combat.png
+Loading resource: res://.godot/imported/fx_combat.png-e6354d67123718b0bffb7ceec69fc478.ctex remapped: res://.godot/imported/fx_combat.png-e6354d67123718b0bffb7ceec69fc478.ctex
+Completed load for: 'res://assets/atlases/fx_combat.png' remapped 'res://assets/atlases/fx_combat.png' at thread -1
+Loading resource: res://assets/atlases/biome_meadow.png remapped: res://assets/atlases/biome_meadow.png
+Loading resource: res://.godot/imported/biome_meadow.png-85b1b5ff68f9a2f47452b0aaa7782020.ctex remapped: res://.godot/imported/biome_meadow.png-85b1b5ff68f9a2f47452b0aaa7782020.ctex
+Completed load for: 'res://assets/atlases/biome_meadow.png' remapped 'res://assets/atlases/biome_meadow.png' at thread -1
+Loading resource: res://assets/audio/music/music_battle.ogg remapped: res://assets/audio/music/music_battle.ogg
+Loading resource: res://.godot/imported/music_battle.ogg-29d1ed4ae21574dbbf14c70630f7c523.oggvorbisstr remapped: res://.godot/imported/music_battle.ogg-29d1ed4ae21574dbbf14c70630f7c523.oggvorbisstr
+Completed load for: 'res://assets/audio/music/music_battle.ogg' remapped 'res://assets/audio/music/music_battle.ogg' at thread -1
+[App] boot ok platform=Windows renderer= view=(640.0, 640.0) window=(0, 0) title= screen=battle ui_source={"hud":"scenes/ui"} atlas={"pages":[{"gpu_bytes":2097152,"h":512,"id":"char_player","refs":1,"source":"import","w":1024},{"gpu_bytes":1048576,"h":512,"id":"bases","refs":1,"source":"import","w":512},{"gpu_bytes":524288,"h":256,"id":"fx_combat","refs":1,"source":"import","w":512},{"gpu_bytes":262144,"h":256,"id":"ui_main","refs":1,"source":"import","w":256},{"gpu_bytes":2097152,"h":512,"id":"biome_meadow","refs":1,"source":"import","w":1024}],"resident_gpu_bytes":6029312} save_recovered=false
+AUDIO_INTEGRATION_REPORT {"audio_children":[19,19,19],"audio_snapshot":{"active_sfx":0,"active_ui":0,"attenuated_offscreen":0,"cluster_events":0,"cluster_lowered":0,"dropped_gap":11,"dropped_group":50,"dropped_max":0,"dropped_offscreen":0,"dropped_voices":0,"duck_db":0.0,"load_errors":[],"load_ms":419,"missing":0,"music":"music_battle","paused":false,"peak_voices":3,"played":118,"resident_sfx_bytes":206800,"sfx_duck_events":5,"sfx_ducked":3,"stolen":0,"suspended":false,"volumes":{"master":1.0,"music":0.8,"sfx":1.0}},"battles_ended":0,"battles_started":1,"bridge_derived":{"alert":false,"base":true,"command":false,"death":false,"gold":true,"hero":true,"milestone":true,"ui":true,"upgrade":true},"commands":{"deploy":10,"deploy_unaffordable":5,"skill":5,"worker":0},"cue_counts":{"death_ally":5,"death_enemy":14,"deploy":10,"gold_tick":9,"hit_bread":23,"hit_mold":34,"shoot_arrow":10,"skill_slam":5,"ui_error":5,"wave_cleared":1,"wave_incoming":2},"engine_truth":{"deployed":10,"hero_deaths":0,"kills":14,"skills_cast":5,"workers_bought":0},"errors":[],"events_has_sfx":true,"focus":{},"hit_events_enemy":50,"hit_events_enemy_rec":46,"hit_events_player":67,"hit_events_player_rec":61,"max_active_sfx":3,"max_active_ui":1,"max_music_playing":1,"music_timeline":[{"m":"music_battle","t":0.1}],"pause":{},"phases":[],"probe_seed":23,"recording":{"cues":110,"seconds":60.01},"results":[],"same_frame_duplicates":[],"screens":["battle"],"switch_check":{},"t":63.5,"toasts":{"not_enough_gold":4,"on_cooldown":1,"wave_incoming":2},"wave_cleared_events":1,"wave_cleared_index":[1]}
+[App] quit-after reached. perf={"draw_calls":0.0,"fps":60.0,"frame_ms_p95":16.6666660308838,"fx":0,"objects":2138.0,"projectiles":0,"sim_ms":0.172,"sim_ms_max":10.984,"static_mem":49218288.0,"tex_mem_bytes":0.0,"units":7,"video_mem_bytes":0.0} atlas={"pages":[{"gpu_bytes":2097152,"h":512,"id":"char_player","refs":1,"source":"import","w":1024},{"gpu_bytes":1048576,"h":512,"id":"bases","refs":1,"source":"import","w":512},{"gpu_bytes":524288,"h":256,"id":"fx_combat","refs":1,"source":"import","w":512},{"gpu_bytes":262144,"h":256,"id":"ui_main","refs":1,"source":"import","w":256},{"gpu_bytes":2097152,"h":512,"id":"biome_meadow","refs":1,"source":"import","w":1024}],"resident_gpu_bytes":6029312}
+[App] battle t=63.8 paused=false ended=false players=5 enemies=2 gold=29
+[App] audio={"active_sfx":0,"active_ui":0,"attenuated_offscreen":0,"cluster_events":0,"cluster_lowered":0,"dropped_gap":11,"dropped_group":50,"dropped_max":0,"dropped_offscreen":0,"dropped_voices":0,"duck_db":0.0,"load_errors":[],"load_ms":419,"missing":0,"music":"","paused":false,"peak_voices":3,"played":118,"resident_sfx_bytes":206800,"sfx_duck_events":5,"sfx_ducked":3,"stolen":0,"suspended":false,"volumes":{"master":1.0,"music":0.8,"sfx":1.0}}
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"
+Leaked instance: GDScriptNativeClass:9223372052742800278 - Reference count: 1
+Leaked instance: GDScript:9223372100742415985 - Reference count: 2
+Leaked instance: RefCounted:9223372118761146299 - Reference count: 1
+Leaked instance: RefCounted:9223372118861809601 - Reference count: 1
+Hint: Leaked instances typically happen when nodes are removed from the scene tree (with `remove_child()`) but not freed (with `free()` or `queue_free()`).
+Orphan StringName: aura_mul (static: 0, total: 5)
+Orphan StringName: "src/gameplay/battle_sim.gd".Unit (static: 0, total: 1)
+Orphan StringName: summon_t (static: 0, total: 5)
+Orphan StringName: hp_max (static: 0, total: 5)
+Orphan StringName: anim_set (static: 0, total: 5)
+Orphan StringName: state (static: 0, total: 5)
+Orphan StringName: alive (static: 0, total: 5)
+Orphan StringName: atk (static: 0, total: 5)
+Orphan StringName: anim_t (static: 0, total: 5)
+Orphan StringName: w_base (static: 0, total: 5)
+Orphan StringName: def (static: 0, total: 4)
+Orphan StringName: buff_t (static: 0, total: 5)
+Orphan StringName: dead_t (static: 0, total: 5)
+Orphan StringName: buff_mul (static: 0, total: 5)
+Orphan StringName: hp (static: 0, total: 5)
+Orphan StringName: id (static: 0, total: 5)
+Orphan StringName: kb (static: 0, total: 5)
+Orphan StringName: lane_y (static: 0, total: 5)
+Orphan StringName: is_boss (static: 0, total: 5)
+Orphan StringName: contact (static: 0, total: 5)
+Orphan StringName: Unit (static: 0, total: 1)
+Orphan StringName: is_hero (static: 0, total: 5)
+Orphan StringName: flash (static: 0, total: 5)
+Orphan StringName: uid (static: 0, total: 5)
+Orphan StringName: x (static: 0, total: 5)
+Orphan StringName: dying (static: 0, total: 5)
+Orphan StringName: wave_tag (static: 0, total: 5)
+Orphan StringName: w_target (static: 0, total: 5)
+Orphan StringName: RefCounted (static: 1, total: 2)
+Orphan StringName: atk_cd (static: 0, total: 5)
+Orphan StringName: invuln (static: 0, total: 5)
+Orphan StringName: side (static: 0, total: 5)
+Orphan StringName: in_lane (static: 0, total: 5)
+Orphan StringName: windup (static: 0, total: 5)
+StringName: 34 unclaimed string names at exit.
+WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

@@ -1,0 +1,19 @@
+{
+ "checks": {
+  "write_music_applied": true,
+  "write_save_has_values": true,
+  "write_sfx_muted": true
+ },
+ "mode": "settings_write",
+ "pass": true,
+ "values": {
+  "saved_settings": {
+   "fps_cap": 60.0,
+   "music": 0.3,
+   "screen_shake": true,
+   "sfx": 0.0,
+   "show_damage": true
+  },
+  "sfx_plays_total": 0
+ }
+}

@@ -1,0 +1,66 @@
+{
+ "tag": "pa",
+ "rule": "log",
+ "recordings": [
+  {
+   "key": "r08_s23",
+   "log_format": 2,
+   "block_frames": 4096,
+   "clock_offset_frames": -444,
+   "clock_offset_agreement": 1.0,
+   "diagnostic_chunk_moves": [],
+   "mix_rate": 44100,
+   "cues_sfx": 131,
+   "envelope_corr_10ms": 0.994,
+   "top_peaks": [
+    {
+     "t": 28.18,
+     "stem_db": -3.51,
+     "render_db": -3.51,
+     "diff_db": 0.0
+    },
+    {
+     "t": 16.082,
+     "stem_db": -4.31,
+     "render_db": -4.38,
+     "diff_db": -0.07
+    },
+    {
+     "t": 42.282,
+     "stem_db": -4.36,
+     "render_db": -3.85,
+     "diff_db": 0.51
+    },
+    {
+     "t": 45.094,
+     "stem_db": -5.05,
+     "render_db": -7.63,
+     "diff_db": -2.58
+    },
+    {
+     "t": 38.557,
+     "stem_db": -6.15,
+     "render_db": -6.15,
+     "diff_db": 0.0
+    }
+   ],
+   "max_abs_peak_diff_db": 2.58,
+   "stem_peak_db": -3.51,
+   "render_peak_db": -3.51,
+   "master_peak_db": -3.52,
+   "master_clipped": 0,
+   "prelimiter_estimate_peak_db": -3.54,
+   "rule_logged": {
+    "cluster_events": 2,
+    "cluster_lowered": 2,
+    "retro_logged": 2,
+    "exempt_touched": 0
+   }
+  }
+ ],
+ "worst_top_peak_diff_db": 2.58,
+ "source": "QOA as imported by Godot",
+ "wav_fallback_files": [
+  "assets/audio/sfx/explosion.wav"
+ ]
+}

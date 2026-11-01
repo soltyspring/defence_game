@@ -1,0 +1,1250 @@
+{
+ "tag": "pa",
+ "recordings": {
+  "r02_s11": {
+   "deploy": {
+    "plays": 10,
+    "per_min": 10.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "skill_slam": {
+    "plays": 5,
+    "per_min": 5.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_mold": {
+    "plays": 23,
+    "per_min": 23.0,
+    "files": 3,
+    "R1_max_1s": 2,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 15,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "death_enemy": {
+    "plays": 12,
+    "per_min": 12.0,
+    "files": 2,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 4,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "gold_tick": {
+    "plays": 6,
+    "per_min": 6.0,
+    "files": 2,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "wave_incoming": {
+    "plays": 2,
+    "per_min": 2.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_bread": {
+    "plays": 26,
+    "per_min": 26.0,
+    "files": 3,
+    "R1_max_1s": 3,
+    "R2_max_same_file_10s": 7,
+    "pairs_2s": 20,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "wave_cleared": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "shoot_arrow": {
+    "plays": 10,
+    "per_min": 10.0,
+    "files": 2,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 4,
+    "pairs_2s": 8,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_base_mold": {
+    "plays": 2,
+    "per_min": 2.0,
+    "files": 1,
+    "R1_max_1s": 2,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 1,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 100.0
+   },
+   "death_ally": {
+    "plays": 4,
+    "per_min": 4.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   }
+  },
+  "r02_s23": {
+   "deploy": {
+    "plays": 10,
+    "per_min": 10.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "skill_slam": {
+    "plays": 5,
+    "per_min": 5.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_mold": {
+    "plays": 26,
+    "per_min": 26.0,
+    "files": 3,
+    "R1_max_1s": 2,
+    "R2_max_same_file_10s": 4,
+    "pairs_2s": 19,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "death_enemy": {
+    "plays": 12,
+    "per_min": 12.0,
+    "files": 2,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 4,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "gold_tick": {
+    "plays": 8,
+    "per_min": 8.0,
+    "files": 2,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "wave_incoming": {
+    "plays": 2,
+    "per_min": 2.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_bread": {
+    "plays": 20,
+    "per_min": 20.0,
+    "files": 3,
+    "R1_max_1s": 3,
+    "R2_max_same_file_10s": 4,
+    "pairs_2s": 13,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "wave_cleared": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "shoot_arrow": {
+    "plays": 10,
+    "per_min": 10.0,
+    "files": 2,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 4,
+    "pairs_2s": 8,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_base_mold": {
+    "plays": 2,
+    "per_min": 2.0,
+    "files": 1,
+    "R1_max_1s": 2,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 1,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 100.0
+   },
+   "death_ally": {
+    "plays": 4,
+    "per_min": 4.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   }
+  },
+  "r02_s37": {
+   "deploy": {
+    "plays": 10,
+    "per_min": 10.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "skill_slam": {
+    "plays": 5,
+    "per_min": 5.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_mold": {
+    "plays": 24,
+    "per_min": 24.0,
+    "files": 3,
+    "R1_max_1s": 2,
+    "R2_max_same_file_10s": 4,
+    "pairs_2s": 17,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "death_enemy": {
+    "plays": 11,
+    "per_min": 11.0,
+    "files": 2,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 4,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "gold_tick": {
+    "plays": 5,
+    "per_min": 5.0,
+    "files": 2,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "wave_incoming": {
+    "plays": 2,
+    "per_min": 2.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_bread": {
+    "plays": 21,
+    "per_min": 21.0,
+    "files": 3,
+    "R1_max_1s": 3,
+    "R2_max_same_file_10s": 4,
+    "pairs_2s": 13,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "wave_cleared": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "shoot_arrow": {
+    "plays": 10,
+    "per_min": 10.0,
+    "files": 2,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 4,
+    "pairs_2s": 8,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_base_mold": {
+    "plays": 2,
+    "per_min": 2.0,
+    "files": 1,
+    "R1_max_1s": 2,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 1,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 100.0
+   },
+   "death_ally": {
+    "plays": 4,
+    "per_min": 4.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   }
+  },
+  "r06_s11": {
+   "worker_buy": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "deploy": {
+    "plays": 13,
+    "per_min": 13.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "skill_slam": {
+    "plays": 5,
+    "per_min": 5.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_mold": {
+    "plays": 37,
+    "per_min": 37.0,
+    "files": 3,
+    "R1_max_1s": 3,
+    "R2_max_same_file_10s": 6,
+    "pairs_2s": 33,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_bread": {
+    "plays": 27,
+    "per_min": 27.0,
+    "files": 3,
+    "R1_max_1s": 2,
+    "R2_max_same_file_10s": 5,
+    "pairs_2s": 21,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "death_enemy": {
+    "plays": 10,
+    "per_min": 10.0,
+    "files": 2,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 1,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "gold_tick": {
+    "plays": 9,
+    "per_min": 9.0,
+    "files": 2,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 1,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "shoot_spit": {
+    "plays": 3,
+    "per_min": 3.0,
+    "files": 3,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 1,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "wave_incoming": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "death_ally": {
+    "plays": 2,
+    "per_min": 2.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "wave_cleared": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   }
+  },
+  "r06_s23": {
+   "worker_buy": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "deploy": {
+    "plays": 13,
+    "per_min": 13.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "skill_slam": {
+    "plays": 5,
+    "per_min": 5.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_mold": {
+    "plays": 37,
+    "per_min": 37.0,
+    "files": 3,
+    "R1_max_1s": 3,
+    "R2_max_same_file_10s": 8,
+    "pairs_2s": 33,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_bread": {
+    "plays": 26,
+    "per_min": 26.0,
+    "files": 3,
+    "R1_max_1s": 2,
+    "R2_max_same_file_10s": 4,
+    "pairs_2s": 21,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "death_enemy": {
+    "plays": 10,
+    "per_min": 10.0,
+    "files": 2,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 1,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "gold_tick": {
+    "plays": 8,
+    "per_min": 8.0,
+    "files": 2,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "shoot_spit": {
+    "plays": 3,
+    "per_min": 3.0,
+    "files": 3,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 1,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "wave_incoming": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "death_ally": {
+    "plays": 2,
+    "per_min": 2.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "wave_cleared": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   }
+  },
+  "r06_s37": {
+   "worker_buy": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "deploy": {
+    "plays": 13,
+    "per_min": 13.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "skill_slam": {
+    "plays": 5,
+    "per_min": 5.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_mold": {
+    "plays": 34,
+    "per_min": 34.0,
+    "files": 3,
+    "R1_max_1s": 3,
+    "R2_max_same_file_10s": 5,
+    "pairs_2s": 30,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_bread": {
+    "plays": 29,
+    "per_min": 29.0,
+    "files": 3,
+    "R1_max_1s": 2,
+    "R2_max_same_file_10s": 5,
+    "pairs_2s": 24,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "death_enemy": {
+    "plays": 9,
+    "per_min": 9.0,
+    "files": 2,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 1,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "gold_tick": {
+    "plays": 7,
+    "per_min": 7.0,
+    "files": 2,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "shoot_spit": {
+    "plays": 3,
+    "per_min": 3.0,
+    "files": 3,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 1,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "wave_incoming": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "death_ally": {
+    "plays": 2,
+    "per_min": 2.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "wave_cleared": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   }
+  },
+  "r08_s11": {
+   "worker_buy": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "deploy": {
+    "plays": 13,
+    "per_min": 13.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "skill_slam": {
+    "plays": 5,
+    "per_min": 5.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "death_enemy": {
+    "plays": 11,
+    "per_min": 11.0,
+    "files": 2,
+    "R1_max_1s": 3,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 6,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "gold_tick": {
+    "plays": 8,
+    "per_min": 8.0,
+    "files": 2,
+    "R1_max_1s": 3,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 5,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "wave_incoming": {
+    "plays": 2,
+    "per_min": 2.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_mold": {
+    "plays": 8,
+    "per_min": 8.0,
+    "files": 3,
+    "R1_max_1s": 3,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 5,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_bread": {
+    "plays": 42,
+    "per_min": 42.0,
+    "files": 3,
+    "R1_max_1s": 3,
+    "R2_max_same_file_10s": 8,
+    "pairs_2s": 37,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "shoot_spit": {
+    "plays": 40,
+    "per_min": 40.0,
+    "files": 3,
+    "R1_max_1s": 3,
+    "R2_max_same_file_10s": 10,
+    "pairs_2s": 38,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "explosion": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "death_ally": {
+    "plays": 2,
+    "per_min": 2.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "wave_cleared": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   }
+  },
+  "r08_s23": {
+   "worker_buy": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "deploy": {
+    "plays": 13,
+    "per_min": 13.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "skill_slam": {
+    "plays": 5,
+    "per_min": 5.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "death_enemy": {
+    "plays": 11,
+    "per_min": 11.0,
+    "files": 2,
+    "R1_max_1s": 2,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 5,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "wave_incoming": {
+    "plays": 2,
+    "per_min": 2.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_mold": {
+    "plays": 9,
+    "per_min": 9.0,
+    "files": 3,
+    "R1_max_1s": 3,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 6,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_bread": {
+    "plays": 41,
+    "per_min": 41.0,
+    "files": 3,
+    "R1_max_1s": 3,
+    "R2_max_same_file_10s": 8,
+    "pairs_2s": 37,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "shoot_spit": {
+    "plays": 39,
+    "per_min": 39.0,
+    "files": 3,
+    "R1_max_1s": 3,
+    "R2_max_same_file_10s": 9,
+    "pairs_2s": 37,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "gold_tick": {
+    "plays": 7,
+    "per_min": 7.0,
+    "files": 2,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 3,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "explosion": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "death_ally": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "wave_cleared": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   }
+  },
+  "r08_s37": {
+   "worker_buy": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "deploy": {
+    "plays": 13,
+    "per_min": 13.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "skill_slam": {
+    "plays": 5,
+    "per_min": 5.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "death_enemy": {
+    "plays": 10,
+    "per_min": 10.0,
+    "files": 2,
+    "R1_max_1s": 2,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 5,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "wave_incoming": {
+    "plays": 2,
+    "per_min": 2.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_mold": {
+    "plays": 10,
+    "per_min": 10.0,
+    "files": 3,
+    "R1_max_1s": 2,
+    "R2_max_same_file_10s": 3,
+    "pairs_2s": 4,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "hit_bread": {
+    "plays": 44,
+    "per_min": 44.0,
+    "files": 3,
+    "R1_max_1s": 3,
+    "R2_max_same_file_10s": 10,
+    "pairs_2s": 41,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "shoot_spit": {
+    "plays": 59,
+    "per_min": 59.0,
+    "files": 3,
+    "R1_max_1s": 3,
+    "R2_max_same_file_10s": 9,
+    "pairs_2s": 58,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "gold_tick": {
+    "plays": 7,
+    "per_min": 7.0,
+    "files": 2,
+    "R1_max_1s": 2,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 5,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "explosion": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "death_ally": {
+    "plays": 2,
+    "per_min": 2.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 2,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   },
+   "wave_cleared": {
+    "plays": 1,
+    "per_min": 1.0,
+    "files": 1,
+    "R1_max_1s": 1,
+    "R2_max_same_file_10s": 1,
+    "pairs_2s": 0,
+    "R3_identical_pct": 0.0,
+    "R4_same_file_pct": 0.0
+   }
+  }
+ },
+ "fails": [],
+ "summary": {
+  "deploy": {
+   "plays": [
+    10,
+    13
+   ],
+   "per_min": [
+    10.0,
+    13.0
+   ],
+   "files": [
+    1,
+    1
+   ],
+   "R1_max_1s": [
+    1,
+    1
+   ],
+   "R2_max_same_file_10s": [
+    3,
+    3
+   ],
+   "pairs_2s": [
+    0,
+    0
+   ],
+   "R3_identical_pct": [
+    0.0,
+    0.0
+   ],
+   "R4_same_file_pct": [
+    0.0,
+    0.0
+   ]
+  },
+  "hit_mold": {
+   "plays": [
+    8,
+    37
+   ],
+   "per_min": [
+    8.0,
+    37.0
+   ],
+   "files": [
+    3,
+    3
+   ],
+   "R1_max_1s": [
+    2,
+    3
+   ],
+   "R2_max_same_file_10s": [
+    2,
+    8
+   ],
+   "pairs_2s": [
+    4,
+    33
+   ],
+   "R3_identical_pct": [
+    0.0,
+    0.0
+   ],
+   "R4_same_file_pct": [
+    0.0,
+    0.0
+   ]
+  },
+  "death_enemy": {
+   "plays": [
+    9,
+    12
+   ],
+   "per_min": [
+    9.0,
+    12.0
+   ],
+   "files": [
+    2,
+    2
+   ],
+   "R1_max_1s": [
+    1,
+    3
+   ],
+   "R2_max_same_file_10s": [
+    2,
+    3
+   ],
+   "pairs_2s": [
+    1,
+    6
+   ],
+   "R3_identical_pct": [
+    0.0,
+    0.0
+   ],
+   "R4_same_file_pct": [
+    0.0,
+    0.0
+   ]
+  },
+  "hit_bread": {
+   "plays": [
+    20,
+    44
+   ],
+   "per_min": [
+    20.0,
+    44.0
+   ],
+   "files": [
+    3,
+    3
+   ],
+   "R1_max_1s": [
+    2,
+    3
+   ],
+   "R2_max_same_file_10s": [
+    4,
+    10
+   ],
+   "pairs_2s": [
+    13,
+    41
+   ],
+   "R3_identical_pct": [
+    0.0,
+    0.0
+   ],
+   "R4_same_file_pct": [
+    0.0,
+    0.0
+   ]
+  },
+  "shoot_arrow": {
+   "plays": [
+    10,
+    10
+   ],
+   "per_min": [
+    10.0,
+    10.0
+   ],
+   "files": [
+    2,
+    2
+   ],
+   "R1_max_1s": [
+    1,
+    1
+   ],
+   "R2_max_same_file_10s": [
+    4,
+    4
+   ],
+   "pairs_2s": [
+    8,
+    8
+   ],
+   "R3_identical_pct": [
+    0.0,
+    0.0
+   ],
+   "R4_same_file_pct": [
+    0.0,
+    0.0
+   ]
+  },
+  "shoot_spit": {
+   "plays": [
+    3,
+    59
+   ],
+   "per_min": [
+    3.0,
+    59.0
+   ],
+   "files": [
+    3,
+    3
+   ],
+   "R1_max_1s": [
+    1,
+    3
+   ],
+   "R2_max_same_file_10s": [
+    1,
+    10
+   ],
+   "pairs_2s": [
+    1,
+    58
+   ],
+   "R3_identical_pct": [
+    0.0,
+    0.0
+   ],
+   "R4_same_file_pct": [
+    0.0,
+    0.0
+   ]
+  }
+ }
+}

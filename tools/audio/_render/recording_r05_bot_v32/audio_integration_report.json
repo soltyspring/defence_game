@@ -1,0 +1,124 @@
+{
+ "audio_children": [
+  19,
+  19,
+  19
+ ],
+ "audio_snapshot": {
+  "active_sfx": 0,
+  "active_ui": 0,
+  "attenuated_offscreen": 237,
+  "dropped_gap": 272,
+  "dropped_max": 0,
+  "dropped_offscreen": 0,
+  "dropped_voices": 0,
+  "duck_db": 0.0,
+  "end_hush_db": -14.0,
+  "load_errors": [],
+  "load_ms": 367,
+  "missing": 0,
+  "music": "",
+  "paused": false,
+  "peak_voices": 6,
+  "played": 985,
+  "resident_sfx_bytes": 197768,
+  "stolen": 0,
+  "volumes": {
+   "master": 1.0,
+   "music": 0.8,
+   "sfx": 1.0
+  }
+ },
+ "battles_ended": 1,
+ "battles_started": 1,
+ "bridge_derived": {
+  "alert": false,
+  "base": false,
+  "command": false,
+  "death": false,
+  "gold": true,
+  "hero": false,
+  "milestone": true,
+  "ui": true,
+  "upgrade": true
+ },
+ "commands": {
+  "deploy": 0,
+  "deploy_unaffordable": 0,
+  "skill": 0,
+  "worker": 0
+ },
+ "cue_counts": {
+  "boss_incoming": 1,
+  "death_ally": 72,
+  "death_enemy": 52,
+  "deploy": 74,
+  "gold_tick": 47,
+  "hero_death": 3,
+  "hero_respawn": 2,
+  "hit_base": 32,
+  "hit_base_mold": 2,
+  "hit_bread": 300,
+  "hit_mold": 236,
+  "shoot_spit": 137,
+  "skill_rally": 7,
+  "skill_slam": 9,
+  "stinger_defeat": 1,
+  "wave_cleared": 3,
+  "wave_incoming": 3,
+  "worker_buy": 4
+ },
+ "engine_truth": {
+  "deployed": 74,
+  "hero_deaths": 3,
+  "kills": 62,
+  "skills_cast": 16,
+  "workers_bought": 4
+ },
+ "errors": [],
+ "events_has_sfx": true,
+ "focus": {},
+ "max_active_sfx": 6,
+ "max_active_ui": 0,
+ "max_music_playing": 1,
+ "music_timeline": [
+  {
+   "m": "music_battle",
+   "t": 0.1
+  },
+  {
+   "m": "",
+   "t": 291.3
+  }
+ ],
+ "pause": {},
+ "phases": [],
+ "recording": {
+  "cues": 984,
+  "seconds": 295.33
+ },
+ "results": [
+  {
+   "time": 289.566666666732,
+   "won": false
+  }
+ ],
+ "same_frame_duplicates": [],
+ "screens": [
+  "battle",
+  "result"
+ ],
+ "switch_check": {},
+ "t": 295.8,
+ "toasts": {
+  "boss_incoming": 2,
+  "hero_dead": 3,
+  "wave_incoming": 3
+ },
+ "wave_cleared_events": 3,
+ "wave_cleared_index": [
+  1,
+  2,
+  4
+ ]
+}

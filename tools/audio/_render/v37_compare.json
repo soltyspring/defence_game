@@ -1,0 +1,210 @@
+{
+ "res": {
+  "death_ally": {
+   "D1": true,
+   "D2": true
+  },
+  "hit_base": {
+   "D1": true,
+   "D2": true
+  }
+ },
+ "worse": [
+  [
+   "wave_cleared",
+   3.6,
+   7.1
+  ],
+  [
+   "hit_base_mold",
+   10.7,
+   14.0
+  ]
+ ],
+ "mix": {
+  "base": [
+   {
+    "s": 11,
+    "lufs": -21.8,
+    "peak": -3.51,
+    "clip": 0,
+    "buried": 6.2,
+    "risk": 5.1,
+    "fatigue": [],
+    "da": 4,
+    "hb": 0,
+    "duck_events": null,
+    "ducked": null,
+    "top": {
+     "hit_mold": {
+      "per_min": 29.0,
+      "max_1s": 3,
+      "gaps_lt_150ms": 0
+     },
+     "hit_bread": {
+      "per_min": 23.0,
+      "max_1s": 2,
+      "gaps_lt_150ms": 0
+     },
+     "death_enemy": {
+      "per_min": 13.0,
+      "max_1s": 1,
+      "gaps_lt_150ms": 0
+     }
+    }
+   },
+   {
+    "s": 23,
+    "lufs": -22.1,
+    "peak": -2.71,
+    "clip": 0,
+    "buried": 7.6,
+    "risk": 5.9,
+    "fatigue": [],
+    "da": 4,
+    "hb": 0,
+    "duck_events": null,
+    "ducked": null,
+    "top": {
+     "hit_mold": {
+      "per_min": 26.0,
+      "max_1s": 2,
+      "gaps_lt_150ms": 0
+     },
+     "hit_bread": {
+      "per_min": 20.0,
+      "max_1s": 2,
+      "gaps_lt_150ms": 0
+     },
+     "death_enemy": {
+      "per_min": 12.0,
+      "max_1s": 1,
+      "gaps_lt_150ms": 0
+     }
+    }
+   },
+   {
+    "s": 37,
+    "lufs": -21.9,
+    "peak": -1.93,
+    "clip": 0,
+    "buried": 8.6,
+    "risk": 5.5,
+    "fatigue": [],
+    "da": 4,
+    "hb": 0,
+    "duck_events": null,
+    "ducked": null,
+    "top": {
+     "hit_mold": {
+      "per_min": 31.0,
+      "max_1s": 2,
+      "gaps_lt_150ms": 0
+     },
+     "hit_bread": {
+      "per_min": 18.0,
+      "max_1s": 2,
+      "gaps_lt_150ms": 0
+     },
+     "death_enemy": {
+      "per_min": 12.0,
+      "max_1s": 1,
+      "gaps_lt_150ms": 0
+     }
+    }
+   }
+  ],
+  "after": [
+   {
+    "s": 11,
+    "lufs": -22.0,
+    "peak": -3.49,
+    "clip": 0,
+    "buried": 7.8,
+    "risk": 4.6,
+    "fatigue": [],
+    "da": 4,
+    "hb": 0,
+    "duck_events": 5,
+    "ducked": 2,
+    "top": {
+     "hit_mold": {
+      "per_min": 27.0,
+      "max_1s": 2,
+      "gaps_lt_150ms": 0
+     },
+     "hit_bread": {
+      "per_min": 20.0,
+      "max_1s": 3,
+      "gaps_lt_150ms": 0
+     },
+     "death_enemy": {
+      "per_min": 12.0,
+      "max_1s": 1,
+      "gaps_lt_150ms": 0
+     }
+    }
+   },
+   {
+    "s": 23,
+    "lufs": -22.0,
+    "peak": -2.41,
+    "clip": 0,
+    "buried": 6.2,
+    "risk": 6.2,
+    "fatigue": [],
+    "da": 4,
+    "hb": 0,
+    "duck_events": 5,
+    "ducked": 4,
+    "top": {
+     "hit_mold": {
+      "per_min": 27.0,
+      "max_1s": 2,
+      "gaps_lt_150ms": 0
+     },
+     "hit_bread": {
+      "per_min": 21.0,
+      "max_1s": 3,
+      "gaps_lt_150ms": 0
+     },
+     "death_enemy": {
+      "per_min": 12.0,
+      "max_1s": 1,
+      "gaps_lt_150ms": 0
+     }
+    }
+   },
+   {
+    "s": 37,
+    "lufs": -22.0,
+    "peak": -3.58,
+    "clip": 0,
+    "buried": 7.7,
+    "risk": 6.0,
+    "fatigue": [],
+    "da": 4,
+    "hb": 0,
+    "duck_events": 5,
+    "ducked": 4,
+    "top": {
+     "hit_mold": {
+      "per_min": 26.0,
+      "max_1s": 2,
+      "gaps_lt_150ms": 0
+     },
+     "hit_bread": {
+      "per_min": 24.0,
+      "max_1s": 3,
+      "gaps_lt_150ms": 0
+     },
+     "death_enemy": {
+      "per_min": 11.0,
+      "max_1s": 1,
+      "gaps_lt_150ms": 0
+     }
+    }
+   }
+  ]
+ }
+}

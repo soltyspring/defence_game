@@ -1,0 +1,517 @@
+DETACHED_START 2026-11-01T02:37:54 pid=40368 args= py=tools/audio/same_bg_ab.py --before=64a95c6 --tag=rb --rounds=r02,r06,r08 --seeds=11,23,37 --out=docs/audio/same_bg_ab_v38.json; tools/audio/phone_check.py --rec=tools/audio/_render/recording_rd_r02_s11 --label=v3.8-rd_r02_s11 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json; tools/audio/mix_report.py --rec=tools/audio/_render/recording_rd_r02_s11 --no-publish; tools/audio/phone_check.py --rec=tools/audio/_render/recording_rd_r02_s23 --label=v3.8-rd_r02_s23 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json; tools/audio/mix_report.py --rec=tools/audio/_render/recording_rd_r02_s23 --no-publish; tools/audio/phone_check.py --rec=tools/audio/_render/recording_rd_r02_s37 --label=v3.8-rd_r02_s37 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json; tools/audio/mix_report.py --rec=tools/audio/_render/recording_rd_r02_s37 --no-publish; tools/audio/phone_check.py --rec=tools/audio/_render/recording_rd_r06_s11 --label=v3.8-rd_r06_s11 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json; tools/audio/mix_report.py --rec=tools/audio/_render/recording_rd_r06_s11 --no-publish; tools/audio/phone_check.py --rec=tools/audio/_render/recording_rd_r06_s23 --label=v3.8-rd_r06_s23 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json; tools/audio/mix_report.py --rec=tools/audio/_render/recording_rd_r06_s23 --no-publish; tools/audio/phone_check.py --rec=tools/audio/_render/recording_rd_r06_s37 --label=v3.8-rd_r06_s37 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json; tools/audio/mix_report.py --rec=tools/audio/_render/recording_rd_r06_s37 --no-publish; tools/audio/phone_check.py --rec=tools/audio/_render/recording_rd_r08_s11 --label=v3.8-rd_r08_s11 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json; tools/audio/mix_report.py --rec=tools/audio/_render/recording_rd_r08_s11 --no-publish; tools/audio/phone_check.py --rec=tools/audio/_render/recording_rd_r08_s23 --label=v3.8-rd_r08_s23 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json; tools/audio/mix_report.py --rec=tools/audio/_render/recording_rd_r08_s23 --no-publish; tools/audio/phone_check.py --rec=tools/audio/_render/recording_rd_r08_s37 --label=v3.8-rd_r08_s37 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json; tools/audio/mix_report.py --rec=tools/audio/_render/recording_rd_r08_s37 --no-publish; tools/audio/phone_check.py --rec=tools/audio/_render/recording_rb_r02_s11 --label=v3.8-rb_r02_s11 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json; tools/audio/mix_report.py --rec=tools/audio/_render/recording_rb_r02_s11 --no-publish; tools/audio/phone_check.py --rec=tools/audio/_render/recording_rb_r02_s23 --label=v3.8-rb_r02_s23 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json; tools/audio/mix_report.py --rec=tools/audio/_render/recording_rb_r02_s23 --no-publish; tools/audio/phone_check.py --rec=tools/audio/_render/recording_rb_r02_s37 --label=v3.8-rb_r02_s37 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json; tools/audio/mix_report.py --rec=tools/audio/_render/recording_rb_r02_s37 --no-publish; tools/audio/phone_check.py --rec=tools/audio/_render/recording_rb_r06_s11 --label=v3.8-rb_r06_s11 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json; tools/audio/mix_report.py --rec=tools/audio/_render/recording_rb_r06_s11 --no-publish; tools/audio/phone_check.py --rec=tools/audio/_render/recording_rb_r06_s23 --label=v3.8-rb_r06_s23 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json; tools/audio/mix_report.py --rec=tools/audio/_render/recording_rb_r06_s23 --no-publish; tools/audio/phone_check.py --rec=tools/audio/_render/recording_rb_r06_s37 --label=v3.8-rb_r06_s37 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json; tools/audio/mix_report.py --rec=tools/audio/_render/recording_rb_r06_s37 --no-publish; tools/audio/phone_check.py --rec=tools/audio/_render/recording_rb_r08_s11 --label=v3.8-rb_r08_s11 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json; tools/audio/mix_report.py --rec=tools/audio/_render/recording_rb_r08_s11 --no-publish; tools/audio/phone_check.py --rec=tools/audio/_render/recording_rb_r08_s23 --label=v3.8-rb_r08_s23 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json; tools/audio/mix_report.py --rec=tools/audio/_render/recording_rb_r08_s23 --no-publish; tools/audio/phone_check.py --rec=tools/audio/_render/recording_rb_r08_s37 --label=v3.8-rb_r08_s37 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json; tools/audio/mix_report.py --rec=tools/audio/_render/recording_rb_r08_s37 --no-publish
+heavy_run: lock acquired for 05-audio-v38-analysis after 1671 s
+=== python tools/audio/same_bg_ab.py --before=64a95c6 --tag=rb --rounds=r02,r06,r08 --seeds=11,23,37 --out=docs/audio/same_bg_ab_v38.json
+r02_s11: render/recorded envelope corr 0.828, bg A -31.55 vs B -31.55 LUFS, danger events 4, mix {'A_lufs': -24.75, 'B_lufs': -24.74, 'A_peak_dbfs': -3.7, 'B_peak_dbfs': -3.14}
+   hit_bread      A masked   8.8% p10   1.9 (3f) | B masked   8.8% p10   1.5 (3f) | diff +0.0 pts
+   hit_mold       A masked   7.0% p10   3.3 (3f) | B masked   7.0% p10   3.3 (3f) | diff +0.0 pts
+   death_ally     A masked   5.3% p10   4.9 (1f) | B masked   5.3% p10   5.1 (1f) | diff +0.0 pts
+   death_enemy    A masked   8.9% p10   1.4 (1f) | B masked   8.9% p10   1.4 (2f) | diff +0.0 pts
+   deploy         A masked   5.4% p10   4.2 (1f) | B masked   5.4% p10   4.4 (1f) | diff +0.0 pts
+   skill_slam     A masked   5.4% p10   4.0 (1f) | B masked   3.6% p10   3.6 (1f) | diff -1.8 pts
+   skill_rally    A masked   8.9% p10   3.1 (1f) | B masked   8.9% p10   3.0 (1f) | diff +0.0 pts
+   skill_barrage  A masked   3.6% p10   3.2 (1f) | B masked   5.5% p10   3.1 (1f) | diff +1.9 pts
+   skill_heal     A masked   7.1% p10   3.6 (1f) | B masked   7.1% p10   3.0 (1f) | diff +0.0 pts
+   wave_incoming  A masked   5.4% p10   5.1 (1f) | B masked   7.1% p10   4.4 (1f) | diff +1.7 pts
+   boss_incoming  A masked   0.0% p10   9.4 (1f) | B masked   0.0% p10   9.1 (1f) | diff +0.0 pts
+   wave_cleared   A masked   3.6% p10   5.9 (1f) | B masked   3.6% p10   6.2 (1f) | diff +0.0 pts
+   ui_confirm     A masked   3.5% p10   2.7 (1f) | B masked   3.5% p10   3.0 (1f) | diff +0.0 pts
+   ui_error       A masked   7.0% p10   2.9 (1f) | B masked   7.0% p10   2.6 (1f) | diff +0.0 pts
+   hit_base       A masked   3.5% p10   6.1 (1f) | B masked   3.5% p10   6.1 (1f) | diff +0.0 pts
+   hit_base_mold  A masked   8.8% p10   0.5 (1f) | B masked   8.8% p10   0.2 (1f) | diff +0.0 pts
+r02_s23: render/recorded envelope corr 0.752, bg A -31.45 vs B -31.48 LUFS, danger events 4, mix {'A_lufs': -24.66, 'B_lufs': -24.68, 'A_peak_dbfs': -4.3, 'B_peak_dbfs': -4.45}
+   hit_bread      A masked  14.5% p10  -1.8 (3f) | B masked  16.4% p10  -2.2 (3f) | diff +1.9 pts
+   hit_mold       A masked  23.6% p10  -3.0 (3f) | B masked  23.6% p10  -2.9 (3f) | diff +0.0 pts
+   death_ally     A masked   5.5% p10   2.9 (1f) | B masked   5.5% p10   3.0 (1f) | diff +0.0 pts
+   death_enemy    A masked  14.5% p10  -3.7 (1f) | B masked  14.5% p10  -3.4 (2f) | diff +0.0 pts
+   deploy         A masked   5.5% p10   1.8 (1f) | B masked   5.5% p10   2.0 (1f) | diff +0.0 pts
+   skill_slam     A masked  12.7% p10  -1.1 (1f) | B masked  10.9% p10  -0.8 (1f) | diff -1.8 pts
+   skill_rally    A masked   3.7% p10   2.4 (1f) | B masked   3.7% p10   2.4 (1f) | diff +0.0 pts
+   skill_barrage  A masked   7.4% p10   3.7 (1f) | B masked   7.4% p10   3.7 (1f) | diff +0.0 pts
+   skill_heal     A masked   1.9% p10   5.3 (1f) | B masked   1.9% p10   5.3 (1f) | diff +0.0 pts
+   wave_incoming  A masked   1.9% p10   4.9 (1f) | B masked   1.9% p10   4.7 (1f) | diff +0.0 pts
+   boss_incoming  A masked   0.0% p10  11.4 (1f) | B masked   0.0% p10  11.4 (1f) | diff +0.0 pts
+   wave_cleared   A masked   5.5% p10   1.5 (1f) | B masked   7.3% p10   1.5 (1f) | diff +1.8 pts
+   ui_confirm     A masked  14.5% p10  -2.1 (1f) | B masked  14.5% p10  -2.0 (1f) | diff +0.0 pts
+   ui_error       A masked   9.1% p10   0.5 (1f) | B masked   9.1% p10   0.8 (1f) | diff +0.0 pts
+   hit_base       A masked   5.5% p10   2.1 (1f) | B masked   5.5% p10   2.1 (1f) | diff +0.0 pts
+   hit_base_mold  A masked  16.4% p10  -3.1 (1f) | B masked  16.4% p10  -2.8 (1f) | diff +0.0 pts
+r02_s37: render/recorded envelope corr 0.674, bg A -31.37 vs B -31.41 LUFS, danger events 4, mix {'A_lufs': -24.57, 'B_lufs': -24.6, 'A_peak_dbfs': -2.56, 'B_peak_dbfs': -2.56}
+   hit_bread      A masked   5.6% p10   1.6 (3f) | B masked   5.6% p10   1.9 (3f) | diff +0.0 pts
+   hit_mold       A masked   7.4% p10   1.7 (3f) | B masked   7.4% p10   1.9 (3f) | diff +0.0 pts
+   death_ally     A masked   7.5% p10   1.9 (1f) | B masked   7.5% p10   2.0 (1f) | diff +0.0 pts
+   death_enemy    A masked  11.3% p10  -0.8 (1f) | B masked  11.3% p10  -0.4 (2f) | diff +0.0 pts
+   deploy         A masked   9.4% p10   1.6 (1f) | B masked   9.4% p10   1.6 (1f) | diff +0.0 pts
+   skill_slam     A masked   3.8% p10   4.3 (1f) | B masked   3.8% p10   4.3 (1f) | diff +0.0 pts
+   skill_rally    A masked   5.7% p10   1.5 (1f) | B masked   7.5% p10   1.7 (1f) | diff +1.8 pts
+   skill_barrage  A masked   3.8% p10   3.2 (1f) | B masked   3.8% p10   3.2 (1f) | diff +0.0 pts
+   skill_heal     A masked   0.0% p10   5.6 (1f) | B masked   0.0% p10   6.1 (1f) | diff +0.0 pts
+   wave_incoming  A masked   0.0% p10   7.7 (1f) | B masked   0.0% p10   8.0 (1f) | diff +0.0 pts
+   boss_incoming  A masked   0.0% p10   9.4 (1f) | B masked   0.0% p10   9.6 (1f) | diff +0.0 pts
+   wave_cleared   A masked   5.7% p10   0.6 (1f) | B masked   5.7% p10   0.7 (1f) | diff +0.0 pts
+   ui_confirm     A masked   7.5% p10   2.0 (1f) | B masked   7.5% p10   2.0 (1f) | diff +0.0 pts
+   ui_error       A masked   5.6% p10   2.5 (1f) | B masked   5.6% p10   2.5 (1f) | diff +0.0 pts
+   hit_base       A masked   3.8% p10   3.6 (1f) | B masked   3.8% p10   3.8 (1f) | diff +0.0 pts
+   hit_base_mold  A masked  18.9% p10  -3.0 (1f) | B masked  17.0% p10  -3.0 (1f) | diff -1.9 pts
+r06_s11: render/recorded envelope corr 0.748, bg A -31.48 vs B -31.47 LUFS, danger events 2, mix {'A_lufs': -24.69, 'B_lufs': -24.67, 'A_peak_dbfs': -2.23, 'B_peak_dbfs': -2.77}
+   hit_bread      A masked  22.8% p10  -2.7 (3f) | B masked  22.8% p10  -2.7 (3f) | diff +0.0 pts
+   hit_mold       A masked  19.3% p10  -2.5 (3f) | B masked  19.3% p10  -2.5 (3f) | diff +0.0 pts
+   death_ally     A masked   3.6% p10   4.0 (1f) | B masked   3.6% p10   3.8 (1f) | diff +0.0 pts
+   death_enemy    A masked  14.3% p10  -1.1 (1f) | B masked  14.3% p10  -1.0 (2f) | diff +0.0 pts
+   deploy         A masked   3.6% p10   3.7 (1f) | B masked   3.6% p10   3.8 (1f) | diff +0.0 pts
+   skill_slam     A masked  10.7% p10   0.3 (1f) | B masked  10.7% p10   0.0 (1f) | diff +0.0 pts
+   skill_rally    A masked   3.6% p10   3.6 (1f) | B masked   3.6% p10   3.6 (1f) | diff +0.0 pts
+   skill_barrage  A masked   5.5% p10   3.0 (1f) | B masked   5.5% p10   2.8 (1f) | diff +0.0 pts
+   skill_heal     A masked   3.6% p10   3.8 (1f) | B masked   3.6% p10   4.0 (1f) | diff +0.0 pts
+   wave_incoming  A masked   3.6% p10   4.0 (1f) | B masked   1.8% p10   4.1 (1f) | diff -1.8 pts
+   boss_incoming  A masked   0.0% p10  15.4 (1f) | B masked   0.0% p10  15.4 (1f) | diff +0.0 pts
+   wave_cleared   A masked   5.4% p10   2.5 (1f) | B masked   5.4% p10   2.5 (1f) | diff +0.0 pts
+   ui_confirm     A masked  10.7% p10   0.9 (1f) | B masked  10.7% p10   0.8 (1f) | diff +0.0 pts
+   ui_error       A masked  10.7% p10   0.3 (1f) | B masked  10.7% p10   0.2 (1f) | diff +0.0 pts
+   hit_base       A masked   1.8% p10   3.7 (1f) | B masked   1.8% p10   3.7 (1f) | diff +0.0 pts
+   hit_base_mold  A masked  12.5% p10  -1.2 (1f) | B masked  14.3% p10  -1.2 (1f) | diff +1.8 pts
+r06_s23: render/recorded envelope corr 0.651, bg A -31.71 vs B -31.73 LUFS, danger events 3, mix {'A_lufs': -24.87, 'B_lufs': -24.88, 'A_peak_dbfs': -3.96, 'B_peak_dbfs': -4.47}
+   hit_bread      A masked   8.8% p10   6.3 (3f) | B masked   8.8% p10   5.4 (3f) | diff +0.0 pts
+   hit_mold       A masked   7.0% p10   2.8 (3f) | B masked   7.0% p10   2.8 (3f) | diff +0.0 pts
+   death_ally     A masked   1.8% p10   4.8 (1f) | B masked   1.8% p10   4.8 (1f) | diff +0.0 pts
+   death_enemy    A masked  10.5% p10   0.3 (1f) | B masked  10.5% p10   0.0 (2f) | diff +0.0 pts
+   deploy         A masked   3.5% p10   3.8 (1f) | B masked   3.5% p10   3.8 (1f) | diff +0.0 pts
+   skill_slam     A masked   7.1% p10   5.8 (1f) | B masked   7.1% p10   5.8 (1f) | diff +0.0 pts
+   skill_rally    A masked   5.4% p10   7.3 (1f) | B masked   5.4% p10   7.2 (1f) | diff +0.0 pts
+   skill_barrage  A masked   0.0% p10   7.4 (1f) | B masked   0.0% p10   7.4 (1f) | diff +0.0 pts
+   skill_heal     A masked   0.0% p10   7.2 (1f) | B masked   0.0% p10   7.2 (1f) | diff +0.0 pts
+   wave_incoming  A masked   1.8% p10   7.9 (1f) | B masked   1.8% p10   7.8 (1f) | diff +0.0 pts
+   boss_incoming  A masked   0.0% p10  16.4 (1f) | B masked   0.0% p10  16.4 (1f) | diff +0.0 pts
+   wave_cleared   A masked   5.4% p10   3.5 (1f) | B masked   5.4% p10   3.5 (1f) | diff +0.0 pts
+   ui_confirm     A masked   7.0% p10   1.7 (1f) | B masked   7.0% p10   1.6 (1f) | diff +0.0 pts
+   ui_error       A masked   7.0% p10   4.5 (1f) | B masked   7.0% p10   4.3 (1f) | diff +0.0 pts
+   hit_base       A masked   1.8% p10   4.8 (1f) | B masked   1.8% p10   4.5 (1f) | diff +0.0 pts
+   hit_base_mold  A masked   8.8% p10   1.4 (1f) | B masked   8.8% p10   1.1 (1f) | diff +0.0 pts
+r06_s37: render/recorded envelope corr 0.862, bg A -31.26 vs B -31.24 LUFS, danger events 3, mix {'A_lufs': -24.5, 'B_lufs': -24.48, 'A_peak_dbfs': -2.79, 'B_peak_dbfs': -2.33}
+   hit_bread      A masked  14.0% p10  -1.4 (3f) | B masked  12.3% p10  -1.4 (3f) | diff -1.7 pts
+   hit_mold       A masked  15.8% p10  -2.2 (3f) | B masked  15.8% p10  -2.2 (3f) | diff +0.0 pts
+   death_ally     A masked   3.5% p10   2.4 (1f) | B masked   3.5% p10   2.4 (1f) | diff +0.0 pts
+   death_enemy    A masked  12.3% p10  -2.5 (1f) | B masked  12.3% p10  -2.5 (2f) | diff +0.0 pts
+   deploy         A masked   5.3% p10   2.7 (1f) | B masked   5.3% p10   2.7 (1f) | diff +0.0 pts
+   skill_slam     A masked  12.3% p10  -1.3 (1f) | B masked  12.3% p10  -1.3 (1f) | diff +0.0 pts
+   skill_rally    A masked   1.8% p10   6.6 (1f) | B masked   1.8% p10   6.2 (1f) | diff +0.0 pts
+   skill_barrage  A masked   1.8% p10   7.7 (1f) | B masked   1.8% p10   7.2 (1f) | diff +0.0 pts
+   skill_heal     A masked   1.8% p10   6.9 (1f) | B masked   1.8% p10   6.9 (1f) | diff +0.0 pts
+   wave_incoming  A masked   0.0% p10   9.0 (1f) | B masked   0.0% p10   9.0 (1f) | diff +0.0 pts
+   boss_incoming  A masked   0.0% p10  16.7 (1f) | B masked   0.0% p10  16.7 (1f) | diff +0.0 pts
+   wave_cleared   A masked   5.3% p10   1.9 (1f) | B masked   5.3% p10   1.2 (1f) | diff +0.0 pts
+   ui_confirm     A masked   8.8% p10   1.3 (1f) | B masked   8.8% p10   1.0 (1f) | diff +0.0 pts
+   ui_error       A masked  12.3% p10  -0.5 (1f) | B masked  12.3% p10  -0.5 (1f) | diff +0.0 pts
+   hit_base       A masked   3.5% p10   2.6 (1f) | B masked   3.5% p10   2.6 (1f) | diff +0.0 pts
+   hit_base_mold  A masked  14.0% p10  -0.7 (1f) | B masked  14.0% p10  -0.7 (1f) | diff +0.0 pts
+r08_s11: render/recorded envelope corr 0.919, bg A -31.0 vs B -30.99 LUFS, danger events 3, mix {'A_lufs': -24.27, 'B_lufs': -24.26, 'A_peak_dbfs': -1.87, 'B_peak_dbfs': -2.54}
+   hit_bread      A masked  10.5% p10   0.3 (3f) | B masked  10.5% p10   0.3 (3f) | diff +0.0 pts
+   hit_mold       A masked  12.3% p10  -0.5 (3f) | B masked  14.0% p10  -0.6 (3f) | diff +1.7 pts
+   death_ally     A masked   3.5% p10   3.5 (1f) | B masked   3.5% p10   3.4 (1f) | diff +0.0 pts
+   death_enemy    A masked  12.3% p10  -0.1 (1f) | B masked  12.3% p10  -0.1 (2f) | diff +0.0 pts
+   deploy         A masked   3.5% p10   3.4 (1f) | B masked   3.5% p10   3.5 (1f) | diff +0.0 pts
+   skill_slam     A masked   8.8% p10   1.4 (1f) | B masked   8.8% p10   1.4 (1f) | diff +0.0 pts
+   skill_rally    A masked   5.4% p10   1.6 (1f) | B masked   5.4% p10   1.6 (1f) | diff +0.0 pts
+   skill_barrage  A masked   5.4% p10   1.6 (1f) | B masked   7.1% p10   1.8 (1f) | diff +1.7 pts
+   skill_heal     A masked   1.8% p10   5.1 (1f) | B masked   1.8% p10   4.9 (1f) | diff +0.0 pts
+   wave_incoming  A masked   1.8% p10   4.3 (1f) | B masked   1.8% p10   4.4 (1f) | diff +0.0 pts
+   boss_incoming  A masked   0.0% p10   6.0 (1f) | B masked   0.0% p10   6.6 (1f) | diff +0.0 pts
+   wave_cleared   A masked   5.3% p10   2.2 (1f) | B masked   5.3% p10   2.1 (1f) | diff +0.0 pts
+   ui_confirm     A masked  12.3% p10  -0.1 (1f) | B masked  12.3% p10  -0.2 (1f) | diff +0.0 pts
+   ui_error       A masked   8.8% p10   1.2 (1f) | B masked   8.8% p10   1.4 (1f) | diff +0.0 pts
+   hit_base       A masked   1.8% p10   4.5 (1f) | B masked   1.8% p10   4.5 (1f) | diff +0.0 pts
+   hit_base_mold  A masked  14.0% p10  -0.8 (1f) | B masked  14.0% p10  -0.7 (1f) | diff +0.0 pts
+r08_s23: render/recorded envelope corr 0.965, bg A -31.03 vs B -31.01 LUFS, danger events 2, mix {'A_lufs': -24.3, 'B_lufs': -24.27, 'A_peak_dbfs': -1.98, 'B_peak_dbfs': -1.85}
+   hit_bread      A masked   5.3% p10   1.7 (3f) | B masked   7.0% p10   1.5 (3f) | diff +1.7 pts
+   hit_mold       A masked  12.3% p10  -0.7 (3f) | B masked  12.3% p10  -0.7 (3f) | diff +0.0 pts
+   death_ally     A masked   5.3% p10   2.4 (1f) | B masked   5.3% p10   2.4 (1f) | diff +0.0 pts
+   death_enemy    A masked  14.0% p10  -2.4 (1f) | B masked  14.0% p10  -2.3 (2f) | diff +0.0 pts
+   deploy         A masked   5.3% p10   2.3 (1f) | B masked   5.3% p10   2.5 (1f) | diff +0.0 pts
+   skill_slam     A masked  12.3% p10  -0.9 (1f) | B masked  12.3% p10  -0.5 (1f) | diff +0.0 pts
+   skill_rally    A masked   7.1% p10   2.7 (1f) | B masked   7.1% p10   2.3 (1f) | diff +0.0 pts
+   skill_barrage  A masked   3.6% p10   2.1 (1f) | B masked   1.8% p10   1.5 (1f) | diff -1.8 pts
+   skill_heal     A masked   1.8% p10   4.5 (1f) | B masked   1.8% p10   4.5 (1f) | diff +0.0 pts
+   wave_incoming  A masked   3.6% p10   4.2 (1f) | B masked   3.6% p10   3.3 (1f) | diff +0.0 pts
+   boss_incoming  A masked   0.0% p10   6.8 (1f) | B masked   0.0% p10   7.3 (1f) | diff +0.0 pts
+   wave_cleared   A masked   3.5% p10   2.0 (1f) | B masked   5.3% p10   2.2 (1f) | diff +1.8 pts
+   ui_confirm     A masked  10.5% p10   1.1 (1f) | B masked   8.8% p10   0.8 (1f) | diff -1.7 pts
+   ui_error       A masked  12.3% p10  -0.6 (1f) | B masked  12.3% p10  -0.6 (1f) | diff +0.0 pts
+   hit_base       A masked   3.5% p10   2.8 (1f) | B masked   3.5% p10   3.1 (1f) | diff +0.0 pts
+   hit_base_mold  A masked  17.5% p10  -1.1 (1f) | B masked  17.5% p10  -1.4 (1f) | diff +0.0 pts
+r08_s37: render/recorded envelope corr 0.956, bg A -31.12 vs B -31.12 LUFS, danger events 2, mix {'A_lufs': -24.37, 'B_lufs': -24.36, 'A_peak_dbfs': -3.56, 'B_peak_dbfs': -3.88}
+   hit_bread      A masked  12.3% p10  -1.1 (3f) | B masked  12.3% p10  -1.1 (3f) | diff +0.0 pts
+   hit_mold       A masked  17.5% p10  -1.2 (3f) | B masked  15.8% p10  -1.0 (3f) | diff -1.7 pts
+   death_ally     A masked   0.0% p10   4.6 (1f) | B masked   0.0% p10   4.4 (1f) | diff +0.0 pts
+   death_enemy    A masked  14.0% p10  -0.4 (1f) | B masked  14.0% p10  -0.2 (2f) | diff +0.0 pts
+   deploy         A masked   3.5% p10   4.9 (1f) | B masked   3.5% p10   4.9 (1f) | diff +0.0 pts
+   skill_slam     A masked   8.8% p10   2.9 (1f) | B masked   8.8% p10   3.0 (1f) | diff +0.0 pts
+   skill_rally    A masked   5.3% p10   2.8 (1f) | B masked   5.3% p10   2.2 (1f) | diff +0.0 pts
+   skill_barrage  A masked   7.1% p10   1.9 (1f) | B masked   7.1% p10   1.9 (1f) | diff +0.0 pts
+   skill_heal     A masked   3.5% p10   2.7 (1f) | B masked   5.3% p10   2.5 (1f) | diff +1.8 pts
+   wave_incoming  A masked   1.8% p10   4.8 (1f) | B masked   1.8% p10   4.6 (1f) | diff +0.0 pts
+   boss_incoming  A masked   0.0% p10   6.1 (1f) | B masked   0.0% p10   5.7 (1f) | diff +0.0 pts
+   wave_cleared   A masked   8.8% p10   1.6 (1f) | B masked   8.8% p10   1.4 (1f) | diff +0.0 pts
+   ui_confirm     A masked  10.5% p10  -0.1 (1f) | B masked   7.0% p10   1.0 (1f) | diff -3.5 pts
+   ui_error       A masked   7.0% p10   2.6 (1f) | B masked   8.8% p10   2.6 (1f) | diff +1.8 pts
+   hit_base       A masked   1.8% p10   3.5 (1f) | B masked   1.8% p10   3.8 (1f) | diff +0.0 pts
+   hit_base_mold  A masked   8.8% p10   0.9 (1f) | B masked  10.5% p10   0.5 (1f) | diff +1.7 pts
+=== python tools/audio/phone_check.py --rec=tools/audio/_render/recording_rd_r02_s11 --label=v3.8-rd_r02_s11 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json
+hit_bread       snr_med   14.6 p10    2.4 masked   7.7% risk  17.3% phoneLUFS -34.4
+hit_mold        snr_med   11.4 p10    1.0 masked   7.7% risk  15.4% phoneLUFS -31.9
+death_ally      snr_med   11.6 p10    3.2 masked   3.8% risk   7.7% phoneLUFS -29.8
+death_enemy     snr_med   11.0 p10   -0.9 masked  11.5% risk  15.4% phoneLUFS -31.3
+deploy          snr_med   16.5 p10    2.6 masked   0.0% risk  11.5% phoneLUFS -25.4
+skill_slam      snr_med   17.8 p10    3.2 masked   9.6% risk   9.6% phoneLUFS -27.4
+skill_rally     snr_med   15.7 p10    5.2 masked   3.9% risk   9.8% phoneLUFS -26.0
+skill_barrage   snr_med   13.8 p10    6.6 masked   2.0% risk   3.9% phoneLUFS -28.1
+skill_heal      snr_med   18.3 p10    6.6 masked   3.8% risk   5.8% phoneLUFS -23.9
+wave_incoming   snr_med   17.3 p10    5.3 masked   3.9% risk   3.9% phoneLUFS -24.9
+boss_incoming   snr_med   21.7 p10   10.1 masked   0.0% risk   0.0% phoneLUFS -23.9
+wave_cleared    snr_med   17.0 p10    4.5 masked   5.8% risk   5.8% phoneLUFS -25.5
+ui_confirm      snr_med   13.3 p10    1.4 masked   7.7% risk  11.5% phoneLUFS -29.0
+ui_error        snr_med   12.3 p10    2.1 masked   9.6% risk  13.5% phoneLUFS -28.6
+hit_base        snr_med   11.8 p10    3.5 masked   0.0% risk   7.7% phoneLUFS -28.5
+hit_base_mold   snr_med   12.1 p10   -1.7 masked  13.5% risk  15.4% phoneLUFS -30.5
+faction LOO full 1.0 phone 1.0 sep 11.25
+=== python tools/audio/mix_report.py --rec=tools/audio/_render/recording_rd_r02_s11 --no-publish
+{"integrated_lufs": -21.5, "peak_dbfs": -3.58, "clipped": 0, "active": 340, "buried": 19, "at_risk": 18, "buried_hp300": 14, "seconds_audio": 54.89, "seconds_wall": 60.0, "cue_counts": {"deploy": 10, "ui_error": 5, "skill_slam": 5, "hit_mold": 29, "death_enemy": 11, "gold_tick": 6, "wave_incoming": 2, "hit_bread": 18, "wave_cleared": 1, "shoot_arrow": 10, "hit_base_mold": 2, "death_ally": 4}, "top_repeat": {"hit_mold": {"per_min": 29.0, "max_1s": 2, "gaps_lt_150ms": 0}, "hit_bread": {"per_min": 18.0, "max_1s": 3, "gaps_lt_150ms": 0}, "death_enemy": {"per_min": 11.0, "max_1s": 1, "gaps_lt_150ms": 0}}, "fatigue": [], "best_window": 22.0}
+=== python tools/audio/phone_check.py --rec=tools/audio/_render/recording_rd_r02_s23 --label=v3.8-rd_r02_s23 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json
+hit_bread       snr_med   15.9 p10    2.8 masked   5.4% risk  10.7% phoneLUFS -34.4
+hit_mold        snr_med   13.1 p10    1.4 masked   7.1% risk  14.3% phoneLUFS -31.9
+death_ally      snr_med   12.5 p10    4.8 masked   0.0% risk   1.8% phoneLUFS -29.8
+death_enemy     snr_med   11.7 p10    0.5 masked  10.9% risk  12.7% phoneLUFS -31.3
+deploy          snr_med   17.0 p10    5.2 masked   1.8% risk   5.5% phoneLUFS -25.4
+skill_slam      snr_med   17.1 p10    4.6 masked   3.6% risk   9.1% phoneLUFS -27.4
+skill_rally     snr_med   15.7 p10    4.5 masked   1.8% risk   3.6% phoneLUFS -26.0
+skill_barrage   snr_med   14.3 p10    3.4 masked   5.6% risk   9.3% phoneLUFS -28.1
+skill_heal      snr_med   17.8 p10    7.0 masked   0.0% risk   5.5% phoneLUFS -23.9
+wave_incoming   snr_med   17.8 p10    7.9 masked   1.8% risk   3.6% phoneLUFS -24.9
+boss_incoming   snr_med   22.4 p10   14.4 masked   0.0% risk   0.0% phoneLUFS -23.9
+wave_cleared    snr_med   16.3 p10    3.3 masked   5.5% risk   9.1% phoneLUFS -25.5
+ui_confirm      snr_med   13.1 p10    1.7 masked   5.4% risk  12.5% phoneLUFS -29.0
+ui_error        snr_med   14.4 p10    5.5 masked   3.6% risk   8.9% phoneLUFS -28.6
+hit_base        snr_med   11.5 p10    4.6 masked   0.0% risk   1.8% phoneLUFS -28.5
+hit_base_mold   snr_med   13.0 p10   -0.4 masked  10.9% risk  14.5% phoneLUFS -30.5
+faction LOO full 1.0 phone 1.0 sep 11.25
+=== python tools/audio/mix_report.py --rec=tools/audio/_render/recording_rd_r02_s23 --no-publish
+{"integrated_lufs": -21.9, "peak_dbfs": -3.27, "clipped": 0, "active": 342, "buried": 30, "at_risk": 19, "buried_hp300": 20, "seconds_audio": 58.33, "seconds_wall": 60.01, "cue_counts": {"deploy": 10, "ui_error": 5, "skill_slam": 5, "hit_mold": 25, "death_enemy": 12, "gold_tick": 6, "wave_incoming": 2, "hit_bread": 19, "wave_cleared": 1, "shoot_arrow": 10, "hit_base_mold": 2, "death_ally": 4}, "top_repeat": {"hit_mold": {"per_min": 25.0, "max_1s": 2, "gaps_lt_150ms": 0}, "hit_bread": {"per_min": 19.0, "max_1s": 3, "gaps_lt_150ms": 0}, "death_enemy": {"per_min": 12.0, "max_1s": 1, "gaps_lt_150ms": 0}}, "fatigue": [], "best_window": 22.0}
+=== python tools/audio/phone_check.py --rec=tools/audio/_render/recording_rd_r02_s37 --label=v3.8-rd_r02_s37 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json
+hit_bread       snr_med   16.6 p10    3.9 masked   1.8% risk   7.3% phoneLUFS -34.4
+hit_mold        snr_med   13.8 p10    3.6 masked   1.8% risk   5.5% phoneLUFS -31.9
+death_ally      snr_med   12.9 p10    7.8 masked   0.0% risk   3.7% phoneLUFS -29.8
+death_enemy     snr_med   12.0 p10    2.5 masked   3.7% risk  13.0% phoneLUFS -31.3
+deploy          snr_med   17.5 p10    7.8 masked   0.0% risk   1.9% phoneLUFS -25.4
+skill_slam      snr_med   18.9 p10    4.9 masked   3.7% risk   3.7% phoneLUFS -27.4
+skill_rally     snr_med   15.1 p10    3.3 masked   3.7% risk   9.3% phoneLUFS -26.0
+skill_barrage   snr_med   14.4 p10    5.8 masked   1.9% risk   9.4% phoneLUFS -28.1
+skill_heal      snr_med   17.0 p10    4.4 masked   3.7% risk   7.4% phoneLUFS -23.9
+wave_incoming   snr_med   16.6 p10    4.5 masked   3.7% risk   3.7% phoneLUFS -24.9
+boss_incoming   snr_med   21.7 p10   11.3 masked   0.0% risk   0.0% phoneLUFS -23.9
+wave_cleared    snr_med   16.7 p10    4.7 masked   3.7% risk   5.6% phoneLUFS -25.5
+ui_confirm      snr_med   13.6 p10    3.7 masked   0.0% risk   3.7% phoneLUFS -29.0
+ui_error        snr_med   14.7 p10    4.5 masked   3.6% risk   7.3% phoneLUFS -28.6
+hit_base        snr_med   11.7 p10    6.0 masked   0.0% risk   3.7% phoneLUFS -28.5
+hit_base_mold   snr_med   13.4 p10    3.5 masked   3.7% risk   7.4% phoneLUFS -30.5
+faction LOO full 1.0 phone 1.0 sep 11.25
+=== python tools/audio/mix_report.py --rec=tools/audio/_render/recording_rd_r02_s37 --no-publish
+{"integrated_lufs": -21.6, "peak_dbfs": -1.79, "clipped": 0, "active": 346, "buried": 25, "at_risk": 12, "buried_hp300": 18, "seconds_audio": 57.21, "seconds_wall": 60.0, "cue_counts": {"deploy": 10, "ui_error": 5, "skill_slam": 5, "hit_mold": 28, "death_enemy": 12, "gold_tick": 9, "wave_incoming": 2, "hit_bread": 19, "wave_cleared": 1, "shoot_arrow": 10, "hit_base_mold": 2, "death_ally": 4}, "top_repeat": {"hit_mold": {"per_min": 28.0, "max_1s": 2, "gaps_lt_150ms": 0}, "hit_bread": {"per_min": 19.0, "max_1s": 3, "gaps_lt_150ms": 0}, "death_enemy": {"per_min": 12.0, "max_1s": 1, "gaps_lt_150ms": 0}}, "fatigue": [], "best_window": 21.0}
+=== python tools/audio/phone_check.py --rec=tools/audio/_render/recording_rd_r06_s11 --label=v3.8-rd_r06_s11 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json
+hit_bread       snr_med   14.4 p10   -0.4 masked  11.1% risk  16.7% phoneLUFS -34.4
+hit_mold        snr_med   12.1 p10   -1.6 masked  13.0% risk  16.7% phoneLUFS -31.9
+death_ally      snr_med   12.4 p10    2.8 masked   3.7% risk  13.0% phoneLUFS -29.8
+death_enemy     snr_med   11.0 p10   -0.3 masked  11.3% risk  15.1% phoneLUFS -31.3
+deploy          snr_med   16.8 p10    1.8 masked   7.5% risk  11.3% phoneLUFS -25.4
+skill_slam      snr_med   16.4 p10    6.9 masked   9.4% risk   9.4% phoneLUFS -27.4
+skill_rally     snr_med   17.2 p10    5.3 masked   3.8% risk   5.7% phoneLUFS -26.0
+skill_barrage   snr_med   13.4 p10    7.0 masked   1.9% risk   1.9% phoneLUFS -28.1
+skill_heal      snr_med   17.6 p10    6.6 masked   1.9% risk   3.8% phoneLUFS -23.9
+wave_incoming   snr_med   17.1 p10    8.5 masked   0.0% risk   3.8% phoneLUFS -24.9
+boss_incoming   snr_med   22.0 p10   16.0 masked   0.0% risk   0.0% phoneLUFS -23.9
+wave_cleared    snr_med   16.2 p10    1.8 masked   9.4% risk  11.3% phoneLUFS -25.5
+ui_confirm      snr_med   12.8 p10    3.3 masked   7.4% risk  11.1% phoneLUFS -29.0
+ui_error        snr_med   14.0 p10    5.1 masked   7.4% risk   9.3% phoneLUFS -28.6
+hit_base        snr_med   11.4 p10    3.2 masked   7.4% risk  11.1% phoneLUFS -28.5
+hit_base_mold   snr_med   12.2 p10   -2.1 masked  14.8% risk  14.8% phoneLUFS -30.5
+faction LOO full 1.0 phone 1.0 sep 11.25
+=== python tools/audio/mix_report.py --rec=tools/audio/_render/recording_rd_r06_s11 --no-publish
+{"integrated_lufs": -21.5, "peak_dbfs": -3.2, "clipped": 0, "active": 405, "buried": 24, "at_risk": 40, "buried_hp300": 24, "seconds_audio": 56.38, "seconds_wall": 60.02, "cue_counts": {"worker_buy": 1, "deploy": 12, "ui_error": 5, "skill_slam": 5, "hit_mold": 35, "hit_bread": 27, "death_enemy": 9, "gold_tick": 7, "shoot_spit": 2, "wave_incoming": 1, "death_ally": 2, "wave_cleared": 1}, "top_repeat": {"hit_mold": {"per_min": 35.0, "max_1s": 3, "gaps_lt_150ms": 0}, "hit_bread": {"per_min": 27.0, "max_1s": 2, "gaps_lt_150ms": 0}, "deploy": {"per_min": 12.0, "max_1s": 1, "gaps_lt_150ms": 0}}, "fatigue": [], "best_window": 19.0}
+=== python tools/audio/phone_check.py --rec=tools/audio/_render/recording_rd_r06_s23 --label=v3.8-rd_r06_s23 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json
+hit_bread       snr_med   15.9 p10    0.3 masked   9.4% risk  15.1% phoneLUFS -34.4
+hit_mold        snr_med   13.3 p10   -0.0 masked  11.3% risk  17.0% phoneLUFS -31.9
+death_ally      snr_med   11.1 p10    5.5 masked   3.8% risk   5.7% phoneLUFS -29.8
+death_enemy     snr_med    9.9 p10    0.8 masked   9.4% risk  18.9% phoneLUFS -31.3
+deploy          snr_med   15.1 p10    5.9 masked   3.8% risk   9.4% phoneLUFS -25.4
+skill_slam      snr_med   17.7 p10    2.9 masked   5.7% risk  11.3% phoneLUFS -27.4
+skill_rally     snr_med   15.5 p10    4.1 masked   5.8% risk   9.6% phoneLUFS -26.0
+skill_barrage   snr_med   13.1 p10    3.7 masked   0.0% risk   7.7% phoneLUFS -28.1
+skill_heal      snr_med   17.2 p10    5.0 masked   0.0% risk   1.9% phoneLUFS -23.9
+wave_incoming   snr_med   16.2 p10    7.2 masked   0.0% risk   1.9% phoneLUFS -24.9
+boss_incoming   snr_med   22.1 p10   14.1 masked   0.0% risk   0.0% phoneLUFS -23.9
+wave_cleared    snr_med   15.9 p10    4.6 masked   3.8% risk   9.4% phoneLUFS -25.5
+ui_confirm      snr_med   11.5 p10    2.0 masked   5.7% risk  13.2% phoneLUFS -29.0
+ui_error        snr_med   12.9 p10    2.0 masked   7.5% risk  13.2% phoneLUFS -28.6
+hit_base        snr_med   10.6 p10    5.4 masked   3.8% risk   5.7% phoneLUFS -28.5
+hit_base_mold   snr_med   11.3 p10    0.8 masked   7.5% risk  17.0% phoneLUFS -30.5
+faction LOO full 1.0 phone 1.0 sep 11.25
+=== python tools/audio/mix_report.py --rec=tools/audio/_render/recording_rd_r06_s23 --no-publish
+{"integrated_lufs": -21.3, "peak_dbfs": -2.71, "clipped": 0, "active": 401, "buried": 16, "at_risk": 22, "buried_hp300": 17, "seconds_audio": 55.73, "seconds_wall": 60.01, "cue_counts": {"worker_buy": 1, "deploy": 12, "ui_error": 5, "skill_slam": 5, "hit_mold": 40, "hit_bread": 23, "death_enemy": 9, "gold_tick": 8, "shoot_spit": 3, "wave_incoming": 1, "death_ally": 2, "wave_cleared": 1}, "top_repeat": {"hit_mold": {"per_min": 40.0, "max_1s": 3, "gaps_lt_150ms": 0}, "hit_bread": {"per_min": 23.0, "max_1s": 2, "gaps_lt_150ms": 0}, "deploy": {"per_min": 12.0, "max_1s": 1, "gaps_lt_150ms": 0}}, "fatigue": [], "best_window": 18.0}
+=== python tools/audio/phone_check.py --rec=tools/audio/_render/recording_rd_r06_s37 --label=v3.8-rd_r06_s37 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json
+hit_bread       snr_med   16.1 p10    0.3 masked  10.5% risk  21.1% phoneLUFS -34.4
+hit_mold        snr_med   13.3 p10   -1.4 masked  14.0% risk  19.3% phoneLUFS -31.9
+death_ally      snr_med   12.2 p10    3.8 masked   3.6% risk  10.7% phoneLUFS -29.8
+death_enemy     snr_med   10.9 p10   -0.4 masked  14.3% risk  16.1% phoneLUFS -31.3
+deploy          snr_med   15.7 p10    2.8 masked   3.6% risk  10.7% phoneLUFS -25.4
+skill_slam      snr_med   15.8 p10    2.4 masked   5.4% risk  14.3% phoneLUFS -27.4
+skill_rally     snr_med   15.8 p10    4.2 masked   3.6% risk   7.1% phoneLUFS -26.0
+skill_barrage   snr_med   13.4 p10    5.0 masked   3.6% risk   7.3% phoneLUFS -28.1
+skill_heal      snr_med   17.8 p10    8.6 masked   1.8% risk   3.6% phoneLUFS -23.9
+wave_incoming   snr_med   16.5 p10    8.4 masked   0.0% risk   3.6% phoneLUFS -24.9
+boss_incoming   snr_med   21.8 p10   14.5 masked   0.0% risk   0.0% phoneLUFS -23.9
+wave_cleared    snr_med   16.2 p10    3.0 masked   3.6% risk  10.7% phoneLUFS -25.5
+ui_confirm      snr_med   12.5 p10    0.8 masked   8.9% risk  19.6% phoneLUFS -29.0
+ui_error        snr_med   12.5 p10    1.8 masked   5.3% risk  14.0% phoneLUFS -28.6
+hit_base        snr_med   11.2 p10    4.2 masked   3.6% risk   8.9% phoneLUFS -28.5
+hit_base_mold   snr_med   12.2 p10   -0.9 masked  12.5% risk  16.1% phoneLUFS -30.5
+faction LOO full 1.0 phone 1.0 sep 11.25
+=== python tools/audio/mix_report.py --rec=tools/audio/_render/recording_rd_r06_s37 --no-publish
+{"integrated_lufs": -21.4, "peak_dbfs": -1.95, "clipped": 0, "active": 414, "buried": 27, "at_risk": 33, "buried_hp300": 26, "seconds_audio": 59.26, "seconds_wall": 60.01, "cue_counts": {"worker_buy": 1, "deploy": 13, "ui_error": 5, "skill_slam": 5, "hit_mold": 39, "hit_bread": 27, "death_enemy": 10, "gold_tick": 8, "shoot_spit": 3, "wave_incoming": 1, "death_ally": 2, "wave_cleared": 1}, "top_repeat": {"hit_mold": {"per_min": 39.0, "max_1s": 3, "gaps_lt_150ms": 0}, "hit_bread": {"per_min": 27.0, "max_1s": 2, "gaps_lt_150ms": 0}, "deploy": {"per_min": 13.0, "max_1s": 1, "gaps_lt_150ms": 0}}, "fatigue": [], "best_window": 23.0}
+=== python tools/audio/phone_check.py --rec=tools/audio/_render/recording_rd_r08_s11 --label=v3.8-rd_r08_s11 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json
+hit_bread       snr_med   13.4 p10    1.9 masked   8.8% risk  15.8% phoneLUFS -34.4
+hit_mold        snr_med   11.0 p10   -1.4 masked  14.3% risk  21.4% phoneLUFS -31.9
+death_ally      snr_med   10.6 p10    3.8 masked   0.0% risk   8.9% phoneLUFS -29.8
+death_enemy     snr_med    9.8 p10   -0.3 masked  10.7% risk  23.2% phoneLUFS -31.3
+deploy          snr_med   14.5 p10    4.1 masked   1.8% risk   8.9% phoneLUFS -25.4
+skill_slam      snr_med   14.6 p10    1.4 masked   8.9% risk  12.5% phoneLUFS -27.4
+skill_rally     snr_med   13.7 p10    4.3 masked   0.0% risk   7.1% phoneLUFS -26.0
+skill_barrage   snr_med   12.9 p10    2.6 masked   1.8% risk  10.9% phoneLUFS -28.1
+skill_heal      snr_med   15.3 p10    6.5 masked   0.0% risk   1.8% phoneLUFS -23.9
+wave_incoming   snr_med   14.6 p10    6.5 masked   0.0% risk   3.6% phoneLUFS -24.9
+boss_incoming   snr_med   21.4 p10    8.4 masked   0.0% risk   0.0% phoneLUFS -23.9
+wave_cleared    snr_med   16.1 p10    4.2 masked   1.8% risk   5.4% phoneLUFS -25.5
+ui_confirm      snr_med   10.4 p10    0.6 masked  10.7% risk  12.5% phoneLUFS -29.0
+ui_error        snr_med   11.3 p10    1.4 masked   7.1% risk  12.5% phoneLUFS -28.6
+hit_base        snr_med   11.5 p10    3.9 masked   0.0% risk   8.9% phoneLUFS -28.5
+hit_base_mold   snr_med    8.7 p10   -0.9 masked  14.3% risk  26.8% phoneLUFS -30.5
+faction LOO full 1.0 phone 1.0 sep 11.25
+=== python tools/audio/mix_report.py --rec=tools/audio/_render/recording_rd_r08_s11 --no-publish
+{"integrated_lufs": -21.8, "peak_dbfs": -2.3, "clipped": 0, "active": 402, "buried": 33, "at_risk": 43, "buried_hp300": 25, "seconds_audio": 59.07, "seconds_wall": 60.01, "cue_counts": {"worker_buy": 1, "deploy": 13, "ui_error": 5, "skill_slam": 5, "death_enemy": 12, "wave_incoming": 2, "hit_mold": 12, "hit_bread": 38, "shoot_spit": 39, "gold_tick": 7, "explosion": 1, "death_ally": 1, "wave_cleared": 1}, "top_repeat": {"shoot_spit": {"per_min": 39.0, "max_1s": 3, "gaps_lt_150ms": 0}, "hit_bread": {"per_min": 38.0, "max_1s": 3, "gaps_lt_150ms": 0}, "deploy": {"per_min": 13.0, "max_1s": 1, "gaps_lt_150ms": 0}}, "fatigue": [], "best_window": 19.0}
+=== python tools/audio/phone_check.py --rec=tools/audio/_render/recording_rd_r08_s23 --label=v3.8-rd_r08_s23 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json
+hit_bread       snr_med   15.8 p10    0.0 masked  10.5% risk  17.5% phoneLUFS -34.4
+hit_mold        snr_med   13.0 p10   -1.0 masked  12.3% risk  22.8% phoneLUFS -31.9
+death_ally      snr_med   11.0 p10    3.6 masked   1.8% risk   8.8% phoneLUFS -29.8
+death_enemy     snr_med    9.2 p10    0.2 masked   8.9% risk  28.6% phoneLUFS -31.3
+deploy          snr_med   15.7 p10    2.7 masked   3.6% risk  10.7% phoneLUFS -25.4
+skill_slam      snr_med   15.0 p10    1.0 masked   7.1% risk  14.3% phoneLUFS -27.4
+skill_rally     snr_med   13.4 p10    2.4 masked   5.4% risk  10.7% phoneLUFS -26.0
+skill_barrage   snr_med   11.8 p10    1.2 masked   9.1% risk  18.2% phoneLUFS -28.1
+skill_heal      snr_med   13.6 p10    4.5 masked   0.0% risk   8.9% phoneLUFS -23.9
+wave_incoming   snr_med   14.0 p10    4.3 masked   0.0% risk   7.1% phoneLUFS -24.9
+boss_incoming   snr_med   20.6 p10    8.8 masked   0.0% risk   1.8% phoneLUFS -23.9
+wave_cleared    snr_med   15.0 p10    3.6 masked   7.1% risk   8.9% phoneLUFS -25.5
+ui_confirm      snr_med   12.2 p10    1.3 masked   8.8% risk  14.0% phoneLUFS -29.0
+ui_error        snr_med   12.2 p10    1.6 masked   8.8% risk  17.5% phoneLUFS -28.6
+hit_base        snr_med    9.8 p10    4.4 masked   3.5% risk   8.8% phoneLUFS -28.5
+hit_base_mold   snr_med    9.7 p10   -0.0 masked  10.5% risk  28.1% phoneLUFS -30.5
+faction LOO full 1.0 phone 1.0 sep 11.25
+=== python tools/audio/mix_report.py --rec=tools/audio/_render/recording_rd_r08_s23 --no-publish
+{"integrated_lufs": -21.9, "peak_dbfs": -0.5, "clipped": 0, "active": 395, "buried": 27, "at_risk": 44, "buried_hp300": 22, "seconds_audio": 59.35, "seconds_wall": 60.01, "cue_counts": {"worker_buy": 1, "deploy": 13, "ui_error": 5, "skill_slam": 5, "death_enemy": 11, "wave_incoming": 2, "hit_mold": 12, "hit_bread": 39, "shoot_spit": 41, "gold_tick": 7, "explosion": 1, "death_ally": 2, "wave_cleared": 1}, "top_repeat": {"shoot_spit": {"per_min": 41.0, "max_1s": 3, "gaps_lt_150ms": 0}, "hit_bread": {"per_min": 39.0, "max_1s": 3, "gaps_lt_150ms": 0}, "deploy": {"per_min": 13.0, "max_1s": 1, "gaps_lt_150ms": 0}}, "fatigue": [], "best_window": 29.0}
+=== python tools/audio/phone_check.py --rec=tools/audio/_render/recording_rd_r08_s37 --label=v3.8-rd_r08_s37 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json
+hit_bread       snr_med   15.2 p10    1.9 masked   7.3% risk  14.5% phoneLUFS -34.4
+hit_mold        snr_med   12.4 p10   -0.3 masked  10.9% risk  21.8% phoneLUFS -31.9
+death_ally      snr_med   11.8 p10    5.5 masked   0.0% risk   3.6% phoneLUFS -29.8
+death_enemy     snr_med   10.0 p10    0.9 masked   7.3% risk  20.0% phoneLUFS -31.3
+deploy          snr_med   16.7 p10    5.3 masked   1.8% risk   5.5% phoneLUFS -25.4
+skill_slam      snr_med   17.1 p10    1.4 masked   5.5% risk  14.5% phoneLUFS -27.4
+skill_rally     snr_med   10.7 p10    3.8 masked   7.4% risk   9.3% phoneLUFS -26.0
+skill_barrage   snr_med   10.9 p10    0.2 masked   9.3% risk  16.7% phoneLUFS -28.1
+skill_heal      snr_med   13.6 p10    4.4 masked   1.8% risk   7.3% phoneLUFS -23.9
+wave_incoming   snr_med   12.9 p10    3.0 masked   3.7% risk  11.1% phoneLUFS -24.9
+boss_incoming   snr_med   19.7 p10    7.3 masked   0.0% risk   0.0% phoneLUFS -23.9
+wave_cleared    snr_med   14.3 p10    2.4 masked   7.3% risk  12.7% phoneLUFS -25.5
+ui_confirm      snr_med   12.5 p10    2.1 masked   3.6% risk  16.4% phoneLUFS -29.0
+ui_error        snr_med   13.5 p10    1.4 masked   7.3% risk  14.5% phoneLUFS -28.6
+hit_base        snr_med   11.1 p10    5.5 masked   0.0% risk   5.5% phoneLUFS -28.5
+hit_base_mold   snr_med   10.7 p10    1.9 masked   7.3% risk  14.5% phoneLUFS -30.5
+faction LOO full 1.0 phone 1.0 sep 11.25
+=== python tools/audio/mix_report.py --rec=tools/audio/_render/recording_rd_r08_s37 --no-publish
+{"integrated_lufs": -21.6, "peak_dbfs": -2.85, "clipped": 0, "active": 400, "buried": 33, "at_risk": 33, "buried_hp300": 27, "seconds_audio": 57.86, "seconds_wall": 60.02, "cue_counts": {"worker_buy": 1, "deploy": 13, "ui_error": 5, "skill_slam": 5, "death_enemy": 10, "gold_tick": 8, "wave_incoming": 2, "hit_mold": 9, "hit_bread": 44, "shoot_spit": 60, "explosion": 1, "death_ally": 2, "wave_cleared": 1}, "top_repeat": {"shoot_spit": {"per_min": 60.0, "max_1s": 3, "gaps_lt_150ms": 18}, "hit_bread": {"per_min": 44.0, "max_1s": 3, "gaps_lt_150ms": 0}, "deploy": {"per_min": 13.0, "max_1s": 1, "gaps_lt_150ms": 0}}, "fatigue": [], "best_window": 23.0}
+=== python tools/audio/phone_check.py --rec=tools/audio/_render/recording_rb_r02_s11 --label=v3.8-rb_r02_s11 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json
+hit_bread       snr_med   17.1 p10    1.2 masked   8.8% risk  15.8% phoneLUFS -34.4
+hit_mold        snr_med   13.0 p10   -1.0 masked  12.3% risk  17.5% phoneLUFS -31.9
+death_ally      snr_med   12.5 p10    4.8 masked   3.5% risk   7.0% phoneLUFS -29.8
+death_enemy     snr_med   11.7 p10   -0.0 masked  10.7% risk  17.9% phoneLUFS -31.3
+deploy          snr_med   17.1 p10    4.2 masked   3.6% risk   5.4% phoneLUFS -25.4
+skill_slam      snr_med   17.9 p10    2.2 masked   5.4% risk  14.3% phoneLUFS -27.4
+skill_rally     snr_med   15.0 p10    2.8 masked   5.4% risk  10.7% phoneLUFS -26.0
+skill_barrage   snr_med   13.4 p10    2.5 masked   5.5% risk  12.7% phoneLUFS -28.1
+skill_heal      snr_med   17.0 p10    6.9 masked   3.6% risk   8.9% phoneLUFS -23.9
+wave_incoming   snr_med   15.6 p10    4.0 masked   1.8% risk   7.1% phoneLUFS -24.9
+boss_incoming   snr_med   21.8 p10   10.4 masked   0.0% risk   0.0% phoneLUFS -23.9
+wave_cleared    snr_med   16.7 p10    2.9 masked   7.1% risk  12.5% phoneLUFS -25.5
+ui_confirm      snr_med   12.8 p10    2.7 masked   7.0% risk  12.3% phoneLUFS -29.0
+ui_error        snr_med   14.4 p10    1.9 masked   7.0% risk  14.0% phoneLUFS -28.6
+hit_base        snr_med   11.6 p10    5.1 masked   1.8% risk  10.5% phoneLUFS -28.5
+hit_base_mold   snr_med   12.7 p10    1.4 masked   8.8% risk  19.3% phoneLUFS -30.5
+faction LOO full 1.0 phone 1.0 sep 11.25
+=== python tools/audio/mix_report.py --rec=tools/audio/_render/recording_rb_r02_s11 --no-publish
+{"integrated_lufs": -21.9, "peak_dbfs": -2.13, "clipped": 0, "active": 361, "buried": 26, "at_risk": 22, "buried_hp300": 24, "seconds_audio": 59.35, "seconds_wall": 60.0, "cue_counts": {"deploy": 10, "ui_error": 5, "skill_slam": 5, "hit_mold": 31, "death_enemy": 12, "gold_tick": 7, "wave_incoming": 2, "hit_bread": 18, "wave_cleared": 1, "shoot_arrow": 10, "death_ally": 4}, "top_repeat": {"hit_mold": {"per_min": 31.0, "max_1s": 2, "gaps_lt_150ms": 0}, "hit_bread": {"per_min": 18.0, "max_1s": 2, "gaps_lt_150ms": 0}, "death_enemy": {"per_min": 12.0, "max_1s": 1, "gaps_lt_150ms": 0}}, "fatigue": [], "best_window": 22.0}
+=== python tools/audio/phone_check.py --rec=tools/audio/_render/recording_rb_r02_s23 --label=v3.8-rb_r02_s23 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json
+hit_bread       snr_med   16.2 p10    1.2 masked   7.3% risk  12.7% phoneLUFS -34.4
+hit_mold        snr_med   13.2 p10   -1.3 masked  12.7% risk  14.5% phoneLUFS -31.9
+death_ally      snr_med   12.3 p10    1.6 masked   5.5% risk  12.7% phoneLUFS -29.8
+death_enemy     snr_med   11.3 p10   -1.6 masked  12.7% risk  18.2% phoneLUFS -31.3
+deploy          snr_med   17.0 p10    1.7 masked   7.3% risk  12.7% phoneLUFS -25.4
+skill_slam      snr_med   17.4 p10    1.7 masked   9.1% risk  12.7% phoneLUFS -27.4
+skill_rally     snr_med   15.6 p10    4.8 masked   1.9% risk   5.6% phoneLUFS -26.0
+skill_barrage   snr_med   13.4 p10    1.8 masked   1.9% risk  14.8% phoneLUFS -28.1
+skill_heal      snr_med   17.7 p10    6.6 masked   1.9% risk   3.7% phoneLUFS -23.9
+wave_incoming   snr_med   17.6 p10    7.6 masked   1.9% risk   1.9% phoneLUFS -24.9
+boss_incoming   snr_med   22.7 p10   11.6 masked   0.0% risk   0.0% phoneLUFS -23.9
+wave_cleared    snr_med   15.8 p10    1.4 masked   7.3% risk  14.5% phoneLUFS -25.5
+ui_confirm      snr_med   12.6 p10   -0.6 masked  10.9% risk  16.4% phoneLUFS -29.0
+ui_error        snr_med   14.0 p10    0.6 masked   9.1% risk  16.4% phoneLUFS -28.6
+hit_base        snr_med   10.9 p10    2.4 masked   5.5% risk  12.7% phoneLUFS -28.5
+hit_base_mold   snr_med   12.2 p10   -3.1 masked  12.7% risk  21.8% phoneLUFS -30.5
+faction LOO full 1.0 phone 1.0 sep 11.25
+=== python tools/audio/mix_report.py --rec=tools/audio/_render/recording_rb_r02_s23 --no-publish
+{"integrated_lufs": -21.9, "peak_dbfs": -3.0, "clipped": 0, "active": 352, "buried": 23, "at_risk": 25, "buried_hp300": 21, "seconds_audio": 57.77, "seconds_wall": 60.01, "cue_counts": {"deploy": 10, "ui_error": 5, "skill_slam": 5, "hit_mold": 29, "death_enemy": 12, "gold_tick": 7, "wave_incoming": 2, "hit_bread": 19, "wave_cleared": 1, "shoot_arrow": 10, "death_ally": 4}, "top_repeat": {"hit_mold": {"per_min": 29.0, "max_1s": 2, "gaps_lt_150ms": 0}, "hit_bread": {"per_min": 19.0, "max_1s": 2, "gaps_lt_150ms": 0}, "death_enemy": {"per_min": 12.0, "max_1s": 1, "gaps_lt_150ms": 0}}, "fatigue": [], "best_window": 21.0}
+=== python tools/audio/phone_check.py --rec=tools/audio/_render/recording_rb_r02_s37 --label=v3.8-rb_r02_s37 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json
+hit_bread       snr_med   16.9 p10    3.8 masked   5.6% risk   9.3% phoneLUFS -34.4
+hit_mold        snr_med   13.5 p10    2.5 masked   7.4% risk  13.0% phoneLUFS -31.9
+death_ally      snr_med   12.8 p10    4.7 masked   0.0% risk   1.9% phoneLUFS -29.8
+death_enemy     snr_med   11.8 p10    1.4 masked   7.5% risk  18.9% phoneLUFS -31.3
+deploy          snr_med   17.5 p10    6.7 masked   1.9% risk   7.5% phoneLUFS -25.4
+skill_slam      snr_med   18.4 p10    6.4 masked   5.7% risk   5.7% phoneLUFS -27.4
+skill_rally     snr_med   16.5 p10    2.2 masked   3.8% risk  13.2% phoneLUFS -26.0
+skill_barrage   snr_med   13.1 p10    4.1 masked   0.0% risk   9.6% phoneLUFS -28.1
+skill_heal      snr_med   17.9 p10    4.4 masked   0.0% risk   9.4% phoneLUFS -23.9
+wave_incoming   snr_med   17.7 p10    5.5 masked   1.9% risk   5.7% phoneLUFS -24.9
+boss_incoming   snr_med   21.8 p10    9.6 masked   0.0% risk   0.0% phoneLUFS -23.9
+wave_cleared    snr_med   16.7 p10    3.2 masked   3.8% risk   9.4% phoneLUFS -25.5
+ui_confirm      snr_med   13.0 p10    3.5 masked   1.9% risk   9.4% phoneLUFS -29.0
+ui_error        snr_med   14.3 p10    3.8 masked   3.7% risk   5.6% phoneLUFS -28.6
+hit_base        snr_med   11.6 p10    4.7 masked   0.0% risk   5.7% phoneLUFS -28.5
+hit_base_mold   snr_med   13.3 p10    1.7 masked   5.7% risk  17.0% phoneLUFS -30.5
+faction LOO full 1.0 phone 1.0 sep 11.25
+=== python tools/audio/mix_report.py --rec=tools/audio/_render/recording_rb_r02_s37 --no-publish
+{"integrated_lufs": -21.8, "peak_dbfs": -4.45, "clipped": 0, "active": 349, "buried": 23, "at_risk": 18, "buried_hp300": 17, "seconds_audio": 56.29, "seconds_wall": 60.01, "cue_counts": {"deploy": 10, "ui_error": 5, "skill_slam": 5, "hit_mold": 27, "death_enemy": 12, "gold_tick": 7, "wave_incoming": 2, "hit_bread": 22, "wave_cleared": 1, "shoot_arrow": 11, "death_ally": 4}, "top_repeat": {"hit_mold": {"per_min": 27.0, "max_1s": 3, "gaps_lt_150ms": 0}, "hit_bread": {"per_min": 22.0, "max_1s": 2, "gaps_lt_150ms": 0}, "death_enemy": {"per_min": 12.0, "max_1s": 1, "gaps_lt_150ms": 0}}, "fatigue": [], "best_window": 21.0}
+=== python tools/audio/phone_check.py --rec=tools/audio/_render/recording_rb_r06_s11 --label=v3.8-rb_r06_s11 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json
+hit_bread       snr_med   17.6 p10    3.5 masked   5.3% risk  10.5% phoneLUFS -34.4
+hit_mold        snr_med   13.8 p10    1.6 masked   8.8% risk  15.8% phoneLUFS -31.9
+death_ally      snr_med   12.4 p10    2.5 masked   7.1% risk  12.5% phoneLUFS -29.8
+death_enemy     snr_med   11.7 p10   -2.3 masked  14.3% risk  17.9% phoneLUFS -31.3
+deploy          snr_med   17.0 p10    0.4 masked   8.9% risk  12.5% phoneLUFS -25.4
+skill_slam      snr_med   18.4 p10    1.1 masked   8.9% risk  12.5% phoneLUFS -27.4
+skill_rally     snr_med   15.9 p10    4.2 masked   5.4% risk   7.1% phoneLUFS -26.0
+skill_barrage   snr_med   14.0 p10    6.0 masked   3.6% risk   5.5% phoneLUFS -28.1
+skill_heal      snr_med   17.9 p10    5.3 masked   3.6% risk   7.1% phoneLUFS -23.9
+wave_incoming   snr_med   17.1 p10    7.3 masked   1.8% risk   3.6% phoneLUFS -24.9
+boss_incoming   snr_med   22.1 p10   16.2 masked   0.0% risk   0.0% phoneLUFS -23.9
+wave_cleared    snr_med   16.3 p10    0.7 masked   7.1% risk  14.3% phoneLUFS -25.5
+ui_confirm      snr_med   12.6 p10    1.6 masked   8.9% risk  12.5% phoneLUFS -29.0
+ui_error        snr_med   14.4 p10    0.1 masked  10.7% risk  12.5% phoneLUFS -28.6
+hit_base        snr_med   11.2 p10    2.8 masked   7.1% risk  10.7% phoneLUFS -28.5
+hit_base_mold   snr_med   13.3 p10   -2.0 masked  12.5% risk  14.3% phoneLUFS -30.5
+faction LOO full 1.0 phone 1.0 sep 11.25
+=== python tools/audio/mix_report.py --rec=tools/audio/_render/recording_rb_r06_s11 --no-publish
+{"integrated_lufs": -21.6, "peak_dbfs": -2.7, "clipped": 0, "active": 382, "buried": 24, "at_risk": 37, "buried_hp300": 21, "seconds_audio": 59.16, "seconds_wall": 60.01, "cue_counts": {"worker_buy": 1, "deploy": 13, "ui_error": 5, "skill_slam": 5, "hit_mold": 29, "hit_bread": 27, "death_enemy": 10, "gold_tick": 9, "shoot_spit": 3, "wave_incoming": 1, "death_ally": 2, "wave_cleared": 1}, "top_repeat": {"hit_mold": {"per_min": 29.0, "max_1s": 3, "gaps_lt_150ms": 0}, "hit_bread": {"per_min": 27.0, "max_1s": 3, "gaps_lt_150ms": 0}, "deploy": {"per_min": 13.0, "max_1s": 1, "gaps_lt_150ms": 0}}, "fatigue": [], "best_window": 20.0}
+=== python tools/audio/phone_check.py --rec=tools/audio/_render/recording_rb_r06_s23 --label=v3.8-rb_r06_s23 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json
+hit_bread       snr_med   17.1 p10    0.4 masked  10.5% risk  15.8% phoneLUFS -34.4
+hit_mold        snr_med   13.2 p10   -2.3 masked  19.3% risk  22.8% phoneLUFS -31.9
+death_ally      snr_med   11.7 p10    3.6 masked   1.8% risk   8.8% phoneLUFS -29.8
+death_enemy     snr_med   10.6 p10    0.2 masked  10.5% risk  17.5% phoneLUFS -31.3
+deploy          snr_med   16.7 p10    3.6 masked   3.5% risk   8.8% phoneLUFS -25.4
+skill_slam      snr_med   16.7 p10    0.8 masked   8.9% risk  14.3% phoneLUFS -27.4
+skill_rally     snr_med   16.5 p10    0.3 masked   8.9% risk  12.5% phoneLUFS -26.0
+skill_barrage   snr_med   13.5 p10    6.2 masked   1.8% risk   7.3% phoneLUFS -28.1
+skill_heal      snr_med   17.2 p10    7.1 masked   1.8% risk   8.9% phoneLUFS -23.9
+wave_incoming   snr_med   16.8 p10    5.9 masked   5.4% risk   7.1% phoneLUFS -24.9
+boss_incoming   snr_med   22.3 p10   12.6 masked   0.0% risk   0.0% phoneLUFS -23.9
+wave_cleared    snr_med   15.6 p10    6.8 masked   5.4% risk   7.1% phoneLUFS -25.5
+ui_confirm      snr_med   12.6 p10    1.2 masked   8.8% risk  15.8% phoneLUFS -29.0
+ui_error        snr_med   13.8 p10    2.5 masked   7.0% risk  12.3% phoneLUFS -28.6
+hit_base        snr_med   11.1 p10    4.4 masked   3.5% risk   8.8% phoneLUFS -28.5
+hit_base_mold   snr_med   12.1 p10   -0.3 masked  12.3% risk  19.3% phoneLUFS -30.5
+faction LOO full 1.0 phone 1.0 sep 11.25
+=== python tools/audio/mix_report.py --rec=tools/audio/_render/recording_rb_r06_s23 --no-publish
+{"integrated_lufs": -22.1, "peak_dbfs": -3.53, "clipped": 0, "active": 392, "buried": 33, "at_risk": 38, "buried_hp300": 25, "seconds_audio": 59.54, "seconds_wall": 60.01, "cue_counts": {"worker_buy": 1, "deploy": 12, "ui_error": 5, "skill_slam": 5, "hit_mold": 30, "hit_bread": 30, "death_enemy": 8, "gold_tick": 6, "shoot_spit": 2, "wave_incoming": 1, "death_ally": 3}, "top_repeat": {"hit_mold": {"per_min": 30.0, "max_1s": 3, "gaps_lt_150ms": 0}, "hit_bread": {"per_min": 30.0, "max_1s": 2, "gaps_lt_150ms": 0}, "deploy": {"per_min": 12.0, "max_1s": 1, "gaps_lt_150ms": 0}}, "fatigue": [], "best_window": 0.0}
+=== python tools/audio/phone_check.py --rec=tools/audio/_render/recording_rb_r06_s37 --label=v3.8-rb_r06_s37 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json
+hit_bread       snr_med   16.2 p10   -1.8 masked  12.3% risk  12.3% phoneLUFS -34.4
+hit_mold        snr_med   13.1 p10    0.1 masked  10.5% risk  14.0% phoneLUFS -31.9
+death_ally      snr_med   11.3 p10    2.7 masked   5.3% risk  12.3% phoneLUFS -29.8
+death_enemy     snr_med   10.6 p10   -2.0 masked  14.0% risk  17.5% phoneLUFS -31.3
+deploy          snr_med   16.8 p10    2.1 masked   7.0% risk  14.0% phoneLUFS -25.4
+skill_slam      snr_med   16.6 p10    1.0 masked   8.8% risk  14.0% phoneLUFS -27.4
+skill_rally     snr_med   16.2 p10    7.2 masked   1.8% risk   5.4% phoneLUFS -26.0
+skill_barrage   snr_med   13.8 p10    5.1 masked   3.6% risk   5.4% phoneLUFS -28.1
+skill_heal      snr_med   17.7 p10    7.5 masked   0.0% risk   5.3% phoneLUFS -23.9
+wave_incoming   snr_med   17.9 p10    9.3 masked   0.0% risk   3.6% phoneLUFS -24.9
+boss_incoming   snr_med   21.9 p10   15.4 masked   0.0% risk   0.0% phoneLUFS -23.9
+wave_cleared    snr_med   16.0 p10    2.9 masked   3.5% risk  10.5% phoneLUFS -25.5
+ui_confirm      snr_med   12.7 p10    1.6 masked   7.0% risk  19.3% phoneLUFS -29.0
+ui_error        snr_med   13.2 p10    0.9 masked   7.0% risk  15.8% phoneLUFS -28.6
+hit_base        snr_med   10.6 p10    2.6 masked   3.5% risk  12.3% phoneLUFS -28.5
+hit_base_mold   snr_med   11.5 p10   -2.0 masked  15.8% risk  19.3% phoneLUFS -30.5
+faction LOO full 1.0 phone 1.0 sep 11.25
+=== python tools/audio/mix_report.py --rec=tools/audio/_render/recording_rb_r06_s37 --no-publish
+{"integrated_lufs": -21.5, "peak_dbfs": -4.85, "clipped": 0, "active": 404, "buried": 25, "at_risk": 22, "buried_hp300": 20, "seconds_audio": 59.81, "seconds_wall": 60.02, "cue_counts": {"worker_buy": 1, "deploy": 13, "ui_error": 5, "skill_slam": 5, "hit_mold": 36, "hit_bread": 28, "death_enemy": 9, "gold_tick": 8, "shoot_spit": 3, "wave_incoming": 1, "death_ally": 3, "wave_cleared": 1}, "top_repeat": {"hit_mold": {"per_min": 36.0, "max_1s": 3, "gaps_lt_150ms": 0}, "hit_bread": {"per_min": 28.0, "max_1s": 2, "gaps_lt_150ms": 0}, "deploy": {"per_min": 13.0, "max_1s": 1, "gaps_lt_150ms": 0}}, "fatigue": [], "best_window": 22.0}
+=== python tools/audio/phone_check.py --rec=tools/audio/_render/recording_rb_r08_s11 --label=v3.8-rb_r08_s11 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json
+hit_bread       snr_med   15.2 p10    2.1 masked   8.8% risk  17.5% phoneLUFS -34.4
+hit_mold        snr_med   12.4 p10    1.1 masked   8.8% risk  17.5% phoneLUFS -31.9
+death_ally      snr_med   11.2 p10    5.5 masked   1.8% risk   7.0% phoneLUFS -29.8
+death_enemy     snr_med    9.8 p10    0.2 masked  10.5% risk  22.8% phoneLUFS -31.3
+deploy          snr_med   15.8 p10    4.2 masked   3.5% risk   7.0% phoneLUFS -25.4
+skill_slam      snr_med   15.1 p10    1.5 masked   7.0% risk  14.0% phoneLUFS -27.4
+skill_rally     snr_med   14.4 p10    4.7 masked   3.6% risk   7.1% phoneLUFS -26.0
+skill_barrage   snr_med   12.1 p10    2.5 masked   5.4% risk  12.5% phoneLUFS -28.1
+skill_heal      snr_med   14.7 p10    5.1 masked   1.8% risk   5.3% phoneLUFS -23.9
+wave_incoming   snr_med   15.2 p10    7.5 masked   1.8% risk   5.4% phoneLUFS -24.9
+boss_incoming   snr_med   20.3 p10    8.7 masked   0.0% risk   0.0% phoneLUFS -23.9
+wave_cleared    snr_med   14.9 p10    4.0 masked   1.8% risk   8.8% phoneLUFS -25.5
+ui_confirm      snr_med   12.2 p10    0.8 masked  10.5% risk  17.5% phoneLUFS -29.0
+ui_error        snr_med   12.2 p10    1.8 masked   7.0% risk  17.5% phoneLUFS -28.6
+hit_base        snr_med   11.3 p10    5.0 masked   1.8% risk   8.8% phoneLUFS -28.5
+hit_base_mold   snr_med    8.9 p10    1.0 masked   8.8% risk  21.1% phoneLUFS -30.5
+faction LOO full 1.0 phone 1.0 sep 11.25
+=== python tools/audio/mix_report.py --rec=tools/audio/_render/recording_rb_r08_s11 --no-publish
+{"integrated_lufs": -21.9, "peak_dbfs": -2.24, "clipped": 0, "active": 414, "buried": 47, "at_risk": 30, "buried_hp300": 35, "seconds_audio": 59.81, "seconds_wall": 60.01, "cue_counts": {"worker_buy": 1, "deploy": 13, "ui_error": 5, "skill_slam": 5, "death_enemy": 11, "wave_incoming": 2, "hit_mold": 13, "hit_bread": 41, "shoot_spit": 42, "gold_tick": 6, "death_ally": 3, "explosion": 1, "wave_cleared": 1}, "top_repeat": {"shoot_spit": {"per_min": 42.0, "max_1s": 3, "gaps_lt_150ms": 0}, "hit_bread": {"per_min": 41.0, "max_1s": 3, "gaps_lt_150ms": 0}, "deploy": {"per_min": 13.0, "max_1s": 1, "gaps_lt_150ms": 0}}, "fatigue": [], "best_window": 26.0}
+=== python tools/audio/phone_check.py --rec=tools/audio/_render/recording_rb_r08_s23 --label=v3.8-rb_r08_s23 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json
+hit_bread       snr_med   16.6 p10    2.3 masked   7.0% risk  14.0% phoneLUFS -34.4
+hit_mold        snr_med   13.2 p10    0.5 masked   8.8% risk  19.3% phoneLUFS -31.9
+death_ally      snr_med   11.8 p10    3.5 masked   1.8% risk   8.8% phoneLUFS -29.8
+death_enemy     snr_med   11.0 p10    0.1 masked   8.8% risk  19.3% phoneLUFS -31.3
+deploy          snr_med   16.0 p10    5.3 masked   3.5% risk   7.0% phoneLUFS -25.4
+skill_slam      snr_med   17.1 p10    2.4 masked   5.3% risk  12.3% phoneLUFS -27.4
+skill_rally     snr_med   14.4 p10    3.5 masked   5.4% risk  10.7% phoneLUFS -26.0
+skill_barrage   snr_med   12.7 p10    2.4 masked   3.6% risk  16.1% phoneLUFS -28.1
+skill_heal      snr_med   14.7 p10    5.8 masked   1.8% risk   8.8% phoneLUFS -23.9
+wave_incoming   snr_med   14.7 p10    5.1 masked   1.8% risk   7.1% phoneLUFS -24.9
+boss_incoming   snr_med   21.1 p10    8.4 masked   0.0% risk   1.8% phoneLUFS -23.9
+wave_cleared    snr_med   15.6 p10    4.3 masked   5.3% risk   7.0% phoneLUFS -25.5
+ui_confirm      snr_med   12.5 p10    2.0 masked   5.3% risk  15.8% phoneLUFS -29.0
+ui_error        snr_med   13.5 p10    2.3 masked   5.3% risk  12.3% phoneLUFS -28.6
+hit_base        snr_med   11.2 p10    4.2 masked   1.8% risk   7.0% phoneLUFS -28.5
+hit_base_mold   snr_med   11.4 p10   -1.0 masked  12.3% risk  21.1% phoneLUFS -30.5
+faction LOO full 1.0 phone 1.0 sep 11.25
+=== python tools/audio/mix_report.py --rec=tools/audio/_render/recording_rb_r08_s23 --no-publish
+{"integrated_lufs": -22.0, "peak_dbfs": -1.66, "clipped": 0, "active": 403, "buried": 42, "at_risk": 34, "buried_hp300": 21, "seconds_audio": 59.81, "seconds_wall": 60.0, "cue_counts": {"worker_buy": 1, "deploy": 13, "ui_error": 5, "skill_slam": 5, "hit_bread": 43, "death_enemy": 11, "gold_tick": 7, "wave_incoming": 2, "hit_mold": 10, "shoot_spit": 43, "death_ally": 2, "explosion": 1, "wave_cleared": 1}, "top_repeat": {"hit_bread": {"per_min": 43.0, "max_1s": 3, "gaps_lt_150ms": 0}, "shoot_spit": {"per_min": 43.0, "max_1s": 3, "gaps_lt_150ms": 3}, "deploy": {"per_min": 13.0, "max_1s": 1, "gaps_lt_150ms": 0}}, "fatigue": [], "best_window": 25.0}
+=== python tools/audio/phone_check.py --rec=tools/audio/_render/recording_rb_r08_s37 --label=v3.8-rb_r08_s37 --report=tools/audio/_render/phone_v38.md --history=docs/audio/phone_check_v38.json
+hit_bread       snr_med   16.3 p10    1.0 masked   7.0% risk  19.3% phoneLUFS -34.4
+hit_mold        snr_med   13.3 p10   -0.4 masked  14.0% risk  21.1% phoneLUFS -31.9
+death_ally      snr_med   11.8 p10    5.8 masked   0.0% risk   7.0% phoneLUFS -29.8
+death_enemy     snr_med   11.0 p10    0.0 masked   8.8% risk  21.1% phoneLUFS -31.3
+deploy          snr_med   17.0 p10    5.3 masked   1.8% risk   7.0% phoneLUFS -25.4
+skill_slam      snr_med   17.2 p10    1.6 masked   7.0% risk  15.8% phoneLUFS -27.4
+skill_rally     snr_med   14.8 p10    2.5 masked   1.8% risk  10.5% phoneLUFS -26.0
+skill_barrage   snr_med   12.8 p10    2.0 masked   7.1% risk  12.5% phoneLUFS -28.1
+skill_heal      snr_med   16.7 p10    3.7 masked   3.5% risk  10.5% phoneLUFS -23.9
+wave_incoming   snr_med   16.5 p10    4.3 masked   3.6% risk   8.9% phoneLUFS -24.9
+boss_incoming   snr_med   21.0 p10    7.9 masked   0.0% risk   0.0% phoneLUFS -23.9
+wave_cleared    snr_med   15.7 p10    2.5 masked   7.0% risk  12.3% phoneLUFS -25.5
+ui_confirm      snr_med   12.6 p10    2.4 masked   7.0% risk  14.0% phoneLUFS -29.0
+ui_error        snr_med   14.2 p10    2.0 masked   7.0% risk  12.3% phoneLUFS -28.6
+hit_base        snr_med   11.6 p10    4.5 masked   0.0% risk   7.0% phoneLUFS -28.5
+hit_base_mold   snr_med   11.6 p10    0.8 masked   8.8% risk  24.6% phoneLUFS -30.5
+faction LOO full 1.0 phone 1.0 sep 11.25
+=== python tools/audio/mix_report.py --rec=tools/audio/_render/recording_rb_r08_s37 --no-publish
+{"integrated_lufs": -21.9, "peak_dbfs": -2.49, "clipped": 0, "active": 405, "buried": 38, "at_risk": 36, "buried_hp300": 28, "seconds_audio": 59.91, "seconds_wall": 60.01, "cue_counts": {"worker_buy": 1, "deploy": 13, "ui_error": 5, "skill_slam": 5, "death_enemy": 10, "wave_incoming": 2, "hit_mold": 11, "hit_bread": 40, "shoot_spit": 40, "gold_tick": 8, "death_ally": 2, "explosion": 1, "wave_cleared": 1}, "top_repeat": {"hit_bread": {"per_min": 40.0, "max_1s": 3, "gaps_lt_150ms": 0}, "shoot_spit": {"per_min": 40.0, "max_1s": 3, "gaps_lt_150ms": 0}, "deploy": {"per_min": 13.0, "max_1s": 1, "gaps_lt_150ms": 0}}, "fatigue": [], "best_window": 19.0}
+DETACHED_DONE 2026-11-01T03:10:16 exit=0

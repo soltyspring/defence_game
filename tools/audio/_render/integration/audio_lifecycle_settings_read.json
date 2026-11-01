@@ -1,0 +1,24 @@
+{
+ "checks": {
+  "read_music_bus_db": true,
+  "read_music_volume_restored": true,
+  "read_sfx_restored_muted": true,
+  "zero_music_bus_muted": true,
+  "zero_volume_output_is_silent": true
+ },
+ "mode": "settings_read",
+ "pass": true,
+ "values": {
+  "loaded_settings": {
+   "fps_cap": 60.0,
+   "music": 0.3,
+   "screen_shake": true,
+   "sfx": 0.0,
+   "show_damage": true
+  },
+  "music_bus_db": -20.92,
+  "sfx_plays_total": 3,
+  "zero_volume_peak_abs": 0,
+  "zero_volume_recorded_samples": 172032
+ }
+}

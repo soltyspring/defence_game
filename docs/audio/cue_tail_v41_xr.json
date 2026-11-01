@@ -1,0 +1,6221 @@
+{
+ "tag": "xr",
+ "cues": [
+  "explosion",
+  "death_ally",
+  "death_enemy",
+  "hit_bread",
+  "hit_mold",
+  "hit_melee",
+  "hit_arrow",
+  "hero_death"
+ ],
+ "plays": [
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 16.4165,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": true,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 17.1595,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "death_enemy",
+   "t_audio": 17.9026,
+   "played_len_s": 0.391,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.32,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 17.9026,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 19.2958,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 19.9459,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.988
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "death_enemy",
+   "t_audio": 20.1317,
+   "played_len_s": 0.426,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 21.5249,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 22.1751,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.992
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "death_enemy",
+   "t_audio": 22.3608,
+   "played_len_s": 0.391,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.32,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 23.011,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.989
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 23.5682,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.988
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "death_enemy",
+   "t_audio": 23.9398,
+   "played_len_s": 0.412,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.33,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 23.9398,
+   "played_len_s": 0.102,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 24.4042,
+   "played_len_s": 0.059,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.988
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 24.7757,
+   "played_len_s": 0.107,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "death_enemy",
+   "t_audio": 25.5187,
+   "played_len_s": 0.427,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 25.5187,
+   "played_len_s": 0.096,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 26.8191,
+   "played_len_s": 0.103,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 27.4692,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.99
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "death_enemy",
+   "t_audio": 27.655,
+   "played_len_s": 0.449,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.36,
+   "confirmed": true,
+   "corr": 0.991
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 34.3423,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 35.2711,
+   "played_len_s": 0.108,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 36.1999,
+   "played_len_s": 0.109,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 37.1287,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 38.0575,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 38.9863,
+   "played_len_s": 0.097,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 39.3578,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "death_enemy",
+   "t_audio": 39.8222,
+   "played_len_s": 0.401,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.33,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 39.8222,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 40.2866,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 40.751,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 41.4012,
+   "played_len_s": 0.086,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.07,
+   "confirmed": true,
+   "corr": 0.986
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 42.0513,
+   "played_len_s": 0.059,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "death_enemy",
+   "t_audio": 42.5157,
+   "played_len_s": 0.441,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.36,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 42.5157,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "death_ally",
+   "t_audio": 43.3516,
+   "played_len_s": 0.337,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.28,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 44.7448,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.985
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 45.3021,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.982
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 45.8594,
+   "played_len_s": 0.106,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "death_enemy",
+   "t_audio": 46.138,
+   "played_len_s": 0.405,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.33,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 46.3238,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.99
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 46.6953,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 47.1597,
+   "played_len_s": 0.09,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.992
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "death_ally",
+   "t_audio": 47.717,
+   "played_len_s": 0.342,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.29,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 47.717,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.974
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "death_enemy",
+   "t_audio": 48.1814,
+   "played_len_s": 0.401,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.33,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 48.1814,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 49.2031,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 49.7604,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 50.3176,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "death_enemy",
+   "t_audio": 50.5963,
+   "played_len_s": 0.402,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.33,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 51.0607,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.973
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "death_ally",
+   "t_audio": 51.0607,
+   "played_len_s": 0.324,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.27,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 51.5251,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 52.0824,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.99
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 52.4539,
+   "played_len_s": 0.1,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 53.4756,
+   "played_len_s": 0.101,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 54.4044,
+   "played_len_s": 0.095,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "death_enemy",
+   "t_audio": 55.3332,
+   "played_len_s": 0.397,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.32,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 55.3332,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": true,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "death_ally",
+   "t_audio": 55.426,
+   "played_len_s": 0.357,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.3,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_bread",
+   "t_audio": 57.0979,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 58.0267,
+   "played_len_s": 0.107,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s11",
+   "cue": "hit_mold",
+   "t_audio": 58.9555,
+   "played_len_s": 0.104,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 16.4513,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": true,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 17.1944,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "death_enemy",
+   "t_audio": 18.0303,
+   "played_len_s": 0.391,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.32,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 18.0303,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 19.4235,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 20.0737,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.988
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "death_enemy",
+   "t_audio": 20.1665,
+   "played_len_s": 0.426,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 21.6526,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 22.3028,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "death_enemy",
+   "t_audio": 22.3956,
+   "played_len_s": 0.43,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 23.0458,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.985
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 23.696,
+   "played_len_s": 0.056,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.98
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "death_enemy",
+   "t_audio": 24.0675,
+   "played_len_s": 0.425,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 24.0675,
+   "played_len_s": 0.106,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 24.439,
+   "played_len_s": 0.059,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.99
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 24.8105,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "death_enemy",
+   "t_audio": 25.6464,
+   "played_len_s": 0.433,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 25.6464,
+   "played_len_s": 0.098,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 26.9468,
+   "played_len_s": 0.101,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 27.5969,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.989
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "death_enemy",
+   "t_audio": 27.6898,
+   "played_len_s": 0.453,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.37,
+   "confirmed": true,
+   "corr": 0.991
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 34.47,
+   "played_len_s": 0.096,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 35.3988,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 36.3276,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 37.2564,
+   "played_len_s": 0.098,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 38.0923,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 39.0211,
+   "played_len_s": 0.106,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 39.4855,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "death_enemy",
+   "t_audio": 39.9499,
+   "played_len_s": 0.44,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.36,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 39.9499,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 40.4143,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.983
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 40.8787,
+   "played_len_s": 0.1,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 41.5289,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 42.2719,
+   "played_len_s": 0.059,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.985
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "death_enemy",
+   "t_audio": 42.6435,
+   "played_len_s": 0.413,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.991
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 42.6435,
+   "played_len_s": 0.087,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.987
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "death_ally",
+   "t_audio": 43.4794,
+   "played_len_s": 0.349,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.29,
+   "confirmed": true,
+   "corr": 0.992
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 44.8726,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.973
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 45.4298,
+   "played_len_s": 0.062,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.992
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 45.9871,
+   "played_len_s": 0.097,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "death_enemy",
+   "t_audio": 46.2658,
+   "played_len_s": 0.39,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.32,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 46.3586,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.987
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 46.823,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.989
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 47.3803,
+   "played_len_s": 0.088,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.99
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "death_ally",
+   "t_audio": 47.8447,
+   "played_len_s": 0.327,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.28,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 47.8447,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.975
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "death_enemy",
+   "t_audio": 48.402,
+   "played_len_s": 0.394,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.32,
+   "confirmed": true,
+   "corr": 0.984
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 48.402,
+   "played_len_s": 0.082,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.07,
+   "confirmed": true,
+   "corr": 0.973
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 49.3308,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 49.8881,
+   "played_len_s": 0.059,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 50.4453,
+   "played_len_s": 0.082,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.07,
+   "confirmed": true,
+   "corr": 0.979
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "death_enemy",
+   "t_audio": 50.724,
+   "played_len_s": 0.406,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.33,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 51.1884,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.966
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "death_ally",
+   "t_audio": 51.1884,
+   "played_len_s": 0.336,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.28,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 51.6528,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 52.2101,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.984
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 52.5816,
+   "played_len_s": 0.106,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 53.1389,
+   "played_len_s": 0.062,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.989
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 53.789,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 54.1606,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 54.7178,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 55.1822,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.984
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "death_ally",
+   "t_audio": 55.1822,
+   "played_len_s": 0.348,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.29,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "death_enemy",
+   "t_audio": 56.9469,
+   "played_len_s": 0.415,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 56.9469,
+   "played_len_s": 0.108,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 57.4113,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.978
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 57.9686,
+   "played_len_s": 0.097,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_bread",
+   "t_audio": 58.433,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.991
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 58.8974,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s23",
+   "cue": "hit_mold",
+   "t_audio": 59.3618,
+   "played_len_s": 0.095,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 16.6371,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 17.473,
+   "played_len_s": 0.095,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "death_enemy",
+   "t_audio": 18.216,
+   "played_len_s": 0.391,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.32,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 18.216,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 19.6092,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 20.2594,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.988
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "death_enemy",
+   "t_audio": 20.4452,
+   "played_len_s": 0.426,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 21.9312,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 22.5814,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "death_enemy",
+   "t_audio": 22.6743,
+   "played_len_s": 0.43,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 23.3244,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.985
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 23.9746,
+   "played_len_s": 0.056,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.98
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "death_enemy",
+   "t_audio": 24.2532,
+   "played_len_s": 0.425,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 24.2532,
+   "played_len_s": 0.106,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 24.7176,
+   "played_len_s": 0.059,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.99
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 25.0892,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "death_enemy",
+   "t_audio": 25.9251,
+   "played_len_s": 0.433,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 25.9251,
+   "played_len_s": 0.098,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 27.2254,
+   "played_len_s": 0.101,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 27.8756,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.989
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "death_enemy",
+   "t_audio": 27.9684,
+   "played_len_s": 0.453,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.37,
+   "confirmed": true,
+   "corr": 0.991
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 34.8415,
+   "played_len_s": 0.096,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 35.7703,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 36.6991,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 37.5351,
+   "played_len_s": 0.098,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 38.4639,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 39.3927,
+   "played_len_s": 0.106,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 39.8571,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "death_enemy",
+   "t_audio": 40.3214,
+   "played_len_s": 0.44,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.36,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 40.3214,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 40.7859,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.983
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 41.2503,
+   "played_len_s": 0.1,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 41.9004,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 42.5506,
+   "played_len_s": 0.059,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "death_enemy",
+   "t_audio": 43.015,
+   "played_len_s": 0.413,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.991
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 43.015,
+   "played_len_s": 0.087,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.987
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "death_ally",
+   "t_audio": 43.758,
+   "played_len_s": 0.325,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.27,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 45.1512,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.974
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 45.6156,
+   "played_len_s": 0.059,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 46.2658,
+   "played_len_s": 0.095,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "death_enemy",
+   "t_audio": 46.4515,
+   "played_len_s": 0.406,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.33,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 46.6373,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.987
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 47.0088,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.986
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 47.5661,
+   "played_len_s": 0.091,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "death_ally",
+   "t_audio": 47.9376,
+   "played_len_s": 0.347,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.29,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 47.9376,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.985
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "death_enemy",
+   "t_audio": 48.5877,
+   "played_len_s": 0.441,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.36,
+   "confirmed": true,
+   "corr": 0.989
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 48.5877,
+   "played_len_s": 0.083,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.07,
+   "confirmed": true,
+   "corr": 0.977
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 49.4237,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.965
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 50.0738,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.987
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 50.5382,
+   "played_len_s": 0.089,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "death_enemy",
+   "t_audio": 50.8169,
+   "played_len_s": 0.396,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.32,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 51.2813,
+   "played_len_s": 0.059,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.973
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "death_ally",
+   "t_audio": 51.2813,
+   "played_len_s": 0.327,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.28,
+   "confirmed": true,
+   "corr": 0.989
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 51.6528,
+   "played_len_s": 0.107,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 52.2101,
+   "played_len_s": 0.062,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.987
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 53.6033,
+   "played_len_s": 0.101,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 54.5321,
+   "played_len_s": 0.106,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "death_enemy",
+   "t_audio": 55.368,
+   "played_len_s": 0.435,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 55.368,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "death_ally",
+   "t_audio": 55.5537,
+   "played_len_s": 0.337,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.28,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_bread",
+   "t_audio": 57.1327,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 58.0615,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r02_s37",
+   "cue": "hit_mold",
+   "t_audio": 58.9903,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 19.3306,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 20.1665,
+   "played_len_s": 0.095,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 21.0024,
+   "played_len_s": 0.102,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 21.4669,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 22.4885,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "death_enemy",
+   "t_audio": 22.5814,
+   "played_len_s": 0.43,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 23.7888,
+   "played_len_s": 0.053,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.954
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 24.439,
+   "played_len_s": 0.107,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 24.9963,
+   "played_len_s": 0.053,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.951
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "death_enemy",
+   "t_audio": 26.018,
+   "played_len_s": 0.395,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.32,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 26.018,
+   "played_len_s": 0.095,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 26.8539,
+   "played_len_s": 0.102,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "death_enemy",
+   "t_audio": 27.5969,
+   "played_len_s": 0.415,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 30.662,
+   "played_len_s": 0.107,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 31.405,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 31.8694,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.978
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "death_enemy",
+   "t_audio": 32.2409,
+   "played_len_s": 0.454,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.37,
+   "confirmed": true,
+   "corr": 0.992
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 32.2409,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 32.8911,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 33.8199,
+   "played_len_s": 0.102,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 34.5629,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.981
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 35.0273,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.983
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 35.4917,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 36.049,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.987
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "death_enemy",
+   "t_audio": 36.2347,
+   "played_len_s": 0.445,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.36,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 37.0707,
+   "played_len_s": 0.062,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.992
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 37.8137,
+   "played_len_s": 0.056,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.986
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 38.371,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.991
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 39.0211,
+   "played_len_s": 0.059,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 39.3927,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.986
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 39.9499,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.986
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "death_enemy",
+   "t_audio": 40.0428,
+   "played_len_s": 0.418,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 40.8787,
+   "played_len_s": 0.101,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 41.9933,
+   "played_len_s": 0.106,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 42.6435,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.986
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 43.015,
+   "played_len_s": 0.108,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 43.6651,
+   "played_len_s": 0.062,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "death_enemy",
+   "t_audio": 43.8509,
+   "played_len_s": 0.421,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 44.3153,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 45.1512,
+   "played_len_s": 0.101,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 45.5227,
+   "played_len_s": 0.096,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 45.8942,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.981
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 46.5444,
+   "played_len_s": 0.056,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.98
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "death_enemy",
+   "t_audio": 46.6373,
+   "played_len_s": 0.444,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.36,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "death_ally",
+   "t_audio": 46.9159,
+   "played_len_s": 0.352,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.3,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 47.0088,
+   "played_len_s": 0.095,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 47.4732,
+   "played_len_s": 0.101,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 48.1234,
+   "played_len_s": 0.103,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 48.5877,
+   "played_len_s": 0.102,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 49.0521,
+   "played_len_s": 0.102,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 49.9809,
+   "played_len_s": 0.101,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 50.8169,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 51.1884,
+   "played_len_s": 0.103,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 51.7457,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "death_enemy",
+   "t_audio": 51.8385,
+   "played_len_s": 0.391,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.32,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 52.5816,
+   "played_len_s": 0.101,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 53.046,
+   "played_len_s": 0.095,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 53.4175,
+   "played_len_s": 0.107,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 54.1606,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 54.6249,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": true,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "death_ally",
+   "t_audio": 54.9965,
+   "played_len_s": 0.346,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.29,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 54.9965,
+   "played_len_s": 0.062,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.97
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 55.7395,
+   "played_len_s": 0.107,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 56.5754,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.974
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 57.1327,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 57.5971,
+   "played_len_s": 0.1,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 58.0615,
+   "played_len_s": 0.056,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.98
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 58.5259,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_mold",
+   "t_audio": 58.9903,
+   "played_len_s": 0.108,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s11",
+   "cue": "hit_bread",
+   "t_audio": 59.3618,
+   "played_len_s": 0.056,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.975
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 19.4235,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 20.2594,
+   "played_len_s": 0.095,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 21.0953,
+   "played_len_s": 0.102,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 21.5597,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 22.5814,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "death_enemy",
+   "t_audio": 22.6743,
+   "played_len_s": 0.43,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 23.7888,
+   "played_len_s": 0.053,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.954
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 24.439,
+   "played_len_s": 0.107,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 24.9963,
+   "played_len_s": 0.053,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.951
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "death_enemy",
+   "t_audio": 25.9251,
+   "played_len_s": 0.395,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.32,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 25.9251,
+   "played_len_s": 0.095,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 26.6681,
+   "played_len_s": 0.102,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "death_enemy",
+   "t_audio": 27.4112,
+   "played_len_s": 0.415,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 30.3833,
+   "played_len_s": 0.102,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 31.1263,
+   "played_len_s": 0.096,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 31.4979,
+   "played_len_s": 0.062,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "death_enemy",
+   "t_audio": 31.8694,
+   "played_len_s": 0.414,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 31.8694,
+   "played_len_s": 0.096,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 32.5196,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 33.4483,
+   "played_len_s": 0.108,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 34.1914,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.977
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "death_enemy",
+   "t_audio": 34.2843,
+   "played_len_s": 0.416,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 34.6558,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.988
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 35.0273,
+   "played_len_s": 0.103,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 35.6775,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 36.6063,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 37.3493,
+   "played_len_s": 0.062,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.986
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 37.9066,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.983
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "death_enemy",
+   "t_audio": 38.1852,
+   "played_len_s": 0.423,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 38.9282,
+   "played_len_s": 0.059,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 39.4855,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 40.5072,
+   "played_len_s": 0.106,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 41.0645,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.986
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 41.6218,
+   "played_len_s": 0.108,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 42.0862,
+   "played_len_s": 0.062,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.987
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 42.6435,
+   "played_len_s": 0.108,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 43.2007,
+   "played_len_s": 0.1,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 43.5722,
+   "played_len_s": 0.108,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "death_enemy",
+   "t_audio": 43.9438,
+   "played_len_s": 0.423,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 43.9438,
+   "played_len_s": 0.101,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 44.4082,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 44.8726,
+   "played_len_s": 0.102,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 45.2441,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.99
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 45.7085,
+   "played_len_s": 0.1,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "death_enemy",
+   "t_audio": 46.2658,
+   "played_len_s": 0.432,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.992
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 46.2658,
+   "played_len_s": 0.101,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 46.7302,
+   "played_len_s": 0.102,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 47.1946,
+   "played_len_s": 0.105,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 47.5661,
+   "played_len_s": 0.096,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 48.0305,
+   "played_len_s": 0.1,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "death_ally",
+   "t_audio": 48.402,
+   "played_len_s": 0.343,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.29,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 48.402,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.985
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 48.8664,
+   "played_len_s": 0.109,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 49.3308,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 49.9809,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.982
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 50.3525,
+   "played_len_s": 0.097,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "death_enemy",
+   "t_audio": 50.3525,
+   "played_len_s": 0.425,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 50.724,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.986
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 51.0955,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 51.467,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 51.9314,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 52.303,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.972
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 52.7674,
+   "played_len_s": 0.104,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 53.5104,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 53.8819,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 54.3463,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.986
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 54.7178,
+   "played_len_s": 0.103,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 55.0893,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "death_ally",
+   "t_audio": 55.5537,
+   "played_len_s": 0.328,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.28,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 55.5537,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.958
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 56.0181,
+   "played_len_s": 0.097,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 56.8541,
+   "played_len_s": 0.106,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 57.3185,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.986
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_mold",
+   "t_audio": 57.7829,
+   "played_len_s": 0.097,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 58.2473,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.991
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "death_ally",
+   "t_audio": 58.6188,
+   "played_len_s": 0.337,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.28,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s23",
+   "cue": "hit_bread",
+   "t_audio": 58.6188,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.984
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 19.4235,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 20.2594,
+   "played_len_s": 0.095,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 21.0024,
+   "played_len_s": 0.102,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 21.4669,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 22.4885,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "death_enemy",
+   "t_audio": 22.5814,
+   "played_len_s": 0.43,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 23.7888,
+   "played_len_s": 0.053,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.954
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 24.439,
+   "played_len_s": 0.107,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 24.9963,
+   "played_len_s": 0.053,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.951
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "death_enemy",
+   "t_audio": 26.018,
+   "played_len_s": 0.395,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.32,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 26.018,
+   "played_len_s": 0.095,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 26.8539,
+   "played_len_s": 0.102,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 27.5969,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.986
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "death_enemy",
+   "t_audio": 27.6898,
+   "played_len_s": 0.415,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 30.662,
+   "played_len_s": 0.102,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 31.405,
+   "played_len_s": 0.096,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 31.8694,
+   "played_len_s": 0.062,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.983
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "death_enemy",
+   "t_audio": 32.2409,
+   "played_len_s": 0.414,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 32.2409,
+   "played_len_s": 0.096,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 32.7982,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 33.8199,
+   "played_len_s": 0.108,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 34.47,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.977
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "death_enemy",
+   "t_audio": 34.5629,
+   "played_len_s": 0.416,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 34.9344,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.988
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 35.3988,
+   "played_len_s": 0.103,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 35.9561,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 36.9778,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 37.7208,
+   "played_len_s": 0.062,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.986
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 38.2781,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.983
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "death_enemy",
+   "t_audio": 38.5567,
+   "played_len_s": 0.423,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 39.2998,
+   "played_len_s": 0.059,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 39.9499,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 40.8787,
+   "played_len_s": 0.106,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 41.9004,
+   "played_len_s": 0.107,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 42.5506,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.966
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 42.9221,
+   "played_len_s": 0.103,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 43.5722,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.973
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "death_enemy",
+   "t_audio": 43.758,
+   "played_len_s": 0.431,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 44.2224,
+   "played_len_s": 0.062,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.992
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 45.0583,
+   "played_len_s": 0.095,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 45.4298,
+   "played_len_s": 0.095,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 45.8014,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 46.3586,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "death_enemy",
+   "t_audio": 46.4515,
+   "played_len_s": 0.443,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.36,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 46.9159,
+   "played_len_s": 0.101,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 47.3803,
+   "played_len_s": 0.107,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 48.0305,
+   "played_len_s": 0.095,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "death_ally",
+   "t_audio": 48.3091,
+   "played_len_s": 0.352,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.3,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 48.4949,
+   "played_len_s": 0.096,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 48.9593,
+   "played_len_s": 0.1,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 49.7952,
+   "played_len_s": 0.095,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "death_enemy",
+   "t_audio": 50.0738,
+   "played_len_s": 0.42,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 50.724,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 51.5599,
+   "played_len_s": 0.059,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 51.9314,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 52.3958,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 52.8602,
+   "played_len_s": 0.103,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 53.2317,
+   "played_len_s": 0.098,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 53.9748,
+   "played_len_s": 0.096,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 54.3463,
+   "played_len_s": 0.096,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 54.7178,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.97
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 55.2751,
+   "played_len_s": 0.104,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 55.8324,
+   "played_len_s": 0.099,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "death_ally",
+   "t_audio": 55.9253,
+   "played_len_s": 0.341,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.29,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 56.2039,
+   "played_len_s": 0.101,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 56.8541,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.986
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 57.4113,
+   "played_len_s": 0.103,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 57.8757,
+   "played_len_s": 0.056,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.984
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 58.3401,
+   "played_len_s": 0.107,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_bread",
+   "t_audio": 58.8045,
+   "played_len_s": 0.062,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.99
+  },
+  {
+   "rec": "r06_s37",
+   "cue": "hit_mold",
+   "t_audio": 59.2689,
+   "played_len_s": 0.097,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "death_enemy",
+   "t_audio": 16.73,
+   "played_len_s": 0.418,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_mold",
+   "t_audio": 22.2099,
+   "played_len_s": 0.105,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 22.86,
+   "played_len_s": 0.062,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 23.3244,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 23.696,
+   "played_len_s": 0.056,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.96
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 24.0675,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.99
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 24.439,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.992
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 24.8105,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.989
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 25.182,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.991
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "death_enemy",
+   "t_audio": 25.2749,
+   "played_len_s": 0.391,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.32,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 25.6464,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.984
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 25.9251,
+   "played_len_s": 0.05,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": false,
+   "corr": 0.876
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 26.3895,
+   "played_len_s": 0.059,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 26.761,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.99
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "death_enemy",
+   "t_audio": 26.761,
+   "played_len_s": 0.432,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 27.1325,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.992
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 27.504,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.989
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 27.9684,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.98
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 28.34,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.991
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "death_enemy",
+   "t_audio": 28.34,
+   "played_len_s": 0.431,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 29.1759,
+   "played_len_s": 0.05,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": false,
+   "corr": 0.859
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 29.826,
+   "played_len_s": 0.049,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": false,
+   "corr": 0.832
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 30.4762,
+   "played_len_s": 0.055,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.967
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 31.1263,
+   "played_len_s": 0.056,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.97
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 31.6836,
+   "played_len_s": 0.054,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.945
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 32.3338,
+   "played_len_s": 0.05,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": false,
+   "corr": 0.841
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 32.9839,
+   "played_len_s": 0.053,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.943
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_mold",
+   "t_audio": 33.5412,
+   "played_len_s": 0.101,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 34.1914,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.991
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "death_enemy",
+   "t_audio": 34.3771,
+   "played_len_s": 0.421,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.988
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 34.5629,
+   "played_len_s": 0.052,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.922
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 35.4917,
+   "played_len_s": 0.05,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": false,
+   "corr": 0.872
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 36.1419,
+   "played_len_s": 0.05,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": false,
+   "corr": 0.843
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 36.792,
+   "played_len_s": 0.052,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.926
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 37.4422,
+   "played_len_s": 0.051,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": true,
+   "corr": 0.902
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 38.1852,
+   "played_len_s": 0.055,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.975
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 40.2286,
+   "played_len_s": 0.049,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": false,
+   "corr": 0.812
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 41.3431,
+   "played_len_s": 0.053,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.927
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "death_ally",
+   "t_audio": 42.6435,
+   "played_len_s": 0.324,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.27,
+   "confirmed": true,
+   "corr": 0.985
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 42.6435,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": false,
+   "corr": 0.841
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "explosion",
+   "t_audio": 42.6435,
+   "played_len_s": 0.52,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.42,
+   "confirmed": true,
+   "corr": 0.986
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "death_enemy",
+   "t_audio": 42.6435,
+   "played_len_s": 0.435,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.987
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 44.0366,
+   "played_len_s": 0.052,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.904
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 45.2441,
+   "played_len_s": 0.051,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": false,
+   "corr": 0.888
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_mold",
+   "t_audio": 46.3586,
+   "played_len_s": 0.103,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_mold",
+   "t_audio": 47.3803,
+   "played_len_s": 0.103,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 47.7518,
+   "played_len_s": 0.053,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.921
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_mold",
+   "t_audio": 48.3091,
+   "played_len_s": 0.102,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 48.7735,
+   "played_len_s": 0.062,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "death_ally",
+   "t_audio": 49.0521,
+   "played_len_s": 0.341,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.29,
+   "confirmed": true,
+   "corr": 0.992
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 49.3308,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.989
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_mold",
+   "t_audio": 49.8881,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 50.3525,
+   "played_len_s": 0.052,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.948
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_mold",
+   "t_audio": 50.8169,
+   "played_len_s": 0.103,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 51.5599,
+   "played_len_s": 0.049,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": false,
+   "corr": 0.828
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "death_enemy",
+   "t_audio": 51.8385,
+   "played_len_s": 0.433,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "death_enemy",
+   "t_audio": 52.7674,
+   "played_len_s": 0.394,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.32,
+   "confirmed": true,
+   "corr": 0.989
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_mold",
+   "t_audio": 52.7674,
+   "played_len_s": 0.106,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.992
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "death_enemy",
+   "t_audio": 53.789,
+   "played_len_s": 0.421,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.96
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_mold",
+   "t_audio": 53.789,
+   "played_len_s": 0.101,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.982
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 54.2534,
+   "played_len_s": 0.056,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.978
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "death_enemy",
+   "t_audio": 54.8107,
+   "played_len_s": 0.397,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.32,
+   "confirmed": true,
+   "corr": 0.989
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_mold",
+   "t_audio": 54.8107,
+   "played_len_s": 0.105,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "death_ally",
+   "t_audio": 56.9469,
+   "played_len_s": 0.349,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.29,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 56.9469,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.979
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_mold",
+   "t_audio": 57.5042,
+   "played_len_s": 0.108,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_bread",
+   "t_audio": 57.9686,
+   "played_len_s": 0.059,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r08_s11",
+   "cue": "hit_mold",
+   "t_audio": 58.5259,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "death_enemy",
+   "t_audio": 16.8229,
+   "played_len_s": 0.418,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_mold",
+   "t_audio": 22.117,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 22.86,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 23.2316,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 23.6031,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.982
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 23.9746,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 24.439,
+   "played_len_s": 0.056,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.973
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 24.8105,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 25.182,
+   "played_len_s": 0.056,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.974
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "death_enemy",
+   "t_audio": 25.182,
+   "played_len_s": 0.404,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.33,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 25.5536,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.984
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 25.9251,
+   "played_len_s": 0.054,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.943
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 26.3895,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.984
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 26.761,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "death_enemy",
+   "t_audio": 26.761,
+   "played_len_s": 0.435,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 27.1325,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 27.504,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.992
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 27.8756,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.991
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 28.34,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.991
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "death_enemy",
+   "t_audio": 28.34,
+   "played_len_s": 0.44,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.36,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "death_enemy",
+   "t_audio": 28.6186,
+   "played_len_s": 0.452,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.37,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 29.1759,
+   "played_len_s": 0.056,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.973
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 29.826,
+   "played_len_s": 0.054,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.955
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 30.4762,
+   "played_len_s": 0.056,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.977
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 31.0335,
+   "played_len_s": 0.053,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": true,
+   "corr": 0.931
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 31.6836,
+   "played_len_s": 0.053,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.951
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 32.3338,
+   "played_len_s": 0.053,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": true,
+   "corr": 0.935
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 32.9839,
+   "played_len_s": 0.054,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.953
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_mold",
+   "t_audio": 33.5412,
+   "played_len_s": 0.1,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 34.1914,
+   "played_len_s": 0.059,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "death_enemy",
+   "t_audio": 34.3771,
+   "played_len_s": 0.422,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.985
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 34.5629,
+   "played_len_s": 0.049,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": false,
+   "corr": 0.848
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 35.4917,
+   "played_len_s": 0.055,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.969
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 36.1419,
+   "played_len_s": 0.054,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.959
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 36.792,
+   "played_len_s": 0.055,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.974
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 37.3493,
+   "played_len_s": 0.054,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.968
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 40.0428,
+   "played_len_s": 0.054,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.953
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 41.1574,
+   "played_len_s": 0.055,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.947
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 42.4577,
+   "played_len_s": 0.056,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.974
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "death_ally",
+   "t_audio": 42.7363,
+   "played_len_s": 0.335,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.28,
+   "confirmed": true,
+   "corr": 0.982
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "explosion",
+   "t_audio": 42.7363,
+   "played_len_s": 0.494,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.4,
+   "confirmed": true,
+   "corr": 0.982
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "death_enemy",
+   "t_audio": 42.7363,
+   "played_len_s": 0.431,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.983
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 43.8509,
+   "played_len_s": 0.049,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": false,
+   "corr": 0.842
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 44.9654,
+   "played_len_s": 0.055,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.972
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 46.2658,
+   "played_len_s": 0.05,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": false,
+   "corr": 0.871
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_mold",
+   "t_audio": 47.2874,
+   "played_len_s": 0.104,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "death_enemy",
+   "t_audio": 48.3091,
+   "played_len_s": 0.372,
+   "cut_by_voice_reuse": true,
+   "audible_end_s": 0.32,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_mold",
+   "t_audio": 48.3091,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 48.6806,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.978
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "death_ally",
+   "t_audio": 48.8664,
+   "played_len_s": 0.324,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.27,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 49.3308,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.983
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_mold",
+   "t_audio": 49.7952,
+   "played_len_s": 0.095,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.984
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 50.1667,
+   "played_len_s": 0.053,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.944
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_mold",
+   "t_audio": 50.8169,
+   "played_len_s": 0.108,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_bread",
+   "t_audio": 51.467,
+   "played_len_s": 0.054,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.956
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "death_enemy",
+   "t_audio": 51.7457,
+   "played_len_s": 0.434,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.986
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "death_enemy",
+   "t_audio": 52.3958,
+   "played_len_s": 0.441,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.36,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_mold",
+   "t_audio": 52.3958,
+   "played_len_s": 0.104,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "death_enemy",
+   "t_audio": 53.4175,
+   "played_len_s": 0.372,
+   "cut_by_voice_reuse": true,
+   "audible_end_s": 0.33,
+   "confirmed": true,
+   "corr": 0.989
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_mold",
+   "t_audio": 53.4175,
+   "played_len_s": 0.094,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.992
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_mold",
+   "t_audio": 56.2039,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_mold",
+   "t_audio": 57.1327,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r08_s23",
+   "cue": "hit_mold",
+   "t_audio": 58.1544,
+   "played_len_s": 0.106,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "death_enemy",
+   "t_audio": 17.0086,
+   "played_len_s": 0.418,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_mold",
+   "t_audio": 22.4885,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 23.2316,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 23.6031,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 24.0675,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.982
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 24.439,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 24.8105,
+   "played_len_s": 0.056,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.975
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 25.2749,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 25.6464,
+   "played_len_s": 0.056,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.974
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "death_enemy",
+   "t_audio": 25.6464,
+   "played_len_s": 0.404,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.33,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 26.018,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.984
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 26.3895,
+   "played_len_s": 0.054,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.943
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 26.8539,
+   "played_len_s": 0.063,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.984
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 27.2254,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "death_enemy",
+   "t_audio": 27.2254,
+   "played_len_s": 0.435,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 27.5969,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 28.0613,
+   "played_len_s": 0.057,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.989
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 28.4328,
+   "played_len_s": 0.064,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.98
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 28.8043,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.993
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "death_enemy",
+   "t_audio": 28.8972,
+   "played_len_s": 0.431,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "death_enemy",
+   "t_audio": 29.1759,
+   "played_len_s": 0.432,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.35,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 29.7331,
+   "played_len_s": 0.056,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.977
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 30.3833,
+   "played_len_s": 0.049,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": false,
+   "corr": 0.828
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 31.0335,
+   "played_len_s": 0.054,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.958
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 31.6836,
+   "played_len_s": 0.055,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.972
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 32.3338,
+   "played_len_s": 0.054,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.931
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 32.9839,
+   "played_len_s": 0.054,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.968
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 33.6341,
+   "played_len_s": 0.053,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": true,
+   "corr": 0.932
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_mold",
+   "t_audio": 34.1914,
+   "played_len_s": 0.102,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 34.8415,
+   "played_len_s": 0.06,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "death_enemy",
+   "t_audio": 35.0273,
+   "played_len_s": 0.396,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.32,
+   "confirmed": true,
+   "corr": 0.992
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 35.2131,
+   "played_len_s": 0.052,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": true,
+   "corr": 0.92
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 36.2347,
+   "played_len_s": 0.05,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": false,
+   "corr": 0.866
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 36.8849,
+   "played_len_s": 0.05,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": false,
+   "corr": 0.843
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 37.5351,
+   "played_len_s": 0.052,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.921
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 38.1852,
+   "played_len_s": 0.051,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": true,
+   "corr": 0.902
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 40.7859,
+   "played_len_s": 0.052,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.917
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 41.9004,
+   "played_len_s": 0.05,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": false,
+   "corr": 0.874
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 43.2007,
+   "played_len_s": 0.055,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.953
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "death_ally",
+   "t_audio": 43.5722,
+   "played_len_s": 0.359,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.3,
+   "confirmed": true,
+   "corr": 0.989
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "explosion",
+   "t_audio": 43.5722,
+   "played_len_s": 0.472,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.38,
+   "confirmed": true,
+   "corr": 0.987
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "death_enemy",
+   "t_audio": 43.5722,
+   "played_len_s": 0.438,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.36,
+   "confirmed": true,
+   "corr": 0.987
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 44.6868,
+   "played_len_s": 0.051,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.901
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 45.8014,
+   "played_len_s": 0.054,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.955
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 47.1017,
+   "played_len_s": 0.05,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": false,
+   "corr": 0.855
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_mold",
+   "t_audio": 48.2162,
+   "played_len_s": 0.093,
+   "cut_by_voice_reuse": true,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "death_enemy",
+   "t_audio": 49.145,
+   "played_len_s": 0.42,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.34,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_mold",
+   "t_audio": 49.145,
+   "played_len_s": 0.1,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 49.6094,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "death_ally",
+   "t_audio": 49.7952,
+   "played_len_s": 0.351,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.3,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 50.1667,
+   "played_len_s": 0.058,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.05,
+   "confirmed": true,
+   "corr": 0.99
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_mold",
+   "t_audio": 50.724,
+   "played_len_s": 0.105,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.986
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 51.3742,
+   "played_len_s": 0.061,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 52.0243,
+   "played_len_s": 0.062,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.06,
+   "confirmed": true,
+   "corr": 0.994
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_bread",
+   "t_audio": 52.3958,
+   "played_len_s": 0.05,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.04,
+   "confirmed": false,
+   "corr": 0.868
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "death_enemy",
+   "t_audio": 52.7674,
+   "played_len_s": 0.409,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.33,
+   "confirmed": true,
+   "corr": 0.985
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "death_enemy",
+   "t_audio": 53.4175,
+   "played_len_s": 0.454,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.37,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_mold",
+   "t_audio": 53.4175,
+   "played_len_s": 0.108,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.996
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "death_enemy",
+   "t_audio": 54.3463,
+   "played_len_s": 0.453,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.37,
+   "confirmed": true,
+   "corr": 0.991
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_mold",
+   "t_audio": 54.3463,
+   "played_len_s": 0.103,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.995
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_mold",
+   "t_audio": 57.2256,
+   "played_len_s": 0.103,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_mold",
+   "t_audio": 57.5042,
+   "played_len_s": 0.097,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_mold",
+   "t_audio": 58.1544,
+   "played_len_s": 0.107,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.998
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_mold",
+   "t_audio": 58.5259,
+   "played_len_s": 0.097,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.08,
+   "confirmed": true,
+   "corr": 0.997
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_mold",
+   "t_audio": 59.0832,
+   "played_len_s": 0.1,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  },
+  {
+   "rec": "r08_s37",
+   "cue": "hit_mold",
+   "t_audio": 59.4547,
+   "played_len_s": 0.1,
+   "cut_by_voice_reuse": false,
+   "audible_end_s": 0.09,
+   "confirmed": true,
+   "corr": 0.999
+  }
+ ],
+ "summary": {
+  "explosion": {
+   "plays": 3,
+   "confirmed": 3,
+   "audible_end_max_s": 0.42,
+   "audible_end_median_s": 0.4,
+   "played_len_max_s": 0.52,
+   "cut": 0
+  },
+  "death_ally": {
+   "plays": 26,
+   "confirmed": 26,
+   "audible_end_max_s": 0.3,
+   "audible_end_median_s": 0.29,
+   "played_len_max_s": 0.359,
+   "cut": 0
+  },
+  "death_enemy": {
+   "plays": 95,
+   "confirmed": 95,
+   "audible_end_max_s": 0.37,
+   "audible_end_median_s": 0.34,
+   "played_len_max_s": 0.454,
+   "cut": 2
+  },
+  "hit_bread": {
+   "plays": 261,
+   "confirmed": 242,
+   "audible_end_max_s": 0.06,
+   "audible_end_median_s": 0.05,
+   "played_len_max_s": 0.064,
+   "cut": 0
+  },
+  "hit_mold": {
+   "plays": 229,
+   "confirmed": 229,
+   "audible_end_max_s": 0.09,
+   "audible_end_median_s": 0.09,
+   "played_len_max_s": 0.109,
+   "cut": 5
+  },
+  "hit_melee": {
+   "plays": 0,
+   "confirmed": 0,
+   "audible_end_max_s": null,
+   "audible_end_median_s": null,
+   "played_len_max_s": null,
+   "cut": 0
+  },
+  "hit_arrow": {
+   "plays": 0,
+   "confirmed": 0,
+   "audible_end_max_s": null,
+   "audible_end_median_s": null,
+   "played_len_max_s": null,
+   "cut": 0
+  },
+  "hero_death": {
+   "plays": 0,
+   "confirmed": 0,
+   "audible_end_max_s": null,
+   "audible_end_median_s": null,
+   "played_len_max_s": null,
+   "cut": 0
+  }
+ }
+}
