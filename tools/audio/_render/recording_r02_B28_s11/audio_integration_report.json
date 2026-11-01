@@ -1,0 +1,113 @@
+{
+ "audio_children": [
+  19,
+  19,
+  19
+ ],
+ "audio_snapshot": {
+  "active_sfx": 0,
+  "active_ui": 0,
+  "attenuated_offscreen": 0,
+  "dropped_gap": 24,
+  "dropped_group": 37,
+  "dropped_max": 0,
+  "dropped_offscreen": 0,
+  "dropped_voices": 0,
+  "duck_db": 0.0,
+  "load_errors": [],
+  "load_ms": 403,
+  "missing": 0,
+  "music": "music_battle",
+  "paused": false,
+  "peak_voices": 3,
+  "played": 124,
+  "resident_sfx_bytes": 198848,
+  "stolen": 0,
+  "volumes": {
+   "master": 1.0,
+   "music": 0.8,
+   "sfx": 1.0
+  }
+ },
+ "battles_ended": 0,
+ "battles_started": 1,
+ "bridge_derived": {
+  "alert": false,
+  "base": false,
+  "command": false,
+  "death": false,
+  "gold": true,
+  "hero": true,
+  "milestone": true,
+  "ui": true,
+  "upgrade": true
+ },
+ "commands": {
+  "deploy": 10,
+  "deploy_unaffordable": 5,
+  "skill": 5,
+  "worker": 0
+ },
+ "cue_counts": {
+  "death_ally": 5,
+  "death_enemy": 14,
+  "deploy": 10,
+  "gold_tick": 9,
+  "hit_base_mold": 1,
+  "hit_bread": 32,
+  "hit_mold": 30,
+  "shoot_arrow": 9,
+  "skill_slam": 5,
+  "ui_error": 5,
+  "wave_cleared": 2,
+  "wave_incoming": 2
+ },
+ "engine_truth": {
+  "deployed": 10,
+  "hero_deaths": 0,
+  "kills": 14,
+  "skills_cast": 5,
+  "workers_bought": 0
+ },
+ "errors": [],
+ "events_has_sfx": true,
+ "focus": {},
+ "hit_events_enemy": 48,
+ "hit_events_enemy_rec": 44,
+ "hit_events_player": 74,
+ "hit_events_player_rec": 70,
+ "hit_group_gap": 0.28,
+ "max_active_sfx": 3,
+ "max_active_ui": 1,
+ "max_music_playing": 1,
+ "music_timeline": [
+  {
+   "m": "music_battle",
+   "t": 0.1
+  }
+ ],
+ "pause": {},
+ "phases": [],
+ "probe_seed": 11,
+ "recording": {
+  "cues": 116,
+  "seconds": 60.01
+ },
+ "results": [],
+ "same_frame_duplicates": [],
+ "screens": [
+  "battle"
+ ],
+ "switch_check": {},
+ "t": 63.5,
+ "toasts": {
+  "not_enough_gold": 4,
+  "on_cooldown": 1,
+  "wave_incoming": 2
+ },
+ "wave_cleared_events": 2,
+ "wave_cleared_index": [
+  1,
+  2
+ ]
+}

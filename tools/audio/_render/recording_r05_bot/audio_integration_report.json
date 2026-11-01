@@ -1,0 +1,126 @@
+{
+ "audio_children": [
+  19,
+  19,
+  19
+ ],
+ "audio_snapshot": {
+  "active_sfx": 0,
+  "active_ui": 0,
+  "attenuated_offscreen": 209,
+  "dropped_gap": 459,
+  "dropped_max": 1,
+  "dropped_offscreen": 0,
+  "dropped_voices": 0,
+  "duck_db": 0.0,
+  "load_errors": [],
+  "load_ms": 383,
+  "missing": 0,
+  "music": "",
+  "paused": false,
+  "peak_voices": 6,
+  "played": 1254,
+  "resident_sfx_bytes": 197768,
+  "stolen": 0,
+  "volumes": {
+   "master": 1.0,
+   "music": 0.8,
+   "sfx": 1.0
+  }
+ },
+ "battles_ended": 1,
+ "battles_started": 1,
+ "bridge_derived": {
+  "alert": false,
+  "base": false,
+  "command": false,
+  "death": false,
+  "gold": true,
+  "hero": false,
+  "milestone": true,
+  "ui": true,
+  "upgrade": true
+ },
+ "commands": {
+  "deploy": 0,
+  "deploy_unaffordable": 0,
+  "skill": 0,
+  "worker": 0
+ },
+ "cue_counts": {
+  "boss_incoming": 1,
+  "death_ally": 85,
+  "death_enemy": 93,
+  "deploy": 112,
+  "gold_tick": 71,
+  "hero_death": 3,
+  "hero_respawn": 3,
+  "hit_arrow": 151,
+  "hit_base": 36,
+  "hit_base_mold": 18,
+  "hit_melee": 467,
+  "shoot_arrow": 4,
+  "shoot_spit": 176,
+  "skill_rally": 12,
+  "skill_slam": 9,
+  "stinger_win": 1,
+  "wave_cleared": 4,
+  "wave_incoming": 4,
+  "worker_buy": 4
+ },
+ "engine_truth": {
+  "deployed": 112,
+  "hero_deaths": 3,
+  "kills": 100,
+  "skills_cast": 21,
+  "workers_bought": 4
+ },
+ "errors": [],
+ "events_has_sfx": true,
+ "focus": {},
+ "max_active_sfx": 6,
+ "max_active_ui": 0,
+ "max_music_playing": 1,
+ "music_timeline": [
+  {
+   "m": "music_battle",
+   "t": 0.1
+  },
+  {
+   "m": "",
+   "t": 398.4
+  }
+ ],
+ "pause": {},
+ "phases": [],
+ "recording": {
+  "cues": 1253,
+  "seconds": 402.38
+ },
+ "results": [
+  {
+   "time": 396.533333333301,
+   "won": true
+  }
+ ],
+ "same_frame_duplicates": [],
+ "screens": [
+  "battle",
+  "result"
+ ],
+ "switch_check": {},
+ "t": 402.9,
+ "toasts": {
+  "boss_incoming": 2,
+  "counterattack": 1,
+  "hero_dead": 3,
+  "wave_incoming": 3
+ },
+ "wave_cleared_events": 4,
+ "wave_cleared_index": [
+  1,
+  2,
+  4,
+  3
+ ]
+}

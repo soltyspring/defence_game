@@ -1,0 +1,141 @@
+{
+ "D": {
+  "death_ally": {
+   "masked": [
+    1.8,
+    1.8,
+    1.8
+   ],
+   "p10": [
+    5.2,
+    2.8,
+    3.3
+   ],
+   "D1": true,
+   "D2": true
+  },
+  "hit_base": {
+   "masked": [
+    3.6,
+    1.8,
+    1.8
+   ],
+   "p10": [
+    5.7,
+    3.0,
+    2.7
+   ],
+   "D1": true,
+   "D2": true
+  }
+ },
+ "G2_fail": [
+  [
+   "hit_bread",
+   8.9,
+   14.5
+  ],
+  [
+   "death_enemy",
+   12.5,
+   16.4
+  ],
+  [
+   "wave_cleared",
+   3.6,
+   9.3
+  ],
+  [
+   "hit_base_mold",
+   10.7,
+   14.5
+  ]
+ ],
+ "replicate_var": [
+  [
+   "hit_bread",
+   5.7
+  ],
+  [
+   "hit_mold",
+   2.2
+  ],
+  [
+   "death_enemy",
+   7.2
+  ],
+  [
+   "deploy",
+   3.6
+  ],
+  [
+   "skill_slam",
+   4.0
+  ],
+  [
+   "skill_rally",
+   1.9
+  ],
+  [
+   "skill_barrage",
+   3.6
+  ],
+  [
+   "skill_heal",
+   5.4
+  ],
+  [
+   "wave_incoming",
+   3.6
+  ],
+  [
+   "boss_incoming",
+   0.0
+  ],
+  [
+   "wave_cleared",
+   5.4
+  ],
+  [
+   "ui_confirm",
+   3.4
+  ],
+  [
+   "ui_error",
+   3.9
+  ],
+  [
+   "hit_base_mold",
+   3.7
+  ]
+ ],
+ "mix": [
+  {
+   "s": 11,
+   "lufs": -21.9,
+   "peak": -2.96,
+   "clip": 0,
+   "fatigue": [],
+   "duck_events": 5,
+   "ducked": 2
+  },
+  {
+   "s": 23,
+   "lufs": -21.8,
+   "peak": -4.01,
+   "clip": 0,
+   "fatigue": [],
+   "duck_events": 4,
+   "ducked": 4
+  },
+  {
+   "s": 37,
+   "lufs": -21.8,
+   "peak": -3.6,
+   "clip": 0,
+   "fatigue": [],
+   "duck_events": 5,
+   "ducked": 4
+  }
+ ]
+}

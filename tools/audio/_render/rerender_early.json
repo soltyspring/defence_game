@@ -1,0 +1,115 @@
+{
+ "tag": "pb",
+ "rule": "log",
+ "recordings": [
+  {
+   "key": "r02_s11",
+   "log_format": 2,
+   "block_frames": 4096,
+   "clock_offset_frames": -444,
+   "clock_offset_agreement": 1.0,
+   "mix_rate": 44100,
+   "cues_sfx": 104,
+   "envelope_corr_10ms": 0.999,
+   "top_peaks": [
+    {
+     "t": 22.768,
+     "stem_db": -3.33,
+     "render_db": -3.56,
+     "diff_db": -0.23
+    },
+    {
+     "t": 21.042,
+     "stem_db": -4.48,
+     "render_db": -5.06,
+     "diff_db": -0.58
+    },
+    {
+     "t": 33.73,
+     "stem_db": -4.58,
+     "render_db": -2.83,
+     "diff_db": 1.75
+    },
+    {
+     "t": 15.174,
+     "stem_db": -4.81,
+     "render_db": -5.26,
+     "diff_db": -0.45
+    },
+    {
+     "t": 19.829,
+     "stem_db": -5.07,
+     "render_db": -5.17,
+     "diff_db": -0.1
+    }
+   ],
+   "max_abs_peak_diff_db": 1.75,
+   "stem_peak_db": -3.33,
+   "render_peak_db": -2.83,
+   "master_peak_db": -3.29,
+   "master_clipped": 0,
+   "prelimiter_estimate_peak_db": -2.79,
+   "rule_logged": {
+    "cluster_events": 0,
+    "cluster_lowered": 0,
+    "retro_logged": 0,
+    "exempt_touched": 0
+   }
+  },
+  {
+   "key": "r06_s11",
+   "log_format": 2,
+   "block_frames": 4096,
+   "clock_offset_frames": -444,
+   "clock_offset_agreement": 0.985,
+   "mix_rate": 44100,
+   "cues_sfx": 108,
+   "envelope_corr_10ms": 0.999,
+   "top_peaks": [
+    {
+     "t": 31.613,
+     "stem_db": -3.27,
+     "render_db": -3.57,
+     "diff_db": -0.3
+    },
+    {
+     "t": 23.93,
+     "stem_db": -3.29,
+     "render_db": -3.73,
+     "diff_db": -0.44
+    },
+    {
+     "t": 25.495,
+     "stem_db": -4.72,
+     "render_db": -4.9,
+     "diff_db": -0.18
+    },
+    {
+     "t": 39.054,
+     "stem_db": -5.0,
+     "render_db": -5.34,
+     "diff_db": -0.34
+    },
+    {
+     "t": 56.755,
+     "stem_db": -5.49,
+     "render_db": -5.43,
+     "diff_db": 0.06
+    }
+   ],
+   "max_abs_peak_diff_db": 0.44,
+   "stem_peak_db": -3.27,
+   "render_peak_db": -3.57,
+   "master_peak_db": -3.13,
+   "master_clipped": 0,
+   "prelimiter_estimate_peak_db": -3.44,
+   "rule_logged": {
+    "cluster_events": 0,
+    "cluster_lowered": 0,
+    "retro_logged": 0,
+    "exempt_touched": 0
+   }
+  }
+ ],
+ "worst_top_peak_diff_db": 1.75
+}

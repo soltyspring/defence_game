@@ -38,7 +38,7 @@ var _record_seconds := 60.0
 var _rec := {}                 # bus name -> AudioEffectRecord
 var _rec_t0_us := 0
 var _rec_state := "idle"       # idle | recording | saved
-var _cue_log: Array = []       # [t_wall_s, cue, variant, pitch, vol_db, t_audio_s, voice, vol_jitter, offscreen, duck_at_start, cluster_db, prio]
+var _cue_log: Array = []       # [t_wall_s, cue, variant, pitch, vol_db, t_audio_s (v4.1: read before play()), voice, vol_jitter, offscreen, duck_at_start, cluster_db, prio, t_audio_after_play_s]
 var _cluster_log: Array = []   # v3.9: [t_audio_s, new voice, lowered earlier voice, dB] per onset-cluster action on an earlier voice
 var _duck_log: Array = []      # v3.9: [t_audio_s, owner voice, [[voice, extra dB], ...]] per danger-cue SFX duck
 var _clock_player: AudioStreamPlayer = null   # v3.9: silent audio-clock voice (see _audio_now)
@@ -173,11 +173,14 @@ func _on_cue(cue: StringName, _voice: int) -> void:   # _voice = index in A._sfx
 		var vi := int(A._last_variant.get(cue, 0))
 		var pl: AudioStreamPlayer = A._sfx[_voice] if _voice >= 0 and _voice < A._sfx.size() else null
 		var lp: Dictionary = A.get("last_play") if A.get("last_play") is Dictionary else {}
+		var t_post := _audio_now()
+		# v4.1: field 5 = audio clock read just BEFORE play() (manager hook); the v3.9 after-play read is kept as field 12
+		var t_pre := float(lp.get("clk_pre", -1.0))
 		_cue_log.append([snappedf((Time.get_ticks_usec() - _rec_t0_us) / 1e6, 0.001), c, vi,
 			snappedf(pl.pitch_scale, 0.0001) if pl else 1.0, snappedf(pl.volume_db, 0.01) if pl else 0.0,
-			snappedf(_audio_now(), 0.00001), _voice, snappedf(float(lp.get("vj", 0.0)), 0.01),
+			snappedf(t_pre if t_pre >= 0.0 else t_post, 0.00001), _voice, snappedf(float(lp.get("vj", 0.0)), 0.01),
 			snappedf(float(lp.get("off", 0.0)), 0.01), snappedf(float(lp.get("sd", 0.0)), 0.01),
-			snappedf(float(lp.get("cl", 0.0)), 0.01), int(A.cues.get(cue, {}).get("prio", 1))])
+			snappedf(float(lp.get("cl", 0.0)), 0.01), int(A.cues.get(cue, {}).get("prio", 1)), snappedf(t_post, 0.00001)])
 		var lc = A.get("last_cluster")
 		if lc is Array and (lc as Array).size() == 2:
 			_cluster_log.append([snappedf(_audio_now(), 0.00001), _voice, int(lc[0]), float(lc[1])])
@@ -352,6 +355,7 @@ func _record_step() -> void:
 			_clock_player.bus = &"Master"
 			add_child(_clock_player)
 			_clock_player.play()
+			if "pre_play_probe" in A: A.pre_play_probe = Callable(self, "_audio_now")   # v4.1: read the clock before play()
 			for b in _rec: _rec[b].set_recording_active(true)
 			_rec_t0_us = Time.get_ticks_usec()
 			_rec_state = "recording"
@@ -374,7 +378,8 @@ func _record_step() -> void:
 				var ui_db := AudioServer.get_bus_volume_db(AudioServer.get_bus_index(&"UI"))
 				var meta := {"seconds": ts, "battle_ended_at": _ended_rec_ts, "results": rep.results, "end_injected": rep.get("end_injected", {}), "mix_rate": AudioServer.get_mix_rate(), "files": files,
 					"sfx_bus_db": sfx_db, "ui_bus_db": ui_db, "cues": _cue_log, "music_gain": _gain_log,
-					"log_format": 2, "cue_fields": ["t_wall", "cue", "variant", "pitch", "vol_db", "t_audio", "voice", "vol_jitter_db", "offscreen_db", "duck_at_start_db", "cluster_db", "prio"],
+					"log_format": 2, "cue_fields": ["t_wall", "cue", "variant", "pitch", "vol_db", "t_audio", "voice", "vol_jitter_db", "offscreen_db", "duck_at_start_db", "cluster_db", "prio", "t_audio_after_play"],
+					"t_audio_source": "pre_play" if "pre_play_probe" in A else "after_play",
 					"ducks": _duck_log, "clusters": _cluster_log, "clock": _clock_log, "audio_block_frames": _block_frames(),
 					"onset_cluster": A.get("onset_cluster"), "audio_stats": (A.stats as Dictionary).duplicate(),
 					"limiter": AudioServer.get_bus_effect(0, 0).get_class() if AudioServer.get_bus_effect_count(0) > 0 else "",
@@ -388,6 +393,7 @@ func _record_step() -> void:
 					for e in range(AudioServer.get_bus_effect_count(bi) - 1, -1, -1):
 						if AudioServer.get_bus_effect(bi, e) == _rec[b]: AudioServer.remove_bus_effect(bi, e)
 				_rec.clear()
+				if "pre_play_probe" in A: A.pre_play_probe = Callable()
 				if _clock_player:
 					_clock_player.stop()
 					_clock_player.stream = null
