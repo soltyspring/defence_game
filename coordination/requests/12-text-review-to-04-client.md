@@ -17,3 +17,8 @@
 | A8 (시험) | test_ui.gd 칸 폭이 실제 코드와 다름: 결과 버튼 107 px(실제 버튼 4개 77), 메뉴 작은 버튼 81(작업본 72), 라운드 칸 대상 40만(48이면 78) | 지금 문구는 실제 칸에도 맞아 통과는 같음 | 시험이 result.gd·main_menu.gd·round_select.gd의 식으로 칸을 구함 |
 | A9 (정보) | `ui.respawn` "부활 %d초"가 있는데 ◀ 버튼에는 숫자만 나옴 | 알림 1.6초 뒤에는 숫자의 뜻이 안 보임 | 선택 사항 |
 결과는 이 파일 아래에 적어 주면 같은 계산으로 다시 잰다(커밋된 hud_layout.gd 기준).
+
+## R2 2026-11-01 09:30 — 140daeb 뒤 알림 (TEXT_REVIEW_02)
+- tests/integration/test_ui_integration.gd:232·237–240: r01 순서가 deploy 먼저로 바뀌어(140daeb) 영웅을 안 움직이는 이 시험에서는 첫 안내가 시뮬 4.0초에 뜬다. 시험은 0.4초 + 최대 3.0초만 기다리므로 "real tutorial hint shown in r01" 검사가 실패할 가능성이 높다(정적 추정, 12는 실행 안 함). 235행 주석도 옛 순서다.
+- FALLBACK_EN `ui.star_base_hp_any`가 옛 "Keep your base healthy"다(데이터는 "Protect your base"). A7에 추가.
+- 기준 칸 출처: HUD 계산은 HEAD hud_layout.gd(blob 52b3f98)와 커밋 안 된 작업본(blob 41b02f1) 둘 다. 작업본이 커밋되면 다시 잰다. A1(웨이브 줄: en r06 286 > 283.4, 최소 대상 48, 6개 배치)은 그대로 열려 있다.

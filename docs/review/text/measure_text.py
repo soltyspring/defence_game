@@ -5,8 +5,9 @@ HarfBuzz/Godot applies), ports the 04 layout maths from src/ui/*.gd, and checks 
 player-visible key of data/text/{ko,en}.json against the slot it is drawn in.
 
 Run from the repository root:
-    python docs/review/text/measure_text.py            # writes docs/review/text/evidence/*.json
+    python docs/review/text/measure_text.py            # writes docs/review/text/evidence/text_width_report.json
     python docs/review/text/measure_text.py --calib    # calibration table only
+    python docs/review/text/measure_text.py --out text_width_report_02.json --before 3f70e92   # + per-key before/after
 
 This is a calculation, not a rendered frame. Calibration against Godot-measured widths
 (build/qa/typography_report.json, written by tests/ui/test_ui.gd) is printed first.
@@ -767,6 +768,51 @@ def proposals():
     return out
 
 
+def diff_keys(before_rev):
+    """Keys whose ko/en value differs between git `before_rev` and the working data/text; width before/after in the
+    narrowest slot that shows them (same slot table as proposals())."""
+    import subprocess
+    old = {}
+    for loc in ("ko", "en"):
+        raw = subprocess.run(["git", "show", "%s:data/text/%s.json" % (before_rev, loc)], cwd=ROOT, capture_output=True, check=True).stdout
+        old[loc] = json.loads(raw.decode("utf-8"))["strings"]
+    narrow = safe_of((640, 360), (34, 0, 34, 0))
+    uw = min(narrow.w - 16, 460.0)
+    res_w = min(narrow.w - 24, 380.0)
+    bw = min(max(narrow.w * 0.44, 252.0), 300.0)
+    slot = {
+        "upgrade.supply_regen": ((uw - 16) - 214, "upgrade row name"),
+        "upgrade.worker": ((uw - 16) - 214, "upgrade row name"),
+        "upgrade.base_hp": ((uw - 16) - 214, "upgrade row name"),
+        "tut_deploy_unit": (min_strip(["r01"]), "tutorial strip r01"),
+        "tut_buy_worker": (min_strip(["r01"]), "tutorial strip r01"),
+        "tut_destroy_base": (min_strip(["r01"]), "tutorial strip r01"),
+        "tut_tank_unit": (min_strip(["r03"]), "tutorial strip r03"),
+        "tut_fast_unit": (min_strip(["r04"]), "tutorial strip r04"),
+        "tut_siege_unit": (min_strip(["r06"]), "tutorial strip r06"),
+        "ui.select_round": (placed(math.floor((bw - 16) / 3.0)) - 6, "main menu small button (04 WIP)"),
+        "ui.star_base_hp_any": (math.floor((res_w - 36) / 2.0) - 6 - 22, "result star row"),
+        "ui.wave_next": (None, "HUD wave line (see hud_* wave_line rows)"),
+        "hint.loss.r05.tactic": (res_w - 36, "result panel inner width (1 line)"),
+        "hint.loss.upgrade": (res_w - 36, "result panel inner width (1 line)"),
+    }
+    rows = []
+    for loc in ("ko", "en"):
+        for k in sorted(set(old[loc]) | set(TEXT[loc])):
+            a, b = old[loc].get(k), TEXT[loc].get(k)
+            if a == b:
+                continue
+            mx, where = slot.get(k, (None, "not mapped"))
+            sa = fmt(a, 25) if (a and k == "ui.wave_next") else a
+            sb = fmt(b, 25) if (b and k == "ui.wave_next") else b
+            wa = tw(sa, 12) if sa else None
+            wb = tw(sb, 12) if sb else None
+            rows.append({"loc": loc, "key": k, "before": a, "after": b, "w_before": wa, "w_after": wb, "max_w": mx,
+                         "where": where, "fits_after": None if (mx is None or wb is None) else wb <= mx,
+                         "slack_after": None if (mx is None or wb is None) else mx - wb})
+    return rows
+
+
 # ----------------------------------------------------------------------------- key resolution / coverage
 
 def key_audit():
@@ -869,6 +915,18 @@ def main():
         print("   %-3s %-28s %-22s %-10s w=%-5s max=%-7.2f '%s' -> '%s' [%s]" % (r["loc"], r["key"][:28], r["where"], r["state"], r["w"], r["max_w"], r["text"], r["drawn"], r["cfg"]))
     ka = key_audit()
     out["keys"] = ka
+    tight = sorted((r for r in out["screens"] if r["state"] in ("ok",) or r["state"].startswith("wrapped")),
+                   key=lambda r: r["slack"])
+    print("tightest screen rows that still fit (single-line slots):")
+    for r in [r for r in tight if r["state"] == "ok"][:6]:
+        print("   slack %5.2f %-3s %-26s %-22s w=%-5s max=%s '%s' [%s]" % (r["slack"], r["loc"], r["key"][:26], r["where"], r["w"], r["max_w"], r["text"], r["cfg"]))
+    if "--before" in sys.argv:
+        rev = sys.argv[sys.argv.index("--before") + 1]
+        dk = diff_keys(rev)
+        out["diff_vs_" + rev] = dk
+        print("CHANGED KEYS vs %s: %d" % (rev, len(dk)))
+        for r in dk:
+            print("   %-3s %-22s %s -> %s  max=%s slack=%s  [%s]" % (r["loc"], r["key"], r["w_before"], r["w_after"], r["max_w"], r["slack_after"], r["where"]))
     pr = proposals()
     out["proposals"] = pr
     print("PROPOSALS (key | slot max | ko now->new w | en now->new w | fits)")
@@ -882,9 +940,10 @@ def main():
     print("placeholder mismatch:", ka["placeholder_mismatch"], "keys only in one locale:", ka["keys_only_in_one_locale"])
     print("fallback drift:", json.dumps(ka["fallback_drift"], ensure_ascii=False))
     print("coverage:", ka["coverage"])
-    with open(os.path.join(OUT, "text_width_report.json"), "w", encoding="utf-8") as fh:
+    name = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv else "text_width_report.json"
+    with open(os.path.join(OUT, name), "w", encoding="utf-8") as fh:
         json.dump(out, fh, ensure_ascii=False, indent=0)
-    print("wrote", os.path.relpath(os.path.join(OUT, "text_width_report.json"), ROOT))
+    print("wrote", os.path.relpath(os.path.join(OUT, name), ROOT))
 
 
 if __name__ == "__main__":

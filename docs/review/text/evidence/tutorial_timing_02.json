@@ -1,0 +1,658 @@
+{
+ "new_140daeb | P1a 영웅을 안 움직이고 아무것도 안 함": {
+  "rows": [
+   [
+    "tut_deploy_unit",
+    4.017,
+    24.017,
+    20.0
+   ],
+   [
+    "tut_move_hero",
+    24.033,
+    44.033,
+    20.0
+   ]
+  ],
+  "state": {
+   "idx": 2,
+   "steps_done": [
+    "tut_deploy_unit",
+    "tut_move_hero"
+   ]
+  }
+ },
+ "new_140daeb | P1b 영웅을 안 움직이고, 안내가 뜨면 2초 뒤 출병·고용": {
+  "rows": [
+   [
+    "tut_deploy_unit",
+    4.017,
+    6.067,
+    2.05
+   ],
+   [
+    "tut_move_hero",
+    6.083,
+    26.083,
+    20.0
+   ],
+   [
+    "tut_buy_worker",
+    26.1,
+    28.15,
+    2.05
+   ],
+   [
+    "tut_destroy_base",
+    30.017,
+    33.017,
+    3.0
+   ]
+  ],
+  "state": {
+   "idx": 4,
+   "steps_done": [
+    "tut_deploy_unit",
+    "tut_move_hero",
+    "tut_buy_worker",
+    "tut_destroy_base"
+   ]
+  }
+ },
+ "new_140daeb | P2a 0.5초에 바로 출병, 안내가 뜨면 2초 뒤 이동·고용": {
+  "rows": [
+   [
+    "tut_deploy_unit",
+    4.017,
+    4.033,
+    0.016
+   ],
+   [
+    "tut_move_hero",
+    4.05,
+    6.083,
+    2.033
+   ],
+   [
+    "tut_buy_worker",
+    6.1,
+    8.15,
+    2.05
+   ],
+   [
+    "tut_destroy_base",
+    30.017,
+    33.017,
+    3.0
+   ]
+  ],
+  "state": {
+   "idx": 4,
+   "steps_done": [
+    "tut_deploy_unit",
+    "tut_move_hero",
+    "tut_buy_worker",
+    "tut_destroy_base"
+   ]
+  }
+ },
+ "new_140daeb | P2b 0.5초에 바로 출병, 영웅은 끝까지 안 움직임, 고용은 안내 2초 뒤": {
+  "rows": [
+   [
+    "tut_deploy_unit",
+    4.017,
+    4.033,
+    0.016
+   ],
+   [
+    "tut_move_hero",
+    4.05,
+    24.05,
+    20.0
+   ],
+   [
+    "tut_buy_worker",
+    24.067,
+    26.117,
+    2.05
+   ],
+   [
+    "tut_destroy_base",
+    30.017,
+    33.017,
+    3.0
+   ]
+  ],
+  "state": {
+   "idx": 4,
+   "steps_done": [
+    "tut_deploy_unit",
+    "tut_move_hero",
+    "tut_buy_worker",
+    "tut_destroy_base"
+   ]
+  }
+ },
+ "old_3f70e92 | P1a 영웅을 안 움직이고 아무것도 안 함": {
+  "rows": [
+   [
+    "tut_move_hero",
+    0.017,
+    20.017,
+    20.0
+   ],
+   [
+    "tut_deploy_unit",
+    20.033,
+    40.033,
+    20.0
+   ]
+  ],
+  "state": {
+   "idx": 2,
+   "steps_done": [
+    "tut_move_hero",
+    "tut_deploy_unit"
+   ]
+  }
+ },
+ "old_3f70e92 | P1b 영웅을 안 움직이고, 안내가 뜨면 2초 뒤 출병·고용": {
+  "rows": [
+   [
+    "tut_move_hero",
+    0.017,
+    20.017,
+    20.0
+   ],
+   [
+    "tut_deploy_unit",
+    20.033,
+    22.083,
+    2.05
+   ],
+   [
+    "tut_buy_worker",
+    22.1,
+    24.15,
+    2.05
+   ],
+   [
+    "tut_destroy_base",
+    30.017,
+    33.017,
+    3.0
+   ]
+  ],
+  "state": {
+   "idx": 4,
+   "steps_done": [
+    "tut_move_hero",
+    "tut_deploy_unit",
+    "tut_buy_worker",
+    "tut_destroy_base"
+   ]
+  }
+ },
+ "old_3f70e92 | P2a 0.5초에 바로 출병, 안내가 뜨면 2초 뒤 이동·고용": {
+  "rows": [
+   [
+    "tut_move_hero",
+    0.017,
+    2.05,
+    2.033
+   ],
+   [
+    "tut_deploy_unit",
+    2.067,
+    2.083,
+    0.016
+   ],
+   [
+    "tut_buy_worker",
+    2.5,
+    4.55,
+    2.05
+   ],
+   [
+    "tut_destroy_base",
+    30.017,
+    33.017,
+    3.0
+   ]
+  ],
+  "state": {
+   "idx": 4,
+   "steps_done": [
+    "tut_move_hero",
+    "tut_deploy_unit",
+    "tut_buy_worker",
+    "tut_destroy_base"
+   ]
+  }
+ },
+ "old_3f70e92 | P2b 0.5초에 바로 출병, 영웅은 끝까지 안 움직임, 고용은 안내 2초 뒤": {
+  "rows": [
+   [
+    "tut_move_hero",
+    0.017,
+    20.017,
+    20.0
+   ],
+   [
+    "tut_deploy_unit",
+    20.033,
+    20.05,
+    0.017
+   ],
+   [
+    "tut_buy_worker",
+    20.067,
+    22.117,
+    2.05
+   ],
+   [
+    "tut_destroy_base",
+    30.017,
+    33.017,
+    3.0
+   ]
+  ],
+  "state": {
+   "idx": 4,
+   "steps_done": [
+    "tut_move_hero",
+    "tut_deploy_unit",
+    "tut_buy_worker",
+    "tut_destroy_base"
+   ]
+  }
+ },
+ "whatif_A deploy->worker->move->base (data only) | P1a 영웅을 안 움직이고 아무것도 안 함": {
+  "rows": [
+   [
+    "tut_deploy_unit",
+    4.017,
+    24.017,
+    20.0
+   ]
+  ],
+  "state": {
+   "idx": 1,
+   "steps_done": [
+    "tut_deploy_unit"
+   ]
+  }
+ },
+ "whatif_A deploy->worker->move->base (data only) | P1b 영웅을 안 움직이고, 안내가 뜨면 2초 뒤 출병·고용": {
+  "rows": [
+   [
+    "tut_deploy_unit",
+    4.017,
+    6.067,
+    2.05
+   ],
+   [
+    "tut_buy_worker",
+    6.083,
+    8.133,
+    2.05
+   ],
+   [
+    "tut_move_hero",
+    8.15,
+    28.15,
+    20.0
+   ],
+   [
+    "tut_destroy_base",
+    30.017,
+    33.017,
+    3.0
+   ]
+  ],
+  "state": {
+   "idx": 4,
+   "steps_done": [
+    "tut_deploy_unit",
+    "tut_buy_worker",
+    "tut_move_hero",
+    "tut_destroy_base"
+   ]
+  }
+ },
+ "whatif_A deploy->worker->move->base (data only) | P2a 0.5초에 바로 출병, 안내가 뜨면 2초 뒤 이동·고용": {
+  "rows": [
+   [
+    "tut_deploy_unit",
+    4.017,
+    4.033,
+    0.016
+   ],
+   [
+    "tut_buy_worker",
+    4.05,
+    6.1,
+    2.05
+   ],
+   [
+    "tut_move_hero",
+    6.117,
+    8.133,
+    2.016
+   ],
+   [
+    "tut_destroy_base",
+    30.017,
+    33.017,
+    3.0
+   ]
+  ],
+  "state": {
+   "idx": 4,
+   "steps_done": [
+    "tut_deploy_unit",
+    "tut_buy_worker",
+    "tut_move_hero",
+    "tut_destroy_base"
+   ]
+  }
+ },
+ "whatif_A deploy->worker->move->base (data only) | P2b 0.5초에 바로 출병, 영웅은 끝까지 안 움직임, 고용은 안내 2초 뒤": {
+  "rows": [
+   [
+    "tut_deploy_unit",
+    4.017,
+    4.033,
+    0.016
+   ],
+   [
+    "tut_buy_worker",
+    4.05,
+    6.1,
+    2.05
+   ],
+   [
+    "tut_move_hero",
+    6.117,
+    26.117,
+    20.0
+   ],
+   [
+    "tut_destroy_base",
+    30.017,
+    33.017,
+    3.0
+   ]
+  ],
+  "state": {
+   "idx": 4,
+   "steps_done": [
+    "tut_deploy_unit",
+    "tut_buy_worker",
+    "tut_move_hero",
+    "tut_destroy_base"
+   ]
+  }
+ },
+ "whatif_B same order as 140daeb + deploy trigger true at t=0 (02 code) | P1a 영웅을 안 움직이고 아무것도 안 함": {
+  "rows": [
+   [
+    "tut_deploy_unit",
+    0.017,
+    20.017,
+    20.0
+   ],
+   [
+    "tut_move_hero",
+    20.033,
+    40.033,
+    20.0
+   ]
+  ],
+  "state": {
+   "idx": 2,
+   "steps_done": [
+    "tut_deploy_unit",
+    "tut_move_hero"
+   ]
+  }
+ },
+ "whatif_B same order as 140daeb + deploy trigger true at t=0 (02 code) | P1b 영웅을 안 움직이고, 안내가 뜨면 2초 뒤 출병·고용": {
+  "rows": [
+   [
+    "tut_deploy_unit",
+    0.017,
+    2.067,
+    2.05
+   ],
+   [
+    "tut_move_hero",
+    2.083,
+    22.083,
+    20.0
+   ],
+   [
+    "tut_buy_worker",
+    22.1,
+    24.15,
+    2.05
+   ],
+   [
+    "tut_destroy_base",
+    30.017,
+    33.017,
+    3.0
+   ]
+  ],
+  "state": {
+   "idx": 4,
+   "steps_done": [
+    "tut_deploy_unit",
+    "tut_move_hero",
+    "tut_buy_worker",
+    "tut_destroy_base"
+   ]
+  }
+ },
+ "whatif_B same order as 140daeb + deploy trigger true at t=0 (02 code) | P2a 0.5초에 바로 출병, 안내가 뜨면 2초 뒤 이동·고용": {
+  "rows": [
+   [
+    "tut_deploy_unit",
+    0.017,
+    0.55,
+    0.533
+   ],
+   [
+    "tut_move_hero",
+    0.567,
+    2.6,
+    2.033
+   ],
+   [
+    "tut_buy_worker",
+    2.617,
+    4.667,
+    2.05
+   ],
+   [
+    "tut_destroy_base",
+    30.017,
+    33.017,
+    3.0
+   ]
+  ],
+  "state": {
+   "idx": 4,
+   "steps_done": [
+    "tut_deploy_unit",
+    "tut_move_hero",
+    "tut_buy_worker",
+    "tut_destroy_base"
+   ]
+  }
+ },
+ "whatif_B same order as 140daeb + deploy trigger true at t=0 (02 code) | P2b 0.5초에 바로 출병, 영웅은 끝까지 안 움직임, 고용은 안내 2초 뒤": {
+  "rows": [
+   [
+    "tut_deploy_unit",
+    0.017,
+    0.55,
+    0.533
+   ],
+   [
+    "tut_move_hero",
+    0.567,
+    20.567,
+    20.0
+   ],
+   [
+    "tut_buy_worker",
+    20.583,
+    22.633,
+    2.05
+   ],
+   [
+    "tut_destroy_base",
+    30.017,
+    33.017,
+    3.0
+   ]
+  ],
+  "state": {
+   "idx": 4,
+   "steps_done": [
+    "tut_deploy_unit",
+    "tut_move_hero",
+    "tut_buy_worker",
+    "tut_destroy_base"
+   ]
+  }
+ },
+ "whatif_C deploy->worker->move->base + deploy trigger true at t=0 | P1a 영웅을 안 움직이고 아무것도 안 함": {
+  "rows": [
+   [
+    "tut_deploy_unit",
+    0.017,
+    20.017,
+    20.0
+   ]
+  ],
+  "state": {
+   "idx": 1,
+   "steps_done": [
+    "tut_deploy_unit"
+   ]
+  }
+ },
+ "whatif_C deploy->worker->move->base + deploy trigger true at t=0 | P1b 영웅을 안 움직이고, 안내가 뜨면 2초 뒤 출병·고용": {
+  "rows": [
+   [
+    "tut_deploy_unit",
+    0.017,
+    2.067,
+    2.05
+   ],
+   [
+    "tut_buy_worker",
+    2.5,
+    4.55,
+    2.05
+   ],
+   [
+    "tut_move_hero",
+    4.567,
+    24.567,
+    20.0
+   ],
+   [
+    "tut_destroy_base",
+    30.017,
+    33.017,
+    3.0
+   ]
+  ],
+  "state": {
+   "idx": 4,
+   "steps_done": [
+    "tut_deploy_unit",
+    "tut_buy_worker",
+    "tut_move_hero",
+    "tut_destroy_base"
+   ]
+  }
+ },
+ "whatif_C deploy->worker->move->base + deploy trigger true at t=0 | P2a 0.5초에 바로 출병, 안내가 뜨면 2초 뒤 이동·고용": {
+  "rows": [
+   [
+    "tut_deploy_unit",
+    0.017,
+    0.55,
+    0.533
+   ],
+   [
+    "tut_buy_worker",
+    2.5,
+    4.55,
+    2.05
+   ],
+   [
+    "tut_move_hero",
+    4.567,
+    6.6,
+    2.033
+   ],
+   [
+    "tut_destroy_base",
+    30.017,
+    33.017,
+    3.0
+   ]
+  ],
+  "state": {
+   "idx": 4,
+   "steps_done": [
+    "tut_deploy_unit",
+    "tut_buy_worker",
+    "tut_move_hero",
+    "tut_destroy_base"
+   ]
+  }
+ },
+ "whatif_C deploy->worker->move->base + deploy trigger true at t=0 | P2b 0.5초에 바로 출병, 영웅은 끝까지 안 움직임, 고용은 안내 2초 뒤": {
+  "rows": [
+   [
+    "tut_deploy_unit",
+    0.017,
+    0.55,
+    0.533
+   ],
+   [
+    "tut_buy_worker",
+    2.5,
+    4.55,
+    2.05
+   ],
+   [
+    "tut_move_hero",
+    4.567,
+    24.567,
+    20.0
+   ],
+   [
+    "tut_destroy_base",
+    30.017,
+    33.017,
+    3.0
+   ]
+  ],
+  "state": {
+   "idx": 4,
+   "steps_done": [
+    "tut_deploy_unit",
+    "tut_buy_worker",
+    "tut_move_hero",
+    "tut_destroy_base"
+   ]
+  }
+ }
+}

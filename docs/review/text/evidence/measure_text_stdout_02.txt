@@ -1,0 +1,87 @@
+CALIBRATION build/qa/typography_report.json (Godot 4.7.2, test_ui.gd, 2026-10-31 17:28) + 04 R4 / 07 QA-B009 in-engine values: 106 strings, match with GPOS kern 106, without kern 94
+REPRO 08:01 (640x360, notch 34/34, 5 cards, 3 skills, t=40):
+  head                 card_w=42.667   button=43 runtime_max=37 test_max=36.667 move=52.0 skill=48.0 overflow={}
+  b_first_0801_model   card_w=41.333   button=41 runtime_max=35 test_max=35.333 move=52.0 skill=40.0 overflow={'ko:worker': 1.0, 'ko:melee_basic': 1.0, 'ko:ranged_basic': 1.0, 'ko:tank': 1.0, 'ko:fast': 1.0, 'ko:siege': 1.0, 'en:worker': 1.0}
+  wip_now              card_w=45.333   button=45 runtime_max=39 test_max=39.333 move=40.0 skill=40.0 overflow={}
+hud_wip: 96 slot/key pairs, 6 non-ok (key, layout) events, resource-panel parts hidden in 1350 layouts (135 view/inset/target groups)
+   slack  -2.64  en  round title + ui.wave + ui.wave_next (r0 wave_line        w=286.0  max=283.36  truncated  [r06 640x360 ins34/0/34/0 t48]
+   slack   0.00  ko  enemy.boss_warlord.name                  boss_strip       w=65.0   max=65.00   ok  [r01 640x360 ins0/0/0/0 t40]
+   slack   0.00  ko  enemy.boss_overlord.name                 boss_strip       w=65.0   max=65.00   ok  [r01 640x360 ins0/0/0/0 t40]
+   slack   0.00  en  enemy.boss_warlord.name                  boss_strip       w=84.0   max=84.00   ok  [r01 640x360 ins0/0/0/0 t40]
+   slack   0.00  en  enemy.boss_overlord.name                 boss_strip       w=83.0   max=83.00   ok  [r01 640x360 ins0/0/0/0 t40]
+   slack   1.00  ko  unit.melee_basic.name                    card             w=36.0   max=37.00   ok  [r08 640x360 ins34/0/0/0 t40]
+   slack   1.00  ko  ui.worker                                worker_card      w=36.0   max=37.00   ok  [r08 640x360 ins34/0/0/0 t40]
+   slack   1.00  en  ui.worker                                worker_card      w=36.0   max=37.00   ok  [r08 640x360 ins34/0/0/0 t40]
+   slack   1.00  ko  unit.ranged_basic.name                   card             w=36.0   max=37.00   ok  [r08 640x360 ins34/0/0/0 t40]
+   slack   1.00  ko  unit.tank.name                           card             w=36.0   max=37.00   ok  [r08 640x360 ins34/0/0/0 t40]
+   slack   1.00  ko  unit.fast.name                           card             w=36.0   max=37.00   ok  [r08 640x360 ins34/0/0/0 t40]
+   slack   1.00  ko  unit.siege.name                          card             w=36.0   max=37.00   ok  [r08 640x360 ins34/0/0/0 t40]
+hud_head: 96 slot/key pairs, 6 non-ok (key, layout) events, resource-panel parts hidden in 1350 layouts (135 view/inset/target groups)
+   slack  -2.64  en  round title + ui.wave + ui.wave_next (r0 wave_line        w=286.0  max=283.36  truncated  [r06 640x360 ins34/0/34/0 t48]
+   slack   0.00  ko  enemy.boss_warlord.name                  boss_strip       w=65.0   max=65.00   ok  [r01 640x360 ins0/0/0/0 t40]
+   slack   0.00  ko  enemy.boss_overlord.name                 boss_strip       w=65.0   max=65.00   ok  [r01 640x360 ins0/0/0/0 t40]
+   slack   0.00  en  enemy.boss_warlord.name                  boss_strip       w=84.0   max=84.00   ok  [r01 640x360 ins0/0/0/0 t40]
+   slack   0.00  en  enemy.boss_overlord.name                 boss_strip       w=83.0   max=83.00   ok  [r01 640x360 ins0/0/0/0 t40]
+   slack   1.00  ko  unit.melee_basic.name                    card             w=36.0   max=37.00   ok  [r08 640x360 ins34/0/34/0 t40]
+   slack   1.00  ko  ui.worker                                worker_card      w=36.0   max=37.00   ok  [r08 640x360 ins34/0/34/0 t40]
+   slack   1.00  en  ui.worker                                worker_card      w=36.0   max=37.00   ok  [r08 640x360 ins34/0/34/0 t40]
+   slack   1.00  ko  unit.ranged_basic.name                   card             w=36.0   max=37.00   ok  [r08 640x360 ins34/0/34/0 t40]
+   slack   1.00  ko  unit.tank.name                           card             w=36.0   max=37.00   ok  [r08 640x360 ins34/0/34/0 t40]
+   slack   1.00  ko  unit.fast.name                           card             w=36.0   max=37.00   ok  [r08 640x360 ins34/0/34/0 t40]
+   slack   1.00  ko  unit.siege.name                          card             w=36.0   max=37.00   ok  [r08 640x360 ins34/0/34/0 t40]
+screens: 990 rows, 0 not ok (truncated / stepped / overflow)
+tightest screen rows that still fit (single-line slots):
+   slack  0.00 en  round.r07.name             round_tile_wip         w=78.0  max=78 'Rising Yeast' [640x360 ins34/0/34/0 t48]
+   slack  1.00 ko  round.r02.name             round_tile_wip         w=77.0  max=78 '초파리의 습격' [640x360 ins34/0/34/0 t48]
+   slack  1.00 ko  round.r08.name             round_tile_wip         w=77.0  max=78 '끝없는 초파리' [640x360 ins34/0/34/0 t48]
+   slack  1.00 ko  round.r09.name             round_tile_wip         w=77.0  max=78 '곰팡이 총공세' [640x360 ins34/0/34/0 t48]
+   slack  2.00 en  hint.loss.r05.tactic       result_inner_w_wrap    w=342.0 max=344.0 'Loaves in front, Rolls behind: beat the Mold General.' [640x360 ins34/0/34/0 t40]
+   slack  2.00 en  round.r07.name             round_tile_head        w=78.0  max=80 'Rising Yeast' [640x360 ins34/0/34/0 t48]
+CHANGED KEYS vs 3f70e92: 23
+   ko  hint.loss.r05.tactic   358.0 -> 319.0  max=344.0 slack=25.0  [result panel inner width (1 line)]
+   ko  tut_buy_worker         245.0 -> 286.0  max=548.0 slack=262.0  [tutorial strip r01]
+   ko  tut_deploy_unit        163.0 -> 204.0  max=548.0 slack=344.0  [tutorial strip r01]
+   ko  tut_destroy_base       197.0 -> 221.0  max=548.0 slack=327.0  [tutorial strip r01]
+   ko  tut_fast_unit          269.0 -> 413.0  max=548.0 slack=135.0  [tutorial strip r04]
+   ko  tut_siege_unit         217.0 -> 241.0  max=548.0 slack=307.0  [tutorial strip r06]
+   ko  tut_tank_unit          257.0 -> 286.0  max=548.0 slack=262.0  [tutorial strip r03]
+   ko  upgrade.supply_regen   53.0 -> 65.0  max=230.0 slack=165.0  [upgrade row name]
+   ko  upgrade.worker         53.0 -> 65.0  max=230.0 slack=165.0  [upgrade row name]
+   en  hint.loss.r05.tactic   477.0 -> 342.0  max=344.0 slack=2.0  [result panel inner width (1 line)]
+   en  hint.loss.upgrade      374.0 -> 296.0  max=344.0 slack=48.0  [result panel inner width (1 line)]
+   en  tut_buy_worker         225.0 -> 324.0  max=548.0 slack=224.0  [tutorial strip r01]
+   en  tut_deploy_unit        186.0 -> 240.0  max=548.0 slack=308.0  [tutorial strip r01]
+   en  tut_destroy_base       312.0 -> 300.0  max=548.0 slack=248.0  [tutorial strip r01]
+   en  tut_fast_unit          320.0 -> 511.0  max=548.0 slack=37.0  [tutorial strip r04]
+   en  tut_siege_unit         325.0 -> 263.0  max=548.0 slack=285.0  [tutorial strip r06]
+   en  tut_tank_unit          322.0 -> 402.0  max=548.0 slack=146.0  [tutorial strip r03]
+   en  ui.select_round        85.0 -> 46.0  max=72 slack=26.0  [main menu small button (04 WIP)]
+   en  ui.star_base_hp_any    154.0 -> 119.0  max=144 slack=25.0  [result star row]
+   en  ui.wave_next           74.0 -> 58.0  max=None slack=None  [HUD wave line (see hud_* wave_line rows)]
+   en  upgrade.base_hp        73.0 -> 89.0  max=230.0 slack=141.0  [upgrade row name]
+   en  upgrade.supply_regen   86.0 -> 75.0  max=230.0 slack=155.0  [upgrade row name]
+   en  upgrade.worker         113.0 -> 104.0  max=230.0 slack=126.0  [upgrade row name]
+PROPOSALS (key | slot max | ko now->new w | en now->new w | fits)
+  upgrade.supply_regen   230.0   ko 65.0->65.0 ok | en 75.0->75.0 ok
+  upgrade.worker         230.0   ko 65.0->65.0 ok | en 104.0->104.0 ok
+  upgrade.base_hp        230.0   ko 53.0->53.0 ok | en 89.0->89.0 ok
+  tut_deploy_unit        548.0   ko 204.0->204.0 ok | en 240.0->240.0 ok
+  tut_buy_worker         548.0   ko 286.0->286.0 ok | en 324.0->324.0 ok
+  tut_destroy_base       548.0   ko 221.0->221.0 ok | en 300.0->300.0 ok
+  tut_tank_unit          548.0   ko 286.0->286.0 ok | en 402.0->402.0 ok
+  tut_fast_unit          548.0   ko 413.0->413.0 ok | en 511.0->311.0 ok
+  tut_siege_unit         548.0   ko 241.0->241.0 ok | en 263.0->263.0 ok
+  ui.menu                77      ko 36.0->65.0 ok | en 33.0->46.0 ok
+  ui.select_round        72      ko 65.0->65.0 ok | en 46.0->46.0 ok
+  ui.star_base_hp_any    144     ko 94.0->94.0 ok | en 119.0->119.0 ok
+  ui.wave_next           None    ko 57.0->57.0 ok | en 58.0->58.0 ok
+  ui.upgrade_error       436.0   ko 217.0->249.0 ok | en 213.0->230.0 ok
+  hint.loss.r05.tactic   344.0   ko 319.0->319.0 ok | en 342.0->342.0 ok
+  hint.loss.upgrade      344.0   ko 336.0->336.0 ok | en 296.0->296.0 ok
+keys used by src/data and NOT served from data/text/ko.json: {}
+keys used by src/data and NOT served from data/text/en.json: {}
+unused data keys: ['biome.biome_01.name', 'currency.gems', 'currency.gold', 'enemy.e_bomber.name', 'enemy.e_brute.name', 'enemy.e_grunt.name', 'enemy.e_spitter.name', 'enemy.e_swarm.name', 'hero.hero_captain.desc', 'hint.loss.r05.tactic', 'hint.loss.upgrade', 'skill.skill_barrage.desc', 'skill.skill_rally.desc', 'skill.skill_slam.desc', 'ui.coins', 'ui.distance_m', 'ui.locked', 'ui.pause', 'ui.respawn', 'ui.round_n', 'unit.fast.desc', 'unit.melee_basic.desc', 'unit.ranged_basic.desc', 'unit.siege.desc', 'unit.tank.desc', 'unit.worker.desc', 'unit.worker.name']
+placeholder mismatch: [] keys only in one locale: []
+fallback drift: [{"loc": "ko", "key": "ui.subtitle", "data": "빵집 마을을 지키고 곰팡이 둥지를 부숴라", "fallback": "기지를 지키고 적 기지를 부숴라"}, {"loc": "ko", "key": "ui.defeat", "data": "패배", "fallback": "패배..."}, {"loc": "ko", "key": "ui.worker", "data": "제빵사", "fallback": "일꾼"}, {"loc": "ko", "key": "ui.wave_next", "data": "다음 %d초", "fallback": "다음 %ds"}, {"loc": "ko", "key": "ui.respawn", "data": "부활 %d초", "fallback": "부활 %ds"}, {"loc": "ko", "key": "ui.coins", "data": "골드", "fallback": "코인"}, {"loc": "ko", "key": "toast.not_enough_gold", "data": "밀가루가 부족합니다", "fallback": "보급이 부족합니다"}, {"loc": "ko", "key": "toast.worker_max", "data": "제빵사가 최대입니다", "fallback": "일꾼이 최대입니다"}, {"loc": "en", "key": "ui.star_base_hp_any", "data": "Protect your base", "fallback": "Keep your base healthy"}]
+coverage: {'ko': {'chars': 339, 'missing_regular': [], 'missing_bold': []}, 'en': {'chars': 239, 'missing_regular': [], 'missing_bold': []}}
+wrote docs\review\text\evidence\text_width_report_02.json

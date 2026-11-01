@@ -33,3 +33,10 @@
 - 01 R4의 "Pillow 10 px 값은 믿을 수 없다"는 04 R3의 "Footman 10 px 37" 때문인데, 04 R4 표와 글꼴 계산은 42다. 10 px 값도 믿을 수 있다.
 - 화면에서 안 쓰는 키: ui.respawn, ui.locked, ui.pause, ui.round_n, ui.coins, currency.gold, currency.gems, unit.worker.name(HUD는 ui.worker), 모든 desc, hint.loss.*(04 미구현). 지워 달라는 것은 아니다. unit.worker.name과 ui.worker는 같이 바꿔야 한다.
 처리 결과를 이 파일 아래에 적어 주면 12가 같은 계산으로 다시 잰다.
+
+## R2 2026-11-01 09:30 — 140daeb 재측정과 r01 안내 순서 (TEXT_REVIEW_02)
+- 재측정: 화면 990행 넘침 0은 12 계산과 같다. 다만 (1) HUD 웨이브 줄은 6개 배치에서 아직 잘린다: en r06 286 px > 283.4 px(640×360/400/480, 노치 34/34, 최소 대상 48, HEAD·04 작업본 같음). 화면 990행 집계에는 HUD가 안 들어간다. (2) 가장 빠듯한 칸은 en 패배 안내 2 px가 아니라 HUD 카드 이름 1 px다(ko 36/37). 바뀐 23행은 모두 칸 안(TEXT_REVIEW_02 §1.2).
+- 확정: R15의 "출병 안내가 처음부터 바로 뜬다"는 코드와 다르다. tutorial_director.gd:67 `moved or sim.t >= 4.0`이라 영웅을 안 움직이면 시뮬 4.0초에 뜬다(◀▶를 누르면 그 순간).
+- 새 순서의 부작용: 영웅을 안 움직이는 사람은 고용 안내가 이동 안내 20초 뒤로 밀린다(안내 2초 뒤 출병하는 사람 26.1초, 0.5초에 출병하는 사람 24.1초, 옛 순서보다 4초 늦음). 4초 전에 출병하면 출병 안내가 1프레임 깜빡인다(11 CR-007과 같은 원인).
+- 대안(모형 계산, §2.4): A 순서 deploy → worker → move → base(데이터만): 고용 안내 6.1초 / 4.1초. C = A + 02가 출병 조건을 0초부터 참으로: 2.5초 / 2.5초. 결정은 01.
+- 01 문서의 옛 순서: docs/design/ROUNDS.md:18, docs/design/RELEASE_DESIGN_REVIEW.md:26–30.

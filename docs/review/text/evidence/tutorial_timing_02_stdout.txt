@@ -1,0 +1,108 @@
+== new_140daeb | P1a 영웅을 안 움직이고 아무것도 안 함
+   tut_deploy_unit    show 4.017   hide 24.017  for 20.0 s
+   tut_move_hero      show 24.033  hide 44.033  for 20.0 s
+   steps done at 70 s: ['tut_deploy_unit', 'tut_move_hero']
+== new_140daeb | P1b 영웅을 안 움직이고, 안내가 뜨면 2초 뒤 출병·고용
+   tut_deploy_unit    show 4.017   hide 6.067   for 2.05 s
+   tut_move_hero      show 6.083   hide 26.083  for 20.0 s
+   tut_buy_worker     show 26.1    hide 28.15   for 2.05 s
+   tut_destroy_base   show 30.017  hide 33.017  for 3.0 s
+   steps done at 70 s: ['tut_deploy_unit', 'tut_move_hero', 'tut_buy_worker', 'tut_destroy_base']
+== new_140daeb | P2a 0.5초에 바로 출병, 안내가 뜨면 2초 뒤 이동·고용
+   tut_deploy_unit    show 4.017   hide 4.033   for 0.016 s
+   tut_move_hero      show 4.05    hide 6.083   for 2.033 s
+   tut_buy_worker     show 6.1     hide 8.15    for 2.05 s
+   tut_destroy_base   show 30.017  hide 33.017  for 3.0 s
+   steps done at 70 s: ['tut_deploy_unit', 'tut_move_hero', 'tut_buy_worker', 'tut_destroy_base']
+== new_140daeb | P2b 0.5초에 바로 출병, 영웅은 끝까지 안 움직임, 고용은 안내 2초 뒤
+   tut_deploy_unit    show 4.017   hide 4.033   for 0.016 s
+   tut_move_hero      show 4.05    hide 24.05   for 20.0 s
+   tut_buy_worker     show 24.067  hide 26.117  for 2.05 s
+   tut_destroy_base   show 30.017  hide 33.017  for 3.0 s
+   steps done at 70 s: ['tut_deploy_unit', 'tut_move_hero', 'tut_buy_worker', 'tut_destroy_base']
+== old_3f70e92 | P1a 영웅을 안 움직이고 아무것도 안 함
+   tut_move_hero      show 0.017   hide 20.017  for 20.0 s
+   tut_deploy_unit    show 20.033  hide 40.033  for 20.0 s
+   steps done at 70 s: ['tut_move_hero', 'tut_deploy_unit']
+== old_3f70e92 | P1b 영웅을 안 움직이고, 안내가 뜨면 2초 뒤 출병·고용
+   tut_move_hero      show 0.017   hide 20.017  for 20.0 s
+   tut_deploy_unit    show 20.033  hide 22.083  for 2.05 s
+   tut_buy_worker     show 22.1    hide 24.15   for 2.05 s
+   tut_destroy_base   show 30.017  hide 33.017  for 3.0 s
+   steps done at 70 s: ['tut_move_hero', 'tut_deploy_unit', 'tut_buy_worker', 'tut_destroy_base']
+== old_3f70e92 | P2a 0.5초에 바로 출병, 안내가 뜨면 2초 뒤 이동·고용
+   tut_move_hero      show 0.017   hide 2.05    for 2.033 s
+   tut_deploy_unit    show 2.067   hide 2.083   for 0.016 s
+   tut_buy_worker     show 2.5     hide 4.55    for 2.05 s
+   tut_destroy_base   show 30.017  hide 33.017  for 3.0 s
+   steps done at 70 s: ['tut_move_hero', 'tut_deploy_unit', 'tut_buy_worker', 'tut_destroy_base']
+== old_3f70e92 | P2b 0.5초에 바로 출병, 영웅은 끝까지 안 움직임, 고용은 안내 2초 뒤
+   tut_move_hero      show 0.017   hide 20.017  for 20.0 s
+   tut_deploy_unit    show 20.033  hide 20.05   for 0.017 s
+   tut_buy_worker     show 20.067  hide 22.117  for 2.05 s
+   tut_destroy_base   show 30.017  hide 33.017  for 3.0 s
+   steps done at 70 s: ['tut_move_hero', 'tut_deploy_unit', 'tut_buy_worker', 'tut_destroy_base']
+== whatif_A deploy->worker->move->base (data only) | P1a 영웅을 안 움직이고 아무것도 안 함
+   tut_deploy_unit    show 4.017   hide 24.017  for 20.0 s
+   steps done at 70 s: ['tut_deploy_unit']
+== whatif_A deploy->worker->move->base (data only) | P1b 영웅을 안 움직이고, 안내가 뜨면 2초 뒤 출병·고용
+   tut_deploy_unit    show 4.017   hide 6.067   for 2.05 s
+   tut_buy_worker     show 6.083   hide 8.133   for 2.05 s
+   tut_move_hero      show 8.15    hide 28.15   for 20.0 s
+   tut_destroy_base   show 30.017  hide 33.017  for 3.0 s
+   steps done at 70 s: ['tut_deploy_unit', 'tut_buy_worker', 'tut_move_hero', 'tut_destroy_base']
+== whatif_A deploy->worker->move->base (data only) | P2a 0.5초에 바로 출병, 안내가 뜨면 2초 뒤 이동·고용
+   tut_deploy_unit    show 4.017   hide 4.033   for 0.016 s
+   tut_buy_worker     show 4.05    hide 6.1     for 2.05 s
+   tut_move_hero      show 6.117   hide 8.133   for 2.016 s
+   tut_destroy_base   show 30.017  hide 33.017  for 3.0 s
+   steps done at 70 s: ['tut_deploy_unit', 'tut_buy_worker', 'tut_move_hero', 'tut_destroy_base']
+== whatif_A deploy->worker->move->base (data only) | P2b 0.5초에 바로 출병, 영웅은 끝까지 안 움직임, 고용은 안내 2초 뒤
+   tut_deploy_unit    show 4.017   hide 4.033   for 0.016 s
+   tut_buy_worker     show 4.05    hide 6.1     for 2.05 s
+   tut_move_hero      show 6.117   hide 26.117  for 20.0 s
+   tut_destroy_base   show 30.017  hide 33.017  for 3.0 s
+   steps done at 70 s: ['tut_deploy_unit', 'tut_buy_worker', 'tut_move_hero', 'tut_destroy_base']
+== whatif_B same order as 140daeb + deploy trigger true at t=0 (02 code) | P1a 영웅을 안 움직이고 아무것도 안 함
+   tut_deploy_unit    show 0.017   hide 20.017  for 20.0 s
+   tut_move_hero      show 20.033  hide 40.033  for 20.0 s
+   steps done at 70 s: ['tut_deploy_unit', 'tut_move_hero']
+== whatif_B same order as 140daeb + deploy trigger true at t=0 (02 code) | P1b 영웅을 안 움직이고, 안내가 뜨면 2초 뒤 출병·고용
+   tut_deploy_unit    show 0.017   hide 2.067   for 2.05 s
+   tut_move_hero      show 2.083   hide 22.083  for 20.0 s
+   tut_buy_worker     show 22.1    hide 24.15   for 2.05 s
+   tut_destroy_base   show 30.017  hide 33.017  for 3.0 s
+   steps done at 70 s: ['tut_deploy_unit', 'tut_move_hero', 'tut_buy_worker', 'tut_destroy_base']
+== whatif_B same order as 140daeb + deploy trigger true at t=0 (02 code) | P2a 0.5초에 바로 출병, 안내가 뜨면 2초 뒤 이동·고용
+   tut_deploy_unit    show 0.017   hide 0.55    for 0.533 s
+   tut_move_hero      show 0.567   hide 2.6     for 2.033 s
+   tut_buy_worker     show 2.617   hide 4.667   for 2.05 s
+   tut_destroy_base   show 30.017  hide 33.017  for 3.0 s
+   steps done at 70 s: ['tut_deploy_unit', 'tut_move_hero', 'tut_buy_worker', 'tut_destroy_base']
+== whatif_B same order as 140daeb + deploy trigger true at t=0 (02 code) | P2b 0.5초에 바로 출병, 영웅은 끝까지 안 움직임, 고용은 안내 2초 뒤
+   tut_deploy_unit    show 0.017   hide 0.55    for 0.533 s
+   tut_move_hero      show 0.567   hide 20.567  for 20.0 s
+   tut_buy_worker     show 20.583  hide 22.633  for 2.05 s
+   tut_destroy_base   show 30.017  hide 33.017  for 3.0 s
+   steps done at 70 s: ['tut_deploy_unit', 'tut_move_hero', 'tut_buy_worker', 'tut_destroy_base']
+== whatif_C deploy->worker->move->base + deploy trigger true at t=0 | P1a 영웅을 안 움직이고 아무것도 안 함
+   tut_deploy_unit    show 0.017   hide 20.017  for 20.0 s
+   steps done at 70 s: ['tut_deploy_unit']
+== whatif_C deploy->worker->move->base + deploy trigger true at t=0 | P1b 영웅을 안 움직이고, 안내가 뜨면 2초 뒤 출병·고용
+   tut_deploy_unit    show 0.017   hide 2.067   for 2.05 s
+   tut_buy_worker     show 2.5     hide 4.55    for 2.05 s
+   tut_move_hero      show 4.567   hide 24.567  for 20.0 s
+   tut_destroy_base   show 30.017  hide 33.017  for 3.0 s
+   steps done at 70 s: ['tut_deploy_unit', 'tut_buy_worker', 'tut_move_hero', 'tut_destroy_base']
+== whatif_C deploy->worker->move->base + deploy trigger true at t=0 | P2a 0.5초에 바로 출병, 안내가 뜨면 2초 뒤 이동·고용
+   tut_deploy_unit    show 0.017   hide 0.55    for 0.533 s
+   tut_buy_worker     show 2.5     hide 4.55    for 2.05 s
+   tut_move_hero      show 4.567   hide 6.6     for 2.033 s
+   tut_destroy_base   show 30.017  hide 33.017  for 3.0 s
+   steps done at 70 s: ['tut_deploy_unit', 'tut_buy_worker', 'tut_move_hero', 'tut_destroy_base']
+== whatif_C deploy->worker->move->base + deploy trigger true at t=0 | P2b 0.5초에 바로 출병, 영웅은 끝까지 안 움직임, 고용은 안내 2초 뒤
+   tut_deploy_unit    show 0.017   hide 0.55    for 0.533 s
+   tut_buy_worker     show 2.5     hide 4.55    for 2.05 s
+   tut_move_hero      show 4.567   hide 24.567  for 20.0 s
+   tut_destroy_base   show 30.017  hide 33.017  for 3.0 s
+   steps done at 70 s: ['tut_deploy_unit', 'tut_buy_worker', 'tut_move_hero', 'tut_destroy_base']
