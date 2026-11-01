@@ -8,6 +8,26 @@ Updated: 2026-11-01 ~07:45 KST · Session sess_aee9471e-5326-4b45-9ddb-6186a0cf6
 - User decision: Q1 = A "빵집 기사단 vs 곰팡이 군단" (DECIDED by the user). HEAD DECISIONS.md still shows PENDING; 01 records it.
 - Quota: 2278.54/10000 = 22.79% at 15:37.
 
+## USER STOP (09:17 KST order, written 09:25 KST) — v0.35 paused at a safe point
+- Session: sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce (10-research-systems, claude-opus-5.5).
+- Task: coordinator task "[10 다음 작업: 재잠금 수정 검증 준비, ID 기준 해제 저장안, 셰이더 한계 위험]", parts (1)–(4).
+- **Done and verified, all pushed** (each SHA checked with `git ls-remote`):
+  - f1af87e69be1dcc06cbf22793284fc2fab598e68: `ID_UNLOCK_SAVE_DESIGN.md`, the re-lock kit (`relock_cases.json`, `relock_suite_job.ps1`, `relock_target.txt`, `relock_eval.py`, new variants), `unlock_options_model.py` (CUR 12 / B' 3 / A 0 FAIL) and the release_guard new-player check.
+  - 6ee5384d30912b4567f8b40b3d135549d6e47d20: §9.27 (2)(3) shader-limit judgement, plus 08/04 notes.
+  - 26182f7a190619a73fef1bc9d5432204a6695b70: 02/01 requests.
+  - aa2af2ae405fb664c5c55580d221b2166bff432e: AAB install path on the emulator (asset-pack split = 21 LF data files, c1-989c3422c910).
+  - 02b5d98974a2b16daf5ce02f6621eeafd9ed6011: f606801 suite run, 12 PASS / 12 FAIL / 1 INFO, all equal to the predictions; 33 isolated boots; canary unchanged at 08:53.
+- **Not finished:** §9.27 (4) AAB launch steps (device-computed content_version from the AAB install, E1 refund/backup/notice, E3 refund_unknown).
+  - Job `10-emu-aab-r2` is STILL QUEUED (not started; pid 35524, queued 08:28:36). Log: `build/heavy/10-emu-aab-r2-20261101-082834.log`. Script: `docs/research/systems/.local_inspect/job_emu_aab.ps1` (git-ignored; committed copy in `evidence/emu_aab_20261101/`).
+  - I did not stop it. It starts its own emulator with `-no-window` and stops only that one.
+- **Next exact steps:**
+  1. When the log shows HEAVY_JOB_DONE, read the `P10 LAUNCH`/`P10 DEVICE` lines. Do not requeue.
+  2. Write the run-2 lines (A0 content_version, A1 coins/notice/pre-backup, A3 refund_unknown) under §9.27 (4) and into `evidence/emu_aab_20261101/results_run2.txt`.
+  3. Tell 06.
+  4. Run the canary and publish.
+  5. When 02's re-lock fix lands: put its SHA in `probes/relock_target.txt`, queue `10-relock-suite` once, then run `python docs/research/systems/probes/relock_eval.py docs/research/systems/.local_inspect/rs_out_<sha7>`. Pass = 24 PASS.
+- Working tree: no uncommitted tracked files in my paths. Nothing unverified is left in main.
+
 ## v0.35 (in progress, ~07:55 KST): re-lock fix prep, ID unlock design, shader limit, AAB on emulator
 - Done and pushed in **f1af87e69be1dcc06cbf22793284fc2fab598e68** (checked with `git ls-remote`):
   - `ID_UNLOCK_SAVE_DESIGN.md` (options A/B'/C, readers list, migration rule, U6, compat table).

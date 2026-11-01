@@ -1,6 +1,6 @@
 # 10-research-systems status
 Updated: 2026-11-01 ~08:00 KST · sess_aee9471e-5326-4b45-9ddb-6186a0cf66ce
-Status: v0.35 IN PROGRESS (§9.27). `10-relock-suite` (f606801) is done. `10-emu-aab-r2` (08:28) is still waiting for the lock.
+Status: STOPPED by the user order (09:17 KST); v0.35 paused at a safe point (§9.27). `10-relock-suite` (f606801) is done. `10-emu-aab-r2` is still queued and was not stopped (log `build/heavy/10-emu-aab-r2-20261101-082834.log`); see the handoff USER STOP entry.
 - (1) Re-lock re-verification kit is ready (f1af87e) and has run on f606801: 12 PASS / 12 FAIL / 1 INFO across 25 cases, all equal to the predictions written before the run (33 boots, all isolated). The fix passes at 24 PASS. Only `probes/relock_target.txt` needs the new SHA.
 - (2) `ID_UNLOCK_SAVE_DESIGN.md`:
   - Recommends A (additive `open_rounds`, computed in `_migrate` on every load, never shrinks, VERSION stays 1).
