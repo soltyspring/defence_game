@@ -130,8 +130,8 @@
   },
   "enemy_tower_atk_mult": 0.3,
   "tutorial": [
-    "tut_move_hero",
     "tut_deploy_unit",
+    "tut_move_hero",
     "tut_buy_worker",
     "tut_destroy_base"
   ],

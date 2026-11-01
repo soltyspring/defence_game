@@ -98,3 +98,5 @@ Data-only structure variants for r05 all failed (D40). My arithmetic on d38_a sa
 - Wanted (skill text + INTERFACES §2.3): Rally = attack ×1.3 and move speed ×1.3, attack interval unchanged. Keep `aura_mul` (the hero aura is an attack-speed effect by design).
 - Repro: r04, competent bot, LOW, seed 1: log one melee_basic's attack timestamps while Rally is active vs inactive. Today the interval drops from 1.0 s to about 0.77 s.
 - Pass: interval unchanged under Rally (±1 frame), damage per hit ×1.3, move speed ×1.3; selftest unchanged for rounds without Rally (r01–r03); a note of the r04–r10 bot result change for me to re-tune.
+## R15 2026-11-01 — r01 tutorial order changed (12 R2, D44)
+data/rounds/r01.json `tutorial` is now tut_deploy_unit → tut_move_hero → tut_buy_worker → tut_destroy_base (was move first). Your tutorial director's deploy-step condition ("hero moved or t ≥ 4") is TRUE at the start for the first step now, so the deploy hint shows at once. That is intended (enemies arrive from 6 s). Please check that the move step (now second) still has a sensible trigger/time-out and that nothing assumes move is step 1. No other data change.

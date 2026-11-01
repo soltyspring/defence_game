@@ -1,4 +1,8 @@
 # 01-director handoff
+## TASK 2026-11-01 — 12 TEXT_REVIEW_01 (no Godot)
+- D44: adopted 13 text changes, #9 modified (Twist + nearest target), #10 pending 04 (01→04 R11), #16 deferred until 04 changes upgrade_panel.gd:277. R2: Mold Nest naming; r01 tutorial order deploy first (02 informed, R15). Reply to 12: 01-director-to-12-text-review.md R1 (12's own file is not mine to edit).
+- Checks: l10n 138/138 ALL_OK; measure_text.py 990 rows 0 not ok.
+- No heavy job; 01-move-block2 not re-queued.
 ## TASK 2026-11-01 — 11 REVIEW_01 CR-001/CR-002 (docs/data only, no Godot)
 - D42 (CR-001): asked 02 (R14) to remove Rally's attack-speed effect (DPS ×1.69 → ×1.3); text kept. r04–r10 bot results must be re-measured after the fix.
 - D43 (CR-002): tut_fast_unit ko/en now says Pretzel hits the nearest enemy (matches code); keys 138/138, l10n ALL_OK.

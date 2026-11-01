@@ -34,7 +34,7 @@ Owner: 01-director. Data IDs stay theme-neutral (D1). Only names, art and sound 
 | skill_barrage | 스킬 | 빵가루 포격 | Barrage | | |
 | 자원 supply | 인게임 자원 | 밀가루 | Flour | | | (D25: 반죽→밀가루, word overlap with 빵어전) |
 | 자원 energy | 영웅 자원 | 기력 | Energy | | |
-| 플레이어 기지 / 적 기지 | | 빵집 / 곰팡이 둥지 | Bakery / Mold Nest | | |
+| 플레이어 기지 / 적 기지 | | 기지 (화면) · 빵집 (세계관) / 곰팡이 둥지 | Base · Bakery / Mold Nest | | (D44: 안내 문구는 적 기지를 "곰팡이 둥지"로, 플레이어 기지는 짧게 "기지") |
 Unchanged: currency 골드/Gold (D12). Title: working title "빵집 기사단: 곰팡이 디펜스 / Bakery Knights: Mold Defense" (Q3 DECIDED by user); the store name is final only after a manual KIPRIS check.
 
 ## Art/sound direction for 03/05 (requests sent)
