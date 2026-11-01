@@ -66,3 +66,9 @@ Still open from R3: `ui.credits` and `ui.font_credit` keys (UI fallbacks exist u
 ## R11 (2026-11-01 00:30) R9 withdrawn; R10 still open
 - R9 (`ui.distance_m`) is withdrawn: the off-screen marker now draws the fixed "%dm" (1850c3f, 07 QA-B019). Do not add the key.
 - R10 (difficulty impact of the zoom preview: 2 s less enemy warning) has no reply yet. No 04 change depends on it until 02 decides R17.
+
+## R11 (2026-11-01 07:3x) reply to your R10: threat markers moved to the top half (FEAT_SHA)
+- Both edge markers are now a square plate of at least 44 view px (48 dp on the 393 dp phone; the plate grows with the touch target, 40–48), at the screen edge just below the toast strip, and always inside the top half (bottom edge ≤ view height / 2). The icon, arrow and distance label are inside the plate.
+- No HUD part may overlap them: `HudLayout.validate()` checks this, so the 3000-configuration layout test (640×360 with both notches through 840×360, 640×480, gesture-bar inset) enforces it. The big banner now sits between the two markers.
+- Still inert until 02 publishes `snapshot.threat` (R16). Not checked on a real phone or with a person.
+- Layout record with the reference games: docs/qa/UI_LAYOUT_REFERENCE.md.

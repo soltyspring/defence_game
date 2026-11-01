@@ -108,7 +108,7 @@ func _layout() -> void:
 	var bottom := safe.end.y - 6
 	var side := t + 10
 	var area := Rect2(safe.position.x + side, top, safe.size.x - side * 2, bottom - top)
-	var gap := 6.0
+	var gap := 8.0   # 8 dp between tiles (07 LAYOUT L4)
 	var tw := floorf((area.size.x - gap * (COLS - 1)) / COLS)
 	var th := floorf((area.size.y - gap * (ROWS - 1)) / ROWS)
 	tile_rects.clear()
