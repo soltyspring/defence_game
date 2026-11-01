@@ -81,7 +81,7 @@ Not in the criteria yet, but recorded: CPU %, current (mA, vendor sign conventio
 PASS / FAIL / NOT_MEASURED / NOT_APPLICABLE per criterion. One phone decides one tier only; the release decision needs the
 minimum device matrix in ANDROID_PROFILING.md §11.
 
-## 4. Self-test without a phone (2026-11-01 07:52, `tests/performance/test_device_session.ps1`): 41/41 PASS
+## 4. Self-test without a phone (2026-11-01 09:1x, `tests/performance/test_device_session.ps1`): 52/52 PASS
 - Stops with exit 2 and no output folder for 0 devices, 2 devices and an unauthorised device; refuses the emulator and the
   release package; stops when the APK is missing.
 - With the fake phone (1080×2400, MemTotal 3.79 GB → low tier, scale 3) the summary reproduces the fixed samples: p50 16.667
@@ -96,6 +96,20 @@ minimum device matrix in ANDROID_PROFILING.md §11.
   2026-10-31 capture): 10's shader-link log → INVALID `GLES_SHADER_ERROR` (10 matching lines) even though its screenshot is not blank;
   10's blank frame → INVALID `BLANK_SCREEN` although 547 frames were presented; the real menu frame → valid. An INVALID scene
   leaves the battle criteria NOT_MEASURED.
+- Real Android formats (EMULATOR format check, not a performance result). Heavy job `08-emu-formats` (queued once 07:45, lock
+  09:05:28–09:07:47) booted its own LaneDefence_Phone instance on emulator-5596 (`-no-window -read-only -gpu swiftshader_indirect`,
+  Android 16 / SDK 36, 720×1600), installed the debug APK `build/android/defence-debug.apk`, captured getprop, wm size/density,
+  /proc/meminfo, dumpsys battery, current_now, thermalservice, am start -W, SurfaceFlinger --list and --latency ×5, gfxinfo and
+  gfxinfo framestats, meminfo and meminfo -d, top, logcat and a screencap, then uninstalled and stopped only its own instance
+  (`adb emu kill`; 0 qemu left). The files are in `tests/performance/fixtures/android_real/emu_formats/`; `replay_adb.ps1` serves
+  them to device_session.ps1. All 11 checks match values recomputed from the raw files: model sdk_gphone64_x86_64, Android 16,
+  canvas scale 2, MemTotal 3.83 GiB; battery 25.0 °C, level 100, AC, current_now 900000 µA; thermal status 0, battery 30.2 °C,
+  skin 30.1 °C; TotalTime 3819 ms; TOTAL PSS 161.2 MB; top 51.8 %; layer `…SurfaceView[…GodotAppLauncher](BLAST)#122` picked out of
+  9 package layers, 332 unique present times → 331 intervals, p50 19.017 ms; HWUI 16 frames / 68.75 %. No parser change was needed.
+- That capture is itself a blank-screen case: SwiftShader logged `SceneShaderGLES3` and `CanvasShaderGLES3: Program linking failed`
+  (GL_MAX_FRAGMENT_UNIFORM_VECTORS 261) and the screenshot has 1 colour, while SurfaceFlinger still presented 331 frames. The scene
+  is INVALID with `ARGS_NOT_APPLIED,GLES_SHADER_ERROR,BLANK_SCREEN` (4 matching log lines; the cache warning is ignored). The emulator
+  reports `Graphics: 0` in meminfo; the parser leaves GPU memory empty instead of reporting 0 MB.
 - The real adb with no phone attached: `NOT_ONE_DEVICE: 0`, exit 2.
-- Not tested: a real phone, real dumpsys formats of other vendors (the parsers follow AOSP output and the emulator run of
-  2026-10-31 for SurfaceFlinger), wireless adb, a real perf APK.
+- Not tested: a real phone, dumpsys formats of phone vendors (the parsers follow AOSP output and the Android 16 emulator captures of
+  2026-10-31 and 2026-11-01), wireless adb, a real perf APK, a rendered game frame on the emulator (SwiftShader fails to link).

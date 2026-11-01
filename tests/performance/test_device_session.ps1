@@ -105,7 +105,9 @@ $x = $r.summary.scenes | Where-Object { $_.id -eq 'r08_caps_zoom_off' }
 Check 'blank_screen_invalid' ($x.valid -eq $false -and $x.invalid_reason -match 'BLANK_SCREEN' -and $x.screen.unique_colors -le 2 -and $x.frames -gt 0) "reason=$($x.invalid_reason) colours=$($x.screen.unique_colors) std=$($x.screen.luma_std) frames=$($x.frames)"
 Check 'good_screen_stats' ($off.screen.unique_colors -gt 2 -and $off.screen.luma_std -ge 2 -and $off.blank_screen -eq $false) "colours=$($off.screen.unique_colors) std=$($off.screen.luma_std)"
 
-# ---- REAL Android formats replayed (emulator capture; EMULATOR format check only, not performance)
+# ---- REAL Android formats replayed (08's emulator-5596 capture 2026-11-01 09:07; EMULATOR format check only, not performance).
+# Expected values were recomputed independently from the raw files (Python, 09:1x): SF unique presents 332 -> 331 intervals, p50 19.017 ms;
+# TOTAL PSS 165096 kB = 161.2 MB, Graphics 0 (left empty); top 51.8; TotalTime 3819; hwui 16 frames / 68.75 %; 2 link failures + 2 uniform lines.
 $emuDir = Join-Path $real 'emu_formats'
 if (Test-Path (Join-Path $emuDir 'getprop.txt')) {
     $env:REPLAY_DIR = $emuDir; $env:REPLAY_STATE = Join-Path $Work 'replay_state'
@@ -122,16 +124,16 @@ if (Test-Path (Join-Path $emuDir 'getprop.txt')) {
     Check 'real_replay_runs' ($code -eq 0 -and $s -ne $null) "exit=$code"
     if ($s) {
         $dv = $s.device
-        Check 'real_getprop_wm_meminfo' ($dv.model -ne '' -and $dv.android -ne '' -and $dv.screen -match '^\d+x\d+$' -and $dv.canvas_scale -ge 1 -and $dv.memtotal_gib -gt 1) "model=$($dv.model) android=$($dv.android) screen=$($dv.screen) scale=$($dv.canvas_scale) mem=$($dv.memtotal_gib)"
-        Check 'real_battery' ($dv.battery_start.temp_c -ne $null -and $dv.battery_start.level -gt 0 -and $dv.battery_start.status -ne '') "temp=$($dv.battery_start.temp_c) level=$($dv.battery_start.level) ac=$($dv.battery_start.ac) usb=$($dv.battery_start.usb) current=$($dv.battery_start.current_ua)"
-        Check 'real_thermal' ($dv.thermal_start.status -ne $null) "status=$($dv.thermal_start.status) keys=$(($dv.thermal_start.PSObject.Properties.Name) -join ',')"
-        Check 'real_cold_start' ($x.cold_start_ms -gt 0) "$($x.cold_start_ms) ms"
-        Check 'real_meminfo_pss' ($x.pss_max_mb -gt 10 -and $x.app_running_samples -gt 0) "pss=$($x.pss_max_mb) MB gfx=$($x.graphics_max_mb) running=$($x.app_running_samples)/$($x.samples)"
-        Check 'real_cpu_top' ($x.cpu_pct_mean -ne $null) "cpu=$($x.cpu_pct_mean)"
-        Check 'real_surfaceflinger' ($x.layer -ne '' -and $x.frames -gt 10 -and $x.refresh_ms -gt 5 -and $x.frame_interval_p50_ms -gt 0) "layer='$($x.layer)' frames=$($x.frames) refresh=$($x.refresh_ms) p50=$($x.frame_interval_p50_ms)"
-        Check 'real_gfxinfo_framestats' ($x.hwui_frames -ne $null) "hwui_frames=$($x.hwui_frames) janky=$($x.hwui_janky_pct)"
-        Check 'real_screencap_stats' ($x.screen.unique_colors -ge 1 -and $x.blank_screen -ne $null) "colours=$($x.screen.unique_colors) std=$($x.screen.luma_std) blank=$($x.blank_screen)"
-        Check 'real_emulator_scene_invalid' ($x.valid -eq $false -and $x.invalid_reason -match 'ARGS_NOT_APPLIED') "reason=$($x.invalid_reason) gles_errors=$($x.gles_errors)"
+        Check 'real_getprop_wm_meminfo' ($dv.model -eq 'sdk_gphone64_x86_64' -and $dv.android -eq '16' -and $dv.screen -eq '720x1600' -and $dv.canvas_scale -eq 2 -and $dv.memtotal_gib -eq 3.83) "model=$($dv.model) android=$($dv.android) screen=$($dv.screen) scale=$($dv.canvas_scale) mem=$($dv.memtotal_gib)"
+        Check 'real_battery' ($dv.battery_start.temp_c -eq 25 -and $dv.battery_start.level -eq 100 -and $dv.battery_start.status -eq '2' -and $dv.battery_start.ac -eq $true -and $dv.battery_start.current_ua -eq 900000) "temp=$($dv.battery_start.temp_c) level=$($dv.battery_start.level) ac=$($dv.battery_start.ac) usb=$($dv.battery_start.usb) current=$($dv.battery_start.current_ua)"
+        Check 'real_thermal' ($dv.thermal_start.status -eq 0 -and $dv.thermal_start.temp_battery_c -eq 30.2 -and $dv.thermal_start.temp_skin_c -eq 30.1) "status=$($dv.thermal_start.status) keys=$(($dv.thermal_start.PSObject.Properties.Name) -join ',')"
+        Check 'real_cold_start' ($x.cold_start_ms -eq 3819) "$($x.cold_start_ms) ms"
+        Check 'real_meminfo_pss' ($x.pss_max_mb -eq 161.2 -and $x.graphics_max_mb -eq $null -and $x.app_running_samples -gt 0) "pss=$($x.pss_max_mb) MB gfx=$($x.graphics_max_mb) running=$($x.app_running_samples)/$($x.samples)"
+        Check 'real_cpu_top' ($x.cpu_pct_mean -eq 51.8) "cpu=$($x.cpu_pct_mean)"
+        Check 'real_surfaceflinger' ($x.layer -ne '' -and $x.layer -match '\(BLAST\)#\d+$' -and $x.frames -eq 331 -and $x.refresh_ms -eq 16.667 -and $x.frame_interval_p50_ms -eq 19.017) "layer='$($x.layer)' frames=$($x.frames) refresh=$($x.refresh_ms) p50=$($x.frame_interval_p50_ms)"
+        Check 'real_gfxinfo_framestats' ($x.hwui_frames -eq 16 -and $x.hwui_janky_pct -eq 68.75) "hwui_frames=$($x.hwui_frames) janky=$($x.hwui_janky_pct)"
+        Check 'real_screencap_stats' ($x.screen.width -eq 1600 -and $x.screen.height -eq 720 -and $x.screen.unique_colors -eq 1 -and $x.blank_screen -eq $true) "colours=$($x.screen.unique_colors) std=$($x.screen.luma_std) blank=$($x.blank_screen)"
+        Check 'real_emulator_scene_invalid' ($x.valid -eq $false -and $x.invalid_reason -match 'ARGS_NOT_APPLIED' -and $x.invalid_reason -match 'GLES_SHADER_ERROR' -and $x.invalid_reason -match 'BLANK_SCREEN' -and $x.gles_errors -eq 4) "reason=$($x.invalid_reason) gles_errors=$($x.gles_errors)"
     }
     Remove-Item env:REPLAY_DIR, env:REPLAY_STATE -ErrorAction SilentlyContinue
 } else { Write-Host '[device_selftest] SKIP real_replay (fixtures/android_real/emu_formats not captured yet)' }

@@ -1,0 +1,23 @@
+--------- beginning of main
+11-01 00:07:05.742  3477  3589 I godot   : Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+11-01 00:07:06.484  3477  3589 E godot   : WARNING: Failed to load cached shader, recompiling.
+11-01 00:07:06.484  3477  3589 E godot   :    at: _load_from_cache (drivers/gles3/shader_gles3.cpp:615)
+11-01 00:07:07.651  3477  3589 I godot   : 1: 
+11-01 00:07:07.651  3477  3589 E godot   : ERROR: SceneShaderGLES3: Program linking failed:
+11-01 00:07:07.651  3477  3589 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-01 00:07:07.651  3477  3589 E godot   : 
+11-01 00:07:07.651  3477  3589 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-01 00:07:07.651  3477  3589 E godot   : ERROR: Method/function failed.
+11-01 00:07:07.651  3477  3589 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)
+11-01 00:07:07.651  3477  3589 E godot   : WARNING: shader failed to compile, unable to bind shader.
+11-01 00:07:07.651  3477  3589 E godot   :    at: _version_bind_shader (./drivers/gles3/shader_gles3.h:215)
+11-01 00:07:07.660  3477  3589 I godot   : OpenGL API OpenGL ES 3.0 (OpenGL ES 3.0 SwiftShader 4.0.0.1) - Compatibility - Using Device: Google (Google Inc.) - Android Emulator OpenGL ES Translator (Google SwiftShader)
+11-01 00:07:08.010  3477  3589 I godot   : 
+11-01 00:07:12.106  3477  3589 I godot   : [App] boot ok platform=Android renderer=Android Emulator OpenGL ES Translator (Google SwiftShader) view=(800.0, 360.0) window=(1600, 720) screen=menu ui_source={"menu":"scenes/ui"} atlas={"pages":[{"gpu_bytes":262144,"h":256,"id":"ui_main","refs":1,"source":"import","w":256}],"resident_gpu_bytes":262144} save_recovered=false
+11-01 00:07:12.310  3477  3589 I godot   : 1: 
+11-01 00:07:12.310  3477  3589 E godot   : ERROR: CanvasShaderGLES3: Program linking failed:
+11-01 00:07:12.310  3477  3589 E godot   : Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (261)
+11-01 00:07:12.310  3477  3589 E godot   : 
+11-01 00:07:12.310  3477  3589 E godot   :    at: _display_error_with_code (drivers/gles3/shader_gles3.cpp:262)
+11-01 00:07:12.310  3477  3589 E godot   : ERROR: Method/function failed.
+11-01 00:07:12.310  3477  3589 E godot   :    at: _compile_specialization (drivers/gles3/shader_gles3.cpp:464)

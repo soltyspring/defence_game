@@ -1,0 +1,14 @@
+Captured 2026-11-01 09:05:28-09:07:47 KST by 08-performance (heavy job 08-emu-formats, build/heavy/08-emu-formats-job.ps1, one run
+under coordination/heavy_run.ps1). EMULATOR FORMAT SAMPLES ONLY: not phone evidence and not a performance result.
+- Emulator: 02's AVD build/avd/LaneDefence_Phone, own instance emulator-5596, -no-window -read-only -gpu swiftshader_indirect;
+  Android 16 (SDK 36) sdk_gphone64_x86_64, 720x1600, density 320. Stopped afterwards with adb emu kill (own instance only).
+- App: build/android/defence-debug.apk (59,290,830 B, 2026-10-31 17:37, SHA-256 0E53DC5151CAED82...), package
+  com.soltyspring.lanedefence, launched with am start -S -W; uninstalled after the capture.
+- Files are the raw command outputs (adb shell ...): getprop, wm size, wm density, cat /proc/meminfo, dumpsys battery (before/after),
+  cat /sys/class/power_supply/battery/current_now, dumpsys thermalservice, pm path, am start -W, pidof, dumpsys SurfaceFlinger --list,
+  dumpsys SurfaceFlinger --latency '<layer>' x5 (1 s apart), dumpsys gfxinfo <pkg> (+ framestats), dumpsys meminfo <pkg> (+ -d),
+  top -b -n 1 -p <pid> -o %CPU, logcat -d -s godot:V, exec-out screencap -p. serial.txt / package.txt are for replay_adb.ps1.
+  Not copied: emulator stdout/stderr, logcat *:E (206 KB), the empty force-stop output.
+- What the frame shows: nothing. SwiftShader logged SceneShaderGLES3 and CanvasShaderGLES3 "Program linking failed" (fragment uniforms
+  exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS 261) and screen.png is one colour, while SurfaceFlinger still presented frames.
+  device_session.ps1 must mark such a scene INVALID (GLES_SHADER_ERROR, BLANK_SCREEN).

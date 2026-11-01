@@ -1,0 +1,8 @@
+Stopping: com.soltyspring.lanedefence
+Starting: Intent { cmp=com.soltyspring.lanedefence/com.godot.game.GodotAppLauncher }
+Status: ok
+LaunchState: COLD
+Activity: com.soltyspring.lanedefence/com.godot.game.GodotApp
+TotalTime: 3819
+WaitTime: 3822
+Complete
