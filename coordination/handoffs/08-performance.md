@@ -1,5 +1,5 @@
 # 08-performance handoff
-## M19 — real-format check, blank-screen guard, new background overdraw (2026-11-01 07:43 – in progress)
+## M19 — real-format check, blank-screen guard, new background overdraw (2026-11-01 07:43 – 09:2x KST, done)
 - Done and pushed (SHAs from `git ls-remote origin refs/heads/main` right after each push):
   - `bde7b87d46904bc9adba8bcfd248be6bbdb19150`: (4) all-in budget re-run on committed 92a1718 (pages byte-identical to the WIP
     budgeted before: 8.75/9.00/0.50, D1 10.75/11.00/0.50; +0.9 KiB PNG is 03's e8c6d96) and (5) 06 U8-2 (menu 0 MiB headroom while
@@ -11,24 +11,25 @@
     GLES/shader errors and takes a screenshot (colours / luma spread); either one makes the scene INVALID, never judged. Tested on
     10's REAL SwiftShader link-failure log and blank frame (fixtures/android_real). Also fixed the soak partial-window bias.
     Self-test 41/41.
-- In progress: (1) heavy job `08-emu-formats` queued ONCE at 07:45:15 (`build/heavy/08-emu-formats-job.ps1`, log
-  `build/heavy/08-emu-formats-20261101-074513.log`). Own instance of LaneDefence_Phone on port 5596: -no-window -read-only
-  -gpu swiftshader_indirect. It captures real getprop / wm / meminfo / battery / thermalservice / SurfaceFlinger list and latency
-  ×5 / gfxinfo + framestats / top / am start / logcat / screencap into `build/perf/emu_formats_<stamp>/`, then `adb emu kill`
-  (own instance only). It waits up to 10 min and touches nothing if a foreign emulator is present.
-  `tests/performance/fixtures/android_real/replay_adb.ps1` (013064a) replays those files for the parser test.
-  - `f041af561e25674043331fb9ac7bff4a003911fc`: replay case in test_device_session.ps1 (11 checks: getprop/wm/meminfo, battery,
-    thermal, cold start, PSS, top CPU, SurfaceFlinger, gfxinfo framestats, screencap stats, scene INVALID = ARGS_NOT_APPLIED because
-    the debug APK has no `[perf08]` ack). SKIPs until `fixtures/android_real/emu_formats/getprop.txt` exists; 41/41 + 1 SKIP.
-  - Dry run 08:01 (not committed, `build/perf/replay_dryrun_1031.ps1`): REAL 2026-10-31 emulator-5580 battery / thermal / meminfo /
-    gfxinfo framestats / am start mixed with synthetic getprop / wm / SF / top. Parsed: battery level 100, 25.0 °C, AC; thermal
-    status 0, battery 30.2 °C, skin 30.1 °C; PSS 165.2 MB; cold start 3458 ms; hwui frames 1; scene INVALID ARGS_NOT_APPLIED.
-    Emulator meminfo reports `Graphics: 0`, which the parser leaves empty (not measured). CPU % untested (synthetic top was wrong).
-  - Queue at 08:02: still QUEUED; 07-art-compare-02ec60f (queued about 07:21) holds the lock.
-- Next if interrupted: poll the log for `HEAVY_JOB_DONE`; copy the captured files (not emu.out/err) to
-  `tests/performance/fixtures/android_real/emu_formats/` (+ serial.txt, package.txt, SOURCE.txt); run
-  `tests/performance/test_device_session.ps1`; fix any parser mismatch; update DEVICE_SESSION.md §4; commit; record it as an
-  EMULATOR format check, not a performance result. Do not queue the job a second time. If it ended EMU_BUSY, requeue once.
+  - `013064af45d5b000bc0d77169647814dfd78ac6f`: progress handoff + `tests/performance/fixtures/android_real/replay_adb.ps1`.
+  - `f041af561e25674043331fb9ac7bff4a003911fc`: replay case in test_device_session.ps1 (SKIP until the capture existed).
+  - `2de574c9462f88ad702612c94d1cd91166edc819`: (1) EMULATOR format check. Heavy job `08-emu-formats` queued ONCE 07:45:15, lock
+    09:05:28, `HEAVY_JOB_DONE exit=0` 09:07:47 (log `build/heavy/08-emu-formats-20261101-074513.log`). Own LaneDefence_Phone
+    instance emulator-5596, -no-window -read-only -gpu swiftshader_indirect, booted in 59 s; debug APK installed, captured, uninstalled;
+    `adb emu kill` on its own instance, qemu_left=0, adb server stopped (the job had started it). Raw outputs are in
+    `tests/performance/fixtures/android_real/emu_formats/` (SOURCE.txt; `.gitattributes -whitespace` keeps the raw trailing blanks
+    past Publish-Task's diff check). device_session.ps1 read every format correctly, no parser change; the 11 replay checks are pinned
+    to values recomputed in Python from the raw files (SF 332 presents → 331 intervals, p50 19.017 ms; PSS 161.2 MB; top 51.8 %;
+    TotalTime 3819 ms; HWUI 16 / 68.75 %; battery 25.0 °C / AC / 900000 µA; thermal 0 / 30.2 / 30.1 °C). Self-test 52/52.
+    The captured frame is blank (1 colour) with SceneShaderGLES3 + CanvasShaderGLES3 link failures, as in 10's run, while
+    SurfaceFlinger presented 331 frames; the scene is INVALID `ARGS_NOT_APPLIED,GLES_SHADER_ERROR,BLANK_SCREEN`. Not a performance
+    result; no phone result exists.
+- Validation: `tests/performance/test_device_session.ps1` 52/52 (53 s); `asset_budget_check.py --range 92a1718..origin/main` PASS
+  (only asset change e8c6d96: 8.75 / 9.00 / 0.50 MiB, PNG 88.4 KiB) at 08:04.
+- Open: emulator meminfo `Graphics: 0` is left empty (GPU memory not measured on SwiftShader). A rendered game frame on the emulator
+  is still impossible with SwiftShader (uniform limit 261). Phone session still needs a phone and 02 P10's perf APK.
+- Next: R9 fill re-run for 04's re-layout (`phone_fill_matrix.ps1 -SkipDraft -Windows @('1600x720')`) when 04 asks; device session
+  when 02 P10 lands; gate new commits with `asset_budget_check.py --range 2de574c..origin/main`.
 
 ## M18 — one-shot phone kit and all-in static budget (2026-11-01 07:1x – 07:5x KST; no Godot, no emulator)
 - **Phone kit:** new `tools/perf/device_session.ps1`, `device_scenes.json` (r01, r08 `--perf-caps`, r10, each with zoom off and
