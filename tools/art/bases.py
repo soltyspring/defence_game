@@ -511,6 +511,48 @@ def _smoke(cv, x, y, phase, n=3):
 
 
 KEEP_PLINTH = dict(base="O", mortar="w", hi="o", edge="w")   # dark crust course behind the units (WORLD_AUDIT §6, keep_plinth_ab.py)
+# Lower storey behind the units (rows PL..g). "crust" = 92a1718 (units in front read 07 C4 0.6-3.8). Structural
+# candidates (docs/art/world/EXTERNAL_RANGE.md section 7): "terrace" = light stone steps with a lit open gate and the
+# dark crust band moved above the unit heads; "arcade" = open arches (transparent) between light pillars, so the light
+# street shows behind the units, with a dark lintel above them.
+KEEP_LOWER = "crust"
+
+
+def _keep_lower(cv, rng, PL, g):
+    if KEEP_LOWER == "terrace":
+        _brick_wall(cv, 8, PL, 92, g + 1, rng, base="U", mortar="x", hi="W", edge="x", bw=10, bh=5)
+        for x in range(8, 92):                                              # dark crust band above the unit heads
+            for y in range(PL - 5, PL):
+                if cv.get(x, y):
+                    cv.put(x, y, c("w" if y < PL - 1 else "O"))
+        gx0, gx1, gtop = 70, 86, 96                                         # open gate: lit bakery inside
+        cx = (gx0 + gx1) / 2
+        for y in range(gtop - 2, g + 1):
+            for x in range(gx0 - 2, gx1 + 2):
+                dy = y - (gtop - 2)
+                if dy < 7 and abs(x + 0.5 - cx) > 3 + dy * 1.4:
+                    continue
+                inner = gx0 <= x < gx1 and y >= gtop and not (y - gtop < 6 and abs(x + 0.5 - cx) > 1 + (y - gtop) * 1.4)
+                cv.put(x, y, c(("Z" if (x + y) % 7 == 0 else "L") if inner else "x"))
+        return True
+    if KEEP_LOWER == "arcade":
+        for x in range(8, 92):                                              # dark lintel above the unit heads
+            for y in range(PL, PL + 4):
+                cv.put(x, y, c("w" if y < PL + 3 else "O"))
+        top = PL + 4
+        cv.a[top:g + 1, 8:92] = 0                                           # open arches: the street shows through
+        for px in (8, 30, 52, 74, 89):                                      # slim light pillars with a shaded side
+            for y in range(top, g + 1):
+                for x in range(px, min(92, px + 3)):
+                    cv.put(x, y, c("X" if x == px + 2 else "x"))
+        for (a, b) in ((11, 30), (33, 52), (55, 74), (77, 89)):            # arch curves under the lintel
+            m = (a + b) / 2
+            for x in range(a, b):
+                d = abs(x + 0.5 - m) / max(1, (b - a) / 2)
+                for y in range(top, top + int(round(4 * d * d)) + 1):
+                    cv.put(x, y, c("x"))
+        return True
+    return False
 
 
 def keep_v2(state: str, phase: int) -> Canvas:
