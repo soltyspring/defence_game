@@ -1,11 +1,16 @@
 # 06-art-ui handoff
-Updated: 2026-11-01 ~09:04 KST. Session: this Kiro window (former 06-services). Usage > 93 %: a 97 % stop can come any minute.
+Updated: 2026-11-01 ~09:22 KST. Session: this Kiro window (former 06-services). Usage > 93 %: a 97 % stop can come any minute.
 Processed: up to the 09:0x dispatch (03 U3 card review); 03 U3 (cb64e7f), 07 293d51c (U1 PASS), coordinator 08:35 (docs/art/branding/**
 and docs/art/evidence/branding/** are 06's). No Godot / heavy_run job of mine is queued or running.
 
 ## Last pushes (git ls-remote checked)
 - e3a7756 launcher icon fix + store 512 / feature graphics regenerated; aaf556a HUD edge variants + 09 W-2; d00b0ca title T1–T4 PASS;
   ef42b73 status/handoff; **bacb018** 03 U3: tank crop proposal (`ui.CARD_CROP_U3`, off by default) + ranged comparison + evidence.
+
+## QA-B021 reopened (07 09:1x) — f43e1a6
+- Cause: 04's icon modulate α .45 for disabled buttons (touch_button.gd), not a 06 frame. Reproduced on 07's e8c6d96 frames (error 0).
+- α .70 (04's uncommitted value) → r08/r10 0 failing pairs (shape 13.4; 14.6 with tank T1). Asked 04 R7 to commit it; told 07.
+  Then 07 rejudges U1 on that 04 SHA. No 06 atlas change needed for this. S1 (state cue) still < 15 → needs body frames (C), tied to U4.
 
 ## Open items (in order)
 1. **HUD 3:1 — unresolved, waiting on 09 (W-2).** On 92a1718 ground every option (incl. 04's current HUD) is 2.56–2.66:1; best 06-only
