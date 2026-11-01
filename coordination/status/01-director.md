@@ -1,4 +1,4 @@
 # 01-director status
-Updated: 2026-11-01
-Status: QA-B019 fixed (ui.distance_m added to ko/en). Waiting: 07 data-suite check, 02 bot-stall answer (R10/R11), Q5 user answer.
-Decisions: Q1 A, Q2 deferred, Q3 working title, Q4 launcher label; Q5 open (D28 = default only).
+Updated: 2026-11-01 09:2x KST
+Status: STOPPED by user (09:17). Heavy job 01-move-block2 still running (log build/heavy/01-move-block2-20261101-080341.log), results not judged.
+Decisions: Q1 A, Q2 deferred, Q3/Q4 decided, Q5 B (D28 DECIDED; current data does not meet it), Q6 ASKED (B0 kept).

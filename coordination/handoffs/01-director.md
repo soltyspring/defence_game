@@ -1,4 +1,15 @@
 # 01-director handoff
+## USER STOP 2026-11-01 09:17 KST ("이제 그만만들고 멈춰", "푸시하고 끝내") — STOPPED
+- Session ID: not visible in-session. Model claude-opus-5.5.
+- Current task: judge the 01-move-block2 results and set the D28 upper bound for rounds other than r05.
+- Done this session (all PUSHED, ls-remote verified at the time): 8bc03e2 (move-block criteria), 52cf31a (bot-version confound correction + job-1 evidence), 28ba40a (93% checkpoint), ee3ec1e (Q5 DECIDED B, D28 status, Q6 ASKED), 8e3ef2f (D42/D43), 5d1692a (handoff), 140daeb (D44 text review), a9ef68d (02 R15 tutorial-timing correction).
+- Validation on record: l10n 138/138 ALL_OK; measure_text.py 990 rows 0 not ok; job 1 01-move-block exit 0.
+- Not finished:
+  - **Heavy job still running, NOT killed:** label `01-move-block2`, START 09:07:47 (heavy_run.log), log `build/heavy/01-move-block2-20261101-080341.log`. At stop time: baseline_low, mv2_r06_180 and mv2_r07_200 started; mv2_r07_240 and mv2_nest140 still to run. Outputs: build/heavy/base/sweep_data.json and build/heavy/sweep_mv2_*.json (not copied into docs, not judged).
+  - D28 upper bound for non-r05 rounds: UNDECIDED.
+  - Pending on others: 04 (ui.menu destination, upgrade_panel.gd:277 change before ui.upgrade_error), 02 (R14 Rally fix, R15 tutorial check), 12 (deploy-hint timing confirmation), Q6 (user).
+- Exact next steps when resumed: (1) `Select-String build\heavy\01-move-block2-20261101-080341.log -Pattern '^HEAVY_JOB_DONE'`; (2) follow the 08:55 checkpoint steps; (3) write the D28 non-r05 upper bound, marked "data before 02 R14"; (4) list post-R14 re-measurements in the 02/07 request files. Do not re-queue 01-move-block2.
+- Uncommitted 01 files: none (working tree clean for data/, docs/design, and my coordination files at stop time).
 ## STATE 2026-11-01 ~09:2x (waiting for 01-move-block2)
 - 01-move-block2 STARTED 09:07:47 (heavy_run.log), log build/heavy/01-move-block2-20261101-080341.log; no END yet. Not re-queued.
 - Corrected 01→02 R15: the deploy hint shows at t = 4 s (or on the first hero move), not at once (tutorial_director.gd:67 `moved or t >= 4`).
