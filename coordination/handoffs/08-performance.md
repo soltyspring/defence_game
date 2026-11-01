@@ -1,4 +1,28 @@
 # 08-performance handoff
+## USER STOP — 2026-11-01 09:17 KST order ("이제 그만만들고 멈춰", "푸시하고 끝내"), written 09:2x KST
+- Session ID: `sess_89969e92-ce80-4028-b734-9037d026027a` (KIRO_SESSION_ID). Model claude-opus-5.5.
+- Current task: M19 (five steps). All five were done and pushed before the stop; nothing was in progress at 09:17.
+- Done (SHAs from `git ls-remote origin refs/heads/main` right after each push):
+  - (1) EMULATOR format check `2de574c9462f88ad702612c94d1cd91166edc819`
+  - (2) blank-screen guards `76333f04003be491e5c4a581031c19e746944276`
+  - (3) background overdraw `3190cfceec0e0c5d98c951d914047d80329ba8f8`
+  - (4) all-in budget + (5) 06 warning `bde7b87d46904bc9adba8bcfd248be6bbdb19150`
+  - replay tool `013064af45d5b000bc0d77169647814dfd78ac6f`, replay case `f041af561e25674043331fb9ac7bff4a003911fc`
+  - M19 completion handoff `70eb0fa3a1c9c1c5edb46fdb7f576c0ce653ee87`
+- Validation actually run: `tests/performance/test_device_session.ps1` 52/52 PASS (09:1x, 53 s; 11 of them replay the real
+  emulator-5596 capture and match values recomputed in Python). `asset_budget_check.py --range 92a1718..origin/main` PASS (08:04).
+  All results are EMULATOR, desktop or static. No phone result exists.
+- Heavy runs: none of 08's are queued or running. The only M19 job, `08-emu-formats`, ended `HEAVY_JOB_DONE exit=0` at 09:07:47
+  (log `build/heavy/08-emu-formats-20261101-074513.log`); its emulator was stopped by the job, 0 qemu left.
+- Not finished / not started (no work exists for them): R9 fill re-run for 04's re-layout; device session (needs a phone and 02 P10's
+  perf APK).
+- Uncommitted 08 files: none in owned paths. Local scratch only (git-ignored `build/`): `build/perf/replay_dryrun_1031.ps1` and its
+  output, `build/perf/emu_formats_20261101-090528/` (raw capture, already copied to the fixtures).
+- Next steps when resumed: 1) read coordinator-to-08-performance.md for the next task; 2) gate new commits with
+  `python tools/perf/asset_budget_check.py --range 2de574c..origin/main`; 3) when 04 asks, queue ONE detached job for
+  `tools/perf/phone_fill_matrix.ps1 -SkipDraft -Windows @('1600x720')`; 4) when 02 P10 lands, run `tools/perf/device_session.ps1`
+  through the heavy-run lock on a real phone.
+
 ## M19 — real-format check, blank-screen guard, new background overdraw (2026-11-01 07:43 – 09:2x KST, done)
 - Done and pushed (SHAs from `git ls-remote origin refs/heads/main` right after each push):
   - `bde7b87d46904bc9adba8bcfd248be6bbdb19150`: (4) all-in budget re-run on committed 92a1718 (pages byte-identical to the WIP
