@@ -17,6 +17,7 @@
 - 1637f65 — notices to 07 (A14), 02 (A20: re-import the 3 character pages), 06 (U2) and 09 (V2).
 - cb64e7f — D1Q final code: native lance, ranged lean, torso grain. ART_AUDIT round 18 result Q1-Q13 except Q3. Evidence sheets, frames_after.json, anim07_d1q.json, before-captures cap/ship_* and cap/full_*. 06 R2 review (U3).
 - The final STOP commit (this file, status, ART_AUDIT 07 result, 07 A15): its SHA goes in the follow-up line below.
+- STOP commit SHA: **41448f2** (41448f2f3764aa116b22bc8af9b604d39c96d67c). `git ls-remote origin refs/heads/main` returned it as the remote head at 09:30.
 
 **Real validation results:**
 - **e8c6d96 on a clean HEAD da2d2a6 copy:**
