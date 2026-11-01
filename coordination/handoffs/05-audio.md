@@ -1,7 +1,42 @@
 RULE (line 1, fixed after 3 violations: af491c2, 53883db, f5f42df batch): a commit SHA is written ONLY in a separate tool call made AFTER the Publish-Task call that printed `PUSHED <sha>` has returned; copy it from that output, confirm it with `git ls-remote origin refs/heads/main` (and `git merge-base --is-ancestor <sha> origin/main` after a fetch), and never record the SHA-record commit's own SHA in the file.
 # 05-audio handoff
-Updated: 2026-11-01 09:1x KST (v4.0: rule kept OFF by coordinator decision; explosion shortened for the 0.5 s death animation)
-Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all. Quota 94 %. Heavy runs only via `coordination/heavy_run_detached.ps1` (headless; lock waits 1000–2500 s). Private APPDATA.
+Updated: 2026-11-01 09:2x KST. **USER STOP (09:17 KST, "이제 그만만들고 멈춰 / 푸시하고 끝내").** Work stopped at a safe point. No new job was queued; the one queued job was NOT killed.
+Session ID: sess_480b589a-e86a-47ff-bada-af6f34aa4635. Model claude-opus-5.5, trust-all. Quota 3.4 % (new account).
+
+## STOP STATE (read first)
+**Current task:** v4.1 (coordinator: one explosion re-recording, Godot only via heavy_run_detached).
+Steps: (1) read the cue time before play(); (2) one re-recording; (3) re-judge R1–R4 / P5 / T1–T3; hero_death listening question.
+
+**Done and verified:**
+- (1) The audio clock is read just BEFORE `play()`.
+  - Manager test hook `pre_play_probe`, null in the game. The probe logs the pre-play read in the same field 5, plus the old after-play read appended as field 12.
+  - Python format check (tools/audio/_render/fmt_check.py): 13 fields in the append = 13 cue_fields, first 12 names unchanged. A v3.9 log with a 13th field gives identical rerender / repetition_check / mix_report results.
+  - NOT yet checked by Godot (parse/selftest/real log), so **not committed** (see below).
+- rerender.py: per-cue start offsets (`start_offsets_*`, outliers > 256 frames from the median) and `--asset-dir`. New tools/audio/cue_tail_check.py measures how long each played cue really sounds.
+  - On the v3.9 `pa` recordings (old explosion): explosion 0.51 s (2 plays), death_ally ≤ 0.30, death_enemy ≤ 0.37, hit_bread ≤ 0.06, hit_mold ≤ 0.09 s. On r08_s23/s11 the start-offset check shows median −444 and 0 outliers. The P5 gold_tick case is a ~512-frame shift, under the same threshold as the refine diagnostic.
+  - Pushed 4ff42c6.
+- Listening question only (no change): hero_death 1.0 s after the 0.5 s fall, in coordination/requests/05-audio-to-01-director.md and 05-audio-to-03-art.md. Pushed 49e98fa.
+
+**Not finished:**
+- Step (2) job `05-explosion-rerec`: HEAVY_JOB_QUEUED 09:16:36, pid 19056, still waiting for the lock at the stop.
+  - Log: `build/heavy/05-explosion-rerec-20261101-091635.log`. Job file `build/heavy/05-explosion-rerec-job.ps1`, 05 snapshot `build/heavy/05-snap-xr` (new explosion 22,094 B, rule off, v4.1 log code). Contention sampler log `build/heavy/05-xr-contention.log`.
+  - Do NOT queue it again while it is queued or running.
+- Step (3): re-judge on its outputs. Nothing judged yet.
+
+**Exact next steps:**
+1. `Select-String -LiteralPath build/heavy/05-explosion-rerec-20261101-091635.log -Pattern '^HEAVY_JOB_DONE'`. If it is missing and the job process is gone (crash/stop), queue the same job file once more with `& .\coordination\heavy_run_detached.ps1 -Label 05-explosion-rerec -ScriptFile build\heavy\05-explosion-rerec-job.ps1`, after refreshing the snapshot: copy src/audio, assets/audio, tools/audio/*.gd into build/heavy/05-snap-xr.
+2. In its log: PARSE OK for audio_manager.gd / integration_probe.gd, AUDIO SELFTEST PASS, 9 × `record exit=0`, then the Python outputs:
+   - docs/audio/rerender_v41_xr.json: P5 ≤ 1 dB at the top-5 peaks; `t_audio_source` = pre_play; `start_offsets_t_audio.outliers` should be 0 if the pre-play read removed the 956-frame case; compare with `start_offsets_after_play`;
+   - docs/audio/repetition_v41_xr.json (R1–R4);
+   - docs/audio/cue_tail_v41_xr.json: explosion audible end ≤ 0.50 s (T1), hits ≤ 0.15 s (T2), hero_death exempt (T3);
+   - mix_report lines (G1, peak ≤ −1 dBFS).
+3. CONTENDED: mark a recording CONTENDED if build/heavy/05-xr-contention.log has a FOREIGN line within its recording time (rec_meta.json LastWriteTime − 65 s … LastWriteTime).
+4. Write the results in docs/audio/DEATH_SYNC_CHECK.md and ONSET_PEAK_CHECK.md §6. Commit audio_manager.gd + integration_probe.gd only if the job's parse/selftest passed and the log has 13 fields.
+
+**Unverified files left in the worktree (not on main):** `src/audio/audio_manager.gd` (pre_play_probe hook), `tools/audio/integration_probe.gd` (v4.1 cue log).
+Git (verified on origin/main after fetch with `git merge-base --is-ancestor`; `git ls-remote origin refs/heads/main` = b4f5a0e at the check): 4ff42c6b9aa79e99f0cf0695202b794aa05c41fe [Test]; 49e98fa4e2e10dea296094ddc444cc07d9955840 [Docs]. Earlier this day: 3821f78 [Fix] explosion, a1ab8fe record.
+Decisions: Q1 A; Q2 on hold (no ad/purchase/shop UI); Q3/Q4 fixed; Q5 B (fail 2–3 times, then upgrade and win). Onset-cluster rule stays OFF (coordinator decision).
+Not verified: human listening (nobody has listened), real phone.
 
 ## v4.0 (2026-11-01 ~09:0x, NO heavy runs: quota 91 %, lock wait ~1 h). Coordinator decisions recorded here first.
 - Decision (coordinator, after 30401e3/1db1f59/83520c9): the onset-cluster rule stays OFF. The limiter is only a safety net. A softer variant is tried only if a real recording again shows a peak that needs it.
