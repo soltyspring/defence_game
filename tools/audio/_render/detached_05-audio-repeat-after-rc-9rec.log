@@ -1,0 +1,2 @@
+DETACHED_START 2026-11-01T01:53:30 pid=25792 args=-Integration -BattleSeconds 80 -Lifecycle -Record -RecordSeconds 60 -RecordTag rc -RecordRounds r02,r06,r08 -RecordSeeds 11,23,37
+DETACHED_CANCELLED 2026-11-01T01:56:32 by 05 while waiting for the lock (no sandbox, no Godot started): death_enemy_v2 level fix first

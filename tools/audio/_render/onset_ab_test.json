@@ -1,0 +1,333 @@
+{
+ "tag": "rd",
+ "policy": {
+  "window": 0.1,
+  "max_full": 3,
+  "db": -6.0,
+  "exempt_prio": 3
+ },
+ "targets": [
+  "hit_bread",
+  "hit_mold",
+  "death_ally",
+  "death_enemy",
+  "deploy",
+  "skill_slam",
+  "skill_rally",
+  "skill_barrage",
+  "skill_heal",
+  "wave_incoming",
+  "boss_incoming",
+  "wave_cleared",
+  "ui_confirm",
+  "ui_error",
+  "hit_base",
+  "hit_base_mold"
+ ],
+ "recordings": {
+  "r08_s23": {
+   "sim": {
+    "events": 5,
+    "lowered_new": 1,
+    "lowered_retro": 3,
+    "exempt_touched": 0
+   },
+   "mix": {
+    "A_prelimiter_peak_db": -2.12,
+    "B_prelimiter_peak_db": -2.12,
+    "A_lufs": -25.19,
+    "B_lufs": -25.21
+   },
+   "cues": {
+    "hit_bread": {
+     "A": {
+      "masked_pct": 8.8,
+      "p10": 2.8,
+      "median": 16.2,
+      "positions": 57,
+      "target_lowered_by_rule": 0
+     },
+     "B": {
+      "masked_pct": 8.8,
+      "p10": 2.8,
+      "median": 16.2,
+      "positions": 57,
+      "target_lowered_by_rule": 1
+     },
+     "diff": 0.0,
+     "file": "hit_bread_1.wav"
+    },
+    "hit_mold": {
+     "A": {
+      "masked_pct": 10.5,
+      "p10": -0.6,
+      "median": 13.3,
+      "positions": 57,
+      "target_lowered_by_rule": 0
+     },
+     "B": {
+      "masked_pct": 10.5,
+      "p10": -0.6,
+      "median": 13.3,
+      "positions": 57,
+      "target_lowered_by_rule": 1
+     },
+     "diff": 0.0,
+     "file": "hit_mold_1.wav"
+    },
+    "death_ally": {
+     "A": {
+      "masked_pct": 1.8,
+      "p10": 3.9,
+      "median": 12.3,
+      "positions": 57,
+      "target_lowered_by_rule": 0
+     },
+     "B": {
+      "masked_pct": 1.8,
+      "p10": 3.9,
+      "median": 12.3,
+      "positions": 57,
+      "target_lowered_by_rule": 0
+     },
+     "diff": 0.0,
+     "file": "death_ally.wav"
+    },
+    "death_enemy": {
+     "A": {
+      "masked_pct": 10.7,
+      "p10": -0.6,
+      "median": 10.2,
+      "positions": 56,
+      "target_lowered_by_rule": 0
+     },
+     "B": {
+      "masked_pct": 10.7,
+      "p10": -0.6,
+      "median": 10.2,
+      "positions": 56,
+      "target_lowered_by_rule": 0
+     },
+     "diff": 0.0,
+     "file": "death_enemy.wav"
+    },
+    "deploy": {
+     "A": {
+      "masked_pct": 3.6,
+      "p10": 3.1,
+      "median": 16.8,
+      "positions": 56,
+      "target_lowered_by_rule": 0
+     },
+     "B": {
+      "masked_pct": 3.6,
+      "p10": 3.1,
+      "median": 16.8,
+      "positions": 56,
+      "target_lowered_by_rule": 0
+     },
+     "diff": 0.0,
+     "file": "deploy.wav"
+    },
+    "skill_slam": {
+     "A": {
+      "masked_pct": 10.7,
+      "p10": 0.4,
+      "median": 16.8,
+      "positions": 56,
+      "target_lowered_by_rule": 0
+     },
+     "B": {
+      "masked_pct": 10.7,
+      "p10": 0.4,
+      "median": 16.8,
+      "positions": 56,
+      "target_lowered_by_rule": 0
+     },
+     "diff": 0.0,
+     "file": "skill_slam.wav"
+    },
+    "skill_rally": {
+     "A": {
+      "masked_pct": 1.8,
+      "p10": 3.5,
+      "median": 14.3,
+      "positions": 56,
+      "target_lowered_by_rule": 0
+     },
+     "B": {
+      "masked_pct": 1.8,
+      "p10": 3.5,
+      "median": 14.3,
+      "positions": 56,
+      "target_lowered_by_rule": 0
+     },
+     "diff": 0.0,
+     "file": "skill_rally.wav"
+    },
+    "skill_barrage": {
+     "A": {
+      "masked_pct": 3.6,
+      "p10": 3.3,
+      "median": 12.2,
+      "positions": 55,
+      "target_lowered_by_rule": 0
+     },
+     "B": {
+      "masked_pct": 3.6,
+      "p10": 3.3,
+      "median": 12.2,
+      "positions": 55,
+      "target_lowered_by_rule": 0
+     },
+     "diff": 0.0,
+     "file": "skill_barrage.wav"
+    },
+    "skill_heal": {
+     "A": {
+      "masked_pct": 1.8,
+      "p10": 5.8,
+      "median": 13.9,
+      "positions": 56,
+      "target_lowered_by_rule": 0
+     },
+     "B": {
+      "masked_pct": 1.8,
+      "p10": 5.8,
+      "median": 13.9,
+      "positions": 56,
+      "target_lowered_by_rule": 0
+     },
+     "diff": 0.0,
+     "file": "skill_heal.wav"
+    },
+    "wave_incoming": {
+     "A": {
+      "masked_pct": 0.0,
+      "p10": 6.1,
+      "median": 14.4,
+      "positions": 56,
+      "target_lowered_by_rule": 0
+     },
+     "B": {
+      "masked_pct": 0.0,
+      "p10": 6.1,
+      "median": 14.4,
+      "positions": 56,
+      "target_lowered_by_rule": 0
+     },
+     "diff": 0.0,
+     "file": "wave_incoming.wav"
+    },
+    "boss_incoming": {
+     "A": {
+      "masked_pct": 0.0,
+      "p10": 8.2,
+      "median": 20.3,
+      "positions": 55,
+      "target_lowered_by_rule": 0
+     },
+     "B": {
+      "masked_pct": 0.0,
+      "p10": 8.2,
+      "median": 20.3,
+      "positions": 55,
+      "target_lowered_by_rule": 0
+     },
+     "diff": 0.0,
+     "file": "boss_incoming.wav"
+    },
+    "wave_cleared": {
+     "A": {
+      "masked_pct": 3.6,
+      "p10": 2.7,
+      "median": 15.5,
+      "positions": 56,
+      "target_lowered_by_rule": 0
+     },
+     "B": {
+      "masked_pct": 3.6,
+      "p10": 2.7,
+      "median": 15.5,
+      "positions": 56,
+      "target_lowered_by_rule": 0
+     },
+     "diff": 0.0,
+     "file": "wave_cleared.wav"
+    },
+    "ui_confirm": {
+     "A": {
+      "masked_pct": 10.5,
+      "p10": -0.1,
+      "median": 12.6,
+      "positions": 57,
+      "target_lowered_by_rule": 0
+     },
+     "B": {
+      "masked_pct": 10.5,
+      "p10": -0.1,
+      "median": 12.6,
+      "positions": 57,
+      "target_lowered_by_rule": 0
+     },
+     "diff": 0.0,
+     "file": "ui_confirm.wav"
+    },
+    "ui_error": {
+     "A": {
+      "masked_pct": 8.8,
+      "p10": 0.3,
+      "median": 14.0,
+      "positions": 57,
+      "target_lowered_by_rule": 0
+     },
+     "B": {
+      "masked_pct": 8.8,
+      "p10": 0.3,
+      "median": 14.0,
+      "positions": 57,
+      "target_lowered_by_rule": 0
+     },
+     "diff": 0.0,
+     "file": "ui_error.wav"
+    },
+    "hit_base": {
+     "A": {
+      "masked_pct": 0.0,
+      "p10": 4.0,
+      "median": 10.9,
+      "positions": 57,
+      "target_lowered_by_rule": 0
+     },
+     "B": {
+      "masked_pct": 0.0,
+      "p10": 4.0,
+      "median": 10.9,
+      "positions": 57,
+      "target_lowered_by_rule": 0
+     },
+     "diff": 0.0,
+     "file": "hit_base.wav"
+    },
+    "hit_base_mold": {
+     "A": {
+      "masked_pct": 12.3,
+      "p10": -0.6,
+      "median": 11.9,
+      "positions": 57,
+      "target_lowered_by_rule": 0
+     },
+     "B": {
+      "masked_pct": 12.3,
+      "p10": -0.6,
+      "median": 11.9,
+      "positions": 57,
+      "target_lowered_by_rule": 0
+     },
+     "diff": 0.0,
+     "file": "hit_base_mold.wav"
+    }
+   }
+  }
+ }
+}

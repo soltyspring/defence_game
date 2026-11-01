@@ -73,6 +73,10 @@ var last_duck: Array = []       # [[voice index in _sfx, extra dB], ...] from th
 var onset_cluster: Dictionary = {}
 var _onsets: Array = []          # [[clock, player, prio, lowered], ...] SFX starts within the window, oldest first
 var last_cluster: Array = []     # [voice index, dB] when the last play() lowered an earlier voice, else []
+## v4.1 test hook (sandbox probe only; null in the game): called right BEFORE p.play(), its return value is stored as
+## last_play.clk_pre. The probe reads its audio clock there, so a mix chunk finished between play() and the probe's
+## read cannot make the logged start one chunk late (ONSET_PEAK_CHECK.md §6). No effect on playback.
+var pre_play_probe: Callable = Callable()
 
 var _clock := 0.0
 var _paused := false
@@ -328,6 +332,7 @@ func play(cue: StringName, params: Dictionary = {}) -> bool:
 	p.volume_db = vol + sduck + cl
 	p.pitch_scale = clampf(pitch, 0.25, 4.0)
 	p.stream_paused = false
+	var clk_pre: float = float(pre_play_probe.call()) if pre_play_probe.is_valid() else -1.0
 	p.play()
 	_v_cue[p] = cue
 	_v_prio[p] = prio
@@ -347,7 +352,7 @@ func play(cue: StringName, params: Dictionary = {}) -> bool:
 		_start_sfx_duck(dsd, int(c.get("duck_sfx_below", prio)), s.get_length() / p.pitch_scale, p)
 	var dk := float(c.get("duck", 0.0))
 	if dk < 0.0: duck(dk, s.get_length())
-	last_play = {"vj": vjv, "off": offv, "sd": sduck, "pj": pj, "cl": cl}
+	last_play = {"vj": vjv, "off": offv, "sd": sduck, "pj": pj, "cl": cl, "clk_pre": clk_pre}
 	cue_played.emit(cue, _sfx.find(p))
 	return true
 
