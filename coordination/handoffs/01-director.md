@@ -1,4 +1,9 @@
 # 01-director handoff
+## STATE 2026-11-01 ~09:2x (waiting for 01-move-block2)
+- 01-move-block2 STARTED 09:07:47 (heavy_run.log), log build/heavy/01-move-block2-20261101-080341.log; no END yet. Not re-queued.
+- Corrected 01→02 R15: the deploy hint shows at t = 4 s (or on the first hero move), not at once (tutorial_director.gd:67 `moved or t >= 4`).
+- Q6 unanswered → B0 kept (no backup config change). D44 applied in data/text and r01 tutorial order; #10 ui.menu waits for 04's answer, #16 ui.upgrade_error waits for 04's upgrade_panel.gd:277 change.
+- Next: when HEAVY_JOB_DONE appears, judge per the 08:55 checkpoint, set the D28 non-r05 upper bound (data before 02 R14), then list the post-R14 re-measurements for 02/07.
 ## TASK 2026-11-01 — 12 TEXT_REVIEW_01 (no Godot)
 - D44: adopted 13 text changes, #9 modified (Twist + nearest target), #10 pending 04 (01→04 R11), #16 deferred until 04 changes upgrade_panel.gd:277. R2: Mold Nest naming; r01 tutorial order deploy first (02 informed, R15). Reply to 12: 01-director-to-12-text-review.md R1 (12's own file is not mine to edit).
 - Checks: l10n 138/138 ALL_OK; measure_text.py 990 rows 0 not ok.
