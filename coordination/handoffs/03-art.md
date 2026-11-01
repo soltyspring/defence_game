@@ -1,4 +1,63 @@
 # 03-art handoff
+## STOP 2026-11-01 09:27 KST (user: "이제 그만만들고 멈춰", "푸시하고 끝내")
+**Task:** coordination/prompts/03-char-polish.txt. D1Q is the hand-polished D1 draft, behind `ART_DRAFT32=D1Q` only; the shipped default stays 32 px until 02 decides R17. After the 03:55 blue screen the coordinator added three items: 07 QA-B024 / QA-B025 and 06 R3 Ask A (`ink` palette key).
+
+**Session:** Kiro session ID is not visible from inside the session. Model claude-opus-5.5. Same window reopened after the blue screen.
+
+**Done (pushed, each checked with `git branch -r --contains` → origin/main; e8c6d96 also seen as the remote head via `git ls-remote`):**
+- 278d52b — round 18 causes and pass criteria Q1-Q13, char_quality.py (before the blue screen).
+- 90c9790 — 06 R1: build.py card line (before the blue screen).
+- e8c6d96 — shipped fixes, and the D1Q code up to that point:
+  - QA-B024: e_brute trot walk and slump death; tank walk stride 3, 2 px dip.
+  - QA-B025: every death plays within 0.5 s, dissolve x0.25.
+  - `ink` k #07070c palette key; save_indexed_png keeps the 53-entry tRNS, so other pages stay byte-identical.
+  - The 3 character pages and their locks.
+  - 09's 6 previews.
+  - ART_AUDIT round 19, ART_DIRECTION palette line.
+- 1637f65 — notices to 07 (A14), 02 (A20: re-import the 3 character pages), 06 (U2) and 09 (V2).
+- cb64e7f — D1Q final code: native lance, ranged lean, torso grain. ART_AUDIT round 18 result Q1-Q13 except Q3. Evidence sheets, frames_after.json, anim07_d1q.json, before-captures cap/ship_* and cap/full_*. 06 R2 review (U3).
+- The final STOP commit (this file, status, ART_AUDIT 07 result, 07 A15): its SHA goes in the follow-up line below.
+
+**Real validation results:**
+- **e8c6d96 on a clean HEAD da2d2a6 copy:**
+  - Only char_player, char_boss_warlord and char_boss_overlord changed. The other 6 pages are byte-identical.
+  - validate --determinism PASS; asset_budget --tree PASS at 8.75 MiB; cvd_check unchanged (16.37 / 18.98 / 18.28).
+  - readability composite: same as HEAD.
+- **07 art_compare e8c6d96, real capture (09:05, ko_1x):**
+  - Every A rule PASS: A1 brute 0→2, tank 1→2; A1c brute 14→62.2; A5 brute 21.5→57.0; A6 ≥ 0.42 s; A6b 83-100 %.
+  - The run is VOID by G2: state drift in r01_t10 / r08 / r10 from non-art commits.
+  - C1 is still FAIL at 3.4-4.0 mm.
+  - Table: build\qa07\art_compare\e8c6d96\table.md, not committed; 07 commits it.
+- **D1Q (atlas, HEAD 52cf31a + draft):**
+  - Q1, Q2, Q4-Q9, Q11-Q13 PASS. Q4: three pairs at 0.59-0.60.
+  - Q10: PASS on the old street. On 09's new street, `dark` is FAIL for both D1Q (51.5) and shipped (48.1).
+  - 07 A rules predicted PASS.
+- **Q3 (real capture of the final D1Q): NOT DONE.**
+
+**Heavy job still queued (not killed, per instruction):** label `03-cq-d1q-cap2`, pid 41568, log `build\heavy\03-cq-d1q-cap2-20261101-081701.log`. It is the final D1Q capture, r01/r06/r10 at t = 46 s, seed 4242, snapshot %TEMP%\art03_q (base 1aec5fe + my files), isolated APPDATA, DISPLAY2. It was still waiting for the lock at 09:25.
+
+**Not done:**
+- Q3 verdict from that capture.
+- 07 review request for D1Q.
+- readability.py `dark` / `bright` → report-only wording (V1 item 3).
+- ART_DIRECTION §4/§5/§7 pointers to WORLD_AUDIT (V1 item 4).
+- 06 Ask B contract lines (waiting for 04).
+
+**Next steps, exactly:**
+1. When the log shows `HEAVY_JOB_DONE`, run:
+   ```
+   python tools/art/char_quality.py battle docs/art/evidence/char_quality/battle_after.json "ship-r01=%TEMP%\art03_cap\ship\r01|current|%TEMP%\art03_ship\assets\atlases" ...
+   ```
+   Cover ship / full / q × r01 / r06 / r10. Q3 passes if every unit has feature ≥ min(shipped, 40) and doubled ≤ 2.0.
+2. Copy `%TEMP%\art03_cap\q\r*\zoom_preview_current.png` and `size_cam_current_units.json` to docs/art/evidence/char_quality/cap/q_r*_t46*.
+3. Make an x3 sheet with `char_quality.py sheet`.
+4. Replace the "Capture section (Q3): pending" line in ART_AUDIT round 18.
+5. Send a review request to 07, and publish.
+
+**Uncommitted, unverified (left in the work tree):** docs/art/evidence/char_quality/battle_after.json. It is from the 08:12 capture of the D1Q state before the lance redraw, superseded and not used for any verdict. Scratch files in build/cq (gitignored). tools/art/bases.py is 09's file and was not touched by me.
+
+**Not tested:** no human player test, no real-phone check, for anything above.
+
 Updated: 2026-11-01 00:46 +09:00 (real time from Get-Date). Q1 = A, Q2 deferred, Q3 working title 빵집 기사단: 곰팡이 디펜스, Q4 home-screen name 빵집 기사단 (all DECIDED); Q5 difficulty unanswered (D28 is only a default). Art version 0.13.0.
 
 ## Session

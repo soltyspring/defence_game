@@ -380,3 +380,15 @@ Selected only by `ART_DRAFT32=D1Q` (tools/art/chars_big.py). The shipped default
 - A6b 83-100 %.
 - All 10 ids pass. Evidence: anim07_d1q.json.
 **Capture section (Q3):** pending. The real captures of this final D1Q are queued as heavy job 03-cq-d1q-cap2. An 08:12 capture of the D1Q state just before the lance redraw is not used for the verdict: its only Q3 miss was 프레첼 r01 doubled 2.7 %, from the scaled lance in attack frame 2. That frame now measures 0.0 % in the atlas.
+
+**Round 19, 07's real capture (art_compare e8c6d96, ko_1x, 08:52-09:05; isolated APPDATA; DISPLAY2):**
+- Every A rule PASSES in the real renderer:
+  - A1: brute 0 → 2 px, tank 1 → 2 px.
+  - A1c: brute 14.0 → 62.2 %.
+  - A5: brute 21.5 → 57.0 %.
+  - A6: min 0.42 s; fast 0.25 → 0.50 s.
+  - A6b: 83-100 %.
+- The model predictions were within 0.2 for brute and tank. Grunt A6 is 0.42 measured vs 0.50 predicted, because the street behind it changed.
+- 07's run is **VOID** by its gate G2: the sim state differs from baseline ad47eda in r01_t10 / r08 / r10. That drift comes from non-art commits, so the C rows are not a judgement of e8c6d96.
+- C1 (soldiers ≥ 5 mm) is still FAIL at 3.4-4.0 mm with the 32 px art.
+- Table: build\qa07\art_compare\e8c6d96\table.md (07 commits it).

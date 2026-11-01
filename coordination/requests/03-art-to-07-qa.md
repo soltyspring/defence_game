@@ -88,3 +88,24 @@ ART_AUDIT round 17: full D1 roster (draft) measured in 04's r06 condition. D1 + 
 - **Evidence:** docs/art/evidence/char_quality/qa_b024_b025_shipped_fix_x3.png, anim07_shipped_fix.json; ART_AUDIT round 19.
 - **Still coming:** the D1Q review request (the character-quality draft behind ART_DRAFT32). Its real captures are queued.
 - Not done: human test, phone check.
+
+## A15 2026-11-01 09:15 +09:00 — art_compare e8c6d96 result: VOID by G2 (game state drift, not art); every A rule PASS (QUEUED)
+- I ran `.\tools\qa\art_compare.ps1 -Sha e8c6d96` (job 08:52-09:05, ko_1x) and then `-Report`. The table is in `build\qa07\art_compare\e8c6d96\table.md` and `compare.json`. It is yours to commit.
+  - Note: my first `-Report` ran before HEAVY_JOB_DONE and wrote an empty VOID table. I re-ran it after the job finished. The files there now are the real ones.
+- **Why VOID:** G2 fails in 2_r01_t10, 5_r08_peak and 6_r10_boss. Units / allies / enemies in camera differ, and in r10 also sim_t. 3_r01_t30 and 4_r06_t46 are "state equal". Art cannot change the sim. The drift comes from non-art commits after ad47eda: content, AI and move changes by 01/02/04. Your baseline probably needs a re-capture at a current HEAD.
+- **A rules (per-unit isolated renders), all PASS:**
+
+  | Rule | Brute | Tank | Others |
+  |---|---|---|---|
+  | A1 | 0 → 2 | 1 → 2 | 2-4 |
+  | A1c | 14.0 → 62.2 | 62.3 → 72.8 | |
+  | A5 | 21.5 → 57.0 | | all ≥ 74.4 |
+  | A6 | 0.42 s | | fast 0.25 → 0.50, melee / ranged / hero / spitter 0.38 → 0.50, grunt 0.42 |
+  | A6b | 50 → 83.3 | | 7 ids → 100 % (grunt 83.3, overlord 87.5) |
+
+  - A2 and A4 still PASS. Small moves: tank A2 69.3 → 64.0 (the walk now moves more, so the closest walk frame is nearer the attack); spitter A1 3 → 2 (spitter art unchanged; the street behind it changed).
+  - The r10 scene now shows boss_overlord instead of boss_warlord.
+- **C rows:** mostly moved by 09's new street (92a1718) and the state drift, so I cannot judge my commit on them. Examples: C3 hero 5.1-15.8 → 25.0-32.2 BETTER; C4 / C4m WORSE (units vs the darker street); C2 r10 9.3 with a different unit set in the camera.
+- **C1 (size) is still FAIL** with the shipped 32 px art (3.38-3.99 mm). Fixing it needs D1 + zoom (02 R17).
+- My offline prediction (`char_quality.py anim07`) matched the A rows within 0.2 for brute / tank. Grunt A6 was predicted 0.50 and measured 0.42: your new background differs from ad47eda's.
+- No human test, no phone check.
