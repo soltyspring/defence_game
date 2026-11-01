@@ -600,7 +600,12 @@ CARD_STYLE = {
 }
 # crop window (default: top-aligned on the head, like portrait()). The oven cannon is 40 px wide with the
 # rolling-pin barrel on top, so its card shows the oven front (fire door) instead of the barrel tip.
-CARD_CROP = {"siege": ("bbox", 17, 2)}   # (window mode, rows below the sprite top, extra plate rings)
+CARD_CROP = {"siege": ("bbox", 17, 2)}
+# 03 U3 proposal (not in the shipped build until 03/04 approve the next ui_main rebuild): tank window 4 rows lower, centred on
+# the sprite, so the loaf shield + red cross go from 32 % to 75 % visible. Previews/measurements: set UI_CARD_CROP_U3=1.
+CARD_CROP_U3 = {"tank": ("bbox", 4, 0)}
+if __import__("os").environ.get("UI_CARD_CROP_U3"):
+    CARD_CROP.update(CARD_CROP_U3)   # (window mode, rows below the sprite top, extra plate rings)
 
 
 def badge_mask(shape: str, n: int = 24) -> np.ndarray:
@@ -617,6 +622,8 @@ def badge_mask(shape: str, n: int = 24) -> np.ndarray:
         m = ((au <= h - 3) & (v >= -4)) | ((u / (h + 0.4)) ** 2 + ((v + 6.0) / 6.0) ** 2 <= 1)
     elif shape == "ticket":                             # rounded tile with a round bite on each side
         m = (av <= h - 2) & (u * u + v * v <= 400) & ~(((au - h) ** 2 + v * v) <= 9)
+    elif shape == "ticket_hi":                        # 03 U3 candidate: the side bites 5 px higher (clear of hand and basket)
+        m = (av <= h - 2) & (u * u + v * v <= 400) & ~(((au - h) ** 2 + (v + 5) ** 2) <= 9)
     elif shape == "shield":                             # flat top, sides taper to a point at the bottom
         t = np.clip((v + 4.0) / (h + 4.0), 0, 1)
         m = au <= h * (1 - t ** 1.2) + 0.3
@@ -691,12 +698,16 @@ def card(uid: str, frame: np.ndarray, size: int = 24) -> Canvas:
     ys, xs = np.nonzero(frame)
     top = ys.min()
     cx = int(np.median(xs[ys < top + 12]))
-    if uid in CARD_CROP:                        # ("bbox", rows below the sprite top, extra plate rings)
-        _mode, dy, extra = CARD_CROP[uid]
-        cx = (int(xs.min()) + int(xs.max())) // 2
-        top = int(ys.min()) + dy
-        for _ in range(extra):
-            allowed = _erode(allowed)
+    if uid in CARD_CROP:                        # ("bbox", rows below the sprite top, extra plate rings) or ("shift", dx, dy)
+        mode, a1, a2 = CARD_CROP[uid]
+        if mode == "bbox":
+            cx = (int(xs.min()) + int(xs.max())) // 2
+            top = int(ys.min()) + a1
+            for _ in range(a2):
+                allowed = _erode(allowed)
+        else:
+            cx += a1
+            top += a2
     w = size - 4
     x0 = cx - w // 2
     fig = np.zeros_like(m)

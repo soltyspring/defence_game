@@ -1,0 +1,57 @@
+{
+ "tank": {
+  "now": {
+   "crop": null,
+   "shape": "shield",
+   "shield_cross_visible": 0.75,
+   "max_iou_vs_others": 0.722
+  },
+  "T1_bbox_dy4": {
+   "crop": [
+    "bbox",
+    4,
+    0
+   ],
+   "shape": "shield",
+   "shield_cross_visible": 0.75,
+   "max_iou_vs_others": 0.722
+  },
+  "T2_bbox_dy7": {
+   "crop": [
+    "bbox",
+    7,
+    0
+   ],
+   "shape": "shield",
+   "shield_cross_visible": 0.842,
+   "max_iou_vs_others": 0.722
+  }
+ },
+ "ranged_basic": {
+  "now": {
+   "crop": null,
+   "shape": "ticket",
+   "basket_visible": 0.969,
+   "roll_visible": 0.792,
+   "max_iou_vs_others": 0.776
+  },
+  "R1_figure_down3": {
+   "crop": [
+    "shift",
+    0,
+    -3
+   ],
+   "shape": "ticket",
+   "basket_visible": 0.75,
+   "roll_visible": 0.604,
+   "max_iou_vs_others": 0.776
+  },
+  "R2_bites_high": {
+   "crop": null,
+   "shape": "ticket_hi",
+   "basket_visible": 1.0,
+   "roll_visible": 0.938,
+   "max_iou_vs_others": 0.826
+  }
+ }
+}
