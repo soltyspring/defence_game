@@ -1,0 +1,212 @@
+{
+ "STREET_LIGHT": {
+  "c4_min": 28.9,
+  "c4_lt15": [],
+  "c4_median": 42.35,
+  "c4": {
+   "worker": 40.1,
+   "melee_basic": 41.2,
+   "ranged_basic": 40.0,
+   "tank": 38.6,
+   "fast": 33.6,
+   "hero_captain": 28.9,
+   "e_grunt": 49.0,
+   "e_spitter": 47.5,
+   "e_swarm": 54.9,
+   "e_brute": 43.5,
+   "e_bomber": 50.8,
+   "boss_warlord": 48.3
+  },
+  "keep_front_c4_min": 1.6,
+  "keep_front": {
+   "hero_captain": 26.6,
+   "melee_basic": 11.5,
+   "worker": 15.5,
+   "ranged_basic": 1.6,
+   "tank": 13.9
+  },
+  "keep_ring_dE": 28.9,
+  "nest_ring_dE": 44.8,
+  "ring_ally_min": [
+   11.5,
+   26.0
+  ],
+  "ring_enemy_min": [
+   18.1,
+   21.9
+  ],
+  "head_band": {
+   "rows": [
+    255,
+    285
+   ],
+   "L_mean": 88.8,
+   "L_std": 7.1,
+   "C_mean": 14.5,
+   "chroma_hi_pct": 1.4,
+   "edge_density": 12.9
+  },
+  "lane": {
+   "rows": [
+    284,
+    297
+   ],
+   "L_mean": 80.3,
+   "L_std": 0.7,
+   "C_mean": 6.2,
+   "chroma_hi_pct": 0.0,
+   "edge_density": 0.7
+  },
+  "far": {
+   "rows": [
+    60,
+    175
+   ],
+   "L_mean": 87.6,
+   "L_std": 7.7,
+   "C_mean": 16.7,
+   "chroma_hi_pct": 2.8,
+   "edge_density": 16.7
+  }
+ },
+ "CAND_SAND": {
+  "c4_min": 28.9,
+  "c4_lt15": [],
+  "c4_median": 42.35,
+  "c4": {
+   "worker": 40.1,
+   "melee_basic": 41.2,
+   "ranged_basic": 40.0,
+   "tank": 38.6,
+   "fast": 33.6,
+   "hero_captain": 28.9,
+   "e_grunt": 49.0,
+   "e_spitter": 47.5,
+   "e_swarm": 54.9,
+   "e_brute": 43.5,
+   "e_bomber": 50.8,
+   "boss_warlord": 48.3
+  },
+  "keep_front_c4_min": 1.6,
+  "keep_front": {
+   "hero_captain": 26.6,
+   "melee_basic": 11.5,
+   "worker": 15.5,
+   "ranged_basic": 1.6,
+   "tank": 13.9
+  },
+  "keep_ring_dE": 28.9,
+  "nest_ring_dE": 44.8,
+  "ring_ally_min": [
+   11.5,
+   26.0
+  ],
+  "ring_enemy_min": [
+   18.1,
+   21.9
+  ],
+  "head_band": {
+   "rows": [
+    255,
+    285
+   ],
+   "L_mean": 88.8,
+   "L_std": 7.1,
+   "C_mean": 14.5,
+   "chroma_hi_pct": 1.4,
+   "edge_density": 12.9
+  },
+  "lane": {
+   "rows": [
+    284,
+    297
+   ],
+   "L_mean": 80.3,
+   "L_std": 0.7,
+   "C_mean": 6.2,
+   "chroma_hi_pct": 0.0,
+   "edge_density": 0.7
+  },
+  "far": {
+   "rows": [
+    60,
+    175
+   ],
+   "L_mean": 87.6,
+   "L_std": 7.7,
+   "C_mean": 16.7,
+   "chroma_hi_pct": 2.8,
+   "edge_density": 16.7
+  }
+ },
+ "CAND_COBBLE": {
+  "c4_min": 28.9,
+  "c4_lt15": [],
+  "c4_median": 42.35,
+  "c4": {
+   "worker": 40.1,
+   "melee_basic": 41.2,
+   "ranged_basic": 40.0,
+   "tank": 38.6,
+   "fast": 33.6,
+   "hero_captain": 28.9,
+   "e_grunt": 49.0,
+   "e_spitter": 47.5,
+   "e_swarm": 54.9,
+   "e_brute": 43.5,
+   "e_bomber": 50.8,
+   "boss_warlord": 48.3
+  },
+  "keep_front_c4_min": 1.6,
+  "keep_front": {
+   "hero_captain": 26.6,
+   "melee_basic": 11.5,
+   "worker": 15.5,
+   "ranged_basic": 1.6,
+   "tank": 13.9
+  },
+  "keep_ring_dE": 28.9,
+  "nest_ring_dE": 44.8,
+  "ring_ally_min": [
+   11.5,
+   26.0
+  ],
+  "ring_enemy_min": [
+   18.1,
+   21.9
+  ],
+  "head_band": {
+   "rows": [
+    255,
+    285
+   ],
+   "L_mean": 88.8,
+   "L_std": 7.1,
+   "C_mean": 14.5,
+   "chroma_hi_pct": 1.4,
+   "edge_density": 12.9
+  },
+  "lane": {
+   "rows": [
+    284,
+    297
+   ],
+   "L_mean": 80.3,
+   "L_std": 0.7,
+   "C_mean": 6.2,
+   "chroma_hi_pct": 0.0,
+   "edge_density": 0.7
+  },
+  "far": {
+   "rows": [
+    60,
+    175
+   ],
+   "L_mean": 87.6,
+   "L_std": 7.7,
+   "C_mean": 16.7,
+   "chroma_hi_pct": 2.8,
+   "edge_density": 16.7
+  }
+ }
+}

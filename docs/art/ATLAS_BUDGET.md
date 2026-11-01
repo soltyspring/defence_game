@@ -13,7 +13,7 @@ Art version 0.13.0. Numbers are measured from the written files. GPU bytes = wid
 | `ui_main` | ui | always | 256×256 | 5.7 KiB | 0.25 MiB | 0.36 | 100 |
 | `ui_title_ko` | title | menu | 512×64 | 2.4 KiB | 0.12 MiB | 0.56 | 2 |
 | `ui_title_en` | title | menu | 256×128 | 3.2 KiB | 0.12 MiB | 0.51 | 2 |
-| `biome_meadow` | biome | per_round | 1024×512 | 13.6 KiB | 2.00 MiB | 0.46 | 5 |
+| `biome_meadow` | biome | per_round | 1024×512 | 13.5 KiB | 2.00 MiB | 0.46 | 5 |
 | **Total** | | | | **88.4 KiB** | **9.00 MiB** | | |
 
 Residency by scene (provisional, matches ENGINE.md §8 load rules):

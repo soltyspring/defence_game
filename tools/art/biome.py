@@ -710,6 +710,11 @@ STREET_LIGHT = dict(wall="U", corner="x", frame="z", glass="z", loaf="T", door_f
 STREET_STONE = dict(wall="x", corner="N", frame="N", glass="X", loaf="T", door_frame="X", door="N", knob="O",
                     pave="N", pave_joint="x", kerb="X", kerb2="N", lane="x", lane_edge="X", rut="N", dust="N", crumb="z")
 STREET = STREET_LIGHT
+# 06 W-2 (coordination/requests/06-art-ui-to-09-art-world.md): the soil band under the HUD row (screen y >= 296) needs
+# mean L* >= 39 (>= 43 if possible) so the HUD's dark edge reaches 3:1. Candidates, light street otherwise unchanged:
+SOIL_SAND = dict(soil="o", stone="O", stone_hi="H", stone_hi_low="s")     # warm sandy earth, L* 50.6
+SOIL_COBBLE = dict(soil="X", stone="A", stone_hi="x", stone_hi_low="M")   # cool grey cobble foundation, L* 60.0
+STREET = {**STREET_LIGHT, **SOIL_SAND}     # chosen (EXTERNAL_RANGE.md section 6): band 54.1 >= 43 with the smaller jump to the HUD
 
 
 def v2_mid(meta, seed=222):
@@ -764,7 +769,7 @@ def v2_ground(meta, seed=233):
             elif y < 24:
                 k = S["lane_edge"]
             else:
-                k = "w"
+                k = S.get("soil", "w")                                             # soil band under the HUD row
             cv.put(x, y, c(k))
     for x in range(W):                                                             # faint wheel ruts
         if (x // 3) % 6 != 0 and x % 2 == 0:
@@ -779,8 +784,8 @@ def v2_ground(meta, seed=233):
     for _ in range(60):                                                            # soil stones (mostly under the HUD)
         x, y, w = int(rng.integers(0, W)), int(rng.integers(26, 76)), int(rng.integers(2, 5))
         for i in range(w):
-            cv.put(x + i, y, c("O"))
-            cv.put(x + i, y - 1, c("H" if y > 40 else "o"))
+            cv.put(x + i, y, c(S.get("stone", "O")))
+            cv.put(x + i, y - 1, c(S.get("stone_hi_low", "H") if y > 40 else S.get("stone_hi", "o")))
     meta.update(view_y=280, parallax=1.0, tile=True, lane_line=LANE,
                 note="layer row 15 is the feet line: place layer at view_y = ground_y - 15")
     return cv
