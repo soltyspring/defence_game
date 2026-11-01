@@ -97,8 +97,12 @@ class Assets:
                     x = np.frombuffer(w.readframes(w.getnframes()), "<i2").astype(np.float64) / 32768.0
                     self._f[res] = (x, w.getframerate())
             else:
-                x, sr = read_wav_any(ROOT / rel)
-                y = self._qoa(ROOT / rel) if self.qoa else None
+                src = ROOT / rel
+                ov = ARGS.get("--asset-dir", "")
+                if ov and (Path(ov) / Path(rel).name).exists():
+                    src = Path(ov) / Path(rel).name   # e.g. the pre-v4.0 explosion.wav for re-rendering older recordings
+                x, sr = read_wav_any(src)
+                y = self._qoa(src) if self.qoa else None
                 if self.qoa and y is None:
                     self.wav_fallback.append(rel)
                 self._f[res] = (y if y is not None else x[:, 0], sr)
@@ -341,6 +345,39 @@ def refine_chunks(ev: list[dict], stem: np.ndarray, off: int, mr: int, chunk: in
     return moved
 
 
+def start_offsets(ev: list[dict], stem: np.ndarray, rec: dict, field: int) -> dict:
+    """Per-cue real start minus logged start (frames), by matched filter (first 60 ms, r >= 0.9), using cue-log field
+    `field` (5 = t_audio as logged, 12 = v4.1 after-play read). Counts cues more than 256 frames away from the
+    median: the v3.9 gold_tick case was median - 512."""
+    q_by = {id(e): e for e in ev}
+    mr = rec["st"]["mr"]
+    cues = [q for q in rec["meta"]["cues"] if len(q) > field and float(q[field]) >= 0]
+    W, L = int(0.15 * mr), int(0.06 * mr)
+    offs = []
+    sfx = {e["t"]: e for e in ev}
+    for q in cues:
+        e = sfx.get(float(q[0]))
+        if e is None or e["cue"] != q[1]:
+            continue
+        s = e["sig"][:L] * 10 ** (e["vol"] / 20)
+        a = int(round(float(q[field]) * mr))
+        if len(s) < L or a - W < 0 or a + W + L > len(stem):
+            continue
+        seg = stem[a - W:a + W + L]
+        c = np.correlate(seg, s, "valid")
+        en = np.sqrt(np.convolve(seg ** 2, np.ones(L), "valid"))
+        r = c / np.maximum(en * np.linalg.norm(s), 1e-12)
+        k = int(np.argmax(r))
+        if r[k] >= 0.9:
+            offs.append((k - W, round(float(q[field]), 5), q[1]))
+    del q_by
+    if not offs:
+        return {"matched": 0}
+    med = int(np.median([o[0] for o in offs]))
+    out = [o for o in offs if abs(o[0] - med) > 256]
+    return {"matched": len(offs), "median_frames": med, "outliers": len(out), "outlier_list": [(o[1], o[2], o[0] - med) for o in out]}
+
+
 def check_one(key: str, rec: dict, assets: Assets) -> dict:
     mr, st = rec["st"]["mr"], rec["st"]
     n = len(st["sfx"])
@@ -367,6 +404,9 @@ def check_one(key: str, rec: dict, assets: Assets) -> dict:
     exempt_retro = sum(1 for e in ev if e["prio"] >= ex and any(src == "cluster" for _a, _d, src in e["changes"]))
     stats = rec["meta"].get("audio_stats", {}) or {}
     out = {"key": key, "log_format": rec["meta"].get("log_format", 1), "block_frames": rec["meta"].get("audio_block_frames"),
+           "t_audio_source": rec["meta"].get("t_audio_source", "after_play"),
+           "start_offsets_t_audio": start_offsets(ev, st["sfx"], rec, 5),
+           "start_offsets_after_play": start_offsets(ev, st["sfx"], rec, 12) if rec["meta"].get("t_audio_source") == "pre_play" else None,
            "clock_offset_frames": off, "clock_offset_agreement": off_corr, "diagnostic_chunk_moves": moved, "mix_rate": mr, "cues_sfx": len(ev), "envelope_corr_10ms": round(corr, 3), "top_peaks": rows,
            "max_abs_peak_diff_db": round(max(abs(x["diff_db"]) for x in rows), 2),
            "stem_peak_db": round(db(st["sfx_abs"].max()), 2), "render_peak_db": round(db(np.abs(r).max()), 2),
@@ -407,6 +447,10 @@ def main_check() -> int:
     res["worst_top_peak_diff_db"] = worst
     res["source"] = "QOA as imported by Godot" if assets.qoa else "source WAV"
     res["wav_fallback_files"] = sorted(set(assets.wav_fallback))
+    if "--refine-chunks" in sys.argv:
+        res["diagnostic_chunk_moves_total"] = sum(len(o["diagnostic_chunk_moves"]) for o in res["recordings"])
+        print(f"DIAGNOSTIC chunk-late cues (moved by whole 512-frame chunks): {res['diagnostic_chunk_moves_total']} "
+              f"{[(o['key'], o['diagnostic_chunk_moves']) for o in res['recordings'] if o['diagnostic_chunk_moves']]}")
     print(f"files: {res['source']}; WAV fallback for {len(res['wav_fallback_files'])} files {res['wav_fallback_files']}")
     print(f"P5 re-render vs stem, worst top-5 peak difference: {worst:.2f} dB -> {'PASS' if worst <= 1.0 else 'FAIL'} (limit 1.0)")
     OUT.parent.mkdir(parents=True, exist_ok=True)
