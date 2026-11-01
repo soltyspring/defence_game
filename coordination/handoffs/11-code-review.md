@@ -22,7 +22,8 @@ Assignment: 사용자 승인(2026-11-01 08:27 KST '창 추가해')으로 연 11�
 - 미검증: 화면·실행 근거 없음. 증상은 코드·data 계산.
 
 ## Commit/push
-- REVIEW_02 + 02 R2·R3 + status/handoff 커밋 SHA는 푸시 뒤 ls-remote로 확인해 다음 갱신에 적는다.
+- REVIEW_02 + 02 R2·R3 + status/handoff: 199a5999e302650d68d98f871a521d2a4128d42f PUSHED. 확인: `git ls-remote origin refs/heads/main` = 199a599(첫 조회는 이전 값 2de574c로 나와 다시 조회), `git merge-base --is-ancestor 199a599 origin/main` rc=0.
+- 이 SHA 기록 커밋의 SHA는 다음 갱신 때 적는다.
 
 ## Next
 1. 02가 재잠금 수정을 main에 올리면 그 diff를 10의 02b5d98 25건 기준으로 읽고 PASS 예상/아님 표를 만든다.
