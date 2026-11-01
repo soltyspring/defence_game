@@ -52,7 +52,11 @@ UI (04) emits `cmd_*` signals and listens to state signals. Gameplay (02) does t
   "hero": {"hp":420,"hp_max":600,"alive":true,"respawn":0.0,"x":310.0},
   "player_base": {"hp":1500,"hp_max":1500}, "enemy_base": {"hp":1200,"hp_max":1500},
   "wave": {"index":2,"total":5,"next_in":7.5,"boss":false},
-  "army": {"player":6,"enemy":9,"cap":36}, "paused": false }
+  "army": {"player":6,"enemy":9,"cap":36}, "paused": false,
+  "threat": {"view_left":80.0,"view_right":880.0,"nest_left":1012.0,"enemy_visible":false,"enemy_right":1180.0,"ground_screen_y":290.0} }
+# threat (v2.0, 04 R16/R17-2): world x of the camera's left/right edges, the enemy base's drawn left edge, any alive
+# enemy unit inside the view; enemy_right / enemy_left = nearest alive enemy beyond that edge (key ABSENT if none);
+# ground_screen_y = ground row in view px from the top (view height − 70 − bottom safe inset).
 
 # BattleResult
 { "round_id":"r01", "won":true, "stars":3, "time":95.2, "kills":41, "coins":60,
@@ -156,6 +160,11 @@ v1.8 (2026-11-01, 01 D32 + 10 F2/X1/v0.27/v0.28; replaces the PROVISIONAL parts 
 | `res://scenes/ui/result.tscn` | Control | listens `battle_ended`; emits `cmd_retry`, `cmd_next_round`, `cmd_open_screen` |
 UI scenes are added under a `CanvasLayer` (layer 10) the engine owns. Read-only queries allowed: `Content.get_round_list() -> Array[Dictionary]` (`id,index,name,biome`), `Content.get_unit(id)`, `Save.progress` (Dictionary, read-only), `Atlas.get_frame_texture(atlas_id, frame) -> AtlasTexture` for icons.
 v1.9 (2026-11-01, 03 A19 / 04 R17-3) battle camera: the ground row stays `battle.GROUND_FROM_BOTTOM` = 70 view px above the view bottom in every view size. Optional world-only zoom `App.world_zoom()` = (k+1)/k with k = `App.pixel_scale` (4/3 at k = 3, 3/2 at k = 2), so one art pixel is k+1 device pixels. Switch: project setting `game/camera/world_zoom_plus_one` (bool, **default false** = zoom 1, camera identical to v1.8). Dev/test user args: `--world-zoom=on|off`, `--world-zoom-k=<k>` (framing of a k-scale phone in a k=2 window). The HUD CanvasLayer is never zoomed. Visible world width = view width / zoom (`battle.view.view_w`); `battle.world_zoom` = the zoom of the last frame. Turning it on waits for 03's D1 art and 01's warning-time check.
+v2.0 (2026-11-01):
+- **Unlocks (10 v0.34):** `Save.is_unlocked(i)` = i < `unlocked_round` (playable prefix) or i == 0 or `stars` has order[i] or order[i−1], or order[i] is in `progress.open_rounds` (ids a content update kept open beyond the prefix; absent in normal play). A content update recomputes both from the ids that were playable before (`content_snapshot.order[0:unlocked_round]` after `round_renames`) plus that rule, so cleared and previously playable rounds never close and unearned rounds never open. `Save.round_reach()` = furthest playable round (1-based) for unit unlock checks. `Save.upgrade_locked(id)`: target unit not reached yet; never true for an upgrade already bought (level ≥ 2). **UI must use these instead of reading `unlocked_round`** (it no longer expresses every open round). A save with every round cleared keeps `unlocked_round` = rounds + 1 across updates.
+- **Unit display (07 QA-B025/QA-O006):** `BattleView.anim_for(u, atlas)` picks death > hero `cast` (once per cast) > `attack` while its frames play > `hit` (once per hit, re-armed after `BattleSim.HIT_REARM` 0.6 s) > held attack > walk/idle. Deaths play at alpha 1 for the whole animation, then the last frame fades over `BattleView.DEATH_FADE` 0.3 s; corpses last `BattleSim.DEATH_TIME` 1.5 s (was 0.7 s; visual only). `BattleView.death_alpha(t, anim_len)` is the fade rule. The hero's death is drawn during respawn.
+- Lane damage numbers: Galmuri11 at 12 px (04 R19, ≥ 1.7 mm), outline 1 px, step 14 px.
+- Biome layers may carry `"opaque": true` (03): the clear-colour rect under the layers then skips the rows that layer covers (08 P11; pixel-identical; selftest checks the flag against the PNG alpha). `battle.view.clear_px_drawn` = area drawn last frame.
 
 ## 5. Art: atlas manifest (03 produces, 02/04 consume)
 ### 5.1 `assets/manifest.json`
