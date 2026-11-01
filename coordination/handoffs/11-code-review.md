@@ -1,35 +1,47 @@
 # 11-code-review handoff
-Updated: 2026-11-01 09:32 +09:00
+Updated: 2026-11-01 09:24 +09:00 — USER STOP (사용자 09:17 KST '이제 그만만들고 멈춰', '푸시하고 끝내')
 Session: sess_9129b680-f80d-45db-bb67-9ead14c05df8 (claude-opus-5.5)
-Assignment: 사용자 승인(2026-11-01 08:27 KST '창 추가해')으로 연 11번 창. 코드를 읽기만 해서 플레이어가 겪을 결함을 찾는다.
+Assignment: 사용자 승인(2026-11-01 08:27 KST '창 추가해')으로 연 11번 창. 코드를 읽기만 해서 플레이어가 겪을 결함을 찾는다(정적 리뷰, Godot 미실행).
 
-## Rules acknowledged
-- Read: BRIEF.md, OWNERSHIP.md(Review expansion), GIT_WORKFLOW.md, QUALITY_REVIEW.md, Publish-Task.ps1, ENGINE.md·INTERFACES.md, DECISIONS.md(D44, Q5 포함), BUG_REGISTER.md·OPEN_DEFECTS.md.
-- Godot·편집기·import·export·에뮬레이터·adb·Gradle·heavy_run 금지. 파일 읽기, rg, git, 가벼운 Python만 썼다.
-- 소유 경로 밖 파일은 고치지 않는다. 커밋은 Publish-Task.ps1 -Role 11-code-review로 내 파일만. SHA는 git ls-remote로 확인한 값만.
-- 라운드 재잠금은 10·02 몫. 사용자 결정 Q1 A, Q2 보류, Q3·Q4 제목, Q5 B. 질문은 01 요청으로만.
-- 코디네이터 지시(09:0x): P3라도 확정 결함은 소유자 요청으로 보낸다. CR-001·CR-002는 01이 결정했으므로 01 요청은 만들지 않는다.
+## 현재 과제
+없음. 정지 지시를 받은 시점에 REVIEW_02와 요청 전달이 끝나 있었고, 새 작업은 시작하지 않았다.
 
-## Done
-1. REVIEW_01 (1차, HEAD cb64e7f): CR-001~CR-005. 커밋 0df3dcc, 978df19 PUSHED(ls-remote·ancestor 확인).
-2. 확정 결함 소유자 전달: `11-code-review-to-02-engine.md` R1(CR-003 효모 경고 시각), `11-code-review-to-04-client.md` R1(CR-004 시간 표시·시간 별). 커밋 ba567f90e7681e76af2051bbfc71b378fa9155d9 PUSHED. 확인: `git ls-remote origin` refs/heads/main = ba567f9(그 시점), 첫 조회는 be150a6로 나와 reflog·재조회로 ba567f9가 main 끝임을 확인.
-3. REVIEW_02 (2차, origin/main 140daeb):
-   - 05 3821f78: manifest 48 variant 파일·bytes·seconds·.import 모두 일치, explosion.wav 0.500초/22,094B, .import 변화 없음(loop_end −1), 코드는 `seconds`를 안 읽음, 사망 애니 0.5초 전제 맞음 → 깨지지 않음.
-   - 06 1f15719·e3a7756: branding PNG 3개 이름·크기(192, 432) 그대로, .import 그대로. export_presets에 launcher_icons 키가 없어 빌드에 안 쓰임(06-services → 02 요청으로 이미 추적). ui_main 프레임 22/22, 아틀라스 9장 크기·프레임·disk_bytes 일치 → 깨지지 않음.
+## 끝낸 일
+1. REVIEW_01 (docs/review/code/REVIEW_01.md, 기준 cb64e7f): CR-001~CR-005, 모두 P3(CR-005만 가능성).
+2. 확정 결함 소유자 전달:
+   - CR-001(함성 공격 속도)·CR-002(프레첼 문구): 01이 D42·D43으로 처리(8e3ef2f). 01이 02에 R14.
+   - CR-003(r07 효모 경고 시각) → coordination/requests/11-code-review-to-02-engine.md R1.
+   - CR-004(결과 시간 표시와 시간 별) → coordination/requests/11-code-review-to-04-client.md R1.
+   - CR-005(180° 회전 안전 영역, 가능성) → coordination/requests/11-code-review-to-07-qa.md R1(낮은 우선순위).
+3. REVIEW_02 (docs/review/code/REVIEW_02.md, 기준 140daeb):
+   - 05 3821f78: 깨진 경로·길이·import 참조 없음(48 variant 일치, explosion.wav 0.500초/22,094B, .import 그대로).
+   - 06 1f15719·e3a7756: 깨진 참조 없음(branding PNG 이름·크기 그대로, ui_main 프레임 22/22, 아틀라스 9장 일치). 아이콘이 빌드에 안 쓰이는 것은 06-services → 02 요청으로 이미 추적 중.
    - 01 140daeb: 키·자리표시자 ko/en 일치.
-   - 새 결함: CR-006(explosion 0.4375초 vs 수명 0.35/0.40초, hit_spark 0.25초 vs 0.20초 → 마지막 프레임 안 그려짐) → 02 R2. CR-007(트리거 때 이미 완료된 단계가 1프레임 깜빡임, D44 r01 순서로 흔해짐) → 02 R3, cc 01.
-   - 02 재잠금 수정: 원격 main에 없음(`git log origin/main -- src/core/save.gd` 마지막 52f9fa3 00:43). 25건 PASS 예상 표는 만들지 않음.
-- 미검증: 화면·실행 근거 없음. 증상은 코드·data 계산.
+   - 새 P3: CR-006(이펙트 마지막 프레임 잘림) → 02 R2, CR-007(이미 한 행동의 안내 1프레임 깜빡임) → 02 R3(cc 01).
+   - 02 재잠금 수정은 원격 main에 없음(save.gd 마지막 커밋 52f9fa3). 25건 PASS 예상 표는 만들지 않음.
 
-## Commit/push
-- REVIEW_02 + 02 R2·R3 + status/handoff: 199a5999e302650d68d98f871a521d2a4128d42f PUSHED. 확인: `git ls-remote origin refs/heads/main` = 199a599(첫 조회는 이전 값 2de574c로 나와 다시 조회), `git merge-base --is-ancestor 199a599 origin/main` rc=0.
-- 이 SHA 기록 커밋의 SHA는 다음 갱신 때 적는다.
+## 실제 검증 결과
+- 파일 읽기, rg, git, 가벼운 Python만 썼다. Godot·편집기·import·export·에뮬레이터·adb·Gradle·heavy_run은 한 번도 실행하지 않았다. 대기열에 넣거나 실행 중인 heavy_run 작업 없음.
+- 스크립트 검사: 텍스트 키 누락 0, ko/en 자리표시자 불일치 0, data 참조 누락 0, 경제 합계(3,140·780·5,595) 설계 문서와 일치, 오디오 variant 48/48 일치, 아틀라스 9장 일치, UI 아이콘 프레임 22/22.
+- 결함 증상은 코드·data 계산이며 화면·실행 근거는 없다.
 
-## Next
-1. 02가 재잠금 수정을 main에 올리면 그 diff를 10의 02b5d98 25건 기준으로 읽고 PASS 예상/아님 표를 만든다.
-2. 02(R1~R3)·04(R1)·07(R1) 회신과 커밋이 오면 같은 행·같은 입력으로 정적 재확인하고 REVIEW 표 상태를 바꾼다. 실행 재검증은 07 몫.
-3. 3차 범위 후보: src/audio(05) 코드 경로, src/gameplay/fallback_*·bot_player, scenes/** 노드 설정.
-4. 사용량 97%에 닿으면 새 일을 멈추고 이 파일에 진행·미완료·다음 단계를 적는다.
+## 못 끝낸 일
+- 없음(시작한 작업은 모두 끝냄). 소유자 회신·수정은 아직 오지 않았다.
+
+## 다음에 이어서 할 정확한 단계
+1. `git log origin/main -- src/core/save.gd`로 02 재잠금 수정 커밋이 올라왔는지 본다. 올라왔으면 그 diff를 10의 02b5d98 25건 기준으로 읽고 건별 PASS 예상/아님 표를 docs/review/code/REVIEW_03.md에 만든다.
+2. 02(R1~R3)·04(R1)·07(R1) 회신과 커밋이 오면 각 요청의 같은 코드 행·같은 재현 입력으로 정적 재확인하고 REVIEW_02 §1 표 상태를 바꾼다. 실행 재검증은 07에 맡긴다.
+3. 3차 범위 후보: src/audio 코드 경로, src/gameplay/fallback_*·bot_player, scenes/** 노드 설정.
+4. 시작 전에 coordination/.runtime/quota/usage.json·triggered.json을 확인하고, 97% 이상이면 시작하지 않는다.
+
+## 커밋·푸시 상태 (모두 origin/main, ls-remote·ancestor로 확인)
+- 0df3dcc REVIEW_01 + status/handoff + 07 요청
+- 978df19 handoff·status SHA 기록
+- ba567f9 02 R1·04 R1 요청
+- 199a599 REVIEW_02 + 02 R2·R3 + status/handoff
+- 88d431a handoff·status SHA 기록
+- 이 정지 기록 커밋의 SHA는 푸시 뒤 ls-remote로 확인해 최종 응답에 적는다.
+- main에 넣지 않은 미검증 파일: 없음.
 
 ## Last processed
-- Decisions: D1~D44, Q1~Q6(Q6 ASKED). Requests to 11: 없음(coordinator 지시는 콘솔로 받음).
+- Decisions: D1~D44, Q1~Q5 결정, Q6 ASKED. 11 앞으로 온 요청 파일 없음.
