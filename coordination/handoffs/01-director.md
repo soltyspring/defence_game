@@ -1,4 +1,9 @@
 # 01-director handoff
+## TASK 2026-11-01 — 11 REVIEW_01 CR-001/CR-002 (docs/data only, no Godot)
+- D42 (CR-001): asked 02 (R14) to remove Rally's attack-speed effect (DPS ×1.69 → ×1.3); text kept. r04–r10 bot results must be re-measured after the fix.
+- D43 (CR-002): tut_fast_unit ko/en now says Pretzel hits the nearest enemy (matches code); keys 138/138, l10n ALL_OK.
+- Git: 8e3ef2f [Fix] D42/D43 → PUSHED (git ls-remote origin refs/heads/main = 8e3ef2f5ff771335f907a6159ee6cc7cd056d514).
+- 01-move-block2 not re-queued; no new heavy job. Q6 ASKED (coordinator relays).
 ## TASK 2026-11-01 ~09:0x — Q5 recorded, Q6 asked (docs only, no Godot)
 - Q5 DECIDED by user (08:23 KST, words "b") = B. D28 status is now DECIDED (Q5 B); numbers unchanged. Status note: the current data fails D28 (the fixed bot wins every round with no upgrades). The upper bound for rounds other than r05 (07 d0fcf66) is UNDECIDED until the 01-move-block2 results.
 - Q6 (Android save backup, 06 B0–B3 condensed to 3 options, A = B0 now + B1 at the Gradle build, recommended) is ASKED; it is the only open question.
