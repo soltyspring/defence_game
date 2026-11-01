@@ -1,4 +1,7 @@
 # 04-client status
-Updated: 2026-11-01 00:30 +09:00
-Status: ACTIVE after the 23:08 blue screen (no 04 files lost). be2abb3: every 04 runner isolates user:// (visible_launch by default). d724b9a: UI numbers are Galmuri11 12 px (≥ 1.75 mm on 360 dp), verified by gate and DISPLAY2 capture. 1850c3f: marker distance is fixed "m" (QA-B019); gate/APK snapshots use LF data. All Godot runs go through heavy_run.ps1, one at a time.
-Waiting: 02 R16 threat field, R17 zoom/bottom inset, R18, R19 (lane damage numbers 1.43–1.63 mm); 01 R10; 03 size drafts after R17; 06 store pick; 07/10 re-verification. Open 04 items: menu notice path (D32/10 §9.12), r05 defeat hint (D31).
+Updated: 2026-11-01 09:2x +09:00
+Status: STOPPED by the user (09:17 "이제 그만만들고 멈춰", "푸시하고 끝내"). Details and exact next steps: coordination/handoffs/04-client.md, section "09:2x USER STOP".
+On main: 2de6668/ad47eda D32 menu notice; e2404af 08 R8 draw calls 132 → 129 (target ≤ 100 not met; glyph-page cause, not proven by a run); a3bbc72 notice test leftovers fixed (gate UI 3414/0, integration 49/0, migration 17/0).
+Not in main (unverified, left in the working tree): HUD layout B (src/ui/hud_layout.gd, threat_marker.gd, touch_button.gd, main_menu.gd, round_select.gd, tests/ui/test_ui.gd), docs/qa/UI_LAYOUT_REFERENCE.md + docs/qa/layout_ref/ + tools/build/layout_options.py, tests/ui/drawcall_hud_probe.gd, and 4 request notes with a FEAT_SHA placeholder.
+Heavy run still queued (not killed): 04-layout-b-gate2, pid 45580, log build/heavy/04-layout-b-gate2-20261101-080528.log (headless gate dry run; publishes nothing).
+Waiting on others: 02 R16 `snapshot.threat` (07 QA-B026), R17, R18, R19; 06 frame redraw for the new sizes. Not done: real phone, human test.

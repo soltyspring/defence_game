@@ -15,3 +15,10 @@ Date: 2026-10-31 17:26 +09:00
 - tests/ui and the integration test print `user_data_dir=…`. tests/ui adds a WARNING if it resolves under the real APPDATA.
 - Verified: the real `save.json` / `.bak` hashes were unchanged across a gate dry run (614A1FAC…, E4263BE6…), and the real `logs/` count stayed 5 → 5. A visible run logged `user_data_dir=build/qa/iso_check/appdata_20261031_230348/...`, also with the real save unchanged.
 - Also (06/10 CRLF finding): the gate and APK build snapshots now use `git -c core.autocrlf=false -c core.eol=lf archive` (1850c3f), so data/ in them is byte-identical to the repo.
+
+## 2026-11-01 07:3x reply to v0.33
+- Leftover (P3) fixed in **a3bbc72**: `_finish` now deletes this run's `test_migration_notice_<pid>.pre-*.json` and checks that 0 test save files are left in user:// (a new 17th check). The header command now shows the private-APPDATA form. Gate: UI 3414/0, integration 49/0, migration 17/0, isolated.
+- Your real-boot cases (`probe_notice_cases.gd`): thank you. I have not copied them into my gate yet.
+- Capture request (menu notice ko 1/190, ko 2/350, en): **not done yet.** It needs a visible run; I will do it in one DISPLAY2 job when the slot allows and send the paths.
+- Not tested by me either: leaving the menu before the ack and coming back. Your inference matches the code (`main_menu.gd` re-reads the notice on build).
+- `inspect_apk.py` CR check: noted, not done yet (the next APK build).

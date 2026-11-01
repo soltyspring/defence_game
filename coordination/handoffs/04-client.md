@@ -129,3 +129,38 @@ State at checkpoint: work stopped at a safe point. The owned working tree is CLE
 
 ## Commit record 2026-11-01 00:35 (all on origin/main, checked with `git branch -r --contains`)
 be2abb3 [Fix] user:// isolation for 04 runners · d724b9a [Fix] readable numbers (Galmuri11 12) · 1850c3f [Fix] marker "m" + LF snapshots · b659c97 [Docs] resume record and replies.
+
+## 2026-11-01 07:4x resume after the 03:55 blue screen (0x3B) — notice/HUD closed, layout B
+- Loss check (06:54): owned files intact (0 NUL, newline-terminated, only intended diffs). heavy_run.log: my only run without an END is 04-glyph-page-gate-probe-dc (START 03:53:21, pid 38012), voided by the coordinator's NOTE; its results were discarded. Other modified tests/acceptance and tests/performance files are 07's and 08's WIP (not mine, untouched).
+- **Notice/HUD task closed.** D32 menu notice 2de6668 + ad47eda (16/16, now 17/17). R8 draw calls measured 132 → 129 (hud_top 56 → 53); target ≤ 100 not met. Cause (Godot 4.5 source, not proven by a run): glyph pages are max(px×8, 256)²; the 2× window draws 12 px text from the 24 px cache (~100 glyphs/page) and the HUD uses ~183 glyphs. My prewarm-order change cannot fit that, so it was not committed (patch: build/qa/tmp/glyph_order_wip.patch). Next test proposed to 08: `FontFile.oversampling = 1.0` + HUD-first order + pixel compare. Card button idle 5 (meets ≤ 5), cooldown 6.
+- **e2404af [Docs]** 08 R8 numbers + cause; 02 R20 notice wiring. **a3bbc72 [Test]** 10 v0.33 P3: `.pre-*.json` leftovers removed and checked (gate UI 3414/0, integration 49/0, migration 17/0, isolated).
+- **Layout B (user 02:24 "ui배치도 다른 게임 참고해서 진행해"):** docs/qa/UI_LAYOUT_REFERENCE.md. 5 lane-defence games (Battle Cats, Cat War2, Stick War: Legacy, Grow Castle, Age of War 2; PvZ partial), official Play screenshots kept outside the repo (%TEMP%\ui04_genre_ref), rules L1–L9, options A/B/C (tools/build/layout_options.py, docs/qa/layout_ref/), B chosen.
+  - Code: hud_layout.gd (worker own group, GROUP_GAP 12; TOUCH_GAP 8 between all targets (07 L4/QA-B027); fit order: skill, then move buttons shrink before cards go under CARD_NAME_W 42, then cards, then group gaps 12 → 8, then stack; threat markers ≥ 44 px square in the top half; banner between markers; `lane_band()`; validate 07 L2/L4 + QA-J3 + 01 R10), threat_marker.gd (content centred in the plate), touch_button.gd (disabled icon α .70, 06 Ask B), main_menu.gd / round_select.gd (button and tile gaps 6 → 8 px), test_ui.gd (marker rule).
+  - First gate (08:00) FAILED correctly: cards had shrunk to 41 px first, so 6 ko card names (36 px) overflowed at 640×360 both notches. Fixed by the fit order above.
+- Not done (do not claim): real phone, human test (09 X7), 10's notice capture (3 texts), NinePatch frame wiring (waits for 06 redraw), glyph oversampling test, `inspect_apk.py` CR check.
+
+## 2026-11-01 09:2x USER STOP ("이제 그만만들고 멈춰", "푸시하고 끝내", 09:17) — final state, supersedes the 07:4x section above
+Session: sess_a24d01e7-e535-413c-9ff6-d5258090820b (Kiro CLI, same window). Stopped at a safe point: no file half-written, no Godot started by me in the foreground.
+**Current task:** coordination/prompts/04-ui-layout-ref.txt (genre-referenced HUD layout, user 02:24). 04-notice-hud.txt is closed.
+
+**Done and on origin/main (checked with git ls-remote):**
+- 2de6668 + ad47eda: D32 menu notice (earlier). e2404af [Docs]: 08 R8 numbers 132 → 129, hud_top 56 → 53, cause = glyph-cache pages (from Godot source, not proven by a run); 02 R20. a3bbc72 [Test]: 10 v0.33 P3 leftover `.pre-*.json` removed and checked; gate UI 3414/0, integration 49/0, migration 17/0, isolated (log build/heavy/04-mig-leftover-gate-20261101-065822.log).
+
+**Heavy runs (not killed, as instructed):**
+- QUEUED, not started at 09:23: label `04-layout-b-gate2`, pid 45580, log `build/heavy/04-layout-b-gate2-20261101-080528.log`, job `build/heavy/04-layout-b-gate.ps1` (headless gate DRY RUN of the layout files; it publishes nothing). It copies the working-tree files at the moment it gets the lock.
+- Finished: `04-layout-cmp-before-a3bbc72` (07 fixed set, ko/en 1x/2x, 34 px notches, harness = committed blob 7eccc60), exit 0, log build/heavy/04-layout-cmp-before-a3bbc72-20261101-072403.log, frames + table in build/qa/layout_cmp/a3bbc72/ (VOID against ad47eda as expected: other roles' changes; 07's L1–L8 rows filled: L3 44, L4 4 px, L7 12, L8 0).
+- Finished and FAILED correctly: `04-layout-b-gate` 08:00 (6 ko card names overflow at 640×360 both notches: cards shrank to 41 px first). Fixed in the working tree since (fit order), not yet re-gated.
+
+**Not verified, left in the working tree (NOT in main):**
+- Layout B code: src/ui/hud_layout.gd (GROUP_GAP 12, TOUCH_GAP 8 for 07 L4/QA-B027, CARD_NAME_W 42 fit order: skills → move → cards → group gap 8 → stack; threat markers ≥ 44 px square in the top half (01 R10); banner between markers; lane_band(); validate 07 L2/L4 + QA-J3 + 01 R10), src/ui/threat_marker.gd (content centred in the plate), src/ui/touch_button.gd (disabled icon α .70, 06 Ask B), src/ui/main_menu.gd and src/ui/round_select.gd (gaps 6 → 8 px), tests/ui/test_ui.gd (marker rule).
+- docs/qa/UI_LAYOUT_REFERENCE.md + docs/qa/layout_ref/ (block mock-ups A/B/C, options.json) + tools/build/layout_options.py (Python model, runs without Godot). The doc's §6 "results" (07 set after-capture, 08 draw calls) is still empty.
+- tests/ui/drawcall_hud_probe.gd (v2 with --os/--shots; never run in this version).
+- Request notes that mention the unpublished layout (placeholder `FEAT_SHA` still in them): coordination/requests/04-client-to-01-director.md (R11), 04-client-to-02-engine.md (R21), 04-client-to-06-art-ui.md (new, reply to R3), 04-client-to-07-qa.md (layout B note).
+- Local only (git-ignored): build/qa/tmp/glyph_order_wip.patch (prewarm order, not committed on purpose), build/heavy/04-make-cmp-job.ps1 (04-labelled copy of art_compare's capture job).
+
+**Exact next steps on resume:**
+1. Read `build/heavy/04-layout-b-gate2-20261101-080528.log`. If it ran after 09:23, note that it gated the files present at that time; compare its `SNAP_HASH` lines with `Get-FileHash` of the 6 files. If they match and the log says GATE PASSED (UI/integration/migration all failed=0), the layout code is verified; otherwise rerun the gate once (detached) after fixing.
+2. Publish the 6 code/test files as one [Feat] commit, then the doc + layout_ref + layout_options.py as [Docs]; replace `FEAT_SHA` in the 4 request notes with the real SHA (git ls-remote) and publish them.
+3. After-capture: `.\build\heavy\04-make-cmp-job.ps1 -Sha <feat>` → start the printed job with heavy_run_detached.ps1 (label 04-layout-cmp-after-<sha>); then `.\tools\qa\art_compare.ps1 -Sha <feat> -Report -Tags ko_1x,en_1x,ko_2x,en_2x -Out build/qa/layout_cmp/<feat> -Baseline <folder with a3bbc72's art_metrics.json + cap/*.png>`; check L1/U2 ≤ +0.5 pp, L2 0, L3 ≥ 44, L4 ≥ 7.3, L8 0. Then 08 draw calls: `build/qa/tmp/drawcall_run_committed.ps1 -Rev a3bbc72` and `-Rev <feat>` (r08, -SkipMicro) in one detached job; HUD must not rise.
+4. Fill §6 results in docs/qa/UI_LAYOUT_REFERENCE.md. Open items: 10's notice capture (3 texts), glyph oversampling test for 08 R8 (Pillow check: Galmuri11/Bold 12 and Galmuri9 10 rasters are identical to the ×2/×3 rasters for all 357 text characters, so `FontFile.oversampling = 1.0` should not change pixels; not run in Godot), NinePatch wiring after 06 redraws, `inspect_apk.py` CR check.
+- Not done by anyone: real phone check, human test (09 X7). Decisions unchanged: Q1 A, Q2 on hold (no shop/ad UI), Q3/Q4 fixed, Q5 unanswered (D28 default only).
