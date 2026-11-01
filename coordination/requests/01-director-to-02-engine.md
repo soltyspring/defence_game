@@ -93,3 +93,8 @@ Context: BALANCE_DIAGNOSIS.md Update (10). r05's length is set by its structure,
 Both keys default off. Test: with the keys absent, results are identical to today on selftest seeds.
 ## R13 2026-11-01 — R12 update: hook #1 is low priority
 Data-only structure variants for r05 all failed (D40). My arithmetic on d38_a says that cancelling post-boss spawns (R12 #1) would cut LOW medians only to 332 s (casual) and 317 s (competent), not enough alone. Keep R12 as a proposal; please do not build it unless I re-request. D36 still waits for your R10/R11 bot-stall answer.
+## R14 2026-11-01 — 11 CR-001: Rally must not speed up attacks (D42)
+- Code: src/gameplay/battle_sim.gd `_attack_logic` (about line 640): `u.atk_cd -= dt * u.buff_mul * u.aura_mul`. `buff_mul` is the Rally multiplier (1 + power/100 = 1.3), so Rally also shortens the attack cooldown: DPS ×1.69.
+- Wanted (skill text + INTERFACES §2.3): Rally = attack ×1.3 and move speed ×1.3, attack interval unchanged. Keep `aura_mul` (the hero aura is an attack-speed effect by design).
+- Repro: r04, competent bot, LOW, seed 1: log one melee_basic's attack timestamps while Rally is active vs inactive. Today the interval drops from 1.0 s to about 0.77 s.
+- Pass: interval unchanged under Rally (±1 frame), damage per hit ×1.3, move speed ×1.3; selftest unchanged for rounds without Rally (r01–r03); a note of the r04–r10 bot result change for me to re-tune.
