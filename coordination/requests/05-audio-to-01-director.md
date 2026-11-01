@@ -18,3 +18,9 @@ Not yet covered (05 backlog, not started): fruit-fly buzz for e_swarm (needs a p
 - Done: UI confirm = whisk swish + small tray bell (`ui_confirm`); Barrage = crumb-shell volley (5 oven-cannon launches, impacts rain from 0.8 s matching `skill_barrage.delay`). Both pass validate.py and the Godot selftest/harness; audio size +5,292 B. Not listened to yet (theme_showcase.mp3 23.4–26.6 s).
 - Still open: fruit-fly buzz (e_swarm), Rally cheer + oven whoosh, folk menu motif.
 - Also: hit density is now capped (shared 0.36 s gap; 83 → 49 hits/min in a same-seed A/B). This is the measured default, not a listening-confirmed choice; a blind A/B is in LISTENING_CHECKLIST.md §4.
+
+## Listening question (2026-11-01 ~09:2x, v4.1): hero_death 1.0 s after the new 0.5 s fall. Question only, no change requested
+- 03 e8c6d96 made every death animation 0.5 s, including hero_captain (was 0.75 s). `hero_death` is a 1.0 s four-note falling line: music −6 dB, plays with the hero-down notice.
+- 05 kept it unchanged. It counts as an event cue, not as the sound of the fall frames (docs/audio/DEATH_SYNC_CHECK.md T3). Measured audible end: 1.00 s, so about 0.5 s of it sounds after the fall has finished.
+- Question for a listener (phone speaker and earphones): when the hero falls, does the 1 s line feel like it belongs to the fall, or does it drag after the body is already down? Answer: fits / drags / no opinion.
+- File: `assets/audio/sfx/hero_death.wav`. Nobody has listened yet.
