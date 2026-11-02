@@ -22,11 +22,13 @@ param(
     [double[]]$ScreenCaptureAt = @(),   # seconds after placement: OS-level grab of the window rect on the secondary display
     [string]$EvidenceDir = '',
     [string]$ProjectPath = '',          # Godot project dir to run (default: this workspace). 07 QA-R5: clean HEAD snapshot, e.g. %TEMP%\qa07_head
+    [string]$GameExecutable = '',       # optional exported game; no source project is loaded
     [string]$IsolateAppData = '',       # 10's isolated_godot.ps1 method: the child gets APPDATA=<dir>, so user:// (save.json) can
                                         # never resolve to the real player folder. DEFAULT ON: <EvidenceDir>\appdata_<stamp> (10 v0.28)
     [switch]$RealUserData               # opt out (not recommended): run with the real %APPDATA% user:// folder
 )
 . "$PSScriptRoot\common.ps1"
+if ($GameExecutable) { $GodotGui = (Resolve-Path -LiteralPath $GameExecutable).Path }
 $ErrorActionPreference = 'Stop'
 if (-not $EvidenceDir) { $EvidenceDir = Join-Path $Root 'build\qa\visible' }
 New-Item -ItemType Directory -Force $EvidenceDir | Out-Null
@@ -105,9 +107,11 @@ $x = [int]($work[0] + ($ww - $w) / 2); $y = [int]($work[1] + [math]::Max(32, ($w
 $screenIdx = [array]::IndexOf(@($mons | ForEach-Object { $_.Device }), $sec.Device)
 $logFile = Join-Path $EvidenceDir "godot_$stamp.log"   # GUI exe has no console: keep stdout/stderr as evidence
 $proj = if ($ProjectPath) { [IO.Path]::GetFullPath($ProjectPath) } else { $Root }
-if (-not (Test-Path (Join-Path $proj 'project.godot'))) { throw "not a Godot project: $proj" }
+if ($GameExecutable) { $proj = Split-Path $GodotGui -Parent }
+elseif (-not (Test-Path (Join-Path $proj 'project.godot'))) { throw "not a Godot project: $proj" }
 $evidence.project = $proj
-$gargs = @('--path', $proj, '--screen', "$screenIdx", '--resolution', "${w}x${h}", '--log-file', $logFile)
+$gargs = @('--screen', "$screenIdx", '--resolution', "${w}x${h}", '--log-file', $logFile)
+if (-not $GameExecutable) { $gargs = @('--path', $proj) + $gargs }
 if ($Script) { $gargs += @('-s', $Script) }
 if ($Scene) { $gargs += $Scene }
 if ($UserArgs.Count -gt 0) { $gargs += '--'; $gargs += $UserArgs }
