@@ -70,6 +70,31 @@ func _run() -> void:
     check(select.is_round_unlocked(5) and not select.is_round_unlocked(3), "round-select uses the same unlock rule as the engine")
     select.queue_free()
     live_save.progress = original_progress
+    save.progress = SaveScript.fresh()
+    save.content_ref = content
+    save.progress.coins = 500
+    save.progress.upgrades = {"old_melee":6}
+    save.progress.upgrade_paid = {"old_melee":{"6":42}}
+    save.progress.content_version = "polish-old"
+    save.progress.content_snapshot = {"order":Array(content.round_order),"upgrades":{"old_melee":{"target":"unit:melee_basic","costs":[60,100,160,190,42]}}}
+    save.progress.migrations_applied = []
+    var deep = 1
+    for i in 600: deep = [deep]
+    save.progress.junk = deep
+    save.recovery_source = "main"
+    DirAccess.make_dir_recursive_absolute(save.path.get_base_dir())
+    save._fault = "after_tmp_write"
+    save._apply_content_migration()
+    check(save.fault_fired == "after_tmp_write", "migration rollback test reaches the injected write failure")
+    check(save.progress.upgrades == {"old_melee":6} and save.progress.coins == 500, "failed rename/refund restores upgrade and coins")
+    check(save.progress.upgrade_paid.get("old_melee",{}).get("6") == 42, "failed migration restores nested paid-level history")
+    check(not save.progress.content_snapshot.upgrades.has("up_melee_basic") and save.progress.migrations_applied.is_empty(), "failed rename leaves the old snapshot and idempotency keys intact")
+    var nested = save.progress.junk
+    var depth := 0
+    while nested is Array and nested.size() == 1 and depth < 601:
+        nested = nested[0]
+        depth += 1
+    check(depth == 600 and nested == 1, "deep unknown extension data survives migration rollback intact")
     save.queue_free()
     var top = load("res://src/ui/hud_top.gd").new()
     root.add_child(top)

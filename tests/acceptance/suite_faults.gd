@@ -149,7 +149,13 @@ func run(q, tree) -> void:
 	Q.write_text(e.path, Q.save_envelope({"version": 1, "unlocked_round": 2, "junk": JSON.parse_string(deep)}) if JSON.parse_string(deep) != null else "{}")
 	var e3 = _mk("tp13", false)
 	e3.load_progress()
-	q.check("TP-13b", "deeply nested payload loads without crash", e3.progress is Dictionary, "", {"unlocked": e3.progress.get("unlocked_round")})
+	var nested = e3.progress.get("junk")
+	var depth := 0
+	while nested is Array and nested.size() == 1 and depth < 601:
+		nested = nested[0]
+		depth += 1
+	q.check("TP-13b", "deeply nested payload loads intact without crash", e3.progress is Dictionary and depth == 600 and nested == 1,
+		"depth=%d" % depth, {"unlocked": e3.progress.get("unlocked_round")})
 	var big := "x".repeat(50 * 1024 * 1024)
 	Q.write_text(e.path, Q.save_envelope({"version": 1, "unlocked_round": 2, "pad": big}))
 	big = ""
