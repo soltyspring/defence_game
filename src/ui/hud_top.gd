@@ -120,15 +120,23 @@ func _draw_resources(r: Rect2) -> void:
 	var mana := float(snap.get("mana", 0))
 	var mmax := maxf(1.0, float(snap.get("mana_max", 100)))
 	var y2 := r.position.y + 27
+	var has_mana := not (snap.get("skills", []) as Array).is_empty()
+	if not show_income:
+		if _pass == P_TEXT:
+			UiStyle.draw_number(self, income_txt, Vector2(r.end.x - 6, y2), UiStyle.NUM_READ, UiStyle.C_GOLD, 1, UiStyle.NUM_READ_KIND)
+		income_rect = Rect2(r.end.x - 6 - income_w, y2 - 6, income_w, 12)
+	if not has_mana:
+		return
 	if _pass == P_ICONS and not UiStyle.draw_ui_icon(self, "icon_energy", Vector2(r.position.x + 11, y2)):
 		UiStyle.draw_glyph(self, &"mana", Vector2(r.position.x + 11, y2), 5)
 	var bx := r.position.x + 20
-	if show_name:
+	var lower_end := r.end.x - 8 - (income_w + 6 if not show_income else 0.0)
+	if show_name and lower_end - bx > name_w + 32:
 		if _pass == P_TEXT:
 			UiStyle.draw_text_left(self, ename, Vector2(bx, y2), UiStyle.FONT_S, UiStyle.C_MANA)
 		bx += name_w + 4
 	if _pass == P_SHAPES:
-		UiStyle.draw_bar(self, Rect2(bx, y2 - 4, r.end.x - 8 - bx, 8), mana / mmax, UiStyle.C_MANA)
+		UiStyle.draw_bar(self, Rect2(bx, y2 - 4, maxf(8, lower_end - bx), 8), mana / mmax, UiStyle.C_MANA)
 
 var name_shown := false
 var name_rect := Rect2()
@@ -173,15 +181,21 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 	base_label_rects.player = Rect2(r.position.x + 4, y, pw, h)
 	base_label_rects.enemy = Rect2(er_rect.end.x - 4 - ew0, y, ew0, h)
 	var wave: Dictionary = snap.get("wave", {})
-	var txt := round_title
+	var txt := ""
 	if not wave.is_empty():
 		var wt := UiText.t("ui.wave") % [int(wave.get("index", 0)), int(wave.get("total", 0))]
 		var next_in := float(wave.get("next_in", 0))
 		if next_in > 0:
 			wt += "  " + UiText.t("ui.wave_next") % ceili(next_in)
-		txt = wt if txt == "" else txt + "   " + wt
+		txt = wt
+	var text_width := maxf(0, wr.size.x - 70)
+	if not round_title.is_empty():
+		var remain := text_width - UiStyle.text_width(txt, UiStyle.FONT_S) - 8
+		if remain >= 24:
+			var title := str(UiStyle.fit_text(round_title, remain, UiStyle.FONT_S)[0])
+			txt = title + "  " + txt
 	if txt != "" and _pass == P_TEXT:
-		UiStyle.draw_text_centered(self, UiStyle.fit_text(txt, wr.size.x - 70, UiStyle.FONT_S)[0], wr.get_center(), UiStyle.FONT_S, UiStyle.C_TEXT)
+		UiStyle.draw_text_centered(self, UiStyle.fit_text(txt, text_width, UiStyle.FONT_S)[0], Vector2(wr.position.x + 70 + text_width * 0.5, wr.get_center().y), UiStyle.FONT_S, UiStyle.C_TEXT)
 	var army: Dictionary = snap.get("army", {})
 	if not army.is_empty() and _pass == P_TEXT:
 		UiStyle.draw_number(self, "%d/%d" % [int(army.get("player", 0)), int(army.get("cap", 0))], Vector2(r.position.x, wr.get_center().y), UiStyle.NUM_READ, UiStyle.C_HP_PLAYER, -1, UiStyle.NUM_READ_KIND)

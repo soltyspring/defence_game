@@ -23,7 +23,7 @@ const UiStyle := preload("res://src/ui/ui_style.gd")
 const PX_PER_M := 16.0          # 1 m = 16 world px (a 24 px soldier is 1.5 m); lane 1600 px = 100 m
 const NEST_MIN_VISIBLE := 24.0
 const MAX_M := 999
-const SIZE := Vector2(44, 34)   # plate: 16x16 icon + arrow on the top row, distance (12 px) below
+const SIZE := Vector2(44, 34)   # content block: 16x16 icon + arrow on the top row, distance (12 px) below; plate = layout rect
 const ICON := {"nest": "icon_nest", "enemy": "icon_skull"}
 const C_NEST := Color(0.52, 0.62, 0.44)
 const C_NEST_SPOT := Color(0.20, 0.26, 0.18)
@@ -74,9 +74,11 @@ func _draw() -> void:
 	redraws += 1
 	var r := Rect2(Vector2.ZERO, size)
 	var out_dir := 1.0 if side == &"right" else -1.0
+	# the plate is the layout rect (≥ 44×44 since 01 R10); the 44×34 content block is centred in it
+	var oy := floorf(maxf(size.y - SIZE.y, 0.0) / 2.0)
 	# top row: icon on the inner side, arrow on the outer side (points off-screen)
-	var icon_c := Vector2(size.x * 0.5 - out_dir * 7.0, 11.0).round()
-	var arrow_c := Vector2(size.x * 0.5 + out_dir * 13.0, 11.0).round()
+	var icon_c := Vector2(size.x * 0.5 - out_dir * 7.0, 11.0 + oy).round()
+	var arrow_c := Vector2(size.x * 0.5 + out_dir * 13.0, 11.0 + oy).round()
 	var tex: Texture2D = UiStyle.ui_icon(ICON.get(kind, ""))
 	# 08 R8 pass order: shapes (plate, arrow, vector stand-in) → ui_main icon → text
 	draw_rect(r, UiStyle.C_TOAST_BG)
@@ -89,7 +91,7 @@ func _draw() -> void:
 			_draw_enemy(icon_c)
 	else:
 		draw_texture_rect(tex, Rect2(icon_c - Vector2(8, 8), Vector2(16, 16)), false)
-	UiStyle.draw_text_centered(self, label(), Vector2(size.x * 0.5, 26.0), UiStyle.FONT_S, UiStyle.C_TEXT)
+	UiStyle.draw_text_centered(self, label(), Vector2(size.x * 0.5, 26.0 + oy), UiStyle.FONT_S, UiStyle.C_TEXT)
 
 ## Fallback nest: a mould dome with dark spots (03's nest silhouette is a mound).
 func _draw_nest(c: Vector2) -> void:

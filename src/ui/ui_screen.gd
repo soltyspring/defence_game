@@ -53,6 +53,14 @@ func _ready() -> void:
 	_build()
 	_connect_bus()
 	_on_resize()
+	# Some devices rotate 180 degrees without changing viewport dimensions.
+	var safe_timer := Timer.new()
+	safe_timer.wait_time = 0.5
+	safe_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+	safe_timer.timeout.connect(func():
+		if SafeArea.safe_rect(get_viewport()) != safe: _on_resize())
+	add_child(safe_timer)
+	safe_timer.start()
 
 func _exit_tree() -> void:
 	_disconnect_bus()
@@ -117,6 +125,13 @@ func progress() -> Dictionary:
 	if s != null and s.get("progress") is Dictionary:
 		return s.progress
 	return {"version": 1, "unlocked_round": 1, "stars": {}, "coins": 0, "settings": {}}
+
+func round_is_unlocked(index: int) -> bool:
+	if index < 0: return false
+	var s := autoload("Save")
+	if progress_override.is_empty() and s != null and s.has_method("is_unlocked"):
+		return s.is_unlocked(index)
+	return index < int(progress().get("unlocked_round", 1))
 
 ## Modal upgrade panel shared by menu / round select / result (created on first use).
 var upgrade_panel: Control

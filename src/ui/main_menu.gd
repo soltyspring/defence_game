@@ -77,14 +77,17 @@ func continue_round_id() -> String:
 	if list.is_empty():
 		return ""
 	var p := progress()
-	var unlocked := int(p.get("unlocked_round", 1))
 	var stars: Dictionary = p.get("stars", {})
 	var pick := str(list[0].id)
-	for i in mini(unlocked, list.size()):
+	for i in list.size():
+		if not s_round_unlocked(i): continue
 		pick = str(list[i].id)
 		if int(stars.get(pick, 0)) == 0:
 			return pick
 	return pick
+
+func s_round_unlocked(i: int) -> bool:
+	return round_is_unlocked(i)
 
 func _round_list() -> Array:
 	var c := autoload("Content")
@@ -133,10 +136,10 @@ func _layout() -> void:
 	var cx := safe.get_center().x
 	var y := safe.position.y + safe.size.y * 0.50
 	place(btn_play, Rect2(cx - bw / 2, y, bw, bh + 6))
-	var w3 := floorf((bw - 12) / 3.0)
+	var w3 := floorf((bw - 16) / 3.0)   # 8 px between the three buttons (07 LAYOUT L4 / QA-B027: 8 dp)
 	place(btn_select, Rect2(cx - bw / 2, y + bh + 14, w3, bh))
-	place(btn_upgrades, Rect2(cx - bw / 2 + w3 + 6, y + bh + 14, w3, bh))
-	place(btn_settings, Rect2(cx - bw / 2 + 2 * (w3 + 6), y + bh + 14, w3, bh))
+	place(btn_upgrades, Rect2(cx - bw / 2 + w3 + 8, y + bh + 14, w3, bh))
+	place(btn_settings, Rect2(cx - bw / 2 + 2 * (w3 + 8), y + bh + 14, w3, bh))
 	place(quit_layer, Rect2(Vector2.ZERO, view))
 	quit_layer.title_y = safe.get_center().y - 30
 	for i in quit_buttons.size():

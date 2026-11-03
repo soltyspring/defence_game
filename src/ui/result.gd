@@ -45,7 +45,7 @@ func _apply() -> void:
 	if btn_next == null:
 		return
 	var won := bool(result.get("won", false))
-	btn_next.visible = won and str(result.get("next_round_id", "")) != ""
+	btn_next.visible = won and bool(result.get("saved", true)) and str(result.get("next_round_id", "")) != ""
 	btn_retry.fill = UiStyle.C_ACCENT.darkened(0.15) if not won else UiStyle.C_PANEL_LIGHT
 	_layout()
 	queue_redraw()
@@ -82,11 +82,14 @@ func _draw() -> void:
 	var won := bool(result.get("won", false))
 	var cx := panel.get_center().x
 	UiStyle.draw_text_centered(self, UiText.t("ui.victory") if won else UiText.t("ui.defeat"), Vector2(cx, panel.position.y + 30), UiStyle.FONT_XL, UiStyle.C_GOLD if won else UiStyle.C_HP_ENEMY, true, &"bold")
+	if not bool(result.get("saved", true)):
+		UiStyle.draw_text_centered(self, UiText.t("toast.save_failed"), Vector2(cx, panel.position.y + 48), UiStyle.FONT_S, UiStyle.C_HP_ENEMY)
 	var stars := int(result.get("stars", 0)) if won else 0
 	var reasons := star_reasons()
 	var t := float(result.get("time", 0))
+	var seconds := ceili(t)
 	var lines := [
-		[UiText.t("ui.time"), "%d:%02d" % [int(t) / 60, int(t) % 60]],
+		[UiText.t("ui.time"), "%d:%02d" % [seconds / 60, seconds % 60]],
 		[UiText.t("ui.kills"), str(int(result.get("kills", 0)))],
 		[UiText.t("ui.reward"), "+%d" % int(result.get("coins", 0))],
 	]
@@ -108,6 +111,11 @@ func _draw() -> void:
 		UiStyle.draw_number(self, lines[k][1], Vector2(panel.end.x - 18, y), UiStyle.FONT_M, UiStyle.C_GOLD if k == 2 else UiStyle.C_TEXT, 1, &"bold")
 	if bool(result.get("first_clear", false)) and won:
 		UiStyle.draw_text_centered(self, UiText.t("ui.first_clear"), Vector2(cx, y0 + 3 * 22 + 6), UiStyle.FONT_M, UiStyle.C_ACCENT)
+	if not won and str(result.get("round_id", "")) == "r05":
+		for i in 2:
+			var hint := UiText.t("hint.loss.r05.tactic" if i == 0 else "hint.loss.upgrade")
+			var fit := UiStyle.fit_text(hint, panel.size.x - 24, UiStyle.FONT_S)
+			UiStyle.draw_text_centered(self, fit[0], Vector2(cx, y0 + 3 * 22 + 14 + i * 18), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
 	if stars != reasons.filter(func(r): return r.met).size():
 		# engine star count and UI reason derivation disagree: show engine count, flag for QA
 		reason_mismatch = true

@@ -46,7 +46,10 @@ func reload() -> void:
 	if c != null and c.has_method("get_round_list"):
 		rounds = c.get_round_list()
 	# open on the page containing the newest unlocked round
-	page = clampi((int(progress().get("unlocked_round", 1)) - 1) / (COLS * ROWS), 0, _pages() - 1)
+	var latest := 0
+	for i in rounds.size():
+		if is_round_unlocked(i): latest = i
+	page = clampi(latest / (COLS * ROWS), 0, _pages() - 1)
 	_refresh()
 
 func _pages() -> int:
@@ -57,7 +60,7 @@ func _set_page(p: int) -> void:
 	_refresh()
 
 func is_round_unlocked(order_index: int) -> bool:
-	return order_index + 1 <= int(progress().get("unlocked_round", 1))
+	return round_is_unlocked(order_index)
 
 func _refresh() -> void:
 	if tiles.is_empty():
@@ -108,7 +111,7 @@ func _layout() -> void:
 	var bottom := safe.end.y - 6
 	var side := t + 10
 	var area := Rect2(safe.position.x + side, top, safe.size.x - side * 2, bottom - top)
-	var gap := 6.0
+	var gap := 8.0   # 8 dp between tiles (07 LAYOUT L4)
 	var tw := floorf((area.size.x - gap * (COLS - 1)) / COLS)
 	var th := floorf((area.size.y - gap * (ROWS - 1)) / ROWS)
 	tile_rects.clear()

@@ -90,6 +90,11 @@ func visible_upgrades() -> Array:
 		if not (u is Dictionary) or not u.has("id"):
 			continue
 		var tgt := str(u.get("target", ""))
+		var sv := _save()
+		if sv != null and sv.has_method("upgrade_locked"):
+			if sv.upgrade_locked(str(u.id)): continue
+			out.append(u)
+			continue
 		if tgt.begins_with("unit:") and c.has_method("get_unit"):
 			var ud: Dictionary = c.get_unit(tgt.substr(5))
 			if ud.is_empty() or str(ud.get("id", "")) != tgt.substr(5) or int(ud.get("unlock_round", 1)) > unlocked:
@@ -274,7 +279,7 @@ func _set_status(code: String, u: Dictionary) -> void:
 		"locked":
 			status_text = UiText.t("ui.upgrade_locked")
 		_:
-			status_text = UiText.t("ui.upgrade_error") % code
+			status_text = UiText.t("ui.upgrade_error")
 	queue_redraw()
 
 func _on_close() -> void:
