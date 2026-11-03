@@ -6,9 +6,9 @@
   "name": "곰팡이 장군",
   "name_key": "round.r05.name",
   "biome": "biome_01",
-  "lane_length": 1800,
+  "lane_length": 1250,
   "player_base_hp": 1800,
-  "enemy_base_hp": 1000.0,
+  "enemy_base_hp": 1200,
   "start_gold": 80,
   "hero": "hero_captain",
   "cards": [
@@ -23,7 +23,7 @@
   ],
   "waves": [
     {
-      "at": 20,
+      "at": 12,
       "spawns": [
         {
           "unit": "e_grunt",
@@ -38,7 +38,7 @@
       ]
     },
     {
-      "at": 60,
+      "at": 30,
       "spawns": [
         {
           "unit": "e_brute",
@@ -53,7 +53,7 @@
       ]
     },
     {
-      "at": 95,
+      "at": 50,
       "boss": true,
       "spawns": [
         {
@@ -69,7 +69,7 @@
       ]
     },
     {
-      "at": 150,
+      "at": 90,
       "spawns": [
         {
           "unit": "e_brute",
@@ -140,8 +140,8 @@
   "gold_max": 350,
   "workers_max": 6,
   "enemy_scaling": {
-    "hp": 1.25,
-    "atk": 1.25
+    "hp": 1.4,
+    "atk": 1.45
   },
   "enemy_tower_atk_mult": 0.5,
   "tutorial": [
@@ -149,5 +149,5 @@
   ],
   "provisional": true,
   "boss_round": true,
-  "balance_note": "D23 (2026-10-31): enemy_scaling halved; r07-r10 trickle without e_brute and 1.5 s slower; validated at the LOW first-clear budget (docs/design/balance/low_budget_2026-10-31_low.json). D24 (2026-10-31): length/fragility retune, 5-seed check docs/design/balance/multi_seed_2026-10-31_after.json. D27: upgrade curve (block at r05), tower ×2 with enemy mult ×0.5. D30: retuned with the fixed bot timing harness (multi_seed_2026-10-31_d30_*). D33: scaling 1.25 (casual LOW 7/10, upper bound 8/10)."
+  "balance_note": "D23 (2026-10-31): enemy_scaling halved; r07-r10 trickle without e_brute and 1.5 s slower; validated at the LOW first-clear budget (docs/design/balance/low_budget_2026-10-31_low.json). D24 (2026-10-31): length/fragility retune, 5-seed check docs/design/balance/multi_seed_2026-10-31_after.json. D27: upgrade curve (block at r05), tower ×2 with enemy mult ×0.5. D30: retuned with the fixed bot timing harness (multi_seed_2026-10-31_d30_*). D33: scaling 1.25 (casual LOW 7/10, upper bound 8/10). 2026-11-03 Codex polish: shorten lane to 1250 and waves to 12/30/50/90s; scaling 1.4 and nest 1200 restore the first-boss upgrade check after fixing Rally attack speed. Timing targets unchanged; verified separately with the current bot."
 }
