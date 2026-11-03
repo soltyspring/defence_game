@@ -490,9 +490,16 @@ func _apply_content_migration() -> void:
 	if recovery_source == "fresh":
 		return   # nothing was on disk: never create a save file during a load (07 SAVE-03)
 	var changed := false
-	var before := progress.duplicate(true)
+	# Unknown extension data is preserved but never mutated by migration. Deep-copy only the
+	# sanitized containers we change: cloning an arbitrary nested extension hits Godot's
+	# recursive-duplicate limit even though the save itself is valid JSON.
+	var before := progress.duplicate()
+	for key in ["upgrades", "upgrade_paid", "stars", "best_time", "migrations_applied"]:
+		var value = progress.get(key)
+		if value is Dictionary or value is Array: before[key] = value.duplicate(true)
 	var snap: Dictionary = progress.get("content_snapshot") if progress.get("content_snapshot") is Dictionary else {}
-	var snap_ups: Dictionary = snap.get("upgrades") if snap.get("upgrades") is Dictionary else {}
+	# Rename inference adds aliases locally; the old snapshot must stay intact for rollback.
+	var snap_ups: Dictionary = snap.upgrades.duplicate() if snap.get("upgrades") is Dictionary else {}
 	var keys: Array = progress.get("migrations_applied") if progress.get("migrations_applied") is Array else []
 	if not (progress.get("upgrade_paid") is Dictionary):
 		progress["upgrade_paid"] = {}
