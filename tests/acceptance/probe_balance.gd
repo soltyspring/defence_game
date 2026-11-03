@@ -20,6 +20,8 @@ func _initialize() -> void:
 	var d28 := false
 	var legacy_dt := false
 	var per_seed := false
+	var policies := [2, 1]   # 2 = competent, 1 = casual; --policies=casual for D28 acceptance runs
+	var exit_code := 0
 	var results := {}
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--rounds="): rounds = Array(a.get_slice("=", 1).split(","))
@@ -28,6 +30,9 @@ func _initialize() -> void:
 		if a == "--d28": d28 = true
 		if a == "--legacy-dt": legacy_dt = true   # reproduce the pre-fix (slowed bot) numbers
 		if a == "--rows": per_seed = true          # also print one [rows] line with every seed's outcome
+		if a.begins_with("--policies="):
+			policies = []
+			for pn in a.get_slice("=", 1).split(","): policies.append(2 if pn == "competent" else 1)
 	var bud = JSON.parse_string(FileAccess.get_file_as_string("res://docs/design/balance/upgrade_budgets.json"))
 	var c = ContentS.new()
 	c.load_all("res://data")
@@ -36,7 +41,7 @@ func _initialize() -> void:
 		for b in budgets:
 			if b != "none" and not (bud is Dictionary and bud.has(b) and bud[b].has(rid)): continue
 			var lv: Dictionary = {} if b == "none" else bud[b][rid]["levels"]
-			for pol in [2, 1]:
+			for pol in policies:
 				var rows := []
 				for s in seeds:
 					var sd := 101 + s
@@ -59,9 +64,12 @@ func _initialize() -> void:
 						sim.step(STEP)
 						min_ratio = minf(min_ratio, sim.player_base.hp / sim.player_base.hp_max)
 					rows.append({"seed": sd, "won": sim.won, "t": snappedf(sim.t, 0.1), "min_base": snappedf(min_ratio, 0.01), "stars": int(sim.result().stars),
-						"enemy_base": snappedf(sim.enemy_base.hp / sim.enemy_base.hp_max, 0.01)})
+						"enemy_base": snappedf(sim.enemy_base.hp / sim.enemy_base.hp_max, 0.01), "end_base": snappedf(sim.player_base.hp / sim.player_base.hp_max, 0.01)})
 				var wins := rows.filter(func(x): return x.won)
 				results["%s|%s|%d" % [rid, b, pol]] = wins.size()
+				var eb := rows.filter(func(x): return x.won).map(func(x): return x.end_base)
+				eb.sort()
+				results["%s|%s|%d|end_med" % [rid, b, pol]] = eb[eb.size() / 2] if eb.size() > 0 else -1.0
 				var ts := wins.map(func(x): return x.t); ts.sort()
 				var mb := rows.map(func(x): return x.min_base); mb.sort()
 				print("[balance] ", JSON.stringify({"round": rid, "budget": b, "policy": "competent" if pol == 2 else "casual", "seeds": seeds,
@@ -84,5 +92,24 @@ func _initialize() -> void:
 			if not ok: fails += 1
 			print("[d28] ", JSON.stringify({"round": ru[0], "budget": ru[1], "casual_wins": results[k], "seeds": seeds, "target": "%d/10" % ru[2], "status": "PASS" if ok else "FAIL"}))
 		print("[d28] summary fails=", fails)
+		# D33(b) r05 "too easy" ceilings (01, under Q5 option B = user-approved 2026-11-01 08:23): casual LOW <= 8/10,
+		# median end base of casual LOW wins <= 0.6, no-upgrade (none) casual 0/10-4/10. Only r05 has ceilings in DECISIONS.
+		var cfails := 0
+		for ce in [["r05", "low", "wins_le", 8], ["r05", "low", "end_med_le", 0.6], ["r05", "none", "wins_le", 4]]:
+			var k2 := "%s|%s|1" % [ce[0], ce[1]]
+			if not results.has(k2):
+				print("[d33] ", JSON.stringify({"round": ce[0], "budget": ce[1], "check": ce[2], "status": "NOT_RUN"}))
+				continue
+			var val = results[k2] if ce[2] == "wins_le" else results[k2 + "|end_med"]
+			var lim: float = float(ce[3]) * (float(seeds) / 10.0 if ce[2] == "wins_le" else 1.0)
+			var ok2: bool = float(val) <= lim
+			if not ok2: cfails += 1
+			print("[d33] ", JSON.stringify({"round": ce[0], "budget": ce[1], "check": ce[2], "value": val, "limit": lim, "seeds": seeds, "status": "PASS" if ok2 else "FAIL"}))
+		# Q5 option B information: casual wins with NO upgrades per round (B = "stuck 2-3 times, then upgrade and win").
+		for rid2 in rounds:
+			var k3 := "%s|none|1" % rid2
+			if results.has(k3): print("[q5b] ", JSON.stringify({"round": rid2, "budget": "none", "casual_wins": results[k3], "seeds": seeds}))
+		print("[d33] summary fails=", cfails)
+		exit_code = 1 if fails + cfails > 0 else 0
 	c.free()
-	quit(0)
+	quit(exit_code)

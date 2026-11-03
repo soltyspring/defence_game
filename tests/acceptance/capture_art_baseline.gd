@@ -202,6 +202,10 @@ func _start(rid: String, budget: String) -> Node:
 func _advance(sim, bot, steps: int, plan) -> void:
 	var done := 0
 	while done < steps and not sim.ended:
+		# Window focus can pause the real Battle while this manual fixed-step run is yielding.
+		# Resume before counting steps, otherwise the pre-pass and captured state diverge silently.
+		if sim.paused:
+			root.get_node("Events").cmd_set_paused.emit(false)
 		var n := mini(CHUNK, steps - done)
 		for k in n:
 			if plan != null:
