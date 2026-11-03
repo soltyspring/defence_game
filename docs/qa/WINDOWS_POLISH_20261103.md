@@ -73,3 +73,16 @@ r05 LOW 승리 시 기지 잔량 중앙값 0.41. 기존 D28 하한과 D33 상한
 - `tools/build/build_windows.ps1`: 커밋에서 독립 Windows 패키지·라이선스·해시 생성 및 EXE 메뉴/r01 실행 확인.
 
 실행 파일의 정확한 소스 커밋·해시는 릴리스 ZIP의 `BUILD_INFO.json`과 `SHA256SUMS.txt`에 있다. [Windows v0.1.1 릴리스](https://github.com/soltyspring/defence_game/releases/tag/windows-v0.1.1-20261103).
+
+## 배포 확인
+
+- 소스 커밋: `45a4d25d4ad3b9e0d7da9bdc2398d338c70180c0`. 이 뒤 검증 문서만 갱신했다.
+- EXE: 111,823,696 bytes, SHA-256 `4180178df2af00a2ca502f7147eac22e95972e40d1a05a8af9f6506323fceac5`.
+- ZIP: 40,499,308 bytes, SHA-256 `df614813b5c1ac480e9f151f0141a4efc17edb86833554fcdef205dfd89d5203`.
+- 커밋에서 추출한 최종 소스로 위 156/3414/49/29 검사를 다시 통과했다. TP-13b 중첩 데이터 검사에서 기존 `Max recursion reached` 오류도 사라졌다.
+- 배포 EXE를 소스·외부 PCK 없는 폴더에서 메뉴와 r01로 실행했다. 헤드리스와 실제 1280×720 메뉴/45초 전투 모두 exit 0, 런타임 오류 0, 오디오 자산 누락 0. 보이는 창은 DISPLAY2에 놓였음을 확인했다.
+- GitHub 공개 링크를 로그인 없이 다시 내려받아 ZIP/EXE 해시·ZIP CRC·라이선스를 확인했다. [배포 검증 데이터](windows-polish/release.json).
+
+42초 EXE 프레임은 60 FPS, 드로우콜 100을 기록했다. 짧은 데스크톱 장면 관측값으로, 최저 사양·발열·장시간 성능을 보장하지 않는다.
+
+![실제 배포 EXE](windows-polish/battle.png)
