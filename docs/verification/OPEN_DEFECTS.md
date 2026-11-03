@@ -1,4 +1,21 @@
 # Open defects: owner and blocking condition (owner: 07-qa)
+
+## Windows update, 2026-11-03
+
+The table below is the historical November 1 snapshot. Current Windows fixes and evidence are in
+[WINDOWS_POLISH_20261103](../qa/WINDOWS_POLISH_20261103.md), source `45a4d25`.
+B020 (hero contrast), B021 (dimmed cards), B023 (unit/faction contrast), B026 (live off-screen markers),
+and B027 (touch gaps) were corrected and rechecked. The final fixed art set also has boss ΔL* 19.6 ≥ 15.
+CR-001/003/004/006/007 and the round-relocking migration defects were corrected; a 600-level extension-data
+case and failed-migration rollback now preserve the original data. Acceptance 156, UI 3414, integration 49,
+and targeted regression 29 pass with no failed checks.
+
+B022/J1's phone and human-perception claims remain outside this Windows verification: the default gameplay
+now uses integer-pixel world zoom and live warnings, but desktop geometry is not a physical-phone playtest.
+W004 still concerns Android APK verification. AUD-03/PLAT-03 remain explicitly untested in the acceptance suite.
+
+## Historical November 1 snapshot
+
 Updated 2026-11-01 07:3x +09:00. Last full -Head: e2404af run 20261101-070302 PASS 156 / FAIL 0 / NOT_TESTED 2, exit 0. Graphics/layout baseline ad47eda (ART_BASELINE.md, LAYOUT.md). Desktop only; not Android certification; no human play test.
 
 | ID | Sev | Owner | State now | Blocks what | Closing condition (same check, HEAD condition) | Next 07 action |
