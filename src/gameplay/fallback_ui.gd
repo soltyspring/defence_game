@@ -77,6 +77,8 @@ static func _menu(root: Control) -> void:
 	vb.add_child(_btn("Play", func(): Events.cmd_open_screen.emit(&"round_select"), Vector2(160, 40)))
 	var unlocked := int(Save.progress.unlocked_round)
 	var cont_idx := mini(unlocked, Content.round_order.size()) - 1
+	for i in Content.round_order.size():
+		if Save.is_unlocked(i): cont_idx = i
 	if cont_idx >= 0:
 		var rid: String = Content.round_order[cont_idx]
 		vb.add_child(_btn("Continue: " + str(Content.get_round(rid).name), func(): Events.cmd_start_round.emit(rid), Vector2(160, 32)))

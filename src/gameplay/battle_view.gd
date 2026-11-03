@@ -28,8 +28,8 @@ const C_ENEMY_D := Color("7d2a25")
 const C_SKIN := Color("f1c79a")
 const C_HERO := Color("f2c14e")
 const C_OUTLINE := Color("1a1c24")
-const C_BAR_PLAYER := Color("6fd36f")
-const C_BAR_ENEMY := Color("e5534b")
+const C_BAR_PLAYER := Color("63cbe8")
+const C_BAR_ENEMY := Color("ef9255")
 
 var _by_lane_y := func(a, b): return a.lane_y < b.lane_y   # one Callable for the depth sort (08 H5)
 var _bar_rects: Array[Rect2] = []      # queued hp bars: outline rect, fill rect, colour (drawn in _flush_bars)
@@ -139,6 +139,10 @@ func _draw_biome_layers(left: float, w: float, front: bool) -> bool:
 			y = ground_y - float(layer.lane_line)
 		else:
 			y = float(layer.get("view_y", ground_y - r.size.y))
+		if front:
+			# Foreground belongs to the lane, not the bottom of the HUD. The old fixed
+			# y=342 left bright wheat fragments across the last rows of the window.
+			y = ground_y - r.size.y + 4.0
 		var tile_w := r.size.x
 		# Round the layer origin ONCE (half-up, sign-consistent) and step copies by exact integer tile widths.
 		# Per-copy roundf() rounded .5 offsets away from zero, leaving 1 px gaps between copies (03 A4 white seams).
@@ -146,6 +150,10 @@ func _draw_biome_layers(left: float, w: float, front: bool) -> bool:
 		var x := floorf((left - bx) / tile_w) * tile_w + bx
 		while x < left + w:
 			draw_texture_rect_region(f.tex, Rect2(x, y, tile_w, r.size.y), r)
+			if layer.has("lane_line") and y + r.size.y < view_bottom + 8.0:
+				# Continue the soil below its 80px tile on taller views / below the HUD.
+				var tail := Rect2(r.position.x, r.end.y - 1.0, r.size.x, 1.0)
+				draw_texture_rect_region(f.tex, Rect2(x, y + r.size.y, tile_w, view_bottom + 8.0 - y - r.size.y), tail)
 			x += tile_w
 	return drew
 
@@ -242,7 +250,16 @@ func _draw_unit(u) -> void:
 	var flip: bool = u.side < 0
 	if u.is_hero:
 		flip = sim.hero_dir < 0
+		# High-contrast pointer keeps the controlled hero identifiable in crowds,
+		# including when bread-coloured sprites pass the bakery facade.
+		var marker := pos + Vector2(0, -44)
+		draw_colored_polygon(PackedVector2Array([marker + Vector2(-5,-5), marker + Vector2(5,-5), marker + Vector2(0,2)]), C_OUTLINE)
+		draw_colored_polygon(PackedVector2Array([marker + Vector2(-3,-4), marker + Vector2(3,-4), marker]), Color("ffe7a0"))
 	var mod := Color.WHITE
+	# Heavy green silhouettes otherwise merge into the dark mold nest during the final push.
+	# Keep their hue and animation while lifting their value above that background.
+	if u.is_boss: mod = Color(3.0, 3.0, 3.0)
+	elif u.id == "e_brute": mod = Color(1.15, 1.15, 1.15)
 	if u.flash > 0.0: mod = Color(1.0, 0.55, 0.55)
 	if u.dying: mod.a = clampf(u.dead_t / 0.7, 0.0, 1.0)
 	elif u.buff_t > 0.0: mod = mod * Color(1.0, 1.0, 0.8)
@@ -360,6 +377,10 @@ func _flush_bars() -> void:
 		draw_rect(r, C_OUTLINE)
 	for i in _bar_fills.size():
 		draw_rect(_bar_fills[i], _bar_cols[i])
+		if _bar_cols[i] == C_BAR_ENEMY:
+			var r := _bar_fills[i]
+			for x in range(int(r.position.x) + 2, int(r.end.x), 4):
+				draw_line(Vector2(x, r.position.y), Vector2(x, r.end.y), C_OUTLINE, 1.0)
 	_bar_rects.clear()
 	_bar_fills.clear()
 	_bar_cols.clear()
@@ -392,7 +413,8 @@ func _draw_fx(f) -> void:
 		var rec = atlas.anim_rec(f.kind, "play")
 		if rec == null: rec = atlas.anim_rec(f.kind, "loop")
 		if rec != null:
-			_blit_rec(rec, atlas.rec_index(rec, f.t), pos, false, Color.WHITE)
+			var at: float = f.t if rec.loop else k * maxf(0.0, rec.rects.size() - 0.001) / rec.fps
+			_blit_rec(rec, atlas.rec_index(rec, at), pos, false, Color.WHITE)
 			return
 	match f.kind:
 		"hit_spark":

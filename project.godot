@@ -8,11 +8,11 @@ config/name_localized={
 "en": "Bakery Knights",
 "ko": "빵집 기사단"
 }
-config/description="Pixel-art lane defence (working title)"
-config/version="0.1.0"
+config/description="Bakery Knights: Mold Defense"
+config/version="0.1.1"
 run/main_scene="res://scenes/gameplay/main.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
-config/icon="res://icon.svg"
+config/icon="res://assets/branding/launcher_main_192.png"
 run/max_fps=60
 config/quit_on_go_back=false
 run/low_processor_mode_sleep_usec=16000
@@ -42,7 +42,7 @@ window/vsync/vsync_mode=1
 
 [game]
 
-camera/world_zoom_plus_one=false
+camera/world_zoom_plus_one=true
 
 [gui]
 

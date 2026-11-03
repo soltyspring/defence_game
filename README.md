@@ -4,14 +4,14 @@
 
 ## Windows에서 바로 실행
 
-**[Windows 미리보기 다운로드](https://github.com/soltyspring/defence_game/releases/tag/windows-preview-20261103)**
+**[Windows v0.1.1 다운로드](https://github.com/soltyspring/defence_game/releases/tag/windows-v0.1.1-20261103)** · [ZIP 바로 받기](https://github.com/soltyspring/defence_game/releases/download/windows-v0.1.1-20261103/BakeryKnights-Windows-x64.zip)
 
 1. 릴리스의 **`BakeryKnights-Windows-x64.zip`**을 내려받습니다. `Source code`는 실행 파일이 아닙니다.
 2. ZIP을 폴더에 모두 압축 해제합니다.
 3. **`BakeryKnights.exe`**를 더블클릭합니다. Godot 설치나 별도 빌드는 필요 없습니다.
-4. **게임 시작** → 병사 출병 → 적 둥지 파괴 순서로 플레이합니다. 획득한 골드는 메인 화면의 **강화**에서 사용합니다.
+4. **게임 시작** → 병사 출병 → 적 둥지 파괴 순서로 플레이합니다. 전투 중 **밀가루**로 제빵사를 고용하고 병사를 보냅니다. 라운드 보상 **골드**는 메인 화면의 **강화**에서 사용합니다.
 
-Windows 64비트용 미리보기입니다. 게임 데이터가 EXE 안에 들어 있어 `.pck`를 따로 찾을 필요가 없습니다. 함께 제공하는 `licenses` 폴더에는 엔진과 글꼴의 사용 고지가 있습니다. EXE는 코드 서명되지 않았습니다. 보안 경고가 뜨면 다운로드 출처와 릴리스의 SHA-256을 확인하세요.
+Windows 64비트용입니다. 게임 데이터가 EXE 안에 들어 있어 `.pck`를 따로 찾을 필요가 없습니다. 함께 제공하는 `licenses` 폴더에는 엔진과 글꼴의 사용 고지가 있습니다. EXE는 코드 서명되지 않았습니다. 보안 경고가 뜨면 다운로드 출처와 릴리스의 SHA-256을 확인하세요.
 
 ## 조작
 
@@ -33,12 +33,12 @@ Windows 64비트용 미리보기입니다. 게임 데이터가 EXE 안에 들어
 - 진행도·강화·설정은 자동으로 로컬에 저장합니다. Windows 경로는 `%APPDATA%\Godot\app_userdata\Lane Defence\`입니다. 폴더 이름에는 초기 개발명이 남아 있습니다.
 - PC 변경 전에는 이 폴더를 복사해 보관하세요. 계정 연동·클라우드 동기화는 제공하지 않습니다.
 - 광고·인앱 결제는 비활성 상태입니다.
-- 이 배포는 **기존 커밋을 Windows로 패키징한 개발 미리보기**입니다. 게임 전체 다듬기는 진행 중이며, 튜토리얼 표시 시점·좁은 화면 글자 잘림·콘텐츠 변경 시 라운드 잠금 문제는 추가 수정과 검증이 필요합니다. 이전 작업의 미검증 UI·저장 수정은 포함하지 않았습니다.
+- v0.1.1은 튜토리얼 지연·깜빡임, 콘텐츠 업데이트 뒤 진행 재잠금, 작은 화면 문구·수입 표시, 화면 하단 배경 띠, 어두운 카드 구분과 화면 밖 적 경고를 수정한 버전입니다. 영웅 표시·전장 배율을 다듬고 첫 보스의 강화 난이도를 조정했습니다.
 - EXE·ZIP의 해시와 원본 커밋은 릴리스 및 ZIP 안의 `BUILD_INFO.json` / `SHA256SUMS.txt`에서 확인할 수 있습니다. 현재 확인한 실행 범위는 릴리스 설명에 적습니다.
 
-메뉴·r01의 실제 Windows EXE 실행과 UI·수락 검사를 수행했습니다. 수락 156개 / UI 3414개 통과, UI 통합 48개 통과·1개 실패입니다. 남은 결함과 캡처는 [Windows 미리보기 검토](docs/qa/WINDOWS_PREVIEW_20261103.md)에 정리했습니다.
+수정본의 수락 156개, UI 3,414개, UI 통합 49개와 수정 회귀 검사 24개가 통과했습니다. 10개 라운드의 봇 검증과 저장 마이그레이션을 별도로 검사했습니다. 실제 폰·사람 플레이 검증은 포함하지 않습니다. 검사 조건과 캡처는 [v0.1.1 검토 기록](docs/qa/WINDOWS_POLISH_20261103.md)에 정리했습니다.
 
-![Windows 실제 실행 화면](docs/qa/windows-preview/menu.png)
+![Windows 실행 화면](docs/qa/windows-polish/battle.png)
 
 ## 소스에서 실행
 

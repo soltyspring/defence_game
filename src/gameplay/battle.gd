@@ -6,6 +6,7 @@ const SimS := preload("res://src/gameplay/battle_sim.gd")
 const ViewS := preload("res://src/gameplay/battle_view.gd")
 const BotS := preload("res://src/gameplay/bot_player.gd")
 const TutorialS := preload("res://src/gameplay/tutorial_director.gd")
+const SafeAreaS := preload("res://src/ui/safe_area.gd")
 
 signal finished(result: Dictionary)
 
@@ -159,7 +160,23 @@ func _publish() -> void:
 	if sim:
 		var s: Dictionary = sim.snapshot()
 		s["tutorial"] = tutorial_key
+		s["threat"] = _threat_snapshot()
 		Events.hud_snapshot.emit(s)
+
+func _threat_snapshot() -> Dictionary:
+	var width := get_viewport_rect().size.x / maxf(world_zoom, 0.01)
+	var vl := cam.position.x - width * 0.5
+	var vr := vl + width
+	var result := {"view_left": vl, "view_right": vr, "nest_left": float(sim.enemy_base.x) - 40.0, "enemy_visible": false}
+	for enemy in sim.enemies:
+		if enemy.dying: continue
+		if enemy.x >= vl and enemy.x <= vr:
+			result.enemy_visible = true
+		elif enemy.x > vr:
+			result["enemy_right"] = minf(float(result.get("enemy_right", INF)), enemy.x)
+		else:
+			result["enemy_left"] = maxf(float(result.get("enemy_left", -INF)), enemy.x)
+	return result
 
 func _drain_events() -> void:
 	_emit_cues()
@@ -235,7 +252,7 @@ func _step_tutorial() -> void:
 
 func _update_camera(delta: float) -> void:
 	var vs := get_viewport_rect().size
-	# 03 A19 / 04 R17-3: optional world-only zoom (k+1)/k (App.world_zoom(), project setting, default off). The HUD
+	# 03 A19 / 04 R17-3: world-only zoom (k+1)/k (App.world_zoom(), enabled in project.godot). The HUD
 	# is a CanvasLayer and is not zoomed. With z == 1 every value below equals the pre-zoom camera exactly.
 	var z: float = App.world_zoom()
 	world_zoom = z
@@ -251,7 +268,8 @@ func _update_camera(delta: float) -> void:
 	# Ground row fixed GROUND_FROM_BOTTOM view px above the view bottom (04 CamFix): integer-scale views taller than
 	# 360 (e.g. 800x450) show more sky. Zoomed, cy stays unrounded so that (ground_y - cy) * z is a whole view px.
 	var vh := vs.y
-	var cy: float = float(view.ground_y) - (vh * 0.5 - GROUND_FROM_BOTTOM) / z
+	var bottom_inset := maxf(0.0, vh - SafeAreaS.safe_rect(get_viewport()).end.y)
+	var cy: float = float(view.ground_y) - (vh * 0.5 - GROUND_FROM_BOTTOM - bottom_inset) / z
 	if z == 1.0:
 		cy = roundf(cy)
 	cam.zoom = Vector2(z, z)

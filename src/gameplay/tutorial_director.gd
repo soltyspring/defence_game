@@ -5,13 +5,14 @@ extends RefCounted
 ## so they are not shown again. The game never pauses for a banner. Owner: 02-engine.
 ##
 ## Key rules (explicit first, then generic patterns so new 01 keys work without code changes):
-##   tut_move_hero      show t=0                          done: hero moved
-##   tut_deploy_unit    show after first move or t>=4     done: any deploy
+##   tut_move_hero      show when its turn is reached     done: hero moved (8 s timeout)
+##   tut_deploy_unit    immediate if first; else move/4 s done: any deploy
 ##   tut_buy_worker     show after 1st deploy & gold>=40  done: worker bought
 ##   tut_destroy_base   show when an ally passes 50% lane done: enemy base damaged
 ##   tut_skill_<x>      show when mana >= cost of skill_<x> (skill must be in the round) done: skill_<x> cast
 ##   tut_<x>_unit       show t>=1                          done: a unit with id/tag/attack_type <x> or card <x> deployed
 ##   tut_boss_warning   show when a boss spawns            done: timeout 5 s
+##   tut_bomber_warning show when a live bomber spawns     done: timeout 8 s
 ##   tut_<other>        show t>=1                          done: timeout 8 s
 
 const DEFAULT_TIMEOUT := 8.0
@@ -41,6 +42,10 @@ func setup(round_steps: Array, already_done: Array) -> void:
 
 ## Returns the key to show ("" to hide) when it changed since the last call, otherwise null.
 func update(sim, dt: float) -> Variant:
+	# Do not flash guidance for an action performed before its turn in the queue.
+	while shown == "" and idx < steps.size() and _completed(steps[idx], sim):
+		done.append(steps[idx])
+		idx += 1
 	if idx >= steps.size():
 		if shown != "":
 			shown = ""
@@ -64,7 +69,11 @@ func update(sim, dt: float) -> Variant:
 func _trigger(key: String, sim) -> bool:
 	match key:
 		"tut_move_hero": return true
-		"tut_deploy_unit": return moved or sim.t >= 4.0
+		"tut_deploy_unit": return idx == 0 or moved or sim.t >= 4.0
+		"tut_bomber_warning":
+			for enemy in sim.enemies:
+				if not enemy.dying and enemy.id == "e_bomber": return true
+			return false
 		"tut_buy_worker": return deployed > 0 and sim.gold >= 40.0
 		"tut_destroy_base":
 			for u in sim.players:
@@ -95,7 +104,8 @@ func _completed(key: String, sim) -> bool:
 
 func _timeout(key: String) -> float:
 	match key:
-		"tut_move_hero", "tut_deploy_unit", "tut_buy_worker": return ACTION_TIMEOUT
+		"tut_move_hero": return 8.0   # keep the economy hint from being delayed past the first wave
+		"tut_deploy_unit", "tut_buy_worker": return ACTION_TIMEOUT
 		"tut_boss_warning": return 5.0
 	if key.begins_with("tut_skill_") or key.ends_with("_unit"):
 		return ACTION_TIMEOUT

@@ -637,7 +637,7 @@ func _step_boss_summon(u: Unit, dt: float) -> void:
 			alive += 1
 
 func _attack_logic(u: Unit, tgt: Unit, in_reach: bool, hit_base: bool, dt: float) -> void:
-	u.atk_cd -= dt * u.buff_mul * u.aura_mul
+	u.atk_cd -= dt * u.aura_mul   # Rally changes damage/movement; only the hero aura changes attack speed.
 	if u.windup >= 0.0:
 		u.windup -= dt
 		if u.windup < 0.0:

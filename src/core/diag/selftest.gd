@@ -403,10 +403,14 @@ func _check_tutorial(content) -> void:
 			shown_seq.append([str(k), snappedf(sim.t, 0.1)])
 	report.tutorial = {"round": rid, "steps": rd.get("tutorial", []), "shown": shown_seq, "done": tut.done, "cues": cue_counts}
 	var steps: Array = rd.get("tutorial", [])
-	if shown_seq.size() != steps.size():
-		_fail("tutorial: shown %d of %d steps" % [shown_seq.size(), steps.size()])
-	for i in mini(shown_seq.size(), steps.size()):
-		if shown_seq[i][0] != str(steps[i]): _fail("tutorial order mismatch at %d" % i)
+	for key in steps:
+		if not tut.done.has(str(key)) and not shown_seq.any(func(row): return row[0] == str(key)):
+			_fail("tutorial step neither shown nor completed: " + str(key))
+	var previous := -1
+	for row in shown_seq:
+		var at := steps.find(row[0])
+		if at <= previous: _fail("tutorial order/repeated hint: " + str(row[0]))
+		previous = at
 	for c in ["hit", "death", "base_hit"]:
 		if int(cue_counts.get(c, 0)) == 0: _fail("no '%s' audio cues in a full battle" % c)
 

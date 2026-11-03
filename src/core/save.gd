@@ -195,6 +195,13 @@ func _migrate(p: Dictionary, _from_version: int) -> Dictionary:
 			for k in p.migrations_applied:
 				if k is String and not ma.has(k): ma.append(k)
 		p.migrations_applied = ma
+	if p.has("open_rounds"):
+		var orr: Array = []
+		if p.open_rounds is Array:
+			for k in p.open_rounds:
+				if k is String and not orr.has(k): orr.append(k)
+		if orr.is_empty(): p.erase("open_rounds")
+		else: p.open_rounds = orr.slice(0, 64)
 	if p.has("migration_notice"):
 		var n = p.migration_notice
 		if n is Dictionary and (n.get("levels") is int or n.get("levels") is float) and (n.get("coins") is int or n.get("coins") is float):
@@ -335,13 +342,26 @@ func record_result(result: Dictionary, round_index_in_order: int) -> bool:
 	before.stars = progress.stars.duplicate()
 	before.best_time = progress.best_time.duplicate()
 	before.applied_battles = progress.applied_battles.duplicate()
+	var had_open = progress.get("open_rounds")
+	if had_open is Array: before["open_rounds"] = had_open.duplicate()
 	var rid := str(result.round_id)
 	if bool(result.won):
+		# 10 v0.34: a win inside the playable prefix (or a forced/dev win of a locked round) advances the prefix as before;
+		# a win of a round open only by id (a hole after a content update) opens the next round by its star, without
+		# unlocking the rounds in between.
+		var hole := round_index_in_order >= int(progress.unlocked_round) and is_unlocked(round_index_in_order)
 		var prev := int(progress.stars.get(rid, 0))
 		progress.stars[rid] = maxi(prev, int(result.stars))
 		var bt := float(progress.best_time.get(rid, 1e9))
 		progress.best_time[rid] = minf(bt, float(result.time))
-		progress.unlocked_round = maxi(int(progress.unlocked_round), round_index_in_order + 2)
+		var prefix := int(progress.unlocked_round) if hole else maxi(int(progress.unlocked_round), round_index_in_order + 2)
+		var c := _content()
+		if c != null and c.round_order.size() > 0:
+			var keep := {}
+			for k in progress.get("open_rounds", []): keep[str(k)] = true
+			_set_unlock_state(_unlock_state(Array(c.round_order), prefix, keep, prefix > c.round_order.size()))
+		else:
+			progress.unlocked_round = prefix
 		progress.clears = int(progress.clears) + 1
 	progress.coins = int(progress.coins) + int(result.get("coins", 0))
 	if uid != "":
@@ -352,11 +372,71 @@ func record_result(result: Dictionary, round_index_in_order: int) -> bool:
 	if not save_progress():
 		for k in before:      # roll back only what this result touched; keeps nested refs (06 services) intact
 			progress[k] = before[k]
+		if not (had_open is Array): progress.erase("open_rounds")
 		return false
 	return true
 
+## 10 v0.34: round order[i] is playable iff i < unlocked_round (the playable prefix), or i == 0, or it has a star record,
+## or order[i-1] has one, or its id is in progress.open_rounds (kept open by a content update beyond the prefix).
+## In normal play only the prefix matters; the rest keeps cleared rounds open after rounds are inserted, moved or
+## renamed. UI should use this (or round_reach()) instead of reading unlocked_round directly.
 func is_unlocked(order_index: int) -> bool:
-	return order_index + 1 <= int(progress.unlocked_round)
+	if order_index < 0: return false
+	var c := _content()
+	if c != null and order_index >= c.round_order.size(): return false
+	if order_index + 1 <= int(progress.unlocked_round):
+		return true
+	if c == null or order_index < 0 or order_index >= c.round_order.size():
+		return false
+	var rid := str(c.round_order[order_index])
+	var st: Dictionary = progress.get("stars", {})
+	if int(st.get(rid, 0)) > 0 or (order_index > 0 and int(st.get(str(c.round_order[order_index - 1]), 0)) > 0):
+		return true
+	var extra = progress.get("open_rounds")
+	return extra is Array and (extra as Array).has(rid)
+
+## 1-based index of the furthest playable round (>= unlocked_round). For "unit unlocked by round k" checks (U5).
+func round_reach() -> int:
+	var reach := int(progress.unlocked_round)
+	var c := _content()
+	if c == null:
+		return reach
+	for i in range(c.round_order.size() - 1, reach - 1, -1):
+		if is_unlocked(i):
+			return i + 1
+	return reach
+
+## See is_unlocked(). Returns {"unlocked": leading playable run (+1 when every round is playable and the last one is
+## cleared, or the save was already past the end), "extra": ids playable beyond that run only because of `keep`}.
+func _unlock_state(order: Array, prefix: int, keep: Dictionary, beyond_end: bool) -> Dictionary:
+	var st: Dictionary = progress.get("stars", {})
+	var n := order.size()
+	var run := 0
+	var in_run := true
+	var extra: Array = []
+	for i in n:
+		var rid := str(order[i])
+		var by_rule: bool = i == 0 or i < prefix or int(st.get(rid, 0)) > 0 or (i > 0 and int(st.get(str(order[i - 1]), 0)) > 0)
+		var open: bool = by_rule or keep.has(rid)
+		if in_run and open:
+			run = i + 1
+		else:
+			in_run = false
+			if open and not by_rule:
+				extra.append(rid)
+	var unl := maxi(1, run)
+	for rid in keep:
+		if not order.has(rid) and not extra.has(rid): extra.append(rid)
+	if n > 0 and run == n and (beyond_end or int(st.get(str(order[n - 1]), 0)) > 0):
+		unl = n + 1
+	return {"unlocked": unl, "extra": extra}
+
+func _set_unlock_state(res: Dictionary) -> void:
+	progress.unlocked_round = int(res.unlocked)
+	if (res.extra as Array).is_empty():
+		progress.erase("open_rounds")
+	else:
+		progress["open_rounds"] = res.extra
 
 # ---------------------------------------------------------------- content migration (10 R5; rules 01 D32)
 ## Every successful save records `content_version` and a small `content_snapshot` of the data it was made with
@@ -502,19 +582,24 @@ func _apply_content_migration() -> void:
 			if progress.best_time.has(old_r):
 				progress.best_time[nr] = minf(float(progress.best_time.get(nr, 1e9)), float(progress.best_time[old_r]))
 				progress.best_time.erase(old_r)
-	# 5. id-based unlocks (only when the data the save was made with is known)
+	# 5. unlocks by round id (10 v0.34 U1–U5; only when the data the save was made with is known)
 	if prev_cv != "":
-		var order: Array = c.round_order
-		var open := 0
-		for i in order.size():
-			var rid := str(order[i])
-			var ok: bool = i == 0 or progress.stars.has(rid) or progress.stars.has(str(order[i - 1]))
-			if not ok: break
-			open = i + 1
-		if maxi(1, open) != int(progress.unlocked_round):
-			log.append("unlocked_round %d->%d" % [int(progress.unlocked_round), maxi(1, open)])
+		var old_order: Array = snap.get("order") if snap.get("order") is Array else Array(c.round_order)
+		var renamed := {}
+		if mig_r is Dictionary:
+			for k in mig_r: renamed[str(k)] = str(mig_r[k])
+		var old_unl := int(progress.unlocked_round)
+		var keep := {}                   # ids playable before the update (U2), after round_renames
+		for i in mini(old_unl, old_order.size()):
+			keep[str(renamed.get(str(old_order[i]), str(old_order[i])))] = true
+		for rid in progress.get("open_rounds", []):
+			keep[str(renamed.get(str(rid), str(rid)))] = true
+		var res := _unlock_state(Array(c.round_order), 0, keep, old_unl > old_order.size())
+		var old_extra: Array = progress.get("open_rounds", [])
+		if int(res.unlocked) != old_unl or res.extra != old_extra:
+			log.append("unlocked_round %d->%d open_rounds %s" % [old_unl, int(res.unlocked), str(res.extra)])
 			changed = true
-		progress.unlocked_round = maxi(1, open)
+		_set_unlock_state(res)
 	migration_log = log
 	if not changed:
 		return   # X1 (10 v0.26): nothing to fix -> no write during load; the next ordinary save stamps the version
@@ -657,7 +742,15 @@ func _upgrade_locked(u: Dictionary) -> bool:
 	var c := _content()
 	if c == null or not c.units.has(uid):
 		return false
-	return int(c.units[uid].get("unlock_round", 1)) > int(progress.unlocked_round)
+	return int(c.units[uid].get("unlock_round", 1)) > round_reach()
+
+## For UI (04 upgrade panel): true while the upgrade's target unit is not unlocked yet. An upgrade the player already
+## bought (level >= 2) is never locked again, whatever a content update did to the round order (10 v0.34 U5).
+func upgrade_locked(upgrade_id: String) -> bool:
+	var u := _upgrade_def(upgrade_id)
+	if u.is_empty() or upgrade_level(upgrade_id) >= 2:
+		return false
+	return _upgrade_locked(u)
 
 ## Buy one upgrade level: validate, then deduct coins and raise the level in ONE atomic save.
 ## On a failed write both are rolled back in memory. Synchronous, so a second identical call in the same frame
@@ -671,7 +764,7 @@ func buy_upgrade(upgrade_id: String, to_level: int) -> String:
 	if to_level <= cur: return UPG_ALREADY
 	if to_level > max_l or cur >= max_l: return UPG_MAX
 	if to_level != cur + 1: return UPG_INVALID
-	if _upgrade_locked(u): return UPG_LOCKED
+	if cur < 2 and _upgrade_locked(u): return UPG_LOCKED
 	var cost := upgrade_cost(upgrade_id, to_level)
 	if cost < 0: return UPG_MAX
 	var coins := int(progress.coins)

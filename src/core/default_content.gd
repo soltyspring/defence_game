@@ -12,13 +12,13 @@ static func economy() -> Dictionary:
 static func units() -> Array:
 	return [
 		# player
-		{"id": "spearman", "name": "Spearman", "faction": "player", "cost": 40, "cooldown": 2.5,
+		{"id": "spearman", "name": "Toast", "faction": "player", "cost": 40, "cooldown": 2.5,
 		 "hp": 110, "atk": 12, "atk_interval": 0.9, "range": 18, "speed": 36, "attack_type": "melee", "anim_set": "spearman"},
-		{"id": "archer", "name": "Archer", "faction": "player", "cost": 60, "cooldown": 3.5,
+		{"id": "archer", "name": "Roll", "faction": "player", "cost": 60, "cooldown": 3.5,
 		 "hp": 70, "atk": 11, "atk_interval": 1.2, "range": 110, "speed": 30, "attack_type": "ranged", "projectile": "arrow", "anim_set": "archer"},
-		{"id": "shieldbearer", "name": "Shieldbearer", "faction": "player", "cost": 80, "cooldown": 6.0,
+		{"id": "shieldbearer", "name": "Loaf", "faction": "player", "cost": 80, "cooldown": 6.0,
 		 "hp": 330, "atk": 8, "atk_interval": 1.2, "range": 16, "speed": 24, "armor": 3, "attack_type": "melee", "anim_set": "shieldbearer", "size": 1.2},
-		{"id": "catapult", "name": "Catapult", "faction": "player", "cost": 150, "cooldown": 12.0,
+		{"id": "catapult", "name": "Oven", "faction": "player", "cost": 150, "cooldown": 12.0,
 		 "hp": 150, "atk": 45, "atk_interval": 3.0, "range": 170, "speed": 18, "attack_type": "siege", "projectile": "rock", "splash": 30, "anim_set": "catapult", "size": 1.4},
 		# enemy
 		{"id": "goblin", "name": "Goblin", "faction": "enemy", "cost": 25, "hp": 80, "atk": 9, "atk_interval": 0.9,
