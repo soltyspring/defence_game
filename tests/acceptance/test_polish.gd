@@ -56,8 +56,8 @@ func _run() -> void:
     check(not save.is_unlocked(-1), "negative round indices cannot be started")
     save.progress.stars["r04"] = 0
     check(not save.is_unlocked(3) and not save.is_unlocked(4), "zero stars are not treated as a clear")
-    save.progress.unlocked_round = 11
-    check(not save.is_unlocked(10), "all-clear sentinel does not unlock a nonexistent eleventh round")
+    save.progress.unlocked_round = content.round_order.size()+1
+    check(not save.is_unlocked(content.round_order.size()), "all-clear sentinel does not unlock a nonexistent next round")
     save.progress.unlocked_round = 2
     var retained = save._unlock_state(["r01","r02"], 1, {"retired_round":true}, false)
     check(retained.extra.has("retired_round"), "temporarily removed open ids are kept for a later return")
