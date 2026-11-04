@@ -398,6 +398,7 @@
       "visual_mark": "shield",
       "visual_tint": "c7b394",
       "audio_pitch": 0.88,
+      "visual_mark_height": 18,
       "desc_key": "unit.e_guard.desc"
     },
     {
@@ -432,6 +433,7 @@
       "visual_mark": "runner",
       "visual_tint": "dfbb83",
       "audio_pitch": 1.12,
+      "visual_mark_height": 23,
       "desc_key": "unit.e_runner.desc"
     },
     {
@@ -466,6 +468,7 @@
       "visual_mark": "spore",
       "visual_tint": "bba4db",
       "audio_pitch": 0.8,
+      "visual_mark_height": 18,
       "desc_key": "unit.e_mortar.desc"
     },
     {
@@ -500,6 +503,7 @@
       "visual_mark": "warden",
       "visual_tint": "c9af88",
       "audio_pitch": 0.83,
+      "visual_mark_height": 44,
       "desc_key": "unit.boss_millward.desc"
     },
     {
@@ -541,6 +545,7 @@
       "visual_mark": "root",
       "visual_tint": "93bb91",
       "audio_pitch": 0.76,
+      "visual_mark_height": 55,
       "desc_key": "unit.boss_rootking.desc"
     },
     {
@@ -575,6 +580,7 @@
       "visual_mark": "frost",
       "visual_tint": "93c7df",
       "audio_pitch": 0.8,
+      "visual_mark_height": 44,
       "desc_key": "unit.boss_frostguard.desc"
     },
     {
@@ -616,6 +622,7 @@
       "visual_mark": "ember",
       "visual_tint": "dba883",
       "audio_pitch": 0.7,
+      "visual_mark_height": 55,
       "desc_key": "unit.boss_ovenheart.desc"
     }
   ]
