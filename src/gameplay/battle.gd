@@ -191,6 +191,7 @@ func _process(delta: float) -> void:
 	var nf := 0
 	for f in sim.fxs: if f.alive: nf += 1
 	Perf.counts.fx = nf
+	view.render_ahead = _acc if not sim.paused and not sim.ended else 0.0
 	_update_camera(delta)
 	_hud_t -= delta
 	if _hud_t <= 0.0:

@@ -15,6 +15,13 @@ var cam_x := 320.0
 var view_w := 640.0
 var world_zoom := 1.0
 var device_scale := 1.0
+var render_ahead := 0.0
+var _formation_targets := {}
+var _formation_offsets := {}
+var _render_positions := {}
+var _formation_timer := 0.0
+var _variant_marks: Array = []
+var _crowd_badges: Array = []
 var view_top := 0.0       # world y at the top of the screen (integer scale may show more than 360 px)
 var view_bottom := 360.0
 var show_damage := true
@@ -37,7 +44,10 @@ const C_OUTLINE := Color("1a1c24")
 const C_BAR_PLAYER := Color("63cbe8")
 const C_BAR_ENEMY := Color("ef9255")
 
-var _by_lane_y := func(a, b): return a.lane_y < b.lane_y   # one Callable for the depth sort (08 H5)
+var _by_lane_y := func(a, b):
+	var ay: float = _unit_pos(a).y
+	var by: float = _unit_pos(b).y
+	return ay < by if not is_equal_approx(ay,by) else a.uid < b.uid
 var _bar_rects: Array[Rect2] = []      # queued hp bars: outline rect, fill rect, colour (drawn in _flush_bars)
 var _bar_fills: Array[Rect2] = []
 var _bar_cols: Array[Color] = []
@@ -64,6 +74,7 @@ func setup(p_sim, p_atlas, p_ground_y: float, p_biome: String) -> void:
 		_biome_layers = b.get("layers", [])
 
 func _process(_dt: float) -> void:
+	_update_formation(_dt)
 	if environment and sim:
 		environment.present(cam_x, world_zoom, device_scale, float(sim.t))
 	queue_redraw()
@@ -81,8 +92,21 @@ func _draw() -> void:
 	for u in sim.enemies: _order.append(u)
 	if sim.hero_respawn <= 0.0: _order.append(sim.hero)
 	_order.sort_custom(_by_lane_y)
+	_variant_marks.clear()
+	# Grounding shadows are one shape pass, rather than a texture/shape switch per unit.
+	for u in _order:
+		if u.dying: continue
+		var foot := _unit_pos(u)
+		draw_rect(Rect2(foot + Vector2(-7,0),Vector2(14,2)),Color(0.08,0.08,0.07,0.32))
 	for u in _order:
 		_draw_unit(u)
+	for u in _variant_marks: _draw_variant(u)
+	for badge in _crowd_badges:
+		if not _render_positions.has(badge.uid): continue
+		var bp := Vector2((_render_positions[badge.uid] as Vector2).x-20*badge.side,ground_y-52)
+		var label := "x%d" % int(badge.count)
+		draw_string(_num_font,bp+Vector2(1,1),label,HORIZONTAL_ALIGNMENT_LEFT,-1,NUM_PX,C_OUTLINE)
+		draw_string(_num_font,bp,label,HORIZONTAL_ALIGNMENT_LEFT,-1,NUM_PX,Color("efda9b"))
 	_flush_bars()   # all hp bars after all sprites: one batch of rects instead of breaking sprite batches (08 H2)
 	for p in sim.projectiles:
 		if p.alive: _draw_projectile(p)
@@ -90,8 +114,61 @@ func _draw() -> void:
 		if f.alive: _draw_fx(f)
 	if show_damage:
 		_placed_text.clear()
+		var live := {}
 		for tx in sim.texts:
-			if tx.alive: _draw_text(tx)
+			if tx.alive:
+				live[tx.serial] = true
+				_draw_text(tx)
+		for serial in _text_offsets.keys():
+			if not live.has(serial): _text_offsets.erase(serial)
+
+func _unit_pos(u) -> Vector2:
+	return _render_positions.get(u.uid,Vector2(roundf(u.x),roundf(ground_y+u.lane_y)))
+
+func _update_formation(dt: float) -> void:
+	if sim == null: return
+	var all: Array = []
+	all.append_array(sim.players)
+	all.append_array(sim.enemies)
+	if sim.hero_respawn <= 0: all.append(sim.hero)
+	_formation_timer -= dt
+	if _formation_timer <= 0:
+		_formation_timer = 0.08 # bounded O(n²), at most 40 per side, 12.5 Hz
+		_formation_targets.clear()
+		_crowd_badges.clear()
+		for u in all:
+			var count := 0
+			var rank := 0
+			var same_count := 0
+			var leader: int = u.uid
+			if not u.is_hero and not u.is_boss and not u.dying:
+				for other in all:
+					if other.side != u.side or other.is_hero or other.is_boss or other.dying: continue
+					if absf(other.x-u.x) < 24:
+						count += 1
+						if other.uid < u.uid: rank += 1
+						if other.id == u.id:
+							same_count += 1
+							leader = mini(leader,other.uid)
+			var offset := Vector2.ZERO
+			if count > 1:
+				# Every row stays above the lane: the lowest row must never enter the card strip.
+				var row := posmod(rank,3)-2
+				offset = Vector2(-u.side * minf(54.0,(rank/3)*9.0+row*4.0),row*10.0-u.lane_y)
+			_formation_targets[u.uid] = offset
+			if same_count >= 6 and leader == u.uid:
+				_crowd_badges.append({"uid":u.uid,"side":u.side,"count":same_count})
+	_render_positions.clear()
+	var live := {}
+	for u in all:
+		live[u.uid] = true
+		var target: Vector2 = _formation_targets.get(u.uid,Vector2.ZERO)
+		var offset: Vector2 = _formation_offsets.get(u.uid,Vector2.ZERO)
+		offset = offset.lerp(target,1.0-exp(-12.0*dt))
+		_formation_offsets[u.uid] = offset
+		_render_positions[u.uid] = Vector2(PixelCamera.world_position(u.x+offset.x,world_zoom,device_scale),PixelCamera.world_position(ground_y+u.lane_y+offset.y,world_zoom,device_scale))
+	for uid in _formation_offsets.keys():
+		if not live.has(uid): _formation_offsets.erase(uid)
 	if environment == null and not _biome_layers.is_empty() and atlas:
 		_draw_biome_layers(cam_x - view_w * 0.5 - 8.0, view_w + 16.0, true)
 
@@ -239,7 +316,7 @@ func _anim_name(u) -> String:
 	return "idle"
 
 func _draw_unit(u) -> void:
-	var pos := Vector2(roundf(u.x), roundf(ground_y + u.lane_y))
+	var pos := _unit_pos(u)
 	var flip: bool = u.side < 0
 	if u.is_hero:
 		flip = sim.hero_dir < 0
@@ -253,6 +330,10 @@ func _draw_unit(u) -> void:
 	# Keep their hue and animation while lifting their value above that background.
 	if u.is_boss: mod = Color(3.0, 3.0, 3.0)
 	elif u.id == "e_brute": mod = Color(1.15, 1.15, 1.15)
+	if u.def.has("visual_tint"):
+		mod = Color(str(u.def.visual_tint)) * (1.4 if u.is_boss else 1.15)
+		mod.a = 1.0
+	if not u.dying and str(u.def.get("visual_mark","")) != "": _variant_marks.append(u)
 	if u.flash > 0.0: mod = Color(1.0, 0.55, 0.55)
 	if u.dying: mod.a = clampf(u.dead_t / 0.7, 0.0, 1.0)
 	elif u.buff_t > 0.0: mod = mod * Color(1.0, 1.0, 0.8)
@@ -271,6 +352,35 @@ func _draw_unit(u) -> void:
 				_hp_bar(pos + Vector2(0, -rec.rects[fi].size.y - 3.0), 12.0 + 4.0 * float(u.def.get("size", 1.0)), u.hp / u.hp_max, u.side)
 	if not drawn:
 		_draw_placeholder(u, pos, flip, mod)
+
+func _draw_variant(u) -> void:
+	var pos := _unit_pos(u)
+	var mark := str(u.def.get("visual_mark",""))
+	var h := 26.0
+	if atlas:
+		var rec = atlas.anim_rec(u.anim_set,"walk")
+		if rec != null: h = rec.rects[0].size.y-3.0
+	if mark == "shield" or mark == "warden":
+		var p := pos+Vector2(u.side*8,-15)
+		draw_rect(Rect2(p-Vector2(5,0),Vector2(10,16)),C_OUTLINE)
+		draw_rect(Rect2(p-Vector2(4,-1),Vector2(8,13)),Color("b8a37b"))
+		draw_rect(Rect2(p+Vector2(-1,1),Vector2(2,12)),Color("eadcb4"))
+	if mark == "spore":
+		var p := pos+Vector2(0,-h)
+		draw_rect(Rect2(p+Vector2(-8,-2),Vector2(16,4)),C_OUTLINE)
+		draw_rect(Rect2(p+Vector2(-6,-4),Vector2(12,4)),Color("d1b6ec"))
+		draw_rect(Rect2(p+Vector2(-2,-6),Vector2(4,3)),Color("f0e7ff"))
+	elif mark == "runner":
+		var p := pos+Vector2(-u.side*5,-h+3)
+		draw_rect(Rect2(p,Vector2(8,3)),Color("e6c887"))
+		draw_rect(Rect2(p+Vector2(-u.side*3,3),Vector2(6,2)),Color("bb754d"))
+	elif mark in ["root","frost","ember","warden"]:
+		var p := pos+Vector2(0,-h)
+		var color := Color("a2dbeb") if mark == "frost" else (Color("edb15e") if mark == "ember" else Color("c4ce86"))
+		draw_rect(Rect2(p+Vector2(-12,-3),Vector2(24,5)),C_OUTLINE)
+		for dx in [-9,0,9]:
+			draw_rect(Rect2(p+Vector2(dx-2,-9),Vector2(4,10)),color)
+		draw_rect(Rect2(p+Vector2(-11,-2),Vector2(22,3)),color)
 
 ## Draw frame `i` of a cached AnimRec. Flip = negative-width destination rect placed at the mirrored left edge;
 ## pixel-identical to draw_set_transform(pos, 0, (-1,1)) (src/core/diag/flip_check.gd: 0 px difference) without
@@ -383,6 +493,8 @@ func _draw_projectile(p) -> void:
 	var k: float = clampf(p.t / p.dur, 0.0, 1.0)
 	var y: float = ground_y + p.y - sin(k * PI) * p.arc
 	var pos := Vector2(roundf(p.x), roundf(y))
+	if p.target != null and _render_positions.has(p.target.uid):
+		pos += (_unit_pos(p.target)-Vector2(p.target.x,ground_y+p.target.lane_y))*k*k
 	if atlas:
 		var rec = atlas.anim_rec(p.kind, "fly")
 		if rec != null:
@@ -427,31 +539,39 @@ func _draw_fx(f) -> void:
 			draw_arc(Vector2(f.x, ground_y), r, PI, TAU, 20, Color(1.0, 0.95, 0.7, 1.0 - k), 3.0)
 			draw_rect(Rect2(f.x - r, ground_y - 2.0, r * 2.0, 2.0), Color(0.9, 0.8, 0.6, 0.6 * (1.0 - k)))
 
+static func damage_curve(age: float) -> Vector2:
+	var u := clampf(age/0.8,0.0,1.0)
+	return Vector2(32.0*(1.0-pow(1.0-u,2.0)),1.0-smoothstep(0.55,1.0,u))
+
+var _text_offsets := {} # spawn-allocated offsets; never reflow surviving numbers
 func _draw_text(tx) -> void:
-	var a := clampf(1.0 - tx.t / 0.8, 0.0, 1.0)
+	var curve := damage_curve(tx.t+render_ahead)
+	var a := curve.y
 	var c := Color(1, 1, 1, a)
 	match tx.kind:
 		&"gold": c = Color(1.0, 0.85, 0.3, a)
 		&"heal": c = Color(0.4, 1.0, 0.5, a)
 		&"crit": c = Color(1.0, 0.4, 0.3, a)
+	if tx.uid < 0: c = Color(1.0,0.87,0.48,a)
 	# QA-B012: bundled Galmuri9 numerals at their native 10 px grid, 1 px shadow (no outline pass); centred on x.
 	var w := _num_font.get_string_size(tx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, NUM_PX).x
-	var by: float = ground_y + tx.y
+	var by: float = ground_y + tx.y + tx.rise - curve.x
 	if tx.anchor_set != "" and atlas:
 		# above the target's frame and its hp bar (bar sits at frame top - 3; lane jitter up to ±6)
 		var rec = atlas.anim_rec(tx.anchor_set, "idle")
 		if rec == null: rec = atlas.anim_rec(tx.anchor_set, "walk")
 		var h: float = rec.rects[0].size.y if rec != null else 24.0
-		by = ground_y - h - 12.0 - tx.rise
-	var p := Vector2(roundf(tx.x - w * 0.5), roundf(by))
+		by = ground_y - h - 12.0 - curve.x
+	var p := Vector2(tx.x - w * 0.5,by)
 	# vertical stagger (QA-B012): the rect covers the glyphs plus the 1 px outline and is exactly TEXT_STEP high, so a
 	# moved number never keeps a 1 px overlap (the old 10 px step under an 11 px rect used up the guard after ~3).
-	var slot := place_text(Rect2(p.x - 1.0, p.y - NUM_PX - 1.0, w + 2.0, TEXT_STEP), _placed_text, TEXT_STEP, TEXT_MAX_STEPS)
-	if slot.size == Vector2.ZERO:
-		texts_dropped += 1   # no free slot within TEXT_MAX_STEPS: skip this number for this frame instead of overlapping
-		return
-	_placed_text.append(slot)
-	p.y = slot.position.y + NUM_PX + 1.0
+	if not _text_offsets.has(tx.serial):
+		var raw := Rect2(p.x-1,p.y-NUM_PX-1,w+2,TEXT_STEP)
+		var slot := place_text(raw,_placed_text,TEXT_STEP,TEXT_MAX_STEPS)
+		_text_offsets[tx.serial] = Vector2(0,slot.position.y-raw.position.y) if slot.size != Vector2.ZERO else Vector2(0,-TEXT_STEP*posmod(tx.serial,3))
+	p += _text_offsets[tx.serial]
+	p = Vector2(PixelCamera.world_position(p.x,world_zoom,device_scale),PixelCamera.world_position(p.y,world_zoom,device_scale))
+	_placed_text.append(Rect2(p.x-1,p.y-NUM_PX-1,w+2,TEXT_STEP))
 	# 1 px dark outline (4 neighbours) for light backgrounds such as the village walls (07 visual7 zoom_nums)
 	var oc := Color(C_OUTLINE, a)
 	for o in TEXT_OUTLINE:

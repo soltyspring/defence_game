@@ -93,6 +93,19 @@ func build(length: float, ground: float, _biome: String) -> void:
 			fields.box(Rect2(x+10+row*4,y-4+row*6,91-row*7,2),Color("b5a66c"))
 		fields.box(Rect2(x+113,y-4,3,39),Color("6d855e"))
 		fields.box(Rect2(x+109,y-17,11,19),Color("799367"))
+	# Chapter landmarks are baked into the existing field mesh, with no new textures/draw passes.
+	if _biome == "biome_orchard":
+		for i in range(-1,int(length/155.0)+2):
+			var x := float(i*155+44)
+			var y := ground-40.0
+			_tree(fields,x,y,false)
+			for d in [Vector2(-9,-38),Vector2(6,-45),Vector2(1,-29)]:
+				fields.box(Rect2(Vector2(x,y)+d,Vector2(5,5)),Color("b96d4c"))
+	elif _biome == "biome_frost":
+		for i in range(-2,int(length/130.0)+3):
+			var x := float(i*130)
+			fields.poly(PackedVector2Array([Vector2(x,ground-50),Vector2(x+24,ground-62),Vector2(x+73,ground-60),Vector2(x+103,ground-47)]),Color("e0e9e4"))
+			fields.box(Rect2(x+18,ground-49,66,3),Color("c8d9df"))
 	var village = layers[4]
 	var village_path := "res://assets/backgrounds/village_panorama_v1.png"
 	if ResourceLoader.exists(village_path):
@@ -125,6 +138,8 @@ func build(length: float, ground: float, _biome: String) -> void:
 		var x := float(i*42)
 		lane.box(Rect2(x,ground+16+posmod(i*19,35),9+posmod(i*7,10),2),Color("897354"))
 		lane.box(Rect2(x+11,ground-9,3,6),Color("b7a77d"))
+		if _biome == "biome_frost" and i%2 == 0:
+			lane.box(Rect2(x-2,ground-14,25,3),Color("d6e3e5"))
 	# Distinct route landmarks, never a wallpaper of identical doors.
 	for fraction in [0.25,0.5,0.76]:
 		var x: float = length * fraction
@@ -135,8 +150,13 @@ func build(length: float, ground: float, _biome: String) -> void:
 		var x := length * 0.72 + i * length * 0.029
 		lane.box(Rect2(x,ground-17,3,14),Color("5d7771"))
 		lane.poly(PackedVector2Array([Vector2(x-8,ground-17),Vector2(x-5,ground-24),Vector2(x+6,ground-24),Vector2(x+11,ground-17)]),Color("82958a"))
-	for layer in layers:
+	for i in layers.size():
+		var layer = layers[i]
 		if layer is Shapes: layer.bake()
+		if _biome == "biome_orchard":
+			layer.modulate = Color("e3d0a8") if i < 3 else Color("d9c3a2")
+		elif _biome == "biome_frost":
+			layer.modulate = Color("a8bddc") if i < 3 else Color("a9bfd1")
 
 func _house(layer, x: float, y: float, w: float, h: float, kind: int, dark: bool) -> void:
 	var wall := Color("a4aca3") if dark else Color("dacbad")

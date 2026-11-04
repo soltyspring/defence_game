@@ -76,6 +76,7 @@ class Fx:
 	var radius := 0.0
 
 class FText:
+	var serial := 0
 	var alive := false
 	var x := 0.0
 	var y := 0.0
@@ -140,6 +141,7 @@ var enemies: Array[Unit] = []
 var projectiles: Array[Projectile] = []
 var fxs: Array[Fx] = []
 var texts: Array[FText] = []
+var _text_serial := 0
 var delayed: Array = []            # delayed skill impacts [{at, x, radius, power, kb, struct, fx}]
 var _unit_pool: Array[Unit] = []
 var _uid := 0
@@ -693,7 +695,7 @@ func _resolve_attack(u: Unit) -> void:
 		p.homing = not siege
 		p.target = tgt
 		p.hit_base = tgt == null
-		_cue(&"shoot", p.kind, {"projectile": p.kind, "x": u.x})
+		_cue(&"shoot", p.kind, {"projectile": p.kind, "x": u.x, "pitch":float(u.def.get("audio_pitch",1.0))})
 	else:
 		if tgt:
 			_damage(tgt, atk, kb)
@@ -701,7 +703,7 @@ func _resolve_attack(u: Unit) -> void:
 				_area_damage_side(-u.side, tgt.x, float(u.def.get("splash", 0.0)), atk, kb, tgt)
 			_fx("hit_spark", tgt.x, -12.0, 0.25, 0.0)
 			var ts := "player" if tgt.side == SIDE_PLAYER else "enemy"
-			_cue(&"hit", "melee:" + ts, {"kind": "melee", "x": tgt.x, "target_side": ts})
+			_cue(&"hit", "melee:" + ts, {"kind": "melee", "x": tgt.x, "target_side": ts,"pitch":float(u.def.get("audio_pitch",1.0))})
 		elif u.w_base:
 			_damage_base(-u.side, atk * _struct_mult(u))
 			if float(u.def.get("splash", 0.0)) > 0.0:
@@ -891,7 +893,7 @@ func _damage_base(side: int, amount: float) -> void:
 	if side == SIDE_PLAYER:
 		events.append(["shake", {"amp": 2.0 if amount < 40.0 else 4.0}])
 	_cue(&"base_hit", "player" if side == SIDE_PLAYER else "enemy", {"side": "player" if side == SIDE_PLAYER else "enemy"})
-	_text(b.x, -70.0, str(int(amount)), &"dmg")
+	_text(b.x, -88.0, str(int(amount)), &"dmg", -100 if side == SIDE_ENEMY else -101, int(amount))
 	if b.hp <= 0.0:
 		if side == SIDE_ENEMY: _base_dead_enemy = true
 		else: _base_dead_player = true
@@ -1090,10 +1092,11 @@ func _text(x: float, y: float, s: String, kind: StringName, uid := 0, value := 0
 	# QA-B012: repeated hits on the same target within 0.35 s merge into one rising number.
 	if uid != 0:
 		for e in texts:
-			if e.alive and e.uid == uid and e.kind == kind and e.t < 0.35:
+			if e.alive and e.uid == uid and e.kind == kind and e.t < (0.24 if uid < 0 else 0.35):
 				e.value += value
 				e.text = str(e.value)
-				e.t = 0.0
+				# A fixed window from birth: repeated base hits must not restart the
+				# rise/fade clock indefinitely or make a number jump backwards.
 				return
 	var tx: FText = null
 	for e in texts:
@@ -1105,6 +1108,8 @@ func _text(x: float, y: float, s: String, kind: StringName, uid := 0, value := 0
 		tx = FText.new()
 		texts.append(tx)
 	tx.alive = true
+	_text_serial += 1
+	tx.serial = _text_serial
 	tx.x = x + _text_rng.randf_range(-4.0, 4.0)   # separate RNG: visual-only, must not shift gameplay randomness
 	tx.y = y
 	tx.t = 0.0

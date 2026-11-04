@@ -759,6 +759,12 @@ func upgrade_locked(upgrade_id: String) -> bool:
 		return false
 	return _upgrade_locked(u)
 
+## Late campaign tiers are gated independently of the original unit unlock.
+## Previously purchased levels remain valid through content migrations.
+func upgrade_level_unlock_round(upgrade_id: String, to_level: int) -> int:
+	var gates: Dictionary = _upgrade_def(upgrade_id).get("level_unlock_rounds",{})
+	return int(gates.get(str(to_level),1))
+
 ## Buy one upgrade level: validate, then deduct coins and raise the level in ONE atomic save.
 ## On a failed write both are rolled back in memory. Synchronous, so a second identical call in the same frame
 ## sees the new level and returns already_applied.
@@ -772,6 +778,7 @@ func buy_upgrade(upgrade_id: String, to_level: int) -> String:
 	if to_level > max_l or cur >= max_l: return UPG_MAX
 	if to_level != cur + 1: return UPG_INVALID
 	if cur < 2 and _upgrade_locked(u): return UPG_LOCKED
+	if round_reach() < upgrade_level_unlock_round(upgrade_id,to_level): return UPG_LOCKED
 	var cost := upgrade_cost(upgrade_id, to_level)
 	if cost < 0: return UPG_MAX
 	var coins := int(progress.coins)
