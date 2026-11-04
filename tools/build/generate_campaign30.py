@@ -36,6 +36,9 @@ def generate():
     for ident, parent, ko, en, changes in specs:
         u = copy.deepcopy(original[parent])
         u.update(changes)
+        # Opaque head height from the existing atlas walk frames, relative to the
+        # foot pivot. Do not anchor hats to the transparent 32/64/80 px cell tops.
+        u['visual_mark_height'] = {'e_grunt':18,'e_swarm':23,'e_spitter':18,'boss_warlord':44,'boss_overlord':55}[parent]
         u.update(id=ident, name=ko, name_key=f"unit.{ident}.name", desc_key=f"unit.{ident}.desc")
         units["units"].append(u)
         extra_text["ko"][u["name_key"]] = ko

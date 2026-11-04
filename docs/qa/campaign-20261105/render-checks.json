@@ -19,7 +19,7 @@
 	},
 	"r30": {
 		"distinct_friendly_positions": 18,
-		"draw_calls": 132.0,
+		"draw_calls": 133.0,
 		"minimap": "[P: (401.0, 4.0), S: (139.0, 40.0)]",
 		"objects": 2133.0,
 		"texture_bytes": 19414821.0,
