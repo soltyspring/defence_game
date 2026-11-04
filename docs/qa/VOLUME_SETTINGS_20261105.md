@@ -17,7 +17,7 @@
 ## 확인
 
 `tests/integration/test_volume_settings.gd`는 mock 없이 실제 App/Events/Audio/Save와
-Viewport 터치·드래그·키 입력으로 26개 검사를 수행했다. 세 실행 모두 **26 PASS / 0 FAIL**이다:
+Viewport 터치·드래그·키 입력으로 29개 검사를 수행했다. 세 실행 모두 **29 PASS / 0 FAIL**이다:
 headless, DISPLAY2 640×360, DISPLAY2 1280×720.
 
 실제 bus의 음량과 mute, 드래그 동안 파일 불변, 놓은 뒤 저장, 디스크에서 정확한 값 재로드,
@@ -29,3 +29,7 @@ headless, DISPLAY2 640×360, DISPLAY2 1280×720.
 백신·드라이버·서비스 설정도 변경하지 않았다.
 
 Windows v0.1.3의 소스 SHA와 EXE/ZIP SHA-256은 릴리스 및 BUILD_INFO.json에 기록한다.
+
+실제 Windows 마우스의 빠른 드래그에서 최종 좌표가 release에만 들어오는 경우를 재현했다.
+터치/마우스 모두 놓는 위치를 반영한 뒤 저장하게 수정하고, 이동 이벤트 없는 드래그와
+마우스+터치 에뮬레이션의 중복 저장 방지까지 같은 입력 조건으로 재검증했다.

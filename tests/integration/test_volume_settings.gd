@@ -6,6 +6,7 @@ var app: Node
 var save: Node
 var audio: Node
 var out := ""
+var commits: Array = []
 func _initialize() -> void: _run.call_deferred()
 func check(ok: bool, message: String) -> void:
 	checks += 1
@@ -29,6 +30,15 @@ func set_volume(slider: Control, percent: int) -> void:
 func tap(c: Control) -> void:
 	touch(c.get_global_rect().get_center(),true)
 	touch(c.get_global_rect().get_center(),false)
+func mouse(pos: Vector2, pressed: bool) -> void:
+	var e := InputEventMouseButton.new()
+	e.device = 32 # observed native desktop pointer
+	e.position = pos
+	e.global_position = pos
+	e.pressed = pressed
+	e.button_index = MOUSE_BUTTON_LEFT
+	e.button_mask = MOUSE_BUTTON_MASK_LEFT if pressed else 0
+	root.push_input(e,true)
 func key(code: Key) -> void:
 	var e := InputEventKey.new()
 	e.keycode = code
@@ -44,6 +54,7 @@ func _run() -> void:
 	app = root.get_node("App")
 	save = root.get_node("Save")
 	audio = root.get_node("Audio")
+	root.get_node("Events").cmd_set_setting.connect(func(k,v): commits.append([k,v]))
 	save.path = "user://volume_settings_test.json"
 	save.progress = save.fresh()
 	save.save_progress()
@@ -69,6 +80,18 @@ func _run() -> void:
 	touch(point(sfx,35),false)
 	check(is_equal_approx(float(save.progress.settings.sfx),0.35),"release commits 35%")
 	check(FileAccess.get_file_as_string(save.path) != before,"release writes the setting")
+	touch(point(sfx,100),true)
+	touch(point(sfx,35),false) # Windows can coalesce the final motion into release
+	check(sfx.percent == 35 and is_equal_approx(float(save.progress.settings.sfx),0.35),"fast touch drag samples its final release coordinate")
+	mouse(point(sfx,100),true)
+	mouse(point(sfx,35),false)
+	check(sfx.percent == 35 and is_equal_approx(float(save.progress.settings.sfx),0.35),"fast mouse drag samples its final release coordinate")
+	var commit_count := commits.size()
+	touch(point(sfx,100),true)
+	mouse(point(sfx,100),true)
+	touch(point(sfx,35),false)
+	mouse(point(sfx,35),false)
+	check(sfx.percent == 35 and sfx._finger == -2 and commits.size() == commit_count+1,"native mouse plus touch emulation commits once and releases capture")
 	set_volume(music,62)
 	check(music.percent == 62 and is_equal_approx(audio.snapshot().volumes.music,0.62),"music independently adjusts to 62%")
 	check(is_equal_approx(audio.snapshot().volumes.sfx,0.35),"music leaves sound effects at 35%")

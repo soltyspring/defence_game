@@ -41,7 +41,9 @@ func _gui_input(e: InputEvent) -> void:
 			_finger = e.index
 			grab_focus()
 			_seek(e.position.x)
-		elif not e.pressed and e.index == _finger: _release()
+		elif not e.pressed and e.index == _finger:
+			_seek(e.position.x) # a fast drag may deliver its last coordinate only here
+			_release()
 		accept_event()
 	elif e is InputEventScreenDrag and e.index == _finger:
 		_seek(e.position.x)
@@ -51,7 +53,9 @@ func _gui_input(e: InputEvent) -> void:
 			_finger = -1
 			grab_focus()
 			_seek(e.position.x)
-		elif not e.pressed and _finger == -1: _release()
+		elif not e.pressed and _finger == -1:
+			_seek(e.position.x)
+			_release()
 		accept_event()
 	elif e is InputEventMouseMotion and _finger == -1:
 		if e.button_mask & MOUSE_BUTTON_MASK_LEFT: _seek(e.position.x)
