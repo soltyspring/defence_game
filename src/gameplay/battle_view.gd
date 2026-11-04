@@ -356,10 +356,9 @@ func _draw_unit(u) -> void:
 func _draw_variant(u) -> void:
 	var pos := _unit_pos(u)
 	var mark := str(u.def.get("visual_mark",""))
-	var h := 26.0
-	if atlas:
-		var rec = atlas.anim_rec(u.anim_set,"walk")
-		if rec != null: h = rec.rects[0].size.y-3.0
+	# Atlas cells contain transparent padding above the head. These anchors were
+	# measured from opaque walk pixels relative to the foot pivot, not cell height.
+	var h := float(u.def.get("visual_mark_height",26.0))
 	if mark == "shield" or mark == "warden":
 		var p := pos+Vector2(u.side*8,-15)
 		draw_rect(Rect2(p-Vector2(5,0),Vector2(10,16)),C_OUTLINE)
