@@ -141,6 +141,11 @@
     "hint.loss.r05.tactic": "Loaves in front, Rolls behind: beat the Mold General.",
     "hint.loss.upgrade": "Replay a round for gold, upgrade, then retry.",
     "notice.content_migrated": "An update changed upgrade limits: {levels} levels were adjusted and {coins} gold was refunded.",
-    "ui.distance_m": "%dm"
+    "ui.distance_m": "%dm",
+    "ui.map_hint": "Battlefield · tap or drag to scout",
+    "ui.map_scouting": "Scouting · Hero returns to the action",
+    "ui.follow_hero": "Hero",
+    "world.flour_mill": "Flour Mill",
+    "world.flour_store": "Flour Store"
   }
 }

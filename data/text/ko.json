@@ -141,6 +141,11 @@
     "hint.loss.r05.tactic": "통식빵을 앞에, 롤빵병을 뒤에 두고 곰팡이 장군을 치세요.",
     "hint.loss.upgrade": "앞 라운드를 다시 해서 골드를 모으고, 강화한 뒤 도전하세요.",
     "notice.content_migrated": "업데이트로 강화 상한이 바뀌어 {levels}개 레벨이 조정되었고 {coins} 골드를 돌려드렸습니다.",
-    "ui.distance_m": "%dm"
+    "ui.distance_m": "%dm",
+    "ui.map_hint": "전장 · 눌러서 둘러보기",
+    "ui.map_scouting": "정찰 중 · 영웅 버튼으로 복귀",
+    "ui.follow_hero": "영웅",
+    "world.flour_mill": "제분소",
+    "world.flour_store": "밀가루 창고"
   }
 }
