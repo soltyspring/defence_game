@@ -7,6 +7,7 @@ const ViewS := preload("res://src/gameplay/battle_view.gd")
 const BotS := preload("res://src/gameplay/bot_player.gd")
 const TutorialS := preload("res://src/gameplay/tutorial_director.gd")
 const SafeAreaS := preload("res://src/ui/safe_area.gd")
+const PixelCamera := preload("res://src/gameplay/pixel_camera.gd")
 
 signal finished(result: Dictionary)
 
@@ -23,6 +24,8 @@ var _ui_dir := 0
 var _drag_active := false
 var _drag_last := Vector2.ZERO
 var _free_cam_t := 0.0
+var _scouting := false
+var _delivery_cycles: Array[int] = []
 var _cam_x := 0.0
 var _ended_emitted := false
 var time_scale := 1.0
@@ -47,6 +50,10 @@ func start(p_round_id: String, seed_value: int, upgrades: Dictionary, autoplay :
 	sets.append(str(sim.hero_def.anim_set))
 	sets.append("worker")
 	_pages = Atlas.pages_for_battle(sets, str(sim.round_def.biome))
+	# Code-drawn scenery no longer needs the old repeating bitmap page resident.
+	for i in range(_pages.size() - 1, -1, -1):
+		var page = Atlas.pages.get(_pages[i])
+		if page != null and str(page.meta.get("group", "")) == "biome": _pages.remove_at(i)
 	for p in _pages: Atlas.acquire(p)
 	view = ViewS.new()
 	view.name = "View"
@@ -57,8 +64,10 @@ func start(p_round_id: String, seed_value: int, upgrades: Dictionary, autoplay :
 	cam.name = "Camera"
 	add_child(cam)
 	cam.make_current()
-	cam.limit_left = -90
-	cam.limit_right = int(sim.L + 50.0)
+	# Clamp the desired centre ourselves below. Camera2D's second limit pass would
+	# move the already raster-aligned translation onto a different subpixel phase.
+	cam.limit_left = -100000
+	cam.limit_right = 100000
 	cam.limit_top = -100000   # vertical framing is done in _update_camera (bottom-anchored)
 	cam.limit_bottom = 100000
 	_cam_x = sim.hero.x
@@ -73,9 +82,14 @@ func start(p_round_id: String, seed_value: int, upgrades: Dictionary, autoplay :
 	Events.cmd_hero_move.connect(_on_hero_move)
 	Events.cmd_hero_skill.connect(_on_skill)
 	Events.cmd_set_paused.connect(set_paused)
+	Events.cmd_camera_seek.connect(_on_camera_seek)
+	Events.cmd_camera_follow.connect(_on_camera_follow)
 	var info: Dictionary = sim.battle_info()
 	info["battle_uid"] = battle_uid
 	Events.battle_started.emit(info)
+	world_zoom = App.world_zoom()
+	_cam_x = sim.hero.x + _camera_lead()
+	_update_camera(0.0)
 	_publish()
 
 ## 06 S4 / 10 R3: unique per battle instance (128 random bits + start time).
@@ -92,7 +106,8 @@ func _exit_tree() -> void:
 	for p in _pages: Atlas.release(p)
 	_pages = PackedStringArray()
 	for pair in [[Events.cmd_deploy_unit, _on_deploy], [Events.cmd_buy_worker, _on_worker],
-			[Events.cmd_hero_move, _on_hero_move], [Events.cmd_hero_skill, _on_skill], [Events.cmd_set_paused, set_paused]]:
+			[Events.cmd_hero_move, _on_hero_move], [Events.cmd_hero_skill, _on_skill], [Events.cmd_set_paused, set_paused],
+			[Events.cmd_camera_seek, _on_camera_seek], [Events.cmd_camera_follow, _on_camera_follow]]:
 		if pair[0].is_connected(pair[1]): pair[0].disconnect(pair[1])
 
 func set_paused(p: bool) -> void:
@@ -122,6 +137,31 @@ func _on_skill(id: String) -> void:
 func _on_hero_move(dir: int) -> void:
 	_ui_dir = clampi(dir, -1, 1)
 	_free_cam_t = 0.0
+	if dir != 0: _scouting = false
+
+func _on_camera_seek(world_x: float) -> void:
+	if sim == null or sim.ended: return
+	if not _scouting: Events.sfx.emit(&"ui_scout", {})
+	_cam_x = world_x
+	_scouting = true
+	_update_camera(0.0)
+	_publish()
+
+func _on_camera_follow() -> void:
+	if _scouting: Events.sfx.emit(&"ui_scout", {})
+	_scouting = false
+	_free_cam_t = 0.0
+	if sim:
+		_cam_x = sim.hero.x + _camera_lead()
+		_update_camera(0.0)
+		_publish()
+
+func _camera_lead() -> float:
+	# At home, include the flour mill behind the bakery; farther along, lead the hero.
+	var width := get_viewport_rect().size.x / maxf(world_zoom, 0.01)
+	var home_center := -175.0 + width * 0.5
+	var blend := clampf((float(sim.hero.x) - float(sim.player_base.x) - 60.0) / 120.0, 0.0, 1.0)
+	return lerpf(home_center, float(sim.hero.x) + 60.0, blend) - float(sim.hero.x)
 
 # ---------------- loop ----------------
 func _process(delta: float) -> void:
@@ -141,6 +181,7 @@ func _process(delta: float) -> void:
 		if steps == Perf.SIM_MAX_STEPS:
 			_acc = 0.0   # spiral-of-death guard: drop backlog
 	_drain_events()
+	_supply_audio()
 	Perf.sim_ms_last = (Time.get_ticks_usec() - t0) / 1000.0
 	Perf.sim_ms_max = maxf(Perf.sim_ms_max, Perf.sim_ms_last)
 	Perf.counts.units = sim.players.size() + sim.enemies.size()
@@ -156,12 +197,34 @@ func _process(delta: float) -> void:
 		_hud_t = 0.1
 		_publish()
 
+func _supply_audio() -> void:
+	if sim.ended or sim.paused: return
+	for i in mini(int(sim.workers), 8):
+		var cycle := floori((float(sim.t) + i * 1.37 - 8.8) / 10.0)
+		if i >= _delivery_cycles.size():
+			_delivery_cycles.append(cycle)
+		elif cycle > _delivery_cycles[i]:
+			_delivery_cycles[i] = cycle
+			Events.sfx.emit(&"flour_delivery", {"x": float(sim.player_base.x) - 26.0})
+
 func _publish() -> void:
 	if sim:
 		var s: Dictionary = sim.snapshot()
 		s["tutorial"] = tutorial_key
 		s["threat"] = _threat_snapshot()
+		s["map"] = _map_snapshot(s.threat)
 		Events.hud_snapshot.emit(s)
+
+func _map_snapshot(threat: Dictionary) -> Dictionary:
+	var dots: Array = []
+	for unit in sim.players:
+		if not unit.dying: dots.append([float(unit.x), 1, false])
+	for unit in sim.enemies:
+		if not unit.dying: dots.append([float(unit.x), -1, bool(unit.is_boss)])
+	return {"left": -200.0, "right": float(sim.L) + 50.0, "player_base": float(sim.player_base.x),
+		"enemy_base": float(sim.enemy_base.x), "hero": float(sim.hero.x), "hero_alive": sim.hero_respawn <= 0.0,
+		"view_left": threat.view_left, "view_right": threat.view_right, "scouting": _scouting,
+		"dots": dots}
 
 func _threat_snapshot() -> Dictionary:
 	var width := get_viewport_rect().size.x / maxf(world_zoom, 0.01)
@@ -258,11 +321,13 @@ func _update_camera(delta: float) -> void:
 	world_zoom = z
 	var vw := vs.x / z                     # visible world width
 	view.view_w = vw
+	view.world_zoom = z
+	view.device_scale = float(App.pixel_scale)
 	_free_cam_t = maxf(0.0, _free_cam_t - delta)
-	if _free_cam_t <= 0.0 and not _drag_active:
-		var target: float = sim.hero.x + 60.0
+	if _free_cam_t <= 0.0 and not _drag_active and not _scouting:
+		var target: float = sim.hero.x + _camera_lead()
 		_cam_x = lerpf(_cam_x, target, clampf(delta * 4.0, 0.0, 1.0))
-	var lo := -90.0 + vw * 0.5
+	var lo := -200.0 + vw * 0.5
 	var hi: float = sim.L + 50.0 - vw * 0.5
 	_cam_x = clampf(_cam_x, lo, maxf(lo, hi))
 	# Ground row fixed GROUND_FROM_BOTTOM view px above the view bottom (04 CamFix): integer-scale views taller than
@@ -270,19 +335,17 @@ func _update_camera(delta: float) -> void:
 	var vh := vs.y
 	var bottom_inset := maxf(0.0, vh - SafeAreaS.safe_rect(get_viewport()).end.y)
 	var cy: float = float(view.ground_y) - (vh * 0.5 - GROUND_FROM_BOTTOM - bottom_inset) / z
-	if z == 1.0:
-		cy = roundf(cy)
 	cam.zoom = Vector2(z, z)
-	cam.position = Vector2(roundf(_cam_x), cy)
-	view.view_top = cy - vh * 0.5 / z
-	view.view_bottom = cy + vh * 0.5 / z
+	cam.position = Vector2(PixelCamera.center(_cam_x, vs.x, z, view.device_scale), PixelCamera.center(cy, vh, z, view.device_scale))
+	view.view_top = cam.position.y - vh * 0.5 / z
+	view.view_bottom = cam.position.y + vh * 0.5 / z
 	if _shake > 0.0:
 		if bool(Save.progress.settings.get("screen_shake", true)):
-			cam.offset = Vector2(roundf(randf_range(-_shake, _shake)), roundf(randf_range(-_shake, _shake) * 0.5))
+			cam.offset = Vector2(PixelCamera.world_position(randf_range(-_shake, _shake), z, view.device_scale), PixelCamera.world_position(randf_range(-_shake, _shake) * 0.5, z, view.device_scale))
 		_shake = maxf(0.0, _shake - delta * 20.0)
 	else:
 		cam.offset = Vector2.ZERO
-	view.cam_x = _cam_x
+	view.cam_x = cam.position.x
 
 # ---------------- input (desktop keys + drag-to-pan) ----------------
 func _unhandled_input(ev: InputEvent) -> void:
@@ -294,6 +357,7 @@ func _unhandled_input(ev: InputEvent) -> void:
 			var r := Input.is_key_pressed(KEY_D) or Input.is_key_pressed(KEY_RIGHT)
 			_key_dir = (1 if r else 0) - (1 if l else 0)
 			_free_cam_t = 0.0
+			if _key_dir != 0: _scouting = false
 		elif ev.pressed:
 			if k >= KEY_1 and k <= KEY_5:
 				var i := int(k - KEY_1)

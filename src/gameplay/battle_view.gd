@@ -3,6 +3,9 @@ extends Node2D
 ## procedural pixel placeholders otherwise. Owner: 02-engine.
 
 const SimS := preload("res://src/gameplay/battle_sim.gd")
+const PixelCamera := preload("res://src/gameplay/pixel_camera.gd")
+const Supply := preload("res://src/gameplay/bakery_supply.gd")
+const Backdrop := preload("res://src/gameplay/lane_backdrop.gd")
 
 var sim                     # battle_sim.gd instance
 var atlas                   # Atlas autoload (may be null in tests)
@@ -10,6 +13,8 @@ var ground_y := 290.0
 var biome := "meadow"
 var cam_x := 320.0
 var view_w := 640.0
+var world_zoom := 1.0
+var device_scale := 1.0
 var view_top := 0.0       # world y at the top of the screen (integer scale may show more than 360 px)
 var view_bottom := 360.0
 var show_damage := true
@@ -20,6 +25,7 @@ const NUM_FONT_PATH := "res://assets/fonts/Galmuri9.ttf"   # 03 bundled OFL font
 const NUM_PX := 10
 var _biome_layers: Array = []
 var _biome_atlas := ""
+var environment: Node2D
 
 const C_PLAYER := Color("4a7fd4")
 const C_PLAYER_D := Color("2c4f8c")
@@ -41,6 +47,10 @@ func setup(p_sim, p_atlas, p_ground_y: float, p_biome: String) -> void:
 	atlas = p_atlas
 	ground_y = p_ground_y
 	biome = p_biome
+	environment = Backdrop.new()
+	environment.z_index = -10
+	add_child(environment)
+	environment.build(float(sim.L), ground_y, biome)
 	_font = ThemeDB.fallback_font
 	_num_font = _font
 	if ResourceLoader.exists(NUM_FONT_PATH):
@@ -54,6 +64,8 @@ func setup(p_sim, p_atlas, p_ground_y: float, p_biome: String) -> void:
 		_biome_layers = b.get("layers", [])
 
 func _process(_dt: float) -> void:
+	if environment and sim:
+		environment.present(cam_x, world_zoom, device_scale, float(sim.t))
 	queue_redraw()
 
 func _draw() -> void:
@@ -80,11 +92,12 @@ func _draw() -> void:
 		_placed_text.clear()
 		for tx in sim.texts:
 			if tx.alive: _draw_text(tx)
-	if not _biome_layers.is_empty() and atlas:
+	if environment == null and not _biome_layers.is_empty() and atlas:
 		_draw_biome_layers(cam_x - view_w * 0.5 - 8.0, view_w + 16.0, true)
 
 # ---------------- background ----------------
 func _draw_background() -> void:
+	if environment != null: return
 	var left := cam_x - view_w * 0.5 - 8.0
 	var w := view_w + 16.0
 	if not _biome_layers.is_empty() and atlas and _draw_biome_layers(left, w, false):
@@ -144,9 +157,10 @@ func _draw_biome_layers(left: float, w: float, front: bool) -> bool:
 			# y=342 left bright wheat fragments across the last rows of the window.
 			y = ground_y - r.size.y + 4.0
 		var tile_w := r.size.x
-		# Round the layer origin ONCE (half-up, sign-consistent) and step copies by exact integer tile widths.
-		# Per-copy roundf() rounded .5 offsets away from zero, leaving 1 px gaps between copies (03 A4 white seams).
-		var bx := floorf(cam_x * (1.0 - par) + 0.5)
+		# Align the layer once to the camera's device-pixel grid, then step copies by
+		# exact tile widths. Whole-world rounding disagrees with zoom 3/2 and 4/3;
+		# independently rounding copies can also open a seam around negative origins.
+		var bx := PixelCamera.layer_origin(cam_x, par, world_zoom, device_scale)
 		var x := floorf((left - bx) / tile_w) * tile_w + bx
 		while x < left + w:
 			draw_texture_rect_region(f.tex, Rect2(x, y, tile_w, r.size.y), r)
@@ -214,28 +228,7 @@ func _draw_base(b: Dictionary, side: int) -> void:
 	_hp_bar(Vector2(x, r.position.y - 36.0), 44.0, b.hp / b.hp_max, side)
 
 func _draw_workers() -> void:
-	var n := mini(sim.workers, 8)
-	var px: float = sim.player_base.x
-	# gold mine behind the base
-	draw_rect(Rect2(px - 64.0, ground_y - 16.0, 22.0, 16.0), Color("5a4a3a"))
-	draw_rect(Rect2(px - 60.0, ground_y - 10.0, 14.0, 10.0), Color("1e1a16"))
-	draw_rect(Rect2(px - 58.0, ground_y - 20.0, 4.0, 4.0), Color("f2d16b"))
-	for i in n:
-		var ph := fposmod(sim.t * 0.35 + i * 0.37, 1.0)
-		var going := ph < 0.5
-		var k := ph * 2.0 if going else (1.0 - ph) * 2.0
-		var wx := lerpf(px - 46.0, px - 18.0, k)
-		var wy := ground_y - 1.0 + (i % 3) * 2.0
-		var bob := 1.0 if int(sim.t * 8.0 + i) % 2 == 0 else 0.0
-		if atlas:
-			var wrec = atlas.anim_rec("worker", "walk" if going else "carry")
-			if wrec != null:
-				_blit_rec(wrec, atlas.rec_index(wrec, sim.t + i * 0.13), Vector2(roundf(wx), roundf(wy)), not going, Color.WHITE)
-				continue
-		draw_rect(Rect2(wx - 2.0, wy - 8.0 - bob, 4.0, 6.0), Color("8d6e4a"))
-		draw_rect(Rect2(wx - 2.0, wy - 11.0 - bob, 4.0, 3.0), C_SKIN)
-		if not going:
-			draw_rect(Rect2(wx + 2.0, wy - 7.0 - bob, 3.0, 3.0), Color("f2d16b"))
+	Supply.draw(self, sim, atlas, ground_y)
 
 # ---------------- units ----------------
 func _anim_name(u) -> String:

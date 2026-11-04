@@ -4,7 +4,7 @@
 
 ## Windows에서 바로 실행
 
-**[Windows v0.1.1 다운로드](https://github.com/soltyspring/defence_game/releases/tag/windows-v0.1.1-20261103)** · [ZIP 바로 받기](https://github.com/soltyspring/defence_game/releases/download/windows-v0.1.1-20261103/BakeryKnights-Windows-x64.zip)
+**[Windows v0.1.2 다운로드](https://github.com/soltyspring/defence_game/releases/tag/windows-v0.1.2-20261105)** · [ZIP 바로 받기](https://github.com/soltyspring/defence_game/releases/download/windows-v0.1.2-20261105/BakeryKnights-Windows-x64.zip)
 
 1. 릴리스의 **`BakeryKnights-Windows-x64.zip`**을 내려받습니다. `Source code`는 실행 파일이 아닙니다.
 2. ZIP을 폴더에 모두 압축 해제합니다.
@@ -24,7 +24,8 @@ Windows 64비트용입니다. 게임 데이터가 EXE 안에 들어 있어 `.pck
 | 제빵사 고용 | `E` 또는 제빵사 버튼 |
 | 스킬 | `Q` / `W` / `R` 또는 스킬 버튼. 해금·기력·재사용 대기 조건 적용 |
 | 일시정지 / 계속 | `P` / `Esc` 또는 일시정지 버튼 |
-| 전장 둘러보기 | 전장 드래그 |
+| 먼 전장 둘러보기 | 상단 미니맵 클릭·드래그 또는 전장 드래그 |
+| 영웅으로 카메라 복귀 | 미니맵 오른쪽 **영웅** 버튼 또는 영웅 이동 |
 
 설정에서 효과음·음악 음량, 30/60 FPS, 피해 숫자, 화면 흔들림을 조절할 수 있습니다. 한국어 환경에서는 한국어, 그 외에는 영어를 자동으로 사용합니다.
 
@@ -33,12 +34,14 @@ Windows 64비트용입니다. 게임 데이터가 EXE 안에 들어 있어 `.pck
 - 진행도·강화·설정은 자동으로 로컬에 저장합니다. Windows 경로는 `%APPDATA%\Godot\app_userdata\Lane Defence\`입니다. 폴더 이름에는 초기 개발명이 남아 있습니다.
 - PC 변경 전에는 이 폴더를 복사해 보관하세요. 계정 연동·클라우드 동기화는 제공하지 않습니다.
 - 광고·인앱 결제는 비활성 상태입니다.
-- v0.1.1은 튜토리얼 지연·깜빡임, 콘텐츠 업데이트 뒤 진행 재잠금, 작은 화면 문구·수입 표시, 화면 하단 배경 띠, 어두운 카드 구분과 화면 밖 적 경고를 수정한 버전입니다. 영웅 표시·전장 배율을 다듬고 첫 보스의 강화 난이도를 조정했습니다.
+- v0.1.2는 이동 중 배경의 픽셀 정렬을 고치고, 마을·제분소와 밀가루 포대 운반을 새로 표현했습니다. 먼 전장을 보는 미니맵, 영웅 복귀 버튼, 부드러운 타격음과 운반·정찰 효과음을 추가했습니다. 기존 전투·라운드·수입·강화 수치는 유지했습니다.
 - EXE·ZIP의 해시와 원본 커밋은 릴리스 및 ZIP 안의 `BUILD_INFO.json` / `SHA256SUMS.txt`에서 확인할 수 있습니다. 현재 확인한 실행 범위는 릴리스 설명에 적습니다.
 
-수정본의 수락 156개, UI 3,414개, UI 통합 49개와 수정 회귀 검사 29개가 통과했습니다. 10개 라운드의 봇 검증과 저장 마이그레이션을 별도로 검사했습니다. 실제 폰·사람 플레이 검증은 포함하지 않습니다. 검사 조건과 캡처는 [v0.1.1 검토 기록](docs/qa/WINDOWS_POLISH_20261103.md)에 정리했습니다.
+수락 156개, UI 3,415개, 실제 엔진 UI 통합 49개, 기존 수정 회귀 29개가 통과했습니다. 새 미니맵·운반 검사는 57개, 실제 화면 이동 검사는 창 크기별 71개입니다. 카메라 수학 검사 8,992개도 통과했습니다. 실제 폰 성능과 사람의 청감 평가는 포함하지 않습니다. [v0.1.2 검토 기록](docs/qa/QUALITY_UPGRADE_20261104.md)에 조건·파형·전후 비용과 한계를 정리했습니다.
 
-![Windows 실행 화면](docs/qa/windows-polish/battle.png)
+![제분소·밀가루 운반과 미니맵](docs/qa/quality-20261105/home.png)
+
+![미니맵으로 먼 전장 정찰](docs/qa/quality-20261105/scout.png)
 
 ## 소스에서 실행
 
