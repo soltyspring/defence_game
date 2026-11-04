@@ -1,7 +1,7 @@
 {
  "version": 1,
  "generator": "tools/audio/synth.py",
- "generator_version": 7,
+ "generator_version": 8,
  "technique": "deterministic numpy synthesis (oscillators/noise/envelopes/filters); no samples, no AI services",
  "license": "Original work created for this project by the 05-audio worker with tools/audio/synth.py. No third-party samples, loops, presets, downloaded audio or AI audio services were used, so no third-party licence or attribution applies. Rights belong to the project owner; the public licence (if any) is the project owner’s decision and has not been chosen.",
  "provenance": {
@@ -251,6 +251,9 @@
    ]
   },
   "hit_melee": {
+   "peak_dbfs_target": -4.5,
+   "fade_in": 0.004,
+   "fade_out": 0.015,
    "bus": "SFX",
    "vol_db": -7,
    "max": 2,
@@ -259,7 +262,7 @@
    "pitch": 0.08,
    "faction": "neutral",
    "group": "hit",
-   "desc": "fallback hit when the target side is unknown (v2 crack)",
+   "desc": "rounded wooden impact, fallback when the target side is unknown",
    "provenance": {
     "recipes": [
      "<lambda>",
@@ -287,42 +290,45 @@
    "variants": [
     {
      "file": "hit_melee_1.wav",
-     "seconds": 0.1,
-     "bytes": 4454,
-     "peak_dbfs": -1.0,
-     "rms_dbfs": -17.39
+     "seconds": 0.105,
+     "bytes": 4674,
+     "peak_dbfs": -5.36,
+     "rms_dbfs": -17.08
     },
     {
      "file": "hit_melee_2.wav",
-     "seconds": 0.1,
-     "bytes": 4454,
-     "peak_dbfs": -1.0,
-     "rms_dbfs": -16.84
+     "seconds": 0.105,
+     "bytes": 4674,
+     "peak_dbfs": -4.58,
+     "rms_dbfs": -16.27
     },
     {
      "file": "hit_melee_3.wav",
-     "seconds": 0.1,
-     "bytes": 4454,
-     "peak_dbfs": -1.0,
-     "rms_dbfs": -17.53
+     "seconds": 0.105,
+     "bytes": 4674,
+     "peak_dbfs": -5.18,
+     "rms_dbfs": -17.12
     },
     {
      "file": "hit_melee_4.wav",
-     "seconds": 0.1,
-     "bytes": 4454,
-     "peak_dbfs": -1.0,
-     "rms_dbfs": -16.48
+     "seconds": 0.105,
+     "bytes": 4674,
+     "peak_dbfs": -5.23,
+     "rms_dbfs": -17.0
     },
     {
      "file": "hit_melee_5.wav",
-     "seconds": 0.1,
-     "bytes": 4454,
-     "peak_dbfs": -1.0,
-     "rms_dbfs": -15.68
+     "seconds": 0.105,
+     "bytes": 4674,
+     "peak_dbfs": -5.48,
+     "rms_dbfs": -17.13
     }
    ]
   },
   "hit_bread": {
+   "peak_dbfs_target": -4.5,
+   "fade_in": 0.004,
+   "fade_out": 0.015,
    "bus": "SFX",
    "vol_db": -8,
    "max": 2,
@@ -331,7 +337,7 @@
    "pitch": 0.07,
    "faction": "bakery",
    "group": "hit",
-   "desc": "a bread soldier is hit: dry crust crunch",
+   "desc": "a bread soldier is hit: rounded wood and soft crust",
    "provenance": {
     "recipes": [
      "<lambda>",
@@ -353,28 +359,31 @@
    "variants": [
     {
      "file": "hit_bread_1.wav",
-     "seconds": 0.06,
-     "bytes": 2690,
-     "peak_dbfs": -1.0,
-     "rms_dbfs": -14.43
+     "seconds": 0.105,
+     "bytes": 4674,
+     "peak_dbfs": -6.05,
+     "rms_dbfs": -17.45
     },
     {
      "file": "hit_bread_2.wav",
-     "seconds": 0.06,
-     "bytes": 2690,
-     "peak_dbfs": -1.0,
-     "rms_dbfs": -14.14
+     "seconds": 0.105,
+     "bytes": 4674,
+     "peak_dbfs": -4.75,
+     "rms_dbfs": -16.66
     },
     {
      "file": "hit_bread_3.wav",
-     "seconds": 0.06,
-     "bytes": 2690,
-     "peak_dbfs": -1.0,
-     "rms_dbfs": -15.7
+     "seconds": 0.105,
+     "bytes": 4674,
+     "peak_dbfs": -5.58,
+     "rms_dbfs": -17.06
     }
    ]
   },
   "hit_mold": {
+   "peak_dbfs_target": -4.5,
+   "fade_in": 0.004,
+   "fade_out": 0.015,
    "bus": "SFX",
    "vol_db": -6,
    "max": 2,
@@ -383,7 +392,7 @@
    "pitch": 0.08,
    "faction": "mold",
    "group": "hit",
-   "desc": "a mold unit is hit: wet squish + bubble",
+   "desc": "a mold unit is hit: soft plop with restrained noise",
    "provenance": {
     "recipes": [
      "<lambda>",
@@ -405,24 +414,24 @@
    "variants": [
     {
      "file": "hit_mold_1.wav",
-     "seconds": 0.1,
-     "bytes": 4454,
-     "peak_dbfs": -1.0,
-     "rms_dbfs": -14.28
+     "seconds": 0.095,
+     "bytes": 4234,
+     "peak_dbfs": -5.02,
+     "rms_dbfs": -16.77
     },
     {
      "file": "hit_mold_2.wav",
-     "seconds": 0.1,
-     "bytes": 4454,
-     "peak_dbfs": -1.0,
-     "rms_dbfs": -13.61
+     "seconds": 0.095,
+     "bytes": 4234,
+     "peak_dbfs": -5.83,
+     "rms_dbfs": -17.06
     },
     {
      "file": "hit_mold_3.wav",
-     "seconds": 0.1,
-     "bytes": 4454,
-     "peak_dbfs": -1.0,
-     "rms_dbfs": -13.18
+     "seconds": 0.095,
+     "bytes": 4234,
+     "peak_dbfs": -5.18,
+     "rms_dbfs": -16.85
     }
    ]
   },
@@ -1242,6 +1251,74 @@
      "bytes": 132344,
      "peak_dbfs": -1.0,
      "rms_dbfs": -14.2
+    }
+   ]
+  },
+  "flour_delivery": {
+   "bus": "SFX",
+   "vol_db": -16,
+   "max": 1,
+   "gap": 1.2,
+   "prio": 1,
+   "pitch": 0.04,
+   "peak_dbfs_target": -5.0,
+   "fade_in": 0.004,
+   "fade_out": 0.02,
+   "faction": "bakery",
+   "desc": "a flour sack settles onto the delivery pallet",
+   "provenance": {
+    "recipes": [
+     "r_flour_delivery"
+    ],
+    "seeds": [
+     1044
+    ]
+   },
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/flour_delivery.wav"
+   ],
+   "variants": [
+    {
+     "file": "flour_delivery.wav",
+     "seconds": 0.14,
+     "bytes": 6218,
+     "peak_dbfs": -5.0,
+     "rms_dbfs": -17.53
+    }
+   ]
+  },
+  "ui_scout": {
+   "bus": "UI",
+   "vol_db": -13,
+   "max": 1,
+   "gap": 0.2,
+   "prio": 6,
+   "pitch": 0.0,
+   "peak_dbfs_target": -5.0,
+   "fade_in": 0.003,
+   "fade_out": 0.01,
+   "faction": "neutral",
+   "desc": "soft scouting and return-to-hero cue",
+   "provenance": {
+    "recipes": [
+     "r_ui_scout"
+    ],
+    "seeds": [
+     1045
+    ]
+   },
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/ui_scout.wav"
+   ],
+   "variants": [
+    {
+     "file": "ui_scout.wav",
+     "seconds": 0.08,
+     "bytes": 3572,
+     "peak_dbfs": -5.3,
+     "rms_dbfs": -16.42
     }
    ]
   }

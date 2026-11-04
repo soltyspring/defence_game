@@ -35,7 +35,7 @@ SFX_SR = 22050          # mono 16-bit PCM; chip-style SFX do not need >11 kHz ba
 MUSIC_SR = 44100        # stereo, encoded to Ogg Vorbis (streamed, not decompressed into RAM)
 SFX_PEAK = 10 ** (-1.0 / 20)    # -1 dBFS sample peak ceiling
 MUSIC_PEAK = 10 ** (-3.0 / 20)  # -3 dBFS before lossy encode (leaves inter-sample/encoder headroom)
-GENERATOR_VERSION = 7
+GENERATOR_VERSION = 8
 
 # ----------------------------------------------------------------------------------------------
 # DSP primitives
@@ -304,6 +304,30 @@ def r_worker_buy(rng):
 def r_gold_tick(rng):
     return seq([(0, blip(1760, 1760, 0.035, "square", 0.25, tau=0.012) * 0.6),
                 (0.03, blip(2349, 2349, 0.07, "sine", tau=0.03))], 0.11)
+
+
+def r_quality_bread(rng, var):
+    """A rounded wooden knock and a little crust, without the old high-frequency crackle."""
+    p = [1.0, 0.91, 1.09][var % 3]
+    body = thump(470 * p, 260 * p, 0.105, 0.026, drive=0.0)
+    cloth = burst(rng, 0.065, 0.025, 450, 2200) * 0.18
+    return lowpass(mix(body, cloth), 2800, SR)
+
+
+def r_quality_mold(rng, var):
+    """A short, soft plop. No hard saturation or abrasive wide-band spray."""
+    p = [1.0, 0.92, 1.08][var % 3]
+    body = thump(620 * p, 330 * p, 0.095, 0.024, drive=0.0) * 0.7
+    wet = squelch(rng, 0.095, 470 * p, 780 * p, 350 * p, wet=0.2) * 0.24
+    return lowpass(mix(body, wet), 2400, SR)
+
+
+def r_flour_delivery(rng):
+    return lowpass(mix(thump(180, 110, 0.14, 0.035, drive=0.0), burst(rng, 0.12, 0.04, 300, 1800) * 0.22), 2000, SR)
+
+
+def r_ui_scout(rng):
+    return seq([(0, blip(740, 960, 0.045, "sine", tau=0.018) * 0.6), (0.025, blip(980, 1100, 0.045, "sine", tau=0.018) * 0.3)], 0.08)
 
 
 def r_hit_melee(rng, var):
@@ -899,15 +923,15 @@ CUES = {
     "deploy":          dict(r=[r3_deploy], bus="SFX", vol_db=-7, max=2, gap=0.06, prio=7, pitch=0.04, faction="bakery", desc="oven-door bell + crust footsteps"),
     "worker_buy":      dict(r=[r3_worker_buy], bus="SFX", vol_db=-9, max=1, gap=0.1, prio=7, pitch=0.0, faction="bakery", desc="shop bell ka-ching"),
     "gold_tick":       dict(r=[r_gold_tick], rx=[lambda g: r38_gold_tick_v(g, 1)], vol_jitter=1.0, bus="SFX", vol_db=-13, max=2, gap=0.09, prio=2, pitch=0.05, faction="bakery", desc="coin glint"),
-    "hit_melee":       dict(r=[lambda g, v=v: r_hit_melee(g, v) for v in range(5)],
+    "hit_melee":       dict(r=[lambda g, v=v: r_quality_bread(g, v) for v in range(5)], peak_dbfs_target=-4.5, fade_in=0.004, fade_out=0.015,
                             bus="SFX", vol_db=-7, max=2, gap=0.26, prio=1, pitch=0.08, faction="neutral", group="hit",
-                            desc="fallback hit when the target side is unknown (v2 crack)"),
-    "hit_bread":       dict(r=[lambda g, v=v: r3_hit_bread(g, v) for v in range(3)],
+                            desc="rounded wooden impact, fallback when the target side is unknown"),
+    "hit_bread":       dict(r=[lambda g, v=v: r_quality_bread(g, v) for v in range(3)], peak_dbfs_target=-4.5, fade_in=0.004, fade_out=0.015,
                             bus="SFX", vol_db=-8, max=2, gap=0.22, prio=1, pitch=0.07, faction="bakery", group="hit",
-                            desc="a bread soldier is hit: dry crust crunch"),
-    "hit_mold":        dict(r=[lambda g, v=v: r3_hit_mold(g, v) for v in range(3)],
+                            desc="a bread soldier is hit: rounded wood and soft crust"),
+    "hit_mold":        dict(r=[lambda g, v=v: r_quality_mold(g, v) for v in range(3)], peak_dbfs_target=-4.5, fade_in=0.004, fade_out=0.015,
                             bus="SFX", vol_db=-6, max=2, gap=0.22, prio=1, pitch=0.08, faction="mold", group="hit",
-                            desc="a mold unit is hit: wet squish + bubble"),
+                            desc="a mold unit is hit: soft plop with restrained noise"),
     "hit_arrow":       dict(r=[r_hit_arrow], bus="SFX", vol_db=-10, max=2, gap=0.05, prio=1, pitch=0.08, faction="neutral", group="hit", desc="ranged impact fallback"),
     "shoot_arrow":     dict(r=[r_shoot_arrow], rx=[lambda g: r38_shoot_arrow_v(g, 1)], vol_jitter=1.0, bus="SFX", vol_db=-12, max=2, gap=0.06, prio=1, pitch=0.08, faction="bakery", desc="baguette thrower whoosh"),
     "shoot_rock":      dict(r=[r_shoot_rock], bus="SFX", vol_db=-10, max=1, gap=0.12, prio=2, pitch=0.06, faction="bakery", desc="oven cannon puff + thunk"),
@@ -940,6 +964,12 @@ SKILL_KIND_CUE = {"aoe_damage": "skill_slam", "rally": "skill_rally", "meteor": 
 PROJECTILE_CUE = {"arrow": "shoot_arrow", "rock": "shoot_rock", "spit": "shoot_spit"}
 # Shared rate limits (v3.4). "hit": minimum seconds between ANY two hit cues (bread/mold/fallbacks), so the
 # faction split does not double hit density. Value chosen by the same-seed A/B in docs/audio/HIT_DENSITY_AB.md.
+CUES.update({
+    "flour_delivery": dict(r=[r_flour_delivery], bus="SFX", vol_db=-16, max=1, gap=1.2, prio=1, pitch=0.04,
+                           peak_dbfs_target=-5.0, fade_in=0.004, fade_out=0.02, faction="bakery", desc="a flour sack settles onto the delivery pallet"),
+    "ui_scout": dict(r=[r_ui_scout], bus="UI", vol_db=-13, max=1, gap=0.2, prio=6, pitch=0.0,
+                     peak_dbfs_target=-5.0, fade_in=0.003, fade_out=0.01, faction="neutral", desc="soft scouting and return-to-hero cue"),
+})
 CUE_GROUPS = {"hit": {"min_gap": 0.36}}   # same-seed A/B: 83 -> 49 hits/min (target 48-56); NOT yet confirmed by listening
 # v3.9 onset-cluster limit (docs/audio/ONSET_PEAK_CHECK.md): from the 4th SFX start within 0.1 s, low-priority cues
 # (prio < 3: hits, shots, gold_tick) start / are lowered 6 dB; prio >= 3 (danger, deaths, deploy, skills, boss) never.
@@ -1162,6 +1192,13 @@ def stats(x: np.ndarray) -> dict:
 
 
 def main() -> int:
+    only = set()
+    for arg in sys.argv[1:]:
+        if not arg.startswith("--only="):
+            raise SystemExit("Usage: synth.py [--only=cue,cue,...]")
+        only.update(filter(None, arg.split("=", 1)[1].split(",")))
+    if only - CUES.keys():
+        raise SystemExit("Unknown cues: " + ",".join(sorted(only - CUES.keys())))
     SFX_DIR.mkdir(parents=True, exist_ok=True)
     manifest = {
         "version": 1, "generator": "tools/audio/synth.py", "generator_version": GENERATOR_VERSION,
@@ -1181,14 +1218,20 @@ def main() -> int:
         "cues": {}, "music": {}, "skill_kind_cue": SKILL_KIND_CUE, "projectile_cue": PROJECTILE_CUE,
         "upgrade_result_cue": UPGRADE_RESULT_CUE, "groups": CUE_GROUPS, **({"onset_cluster": ONSET_CLUSTER} if ONSET_CLUSTER_ON else {}),
     }
+    if only:
+        manifest = json.loads((OUT / "audio_manifest.json").read_text(encoding="utf-8"))
+        manifest["generator_version"] = GENERATOR_VERSION
     seed = 1000
     for cue, c in CUES.items():
+        if only and cue not in only:
+            seed += len(c["r"])
+            continue
         files = []
         info = []
         for vi, recipe in enumerate(c["r"]):
             seed += 1
             rng = np.random.default_rng(seed)
-            x = fade_edges(normalize(highpass(np.asarray(recipe(rng), dtype=np.float64), 30.0, SR), SFX_PEAK), SR)
+            x = fade_edges(normalize(highpass(np.asarray(recipe(rng), dtype=np.float64), 30.0, SR), 10 ** (float(c.get("peak_dbfs_target", -1.0)) / 20)), SR, float(c.get("fade_in", 0.002)), float(c.get("fade_out", 0.008)))
             name = f"{cue}.wav" if len(c["r"]) == 1 else f"{cue}_{vi + 1}.wav"
             write_wav(SFX_DIR / name, x, SR, seed)
             files.append(f"res://assets/audio/sfx/{name}")
@@ -1199,7 +1242,7 @@ def main() -> int:
             xs = 70000 + 10 * list(CUES).index(cue) + xi
             xseeds.append(xs)
             rng = np.random.default_rng(xs)
-            x = fade_edges(normalize(highpass(np.asarray(recipe(rng), dtype=np.float64), 30.0, SR), SFX_PEAK), SR)
+            x = fade_edges(normalize(highpass(np.asarray(recipe(rng), dtype=np.float64), 30.0, SR), 10 ** (float(c.get("peak_dbfs_target", -1.0)) / 20)), SR, float(c.get("fade_in", 0.002)), float(c.get("fade_out", 0.008)))
             name = f"{cue}_v{xi + 2}.wav"
             write_wav(SFX_DIR / name, x, SR, xs)
             files.append(f"res://assets/audio/sfx/{name}")
@@ -1213,7 +1256,7 @@ def main() -> int:
         manifest["cues"][cue] = entry
     SRC_DIR.mkdir(parents=True, exist_ok=True)
     (SRC_DIR / ".gdignore").write_text("", encoding="utf-8")   # keep Godot from importing intermediates
-    for mid, m in MUSIC.items():
+    for mid, m in (MUSIC.items() if not only else []):
         st = render_loop(m["spec"], m["seed"])
         wav = SRC_DIR / f"{mid}.wav"
         write_wav(wav, st, MSR, m["seed"])
