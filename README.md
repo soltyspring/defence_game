@@ -4,7 +4,7 @@
 
 ## Windows에서 바로 실행
 
-**[Windows v0.1.2 다운로드](https://github.com/soltyspring/defence_game/releases/tag/windows-v0.1.2-20261105)** · [ZIP 바로 받기](https://github.com/soltyspring/defence_game/releases/download/windows-v0.1.2-20261105/BakeryKnights-Windows-x64.zip)
+**[Windows v0.1.3 다운로드](https://github.com/soltyspring/defence_game/releases/tag/windows-v0.1.3-20261105)** · [ZIP 바로 받기](https://github.com/soltyspring/defence_game/releases/download/windows-v0.1.3-20261105/BakeryKnights-Windows-x64.zip)
 
 1. 릴리스의 **`BakeryKnights-Windows-x64.zip`**을 내려받습니다. `Source code`는 실행 파일이 아닙니다.
 2. ZIP을 폴더에 모두 압축 해제합니다.
@@ -27,13 +27,14 @@ Windows 64비트용입니다. 게임 데이터가 EXE 안에 들어 있어 `.pck
 | 먼 전장 둘러보기 | 상단 미니맵 클릭·드래그 또는 전장 드래그 |
 | 영웅으로 카메라 복귀 | 미니맵 오른쪽 **영웅** 버튼 또는 영웅 이동 |
 
-설정에서 효과음·음악 음량, 30/60 FPS, 피해 숫자, 화면 흔들림을 조절할 수 있습니다. 한국어 환경에서는 한국어, 그 외에는 영어를 자동으로 사용합니다.
+메인 화면의 **설정**, 또는 전투 중 **일시정지 → 설정**에서 효과음·음악 음량을 각각 **0~100%**로 조절할 수 있습니다. 슬라이더를 끌면 즉시 반영되고 놓으면 자동 저장됩니다. 0%는 음소거이며, 슬라이더 선택 후 `←` / `→`로 1%씩 조절할 수도 있습니다. 30/60 FPS, 피해 숫자, 화면 흔들림도 설정할 수 있습니다. 한국어 환경에서는 한국어, 그 외에는 영어를 자동으로 사용합니다.
 
 ## 저장과 빌드 상태
 
 - 진행도·강화·설정은 자동으로 로컬에 저장합니다. Windows 경로는 `%APPDATA%\Godot\app_userdata\Lane Defence\`입니다. 폴더 이름에는 초기 개발명이 남아 있습니다.
 - PC 변경 전에는 이 폴더를 복사해 보관하세요. 계정 연동·클라우드 동기화는 제공하지 않습니다.
 - 광고·인앱 결제는 비활성 상태입니다.
+- v0.1.3은 효과음·음악의 켜기/끄기 버튼을 퍼센트 슬라이더로 바꿨습니다. [음량 조절 검증](docs/qa/VOLUME_SETTINGS_20261105.md).
 - v0.1.2는 이동 중 배경의 픽셀 정렬을 고치고, 마을·제분소와 밀가루 포대 운반을 새로 표현했습니다. 먼 전장을 보는 미니맵, 영웅 복귀 버튼, 부드러운 타격음과 운반·정찰 효과음을 추가했습니다. 기존 전투·라운드·수입·강화 수치는 유지했습니다.
 - EXE·ZIP의 해시와 원본 커밋은 릴리스 및 ZIP 안의 `BUILD_INFO.json` / `SHA256SUMS.txt`에서 확인할 수 있습니다. 현재 확인한 실행 범위는 릴리스 설명에 적습니다.
 

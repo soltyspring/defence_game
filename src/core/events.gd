@@ -32,6 +32,8 @@ signal cmd_hero_move(dir: int)
 ## Presentation-only scouting; never teleports the hero or changes the simulation.
 signal cmd_camera_seek(world_x: float)
 signal cmd_camera_follow()
+## Live audio preview while dragging; cmd_set_setting persists on release.
+signal cmd_preview_volume(key: String, value: float)
 signal cmd_hero_skill(skill_id: String)
 signal cmd_set_paused(paused: bool)
 signal cmd_retry()
