@@ -36,6 +36,11 @@ func mouse(pos: Vector2, pressed: bool, device := 0) -> void:
 	root.push_input(e,true)
 func shot(name: String) -> void:
 	if DisplayServer.get_name() == "headless": return
+	# This harness freezes View._process; apply its normal parallax update before
+	# capturing a changed camera, otherwise the image would show the previous plane.
+	if app.battle:
+		var b = app.battle
+		b.view.environment.present(b.view.cam_x,b.world_zoom,float(app.pixel_scale),b.sim.t)
 	await RenderingServer.frame_post_draw
 	root.get_texture().get_image().save_png(out.path_join(name + ".png"))
 func _run() -> void:
