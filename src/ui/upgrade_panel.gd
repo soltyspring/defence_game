@@ -211,8 +211,16 @@ func _refresh() -> void:
 		b.show()
 		var u: Dictionary = rows[i]
 		var mx := is_max(u)
+		var sv := _save()
+		var need_round := 1
+		var tier_locked := false
+		if sv != null and sv.has_method("upgrade_level_unlock_round"):
+			need_round = int(sv.upgrade_level_unlock_round(str(u.id),level_of(str(u.id))+1))
+			tier_locked = int(sv.round_reach()) < need_round
 		b.text = UiText.t("ui.max") if mx else UiText.t("ui.upgrade_buy")
-		b.disabled = mx or not active
+		if tier_locked and not mx: b.text = "R%d" % need_round
+		b.tooltip_text = "R%d" % need_round if tier_locked else ""
+		b.disabled = mx or not active or tier_locked
 		b.dim_reason = ""
 		b.fill = UiStyle.C_PANEL_LIGHT if mx or coins() < next_cost(u) else UiStyle.C_ACCENT.darkened(0.15)
 		b.queue_redraw()

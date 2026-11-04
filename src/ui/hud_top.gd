@@ -188,16 +188,20 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 		if next_in > 0:
 			wt += "  " + UiText.t("ui.wave_next") % ceili(next_in)
 		txt = wt
-	var text_width := maxf(0, wr.size.x - 70)
-	if not round_title.is_empty():
+	var compact := bool(layout.get("compact",false))
+	var army_width := 0.0 if compact else 70.0
+	var text_width := maxf(0, wr.size.x - army_width)
+	if compact and not round_title.is_empty():
+		txt = round_title.get_slice(".",0) + " · " + txt
+	elif not round_title.is_empty():
 		var remain := text_width - UiStyle.text_width(txt, UiStyle.FONT_S) - 8
 		if remain >= 24:
 			var title := str(UiStyle.fit_text(round_title, remain, UiStyle.FONT_S)[0])
 			txt = title + "  " + txt
 	if txt != "" and _pass == P_TEXT:
-		UiStyle.draw_text_centered(self, UiStyle.fit_text(txt, text_width, UiStyle.FONT_S)[0], Vector2(wr.position.x + 70 + text_width * 0.5, wr.get_center().y), UiStyle.FONT_S, UiStyle.C_TEXT)
+		UiStyle.draw_text_centered(self, UiStyle.fit_text(txt, text_width, UiStyle.FONT_S)[0], Vector2(wr.position.x + army_width + text_width * 0.5, wr.get_center().y), UiStyle.FONT_S, UiStyle.C_TEXT)
 	var army: Dictionary = snap.get("army", {})
-	if not army.is_empty() and _pass == P_TEXT:
+	if not compact and not army.is_empty() and _pass == P_TEXT:
 		UiStyle.draw_number(self, "%d/%d" % [int(army.get("player", 0)), int(army.get("cap", 0))], Vector2(r.position.x, wr.get_center().y), UiStyle.NUM_READ, UiStyle.C_HP_PLAYER, -1, UiStyle.NUM_READ_KIND)
 	_draw_boss(layout.get("boss", Rect2()))
 

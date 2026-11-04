@@ -14,6 +14,7 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	clip_contents = true
 	tooltip_text = Text.t("ui.map_hint")
+	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 
 func world_at(local_x: float) -> float:
 	var lo := float(state.get("left", 0.0))
@@ -33,6 +34,7 @@ func _gui_input(event: InputEvent) -> void:
 			_mouse_down = true
 			seek.emit(world_at(event.position.x))
 		elif not event.pressed:
+			if _mouse_down: seek.emit(world_at(event.position.x))
 			_mouse_down = false
 		accept_event()
 	elif event is InputEventMouseMotion and _mouse_down:
@@ -44,6 +46,7 @@ func _gui_input(event: InputEvent) -> void:
 			_finger = event.index
 			seek.emit(world_at(event.position.x))
 		elif not event.pressed and event.index == _finger:
+			seek.emit(world_at(event.position.x))
 			_finger = -1
 		accept_event()
 	elif event is InputEventScreenDrag and event.index == _finger:
@@ -56,11 +59,10 @@ func _notification(what: int) -> void:
 		_finger = -1
 
 func _draw() -> void:
-	Style.draw_pixel_box(self, Rect2(Vector2.ZERO, size), Color("252c32"))
-	var title := Text.t("ui.map_scouting" if bool(state.get("scouting", false)) else "ui.map_hint")
-	Style.draw_text_left(self, Style.fit_text(title, size.x - 16, Style.FONT_S)[0], Vector2(8, 10), Style.FONT_S, Color("c9c7a7"))
+	# 20 px ink inside a 40–48 px touch area: the overview no longer owns a HUD row.
+	Style.draw_pixel_box(self, Rect2(2, 4, size.x-4, 20), Color(0.12,0.16,0.16,0.82))
 	if state.is_empty(): return
-	var y := size.y - 14.0
+	var y := 15.0
 	draw_rect(Rect2(10, y - 2, size.x - 20, 5), Color("68745a"))
 	var bx := map_x(float(state.get("player_base", 0)))
 	var ex := map_x(float(state.get("enemy_base", 1)))
@@ -71,10 +73,10 @@ func _draw() -> void:
 		var x := map_x(float(dot[0]))
 		var ally := int(dot[1]) > 0
 		var h := 6.0 if bool(dot[2]) else 3.0
-		draw_rect(Rect2(x - 1, y - 1 - h if ally else y + 3, 3, h), Color("70d7df") if ally else Color("ed9b78"))
+		draw_rect(Rect2(x - 1, y - 1 - h if ally else y + 3, 2, h), Color("70d7df") if ally else Color("ed9b78"))
 	if bool(state.get("hero_alive", true)):
 		var hx := map_x(float(state.get("hero", 0)))
 		draw_colored_polygon(PackedVector2Array([Vector2(hx,y-10), Vector2(hx+3,y-6), Vector2(hx,y-2), Vector2(hx-3,y-6)]), Color("ffe19a"))
 	var a := map_x(float(state.get("view_left", 0)))
 	var b := map_x(float(state.get("view_right", 1)))
-	draw_rect(Rect2(a, y - 11, maxf(3, b - a), 23), Color("ffe5a9"), false, 1.0)
+	draw_rect(Rect2(a, y - 9, maxf(3, b - a), 16), Color("ffe5a9"), false, 1.0)

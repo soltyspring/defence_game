@@ -1,0 +1,1953 @@
+{
+  "meta": {
+    "counts": {
+      "BLOCKED": 0,
+      "FAIL": 0,
+      "NOT_IMPLEMENTED": 0,
+      "NOT_TESTED": 2,
+      "PASS": 156
+    },
+    "display": "headless",
+    "elapsed_ms": 48963,
+    "generated_unix": 1793821390.989,
+    "godot": "4.7.2-stable (official)",
+    "os": "Windows",
+    "scope": "desktop headless acceptance; NOT Android device certification"
+  },
+  "results": [
+    {
+      "detail": "",
+      "evidence": {
+        "order": [
+          "r01",
+          "r02",
+          "r03",
+          "r04",
+          "r05",
+          "r06",
+          "r07",
+          "r08",
+          "r09",
+          "r10",
+          "r11",
+          "r12",
+          "r13",
+          "r14",
+          "r15",
+          "r16",
+          "r17",
+          "r18",
+          "r19",
+          "r20",
+          "r21",
+          "r22",
+          "r23",
+          "r24",
+          "r25",
+          "r26",
+          "r27",
+          "r28",
+          "r29",
+          "r30"
+        ]
+      },
+      "id": "DATA-01",
+      "status": "PASS",
+      "suite": "data",
+      "title": "data/rounds/order.json lists >= 3 rounds"
+    },
+    {
+      "detail": "",
+      "id": "DATA-02",
+      "status": "PASS",
+      "suite": "data",
+      "title": "every round in order.json has a data file"
+    },
+    {
+      "detail": "",
+      "id": "DATA-03",
+      "status": "PASS",
+      "suite": "data",
+      "title": "every round file is reachable from order.json"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "problems": []
+      },
+      "id": "DATA-04",
+      "status": "PASS",
+      "suite": "data",
+      "title": "all round/unit/hero/skill cross references resolve with correct faction"
+    },
+    {
+      "detail": "",
+      "id": "DATA-05",
+      "status": "PASS",
+      "suite": "data",
+      "title": "P0 rounds [\"r01\", \"r02\", \"r03\"] numeric sanity (lane, base hp, wave times, start gold <= cap)"
+    },
+    {
+      "detail": "",
+      "id": "DATA-06",
+      "status": "PASS",
+      "suite": "data",
+      "title": "unit stats are positive / non-negative"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "keys_checked": 83
+      },
+      "id": "DATA-07",
+      "status": "PASS",
+      "suite": "data",
+      "title": "every referenced text key exists in data/text/ko.json"
+    },
+    {
+      "detail": "",
+      "id": "DATA-08",
+      "status": "PASS",
+      "suite": "data",
+      "title": "every referenced text key exists in data/text/en.json"
+    },
+    {
+      "detail": "",
+      "id": "DATA-09",
+      "status": "PASS",
+      "suite": "data",
+      "title": "en.json contains every ko.json key"
+    },
+    {
+      "detail": "",
+      "id": "DATA-12",
+      "status": "PASS",
+      "suite": "data",
+      "title": "ko/en placeholder parity (177 keys)"
+    },
+    {
+      "detail": "",
+      "id": "DATA-13",
+      "status": "PASS",
+      "suite": "data",
+      "title": "ui.*/toast.* keys referenced in src exist in ko.json (69 keys)"
+    },
+    {
+      "detail": "",
+      "id": "DATA-14",
+      "status": "PASS",
+      "suite": "data",
+      "title": "ui.*/toast.* keys referenced in src exist in en.json"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "warnings": []
+      },
+      "id": "DATA-10",
+      "status": "PASS",
+      "suite": "data",
+      "title": "Content autoload loads data/ without warnings"
+    },
+    {
+      "detail": "",
+      "id": "DATA-11",
+      "status": "PASS",
+      "suite": "data",
+      "title": "runtime round order equals order.json"
+    },
+    {
+      "detail": "",
+      "id": "ART-01",
+      "status": "PASS",
+      "suite": "assets",
+      "title": "assets/manifest.json present and parses"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "pages": {
+          "bases": {
+            "frames": 17,
+            "h": 512,
+            "w": 512
+          },
+          "biome_meadow": {
+            "frames": 5,
+            "h": 512,
+            "w": 1024
+          },
+          "char_boss_overlord": {
+            "frames": 41,
+            "h": 512,
+            "w": 1024
+          },
+          "char_boss_warlord": {
+            "frames": 32,
+            "h": 512,
+            "w": 512
+          },
+          "char_player": {
+            "frames": 331,
+            "h": 512,
+            "w": 1024
+          },
+          "fx_combat": {
+            "frames": 83,
+            "h": 256,
+            "w": 512
+          },
+          "ui_main": {
+            "frames": 104,
+            "h": 256,
+            "w": 256
+          },
+          "ui_title_en": {
+            "frames": 2,
+            "h": 128,
+            "w": 256
+          },
+          "ui_title_ko": {
+            "frames": 2,
+            "h": 64,
+            "w": 512
+          }
+        }
+      },
+      "id": "ART-02",
+      "status": "PASS",
+      "suite": "assets",
+      "title": "every atlas page: files exist, size/gpu_bytes match, frames in bounds, anim frames exist, lossless import"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "anim_sets": {
+          "e_grunt": "unit e_grunt",
+          "e_spitter": "unit e_spitter",
+          "e_swarm": "unit e_swarm",
+          "hero_captain": "hero hero_captain",
+          "melee_basic": "unit melee_basic",
+          "ranged_basic": "unit ranged_basic",
+          "tank": "unit tank"
+        },
+        "unresolved": []
+      },
+      "id": "ART-03",
+      "status": "PASS",
+      "suite": "assets",
+      "title": "P0 characters resolve to atlas sprites (else procedural placeholder is drawn)"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "kinds": {
+          "arrow": "ranged_basic",
+          "spit": "e_spitter",
+          "tower_bolt": "base tower"
+        }
+      },
+      "id": "ART-04",
+      "status": "PASS",
+      "suite": "assets",
+      "title": "P0 projectiles resolve to atlas 'fly' anims"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "kinds": {
+          "explosion": "splash",
+          "hit_spark": "melee hit",
+          "skill_slam": "skill skill_slam"
+        }
+      },
+      "id": "ART-05",
+      "status": "PASS",
+      "suite": "assets",
+      "title": "P0 combat/skill fx resolve to atlas anims"
+    },
+    {
+      "detail": "",
+      "id": "ART-06",
+      "status": "PASS",
+      "suite": "assets",
+      "title": "P0 round biomes exist in manifest.biomes (else flat procedural background)"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "icons": [
+          "card_melee_basic",
+          "card_melee_basic",
+          "card_ranged_basic",
+          "skill_skill_slam",
+          "card_melee_basic",
+          "card_ranged_basic",
+          "card_tank",
+          "skill_skill_slam"
+        ]
+      },
+      "id": "ART-07",
+      "status": "PASS",
+      "suite": "assets",
+      "title": "P0 card/skill icons requested by battle_info resolve in ui_main"
+    },
+    {
+      "detail": "",
+      "id": "ART-08",
+      "status": "PASS",
+      "suite": "assets",
+      "title": "base sprites resolve"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "pages": [
+          "char_player",
+          "bases",
+          "fx_combat",
+          "biome_meadow"
+        ],
+        "resident_gpu_bytes": 6029312
+      },
+      "id": "ART-09",
+      "status": "PASS",
+      "suite": "assets",
+      "title": "battle texture residency <= 32 MiB low-tier budget (ENGINE.md §7, desktop estimate)"
+    },
+    {
+      "detail": "",
+      "id": "ART-10",
+      "status": "PASS",
+      "suite": "assets",
+      "title": "non-UI atlas pages released after battle refcount drops"
+    },
+    {
+      "detail": "",
+      "id": "ART-11",
+      "status": "PASS",
+      "suite": "assets",
+      "title": "missing atlas/anim lookups return empty (placeholder path) without error"
+    },
+    {
+      "detail": "",
+      "id": "R1-START",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r01 start: gold/workers/base hp/cards/hero match data"
+    },
+    {
+      "detail": "",
+      "id": "R1-INCOME",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r01 income = base_income + workers*worker_income (economy.json), capped at gold_max"
+    },
+    {
+      "detail": "",
+      "id": "R1-WORKER",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r01 worker: refused when poor, cost=base*growth^n, income rises, refused at workers_max=4"
+    },
+    {
+      "detail": "",
+      "id": "R1-DEPLOY",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r01 deploy melee_basic: refused when poor, spends cost, spawns at player base, cooldown blocks, unit advances"
+    },
+    {
+      "detail": "",
+      "id": "R1-DEPLOY-UNKNOWN",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r01 deploy of a card not in the round is refused without crash"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "cast_unknown": "unknown"
+      },
+      "id": "R1-SKILL",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r01 has no hero skills by design (data skills=[]); cast() refuses unknown"
+    },
+    {
+      "detail": "",
+      "id": "R1-PAUSE",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r01 paused sim does not advance time/gold/spawns"
+    },
+    {
+      "detail": "",
+      "evidence": [
+        {
+          "enemy_base": 0.0,
+          "player_base": 1500.0,
+          "seed": 101,
+          "stars": 3,
+          "t": 101.8,
+          "won": true
+        },
+        {
+          "enemy_base": 0.0,
+          "player_base": 1500.0,
+          "seed": 202,
+          "stars": 3,
+          "t": 101.8,
+          "won": true
+        },
+        {
+          "enemy_base": 0.0,
+          "player_base": 1500.0,
+          "seed": 303,
+          "stars": 3,
+          "t": 101.8,
+          "won": true
+        }
+      ],
+      "id": "R1-WIN",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r01 is winnable: competent bot wins >= 2/3 seeds by destroying the enemy base"
+    },
+    {
+      "detail": "",
+      "id": "R1-RESULT",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r01 BattleResult has contract keys and exactly one 'ended' event"
+    },
+    {
+      "detail": "",
+      "id": "R1-STARS",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r01 win => enemy base hp 0 and 1..3 stars"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "loss_time": 268.8
+      },
+      "id": "R1-LOSS",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r01 idle player loses by base destruction (not by 900s timeout)"
+    },
+    {
+      "detail": "",
+      "id": "R1-ENDED",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r01 after end: time frozen, deploy/worker/cast return 'ended'"
+    },
+    {
+      "detail": "",
+      "id": "R1-DETERMINISM",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r01 same seed + same inputs => identical outcome (D6)"
+    },
+    {
+      "detail": "",
+      "id": "R2-START",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r02 start: gold/workers/base hp/cards/hero match data"
+    },
+    {
+      "detail": "",
+      "id": "R2-INCOME",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r02 income = base_income + workers*worker_income (economy.json), capped at gold_max"
+    },
+    {
+      "detail": "",
+      "id": "R2-WORKER",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r02 worker: refused when poor, cost=base*growth^n, income rises, refused at workers_max=5"
+    },
+    {
+      "detail": "",
+      "id": "R2-DEPLOY",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r02 deploy melee_basic: refused when poor, spends cost, spawns at player base, cooldown blocks, unit advances"
+    },
+    {
+      "detail": "",
+      "id": "R2-DEPLOY-UNKNOWN",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r02 deploy of a card not in the round is refused without crash"
+    },
+    {
+      "detail": "",
+      "id": "R2-SKILL",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r02 skill skill_slam: needs mana, casts, cooldown, refused while hero dead"
+    },
+    {
+      "detail": "",
+      "id": "R2-PAUSE",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r02 paused sim does not advance time/gold/spawns"
+    },
+    {
+      "detail": "",
+      "evidence": [
+        {
+          "enemy_base": 0.0,
+          "player_base": 1500.0,
+          "seed": 101,
+          "stars": 3,
+          "t": 132.4,
+          "won": true
+        },
+        {
+          "enemy_base": 0.0,
+          "player_base": 1500.0,
+          "seed": 202,
+          "stars": 3,
+          "t": 132.4,
+          "won": true
+        },
+        {
+          "enemy_base": 0.0,
+          "player_base": 1500.0,
+          "seed": 303,
+          "stars": 3,
+          "t": 132.4,
+          "won": true
+        }
+      ],
+      "id": "R2-WIN",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r02 is winnable: competent bot wins >= 2/3 seeds by destroying the enemy base"
+    },
+    {
+      "detail": "",
+      "id": "R2-RESULT",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r02 BattleResult has contract keys and exactly one 'ended' event"
+    },
+    {
+      "detail": "",
+      "id": "R2-STARS",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r02 win => enemy base hp 0 and 1..3 stars"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "loss_time": 277.0
+      },
+      "id": "R2-LOSS",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r02 idle player loses by base destruction (not by 900s timeout)"
+    },
+    {
+      "detail": "",
+      "id": "R2-ENDED",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r02 after end: time frozen, deploy/worker/cast return 'ended'"
+    },
+    {
+      "detail": "",
+      "id": "R2-DETERMINISM",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r02 same seed + same inputs => identical outcome (D6)"
+    },
+    {
+      "detail": "",
+      "id": "R3-START",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r03 start: gold/workers/base hp/cards/hero match data"
+    },
+    {
+      "detail": "",
+      "id": "R3-INCOME",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r03 income = base_income + workers*worker_income (economy.json), capped at gold_max"
+    },
+    {
+      "detail": "",
+      "id": "R3-WORKER",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r03 worker: refused when poor, cost=base*growth^n, income rises, refused at workers_max=6"
+    },
+    {
+      "detail": "",
+      "id": "R3-DEPLOY",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r03 deploy melee_basic: refused when poor, spends cost, spawns at player base, cooldown blocks, unit advances"
+    },
+    {
+      "detail": "",
+      "id": "R3-DEPLOY-UNKNOWN",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r03 deploy of a card not in the round is refused without crash"
+    },
+    {
+      "detail": "",
+      "id": "R3-SKILL",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r03 skill skill_slam: needs mana, casts, cooldown, refused while hero dead"
+    },
+    {
+      "detail": "",
+      "id": "R3-PAUSE",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r03 paused sim does not advance time/gold/spawns"
+    },
+    {
+      "detail": "",
+      "evidence": [
+        {
+          "enemy_base": 0.0,
+          "player_base": 1500.0,
+          "seed": 101,
+          "stars": 3,
+          "t": 154.0,
+          "won": true
+        },
+        {
+          "enemy_base": 0.0,
+          "player_base": 1500.0,
+          "seed": 202,
+          "stars": 3,
+          "t": 154.0,
+          "won": true
+        },
+        {
+          "enemy_base": 0.0,
+          "player_base": 1500.0,
+          "seed": 303,
+          "stars": 3,
+          "t": 154.0,
+          "won": true
+        }
+      ],
+      "id": "R3-WIN",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r03 is winnable: competent bot wins >= 2/3 seeds by destroying the enemy base"
+    },
+    {
+      "detail": "",
+      "id": "R3-RESULT",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r03 BattleResult has contract keys and exactly one 'ended' event"
+    },
+    {
+      "detail": "",
+      "id": "R3-STARS",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r03 win => enemy base hp 0 and 1..3 stars"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "loss_time": 221.0
+      },
+      "id": "R3-LOSS",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r03 idle player loses by base destruction (not by 900s timeout)"
+    },
+    {
+      "detail": "",
+      "id": "R3-ENDED",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r03 after end: time frozen, deploy/worker/cast return 'ended'"
+    },
+    {
+      "detail": "",
+      "id": "R3-DETERMINISM",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "r03 same seed + same inputs => identical outcome (D6)"
+    },
+    {
+      "detail": "",
+      "id": "BD-DATA",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "base_defense read from economy.json at setup (missing key = 0 = off); player tower bolt splash = tower_splash"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "off": {
+          "bolt_enemy": [],
+          "bolt_player": [
+            0.0
+          ],
+          "capped": 0.0,
+          "end_t": 268.8,
+          "lost": 1500.0,
+          "peak_1s": 90.0
+        },
+        "on": {
+          "bolt_enemy": [],
+          "bolt_player": [
+            0.0
+          ],
+          "capped": 1825.0,
+          "end_t": 296.9,
+          "lost": 1500.0,
+          "peak_1s": 45.0
+        }
+      },
+      "id": "BD-CAP",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "dps_cap: player base never loses more than the cap in any 1 s window; the excess is counted in base_dmg_capped"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "off_end_t": 268.8,
+        "push_end_t": 273.2,
+        "push_lost": 1500.0
+      },
+      "id": "BD-PUSH",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "push_px + stagger_s slow the damage on the player base (idle: base lasts longer than with the option off)"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "enemy_bolt_splash": [
+          0.0
+        ],
+        "player_bolt_splash": [
+          37.5
+        ]
+      },
+      "id": "BD-SPLASH",
+      "status": "PASS",
+      "suite": "sim",
+      "title": "tower_splash applies to the PLAYER tower bolt only (idle run: player tower fires; competent run: enemy tower fires)"
+    },
+    {
+      "detail": "",
+      "id": "SAVE-01",
+      "status": "PASS",
+      "suite": "save",
+      "title": "main+bak corrupt -> fresh defaults, recovered=true, next save loads clean"
+    },
+    {
+      "detail": "",
+      "id": "SAVE-02",
+      "status": "PASS",
+      "suite": "save",
+      "title": "zero-byte save, no .bak -> defaults with recovered=true (user is told)"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "note": "tmp newer than bak is ignored; acceptable but loses last write",
+        "restored_unlocked": 3
+      },
+      "id": "SAVE-03",
+      "status": "PASS",
+      "suite": "save",
+      "title": "main missing after interrupted rename -> progress restored from .bak (no reset to round 1)"
+    },
+    {
+      "detail": "",
+      "id": "SAVE-04",
+      "status": "PASS",
+      "suite": "save",
+      "title": "save succeeds when a stale .tmp is left over"
+    },
+    {
+      "detail": "",
+      "id": "SAVE-05",
+      "status": "PASS",
+      "suite": "save",
+      "title": "wrong-typed fields in a valid envelope are normalised (stars/best_time/settings dicts, coins>=0)"
+    },
+    {
+      "detail": "",
+      "id": "SAVE-06",
+      "status": "PASS",
+      "suite": "save",
+      "title": "record_result after normalisation persists stars/unlock"
+    },
+    {
+      "detail": "",
+      "id": "SAVE-07",
+      "status": "PASS",
+      "suite": "save",
+      "title": "best stars kept, best time kept, loss does not unlock/award stars, coins accumulate, persisted"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "kept_unknown_field": true,
+        "note": "version is rewritten to 1 on next save; downgrade policy unspecified",
+        "version_after_load": 99.0
+      },
+      "id": "SAVE-08",
+      "status": "PASS",
+      "suite": "save",
+      "title": "save from newer build (v99) loads without losing progress"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "after_bak_rename": 4,
+        "after_tmp_write": 3,
+        "torn_tmp": 3
+      },
+      "id": "TP-01",
+      "status": "PASS",
+      "suite": "faults",
+      "title": "kill during save (after tmp write / after bak rename / torn tmp) never resets progress"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "after_bak_rename": {
+          "fired": "after_bak_rename",
+          "save_ret": false,
+          "source": "tmp",
+          "unlocked": 4
+        },
+        "after_tmp_write": {
+          "fired": "after_tmp_write",
+          "save_ret": false,
+          "source": "main",
+          "unlocked": 3
+        },
+        "before_final_rename": {
+          "fired": "before_final_rename",
+          "save_ret": false,
+          "source": "tmp",
+          "unlocked": 4
+        },
+        "torn_tmp": {
+          "fired": "torn_tmp",
+          "save_ret": false,
+          "source": "main",
+          "unlocked": 3
+        }
+      },
+      "id": "TP-01H",
+      "status": "PASS",
+      "suite": "faults",
+      "title": "Save._fault at every FAULT_POINT: fault fires, save returns false, reload keeps committed or newer progress"
+    },
+    {
+      "detail": "",
+      "id": "TP-02H",
+      "status": "PASS",
+      "suite": "faults",
+      "title": "SV-1 via hook: corrupt main, recover, kill after bak rename -> progress kept"
+    },
+    {
+      "detail": "",
+      "id": "TP-02a",
+      "status": "PASS",
+      "suite": "faults",
+      "title": "after recovering from .bak and saving once, a valid backup still exists"
+    },
+    {
+      "detail": "",
+      "id": "TP-02b",
+      "status": "PASS",
+      "suite": "faults",
+      "title": "SV-1 double fault: corrupt main, recover, kill during next save -> progress kept (not fresh)"
+    },
+    {
+      "detail": "",
+      "id": "TP-06",
+      "status": "PASS",
+      "suite": "faults",
+      "title": "save from a newer build (v99) is left byte-identical (no downgrade write)"
+    },
+    {
+      "detail": "",
+      "id": "TP-13a",
+      "status": "PASS",
+      "suite": "faults",
+      "title": "out-of-range values clamped (unlocked <= rounds+1, coins <= data/meta.json gold max, stars 0..3 ints)"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "unlocked": 2
+      },
+      "id": "TP-13b",
+      "status": "PASS",
+      "suite": "faults",
+      "title": "deeply nested payload loads intact without crash"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "load_ms_desktop": 13,
+        "note": "no size guard: whole file is read and parsed",
+        "unlocked": 1
+      },
+      "id": "TP-13c",
+      "status": "PASS",
+      "suite": "faults",
+      "title": "50 MB save loads without crash (load time recorded; limit owned by 08)"
+    },
+    {
+      "detail": "",
+      "id": "TP-14a",
+      "status": "PASS",
+      "suite": "faults",
+      "title": "write failure: save_progress returns false and the previous file is intact"
+    },
+    {
+      "detail": "",
+      "id": "TP-14b",
+      "status": "PASS",
+      "suite": "faults",
+      "title": "write failure is surfaced to the player (toast/signal)"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "after_recovery/after_bak_rename": {
+          "code": "save_uncertain",
+          "disk": [
+            440,
+            2
+          ],
+          "fired": "after_bak_rename",
+          "mem": [
+            500,
+            1
+          ]
+        },
+        "after_recovery/after_tmp_write": {
+          "code": "save_uncertain",
+          "disk": [
+            440,
+            2
+          ],
+          "fired": "after_tmp_write",
+          "mem": [
+            500,
+            1
+          ]
+        },
+        "after_recovery/before_final_rename": {
+          "code": "save_uncertain",
+          "disk": [
+            440,
+            2
+          ],
+          "fired": "before_final_rename",
+          "mem": [
+            500,
+            1
+          ]
+        },
+        "after_recovery/torn_tmp": {
+          "code": "save_failed",
+          "disk": [
+            500,
+            1
+          ],
+          "fired": "torn_tmp",
+          "mem": [
+            500,
+            1
+          ]
+        },
+        "normal/after_bak_rename": {
+          "code": "save_uncertain",
+          "disk": [
+            440,
+            2
+          ],
+          "fired": "after_bak_rename",
+          "mem": [
+            500,
+            1
+          ]
+        },
+        "normal/after_tmp_write": {
+          "code": "save_failed",
+          "disk": [
+            500,
+            1
+          ],
+          "fired": "after_tmp_write",
+          "mem": [
+            500,
+            1
+          ]
+        },
+        "normal/before_final_rename": {
+          "code": "save_uncertain",
+          "disk": [
+            440,
+            2
+          ],
+          "fired": "before_final_rename",
+          "mem": [
+            500,
+            1
+          ]
+        },
+        "normal/torn_tmp": {
+          "code": "save_failed",
+          "disk": [
+            500,
+            1
+          ],
+          "fired": "torn_tmp",
+          "mem": [
+            500,
+            1
+          ]
+        }
+      },
+      "id": "PUR-C6",
+      "status": "PASS",
+      "suite": "purchase",
+      "title": "purchase killed at every fault point (normal and right after recovery): disk is (before) or (after), never half; memory matches the return code"
+    },
+    {
+      "detail": "",
+      "id": "PUR-C7",
+      "status": "PASS",
+      "suite": "purchase",
+      "title": "purchase on a newer-version (read-only) save is refused; memory and file bytes unchanged"
+    },
+    {
+      "detail": "",
+      "id": "PUR-C8",
+      "status": "PASS",
+      "suite": "purchase",
+      "title": "first purchase after .bak recovery succeeds, leaves a valid .bak, and persists"
+    },
+    {
+      "detail": "",
+      "id": "PUR-C9",
+      "status": "PASS",
+      "suite": "purchase",
+      "title": "balance = cost buys to 0, cost-1 refused, near cap deducts exactly; never negative on disk"
+    },
+    {
+      "detail": "",
+      "id": "PUR-C11",
+      "status": "PASS",
+      "suite": "purchase",
+      "title": "two identical taps: one charge, second returns already_applied"
+    },
+    {
+      "detail": "",
+      "id": "PUR-C12",
+      "status": "PASS",
+      "suite": "purchase",
+      "title": "failed purchase + later result keeps only the result; failed result + later purchase keeps only the purchase"
+    },
+    {
+      "detail": "",
+      "id": "PUR-C13",
+      "status": "PASS",
+      "suite": "purchase",
+      "title": "app pause right after a purchase does not apply it twice (desktop simulation; device NOT tested)"
+    },
+    {
+      "detail": "",
+      "id": "TH-TEXT-KO",
+      "status": "PASS",
+      "suite": "theme",
+      "title": "ko: every card/skill/round/hero/enemy display name exists and is not a raw id (53 names)"
+    },
+    {
+      "detail": "",
+      "id": "TH-TEXT-EN",
+      "status": "PASS",
+      "suite": "theme",
+      "title": "en: every card/skill/round/hero/enemy display name exists and is not a raw id (53 names)"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "cut": [],
+        "label_px_per_round_[card,skill]": {
+          "r01": [
+            44.0,
+            0.0
+          ],
+          "r02": [
+            44.0,
+            42.0
+          ],
+          "r03": [
+            44.0,
+            42.0
+          ],
+          "r04": [
+            44.0,
+            42.0
+          ],
+          "r05": [
+            44.0,
+            42.0
+          ],
+          "r06": [
+            40.67,
+            42.0
+          ],
+          "r07": [
+            40.67,
+            42.0
+          ],
+          "r08": [
+            39.33,
+            34.0
+          ],
+          "r09": [
+            39.33,
+            34.0
+          ],
+          "r10": [
+            39.33,
+            34.0
+          ],
+          "r11": [
+            39.33,
+            34.0
+          ],
+          "r12": [
+            39.33,
+            34.0
+          ],
+          "r13": [
+            39.33,
+            34.0
+          ],
+          "r14": [
+            39.33,
+            34.0
+          ],
+          "r15": [
+            39.33,
+            34.0
+          ],
+          "r16": [
+            39.33,
+            34.0
+          ],
+          "r17": [
+            39.33,
+            34.0
+          ],
+          "r18": [
+            39.33,
+            34.0
+          ],
+          "r19": [
+            39.33,
+            34.0
+          ],
+          "r20": [
+            39.33,
+            34.0
+          ],
+          "r21": [
+            39.33,
+            34.0
+          ],
+          "r22": [
+            39.33,
+            34.0
+          ],
+          "r23": [
+            39.33,
+            34.0
+          ],
+          "r24": [
+            39.33,
+            34.0
+          ],
+          "r25": [
+            39.33,
+            34.0
+          ],
+          "r26": [
+            39.33,
+            34.0
+          ],
+          "r27": [
+            39.33,
+            34.0
+          ],
+          "r28": [
+            39.33,
+            34.0
+          ],
+          "r29": [
+            39.33,
+            34.0
+          ],
+          "r30": [
+            39.33,
+            34.0
+          ]
+        },
+        "name_hidden_icon_only": [
+          "skill skill_slam",
+          "skill skill_rally",
+          "skill skill_barrage"
+        ]
+      },
+      "id": "TH-FIT-HUD-KO",
+      "status": "PASS",
+      "suite": "theme",
+      "title": "ko: every drawn card/skill label fits at 640x360 with 34 px notches both sides (no ellipsis); icon-only buttons listed in evidence"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "cut": [],
+        "label_px_per_round_[card,skill]": {
+          "r01": [
+            44.0,
+            0.0
+          ],
+          "r02": [
+            44.0,
+            42.0
+          ],
+          "r03": [
+            44.0,
+            42.0
+          ],
+          "r04": [
+            44.0,
+            42.0
+          ],
+          "r05": [
+            44.0,
+            42.0
+          ],
+          "r06": [
+            40.67,
+            42.0
+          ],
+          "r07": [
+            40.67,
+            42.0
+          ],
+          "r08": [
+            39.33,
+            34.0
+          ],
+          "r09": [
+            39.33,
+            34.0
+          ],
+          "r10": [
+            39.33,
+            34.0
+          ],
+          "r11": [
+            39.33,
+            34.0
+          ],
+          "r12": [
+            39.33,
+            34.0
+          ],
+          "r13": [
+            39.33,
+            34.0
+          ],
+          "r14": [
+            39.33,
+            34.0
+          ],
+          "r15": [
+            39.33,
+            34.0
+          ],
+          "r16": [
+            39.33,
+            34.0
+          ],
+          "r17": [
+            39.33,
+            34.0
+          ],
+          "r18": [
+            39.33,
+            34.0
+          ],
+          "r19": [
+            39.33,
+            34.0
+          ],
+          "r20": [
+            39.33,
+            34.0
+          ],
+          "r21": [
+            39.33,
+            34.0
+          ],
+          "r22": [
+            39.33,
+            34.0
+          ],
+          "r23": [
+            39.33,
+            34.0
+          ],
+          "r24": [
+            39.33,
+            34.0
+          ],
+          "r25": [
+            39.33,
+            34.0
+          ],
+          "r26": [
+            39.33,
+            34.0
+          ],
+          "r27": [
+            39.33,
+            34.0
+          ],
+          "r28": [
+            39.33,
+            34.0
+          ],
+          "r29": [
+            39.33,
+            34.0
+          ],
+          "r30": [
+            39.33,
+            34.0
+          ]
+        },
+        "name_hidden_icon_only": [
+          "skill skill_slam",
+          "skill skill_rally",
+          "skill skill_barrage"
+        ]
+      },
+      "id": "TH-FIT-HUD-EN",
+      "status": "PASS",
+      "suite": "theme",
+      "title": "en: every drawn card/skill label fits at 640x360 with 34 px notches both sides (no ellipsis); icon-only buttons listed in evidence"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "wrapped_to_2_lines": [
+          "포자가 날아온다",
+          "곰팡이 성벽을 부숴라",
+          "부풀어 터지는 효모",
+          "균사왕의 과수원",
+          "곰팡이 오븐 심장"
+        ]
+      },
+      "id": "TH-FIT-ROUND-KO",
+      "status": "PASS",
+      "suite": "theme",
+      "title": "ko: round names fit round-select tiles (83 px, up to 2 lines) at narrowest layout without ellipsis"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "wrapped_to_2_lines": [
+          "Fruit Fly Raid",
+          "Spores Incoming",
+          "Rotten Hooves",
+          "The Mold General",
+          "Break the Mold Wall",
+          "Mold Onslaught",
+          "The Rot Overlord",
+          "Husk Vanguard",
+          "Spore Battery",
+          "Orchard Crossfire",
+          "Night Harvest",
+          "Apple Store Siege",
+          "Root Orchard",
+          "Frostbound Road",
+          "Blizzard Rush",
+          "Frozen Battery",
+          "Frost Warden",
+          "Black Yeast Night",
+          "Last Supply Route",
+          "Before the Oven Heart",
+          "Mold Oven Heart"
+        ]
+      },
+      "id": "TH-FIT-ROUND-EN",
+      "status": "PASS",
+      "suite": "theme",
+      "title": "en: round names fit round-select tiles (83 px, up to 2 lines) at narrowest layout without ellipsis"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "closest": "melee_basic vs e_swarm",
+        "delta_e": 21.6,
+        "note": "mean colour proxy only; silhouettes, markers and facing are not measured; human/CVD review still required"
+      },
+      "id": "TH-COL-NORMAL",
+      "status": "PASS",
+      "suite": "theme",
+      "title": "ally vs enemy mean sprite colour ΔE76 >= 2.3 (normal vision, Machado 2009 severity 1.0)"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "closest": "melee_basic vs e_brute",
+        "delta_e": 17.7,
+        "note": "mean colour proxy only; silhouettes, markers and facing are not measured; human/CVD review still required"
+      },
+      "id": "TH-COL-PROTAN",
+      "status": "PASS",
+      "suite": "theme",
+      "title": "ally vs enemy mean sprite colour ΔE76 >= 2.3 (protan vision, Machado 2009 severity 1.0)"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "closest": "melee_basic vs e_swarm",
+        "delta_e": 21.98,
+        "note": "mean colour proxy only; silhouettes, markers and facing are not measured; human/CVD review still required"
+      },
+      "id": "TH-COL-DEUTAN",
+      "status": "PASS",
+      "suite": "theme",
+      "title": "ally vs enemy mean sprite colour ΔE76 >= 2.3 (deutan vision, Machado 2009 severity 1.0)"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "closest": "melee_basic vs e_swarm",
+        "delta_e": 17.85,
+        "note": "mean colour proxy only; silhouettes, markers and facing are not measured; human/CVD review still required"
+      },
+      "id": "TH-COL-TRITAN",
+      "status": "PASS",
+      "suite": "theme",
+      "title": "ally vs enemy mean sprite colour ΔE76 >= 2.3 (tritan vision, Machado 2009 severity 1.0)"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-01",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "boot shows main menu from scenes/ui (not fallback)"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-02",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "locked round r03 refused on fresh save (toast round_locked, stays on menu)"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "buttons": 4,
+        "safe": "[P: (0.0, 0.0), S: (640.0, 360.0)]"
+      },
+      "id": "TOUCH-MENU",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "main menu: 4 visible touch targets >= 40 logical px, inside safe area, non-overlapping"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-03",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "tap Play (touch) -> battle r01 with HUD from scenes/ui"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-04",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "hud_snapshot streams (~10 Hz) with all INTERFACES §1.3 keys"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-04B",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "HUD shows localized text for every engine toast key (no raw ids)"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "buttons": 5,
+        "safe": "[P: (0.0, 0.0), S: (640.0, 360.0)]"
+      },
+      "id": "TOUCH-HUD-R1",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "HUD r01: 5 visible touch targets >= 40 logical px, inside safe area, non-overlapping"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "buttons": 5,
+        "safe": "[P: (0.0, 0.0), S: (640.0, 360.0)]"
+      },
+      "id": "SAFE-R1-16:9",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "HUD @ 16:9 (640.0, 360.0) safe [P: (0.0, 0.0), S: (640.0, 360.0)]: 5 visible touch targets >= 40 logical px, inside safe area, non-overlapping"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "buttons": 5,
+        "safe": "[P: (34.0, 0.0), S: (712.0, 360.0)]"
+      },
+      "id": "SAFE-R1-19.5:9",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "HUD @ 19.5:9 notch both (780.0, 360.0) safe [P: (34.0, 0.0), S: (712.0, 360.0)]: 5 visible touch targets >= 40 logical px, inside safe area, non-overlapping"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "buttons": 5,
+        "safe": "[P: (40.0, 0.0), S: (760.0, 348.0)]"
+      },
+      "id": "SAFE-R1-20:9",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "HUD @ 20:9 notch L + gesture bar (800.0, 360.0) safe [P: (40.0, 0.0), S: (760.0, 348.0)]: 5 visible touch targets >= 40 logical px, inside safe area, non-overlapping"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "buttons": 5,
+        "safe": "[P: (48.0, 0.0), S: (792.0, 360.0)]"
+      },
+      "id": "SAFE-R1-21:9",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "HUD @ 21:9 cutout L (840.0, 360.0) safe [P: (48.0, 0.0), S: (792.0, 360.0)]: 5 visible touch targets >= 40 logical px, inside safe area, non-overlapping"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "buttons": 5,
+        "safe": "[P: (0.0, 0.0), S: (640.0, 480.0)]"
+      },
+      "id": "SAFE-R1-4:3",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "HUD @ 4:3 tablet (640.0, 480.0) safe [P: (0.0, 0.0), S: (640.0, 480.0)]: 5 visible touch targets >= 40 logical px, inside safe area, non-overlapping"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-05",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "tap card (touch) deploys a unit and spends gold"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-06",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "tap worker button (touch) hires a worker"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-07",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "multi-touch: holding ▶ moves hero while a 2nd finger deploys"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-08",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "app background -> battle paused, pause overlay shown, progress saved"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-09",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "while backgrounded the sim does not advance; held move is released (cmd_hero_move 0)"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-10",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "app resume keeps battle paused until the player taps resume (ENGINE §7)"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-11",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "tap Resume -> sim runs again with no ghost hero movement"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "battle_paused_seq": [
+          true
+        ]
+      },
+      "id": "FLOW-12",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "Android back in battle opens pause (single toggle)"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "battle_uid": "1793821375-4ab7195d96292d34205482b34884c913",
+        "coins": 169,
+        "first_clear": true,
+        "hero_deaths": 0,
+        "kill_coins": 19,
+        "kills": 19,
+        "next_round_id": "r02",
+        "player_base_ratio": 1.0,
+        "round_id": "r01",
+        "saved": true,
+        "stars": 3,
+        "time": 74.1333333333304,
+        "tutorial_done": [
+          "tut_deploy_unit",
+          "tut_move_hero",
+          "tut_buy_worker"
+        ],
+        "won": true
+      },
+      "id": "FLOW-13",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "win r01 -> result screen (scenes/ui) + one battle_ended with won=true, stars, next_round_id"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-14",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "win persisted to disk: stars + unlocked_round >= 2 + coins"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-13B",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "result screen: HUD pause menu is not shown underneath the result panel"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "buttons": 4,
+        "safe": "[P: (0.0, 0.0), S: (640.0, 360.0)]"
+      },
+      "id": "TOUCH-RESULT",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "result screen: 4 visible touch targets >= 40 logical px, inside safe area, non-overlapping"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-15",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "retry -> fresh battle of same round (old battle freed, single UI root, t~0, start gold)"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-16",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "after retry one deploy command spawns exactly one unit (no duplicate handlers)"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-17",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "loss -> result won=false, no next button, saved stars/unlock not reduced"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-18",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "result menu button -> round select (battle torn down)"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "buttons": 13,
+        "safe": "[P: (0.0, 0.0), S: (640.0, 360.0)]"
+      },
+      "id": "TOUCH-ROUNDSEL",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "round select: 13 visible touch targets >= 40 logical px, inside safe area, non-overlapping"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-19",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "tap unlocked r02 tile -> battle r02"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "buttons": 7,
+        "safe": "[P: (0.0, 0.0), S: (640.0, 360.0)]"
+      },
+      "id": "TOUCH-HUD-R2",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "HUD r02: 7 visible touch targets >= 40 logical px, inside safe area, non-overlapping"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-20",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "win r02 -> Next button visible"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-21",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "Next -> battle r03"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "buttons": 8,
+        "safe": "[P: (0.0, 0.0), S: (640.0, 360.0)]"
+      },
+      "id": "TOUCH-HUD-R3",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "HUD r03: 8 visible touch targets >= 40 logical px, inside safe area, non-overlapping"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "buttons": 8,
+        "safe": "[P: (0.0, 0.0), S: (640.0, 360.0)]"
+      },
+      "id": "SAFE-R3-16:9",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "HUD @ 16:9 (640.0, 360.0) safe [P: (0.0, 0.0), S: (640.0, 360.0)]: 8 visible touch targets >= 40 logical px, inside safe area, non-overlapping"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "buttons": 8,
+        "safe": "[P: (34.0, 0.0), S: (712.0, 360.0)]"
+      },
+      "id": "SAFE-R3-19.5:9",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "HUD @ 19.5:9 notch both (780.0, 360.0) safe [P: (34.0, 0.0), S: (712.0, 360.0)]: 8 visible touch targets >= 40 logical px, inside safe area, non-overlapping"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "buttons": 8,
+        "safe": "[P: (40.0, 0.0), S: (760.0, 348.0)]"
+      },
+      "id": "SAFE-R3-20:9",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "HUD @ 20:9 notch L + gesture bar (800.0, 360.0) safe [P: (40.0, 0.0), S: (760.0, 348.0)]: 8 visible touch targets >= 40 logical px, inside safe area, non-overlapping"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "buttons": 8,
+        "safe": "[P: (48.0, 0.0), S: (792.0, 360.0)]"
+      },
+      "id": "SAFE-R3-21:9",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "HUD @ 21:9 cutout L (840.0, 360.0) safe [P: (48.0, 0.0), S: (792.0, 360.0)]: 8 visible touch targets >= 40 logical px, inside safe area, non-overlapping"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "buttons": 8,
+        "safe": "[P: (0.0, 0.0), S: (640.0, 480.0)]"
+      },
+      "id": "SAFE-R3-4:3",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "HUD @ 4:3 tablet (640.0, 480.0) safe [P: (0.0, 0.0), S: (640.0, 480.0)]: 8 visible touch targets >= 40 logical px, inside safe area, non-overlapping"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-22",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "win r03 (first 3 rounds cleared through real UI; forced_win=false) -> unlocked_round >= 4"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "nav": [
+          "round_select"
+        ],
+        "top": "round_select.gd"
+      },
+      "id": "FLOW-23",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "Android back on result navigates exactly once and the target screen is actually mounted"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "nav": [
+          "menu"
+        ],
+        "quit_dialog": false
+      },
+      "id": "FLOW-23B",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "Android back on round select -> menu once, without also opening the menu's quit dialog"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-24",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "corrupt save at launch -> restored from .bak, recovered flagged, menu shows recovery notice"
+    },
+    {
+      "detail": "",
+      "id": "FLOW-25",
+      "status": "PASS",
+      "suite": "flow",
+      "title": "Android back on main menu shows quit confirmation instead of quitting immediately"
+    },
+    {
+      "detail": "",
+      "id": "REL-01",
+      "status": "PASS",
+      "suite": "release",
+      "title": "mobile project settings match ENGINE.md §4"
+    },
+    {
+      "detail": "",
+      "id": "AUD-01",
+      "status": "PASS",
+      "suite": "release",
+      "title": "audio manifest cue/music files exist (52 refs)"
+    },
+    {
+      "detail": "",
+      "id": "AUD-02",
+      "status": "PASS",
+      "suite": "release",
+      "title": "audio manager registered as autoload Audio"
+    },
+    {
+      "detail": "verified after AUD-02 is wired (cue_played signal hook exists)",
+      "id": "AUD-03",
+      "status": "NOT_TESTED",
+      "suite": "release",
+      "title": "cues play on gameplay events and honour sfx/music settings + pause"
+    },
+    {
+      "detail": "",
+      "id": "MON-01",
+      "status": "PASS",
+      "suite": "release",
+      "title": "monetization disabled in data (premium currency, rewarded ads, IAP catalog) per D9"
+    },
+    {
+      "detail": "",
+      "id": "MON-02",
+      "status": "PASS",
+      "suite": "release",
+      "title": "no live ad/billing SDK (Android plugin singleton) calls in runtime code"
+    },
+    {
+      "detail": "",
+      "evidence": {
+        "autoload_registered": true
+      },
+      "id": "MON-03",
+      "status": "PASS",
+      "suite": "release",
+      "title": "06-services facade defaults to mode=disabled"
+    },
+    {
+      "detail": "",
+      "id": "PLAT-01",
+      "status": "PASS",
+      "suite": "release",
+      "title": "Android export preset exists without billing/ad/location permissions"
+    },
+    {
+      "detail": "",
+      "id": "PLAT-02",
+      "status": "PASS",
+      "suite": "release",
+      "title": "no signing secrets in export_presets.cfg"
+    },
+    {
+      "detail": "desktop headless run only; this report is NOT Android release certification",
+      "id": "PLAT-03",
+      "status": "NOT_TESTED",
+      "suite": "release",
+      "title": "on-device Android: install, touch, lifecycle, safe area, perf, thermals"
+    }
+  ]
+}

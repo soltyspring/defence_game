@@ -35,7 +35,13 @@ static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min
 	var res_w := clampf(s.size.x * 0.26, 132.0, 180.0)
 	out.resources = Rect2(s.position, Vector2(res_w, top_h))
 	var bars_x := s.position.x + res_w + GAP * 2
-	var bars_end := pause_r.position.x - GAP * 2
+	var follow_r := Rect2(pause_r.position.x-TOUCH_GAP-t,s.position.y,t,t)
+	var map_w := roundf(clampf(s.size.x*0.22,126.0,150.0))
+	var map_r := Rect2(follow_r.position.x-TOUCH_GAP-map_w,s.position.y,map_w,t)
+	out.minimap = map_r
+	out.follow = follow_r
+	out.compact = true
+	var bars_end := map_r.position.x - GAP * 2
 	out.bases = Rect2(Vector2(bars_x, s.position.y), Vector2(maxf(bars_end - bars_x, 60.0), 22.0))
 	out.wave = Rect2(Vector2(bars_x, s.position.y + 24.0), Vector2(out.bases.size.x, 14.0))
 
@@ -96,12 +102,8 @@ static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min
 	var strip_end := s.end.x
 	if not skills_in_row and n_skills > 0:
 		strip_end = (skills[0] as Rect2).position.x - GAP * 2
-	var map_y := s.position.y + top_h + TOUCH_GAP
-	var map_h := maxf(t, 44.0)
-	out.minimap = Rect2(bars_x, map_y, out.bases.size.x, map_h)
-	out.follow = Rect2(pause_r.position.x, map_y, t, map_h)
-	var boss_y := map_y + map_h + TOUCH_GAP
-	out.boss = Rect2(Vector2(bars_x, boss_y), Vector2(out.bases.size.x, 14.0))
+	var boss_y := s.position.y + top_h + TOUCH_GAP
+	out.boss = Rect2(Vector2(bars_x, boss_y), Vector2(map_r.end.x-bars_x, 14.0))
 	# off-screen threat markers (03 A11, 01 R10): square plate ≥ 44 px at the screen edges, just below the toast
 	# strip and always inside the top half, so no HUD part and no lane unit covers them. Right marker stays left
 	# of a stacked skill column.

@@ -219,6 +219,7 @@ func _on_snapshot(s: Dictionary) -> void:
 	snap = s
 	top.snap = s            # hud_top redraws itself only if a drawn value changed
 	minimap.state = s.get("map", {})
+	btn_follow.visible = bool(s.get("map", {}).get("scouting", false))
 	btn_follow.fill = UiStyle.C_ACCENT.darkened(0.25) if bool(s.get("map", {}).get("scouting", false)) else UiStyle.C_PANEL_LIGHT
 	var gold := float(s.get("gold", 0))
 	var army: Dictionary = s.get("army", {})
@@ -272,6 +273,8 @@ func _update_threat(t: Variant) -> void:
 	if t is Dictionary and not _battle_over:
 		td = t
 	var d: Dictionary = ThreatMarker.compute(td)
+	# The overview already marks the nest. Keep edge plates for live threats only.
+	if str(d.right.get("kind", "")) == "nest": d.right = {"kind":"","m":0}
 	threat_right.state = d.right
 	threat_left.state = d.left
 
