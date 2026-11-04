@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "id": "r18",
+  "index": 18,
+  "chapter": 2,
+  "name": "포자 공성진",
+  "name_key": "round.r18.name",
+  "biome": "biome_orchard",
+  "lane_length": 1980,
+  "player_base_hp": 2575,
+  "enemy_base_hp": 2585,
+  "start_gold": 120,
+  "gold_max": 500,
+  "workers_max": 8,
+  "hero": "hero_captain",
+  "cards": [
+    "melee_basic",
+    "ranged_basic",
+    "tank",
+    "fast",
+    "siege"
+  ],
+  "skills": [
+    "skill_slam",
+    "skill_rally",
+    "skill_barrage"
+  ],
+  "waves": [
+    {
+      "at": 12,
+      "spawns": [
+        {
+          "unit": "e_guard",
+          "count": 3,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_mortar",
+          "count": 2,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_runner",
+          "count": 4,
+          "interval": 0.7
+        }
+      ]
+    },
+    {
+      "at": 44,
+      "spawns": [
+        {
+          "unit": "e_guard",
+          "count": 3,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_mortar",
+          "count": 2,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_runner",
+          "count": 4,
+          "interval": 0.7
+        },
+        {
+          "unit": "e_spitter",
+          "count": 2,
+          "interval": 1.6
+        }
+      ]
+    },
+    {
+      "at": 82,
+      "spawns": [
+        {
+          "unit": "e_guard",
+          "count": 4,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_mortar",
+          "count": 3,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_runner",
+          "count": 5,
+          "interval": 0.7
+        }
+      ]
+    },
+    {
+      "at": 124,
+      "spawns": [
+        {
+          "unit": "e_guard",
+          "count": 4,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_mortar",
+          "count": 3,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_runner",
+          "count": 5,
+          "interval": 0.7
+        },
+        {
+          "unit": "e_bomber",
+          "count": 2,
+          "interval": 1.6
+        }
+      ]
+    }
+  ],
+  "enemy_ai": {
+    "pool": [],
+    "income": 0,
+    "start_gold": 0,
+    "think": 2.5,
+    "after_waves_loop": false
+  },
+  "trickle": {
+    "start": 7,
+    "pattern": [
+      "e_guard",
+      "e_grunt",
+      "e_swarm",
+      "e_runner"
+    ],
+    "interval": 8.44,
+    "interval_min": 7.0,
+    "ramp_per_min": 0.25
+  },
+  "enemy_base_spawns_on_hp": [
+    {
+      "below": 0.55,
+      "spawns": [
+        {
+          "unit": "e_guard",
+          "count": 2,
+          "interval": 1.3
+        },
+        {
+          "unit": "e_mortar",
+          "count": 1,
+          "interval": 0
+        }
+      ]
+    },
+    {
+      "below": 0.25,
+      "spawns": [
+        {
+          "unit": "e_runner",
+          "count": 5,
+          "interval": 0.6
+        }
+      ]
+    }
+  ],
+  "reward": {
+    "coins": 222,
+    "first_clear_coins": 486,
+    "three_star_bonus_coins": 128
+  },
+  "stars": {
+    "time_3": 270,
+    "base_hp_2": 0.4
+  },
+  "enemy_scaling": {
+    "hp": 1.46,
+    "atk": 1.226
+  },
+  "enemy_tower_atk_mult": 0.5,
+  "tutorial": [],
+  "boss_round": false,
+  "provisional": true,
+  "balance_note": "Campaign 30: distinct wave compositions, reused animation sets, gated late upgrades; bot validation in docs/qa/CAMPAIGN30_20261105.md. Human difficulty remains to be played."
+}

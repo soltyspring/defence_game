@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "id": "r24",
+  "index": 24,
+  "chapter": 3,
+  "name": "얼음 포격대",
+  "name_key": "round.r24.name",
+  "biome": "biome_frost",
+  "lane_length": 2170,
+  "player_base_hp": 2725,
+  "enemy_base_hp": 2915,
+  "start_gold": 130,
+  "gold_max": 500,
+  "workers_max": 8,
+  "hero": "hero_captain",
+  "cards": [
+    "melee_basic",
+    "ranged_basic",
+    "tank",
+    "fast",
+    "siege"
+  ],
+  "skills": [
+    "skill_slam",
+    "skill_rally",
+    "skill_barrage"
+  ],
+  "waves": [
+    {
+      "at": 12,
+      "spawns": [
+        {
+          "unit": "e_mortar",
+          "count": 2,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_grunt",
+          "count": 5,
+          "interval": 1.2
+        }
+      ]
+    },
+    {
+      "at": 44,
+      "spawns": [
+        {
+          "unit": "e_mortar",
+          "count": 2,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_grunt",
+          "count": 5,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_spitter",
+          "count": 3,
+          "interval": 1.6
+        }
+      ]
+    },
+    {
+      "at": 82,
+      "spawns": [
+        {
+          "unit": "e_mortar",
+          "count": 3,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_grunt",
+          "count": 6,
+          "interval": 1.2
+        }
+      ]
+    },
+    {
+      "at": 124,
+      "spawns": [
+        {
+          "unit": "e_mortar",
+          "count": 3,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_grunt",
+          "count": 6,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_bomber",
+          "count": 3,
+          "interval": 1.6
+        }
+      ]
+    }
+  ],
+  "enemy_ai": {
+    "pool": [],
+    "income": 0,
+    "start_gold": 0,
+    "think": 2.5,
+    "after_waves_loop": false
+  },
+  "trickle": {
+    "start": 7,
+    "pattern": [
+      "e_mortar",
+      "e_grunt",
+      "e_swarm",
+      "e_grunt"
+    ],
+    "interval": 7.96,
+    "interval_min": 7.0,
+    "ramp_per_min": 0.25
+  },
+  "enemy_base_spawns_on_hp": [
+    {
+      "below": 0.55,
+      "spawns": [
+        {
+          "unit": "e_guard",
+          "count": 2,
+          "interval": 1.3
+        },
+        {
+          "unit": "e_mortar",
+          "count": 1,
+          "interval": 0
+        }
+      ]
+    },
+    {
+      "below": 0.25,
+      "spawns": [
+        {
+          "unit": "e_runner",
+          "count": 5,
+          "interval": 0.6
+        }
+      ]
+    }
+  ],
+  "reward": {
+    "coins": 258,
+    "first_clear_coins": 594,
+    "three_star_bonus_coins": 152
+  },
+  "stars": {
+    "time_3": 270,
+    "base_hp_2": 0.4
+  },
+  "enemy_scaling": {
+    "hp": 1.64,
+    "atk": 1.334
+  },
+  "enemy_tower_atk_mult": 0.5,
+  "tutorial": [],
+  "boss_round": false,
+  "provisional": true,
+  "balance_note": "Campaign 30: distinct wave compositions, reused animation sets, gated late upgrades; bot validation in docs/qa/CAMPAIGN30_20261105.md. Human difficulty remains to be played."
+}

@@ -26,157 +26,257 @@
       "id": "up_melee_basic",
       "target": "unit:melee_basic",
       "name_key": "upgrade.unit",
-      "max_level": 5,
+      "max_level": 9,
       "costs": [
         60,
         100,
         160,
-        190
+        190,
+        240,
+        330,
+        450,
+        590
       ],
       "per_level": {
         "hp_mult": 0.15,
         "atk_mult": 0.15
+      },
+      "level_unlock_rounds": {
+        "6": 11,
+        "7": 16,
+        "8": 21,
+        "9": 26
       }
     },
     {
       "id": "up_ranged_basic",
       "target": "unit:ranged_basic",
       "name_key": "upgrade.unit",
-      "max_level": 5,
+      "max_level": 9,
       "costs": [
         60,
         100,
         160,
-        190
+        190,
+        240,
+        330,
+        450,
+        590
       ],
       "per_level": {
         "hp_mult": 0.18,
         "atk_mult": 0.15
+      },
+      "level_unlock_rounds": {
+        "6": 11,
+        "7": 16,
+        "8": 21,
+        "9": 26
       }
     },
     {
       "id": "up_tank",
       "target": "unit:tank",
       "name_key": "upgrade.unit",
-      "max_level": 5,
+      "max_level": 9,
       "costs": [
         70,
         115,
         180,
-        210
+        210,
+        260,
+        370,
+        490,
+        650
       ],
       "per_level": {
         "hp_mult": 0.15,
         "atk_mult": 0.15
+      },
+      "level_unlock_rounds": {
+        "6": 11,
+        "7": 16,
+        "8": 21,
+        "9": 26
       }
     },
     {
       "id": "up_fast",
       "target": "unit:fast",
       "name_key": "upgrade.unit",
-      "max_level": 5,
+      "max_level": 9,
       "costs": [
         70,
         115,
         180,
-        210
+        210,
+        260,
+        370,
+        490,
+        650
       ],
       "per_level": {
         "hp_mult": 0.15,
         "atk_mult": 0.15
+      },
+      "level_unlock_rounds": {
+        "6": 11,
+        "7": 16,
+        "8": 21,
+        "9": 26
       }
     },
     {
       "id": "up_siege",
       "target": "unit:siege",
       "name_key": "upgrade.unit",
-      "max_level": 5,
+      "max_level": 9,
       "costs": [
         90,
         150,
         230,
-        260
+        260,
+        320,
+        460,
+        610,
+        810
       ],
       "per_level": {
         "hp_mult": 0.15,
         "atk_mult": 0.2
+      },
+      "level_unlock_rounds": {
+        "6": 11,
+        "7": 16,
+        "8": 21,
+        "9": 26
       }
     },
     {
       "id": "up_hero",
       "target": "hero:hero_captain",
       "name_key": "upgrade.hero",
-      "max_level": 5,
+      "max_level": 9,
       "costs": [
         80,
         130,
         200,
-        225
+        225,
+        280,
+        390,
+        530,
+        700
       ],
       "per_level": {
         "hp_mult": 0.15,
         "atk_mult": 0.15
+      },
+      "level_unlock_rounds": {
+        "6": 11,
+        "7": 16,
+        "8": 21,
+        "9": 26
       }
     },
     {
       "id": "up_supply_regen",
       "target": "resource:supply",
       "name_key": "upgrade.supply_regen",
-      "max_level": 5,
+      "max_level": 9,
       "costs": [
         70,
         120,
         190,
-        210
+        210,
+        260,
+        370,
+        490,
+        650
       ],
       "per_level": {
         "regen_add": 0.5,
         "cap_add": 25
+      },
+      "level_unlock_rounds": {
+        "6": 11,
+        "7": 16,
+        "8": 21,
+        "9": 26
       }
     },
     {
       "id": "up_energy_regen",
       "target": "resource:energy",
       "name_key": "upgrade.energy_regen",
-      "max_level": 5,
+      "max_level": 9,
       "costs": [
         70,
         120,
         190,
-        210
+        210,
+        260,
+        370,
+        490,
+        650
       ],
       "per_level": {
         "regen_add": 0.4,
         "cap_add": 10
+      },
+      "level_unlock_rounds": {
+        "6": 11,
+        "7": 16,
+        "8": 21,
+        "9": 26
       }
     },
     {
       "id": "up_worker",
       "target": "worker",
       "name_key": "upgrade.worker",
-      "max_level": 4,
+      "max_level": 8,
       "costs": [
         90,
         150,
-        180
+        180,
+        220,
+        320,
+        420,
+        560
       ],
       "per_level": {
         "income_add": 0.25
+      },
+      "level_unlock_rounds": {
+        "5": 11,
+        "6": 16,
+        "7": 21,
+        "8": 26
       }
     },
     {
       "id": "up_base_hp",
       "target": "base:player",
       "name_key": "upgrade.base_hp",
-      "max_level": 5,
+      "max_level": 9,
       "costs": [
         50,
         90,
         150,
-        170
+        170,
+        210,
+        300,
+        400,
+        530
       ],
       "per_level": {
         "hp_mult": 0.1
+      },
+      "level_unlock_rounds": {
+        "6": 11,
+        "7": 16,
+        "8": 21,
+        "9": 26
       }
     }
   ],

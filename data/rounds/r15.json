@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "id": "r15",
+  "index": 15,
+  "chapter": 2,
+  "name": "제분장 파수꾼",
+  "name_key": "round.r15.name",
+  "biome": "biome_orchard",
+  "lane_length": 2160,
+  "player_base_hp": 2500,
+  "enemy_base_hp": 2720,
+  "start_gold": 110,
+  "gold_max": 500,
+  "workers_max": 8,
+  "hero": "hero_captain",
+  "cards": [
+    "melee_basic",
+    "ranged_basic",
+    "tank",
+    "fast",
+    "siege"
+  ],
+  "skills": [
+    "skill_slam",
+    "skill_rally",
+    "skill_barrage"
+  ],
+  "waves": [
+    {
+      "at": 12,
+      "spawns": [
+        {
+          "unit": "boss_millward",
+          "count": 1,
+          "interval": 0
+        },
+        {
+          "unit": "e_guard",
+          "count": 3,
+          "interval": 1.2
+        }
+      ],
+      "boss": true
+    },
+    {
+      "at": 44,
+      "spawns": [
+        {
+          "unit": "e_guard",
+          "count": 3,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_grunt",
+          "count": 4,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_spitter",
+          "count": 2,
+          "interval": 1.6
+        }
+      ]
+    },
+    {
+      "at": 82,
+      "spawns": [
+        {
+          "unit": "e_guard",
+          "count": 4,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_grunt",
+          "count": 5,
+          "interval": 1.2
+        }
+      ]
+    },
+    {
+      "at": 124,
+      "spawns": [
+        {
+          "unit": "e_guard",
+          "count": 4,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_grunt",
+          "count": 5,
+          "interval": 1.2
+        },
+        {
+          "unit": "e_bomber",
+          "count": 2,
+          "interval": 1.6
+        }
+      ]
+    }
+  ],
+  "enemy_ai": {
+    "pool": [],
+    "income": 0,
+    "start_gold": 0,
+    "think": 2.5,
+    "after_waves_loop": false
+  },
+  "trickle": {
+    "start": 7,
+    "pattern": [
+      "e_guard",
+      "e_grunt",
+      "e_swarm",
+      "e_grunt"
+    ],
+    "interval": 8.68,
+    "interval_min": 7.0,
+    "ramp_per_min": 0.25
+  },
+  "enemy_base_spawns_on_hp": [
+    {
+      "below": 0.55,
+      "spawns": [
+        {
+          "unit": "e_guard",
+          "count": 2,
+          "interval": 1.3
+        },
+        {
+          "unit": "e_mortar",
+          "count": 1,
+          "interval": 0
+        }
+      ]
+    },
+    {
+      "below": 0.25,
+      "spawns": [
+        {
+          "unit": "e_runner",
+          "count": 5,
+          "interval": 0.6
+        }
+      ]
+    }
+  ],
+  "reward": {
+    "coins": 204,
+    "first_clear_coins": 432,
+    "three_star_bonus_coins": 116
+  },
+  "stars": {
+    "time_3": 300,
+    "base_hp_2": 0.4
+  },
+  "enemy_scaling": {
+    "hp": 1.37,
+    "atk": 1.172
+  },
+  "enemy_tower_atk_mult": 0.5,
+  "tutorial": [],
+  "boss_round": true,
+  "provisional": true,
+  "balance_note": "Campaign 30: distinct wave compositions, reused animation sets, gated late upgrades; bot validation in docs/qa/CAMPAIGN30_20261105.md. Human difficulty remains to be played."
+}

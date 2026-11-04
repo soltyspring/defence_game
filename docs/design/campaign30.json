@@ -1,0 +1,327 @@
+{
+  "rounds": [
+    {
+      "id": "r11",
+      "role": [
+        [
+          "e_guard",
+          3
+        ],
+        [
+          "e_grunt",
+          4
+        ]
+      ],
+      "boss": null,
+      "recommended_level": 6
+    },
+    {
+      "id": "r12",
+      "role": [
+        [
+          "e_mortar",
+          2
+        ],
+        [
+          "e_grunt",
+          5
+        ]
+      ],
+      "boss": null,
+      "recommended_level": 6
+    },
+    {
+      "id": "r13",
+      "role": [
+        [
+          "e_runner",
+          8
+        ],
+        [
+          "e_spitter",
+          3
+        ]
+      ],
+      "boss": null,
+      "recommended_level": 6
+    },
+    {
+      "id": "r14",
+      "role": [
+        [
+          "e_guard",
+          3
+        ],
+        [
+          "e_mortar",
+          2
+        ],
+        [
+          "e_runner",
+          4
+        ]
+      ],
+      "boss": null,
+      "recommended_level": 6
+    },
+    {
+      "id": "r15",
+      "role": [
+        [
+          "e_guard",
+          3
+        ],
+        [
+          "e_grunt",
+          4
+        ]
+      ],
+      "boss": "boss_millward",
+      "recommended_level": 6
+    },
+    {
+      "id": "r16",
+      "role": [
+        [
+          "e_mortar",
+          2
+        ],
+        [
+          "e_grunt",
+          5
+        ]
+      ],
+      "boss": null,
+      "recommended_level": 7
+    },
+    {
+      "id": "r17",
+      "role": [
+        [
+          "e_runner",
+          8
+        ],
+        [
+          "e_spitter",
+          3
+        ]
+      ],
+      "boss": null,
+      "recommended_level": 7
+    },
+    {
+      "id": "r18",
+      "role": [
+        [
+          "e_guard",
+          3
+        ],
+        [
+          "e_mortar",
+          2
+        ],
+        [
+          "e_runner",
+          4
+        ]
+      ],
+      "boss": null,
+      "recommended_level": 7
+    },
+    {
+      "id": "r19",
+      "role": [
+        [
+          "e_guard",
+          3
+        ],
+        [
+          "e_grunt",
+          4
+        ]
+      ],
+      "boss": null,
+      "recommended_level": 7
+    },
+    {
+      "id": "r20",
+      "role": [
+        [
+          "e_mortar",
+          2
+        ],
+        [
+          "e_grunt",
+          5
+        ]
+      ],
+      "boss": "boss_rootking",
+      "recommended_level": 7
+    },
+    {
+      "id": "r21",
+      "role": [
+        [
+          "e_runner",
+          8
+        ],
+        [
+          "e_spitter",
+          3
+        ]
+      ],
+      "boss": null,
+      "recommended_level": 8
+    },
+    {
+      "id": "r22",
+      "role": [
+        [
+          "e_guard",
+          3
+        ],
+        [
+          "e_mortar",
+          2
+        ],
+        [
+          "e_runner",
+          4
+        ]
+      ],
+      "boss": null,
+      "recommended_level": 8
+    },
+    {
+      "id": "r23",
+      "role": [
+        [
+          "e_guard",
+          3
+        ],
+        [
+          "e_grunt",
+          4
+        ]
+      ],
+      "boss": null,
+      "recommended_level": 8
+    },
+    {
+      "id": "r24",
+      "role": [
+        [
+          "e_mortar",
+          2
+        ],
+        [
+          "e_grunt",
+          5
+        ]
+      ],
+      "boss": null,
+      "recommended_level": 8
+    },
+    {
+      "id": "r25",
+      "role": [
+        [
+          "e_runner",
+          8
+        ],
+        [
+          "e_spitter",
+          3
+        ]
+      ],
+      "boss": "boss_frostguard",
+      "recommended_level": 8
+    },
+    {
+      "id": "r26",
+      "role": [
+        [
+          "e_guard",
+          3
+        ],
+        [
+          "e_mortar",
+          2
+        ],
+        [
+          "e_runner",
+          4
+        ]
+      ],
+      "boss": null,
+      "recommended_level": 9
+    },
+    {
+      "id": "r27",
+      "role": [
+        [
+          "e_guard",
+          3
+        ],
+        [
+          "e_grunt",
+          4
+        ]
+      ],
+      "boss": null,
+      "recommended_level": 9
+    },
+    {
+      "id": "r28",
+      "role": [
+        [
+          "e_mortar",
+          2
+        ],
+        [
+          "e_grunt",
+          5
+        ]
+      ],
+      "boss": null,
+      "recommended_level": 9
+    },
+    {
+      "id": "r29",
+      "role": [
+        [
+          "e_runner",
+          8
+        ],
+        [
+          "e_spitter",
+          3
+        ]
+      ],
+      "boss": null,
+      "recommended_level": 9
+    },
+    {
+      "id": "r30",
+      "role": [
+        [
+          "e_guard",
+          3
+        ],
+        [
+          "e_mortar",
+          2
+        ],
+        [
+          "e_runner",
+          4
+        ]
+      ],
+      "boss": "boss_ovenheart",
+      "recommended_level": 9
+    }
+  ],
+  "original_rounds_unchanged": "r01-r10",
+  "extra_texture_pages": 0,
+  "extra_audio_files": 0
+}
