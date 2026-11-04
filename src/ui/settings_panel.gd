@@ -7,6 +7,7 @@ signal closed
 const UiStyle := preload("res://src/ui/ui_style.gd")
 const UiText := preload("res://src/ui/ui_text.gd")
 const TouchButton := preload("res://src/ui/touch_button.gd")
+const VolumeSlider := preload("res://src/ui/volume_slider.gd")
 
 var bus: Node
 var settings: Dictionary = {}
@@ -24,8 +25,8 @@ func _init() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	_rows = [
 		{"key": "fps_cap", "label": "ui.fps_cap", "options": [["30", 30], ["60", 60]]},
-		{"key": "sfx", "label": "ui.sfx", "options": [["ui.on", 1.0], ["ui.off", 0.0]]},
-		{"key": "music", "label": "ui.music", "options": [["ui.on", 0.8], ["ui.off", 0.0]]},
+		{"key": "sfx", "label": "ui.sfx", "options": [], "volume": true},
+		{"key": "music", "label": "ui.music", "options": [], "volume": true},
 		{"key": "show_damage", "label": "ui.show_damage", "options": [["ui.on", true], ["ui.off", false]]},
 		{"key": "screen_shake", "label": "ui.screen_shake", "options": [["ui.on", true], ["ui.off", false]]},
 	]
@@ -44,6 +45,12 @@ func open(p_bus: Node, p_settings: Dictionary, view: Vector2, safe: Rect2, p_tar
 func _build() -> void:
 	for row in _rows:
 		row.buttons = []
+		if row.get("volume", false):
+			var slider := VolumeSlider.new()
+			slider.preview.connect(_on_volume_preview.bind(row.key))
+			slider.committed.connect(_on_volume_commit.bind(row.key))
+			add_child(slider)
+			row.slider = slider
 		for opt in row.options:
 			var b: Control = TouchButton.new()
 			b.text = UiText.t(opt[0]) if str(opt[0]).begins_with("ui.") else str(opt[0])
@@ -70,6 +77,9 @@ func _layout(view: Vector2, safe: Rect2) -> void:
 	var y := panel_rect.position.y + 38
 	var bw := maxf(target, 64.0)
 	for row in _rows:
+		if row.has("slider"):
+			row.slider.position = Vector2(panel_rect.end.x - 204,y).round()
+			row.slider.size = Vector2(196,row_h)
 		var x: float = panel_rect.end.x - 8 - row.buttons.size() * (bw + 4) + 4
 		for b in row.buttons:
 			b.position = Vector2(x, y).round()
@@ -90,12 +100,15 @@ static func option_matches(key: String, cur: Variant, opt: Variant) -> bool:
 		"fps_cap":
 			return int(cur) == int(opt)
 		"sfx", "music":
-			return (float(cur) > 0.0) == (float(opt) > 0.0)   # volume: any >0 is "on"
+			return is_equal_approx(float(cur), float(opt))
 		_:
 			return bool(cur) == bool(opt)
 
 func _refresh() -> void:
 	for row in _rows:
+		if row.has("slider"):
+			row.slider.percent = roundi(clampf(float(settings.get(row.key, 0.8 if row.key == "music" else 1.0)),0.0,1.0)*100.0)
+			continue
 		var cur = settings.get(row.key, row.options[0][1])
 		for i in row.buttons.size():
 			var on := option_matches(row.key, cur, row.options[i][1])
@@ -108,6 +121,14 @@ func _on_option(key: String, value: Variant) -> void:
 	if bus != null and bus.has_signal(&"cmd_set_setting"):
 		bus.cmd_set_setting.emit(key, value)
 	_refresh()
+
+func _on_volume_preview(value: float, key: String) -> void:
+	settings[key] = value
+	if bus != null and bus.has_signal(&"cmd_preview_volume"):
+		bus.cmd_preview_volume.emit(key,value)
+
+func _on_volume_commit(value: float, key: String) -> void:
+	_on_option(key,value)
 
 func _on_close() -> void:
 	if showing_credits:
@@ -123,6 +144,7 @@ func _on_credits() -> void:
 
 func _apply_mode() -> void:
 	for row in _rows:
+		if row.has("slider"): row.slider.visible = not showing_credits
 		for b in row.buttons:
 			b.visible = not showing_credits
 	if _credits_btn:

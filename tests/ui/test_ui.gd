@@ -478,16 +478,21 @@ func test_menu_and_settings() -> void:
 	var sp: Control = m.settings_panel
 	check(Rect2(0, 0, 640, 360).encloses(sp.panel_rect), "settings panel fits 640x360 (%s)" % sp.panel_rect)
 	for row in sp._rows:
+		if row.has("slider"):
+			check(row.slider.size.y >= 40 and sp.panel_rect.encloses(row.slider.get_rect()), "settings volume %s target ok" % row.key)
 		for b in row.buttons:
 			check(b.size.y >= 40 and b.size.x >= 40 and sp.panel_rect.encloses(b.get_rect()), "settings option %s target ok" % row.key)
 	check(sp.panel_rect.encloses(sp._close.get_rect()), "settings close inside panel")
 	var row0: Array = m.settings_panel._rows[0].buttons
 	tap(row0[0])
 	check(last() == [&"cmd_set_setting", "fps_cap", 30], "settings fps 30 (got %s)" % [last()])
-	var row1: Array = m.settings_panel._rows[1].buttons
-	tap(row1[1])
+	var volume: Control = m.settings_panel._rows[1].slider
+	check(volume.percent == 100 and sp._rows[2].slider.percent == 80,"stored volume shown as exact percentages")
+	var start := volume.global_position + Vector2(8,volume.size.y/2)
+	touch(0,start,true)
+	touch(0,start,false)
 	check(last() == [&"cmd_set_setting", "sfx", 0.0], "settings sfx off")
-	check(SettingsPanel.option_matches("music", 0.5, 0.8) and not SettingsPanel.option_matches("music", 0.0, 0.8), "volume on/off matching")
+	check(SettingsPanel.option_matches("music", 0.5, 0.5) and not SettingsPanel.option_matches("music", 0.5, 0.8), "volume matches actual percentage")
 	back(m)
 	check(not m.settings_panel.visible, "back closes settings")
 	# credits view (OFL font credit). Galmuri11 12 only; wrapped lines fit the panel.
