@@ -54,6 +54,7 @@ func setup(p_audio: Node, p_events: Node) -> void:
 	_c(&"cmd_open_screen", func(s): _ui(&"ui_back" if StringName(s) == &"menu" else &"ui_tap"))
 	_c(&"cmd_set_paused", func(_p): _ui(&"ui_tap"))
 	_c(&"cmd_set_setting", _on_setting)
+	_c(&"cmd_preview_volume", _on_volume_preview)
 	_c(&"wave_cleared", _on_wave_cleared)
 	_c(&"upgrade_result", _on_upgrade_result)   # 02 v1.5 engine answer to cmd_buy_upgrade (04 97c8b9c)   # 02 v1.4 (22d99ea): once per scripted wave, never after a loss
 	_c(&"sfx", _on_direct)   # requested from 02 (AUDIO_CONTRACT §3.1); absent signal is fine
@@ -205,6 +206,9 @@ func _on_setting(key: String, value: Variant) -> void:
 	if key in ["sfx", "music", "master"]:
 		audio.set_volume(key, value)
 	_ui(&"ui_tap")
+
+func _on_volume_preview(key: String, value: float) -> void:
+	if key in ["sfx", "music"]: audio.set_volume(key, clampf(value,0.0,1.0))
 
 func _on_progress(p: Dictionary) -> void:
 	if p.get("settings") is Dictionary: audio.apply_settings(p.settings)
