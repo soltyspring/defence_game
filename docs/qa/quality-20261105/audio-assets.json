@@ -1,0 +1,244 @@
+{
+  "hit_melee_1.wav": {
+    "after": {
+      "peak_dbfs": -5.36,
+      "above_4khz_energy_pct": 0.04,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": -3.0517578125e-05,
+      "max_step": 0.0885,
+      "bytes": 4674
+    },
+    "before": {
+      "peak_dbfs": -1.0,
+      "above_4khz_energy_pct": 51.26,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": 0.0,
+      "max_step": 1.1249,
+      "bytes": 4454
+    }
+  },
+  "hit_melee_2.wav": {
+    "after": {
+      "peak_dbfs": -4.58,
+      "above_4khz_energy_pct": 0.03,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": -3.0517578125e-05,
+      "max_step": 0.0861,
+      "bytes": 4674
+    },
+    "before": {
+      "peak_dbfs": -1.0,
+      "above_4khz_energy_pct": 40.92,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": 3.0517578125e-05,
+      "max_step": 1.0085,
+      "bytes": 4454
+    }
+  },
+  "hit_melee_3.wav": {
+    "after": {
+      "peak_dbfs": -5.18,
+      "above_4khz_energy_pct": 0.04,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": 0.0,
+      "max_step": 0.0973,
+      "bytes": 4674
+    },
+    "before": {
+      "peak_dbfs": -1.0,
+      "above_4khz_energy_pct": 54.34,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": -3.0517578125e-05,
+      "max_step": 1.1473,
+      "bytes": 4454
+    }
+  },
+  "hit_melee_4.wav": {
+    "after": {
+      "peak_dbfs": -5.23,
+      "above_4khz_energy_pct": 0.03,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": 3.0517578125e-05,
+      "max_step": 0.0821,
+      "bytes": 4674
+    },
+    "before": {
+      "peak_dbfs": -1.0,
+      "above_4khz_energy_pct": 47.85,
+      "clipped_samples": 0,
+      "first": 3.0517578125e-05,
+      "last": 0.0,
+      "max_step": 1.2835,
+      "bytes": 4454
+    }
+  },
+  "hit_melee_5.wav": {
+    "after": {
+      "peak_dbfs": -5.48,
+      "above_4khz_energy_pct": 0.04,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": 3.0517578125e-05,
+      "max_step": 0.0906,
+      "bytes": 4674
+    },
+    "before": {
+      "peak_dbfs": -1.0,
+      "above_4khz_energy_pct": 52.55,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": 0.0,
+      "max_step": 1.2686,
+      "bytes": 4454
+    }
+  },
+  "hit_bread_1.wav": {
+    "after": {
+      "peak_dbfs": -6.05,
+      "above_4khz_energy_pct": 0.03,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": 0.0,
+      "max_step": 0.0897,
+      "bytes": 4674
+    },
+    "before": {
+      "peak_dbfs": -1.0,
+      "above_4khz_energy_pct": 46.27,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": 0.0,
+      "max_step": 1.3956,
+      "bytes": 2690
+    }
+  },
+  "hit_bread_2.wav": {
+    "after": {
+      "peak_dbfs": -4.75,
+      "above_4khz_energy_pct": 0.04,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": -3.0517578125e-05,
+      "max_step": 0.0871,
+      "bytes": 4674
+    },
+    "before": {
+      "peak_dbfs": -1.0,
+      "above_4khz_energy_pct": 53.87,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": 0.0,
+      "max_step": 1.3919,
+      "bytes": 2690
+    }
+  },
+  "hit_bread_3.wav": {
+    "after": {
+      "peak_dbfs": -5.58,
+      "above_4khz_energy_pct": 0.03,
+      "clipped_samples": 0,
+      "first": 3.0517578125e-05,
+      "last": 0.0,
+      "max_step": 0.0991,
+      "bytes": 4674
+    },
+    "before": {
+      "peak_dbfs": -1.0,
+      "above_4khz_energy_pct": 53.31,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": 3.0517578125e-05,
+      "max_step": 1.2657,
+      "bytes": 2690
+    }
+  },
+  "hit_mold_1.wav": {
+    "after": {
+      "peak_dbfs": -5.02,
+      "above_4khz_energy_pct": 0.02,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": 0.0,
+      "max_step": 0.1079,
+      "bytes": 4234
+    },
+    "before": {
+      "peak_dbfs": -1.0,
+      "above_4khz_energy_pct": 5.61,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": 0.0,
+      "max_step": 0.3921,
+      "bytes": 4454
+    }
+  },
+  "hit_mold_2.wav": {
+    "after": {
+      "peak_dbfs": -5.83,
+      "above_4khz_energy_pct": 0.02,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": 0.0,
+      "max_step": 0.0932,
+      "bytes": 4234
+    },
+    "before": {
+      "peak_dbfs": -1.0,
+      "above_4khz_energy_pct": 5.47,
+      "clipped_samples": 0,
+      "first": 3.0517578125e-05,
+      "last": 0.0,
+      "max_step": 0.4225,
+      "bytes": 4454
+    }
+  },
+  "hit_mold_3.wav": {
+    "after": {
+      "peak_dbfs": -5.18,
+      "above_4khz_energy_pct": 0.02,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": 0.0,
+      "max_step": 0.1236,
+      "bytes": 4234
+    },
+    "before": {
+      "peak_dbfs": -1.0,
+      "above_4khz_energy_pct": 7.6,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": 0.0,
+      "max_step": 0.4393,
+      "bytes": 4454
+    }
+  },
+  "flour_delivery.wav": {
+    "after": {
+      "peak_dbfs": -5.0,
+      "above_4khz_energy_pct": 0.03,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": 3.0517578125e-05,
+      "max_step": 0.0471,
+      "bytes": 6218
+    }
+  },
+  "ui_scout.wav": {
+    "after": {
+      "peak_dbfs": -5.3,
+      "above_4khz_energy_pct": 0.0,
+      "clipped_samples": 0,
+      "first": 0.0,
+      "last": 0.0,
+      "max_step": 0.1146,
+      "bytes": 3572
+    }
+  }
+}

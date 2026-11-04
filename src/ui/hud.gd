@@ -19,6 +19,8 @@ var layout: Dictionary = {}
 var paused := false
 
 var top: Control                 # resources + base bars + wave (custom drawn, no input)
+var minimap: Control
+var btn_follow: Control
 var btn_pause: Control
 var btn_left: Control
 var btn_right: Control
@@ -69,6 +71,11 @@ func ui_setup(params: Dictionary) -> void:
 func _build() -> void:
 	top = preload("res://src/ui/hud_top.gd").new()
 	add_child(top)
+	minimap = preload("res://src/ui/battle_minimap.gd").new()
+	minimap.seek.connect(_on_map_seek)
+	add_child(minimap)
+	btn_follow = make_button(UiText.t("ui.follow_hero"), _on_map_follow)
+	btn_follow.font_size = UiStyle.FONT_S
 
 	btn_pause = make_button("", _on_pause_pressed)
 	btn_pause.glyph = &"pause"
@@ -131,6 +138,12 @@ func _make_label(fs: int) -> Label:
 	l.modulate.a = 0.0
 	add_child(l)
 	return l
+
+func _on_map_seek(x: float) -> void:
+	if bus and bus.has_signal("cmd_camera_seek"): bus.cmd_camera_seek.emit(x)
+
+func _on_map_follow() -> void:
+	if bus and bus.has_signal("cmd_camera_follow"): bus.cmd_camera_follow.emit()
 
 func _build_pause_layer() -> void:
 	pause_layer = preload("res://src/ui/dim_layer.gd").new()
@@ -205,6 +218,8 @@ func _on_battle_started(p_info: Dictionary) -> void:
 func _on_snapshot(s: Dictionary) -> void:
 	snap = s
 	top.snap = s            # hud_top redraws itself only if a drawn value changed
+	minimap.state = s.get("map", {})
+	btn_follow.fill = UiStyle.C_ACCENT.darkened(0.25) if bool(s.get("map", {}).get("scouting", false)) else UiStyle.C_PANEL_LIGHT
 	var gold := float(s.get("gold", 0))
 	var army: Dictionary = s.get("army", {})
 	var army_full := int(army.get("player", 0)) >= int(army.get("cap", 1 << 30))
@@ -455,6 +470,8 @@ func _layout() -> void:
 	layout = HudLayout.compute(view, safe, card_buttons.size(), skill_buttons.size(), target)
 	place(top, Rect2(Vector2.ZERO, view))
 	top.layout = layout
+	place(minimap, layout.minimap)
+	place(btn_follow, layout.follow)
 	place(btn_pause, layout.pause)
 	place(btn_left, layout.move_left)
 	place(btn_right, layout.move_right)

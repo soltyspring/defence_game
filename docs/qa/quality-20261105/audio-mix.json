@@ -1,0 +1,50 @@
+{
+	"audio": {
+		"active_sfx": 0,
+		"active_ui": 0,
+		"attenuated_offscreen": 7,
+		"cluster_events": 0,
+		"cluster_lowered": 0,
+		"dropped_gap": 5,
+		"dropped_group": 3,
+		"dropped_max": 0,
+		"dropped_offscreen": 0,
+		"dropped_voices": 0,
+		"duck_db": 0.0,
+		"load_errors": [],
+		"load_ms": 82,
+		"missing": 0,
+		"music": "music_battle",
+		"paused": false,
+		"peak_voices": 3,
+		"played": 47,
+		"resident_sfx_bytes": 257048,
+		"sfx_duck_events": 0,
+		"sfx_ducked": 0,
+		"stolen": 0,
+		"suspended": false,
+		"volumes": {
+			"master": 1.0,
+			"music": 0.8,
+			"sfx": 1.0
+		}
+	},
+	"contains_audio": true,
+	"driver": "WASAPI",
+	"mode": "12 isolated hits + delivery/scout, then r08 autoplay 35s at normal speed",
+	"probe_mirrors_stereo_pairs": true,
+	"recordings": {
+		"Master": {
+			"bytes": 7530496,
+			"rate": 44100,
+			"seconds": 42.6898866213152
+		},
+		"SFX": {
+			"bytes": 7530496,
+			"rate": 44100,
+			"seconds": 42.6898866213152
+		}
+	},
+	"sim_t": 35.0499999999993,
+	"speaker_mode": 3
+}

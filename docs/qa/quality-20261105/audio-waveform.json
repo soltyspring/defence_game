@@ -1,0 +1,16 @@
+{
+  "quality_master.wav": {
+    "seconds": 42.689886621315196,
+    "peak_dbfs": -2.540224758320499,
+    "rms_dbfs": -29.200434061155207,
+    "full_scale_samples": 0,
+    "nonzero_samples": 3760372
+  },
+  "quality_sfx.wav": {
+    "seconds": 42.689886621315196,
+    "peak_dbfs": -2.9708317287668953,
+    "rms_dbfs": -31.124410469143143,
+    "full_scale_samples": 0,
+    "nonzero_samples": 692012
+  }
+}

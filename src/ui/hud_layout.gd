@@ -96,21 +96,25 @@ static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min
 	var strip_end := s.end.x
 	if not skills_in_row and n_skills > 0:
 		strip_end = (skills[0] as Rect2).position.x - GAP * 2
-	var strip_w := strip_end - s.position.x
-	out.boss = Rect2(Vector2(bars_x, s.position.y + top_h + 4), Vector2(out.bases.size.x, 14.0))
-	out.tutorial = Rect2(Vector2(s.position.x, s.position.y + top_h + 24), Vector2(strip_w, 20.0))
-	out.toast = Rect2(Vector2(s.position.x, s.position.y + top_h + 46), Vector2(strip_w, 20.0))
+	var map_y := s.position.y + top_h + TOUCH_GAP
+	var map_h := maxf(t, 44.0)
+	out.minimap = Rect2(bars_x, map_y, out.bases.size.x, map_h)
+	out.follow = Rect2(pause_r.position.x, map_y, t, map_h)
+	var boss_y := map_y + map_h + TOUCH_GAP
+	out.boss = Rect2(Vector2(bars_x, boss_y), Vector2(out.bases.size.x, 14.0))
 	# off-screen threat markers (03 A11, 01 R10): square plate ≥ 44 px at the screen edges, just below the toast
 	# strip and always inside the top half, so no HUD part and no lane unit covers them. Right marker stays left
 	# of a stacked skill column.
 	var mk := maxf(t, THREAT_MIN)
-	var ty := minf((out.toast as Rect2).end.y + GAP, floorf(view.y / 2.0) - mk)
+	var ty := boss_y + 16.0
 	out.threat_right = Rect2(Vector2(strip_end - mk, ty), Vector2(mk, mk))
 	out.threat_left = Rect2(Vector2(s.position.x, ty), Vector2(mk, mk))
 	# banner: between the two markers
 	var bx: float = (out.threat_left as Rect2).end.x + GAP * 2
 	var bend: float = (out.threat_right as Rect2).position.x - GAP * 2
-	out.banner = Rect2(Vector2(bx, maxf(view.y * 0.36, s.position.y + top_h + 70)), Vector2(bend - bx, 32.0))
+	out.tutorial = Rect2(bx, ty, bend - bx, 20.0)
+	out.toast = Rect2(bx, ty + 22.0, bend - bx, 20.0)
+	out.banner = Rect2(Vector2(bx, ty + 50.0), Vector2(bend - bx, 24.0))
 	return out
 
 ## Width of the skill group incl. the gap before it (0 without skills).
@@ -132,6 +136,8 @@ static func lane_band(view: Vector2) -> Rect2:
 ## All interactive rects, for validation.
 static func touch_rects(l: Dictionary) -> Array[Rect2]:
 	var r: Array[Rect2] = [l.pause, l.move_left, l.move_right, l.worker]
+	if l.has("minimap"): r.append(l.minimap)
+	if l.has("follow"): r.append(l.follow)
 	for c in l.cards:
 		r.append(c)
 	for c in l.skills:

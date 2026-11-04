@@ -7,6 +7,11 @@ const FALLBACK_KO := {
 	"ui.title": "빵집 기사단: 곰팡이 디펜스",   # Q3 working title (same as data/text since 01 a262640)
 	"ui.subtitle": "빵집 마을을 지키고 곰팡이 둥지를 부숴라",
 	"ui.play": "시작",
+	"ui.map_hint": "전장 · 눌러서 둘러보기",
+	"ui.map_scouting": "정찰 중 · 영웅 버튼으로 복귀",
+	"ui.follow_hero": "영웅",
+	"world.flour_mill": "제분소",
+	"world.flour_store": "밀가루 창고",
 	"ui.continue": "이어하기",
 	"ui.settings": "설정",
 	"ui.back": "뒤로",
@@ -78,6 +83,11 @@ const FALLBACK_KO := {
 
 ## English UI fallbacks for keys not yet in data/text/en.json (01 asked to add them; data wins).
 const FALLBACK_EN := {
+	"ui.map_hint": "Battlefield · tap or drag to scout",
+	"ui.map_scouting": "Scouting · Hero returns to the action",
+	"ui.follow_hero": "Hero",
+	"world.flour_mill": "Flour Mill",
+	"world.flour_store": "Flour Store",
 	"notice.content_migrated": "An update changed upgrade limits: {levels} levels were adjusted and {coins} gold was refunded.",
 	"ui.title": "Bakery Knights: Mold Defense",
 	"toast.counterattack": "Enemy counterattack!",
