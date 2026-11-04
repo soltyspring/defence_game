@@ -33,3 +33,14 @@ Windows v0.1.3의 소스 SHA와 EXE/ZIP SHA-256은 릴리스 및 BUILD_INFO.json
 실제 Windows 마우스의 빠른 드래그에서 최종 좌표가 release에만 들어오는 경우를 재현했다.
 터치/마우스 모두 놓는 위치를 반영한 뒤 저장하게 수정하고, 이동 이벤트 없는 드래그와
 마우스+터치 에뮬레이션의 중복 저장 방지까지 같은 입력 조건으로 재검증했다.
+
+## 배포 확인
+
+게임 소스 `5d14487191598ef3eab2c16e5c2be0df325129d2`로 만든 v0.1.3 EXE에서도 같은 빠른
+마우스 드래그가 정상 반영됐다. 효과음을 36%로 끈 뒤 방향키로 37%로 바꾸고 음악을 62%로
+조절했다. 설정을 닫고 다시 열었을 때 37%/62%였으며, 격리된 실제 EXE 저장 파일의 값도
+각각 0.37/0.62였다. [디스크 확인](volume-settings/exe-volume-settings.json).
+
+[Windows v0.1.3](https://github.com/soltyspring/defence_game/releases/tag/windows-v0.1.3-20261105)을
+공개했고, 인증 없이 ZIP을 다시 내려받아 ZIP/EXE SHA-256·CRC·라이선스 파일이 일치하는 것을
+확인했다. [공개 다운로드 검증](volume-settings/public-verification.json).

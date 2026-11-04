@@ -1,0 +1,10 @@
+{
+  "url": "https://github.com/soltyspring/defence_game/releases/download/windows-v0.1.3-20261105/BakeryKnights-Windows-x64.zip",
+  "public_download": true,
+  "zip_sha256": "64207f943bd59ecf871b2752a8bc63a72529263239176183b61fcb0cfc574468",
+  "zip_bytes": 40947140,
+  "exe_sha256": "7f73c279a98cc68d343223c1d74d417e8f292a1efb7d911b37378dd4e0260582",
+  "source_commit": "5d14487191598ef3eab2c16e5c2be0df325129d2",
+  "crc_ok": true,
+  "licenses_ok": true
+}
