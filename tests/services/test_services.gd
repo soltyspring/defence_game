@@ -38,6 +38,9 @@ var current := ""
 var report := {"groups": {}}
 
 func _initialize() -> void:
+	_run.call_deferred()
+
+func _run() -> void:
 	var t0 := Time.get_ticks_msec()
 	_group("factory_config", test_factory_config)
 	_group("consent", test_consent)
@@ -707,9 +710,7 @@ func _list_gd(dir: String) -> Array[String]:
 func test_services_node() -> bool:
 	var n = ServicesNode.new()
 	root.add_child(n)
-	# In SceneTree._initialize the root may not deliver _ready yet; autoload boot calls it normally.
-	if n.bundle.is_empty():
-		n._ready()
+	check(n.is_node_ready(), "Services is initialized by the active scene tree")
 	eq(n.mode, "disabled", "Services node defaults to disabled")
 	eq(n.ads.availability("ad_double_gold", "x"), R.DISABLED, "node ads disabled")
 	eq(n.purchases.has_entitlement("remove_ads"), false, "node no entitlements")
