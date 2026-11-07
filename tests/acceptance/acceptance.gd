@@ -55,6 +55,8 @@ func _run() -> void:
 	_write()
 	var c: Dictionary = q.counts()
 	print("[acceptance] PASS=%d FAIL=%d NOT_IMPLEMENTED=%d NOT_TESTED=%d BLOCKED=%d (%d ms)" % [c.PASS, c.FAIL, c.NOT_IMPLEMENTED, c.NOT_TESTED, c.BLOCKED, Time.get_ticks_msec() - t0])
+	root.get_node("Audio").prepare_quit()
+	await create_timer(0.3,true,false,true).timeout
 	quit(1 if q.failed() else 0)
 
 func _write() -> void:
