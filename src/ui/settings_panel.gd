@@ -22,7 +22,7 @@ var row_h_used := 40.0
 
 func _init() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP   # modal: swallow touches behind
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_preset(Control.PRESET_TOP_LEFT) # sized explicitly by open(), also under CanvasLayer
 	_rows = [
 		{"key": "fps_cap", "label": "ui.fps_cap", "options": [["30", 30], ["60", 60]]},
 		{"key": "sfx", "label": "ui.sfx", "options": [], "volume": true},

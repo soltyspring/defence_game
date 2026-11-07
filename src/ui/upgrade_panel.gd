@@ -39,7 +39,7 @@ var per_page := 4
 
 func _init() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP     # modal
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_preset(Control.PRESET_TOP_LEFT) # sized explicitly by open()
 
 func _content() -> Object:
 	return content if content != null else get_node_or_null("/root/Content")

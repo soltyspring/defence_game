@@ -1,0 +1,32 @@
+{
+  "before_input": [
+    "FAIL resolution: logical view follows the current native size (1366, 768)",
+    "FAIL resolution: logical view follows the current native size (1600, 900)",
+    "FAIL resolution: logical view follows the current native size (640, 360)",
+    "FAIL resolution: drawn button center stays inside native client area",
+    "FAIL resolution: drawn button center stays inside native client area",
+    "FAIL resolution: drawn button center stays inside native client area",
+    "FAIL resolution: drawn button center stays inside native client area",
+    "FAIL resolution: resize cancels obsolete pointer capture",
+    "[resolution] checks=116 failures=8"
+  ],
+  "after_input": [
+    "[resolution] checks=116 failures=0"
+  ],
+  "formation": [
+    "[formation] checks=6 failures=0 survivor_y_travel=0.0 row_switches=0"
+  ],
+  "services": [
+    "[test_services] passes=503 failures=0 time_ms=58"
+  ],
+  "ui": [
+    "WARNING: [HUD] toast key without text: zz_new_engine_key (add toast.zz_new_engine_key to data/text)",
+    "[test_ui] passed=3415 failed=0"
+  ],
+  "integration": [
+    "[ui_integration] passed=49 failed=0"
+  ],
+  "volume": [
+    "VOLUME_SETTINGS checks=29 failures=0 user_dir=Z:/.solty/dev/appintoss/defence/build/fix-20261107/appdata-final/Godot/app_userdata/Lane Defence"
+  ]
+}

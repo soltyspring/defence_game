@@ -1,0 +1,28 @@
+{
+	"checks": 414,
+	"failures": 0,
+	"r14": {
+		"distinct_friendly_positions": 18,
+		"draw_calls": 120.0,
+		"minimap": "[P: (401.0, 4.0), S: (139.0, 40.0)]",
+		"objects": 2112.0,
+		"texture_bytes": 16618617.0,
+		"world_zoom": 1.5
+	},
+	"r21": {
+		"distinct_friendly_positions": 18,
+		"draw_calls": 115.0,
+		"minimap": "[P: (401.0, 4.0), S: (139.0, 40.0)]",
+		"objects": 2119.0,
+		"texture_bytes": 16618617.0,
+		"world_zoom": 1.5
+	},
+	"r30": {
+		"distinct_friendly_positions": 18,
+		"draw_calls": 133.0,
+		"minimap": "[P: (401.0, 4.0), S: (139.0, 40.0)]",
+		"objects": 2125.0,
+		"texture_bytes": 19414821.0,
+		"world_zoom": 1.5
+	}
+}

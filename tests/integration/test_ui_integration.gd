@@ -375,6 +375,10 @@ func _finish() -> void:
 		print("  - " + f)
 	if main != null:
 		main.queue_free()
+	# Use the same audio drain as the real App quit path; immediate SceneTree.quit
+	# can destroy WAV/Ogg resources while the audio thread still reads them.
+	root.get_node("Audio").prepare_quit()
+	await create_timer(0.3,true,false,true).timeout
 	for f in [TEST_SAVE, TEST_SAVE + ".bak", TEST_SAVE + ".tmp"]:
 		if FileAccess.file_exists(f):
 			DirAccess.remove_absolute(ProjectSettings.globalize_path(f))

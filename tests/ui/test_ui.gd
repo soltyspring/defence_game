@@ -895,6 +895,7 @@ func test_qaj3_and_upgrades() -> void:
 	panel.content = content
 	panel.save = fs
 	panel.bus = Node.new()   # no purchase signals → direct FakeSave path (never the real Events/Save)
+	panel.add_child(panel.bus)
 	root.add_child(panel)
 	panel.open(Vector2(640, 360), Rect2(0, 0, 640, 360), 40.0)
 	await _frames(1)
@@ -956,6 +957,8 @@ func test_qaj3_and_upgrades() -> void:
 	# inactive without the 02 contract
 	panel.bus = Node.new()
 	panel.save = Node.new()
+	panel.add_child(panel.bus)
+	panel.add_child(panel.save)
 	panel.open(Vector2(640, 360), Rect2(0, 0, 640, 360), 40.0)
 	check(not panel.purchase_available() and panel.buy_buttons[0].disabled and panel.status_text == UiText.t("ui.upgrade_unavailable"), "no Save.buy_upgrade → inactive buttons + notice")
 	check(UiText.t("ui.upgrades").find("보석") < 0 and not panel.status_text.contains("광고"), "no premium currency / ad wording (Q2 보류)")

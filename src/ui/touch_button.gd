@@ -76,6 +76,26 @@ const UiStyle := preload("res://src/ui/ui_style.gd")
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	focus_mode = Control.FOCUS_NONE
+	get_viewport().size_changed.connect(cancel)
+
+func _input(event: InputEvent) -> void:
+	# Finish captured pointers even when the release is routed outside this Control
+	# after a resize, drag or a DPI transition. GUI-local release alone can leave a
+	# held button latched and reject every later click.
+	if _finger == -2: return
+	var release := false
+	if event is InputEventScreenTouch:
+		release = not event.pressed and event.index == _finger
+	elif event is InputEventMouseButton:
+		release = event.device != InputEvent.DEVICE_ID_EMULATION and _finger == -1 and not event.pressed and event.button_index == MOUSE_BUTTON_LEFT
+	elif event is InputEventMouseMotion and _finger == -1 and event.button_mask & MOUSE_BUTTON_MASK_LEFT == 0:
+		cancel()
+	if release:
+		var local: Vector2 = get_global_transform_with_canvas().affine_inverse() * event.position
+		var inside := Rect2(Vector2.ZERO,size).has_point(local)
+		if event is InputEventScreenTouch and event.canceled: inside = false
+		_release(inside)
+		get_viewport().set_input_as_handled()
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
