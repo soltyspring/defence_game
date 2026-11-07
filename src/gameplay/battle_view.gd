@@ -17,6 +17,8 @@ var world_zoom := 1.0
 var device_scale := 1.0
 var render_ahead := 0.0
 var _formation_targets := {}
+var _formation_slots := {} # uid -> permanent row / sticky column
+var _formation_conflicts := {}
 var _formation_offsets := {}
 var _render_positions := {}
 var _formation_timer := 0.0
@@ -74,7 +76,7 @@ func setup(p_sim, p_atlas, p_ground_y: float, p_biome: String) -> void:
 		_biome_layers = b.get("layers", [])
 
 func _process(_dt: float) -> void:
-	_update_formation(_dt)
+	_update_formation(0.0 if sim != null and (sim.paused or sim.ended) else _dt)
 	if environment and sim:
 		environment.present(cam_x, world_zoom, device_scale, float(sim.t))
 	queue_redraw()
@@ -131,46 +133,69 @@ func _update_formation(dt: float) -> void:
 	all.append_array(sim.players)
 	all.append_array(sim.enemies)
 	if sim.hero_respawn <= 0: all.append(sim.hero)
+	var row_counts := {1:[0,0,0],-1:[0,0,0]}
+	for u in all:
+		if _formation_slots.has(u.uid):
+			row_counts[u.side][_formation_slots[u.uid].x] += 1
+	var born := {}
+	for u in all:
+		if u.is_hero or u.is_boss or _formation_slots.has(u.uid): continue
+		var row := 0
+		for r in range(1,3):
+			if row_counts[u.side][r] < row_counts[u.side][row]: row = r
+		_formation_slots[u.uid] = Vector2i(row,0)
+		row_counts[u.side][row] += 1
+		born[u.uid] = true
 	_formation_timer -= dt
-	if _formation_timer <= 0:
-		_formation_timer = 0.08 # bounded O(n²), at most 40 per side, 12.5 Hz
-		_formation_targets.clear()
+	if _formation_timer <= 0 or not born.is_empty():
+		var interval := maxf(dt,0.15)
+		_formation_timer = 0.15
 		_crowd_badges.clear()
+		# The oldest occupant owns its place. New arrivals use vacancies; survivors
+		# never change rows or collapse forward when someone dies/leaves the pack.
 		for u in all:
-			var count := 0
-			var rank := 0
+			if u.is_hero or u.is_boss or u.dying: continue
+			var slot: Vector2i = _formation_slots[u.uid]
+			var used := {}
 			var same_count := 0
 			var leader: int = u.uid
-			if not u.is_hero and not u.is_boss and not u.dying:
-				for other in all:
-					if other.side != u.side or other.is_hero or other.is_boss or other.dying: continue
-					if absf(other.x-u.x) < 24:
-						count += 1
-						if other.uid < u.uid: rank += 1
-						if other.id == u.id:
-							same_count += 1
-							leader = mini(leader,other.uid)
-			var offset := Vector2.ZERO
-			if count > 1:
-				# Every row stays above the lane: the lowest row must never enter the card strip.
-				var row := posmod(rank,3)-2
-				offset = Vector2(-u.side * minf(54.0,(rank/3)*9.0+row*4.0),row*10.0-u.lane_y)
-			_formation_targets[u.uid] = offset
+			for other in all:
+				if other.side != u.side or other.is_hero or other.is_boss or other.dying: continue
+				if absf(other.x-u.x) < 32:
+					if other.uid < u.uid and _formation_slots[other.uid].x == slot.x:
+						used[_formation_slots[other.uid].y] = true
+					if other.id == u.id:
+						same_count += 1
+						leader = mini(leader,other.uid)
+			var conflict := float(_formation_conflicts.get(u.uid,0.0)) + interval if used.has(slot.y) else 0.0
+			_formation_conflicts[u.uid] = conflict
+			if used.has(slot.y) and (born.has(u.uid) or conflict >= 0.3):
+				for col in 7:
+					if not used.has(col):
+						slot.y = col
+						_formation_slots[u.uid] = slot
+						_formation_conflicts[u.uid] = 0.0
+						break
 			if same_count >= 6 and leader == u.uid:
 				_crowd_badges.append({"uid":u.uid,"side":u.side,"count":same_count})
 	_render_positions.clear()
+	_formation_targets.clear()
 	var live := {}
 	for u in all:
 		live[u.uid] = true
-		var target: Vector2 = _formation_targets.get(u.uid,Vector2.ZERO)
-		var offset: Vector2 = _formation_offsets.get(u.uid,Vector2.ZERO)
-		offset = offset.lerp(target,1.0-exp(-12.0*dt))
+		var target := Vector2.ZERO
+		if _formation_slots.has(u.uid):
+			var slot: Vector2i = _formation_slots[u.uid]
+			target = Vector2(-u.side*slot.y*9.0,-slot.x*10.0-u.lane_y)
+		_formation_targets[u.uid] = target
+		var offset: Vector2 = _formation_offsets.get(u.uid,target)
+		offset.x = move_toward(offset.x,target.x,30.0*dt)
+		offset.y = target.y # permanent row: no up/down re-ranking or bobbing
 		_formation_offsets[u.uid] = offset
 		_render_positions[u.uid] = Vector2(PixelCamera.world_position(u.x+offset.x,world_zoom,device_scale),PixelCamera.world_position(ground_y+u.lane_y+offset.y,world_zoom,device_scale))
-	for uid in _formation_offsets.keys():
-		if not live.has(uid): _formation_offsets.erase(uid)
-	if environment == null and not _biome_layers.is_empty() and atlas:
-		_draw_biome_layers(cam_x - view_w * 0.5 - 8.0, view_w + 16.0, true)
+	for cache in [_formation_offsets,_formation_slots,_formation_conflicts]:
+		for uid in cache.keys():
+			if not live.has(uid): cache.erase(uid)
 
 # ---------------- background ----------------
 func _draw_background() -> void:

@@ -4,7 +4,7 @@
 
 ## Windows에서 바로 실행
 
-**[Windows v0.1.4 다운로드](https://github.com/soltyspring/defence_game/releases/tag/windows-v0.1.4-20261105)** · [ZIP 바로 받기](https://github.com/soltyspring/defence_game/releases/download/windows-v0.1.4-20261105/BakeryKnights-Windows-x64.zip)
+**[Windows v0.1.5 다운로드](https://github.com/soltyspring/defence_game/releases/tag/windows-v0.1.5-20261107)** · [ZIP 바로 받기](https://github.com/soltyspring/defence_game/releases/download/windows-v0.1.5-20261107/BakeryKnights-Windows-x64.zip)
 
 1. 릴리스의 **`BakeryKnights-Windows-x64.zip`**을 내려받습니다. `Source code`는 실행 파일이 아닙니다.
 2. ZIP을 폴더에 모두 압축 해제합니다.
@@ -34,6 +34,7 @@ Windows 64비트용입니다. 게임 데이터가 EXE 안에 들어 있어 `.pck
 - 진행도·강화·설정은 자동으로 로컬에 저장합니다. Windows 경로는 `%APPDATA%\Godot\app_userdata\Lane Defence\`입니다. 폴더 이름에는 초기 개발명이 남아 있습니다.
 - PC 변경 전에는 이 폴더를 복사해 보관하세요. 계정 연동·클라우드 동기화는 제공하지 않습니다.
 - 광고·인앱 결제는 비활성 상태입니다.
+- v0.1.5는 창 크기 변경 시 버튼이 화면 밖에 남는 문제, 병력 대형의 상하 흔들림, 전투 종료 시 유닛 참조 누수를 고쳤습니다. [수정·검증 기록](docs/qa/FIX_INPUT_FORMATION_20261107.md).
 - v0.1.4는 캠페인을 30라운드로 늘리고 피해 숫자·밀집 병력 표시와 미니맵을 다듬었습니다. [변경·검증 기록](docs/qa/CAMPAIGN30_20261105.md).
 - v0.1.3은 효과음·음악의 켜기/끄기 버튼을 퍼센트 슬라이더로 바꿨습니다. [음량 조절 검증](docs/qa/VOLUME_SETTINGS_20261105.md).
 - v0.1.2는 이동 중 배경의 픽셀 정렬을 고치고, 마을·제분소와 밀가루 포대 운반을 새로 표현했습니다. 먼 전장을 보는 미니맵, 영웅 복귀 버튼, 부드러운 타격음과 운반·정찰 효과음을 추가했습니다. 기존 전투·라운드·수입·강화 수치는 유지했습니다.

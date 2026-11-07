@@ -28,7 +28,11 @@ class Unit:
 	var atk := 1.0
 	var atk_cd := 0.0
 	var windup := -1.0
-	var w_target: Unit = null
+	# Mutual attack targets must not keep two RefCounted units alive after battle teardown.
+	var _target_ref: WeakRef
+	var w_target: Unit:
+		get: return _target_ref.get_ref() if _target_ref != null else null
+		set(value): _target_ref = weakref(value) if value != null else null
 	var w_base := false
 	var state := 0
 	var anim_t := 0.0

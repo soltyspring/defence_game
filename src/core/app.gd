@@ -82,9 +82,12 @@ func _ready() -> void:
 ## Below 640x360 physical the view equals the window (k=1).
 func _apply_pixel_scale() -> void:
 	var root := get_tree().root
-	var ws := DisplayServer.window_get_size() if DisplayServer.get_name() != "headless" else Vector2i(640, 360)
+	# During resize/DPI notifications the native backend may still report the old
+	# size. The Window already owns the current client size used for input mapping.
+	var ws := root.size if DisplayServer.get_name() != "headless" else Vector2i(640, 360)
 	if ws.x <= 0 or ws.y <= 0:
 		return
+	_pixel_window_size = ws
 	var k := maxi(1, mini(ws.x / 640, ws.y / 360))
 	var size := Vector2i(maxi(1, ws.x / k), maxi(1, ws.y / k))
 	if root.content_scale_size != size:
@@ -92,6 +95,17 @@ func _apply_pixel_scale() -> void:
 	pixel_scale = k
 
 var pixel_scale := 1
+var _pixel_window_size := Vector2i.ZERO
+var _scale_update_queued := false
+
+func _schedule_pixel_scale() -> void:
+	if _scale_update_queued: return
+	_scale_update_queued = true
+	_update_pixel_scale_deferred.call_deferred()
+
+func _update_pixel_scale_deferred() -> void:
+	_scale_update_queued = false
+	_apply_pixel_scale()
 
 ## 03 A19 / 04 R17-3 world-only camera zoom: (k+1)/k, so one art pixel is k+1 device pixels (4/3 at k = 3, 3/2 at
 ## k = 2); the HUD stays at k. Switch: project setting game/camera/world_zoom_plus_one (default false = zoom 1).
@@ -137,8 +151,8 @@ func boot(p_main: Node, p_world: Node2D, p_ui: CanvasLayer) -> void:
 	ui_layer = p_ui
 	_apply_pixel_scale()
 	_apply_window_title()
-	if not get_tree().root.size_changed.is_connected(_apply_pixel_scale):
-		get_tree().root.size_changed.connect(_apply_pixel_scale)
+	if not get_tree().root.size_changed.is_connected(_schedule_pixel_scale):
+		get_tree().root.size_changed.connect(_schedule_pixel_scale)
 	Perf.set_fps_cap(int(Save.progress.settings.get("fps_cap", 60)))
 	for id in Atlas.pages:   # always-resident UI pages (load_policy "always" / group "ui")
 		var m: Dictionary = Atlas.pages[id].meta
@@ -163,6 +177,11 @@ func boot(p_main: Node, p_world: Node2D, p_ui: CanvasLayer) -> void:
 		RenderingServer.get_video_adapter_name(), str(get_viewport().get_visible_rect().size), str(DisplayServer.window_get_size()), window_title, str(screen), JSON.stringify(ui_source), JSON.stringify(Atlas.texture_report()), Save.recovered])
 
 func _process(delta: float) -> void:
+	# Viewport.size_changed is not a native-window resize signal: within the same
+	# integer scale it may not fire at all. Detect the new client size even while
+	# paused, otherwise right/bottom buttons can remain outside the smaller window.
+	if DisplayServer.get_name() != "headless" and get_tree().root.size != _pixel_window_size:
+		_apply_pixel_scale()
 	_clock += delta
 	if not _shots.is_empty() and _clock >= _shots[0]:
 		var at: float = _shots.pop_front()
