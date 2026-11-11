@@ -1,10 +1,12 @@
-# Build a Windows x64 preview from a committed Git ref, without using gameplay WIP.
+# Build a Windows x64 EXE from a committed Git ref (default) or the current checkout.
 # Run inside coordination/heavy_run_detached.ps1 on this shared development PC.
 param(
     [string]$Ref = 'HEAD',
     [string]$Godot = '',
     [string]$OutDir = '',
-    [string]$PresetFile = ''
+    [string]$PresetFile = '',
+    [switch]$FromWorkingTree,
+    [switch]$GoldShopPreview
 )
 $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
@@ -20,13 +22,28 @@ if ($LASTEXITCODE -ne 0) { throw 'Invalid Git ref.' }
 $work = Join-Path $OutDir 'source'
 $package = Join-Path $OutDir 'BakeryKnights-Windows-x64'
 New-Item -ItemType Directory -Path $work, $package | Out-Null
-$archive = Join-Path $OutDir 'source.zip'
-& git -c core.autocrlf=false -c core.eol=lf archive --format=zip -o $archive $sha project.godot export_presets.cfg icon.svg src scenes assets data tests
-if ($LASTEXITCODE -ne 0) { throw 'Cannot archive source.' }
-Expand-Archive -LiteralPath $archive -DestinationPath $work
-Remove-Item -LiteralPath $archive
+if ($FromWorkingTree) {
+    Copy-Item -LiteralPath @('project.godot', 'export_presets.cfg', 'icon.svg', 'src', 'scenes', 'assets', 'data', 'tests') -Destination $work -Recurse
+} else {
+    $archive = Join-Path $OutDir 'source.zip'
+    & git -c core.autocrlf=false -c core.eol=lf archive --format=zip -o $archive $sha project.godot export_presets.cfg icon.svg src scenes assets data tests
+    if ($LASTEXITCODE -ne 0) { throw 'Cannot archive source.' }
+    Expand-Archive -LiteralPath $archive -DestinationPath $work
+    Remove-Item -LiteralPath $archive
+}
 if ($PresetFile) { Copy-Item -LiteralPath (Resolve-Path -LiteralPath $PresetFile).Path -Destination (Join-Path $work 'export_presets.cfg') }
 if ([IO.File]::ReadAllText((Join-Path $work 'export_presets.cfg')) -notmatch 'name="Windows Desktop"') { throw 'The selected ref has no Windows Desktop preset.' }
+if ($GoldShopPreview) {
+    $cfgPath = Join-Path $work 'export_presets.cfg'
+    $cfg = [IO.File]::ReadAllText($cfgPath)
+    $rx = [regex]'(?s)(name="Windows Desktop"[^\[]*?custom_features=")([^"]*)"'
+    if (!$rx.IsMatch($cfg)) { throw 'Cannot add the gold-shop feature to the Windows preset.' }
+    $cfg = $rx.Replace($cfg, { param($m)
+        $features = @($m.Groups[2].Value.Split(',') | Where-Object { $_ })
+        $m.Groups[1].Value + (($features + 'gold_shop_preview') -join ',') + '"'
+    }, 1)
+    [IO.File]::WriteAllText($cfgPath, $cfg, [Text.UTF8Encoding]::new($false))
+}
 $previousAppData = $env:APPDATA
 $env:APPDATA = Join-Path $OutDir 'appdata'
 New-Item -ItemType Directory -Path $env:APPDATA | Out-Null
@@ -37,6 +54,20 @@ try {
     & $Godot --headless --language en --path $work --import *> (Join-Path $OutDir 'import.log')
     $ErrorActionPreference = 'Stop'
     if ($LASTEXITCODE -ne 0) { throw 'Import failed. See import.log.' }
+    if ($GoldShopPreview) {
+        foreach ($preview in @($false, $true)) {
+            $shopLog = Join-Path $OutDir "shop-source-$preview.log"
+            $shopArgs = @('--headless','--language','en','--path',$work,'-s','tests/integration/test_gold_shop.gd')
+            if ($preview) { $shopArgs += @('--','--gold-shop-preview') }
+            $ErrorActionPreference = 'Continue'
+            & $Godot @shopArgs *> $shopLog
+            $ErrorActionPreference = 'Stop'
+            $shopText = [IO.File]::ReadAllText($shopLog)
+            if ($LASTEXITCODE -ne 0 -or $shopText -notmatch ('\[gold-shop\] checks=\d+ failures=0 preview=' + $preview.ToString().ToLowerInvariant()) -or $shopText -match 'SCRIPT ERROR|Parse Error') {
+                throw "Shop source checks failed: $shopLog"
+            }
+        }
+    }
     # Obtain notices from this exact engine rather than a different online version.
     $licenseProbe = Join-Path $work '_windows_license_probe.gd'
     $probe = @'
@@ -83,11 +114,30 @@ func _initialize():
         if ($text -notmatch '\[App\] boot ok') { throw "No boot evidence in $name" }
     }
     $hash = (Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash.ToLowerInvariant()
-    $info = [ordered]@{ source_commit=$sha; engine=$version; platform='Windows x86_64'; embedded_pck=$true; sha256=$hash; smoke_tests=@('menu','r01 autoplay'); signed=$false }
+    $smoke = @('menu','r01 autoplay')
+    if ($GoldShopPreview) {
+        $log = Join-Path $OutDir 'exe-shop.log'
+        $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--log-file',('"' + $log + '"'),'--','--open-gold-shop','--quit-after=2') -WorkingDirectory $package -WindowStyle Hidden -Wait -PassThru
+        $contents = [IO.File]::ReadAllText($log)
+        if ($run.ExitCode -ne 0 -or $contents -notmatch 'screen=gold_shop.*"gold_shop":"scenes/ui"' -or $contents -match 'SCRIPT ERROR|Parse Error|ERROR:') { throw 'EXE shop smoke test failed.' }
+        $smoke += 'gold shop'
+    }
+    $info = [ordered]@{ source_commit=$sha; from_working_tree=[bool]$FromWorkingTree; gold_shop_preview=[bool]$GoldShopPreview; engine=$version; platform='Windows x86_64'; embedded_pck=$true; sha256=$hash; smoke_tests=$smoke; signed=$false }
     $info | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $package 'BUILD_INFO.json') -Encoding utf8
     "$hash  BakeryKnights.exe" | Set-Content -LiteralPath (Join-Path $package 'SHA256SUMS.txt') -Encoding ascii
     if (Test-Path -LiteralPath (Join-Path $root 'README.md')) { Copy-Item -LiteralPath (Join-Path $root 'README.md') -Destination (Join-Path $package 'README.md') }
     Compress-Archive -LiteralPath $package -DestinationPath (Join-Path $OutDir 'BakeryKnights-Windows-x64.zip')
+    $rootExe = Join-Path $root 'BakeryKnights.exe'
+    $stagedExe = Join-Path $root 'BakeryKnights.exe.tmp'
+    Copy-Item -LiteralPath $exe -Destination $stagedExe -Force
+    if (Test-Path -LiteralPath $rootExe) {
+        # PowerShell can bind $null to an empty path in File.Replace. Use a
+        # real sibling backup so a replacement on the shared drive is atomic.
+        $backupExe = Join-Path $root ('BakeryKnights.exe.' + [Guid]::NewGuid().ToString('N') + '.tmp')
+        [IO.File]::Replace($stagedExe, $rootExe, $backupExe)
+        Remove-Item -LiteralPath $backupExe
+    } else { [IO.File]::Move($stagedExe, $rootExe) }
+    Write-Output ('WINDOWS_ROOT_EXE ' + $rootExe)
     Write-Output ('WINDOWS_BUILD_OK ' + (Join-Path $OutDir 'BakeryKnights-Windows-x64.zip'))
     Write-Output ($info | ConvertTo-Json -Compress)
 } finally { $env:APPDATA = $previousAppData }

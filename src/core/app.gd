@@ -7,10 +7,12 @@ const BattleScene := "res://scenes/gameplay/battle.tscn"
 const UI_SCENES := {
 	&"menu": "res://scenes/ui/main_menu.tscn",
 	&"round_select": "res://scenes/ui/round_select.tscn",
+	&"gold_shop": "res://scenes/ui/gold_shop.tscn",
 	&"hud": "res://scenes/ui/hud.tscn",
 	&"result": "res://scenes/ui/result.tscn",
 }
 const FallbackUI := preload("res://src/gameplay/fallback_ui.gd")
+const GoldShopCatalog := preload("res://src/core/gold_shop_catalog.gd")
 
 var main: Node = null
 var world: Node2D = null
@@ -172,6 +174,8 @@ func boot(p_main: Node, p_world: Node2D, p_ui: CanvasLayer) -> void:
 		direct = Content.round_order[0]
 	if direct != "":
 		start_round(direct, true, Content.is_challenge(direct))
+	elif "--open-gold-shop" in args and GoldShopCatalog.enabled():
+		show_screen(&"gold_shop")
 	else:
 		show_screen(&"menu")
 	print("[App] boot ok platform=%s renderer=%s view=%s window=%s title=%s screen=%s ui_source=%s atlas=%s save_recovered=%s" % [OS.get_name(),
@@ -236,6 +240,8 @@ func _ui_handles_back() -> bool:
 
 func show_screen(name: StringName, params: Dictionary = {}) -> void:
 	if name == &"battle":
+		return
+	if name == &"gold_shop" and not GoldShopCatalog.enabled():
 		return
 	_end_battle()
 	_clear_ui()

@@ -5,7 +5,9 @@ var btn_play: Control
 var btn_select: Control
 var btn_settings: Control
 var btn_upgrades: Control
+var btn_shop: Control
 const TitleBlock := preload("res://src/ui/title_block.gd")
+const GoldShopCatalog := preload("res://src/core/gold_shop_catalog.gd")
 var title_slot := Rect2()   # QA
 var title_page := ""        # atlas page held for the logo (released when the menu leaves the tree)
 var settings_panel: Control
@@ -21,6 +23,8 @@ func _build() -> void:
 	btn_select = make_button(UiText.t("ui.select_round"), _on_select)
 	btn_upgrades = make_button(UiText.t("ui.upgrades"), open_upgrades)
 	btn_settings = make_button(UiText.t("ui.settings"), _on_settings)
+	if GoldShopCatalog.enabled():
+		btn_shop = make_button(UiText.t("shop.title"), func(): emit_cmd(&"cmd_open_screen", [&"gold_shop"]))
 	settings_panel = SettingsPanel.new()
 	settings_panel.hide()
 	add_child(settings_panel)
@@ -140,6 +144,8 @@ func _layout() -> void:
 	place(btn_select, Rect2(cx - bw / 2, y + bh + 14, w3, bh))
 	place(btn_upgrades, Rect2(cx - bw / 2 + w3 + 8, y + bh + 14, w3, bh))
 	place(btn_settings, Rect2(cx - bw / 2 + 2 * (w3 + 8), y + bh + 14, w3, bh))
+	if btn_shop != null:
+		place(btn_shop, Rect2(Vector2(safe.end.x - 92, safe.position.y + 4), Vector2(88, bh)))
 	place(quit_layer, Rect2(Vector2.ZERO, view))
 	quit_layer.title_y = safe.get_center().y - 30
 	for i in quit_buttons.size():

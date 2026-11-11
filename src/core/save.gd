@@ -806,6 +806,23 @@ func buy_upgrade(upgrade_id: String, to_level: int) -> String:
 	if not had_rec: paid_all.erase(upgrade_id)
 	return UPG_SAVE_UNCERTAIN if last_failure_uncertain else UPG_SAVE_FAILED
 
+const GoldShopCatalog := preload("res://src/core/gold_shop_catalog.gd")
+var _gold_shop_uncertain := false
+
+## Preview credit uses the same wallet as upgrades. A full pack is saved once,
+## or the balance is left unchanged. Real payments must never call this path.
+func buy_preview_gold(amount: int) -> String:
+	if not GoldShopCatalog.enabled() or amount not in GoldShopCatalog.PACKS: return "unavailable"
+	if read_only: return "read_only"
+	if _gold_shop_uncertain: return "save_uncertain"
+	var old := int(progress.coins)
+	if amount > _coins_cap() - old: return "wallet_full"
+	progress.coins = old + amount
+	if save_progress(): return "ok"
+	progress.coins = old
+	_gold_shop_uncertain = last_failure_uncertain
+	return "save_uncertain" if _gold_shop_uncertain else "save_failed"
+
 func set_setting(key: String, value: Variant) -> void:
 	progress.settings[key] = value
 	save_progress()
