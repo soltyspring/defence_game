@@ -768,6 +768,10 @@ func _draw_fx(f) -> void:
 			draw_rect(Rect2(pos - Vector2(0.5, s), Vector2(1.0, s * 2.0)), Color(1, 1, 0.7, 1.0 - k))
 		"explosion":
 			draw_circle(pos, maxf(4.0, f.radius) * (0.4 + k * 0.6), Color(1.0, 0.6, 0.2, 0.7 * (1.0 - k)))
+		"spore_burst":
+			# a lobbed zone going off: a low violet puff over exactly the marked width
+			draw_rect(Rect2(f.x - f.radius, ground_y - 10.0 - 8.0 * k, f.radius * 2.0, 10.0 + 8.0 * k), Color(0.66, 0.45, 0.82, 0.6 * (1.0 - k)))
+			draw_rect(Rect2(f.x - f.radius * (0.4 + 0.6 * k), ground_y - 16.0 - 10.0 * k, f.radius * 2.0 * (0.4 + 0.6 * k), 4.0), Color(0.86, 0.72, 0.96, 0.8 * (1.0 - k)))
 		"link_break":
 			for dx in [-1.0, 1.0]:
 				draw_line(pos + Vector2(dx * 2.0, 0), pos + Vector2(dx * (5.0 + 8.0 * k), -4.0 - 6.0 * k), Color(0.56, 0.84, 0.81, 1.0 - k), 2.0)

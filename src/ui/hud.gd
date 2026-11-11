@@ -6,6 +6,7 @@ extends "res://src/ui/ui_screen.gd"
 
 const HudLayout := preload("res://src/ui/hud_layout.gd")
 const ThreatMarker := preload("res://src/ui/threat_marker.gd")
+const ReviveBadge := preload("res://src/ui/revive_badge.gd")
 const TOAST_SECONDS := 1.6
 const BANNER_SECONDS := 1.8
 ## Engine toast key → tutorial step that explains the same event (show only the hint; 15:59 theme-A capture
@@ -46,6 +47,9 @@ var _toast_left := 0.0
 var _banner_left := 0.0
 var _last_wave := -1
 var _boss_bar := false           # a boss is alive: the boss HP row is in use (HudLayout boss_bar)
+var revive_badge: Control        # hero revive countdown (own HudLayout rect, takes no input)
+var _hero_dead := false
+var _revive_total := 0.0
 var stats := {"cmds": 0}         # QA counters
 
 func _ready() -> void:
@@ -115,6 +119,10 @@ func _build() -> void:
 	threat_left = ThreatMarker.new()
 	threat_left.side = &"left"
 	add_child(threat_left)
+	revive_badge = ReviveBadge.new()
+	revive_badge.hide()
+	revive_badge.finished.connect(_layout)
+	add_child(revive_badge)
 	_build_pause_layer()
 	settings_panel = SettingsPanel.new()
 	settings_panel.hide()
@@ -169,6 +177,10 @@ func _on_battle_started(p_info: Dictionary) -> void:
 	_held.clear()
 	_last_wave = -1
 	_boss_bar = false
+	_hero_dead = false
+	if revive_badge != null:
+		revive_badge.flash_t = 0.0
+		revive_badge.hide()
 	_battle_over = false
 	wave_cleared_shown = false
 	_on_tutorial_step("")
@@ -258,8 +270,22 @@ func _on_snapshot(s: Dictionary) -> void:
 	for b in [btn_left, btn_right]:
 		b.disabled = dead
 		b.badge = ""
-	btn_left.text = str(ceili(float(hero.get("respawn", 0)))) if dead else ""   # big fixed-cell countdown
-	btn_left.font_size = UiStyle.FONT_S
+	# The move buttons always keep their arrows. The countdown lives in its own read-out under the top bar
+	# (it used to overwrite the left arrow, which read as "the controls turned into a timer").
+	if dead != _hero_dead:
+		_hero_dead = dead
+		if dead:
+			_release_all_holds()          # a move held at the moment of death must not carry over to the revive
+			_revive_total = maxf(0.1, float(hero.get("respawn", 0)))
+			revive_badge.flash_t = 0.0
+			revive_badge.show()
+		elif not _battle_over and revive_badge.remaining <= 1.0:
+			revive_badge.flash(0.9)       # once, when the countdown really ran out (the hero is back)
+		else:
+			revive_badge.hide()           # battle replaced / ended mid-countdown: nothing to announce
+		_layout()
+	if dead:
+		revive_badge.set_state(float(hero.get("respawn", 0)), _revive_total, bool(layout.get("revive_compact", false)))
 	var wave: Dictionary = s.get("wave", {})
 	var wi := int(wave.get("index", 0))
 	if wi != _last_wave and _last_wave != -1 and wi > 0:
@@ -365,6 +391,8 @@ func _on_worker() -> void:
 	_cmd(&"cmd_buy_worker")
 
 func _on_move_press(dir: int) -> void:
+	if _hero_dead:
+		return                            # arrows stay visible but do nothing until the hero is back
 	_held.erase(dir)
 	_held.push_back(dir)
 	_cmd(&"cmd_hero_move", [dir])
@@ -483,7 +511,8 @@ func _process(delta: float) -> void:
 func _layout() -> void:
 	if top == null:
 		return
-	layout = HudLayout.compute(view, safe, card_buttons.size(), skill_buttons.size(), target, _boss_bar)
+	var revive_row: bool = _hero_dead or (revive_badge != null and revive_badge.flash_t > 0.0)
+	layout = HudLayout.compute(view, safe, card_buttons.size(), skill_buttons.size(), target, _boss_bar, revive_row)
 	place(top, Rect2(Vector2.ZERO, view))
 	top.layout = layout
 	place(minimap, layout.minimap)
@@ -502,6 +531,7 @@ func _layout() -> void:
 	_fit_label(tutorial_label, layout.tutorial)
 	place(threat_right, layout.threat_right)
 	place(threat_left, layout.threat_left)
+	place(revive_badge, layout.revive)
 	place(pause_layer, Rect2(Vector2.ZERO, view))
 	var bw := 150.0
 	var bh := maxf(target, 40.0)

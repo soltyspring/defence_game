@@ -231,6 +231,9 @@
     "hint.loss.flour_idle": "밀가루가 가득 찬 채 남았습니다. 병사를 더 자주 내보내세요.",
     "hint.loss.no_baker": "제빵사를 고용하지 않았습니다. 초반에 고용하면 밀가루가 빨리 모입니다.",
     "hint.loss.hero_fell": "영웅이 여러 번 쓰러졌습니다. 병사 뒤에 세우고 위험 표시는 피하세요.",
-    "hint.loss.no_skill": "기력이 남았습니다. 적이 몰렸을 때 스킬을 쓰세요."
+    "hint.loss.no_skill": "기력이 남았습니다. 적이 몰렸을 때 스킬을 쓰세요.",
+    "ui.revive_label": "영웅 부활",
+    "ui.revive_unit": "초",
+    "ui.revived": "영웅 복귀!"
   }
 }

@@ -231,6 +231,9 @@
     "hint.loss.flour_idle": "Flour sat full. Send soldiers more often.",
     "hint.loss.no_baker": "No baker was hired. Hiring early makes flour come faster.",
     "hint.loss.hero_fell": "The hero fell several times. Keep the hero behind the soldiers and off danger markers.",
-    "hint.loss.no_skill": "Energy was left over. Use a skill when enemies bunch up."
+    "hint.loss.no_skill": "Energy was left over. Use a skill when enemies bunch up.",
+    "ui.revive_label": "Hero returns in",
+    "ui.revive_unit": "s",
+    "ui.revived": "Hero is back!"
   }
 }

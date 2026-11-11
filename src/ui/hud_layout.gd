@@ -19,13 +19,18 @@ const THREAT_MIN := 44.0                      # marker plate ≥ 44 px = 48 dp o
 const THREAT_SIZE := Vector2(44, 34)          # = ThreatMarker.SIZE (content block)
 const CARD_NAME_W := 42.0                     # 36 px ko card name (Galmuri11 12) + 6 px padding (touch_button fit_lines)
 
+const REVIVE_W := 150.0                       # "영웅 부활 05초" + progress line
+const REVIVE_W_COMPACT := 56.0                # pointer glyph + fixed-width seconds (narrow views)
+const REVIVE_H := 16.0
 const FIT_GAP := 2.0                          # gap between controls in the last-resort "fit" row
 const FIT_MIN := 16.0                         # smallest control in the fit row (mouse-only window sizes)
 const MAP_MIN := 84.0                         # overview strip: 15 % of the width, 84-104 px (was 22 %, 126-150)
 const MAP_MAX := 104.0
 
 ## boss_bar = false (no boss alive): the feedback strips and threat markers move up into the unused boss-bar row.
-static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min_target: float, boss_bar := true) -> Dictionary:
+## revive = true (hero down, or its "back" highlight is showing): the revive read-out gets its own row and the
+## feedback strips move down by it. It never shares a rectangle with the boss bar, the wave line or the overview.
+static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min_target: float, boss_bar := true, revive := false) -> Dictionary:
 	var t := maxf(min_target, 40.0)
 	var m := 4.0
 	var s := safe.grow(-m)
@@ -147,9 +152,15 @@ static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min
 	# banner: between the two markers
 	var bx: float = (out.threat_left as Rect2).end.x + GAP * 2
 	var bend: float = (out.threat_right as Rect2).position.x - GAP * 2
-	out.tutorial = Rect2(bx, ty, bend - bx, 20.0)
-	out.toast = Rect2(bx, ty + 22.0, bend - bx, 20.0)
-	out.banner = Rect2(Vector2(bx, ty + 50.0), Vector2(bend - bx, 24.0))
+	# revive read-out: centred between the edge markers, directly under the top bar / boss bar
+	var rv_w := minf(REVIVE_W if bend - bx >= REVIVE_W else REVIVE_W_COMPACT, maxf(bend - bx, 0.0))
+	var rv_x := clampf(roundf(s.get_center().x - rv_w * 0.5), bx, maxf(bx, bend - rv_w))
+	out.revive = Rect2(Vector2(rv_x, ty), Vector2(rv_w, REVIVE_H) if revive else Vector2.ZERO)
+	out.revive_compact = rv_w < REVIVE_W
+	var ry := ty + (REVIVE_H + 2.0 if revive else 0.0)
+	out.tutorial = Rect2(bx, ry, bend - bx, 20.0)
+	out.toast = Rect2(bx, ry + 22.0, bend - bx, 20.0)
+	out.banner = Rect2(Vector2(bx, ry + 50.0), Vector2(bend - bx, 24.0))
 	return out
 
 ## Width of the skill group incl. the gap before it (0 without skills).

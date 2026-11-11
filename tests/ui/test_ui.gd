@@ -292,7 +292,7 @@ func test_hud_state() -> void:
 	var s: Dictionary = mock.snapshot()
 	s.hero.alive = false; s.hero.respawn = 4.2
 	bus.hud_snapshot.emit(s)
-	check(hud.btn_left.disabled and hud.btn_left.text.contains("5"), "dead hero shows respawn countdown (%s)" % hud.btn_left.text)
+	check(hud.btn_left.disabled and hud.btn_left.text == "" and hud.revive_badge.visible and hud.revive_badge.shown_text.contains("05"), "dead hero: arrows keep their glyph, the revive read-out counts down (%s / %s)" % [hud.btn_left.text, hud.revive_badge.shown_text])
 	# toast
 	bus.toast.emit("not_enough_gold", {})
 	check(hud.toast_label.text == UiText.t("toast.not_enough_gold") and hud.toast_label.modulate.a > 0.9, "toast shown in Korean")

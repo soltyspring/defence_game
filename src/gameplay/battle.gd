@@ -20,6 +20,7 @@ var _acc := 0.0
 var _hud_t := 0.0
 var _pages: PackedStringArray = []
 var _key_dir := 0
+var _key_wait_release := false   # a move key was held when the hero died: ignored until it is let go
 var _ui_dir := 0
 var _drag_active := false
 var _drag_last := Vector2.ZERO
@@ -266,7 +267,10 @@ func _drain_events() -> void:
 				# One wind-up sound for every announced action; its pitch tells the kind apart (no new samples).
 				var kind := str(e[1].get("kind", "slam"))
 				var pitch: float = float(HEAVY_PITCH.get(kind, 1.0)) * (0.8 if bool(e[1].boss) else 1.0)
-				Events.sfx.emit(&"nest_windup", {"x": e[1].x, "pitch": pitch})
+				if kind == "charge":      # its own dry scrape + rise, so a charge is told from a slam by ear as well
+					Events.sfx.emit(&"frost_charge_windup", {"x": e[1].x, "pitch": 0.85 if bool(e[1].boss) else 1.0})
+				else:
+					Events.sfx.emit(&"nest_windup", {"x": e[1].x, "pitch": pitch})
 				# toast: every boss wind-up, and the first time each kind is seen in a battle
 				if bool(e[1].boss):
 					# the boss bar frame + the ground marker + the sound carry every later wind-up
@@ -294,9 +298,16 @@ func _drain_events() -> void:
 			"link_break":
 				Events.toast.emit("link_break", e[1])
 				Events.sfx.emit(&"nest_link_snap", {"x": e[1].x})
+			"lob_burst":
+				Events.sfx.emit(&"spore_burst", {"x": e[1].x})
 			"hero_dead":
-				Events.toast.emit("hero_dead", e[1])
+				# one cue at the moment of death; the HUD revive read-out carries the countdown (no toast, no ticking)
 				Events.sfx.emit(&"hero_death", {})
+				# A move held at that moment (button or key) is dropped: the revived hero stands until a new press.
+				_ui_dir = 0
+				_key_wait_release = _key_dir != 0
+				_key_dir = 0
+				sim.set_hero_dir(0)
 			"hero_respawn":
 				Events.sfx.emit(&"hero_respawn", {})
 			"counterattack":
@@ -394,6 +405,9 @@ func _unhandled_input(ev: InputEvent) -> void:
 			var l := Input.is_key_pressed(KEY_A) or Input.is_key_pressed(KEY_LEFT)
 			var r := Input.is_key_pressed(KEY_D) or Input.is_key_pressed(KEY_RIGHT)
 			_key_dir = (1 if r else 0) - (1 if l else 0)
+			if _key_wait_release:             # still the key that was down when the hero fell
+				if _key_dir == 0: _key_wait_release = false
+				_key_dir = 0
 			_free_cam_t = 0.0
 			if _key_dir != 0: _scouting = false
 		elif ev.pressed:

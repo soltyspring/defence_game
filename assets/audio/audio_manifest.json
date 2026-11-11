@@ -767,7 +767,7 @@
    "pitch": 0.0,
    "duck": -6,
    "faction": "bakery",
-   "desc": "head baker falls: 4-note falling triangle line",
+   "desc": "head baker falls: two short falling notes",
    "provenance": {
     "recipes": [
      "r_hero_death"
@@ -782,10 +782,10 @@
    "variants": [
     {
      "file": "hero_death.wav",
-     "seconds": 1.0,
-     "bytes": 44144,
+     "seconds": 0.52,
+     "bytes": 22976,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -11.63
+     "rms_dbfs": -10.5
     }
    ]
   },
@@ -797,7 +797,7 @@
    "prio": 8,
    "pitch": 0.0,
    "faction": "bakery",
-   "desc": "rising sparkle arpeggio",
+   "desc": "rising pair ending on one shop-bell stroke",
    "provenance": {
     "recipes": [
      "r_hero_respawn"
@@ -813,10 +813,10 @@
    "variants": [
     {
      "file": "hero_respawn.wav",
-     "seconds": 0.6,
-     "bytes": 26504,
+     "seconds": 0.62,
+     "bytes": 27386,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -13.2
+     "rms_dbfs": -15.31
     }
    ]
   },
@@ -1395,7 +1395,7 @@
    "pitch": 0.0,
    "peak_dbfs_target": -4.0,
    "faction": "mold",
-   "desc": "dry snap and falling twang for a cut link",
+   "desc": "dry cut and a short clear ring: a link, shell or wind-up was broken",
    "provenance": {
     "recipes": [
      "r_nest_link_snap"
@@ -1411,10 +1411,74 @@
    "variants": [
     {
      "file": "nest_link_snap.wav",
-     "seconds": 0.29,
-     "bytes": 12832,
+     "seconds": 0.34,
+     "bytes": 15038,
      "peak_dbfs": -4.0,
-     "rms_dbfs": -18.75
+     "rms_dbfs": -18.17
+    }
+   ]
+  },
+  "frost_charge_windup": {
+   "bus": "SFX",
+   "vol_db": -9,
+   "max": 1,
+   "gap": 0.45,
+   "prio": 7,
+   "pitch": 0.0,
+   "peak_dbfs_target": -3.5,
+   "faction": "mold",
+   "desc": "dry scrape then a short rise for the marked charge path",
+   "provenance": {
+    "recipes": [
+     "r_frost_charge_windup"
+    ],
+    "seeds": [
+     1049
+    ]
+   },
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/frost_charge_windup.wav"
+   ],
+   "variants": [
+    {
+     "file": "frost_charge_windup.wav",
+     "seconds": 0.5,
+     "bytes": 22094,
+     "peak_dbfs": -3.5,
+     "rms_dbfs": -15.35
+    }
+   ]
+  },
+  "spore_burst": {
+   "bus": "SFX",
+   "vol_db": -10,
+   "max": 1,
+   "gap": 0.2,
+   "prio": 6,
+   "pitch": 0.0,
+   "peak_dbfs_target": -4.0,
+   "faction": "mold",
+   "desc": "short dull thud when a lobbed spore zone bursts",
+   "provenance": {
+    "recipes": [
+     "r_spore_burst"
+    ],
+    "seeds": [
+     1050
+    ]
+   },
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/spore_burst.wav"
+   ],
+   "variants": [
+    {
+     "file": "spore_burst.wav",
+     "seconds": 0.22,
+     "bytes": 9746,
+     "peak_dbfs": -4.0,
+     "rms_dbfs": -19.43
     }
    ]
   }

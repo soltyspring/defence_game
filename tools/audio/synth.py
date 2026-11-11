@@ -389,24 +389,28 @@ def r_death(rng, enemy: bool):
 
 
 def r_hero_death(rng):
-    out = np.zeros(n_samples(1.0, SR))
-    for i, m in enumerate([72, 68, 65, 60]):
-        n = n_samples(0.26 if i < 3 else 0.5, SR)
-        f = midi_hz(m) * (ramp(1.0, 0.94, n) if i == 3 else 1.0)
-        s = osc(f, n, SR, "tri") * env_adsr(n, SR, 0.005, 0.05, 0.7, 0.12)
-        place(out, s, n_samples(i * 0.17, SR))
-    return out + seq([(0, burst(rng, 0.3, 0.1, 300, 2000) * 0.25)], 1.0)
+    # 2026-11-11: two short falling notes (was a 1 s four-note line that ran into the next fight sounds).
+    # One cue at the moment of death; the HUD carries the countdown, nothing ticks afterwards.
+    out = np.zeros(n_samples(0.52, SR))
+    for i, m in enumerate([72, 65]):
+        n = n_samples(0.2 if i == 0 else 0.32, SR)
+        f = midi_hz(m) * (ramp(1.0, 0.93, n) if i == 1 else 1.0)
+        s = (osc(f, n, SR, "tri") + 0.25 * osc(f * 2.0, n, SR, "sine")) * env_adsr(n, SR, 0.004, 0.05, 0.65, 0.12)
+        place(out, s, n_samples(i * 0.18, SR))
+    return out + seq([(0, burst(rng, 0.12, 0.04, 300, 2000) * 0.2)], 0.52)
 
 
 def r_hero_respawn(rng):
-    out = np.zeros(n_samples(0.6, SR))
-    for i, m in enumerate([67, 71, 74, 79, 83]):
-        n = n_samples(0.2, SR)
-        s = (osc(midi_hz(m), n, SR, "sine") + 0.3 * osc(midi_hz(m) * 2, n, SR, "sine")) * env_exp(n, SR, 0.08)
-        place(out, s * 0.6, n_samples(i * 0.06, SR))
-    n = len(out)
-    shimmer = bandpass(noise(n, rng), 5000, 9000, SR) * env_adsr(n, SR, 0.2, 0.1, 0.5, 0.3) * 0.15
-    return out + shimmer
+    # 2026-11-11: a rising pair that ends on one shop-bell stroke (was a five-note sparkle run). Played once, when
+    # the hero is back; the bell is the same family as the deploy/worker bells, so it reads as "ours".
+    out = np.zeros(n_samples(0.62, SR))
+    for i, m in enumerate([67, 74]):
+        n = n_samples(0.14, SR)
+        s = (osc(midi_hz(m), n, SR, "tri") + 0.3 * osc(midi_hz(m) * 2, n, SR, "sine")) * env_exp(n, SR, 0.06)
+        place(out, s * 0.55, n_samples(i * 0.09, SR))
+    ring = bell(midi_hz(79), 0.42, 0.16, bright=0.9)
+    place(out, ring * 0.8, n_samples(0.18, SR))
+    return out
 
 
 def r_skill_slam(rng):
@@ -944,8 +948,8 @@ CUES = {
     "explosion":       dict(r=[r3_explosion], bus="SFX", vol_db=-8, max=2, gap=0.12, prio=5, pitch=0.06, faction="mold", desc="spore bomber burst: splat + hiss + bubbles"),
     "death_ally":      dict(r=[r3_death_ally], bus="SFX", vol_db=-8.5, max=2, gap=0.08, prio=3, pitch=0.06, duck_sfx=-6, duck_sfx_below=3, faction="bakery", desc="bread crumbles: dry crackle + soft falling tone"),
     "death_enemy":     dict(r=[r3_death_enemy], rx=[lambda g: r38_death_enemy_v(g, 1)], vol_jitter=1.0, bus="SFX", vol_db=-11, max=2, gap=0.07, prio=3, pitch=0.08, faction="mold", desc="mold bursts: squelch + bubble fizz"),
-    "hero_death":      dict(r=[r_hero_death], bus="SFX", vol_db=-5, max=1, gap=1.0, prio=9, pitch=0.0, duck=-6, faction="bakery", desc="head baker falls: 4-note falling triangle line"),
-    "hero_respawn":    dict(r=[r_hero_respawn], bus="SFX", vol_db=-8, max=1, gap=1.0, prio=8, pitch=0.0, faction="bakery", desc="rising sparkle arpeggio"),
+    "hero_death":      dict(r=[r_hero_death], bus="SFX", vol_db=-5, max=1, gap=1.0, prio=9, pitch=0.0, duck=-6, faction="bakery", desc="head baker falls: two short falling notes"),
+    "hero_respawn":    dict(r=[r_hero_respawn], bus="SFX", vol_db=-8, max=1, gap=1.0, prio=8, pitch=0.0, faction="bakery", desc="rising pair ending on one shop-bell stroke"),
     "skill_slam":      dict(r=[r_skill_slam], bus="SFX", vol_db=-4, max=1, gap=0.2, prio=9, pitch=0.0, duck=-4, faction="bakery", desc="rolling-pin ground pound"),
     "skill_rally":     dict(r=[r36_skill_rally], bus="SFX", vol_db=-6, max=1, gap=0.2, prio=9, pitch=0.0, duck=-4, faction="bakery", desc="oven-door whoosh + troop cheer + bell accent (01 R1)"),
     "skill_barrage":   dict(r=[r34_skill_barrage], bus="SFX", vol_db=-5, max=1, gap=0.2, prio=9, pitch=0.0, duck=-5, faction="bakery", desc="crumb-shell volley: 5 oven-cannon launches, impacts rain from 0.8 s (01 R1)"),
@@ -995,10 +999,37 @@ def r_nest_slam(rng):
 
 
 def r_nest_link_snap(rng):
-    n = n_samples(0.29, SR)
-    snap = bandpass(noise(n, rng), 1000, 4500, SR) * env_exp(n, SR, 0.027)
-    tail = osc(ramp(870, 280, n), n, SR, "tri") * env_exp(n, SR, 0.079, 0.004)
-    return 0.48 * snap + 0.72 * tail
+    # 2026-11-11: dry cut + a short clear ring (was a falling twang that sat in the same band as melee hits).
+    # Used for "a protection just ended": link cut, shell pried open, wind-up interrupted.
+    n = n_samples(0.34, SR)
+    snap = bandpass(noise(n, rng), 1400, 5200, SR) * env_exp(n, SR, 0.018)
+    ring = np.zeros(n)
+    place(ring, bell(1568.0, 0.3, 0.09, bright=0.6), n_samples(0.03, SR))
+    return 0.6 * snap + 0.55 * ring
+
+
+def r_frost_charge_windup(rng):
+    # Dry scrape (ice on stone), then one short rise: unlike the wet double pulse of the nest slam.
+    n = n_samples(0.5, SR)
+    out = np.zeros(n)
+    k = n_samples(0.3, SR)
+    scrape = bandpass(noise(k, rng), 2200, 6500, SR) * env_adsr(k, SR, 0.02, 0.05, 0.6, 0.08)
+    scrape *= 0.6 + 0.4 * osc(38.0, k, SR, "square")          # gritty chatter
+    place(out, scrape * 0.7, 0)
+    m = n_samples(0.2, SR)
+    sweep = ramp(520, 1180, m)
+    rise = (osc(sweep, m, SR, "tri") + 0.2 * osc(sweep * 2.0, m, SR, "sine")) * env_adsr(m, SR, 0.01, 0.03, 0.7, 0.06)
+    place(out, rise * 0.8, n_samples(0.28, SR))
+    return out
+
+
+def r_spore_burst(rng):
+    # A lobbed clump bursting: one short dull thud with a soft puff, shorter and lower than `explosion`.
+    n = n_samples(0.22, SR)
+    # Kept above 300 Hz for the most part: phone loudspeakers reproduce little below that.
+    thud = osc(ramp(520, 230, n), n, SR, "tri") * env_exp(n, SR, 0.045, 0.003)
+    puff = bandpass(noise(n, rng), 600, 2400, SR) * env_exp(n, SR, 0.04, 0.004)
+    return 0.55 * thud + 0.75 * puff
 
 
 CUES.update({
@@ -1007,7 +1038,11 @@ CUES.update({
     "nest_slam": dict(r=[r_nest_slam], bus="SFX", vol_db=-11, max=1, gap=0.20, prio=6, pitch=0.0,
                       peak_dbfs_target=-4.0, faction="mold", desc="low impact with a rubble tail"),
     "nest_link_snap": dict(r=[r_nest_link_snap], bus="SFX", vol_db=-10, max=1, gap=0.28, prio=6, pitch=0.0,
-                           peak_dbfs_target=-4.0, faction="mold", desc="dry snap and falling twang for a cut link"),
+                           peak_dbfs_target=-4.0, faction="mold", desc="dry cut and a short clear ring: a link, shell or wind-up was broken"),
+    "frost_charge_windup": dict(r=[r_frost_charge_windup], bus="SFX", vol_db=-9, max=1, gap=0.45, prio=7, pitch=0.0,
+                                peak_dbfs_target=-3.5, faction="mold", desc="dry scrape then a short rise for the marked charge path"),
+    "spore_burst": dict(r=[r_spore_burst], bus="SFX", vol_db=-10, max=1, gap=0.2, prio=6, pitch=0.0,
+                        peak_dbfs_target=-4.0, faction="mold", desc="short dull thud when a lobbed spore zone bursts"),
 })
 CUE_GROUPS = {"hit": {"min_gap": 0.36}}   # same-seed A/B: 83 -> 49 hits/min (target 48-56); NOT yet confirmed by listening
 # v3.9 onset-cluster limit (docs/audio/ONSET_PEAK_CHECK.md): from the 4th SFX start within 0.1 s, low-priority cues

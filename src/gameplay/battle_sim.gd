@@ -580,6 +580,7 @@ func _step_delayed() -> void:
 				var wall: float = (player_base.x + BASE_HALF) if victim == SIDE_PLAYER else (enemy_base.x - BASE_HALF)
 				if absf(wall - float(d.x)) <= float(d.radius):
 					_damage_base(victim, float(d.power) * float(d.get("struct", 1.0)))
+				events.append(["lob_burst", {"x": float(d.x), "r": float(d.radius)}])
 			else:
 				_area_damage(float(d.x), float(d.radius), float(d.power), float(d.kb), 1.0)
 			_fx(str(d.fx), float(d.x), 0.0, 0.6, float(d.radius))
@@ -815,7 +816,7 @@ func _resolve_heavy(u: Unit, h: Dictionary) -> void:
 			if foe != null and absf(foe.x - u.x) <= float(h.get("trigger", 120.0)) * 1.3: tx = foe.x
 			var delay := float(h.get("delay", 1.2))
 			var r := float(h.get("radius", 40.0))
-			delayed.append({"at": t + delay, "x": tx, "radius": r, "power": power, "kb": kb, "fx": "explosion", "side": u.side,
+			delayed.append({"at": t + delay, "x": tx, "radius": r, "power": power, "kb": kb, "fx": "spore_burst", "side": u.side,
 				"struct": float(h.get("structure_mult", 1.0))})
 			_fx("telegraph", tx, 0.0, delay, r, 0, "lob")
 			hit_x = tx
@@ -1195,6 +1196,7 @@ func _kill(u: Unit, rewarded: bool) -> void:
 		_link_sources -= 1
 		_break_links(u)
 	if u.is_hero:
+		hero_dir = 0          # a move held when the hero fell does not resume by itself at the revive
 		hero_deaths += 1
 		stats.hero_deaths += 1
 		var rs := float(hero_def.respawn) + float(hero_def.get("respawn_per_death", 0.0)) * (hero_deaths - 1)
