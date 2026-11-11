@@ -7,6 +7,7 @@ Godot 4.7.2 / GDScript 가로 라인 디펜스. 영웅을 직접 움직이면서
 - 아래 표에서 **지금 하는 한 항목**을 골라 `rg -n`으로 심볼을 찾고 해당 함수와 호출부부터 읽는다. 기본 시작 범위는 핵심 파일 2–4개다. 구현에 필요한 의존성, 충돌, 실패가 확인되면 범위를 넓힌다. `build/`, `.godot/`, 전체 라운드 JSON, 장문 기록과 캡처는 미리 훑지 않는다.
 - 같은 파일이나 로그를 다시 읽기 전 변경 여부를 확인한다. 테스트 출력은 요약과 첫 실패 구간부터 본다. 이전 검증은 기준선으로 재사용하고, 이번 변경에 영향을 받는 검사는 다시 실행한다.
 - 작업을 넘길 때 기존 인수인계를 덮어 갱신한다. 최신 기준 SHA, 끝난 일, 실행한 검증, 다음에 열 파일·함수만 남긴다. 이전 진행 기록을 누적하지 않는다.
+- **Fable의 작업 제출은 로컬 커밋까지다.** 검증한 작업만 목적별로 커밋하고 SHA·검증 결과·미확인 사항을 남긴다. `git push`와 GitHub 게시를 실행하지 않는다. Codex가 커밋을 검토하고 `origin/main`에 푸시한다.
 
 | 작업 | 먼저 볼 곳 |
 | --- | --- |
@@ -15,4 +16,4 @@ Godot 4.7.2 / GDScript 가로 라인 디펜스. 영웅을 직접 움직이면서
 | 해금·상점·경제 | `src/core/app.gd`의 `start_round`, `src/core/save.gd`의 `is_unlocked`·`buy_preview_gold`, `src/core/gold_shop_catalog.gd`. 가격/강화 수치만 필요하면 `data/meta.json`의 관련 ID. |
 | 사운드 | `src/gameplay/battle.gd`의 `_drain_events`, `assets/audio/audio_manifest.json`의 관련 큐, `tools/audio/synth.py`의 해당 레시피. |
 
-데스크톱 창을 조작하지 않고 실제 플레이어 저장과 다른 작업자의 변경을 보존한다. 검증과 푸시 규칙은 [AGENTS.md](AGENTS.md)를 따른다.
+데스크톱 창을 조작하지 않고 실제 플레이어 저장과 다른 작업자의 변경을 보존한다. 공통 검증·Git 규칙은 [AGENTS.md](AGENTS.md)를 따르며, 거기에 적힌 푸시는 Codex가 맡는다.
