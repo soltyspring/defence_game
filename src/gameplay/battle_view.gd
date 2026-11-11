@@ -62,7 +62,7 @@ func setup(p_sim, p_atlas, p_ground_y: float, p_biome: String) -> void:
 	environment = Backdrop.new()
 	environment.z_index = -10
 	add_child(environment)
-	environment.build(float(sim.L), ground_y, biome)
+	environment.build(float(sim.L), ground_y, biome, float(sim.player_base.x), float(sim.enemy_base.x))
 	_font = ThemeDB.fallback_font
 	_num_font = _font
 	if ResourceLoader.exists(NUM_FONT_PATH):
@@ -120,7 +120,10 @@ func _draw() -> void:
 		for tx in sim.texts:
 			if tx.alive:
 				live[tx.serial] = true
-				_draw_text(tx)
+				if tx.uid < 0: _feed_base_combo(tx)   # base hits: one running total per base (drawn below)
+		_draw_base_combos(live)
+		for tx in sim.texts:
+			if tx.alive and tx.uid >= 0: _draw_text(tx)
 		for serial in _text_offsets.keys():
 			if not live.has(serial): _text_offsets.erase(serial)
 
@@ -153,29 +156,33 @@ func _update_formation(dt: float) -> void:
 		_crowd_badges.clear()
 		# The oldest occupant owns its place. New arrivals use vacancies; survivors
 		# never change rows or collapse forward when someone dies/leaves the pack.
+		# A unit changes column only once it has STOPPED (or was just born) and an older, stopped unit of its row
+		# is drawn on top of it (drawn x closer than FORM_OVERLAP) for 0.3 s. The former rule compared column
+		# NUMBERS of everyone within 32 px, walking or not, so units that marched 28 px apart, walked past each
+		# other or hovered around the 32 px edge kept being re-seated (tools/qa/formation_mirror.py: 42 -> 13).
 		for u in all:
 			if u.is_hero or u.is_boss or u.dying: continue
 			var slot: Vector2i = _formation_slots[u.uid]
-			var used := {}
+			var is_born: bool = born.has(u.uid)
+			var occupied := PackedFloat32Array()
 			var same_count := 0
 			var leader: int = u.uid
 			for other in all:
 				if other.side != u.side or other.is_hero or other.is_boss or other.dying: continue
-				if absf(other.x-u.x) < 32:
-					if other.uid < u.uid and _formation_slots[other.uid].x == slot.x:
-						used[_formation_slots[other.uid].y] = true
-					if other.id == u.id:
-						same_count += 1
-						leader = mini(leader,other.uid)
-			var conflict := float(_formation_conflicts.get(u.uid,0.0)) + interval if used.has(slot.y) else 0.0
+				if absf(other.x-u.x) < 32 and other.id == u.id:
+					same_count += 1
+					leader = mini(leader,other.uid)
+				if other.uid < u.uid and absf(other.x-u.x) < FORM_REACH and _formation_slots[other.uid].x == slot.x and (is_born or other.state != SimS.S_WALK):
+					occupied.append(drawn_x(other.x,other.side,_formation_slots[other.uid].y))
+			var blocked: bool = (is_born or u.state != SimS.S_WALK) and column_blocked(drawn_x(u.x,u.side,slot.y),occupied)
+			var conflict := float(_formation_conflicts.get(u.uid,0.0)) + interval if blocked else 0.0
 			_formation_conflicts[u.uid] = conflict
-			if used.has(slot.y) and (born.has(u.uid) or conflict >= 0.3):
-				for col in 7:
-					if not used.has(col):
-						slot.y = col
-						_formation_slots[u.uid] = slot
-						_formation_conflicts[u.uid] = 0.0
-						break
+			if blocked and (is_born or conflict >= 0.3):
+				var col := free_column(u.x,u.side,slot.y,occupied)
+				if col >= 0:
+					slot.y = col
+					_formation_slots[u.uid] = slot
+					_formation_conflicts[u.uid] = 0.0
 			if same_count >= 6 and leader == u.uid:
 				_crowd_badges.append({"uid":u.uid,"side":u.side,"count":same_count})
 	_render_positions.clear()
@@ -186,7 +193,7 @@ func _update_formation(dt: float) -> void:
 		var target := Vector2.ZERO
 		if _formation_slots.has(u.uid):
 			var slot: Vector2i = _formation_slots[u.uid]
-			target = Vector2(-u.side*slot.y*9.0,-slot.x*10.0-u.lane_y)
+			target = Vector2(-u.side*slot.y*FORM_COL_STEP,-slot.x*10.0-u.lane_y)
 		_formation_targets[u.uid] = target
 		var offset: Vector2 = _formation_offsets.get(u.uid,target)
 		offset.x = move_toward(offset.x,target.x,30.0*dt)
@@ -196,6 +203,32 @@ func _update_formation(dt: float) -> void:
 	for cache in [_formation_offsets,_formation_slots,_formation_conflicts]:
 		for uid in cache.keys():
 			if not live.has(uid): cache.erase(uid)
+
+const FORM_COL_STEP := 9.0   # drawn px between two columns of one row
+const FORM_OVERLAP := 7.0    # same-row sprites drawn closer than this cover each other
+const FORM_COLS := 7
+const FORM_REACH := FORM_COL_STEP * FORM_COLS + FORM_OVERLAP   # farther units can never be drawn on top
+
+## Drawn x of a unit standing at sim x in column `col` (columns trail behind the unit's facing).
+static func drawn_x(x: float, side: int, col: int) -> float:
+	return x - side * col * FORM_COL_STEP
+
+static func column_blocked(here: float, occupied: PackedFloat32Array) -> bool:
+	for ox in occupied:
+		if absf(ox - here) < FORM_OVERLAP:
+			return true
+	return false
+
+## Nearest column to `current` whose drawn x is clear of `occupied` (drawn x of older row mates); -1 = none.
+static func free_column(x: float, side: int, current: int, occupied: PackedFloat32Array) -> int:
+	for step in FORM_COLS:
+		for dirn in [1, -1]:
+			var col: int = current + step * dirn
+			if col < 0 or col >= FORM_COLS or (step == 0 and dirn < 0):
+				continue
+			if not column_blocked(drawn_x(x, side, col), occupied):
+				return col
+	return -1
 
 # ---------------- background ----------------
 func _draw_background() -> void:
@@ -353,7 +386,8 @@ func _draw_unit(u) -> void:
 	var mod := Color.WHITE
 	# Heavy green silhouettes otherwise merge into the dark mold nest during the final push.
 	# Keep their hue and animation while lifting their value above that background.
-	if u.is_boss: mod = Color(3.0, 3.0, 3.0)
+	# With the v2 lane set the ground behind the nest is light, so the boss keeps its own colours.
+	if u.is_boss and not (environment != null and environment.v2): mod = Color(3.0, 3.0, 3.0)
 	elif u.id == "e_brute": mod = Color(1.15, 1.15, 1.15)
 	if u.def.has("visual_tint"):
 		mod = Color(str(u.def.visual_tint)) * (1.4 if u.is_boss else 1.15)
@@ -601,6 +635,57 @@ func _draw_text(tx) -> void:
 	for o in TEXT_OUTLINE:
 		draw_string(_num_font, p + o, tx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, NUM_PX, oc)
 	draw_string(_num_font, p, tx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, NUM_PX, c)
+
+# ---- base damage: one running total per base ----
+# The sim spawns a new base number every 0.24 s of sustained fire (FText uid -100/-101), so a siege showed a
+# ladder of 3-4 rising numbers that restarted all the time. The view now adds those values into ONE number per
+# base that stays put while hits keep coming and drifts up once after the last hit. Display only: the sim's
+# damage, its texts and their values are untouched, and the shown total is exactly the sum of those values.
+const COMBO_HOLD := 0.45     # s the total stays after the last hit
+const COMBO_FADE := 0.35     # s of the single drift-up + fade
+const COMBO_RISE := 10.0     # px drifted during the fade
+const COMBO_SIDE := 38.0     # px from the base centre towards the battlefield (clear of the base HP bar)
+const COMBO_UP := 70.0       # px above the ground: over the attackers' heads, under the HUD strips
+var _base_combo := {}        # FText uid -> {total:int, seen:{serial:value}, last:float, x:float}
+
+## Pure: shown alpha (x) and drift in px (y) of a base total `age` seconds after its last hit.
+static func combo_curve(age: float) -> Vector2:
+	var k := smoothstep(COMBO_HOLD, COMBO_HOLD + COMBO_FADE, age)
+	return Vector2(1.0 - k, COMBO_RISE * k)
+
+## Adds the not-yet-counted part of one base FText to its base's running total (public for tests).
+func _feed_base_combo(tx) -> void:
+	if not _base_combo.has(tx.uid):
+		var enemy_side: bool = absf(tx.x - float(sim.enemy_base.x)) < absf(tx.x - float(sim.player_base.x))
+		var bx: float = float(sim.enemy_base.x) if enemy_side else float(sim.player_base.x)
+		_base_combo[tx.uid] = {"total": 0, "seen": {}, "last": -1000.0, "x": bx + (-COMBO_SIDE if enemy_side else COMBO_SIDE)}
+	var st: Dictionary = _base_combo[tx.uid]
+	var seen: Dictionary = st.seen
+	var before := int(seen.get(tx.serial, 0))
+	if int(tx.value) > before:
+		if float(sim.t) - float(st.last) > COMBO_HOLD + COMBO_FADE:
+			st.total = 0                      # the previous total has fully faded: a new burst starts at 0
+		st.total = int(st.total) + int(tx.value) - before
+		st.last = float(sim.t)
+		seen[tx.serial] = int(tx.value)
+
+func _draw_base_combos(live: Dictionary) -> void:
+	for uid in _base_combo:
+		var st: Dictionary = _base_combo[uid]
+		var seen: Dictionary = st.seen
+		for serial in seen.keys():
+			if not live.has(serial): seen.erase(serial)
+		var curve := combo_curve(float(sim.t) + render_ahead - float(st.last))
+		if curve.x <= 0.0 or int(st.total) <= 0: continue
+		var text := str(int(st.total))
+		var w := _num_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, NUM_PX).x
+		var p := Vector2(float(st.x) - w * 0.5, ground_y - COMBO_UP - curve.y)
+		p = Vector2(PixelCamera.world_position(p.x,world_zoom,device_scale),PixelCamera.world_position(p.y,world_zoom,device_scale))
+		_placed_text.append(Rect2(p.x-1,p.y-NUM_PX-1,w+2,TEXT_STEP))   # unit numbers stagger around it
+		var oc := Color(C_OUTLINE, curve.x)
+		for o in TEXT_OUTLINE:
+			draw_string(_num_font, p + o, text, HORIZONTAL_ALIGNMENT_LEFT, -1, NUM_PX, oc)
+		draw_string(_num_font, p, text, HORIZONTAL_ALIGNMENT_LEFT, -1, NUM_PX, Color(1.0,0.87,0.48,curve.x))
 
 var _placed_text: Array[Rect2] = []   # rects of the damage numbers drawn this frame (07 capture_crowd reads it)
 var texts_dropped := 0                 # numbers skipped for lack of a free slot (QA evidence)

@@ -45,6 +45,7 @@ var _held: Array[int] = []       # stack of held hero directions
 var _toast_left := 0.0
 var _banner_left := 0.0
 var _last_wave := -1
+var _boss_bar := false           # a boss is alive: the boss HP row is in use (HudLayout boss_bar)
 var stats := {"cmds": 0}         # QA counters
 
 func _ready() -> void:
@@ -167,6 +168,7 @@ func _on_battle_started(p_info: Dictionary) -> void:
 	snap = {}
 	_held.clear()
 	_last_wave = -1
+	_boss_bar = false
 	_battle_over = false
 	wave_cleared_shown = false
 	_on_tutorial_step("")
@@ -263,6 +265,10 @@ func _on_snapshot(s: Dictionary) -> void:
 	if wi != _last_wave and _last_wave != -1 and wi > 0:
 		show_banner(UiText.t("ui.boss") if bool(wave.get("boss", false)) else UiText.t("ui.wave") % [wi, int(wave.get("total", 0))])
 	_last_wave = wi
+	var boss_now := bool((s.get("boss", {}) as Dictionary).get("alive", false))
+	if boss_now != _boss_bar:
+		_boss_bar = boss_now      # strips/markers use the boss row while no boss is alive
+		_layout()
 	_update_threat(s.get("threat", {}))
 	if not _battle_over and s.has("paused") and bool(s.paused) != paused:
 		_on_paused(bool(s.paused))
@@ -464,16 +470,24 @@ func _process(delta: float) -> void:
 	if _banner_left > 0:
 		_banner_left -= delta
 		banner_label.modulate.a = clampf(_banner_left / 0.5, 0.0, 1.0)
+	# App re-derives the integer scale from the native window size in ITS _process, i.e. after the
+	# Viewport.size_changed that laid this screen out. Until the next signal/timer the buttons were drawn (and hit
+	# tested) at the previous logical size. Compare every frame: one Vector2 compare, re-layout only on change.
+	if is_inside_tree() and SafeArea.view_size(get_viewport()) != view:
+		for b in [btn_left, btn_right, btn_worker, btn_pause] + card_buttons + skill_buttons:
+			if b != null: b.cancel()
+		_on_resize()
 
 # ---------------- layout ----------------
 
 func _layout() -> void:
 	if top == null:
 		return
-	layout = HudLayout.compute(view, safe, card_buttons.size(), skill_buttons.size(), target)
+	layout = HudLayout.compute(view, safe, card_buttons.size(), skill_buttons.size(), target, _boss_bar)
 	place(top, Rect2(Vector2.ZERO, view))
 	top.layout = layout
 	place(minimap, layout.minimap)
+	minimap.visible = (layout.minimap as Rect2).size.x > 0.0   # dropped on views too narrow for bars + overview
 	place(btn_follow, layout.follow)
 	place(btn_pause, layout.pause)
 	place(btn_left, layout.move_left)

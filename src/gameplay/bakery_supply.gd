@@ -44,7 +44,12 @@ static func draw(v: Node2D, sim, atlas, ground: float) -> void:
 	# The same original village texture supplies a detailed, readable flour mill.
 	# It is shared with the backdrop, so this does not allocate another texture page.
 	var texture: Texture2D = v.environment.village_texture if v.environment else null
-	if texture:
+	var set_texture: Texture2D = v.environment.set_texture if v.environment else null
+	if set_texture:
+		# v2 lane set: the windmill is the home landmark, drawn on the same pixel grid as the units.
+		var region: Rect2 = v.environment.SET_MILL
+		v.draw_texture_rect_region(set_texture, Rect2(mill - 56, ground - 111, region.size.x, region.size.y), region)
+	elif texture:
 		var ratio := float(texture.get_width()) / 2172.0
 		v.draw_texture_rect_region(texture, Rect2(mill-55, ground-96, 110, 96), Rect2(Vector2(0,240)*ratio,Vector2(440,384)*ratio))
 	else:

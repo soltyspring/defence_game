@@ -55,10 +55,11 @@ func _ready() -> void:
 	_on_resize()
 	# Some devices rotate 180 degrees without changing viewport dimensions.
 	var safe_timer := Timer.new()
-	safe_timer.wait_time = 0.5
+	safe_timer.wait_time = 0.2
 	safe_timer.process_mode = Node.PROCESS_MODE_ALWAYS
 	safe_timer.timeout.connect(func():
-		if SafeArea.safe_rect(get_viewport()) != safe: _on_resize())
+		# Also the logical view: App may change the integer scale after the size_changed that laid us out.
+		if SafeArea.safe_rect(get_viewport()) != safe or SafeArea.view_size(get_viewport()) != view: _on_resize())
 	add_child(safe_timer)
 	safe_timer.start()
 

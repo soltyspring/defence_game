@@ -1,0 +1,25 @@
+{
+ "image": "lane_set_v2.png",
+ "filter": "nearest",
+ "baseline": "bottom row = world ground_y - 12",
+ "regions": {
+  "home": [
+   0,
+   0,
+   320,
+   108
+  ],
+  "blight": [
+   0,
+   112,
+   320,
+   108
+  ],
+  "mill": [
+   324,
+   0,
+   112,
+   112
+  ]
+ }
+}

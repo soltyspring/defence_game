@@ -5,6 +5,22 @@ const Raster := preload("res://src/gameplay/pixel_camera.gd")
 var layers: Array[Node2D] = []
 var village_texture: Texture2D
 var factors := [0.0, 0.08, 0.22, 0.4, 0.68, 1.0]
+## v2 lane set (tools/art/world/lane_set.py, docs/art/fable52/STYLE_RULES.md): bakery town by the keep, open field,
+## mould thicket by the nest. Used when the sheet is imported; otherwise the v1 painted panorama below.
+const SET_PATH := "res://assets/backgrounds/lane_set_v2.png"
+const SET_HOME := Rect2(0, 0, 320, 108)
+const SET_BLIGHT := Rect2(0, 112, 320, 108)
+const SET_MILL := Rect2(324, 0, 112, 112)
+var set_texture: Texture2D
+var v2 := false
+
+class SetPieces extends Node2D:
+	var texture: Texture2D
+	var items: Array = []   # [source Rect2, world position Vector2]
+	func _draw() -> void:
+		for item in items:
+			var src: Rect2 = item[0]
+			draw_texture_rect_region(texture, Rect2(item[1], src.size), src)
 
 class Panorama extends Node2D:
 	var texture: Texture2D
@@ -59,7 +75,12 @@ class Shapes extends Node2D:
 		commands.clear()
 		queue_redraw()
 
-func build(length: float, ground: float, _biome: String) -> void:
+func build(length: float, ground: float, _biome: String, player_x := 40.0, enemy_x := -1.0) -> void:
+	if enemy_x < 0.0: enemy_x = length - 40.0
+	v2 = ResourceLoader.exists(SET_PATH)
+	if v2:
+		set_texture = load(SET_PATH)
+		factors[4] = 1.0   # set pieces are world-locked: they frame the two bases
 	for i in factors.size():
 		var layer := Shapes.new()
 		add_child(layer)
@@ -77,15 +98,35 @@ func build(length: float, ground: float, _biome: String) -> void:
 		clouds.box(Rect2(x+7,y-7,40,9),Color("edf0df"))
 		clouds.box(Rect2(x+18,y-12,20,7),Color("edf0df"))
 	var hills = layers[2]
-	for i in range(-8, int(length / 170.0) + 12):
-		var x := float(i * 170)
+	var hill_span := 235 if v2 else 170
+	for i in range(-8, int(length / float(hill_span)) + 12):
+		var x := float(i * hill_span)
 		var h := float(22 + posmod(i * 37, 43))
 		var y := ground - 100
-		hills.poly(PackedVector2Array([Vector2(x-40,y+25),Vector2(x+24,y-h),Vector2(x+68,y-h-9),Vector2(x+147,y+16),Vector2(x+202,y+34)]),Color("86a69a"))
-		hills.poly(PackedVector2Array([Vector2(x+8,y+29),Vector2(x+84,y-h+20),Vector2(x+154,y+10),Vector2(x+196,y+37)]),Color("a1b8a0"))
+		if v2:
+			# Broad, overlapping ridges. Lower crests leave the wave timer over calm sky.
+			hills.poly(PackedVector2Array([Vector2(x-45,y+18),Vector2(x-14,y-3),Vector2(x+25,y-h*0.45),Vector2(x+72,y-h*0.62),Vector2(x+116,y-h*0.57),Vector2(x+176,y-h*0.26),Vector2(x+253,y+10),Vector2(x+269,y+28)]),Color("9ab5a9"))
+			hills.poly(PackedVector2Array([Vector2(x+12,y+23),Vector2(x+57,y+4),Vector2(x+111,y-h*0.22),Vector2(x+155,y-h*0.26),Vector2(x+211,y-2),Vector2(x+263,y+21),Vector2(x+270,y+31)]),Color("aec2a6"))
+		else:
+			hills.poly(PackedVector2Array([Vector2(x-40,y+25),Vector2(x+24,y-h),Vector2(x+68,y-h-9),Vector2(x+147,y+16),Vector2(x+202,y+34)]),Color("86a69a"))
+			hills.poly(PackedVector2Array([Vector2(x+8,y+29),Vector2(x+84,y-h+20),Vector2(x+154,y+10),Vector2(x+196,y+37)]),Color("a1b8a0"))
 	var fields = layers[3]
 	fields.box(Rect2(-1000,ground-102,length+3000,110),Color("9eae78"))
-	for i in range(-5, int(length / 120.0) + 10):
+	if v2:
+		# One broad wheat band and sparse sheaves instead of furrows and posts every 120 px.
+		fields.box(Rect2(-1000,ground-88,length+3000,34),Color("cdbf85"))
+		fields.box(Rect2(-1000,ground-88,length+3000,3),Color("ddd09a"))
+		for i in range(-1, int(length * 0.4 / 420.0) + 3):
+			var sx := float(i * 420 + 150)
+			fields.box(Rect2(sx,ground-66,12,12),Color("b7a468"))
+			fields.box(Rect2(sx+2,ground-70,8,4),Color("c9b877"))
+		# The blight takes the far fields in two flat steps; slanted edges read as terrain, not as a seam.
+		var far := length + 3000.0
+		for step in [[0.4 * 0.58 * length + 130.0, "9aa888", "bcb992"], [0.4 * 0.8 * length + 190.0, "93a290", "a9b09c"]]:
+			var b: float = step[0]
+			fields.poly(PackedVector2Array([Vector2(b+70,ground-102),Vector2(far,ground-102),Vector2(far,ground+8),Vector2(b,ground+8)]),Color(str(step[1])))
+			fields.poly(PackedVector2Array([Vector2(b+61,ground-88),Vector2(far,ground-88),Vector2(far,ground-54),Vector2(b+39,ground-54)]),Color(str(step[2])))
+	for i in range(-5, (int(length / 120.0) + 10) if not v2 else -5):
 		var x := float(i * 120)
 		var y := ground - 77.0
 		fields.poly(PackedVector2Array([Vector2(x,y),Vector2(x+36,y-14),Vector2(x+140,y-14),Vector2(x+112,y+30)]),Color("d3bd79"))
@@ -94,7 +135,9 @@ func build(length: float, ground: float, _biome: String) -> void:
 		fields.box(Rect2(x+113,y-4,3,39),Color("6d855e"))
 		fields.box(Rect2(x+109,y-17,11,19),Color("799367"))
 	# Chapter landmarks are baked into the existing field mesh, with no new textures/draw passes.
-	if _biome == "biome_orchard":
+	if v2:
+		_chapter_landmark(fields, length, ground, _biome)
+	elif _biome == "biome_orchard":
 		for i in range(-1,int(length/155.0)+2):
 			var x := float(i*155+44)
 			var y := ground-40.0
@@ -108,7 +151,16 @@ func build(length: float, ground: float, _biome: String) -> void:
 			fields.box(Rect2(x+18,ground-49,66,3),Color("c8d9df"))
 	var village = layers[4]
 	var village_path := "res://assets/backgrounds/village_panorama_v1.png"
-	if ResourceLoader.exists(village_path):
+	if v2:
+		var pieces := SetPieces.new()
+		pieces.texture = set_texture
+		pieces.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		pieces.items = [[SET_HOME, Vector2(player_x + 52.0, ground - 12.0 - 107.0)], [SET_BLIGHT, Vector2(enemy_x - 250.0, ground - 12.0 - 107.0)]]
+		add_child(pieces)
+		move_child(pieces, 4)
+		layers[4] = pieces
+		village.queue_free()
+	elif ResourceLoader.exists(village_path):
 		var panorama := Panorama.new()
 		village_texture = load(village_path)
 		panorama.texture = village_texture
@@ -137,16 +189,35 @@ func build(length: float, ground: float, _biome: String) -> void:
 	for i in range(-12,int(length/42.0)+15):
 		var x := float(i*42)
 		lane.box(Rect2(x,ground+16+posmod(i*19,35),9+posmod(i*7,10),2),Color("897354"))
-		lane.box(Rect2(x+11,ground-9,3,6),Color("b7a77d"))
+		if not v2: lane.box(Rect2(x+11,ground-9,3,6),Color("b7a77d"))
 		if _biome == "biome_frost" and i%2 == 0:
 			lane.box(Rect2(x-2,ground-14,25,3),Color("d6e3e5"))
+	if v2:
+		# Verge and path cool in two steps towards the nest; a light forecourt and a dark creep apron mark the bases.
+		lane.box(Rect2(0.6*length,ground-14,length,10),Color("8d9c7c"))
+		lane.box(Rect2(0.8*length,ground-14,length,10),Color("869687"))
+		lane.box(Rect2(0.8*length,ground-4,length,13),Color("bdb7a3"))
+		lane.box(Rect2(player_x-78,ground-4,190,13),Color("ddd2b2"))
+		lane.box(Rect2(player_x-78,ground-4,190,2),Color("ece3c8"))
+		for apron in [[-150.0,"9fa998"],[-112.0,"8b9b90"],[-74.0,"778b84"]]:
+			var ax: float = enemy_x + float(apron[0])
+			lane.poly(PackedVector2Array([Vector2(ax,ground+9),Vector2(ax+22,ground-4),Vector2(enemy_x+80,ground-4),Vector2(enemy_x+80,ground+9)]),Color(str(apron[1])))
+		for dx in [-112.0,-74.0,-30.0]:
+			lane.box(Rect2(enemy_x+dx,ground+1,3,3),Color("c6d6cb"))
 	# Distinct route landmarks, never a wallpaper of identical doors.
-	for fraction in [0.25,0.5,0.76]:
+	for fraction in ([0.3,0.55] if v2 else [0.25,0.5,0.76]):
 		var x: float = length * fraction
 		lane.box(Rect2(x,ground-34,3,31),Color("685641"))
 		lane.poly(PackedVector2Array([Vector2(x-7,ground-33),Vector2(x+16,ground-33),Vector2(x+23,ground-27),Vector2(x+16,ground-21),Vector2(x-7,ground-21)]),Color("b59560"))
 	# Encroaching mold at the far end: large readable growths rather than noisy pixels.
-	for i in 9:
+	if v2:
+		# Uneven spacing and heights: growth, not a fence.
+		for growth in [[0.70,12.0],[0.745,17.0],[0.80,14.0],[0.83,22.0],[0.875,16.0],[0.90,26.0]]:
+			var gx: float = length * float(growth[0])
+			var gh: float = growth[1]
+			lane.box(Rect2(gx,ground-3-gh,3,gh),Color("5d7771"))
+			lane.poly(PackedVector2Array([Vector2(gx-8,ground-3-gh),Vector2(gx-5,ground-10-gh),Vector2(gx+6,ground-10-gh),Vector2(gx+11,ground-3-gh)]),Color("82958a"))
+	for i in (0 if v2 else 9):
 		var x := length * 0.72 + i * length * 0.029
 		lane.box(Rect2(x,ground-17,3,14),Color("5d7771"))
 		lane.poly(PackedVector2Array([Vector2(x-8,ground-17),Vector2(x-5,ground-24),Vector2(x+6,ground-24),Vector2(x+11,ground-17)]),Color("82958a"))
@@ -157,6 +228,37 @@ func build(length: float, ground: float, _biome: String) -> void:
 			layer.modulate = Color("e3d0a8") if i < 3 else Color("d9c3a2")
 		elif _biome == "biome_frost":
 			layer.modulate = Color("a8bddc") if i < 3 else Color("a9bfd1")
+		elif _biome == "biome_nest":
+			# Challenge chapter (R31-R40): the same layers under a dim grey-teal cast; no new texture.
+			layer.modulate = Color("9fb3ac") if i < 3 else Color("94a9a2")
+
+## A single silhouette per chapter. Keep the shapes above the unit band and
+## bake them into the field mesh so all three chapters share the same sheet.
+func _chapter_landmark(field: Shapes, length: float, ground: float, biome: String) -> void:
+	var x := roundf(length * 0.4 * 0.48 + 140.0)
+	var y := ground - 57.0
+	match biome:
+		"biome_01", "biome_meadow":
+			# A distant grain shelter and uneven windbreak add scale without competing with troops.
+			field.box(Rect2(x-49, y-30, 52, 28), Color("c4b58a"))
+			field.poly(PackedVector2Array([Vector2(x-57,y-30), Vector2(x-39,y-47), Vector2(x-8,y-47), Vector2(x+10,y-30)]), Color("bcaa7e"))
+			field.box(Rect2(x-36, y-19, 17, 17), Color("b7aa7e"))
+			field.poly(PackedVector2Array([Vector2(x+20,y-2), Vector2(x+21,y-22), Vector2(x+34,y-35), Vector2(x+51,y-38), Vector2(x+70,y-29), Vector2(x+78,y-32), Vector2(x+97,y-21), Vector2(x+106,y-2)]), Color("a9b585"))
+		"biome_orchard":
+			# Harvest orchard: a single cluster with staggered canopies, not a repeating row.
+			for tree in [Vector2(-47, -4), Vector2(0, -13), Vector2(54, 0)]:
+				var o: Vector2 = Vector2(x, y) + tree
+				field.box(Rect2(o + Vector2(-4, -34), Vector2(8, 34)), Color("af9b75"))
+				field.poly(PackedVector2Array([o + Vector2(-29,-27), o + Vector2(-27,-47), o + Vector2(-14,-59), o + Vector2(9,-63), o + Vector2(28,-49), o + Vector2(30,-30), o + Vector2(13,-23), o + Vector2(-14,-22)]), Color("b7bc87"))
+				field.box(Rect2(o + Vector2(-19,-47), Vector2(24, 8)), Color("c9c990"))
+				for fruit in [Vector2(-13,-36), Vector2(2,-50), Vector2(17,-37)]:
+					field.box(Rect2(o + fruit, Vector2(5, 5)), Color("cc986e"))
+		"biome_frost":
+			# Frost road: a broken frozen arch, with a clear opening even in silhouette.
+			field.poly(PackedVector2Array([Vector2(x-77,y), Vector2(x-64,y-44), Vector2(x-43,y-69), Vector2(x-10,y-71), Vector2(x-18,y-52), Vector2(x-38,y-50), Vector2(x-53,y-27), Vector2(x-54,y)]), Color("b5cbcd"))
+			field.poly(PackedVector2Array([Vector2(x+28,y), Vector2(x+22,y-32), Vector2(x+12,y-48), Vector2(x+24,y-55), Vector2(x+47,y-35), Vector2(x+58,y)]), Color("aabfc6"))
+			field.poly(PackedVector2Array([Vector2(x-65,y-45), Vector2(x-44,y-70), Vector2(x-10,y-72), Vector2(x-15,y-61), Vector2(x-42,y-61)]), Color("e3ebe4"))
+			field.box(Rect2(x-92, y, 170, 6), Color("d6e0df"))
 
 func _house(layer, x: float, y: float, w: float, h: float, kind: int, dark: bool) -> void:
 	var wall := Color("a4aca3") if dark else Color("dacbad")

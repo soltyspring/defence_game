@@ -17,9 +17,9 @@
  "repeat": false,
  "gpu_format": "RGBA8 (lossless, no VRAM compression)",
  "gpu_bytes": 2097152,
- "disk_bytes": 31648,
- "unique_regions": 237,
- "occupancy": 0.608,
+ "disk_bytes": 31912,
+ "unique_regions": 238,
+ "occupancy": 0.61,
  "frames": {
   "hero_captain/idle/0": {
    "x": 367,
@@ -712,8 +712,8 @@
    ]
   },
   "melee_basic/idle/1": {
-   "x": 3,
-   "y": 471,
+   "x": 831,
+   "y": 467,
    "w": 32,
    "h": 32,
    "pivot": [

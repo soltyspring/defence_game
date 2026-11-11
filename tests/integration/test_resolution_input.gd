@@ -39,7 +39,7 @@ func _run() -> void:
 	root.add_child(load("res://scenes/gameplay/main.tscn").instantiate())
 	await frames()
 	root.notify_mouse_entered()
-	for sz in [Vector2i(1280,720),Vector2i(1366,768),Vector2i(1600,900),Vector2i(800,450),Vector2i(640,360),Vector2i(1280,800)]:
+	for sz in [Vector2i(1280,720),Vector2i(1366,768),Vector2i(1600,900),Vector2i(800,450),Vector2i(640,360),Vector2i(1280,800),Vector2i(1920,1080),Vector2i(480,270)]:
 		root.size = sz
 		await frames(10)
 		var k := maxi(1,mini(sz.x/640,sz.y/360))

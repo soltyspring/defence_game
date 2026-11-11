@@ -19,7 +19,13 @@ const THREAT_MIN := 44.0                      # marker plate ≥ 44 px = 48 dp o
 const THREAT_SIZE := Vector2(44, 34)          # = ThreatMarker.SIZE (content block)
 const CARD_NAME_W := 42.0                     # 36 px ko card name (Galmuri11 12) + 6 px padding (touch_button fit_lines)
 
-static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min_target: float) -> Dictionary:
+const FIT_GAP := 2.0                          # gap between controls in the last-resort "fit" row
+const FIT_MIN := 16.0                         # smallest control in the fit row (mouse-only window sizes)
+const MAP_MIN := 84.0                         # overview strip: 15 % of the width, 84-104 px (was 22 %, 126-150)
+const MAP_MAX := 104.0
+
+## boss_bar = false (no boss alive): the feedback strips and threat markers move up into the unused boss-bar row.
+static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min_target: float, boss_bar := true) -> Dictionary:
 	var t := maxf(min_target, 40.0)
 	var m := 4.0
 	var s := safe.grow(-m)
@@ -36,12 +42,17 @@ static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min
 	out.resources = Rect2(s.position, Vector2(res_w, top_h))
 	var bars_x := s.position.x + res_w + GAP * 2
 	var follow_r := Rect2(pause_r.position.x-TOUCH_GAP-t,s.position.y,t,t)
-	var map_w := roundf(clampf(s.size.x*0.22,126.0,150.0))
+	var map_w := roundf(clampf(s.size.x*0.15,MAP_MIN,MAP_MAX))
 	var map_r := Rect2(follow_r.position.x-TOUCH_GAP-map_w,s.position.y,map_w,t)
+	var bars_end := map_r.position.x - GAP * 2
+	if bars_end - bars_x < 60.0:
+		# Too narrow for bars + overview: drop the overview (zero-size = hidden, no input) instead of letting it
+		# cover the base HP bars. Dragging the battlefield still scouts.
+		map_r = Rect2(follow_r.position, Vector2(0.0, t))
+		bars_end = follow_r.position.x - GAP * 2
 	out.minimap = map_r
 	out.follow = follow_r
 	out.compact = true
-	var bars_end := map_r.position.x - GAP * 2
 	out.bases = Rect2(Vector2(bars_x, s.position.y), Vector2(maxf(bars_end - bars_x, 60.0), 22.0))
 	out.wave = Rect2(Vector2(bars_x, s.position.y + 24.0), Vector2(out.bases.size.x, 14.0))
 
@@ -70,28 +81,50 @@ static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min
 		gg = GROUP_GAP
 		cw_fit = _card_fit(s.size.x, n_cards, move, skill, 0, gg)
 	var card_w := clampf(cw_fit, t, maxf(t, 50.0))
-	var need := n_cards * card_w + maxi(n_cards - 1, 0) * TOUCH_GAP
-	var avail := s.size.x - (2.0 * move + GAP * 2) - gg - card_w - gg - (_skills_w(skill, n_skills, gg) if skills_in_row else 0.0)
+	var tg := TOUCH_GAP      # gap between cards / between skills
+	var mg := GAP * 2        # gap between the two move buttons
+	# Last resort. Two cases used to leave controls unreachable in small desktop windows (k = 1, view = window):
+	#  - below ~392 logical px even the column mode overflowed: cards were laid out past the right edge;
+	#  - on short views the skill column climbed into the top row and sat on top of the pause button.
+	# Both now collapse to ONE row in which every control shrinks equally; nothing leaves the view or stacks.
+	var col_top := row_bottom - card_h - GAP * 2 - n_skills * skill - maxi(n_skills - 1, 0) * TOUCH_GAP
+	var fit := cw_fit < t or (not skills_in_row and col_top < s.position.y + top_h + TOUCH_GAP)
+	if fit:
+		skills_in_row = true
+		gg = FIT_GAP
+		tg = FIT_GAP
+		mg = FIT_GAP
+		var n := 3 + n_cards + n_skills      # 2 move buttons + worker + cards + skills
+		var u := clampf(floorf((s.size.x - (n - 1) * FIT_GAP) / float(n)), FIT_MIN, t)
+		move = u
+		skill = u
+		card_w = u
+		card_h = clampf(s.size.y - top_h - TOUCH_GAP, u, card_h)
+		out.min_target = u
+	out.fit = fit
+	var skills_w := (n_skills * skill + maxi(n_skills - 1, 0) * tg + gg) if (skills_in_row and n_skills > 0) else 0.0
+	var need := n_cards * card_w + maxi(n_cards - 1, 0) * tg
+	var avail := s.size.x - (2.0 * move + mg) - gg - card_w - gg - skills_w
 	out.skills_in_row = skills_in_row
 	out.group_gap = gg
 	out.overflow = need > avail + 0.5
 	out.move_left = Rect2(Vector2(s.position.x, row_bottom - move), Vector2(move, move))
-	out.move_right = Rect2(Vector2(s.position.x + move + GAP * 2, row_bottom - move), Vector2(move, move))
+	out.move_right = Rect2(Vector2(s.position.x + move + mg, row_bottom - move), Vector2(move, move))
 	out.worker = Rect2(Vector2((out.move_right as Rect2).end.x + gg, row_bottom - card_h), Vector2(card_w, card_h))
-	var sk_w := _skills_w(skill, n_skills, gg) if skills_in_row else 0.0
+	var sk_w := skills_w
 	var lo: float = (out.worker as Rect2).end.x + gg
 	var hi := s.end.x - sk_w
 	# centre the unit cards between the worker and the skills
 	var x0 := lo + maxf(0.0, (hi - lo - need) / 2.0)
 	var cards: Array[Rect2] = []
 	for i in n_cards:
-		cards.append(Rect2(Vector2(x0 + i * (card_w + TOUCH_GAP), row_bottom - card_h), Vector2(card_w, card_h)))
+		cards.append(Rect2(Vector2(x0 + i * (card_w + tg), row_bottom - card_h), Vector2(card_w, card_h)))
 	out.cards = cards
 
 	var skills: Array[Rect2] = []
 	for i in n_skills:
 		if skills_in_row:
-			var x := s.end.x - (n_skills - i) * skill - (n_skills - 1 - i) * TOUCH_GAP
+			var x := s.end.x - (n_skills - i) * skill - (n_skills - 1 - i) * tg
 			skills.append(Rect2(Vector2(x, row_bottom - skill), Vector2(skill, skill)))
 		else:
 			var y := row_bottom - card_h - GAP * 2 - (i + 1) * skill - i * TOUCH_GAP
@@ -103,12 +136,12 @@ static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min
 	if not skills_in_row and n_skills > 0:
 		strip_end = (skills[0] as Rect2).position.x - GAP * 2
 	var boss_y := s.position.y + top_h + TOUCH_GAP
-	out.boss = Rect2(Vector2(bars_x, boss_y), Vector2(map_r.end.x-bars_x, 14.0))
+	out.boss = Rect2(Vector2(bars_x, boss_y), Vector2(map_r.end.x-bars_x, 14.0) if boss_bar else Vector2.ZERO)
 	# off-screen threat markers (03 A11, 01 R10): square plate ≥ 44 px at the screen edges, just below the toast
 	# strip and always inside the top half, so no HUD part and no lane unit covers them. Right marker stays left
 	# of a stacked skill column.
 	var mk := maxf(t, THREAT_MIN)
-	var ty := boss_y + 16.0
+	var ty := boss_y + (16.0 if boss_bar else 0.0)
 	out.threat_right = Rect2(Vector2(strip_end - mk, ty), Vector2(mk, mk))
 	out.threat_left = Rect2(Vector2(s.position.x, ty), Vector2(mk, mk))
 	# banner: between the two markers
@@ -138,7 +171,7 @@ static func lane_band(view: Vector2) -> Rect2:
 ## All interactive rects, for validation.
 static func touch_rects(l: Dictionary) -> Array[Rect2]:
 	var r: Array[Rect2] = [l.pause, l.move_left, l.move_right, l.worker]
-	if l.has("minimap"): r.append(l.minimap)
+	if l.has("minimap") and (l.minimap as Rect2).size.x > 0.0: r.append(l.minimap)
 	if l.has("follow"): r.append(l.follow)
 	for c in l.cards:
 		r.append(c)
@@ -210,6 +243,8 @@ static func validate(l: Dictionary) -> PackedStringArray:
 			problems.append("01 R10 %s smaller than %.0f px %s" % [key, THREAT_MIN, a.size])
 		if view != Vector2.ZERO and a.end.y > view.y / 2.0 + 0.01:
 			problems.append("01 R10 %s not in the top half (end y %.0f > %.0f)" % [key, a.end.y, view.y / 2.0])
+	if bool(l.get("fit", false)):
+		return problems      # fit row: spacing rules (QA-J3, L4, L2) are deliberately traded for reachability
 	var w: Rect2 = l.worker
 	var gmin: float = GROUP_GAP if l.skills_in_row and float(l.get("group_gap", GROUP_GAP)) >= GROUP_GAP else TOUCH_GAP
 	if w.position.x - (l.move_right as Rect2).end.x + 0.01 < gmin:

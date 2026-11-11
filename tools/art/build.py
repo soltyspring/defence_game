@@ -145,6 +145,9 @@ def apply_name_redraws():
                                     blink_px=[(6, 5, "L"), (6, 6, "S")])
         chars_player.ALL["melee_basic"] = (chars_player.SPEARMAN, chars_player.spearman_anims)
     fx.SETS["arrow"] = (chars_retheme.proj_roll, 14, 5, (7, 2))
+    if os.environ.get("ART_FABLE", "1") == "1":    # 2026-11-10 release-style redraw of 4 representative characters
+        import chars_fable                         # (hero, toast soldier, mould grunt, warlord); ART_FABLE=0 = previous art
+        chars_fable.apply()
     if os.environ.get("ART_DRAFT32"):          # unit-size drafts only (tools/art/chars_big.py); never shipped
         import chars_big
         chars_big.apply(os.environ["ART_DRAFT32"])
