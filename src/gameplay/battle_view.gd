@@ -102,6 +102,7 @@ func _draw() -> void:
 		draw_rect(Rect2(foot + Vector2(-7,0),Vector2(14,2)),Color(0.08,0.08,0.07,0.32))
 	_draw_links()
 	_state_marks.clear()
+	_mark_rects.clear()
 	for u in _order:
 		_draw_unit(u)
 	for u in _variant_marks: _draw_variant(u)
@@ -116,9 +117,11 @@ func _draw() -> void:
 	for p in sim.projectiles:
 		if p.alive: _draw_projectile(p)
 	for f in sim.fxs:
-		if f.alive: _draw_fx(f)
+		if f.alive and f.kind != "telegraph": _draw_fx(f)
+	_draw_telegraphs()
 	if show_damage:
 		_placed_text.clear()
+		_placed_text.append_array(_mark_rects)   # damage numbers stagger around wind-up wedges instead of covering them
 		var live := {}
 		for tx in sim.texts:
 			if tx.alive:
@@ -370,10 +373,11 @@ func _draw_workers() -> void:
 
 # ---------------- units ----------------
 func _anim_name(u) -> String:
-	if not u.dying and u.def.has("heavy"):
+	if not u.dying and (not u.ab.is_empty() or u.exposed_t > 0.0):
 		if u.heavy_t >= 0.0: return "heavy_prepare"
+		if u.fire_t >= 0.0: return "heavy_release"
 		if u.recover_t > 0.0:
-			return "heavy_release" if float(u.def.heavy.get("recover", 2.0)) - u.recover_t < 0.20 else "heavy_exposed"
+			return "heavy_release" if float(u.ab.get("recover", 2.0)) - u.recover_t < 0.20 and str(u.ab.get("kind", "slam")) != "vent" else "heavy_exposed"
 		if u.exposed_t > 0.0: return "heavy_exposed"
 	match u.state:
 		SimS.S_WALK: return "walk"
@@ -383,6 +387,7 @@ func _anim_name(u) -> String:
 
 # ---- chapter 4 readouts: link strands, wind-up and weak-point marks ----
 var _state_marks: Array = []
+var _mark_rects: Array[Rect2] = []      # wind-up wedges drawn this frame
 
 ## A sagging strand from every living link source to each unit it protects, drawn under the units.
 func _draw_links() -> void:
@@ -402,13 +407,26 @@ func _draw_links() -> void:
 ## Wind-up: a wedge over the head that grows until the hit. Exposed (recovering / link cut): an open pale ring at
 ## chest height. Both keep the unit's own colours, so they also read in greyscale by shape.
 func _draw_state_mark(u) -> void:
+	if u.hidden:
+		# Keep the mound behind sprites, but place a small surface marker above
+		# their feet. X stays on the real burrow path, not a formation offset.
+		var p := Vector2(roundf(u.x), ground_y - 25.0)
+		draw_line(p + Vector2(0, 5), Vector2(p.x, ground_y - 4.0), C_OUTLINE, 3.0)
+		draw_rect(Rect2(p + Vector2(0, 6), Vector2(1, 13)), Color("ebcfab"))
+		draw_colored_polygon(PackedVector2Array([p+Vector2(0,-6), p+Vector2(8,0), p+Vector2(0,6), p+Vector2(-8,0)]), C_OUTLINE)
+		draw_colored_polygon(PackedVector2Array([p+Vector2(0,-4), p+Vector2(5,0), p+Vector2(0,4), p+Vector2(-5,0)]), Color("ebcfab"))
+		_mark_rects.append(Rect2(p - Vector2(8,6), Vector2(16,12)))
+		return
 	var pos := _unit_pos(u)
 	var size := float(u.def.get("size", 1.0))
+	if u.heavy_t >= 0.0 and str(u.ab.get("kind", "slam")) == "vent":
+		return      # opening its own shell is not a danger to announce
 	if u.heavy_t >= 0.0:
-		var total := maxf(0.1, float(u.def.heavy.get("windup", 1.2)))
+		var total := maxf(0.1, float(u.ab.get("windup", 1.2)))
 		var k := 1.0 - clampf(u.heavy_t / total, 0.0, 1.0)
 		var w := 4.0 + 5.0 * k
 		var p := pos + Vector2(0, -float(u.def.get("visual_mark_height", 26.0)) - 12.0 - 3.0 * size)
+		_mark_rects.append(Rect2(p.x - w - 3.0, p.y - w - 3.0, w * 2.0 + 6.0, w + 8.0))
 		draw_colored_polygon(PackedVector2Array([p + Vector2(-w - 2, -w - 2), p + Vector2(w + 2, -w - 2), p + Vector2(0, 4)]), C_OUTLINE)
 		draw_colored_polygon(PackedVector2Array([p + Vector2(-w, -w), p + Vector2(w, -w), p + Vector2(0, 1)]), Color("bff3ee"))
 	elif u.exposed_t > 0.0:
@@ -418,7 +436,23 @@ func _draw_state_mark(u) -> void:
 		draw_arc(c, r + 1.0, 0, TAU, 16, Color("fff0b0"), 1.0)
 		draw_rect(Rect2(c - Vector2(1, 1), Vector2(3, 3)), Color("fff0b0"))
 
+## A burrowed unit: only the moving mound and the clods it leaves behind.
+func _draw_burrow_trail(u) -> void:
+	var pos := Vector2(roundf(u.x), ground_y)
+	var wob := sin(u.anim_t * 14.0)
+	for i in 4:
+		var c := pos + Vector2(-u.side * (9.0 + i * 9.0), 0.0)
+		var s := 4.0 - i * 0.8
+		draw_rect(Rect2(c + Vector2(-s, -s * 0.6), Vector2(s * 2.0, s * 0.9)), Color(0.36, 0.30, 0.22, 0.85 - i * 0.18))
+	draw_colored_polygon(PackedVector2Array([pos + Vector2(-10, 1), pos + Vector2(-6, -5 - wob), pos + Vector2(0, -7 + wob), pos + Vector2(6, -5 - wob), pos + Vector2(10, 1)]), C_OUTLINE)
+	draw_colored_polygon(PackedVector2Array([pos + Vector2(-8, 0), pos + Vector2(-5, -3 - wob), pos + Vector2(0, -5 + wob), pos + Vector2(5, -3 - wob), pos + Vector2(8, 0)]), Color("8c7a5c"))
+	draw_rect(Rect2(pos + Vector2(-2, -4 + wob), Vector2(4, 2)), Color("8fd6cf"))
+
 func _draw_unit(u) -> void:
+	if u.hidden and not u.dying:
+		_draw_burrow_trail(u)
+		_state_marks.append(u)
+		return
 	var pos := _unit_pos(u)
 	if not u.dying:
 		if u.heavy_t >= 0.0:
@@ -443,7 +477,9 @@ func _draw_unit(u) -> void:
 		mod = Color(str(u.def.visual_tint)) * (1.4 if u.is_boss else 1.15)
 		mod.a = 1.0
 	if not u.dying and str(u.def.get("visual_mark","")) != "": _variant_marks.append(u)
-	if u.flash > 0.0: mod = Color(1.0, 0.55, 0.55)
+	# Hit flash: a warm BRIGHTENING. The former Color(1, 0.55, 0.55) multiplied grey-green enemies down to a dark
+	# maroon, so a unit under focus fire (flashing most of the time) lost its colours and merged with its neighbours.
+	if u.flash > 0.0: mod = Color(1.5, 1.12, 1.12)
 	if u.dying: mod.a = clampf(u.dead_t / 0.7, 0.0, 1.0)
 	elif u.buff_t > 0.0: mod = mod * Color(1.0, 1.0, 0.8)
 	var drawn := false
@@ -663,6 +699,58 @@ func _draw_projectile(p) -> void:
 			var d := float(p.side)
 			draw_line(pos - Vector2(4.0 * d, 0), pos + Vector2(2.0 * d, 0), Color("e8e0c8"), 1.0)
 
+func _draw_telegraphs() -> void:
+	var overflow: Array[Vector2] = []
+	for f in sim.fxs:
+		if not f.alive or f.kind != "telegraph": continue
+		var left: float = f.x - f.radius
+		var right: float = f.x + f.radius
+		if f.warning_track >= 3:
+			overflow.append(Vector2(left, right))
+			continue
+		var y := ground_y - 1.0 - 7.0 * float(f.warning_track)
+		var band := Rect2(left, y, right - left, 4.0)
+		var ink := Color("bff3ee")
+		match f.warning_shape:
+			"charge": ink = Color("d9edff")
+			"lob": ink = Color("ffd47c")
+			"burrow": ink = Color("ead0af")
+		draw_rect(band.grow(1.0), C_OUTLINE)
+		draw_rect(band, ink.darkened(0.65))
+		var fill := band.size.x * 0.5 * clampf(f.t / maxf(0.001, f.dur), 0.0, 1.0)
+		draw_rect(Rect2(left, y, fill, 4), ink)
+		draw_rect(Rect2(right - fill, y, fill, 4), ink)
+		if f.warning_shape == "lob" or f.warning_shape == "burrow":
+			# Three teeth distinguish a delayed ground hazard from the smooth slam rail.
+			for k in [0.25, 0.5, 0.75]:
+				draw_rect(Rect2(lerpf(left, right, k) - 1.0, y - 2.0, 3.0, 4.0), ink)
+		else:
+			for ex in [left, right - 2.0]:
+				draw_rect(Rect2(ex, y - 3.0, 2.0, 7.0), ink)
+	if overflow.is_empty(): return
+	overflow.sort_custom(func(a: Vector2, b: Vector2) -> bool: return a.x < b.x)
+	var span := overflow[0]
+	var count := 1
+	for i in range(1, overflow.size()):
+		if overflow[i].x <= span.y + 4.0:
+			span.y = maxf(span.y, overflow[i].y)
+			count += 1
+		else:
+			_draw_telegraph_overflow(span, count)
+			span = overflow[i]
+			count = 1
+	_draw_telegraph_overflow(span, count)
+
+func _draw_telegraph_overflow(span: Vector2, count: int) -> void:
+	# Keep the combined danger extent visible even when every regular rail is occupied.
+	var band := Rect2(span.x, ground_y - 22.0, span.y - span.x, 3.0)
+	draw_rect(band.grow(1.0), C_OUTLINE)
+	draw_rect(band, Color("ffe2a1"))
+	var p := Vector2(roundf((span.x + span.y) * 0.5) - 10.0, ground_y - 24.0)
+	draw_rect(Rect2(p + Vector2(-2, -10), Vector2(27, 13)), C_OUTLINE)
+	draw_string(_num_font, p, "+%d" % count, HORIZONTAL_ALIGNMENT_LEFT, -1, NUM_PX, Color("ffe2a1"))
+	_mark_rects.append(Rect2(p + Vector2(-2, -10), Vector2(27, 13)))
+
 func _draw_fx(f) -> void:
 	var k := clampf(f.t / f.dur, 0.0, 1.0)
 	var pos := Vector2(f.x, ground_y + f.y)
@@ -680,17 +768,6 @@ func _draw_fx(f) -> void:
 			draw_rect(Rect2(pos - Vector2(0.5, s), Vector2(1.0, s * 2.0)), Color(1, 1, 0.7, 1.0 - k))
 		"explosion":
 			draw_circle(pos, maxf(4.0, f.radius) * (0.4 + k * 0.6), Color(1.0, 0.6, 0.2, 0.7 * (1.0 - k)))
-		"telegraph":
-			# announced enemy zone: a ground band that fills from both ends; full = the hit lands
-			var band := Rect2(f.x - f.radius, ground_y - 2.0, f.radius * 2.0, 6.0)
-			draw_rect(band.grow(1.0), C_OUTLINE)
-			draw_rect(band, Color("2f5a5c"))
-			var half := band.size.x * 0.5 * k
-			draw_rect(Rect2(band.position, Vector2(half, band.size.y)), Color("bff3ee"))
-			draw_rect(Rect2(Vector2(band.end.x - half, band.position.y), Vector2(half, band.size.y)), Color("bff3ee"))
-			for ex in [band.position.x - 1.0, band.end.x - 2.0]:
-				draw_rect(Rect2(ex - 1.0, ground_y - 10.0, 5.0, 9.0), C_OUTLINE)
-				draw_rect(Rect2(ex, ground_y - 9.0, 3.0, 7.0), Color("bff3ee"))
 		"link_break":
 			for dx in [-1.0, 1.0]:
 				draw_line(pos + Vector2(dx * 2.0, 0), pos + Vector2(dx * (5.0 + 8.0 * k), -4.0 - 6.0 * k), Color(0.56, 0.84, 0.81, 1.0 - k), 2.0)

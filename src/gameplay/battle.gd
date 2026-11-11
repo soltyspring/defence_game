@@ -243,6 +243,9 @@ func _threat_snapshot() -> Dictionary:
 	return result
 
 var _heavy_toast_shown := false
+var _heavy_kinds_shown := {}
+const HEAVY_PITCH := {"slam": 1.0, "charge": 1.35, "lob": 1.2, "burrow": 0.9, "vent": 1.5}
+const HEAVY_TOAST := {"slam": "enemy_heavy", "charge": "enemy_charge", "lob": "enemy_lob", "burrow": "enemy_heavy", "vent": "enemy_vent"}
 
 func _drain_events() -> void:
 	_emit_cues()
@@ -260,15 +263,34 @@ func _drain_events() -> void:
 				Events.toast.emit("boss_incoming", e[1])
 				if tutorial: tutorial.boss_seen = true
 			"heavy":
-				Events.sfx.emit(&"nest_windup", {"x": e[1].x, "pitch": 0.8 if bool(e[1].boss) else 1.0})
-				# announced heavy attack: every boss wind-up, and the first one of ordinary enemies per battle
+				# One wind-up sound for every announced action; its pitch tells the kind apart (no new samples).
+				var kind := str(e[1].get("kind", "slam"))
+				var pitch: float = float(HEAVY_PITCH.get(kind, 1.0)) * (0.8 if bool(e[1].boss) else 1.0)
+				Events.sfx.emit(&"nest_windup", {"x": e[1].x, "pitch": pitch})
+				# toast: every boss wind-up, and the first time each kind is seen in a battle
 				if bool(e[1].boss):
-					Events.toast.emit("boss_heavy", e[1])
-				elif not _heavy_toast_shown:
+					# the boss bar frame + the ground marker + the sound carry every later wind-up
+					if not _heavy_kinds_shown.has("boss:" + kind):
+						_heavy_kinds_shown["boss:" + kind] = true
+						Events.toast.emit("boss_heavy", e[1])
+				elif not _heavy_kinds_shown.has(kind):
+					_heavy_kinds_shown[kind] = true
 					_heavy_toast_shown = true
-					Events.toast.emit("enemy_heavy", e[1])
+					Events.toast.emit(str(HEAVY_TOAST.get(kind, "enemy_heavy")), e[1])
 			"heavy_hit":
-				Events.sfx.emit(&"nest_slam", {"x": e[1].x, "pitch": 0.82 if bool(e[1].boss) else 1.0})
+				var hit_kind := str(e[1].get("kind", "slam"))
+				if hit_kind != "vent" and hit_kind != "lob":      # a lobbed zone bursts later with the explosion cue
+					Events.sfx.emit(&"nest_slam", {"x": e[1].x, "pitch": (0.82 if bool(e[1].boss) else 1.0) * (1.3 if hit_kind == "charge" else 1.0)})
+			"burrow":
+				Events.sfx.emit(&"nest_windup", {"x": e[1].x, "pitch": 0.7})
+				if not _heavy_kinds_shown.has("burrow"):
+					_heavy_kinds_shown["burrow"] = true
+					Events.toast.emit("enemy_burrow", e[1])
+			"shell_pry", "heavy_cancel":
+				Events.sfx.emit(&"nest_link_snap", {"x": e[1].x, "pitch": 0.8})
+				if not _heavy_kinds_shown.has(e[0]):
+					_heavy_kinds_shown[e[0]] = true
+					Events.toast.emit(str(e[0]), e[1])
 			"link_break":
 				Events.toast.emit("link_break", e[1])
 				Events.sfx.emit(&"nest_link_snap", {"x": e[1].x})

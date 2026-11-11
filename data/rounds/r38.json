@@ -35,7 +35,7 @@
           "interval": 4
         },
         {
-          "unit": "e_binder",
+          "unit": "e_burrower",
           "count": 1,
           "interval": 0
         }
@@ -53,6 +53,11 @@
           "unit": "e_binder",
           "count": 1,
           "interval": 0
+        },
+        {
+          "unit": "e_burrower",
+          "count": 2,
+          "interval": 6
         }
       ]
     },
@@ -68,6 +73,11 @@
           "unit": "e_binder",
           "count": 1,
           "interval": 0
+        },
+        {
+          "unit": "e_burrower",
+          "count": 2,
+          "interval": 5
         }
       ]
     },
@@ -83,6 +93,11 @@
           "unit": "e_binder",
           "count": 1,
           "interval": 0
+        },
+        {
+          "unit": "e_burrower",
+          "count": 3,
+          "interval": 5
         }
       ]
     },
@@ -132,7 +147,7 @@
       "e_thrall",
       "e_binder",
       "e_thrall",
-      "e_binder"
+      "e_burrower"
     ],
     "interval": 11.5,
     "interval_min": 8,
@@ -145,10 +160,10 @@
         {
           "unit": "e_thrall",
           "count": 2,
-          "interval": 3
+          "interval": 2.0
         },
         {
-          "unit": "e_binder",
+          "unit": "e_burrower",
           "count": 1,
           "interval": 0
         }

@@ -211,6 +211,26 @@
     "round.r37.name": "Spore Cover",
     "round.r38.name": "Living Thread",
     "round.r39.name": "Before the Core",
-    "round.r40.name": "The Nest Core"
+    "round.r40.name": "The Nest Core",
+    "unit.e_frostshell.name": "Frost Carapace",
+    "unit.e_frostshell.desc": "Barely hurt while its shell is shut. Strike when it stops and opens, or force it open with a hero skill.",
+    "unit.e_icerunner.name": "Rime Charger",
+    "unit.e_icerunner.desc": "Marks a path, then rams the first target standing on it. Step the hero off the path or take it on a cheap front unit.",
+    "unit.e_sporesac.name": "Ferment Sac",
+    "unit.e_sporesac.desc": "Swells, then lobs a spore clump; the marked ground bursts a moment later. Hit it while it swells, or clear the marked spot and wait.",
+    "unit.e_burrower.name": "Hypha Burrower",
+    "unit.e_burrower.desc": "Digs under your front line. It surfaces where the dirt trail stops: send the hero back or meet it with fresh troops.",
+    "unit.boss_frostguard.desc": "A shelled checkpoint boss. It alternates a charge and a frost slam, and its shell opens only right after each.",
+    "toast.enemy_vent": "It only takes real damage while its shell is open!",
+    "toast.enemy_charge": "It will ram the first target on the marked path!",
+    "toast.enemy_lob": "The marked ground is about to burst!",
+    "toast.enemy_burrow": "An enemy went underground. Follow the dirt trail!",
+    "toast.shell_pry": "Shell forced open!",
+    "toast.heavy_cancel": "Enemy wind-up interrupted!",
+    "hint.loss.no_units": "No soldiers were sent. Tap a soldier card to hold the line.",
+    "hint.loss.flour_idle": "Flour sat full. Send soldiers more often.",
+    "hint.loss.no_baker": "No baker was hired. Hiring early makes flour come faster.",
+    "hint.loss.hero_fell": "The hero fell several times. Keep the hero behind the soldiers and off danger markers.",
+    "hint.loss.no_skill": "Energy was left over. Use a skill when enemies bunch up."
   }
 }

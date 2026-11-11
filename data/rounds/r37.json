@@ -31,11 +31,11 @@
       "spawns": [
         {
           "unit": "e_thrall",
-          "count": 3,
+          "count": 2,
           "interval": 4
         },
         {
-          "unit": "e_binder",
+          "unit": "e_sporesac",
           "count": 1,
           "interval": 0
         }
@@ -55,9 +55,9 @@
           "interval": 0
         },
         {
-          "unit": "e_mortar",
-          "count": 3,
-          "interval": 4.5
+          "unit": "e_sporesac",
+          "count": 2,
+          "interval": 5
         }
       ]
     },
@@ -73,6 +73,11 @@
           "unit": "e_binder",
           "count": 2,
           "interval": 4
+        },
+        {
+          "unit": "e_sporesac",
+          "count": 1,
+          "interval": 0
         }
       ]
     },
@@ -88,6 +93,11 @@
           "unit": "e_binder",
           "count": 2,
           "interval": 4
+        },
+        {
+          "unit": "e_sporesac",
+          "count": 2,
+          "interval": 5
         }
       ]
     },
@@ -135,6 +145,7 @@
     "start": 34,
     "pattern": [
       "e_thrall",
+      "e_sporesac",
       "e_thrall",
       "e_binder"
     ],
@@ -149,10 +160,10 @@
         {
           "unit": "e_thrall",
           "count": 2,
-          "interval": 3
+          "interval": 2.0
         },
         {
-          "unit": "e_binder",
+          "unit": "e_sporesac",
           "count": 1,
           "interval": 0
         }

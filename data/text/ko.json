@@ -211,6 +211,26 @@
     "round.r37.name": "포자 엄호",
     "round.r38.name": "다시 잇는 균사",
     "round.r39.name": "핵 앞의 방벽",
-    "round.r40.name": "둥지의 핵"
+    "round.r40.name": "둥지의 핵",
+    "unit.e_frostshell.name": "서리 갑각병",
+    "unit.e_frostshell.desc": "갑각을 닫고 있는 동안은 거의 다치지 않습니다. 멈춰 서서 갑각을 열 때 몰아치거나, 영웅 스킬로 억지로 열어젖히세요.",
+    "unit.e_icerunner.name": "빙결 질주자",
+    "unit.e_icerunner.desc": "바닥에 길을 그은 뒤 돌진해 길 위의 첫 상대를 들이받습니다. 영웅을 길 밖으로 빼거나, 값싼 앞줄로 받아내세요.",
+    "unit.e_sporesac.name": "발효 포자낭",
+    "unit.e_sporesac.desc": "부풀어 오른 뒤 포자 덩이를 던지고, 떨어진 자리는 잠시 뒤 터집니다. 부푸는 동안 때려 끊거나, 표시된 자리를 비우고 기다리세요.",
+    "unit.e_burrower.name": "균사 잠입병",
+    "unit.e_burrower.desc": "땅속으로 숨어 전선 뒤로 파고듭니다. 흙 자국이 멈춘 곳에서 솟아오르니 영웅을 돌려보내거나 새 병력으로 맞이하세요.",
+    "unit.boss_frostguard.desc": "갑각을 두른 구간 보스. 돌진과 냉기 내려찍기를 번갈아 쓰고, 쓴 직후에만 갑각이 열립니다.",
+    "toast.enemy_vent": "갑각이 열린 순간에만 피해가 제대로 들어갑니다!",
+    "toast.enemy_charge": "바닥의 길 위 첫 상대에게 돌진합니다!",
+    "toast.enemy_lob": "표시된 자리가 곧 터집니다!",
+    "toast.enemy_burrow": "적이 땅속으로 숨었습니다. 흙 자국을 따라가세요!",
+    "toast.shell_pry": "갑각을 열어젖혔습니다!",
+    "toast.heavy_cancel": "적의 준비 동작을 끊었습니다!",
+    "hint.loss.no_units": "병사를 한 명도 내보내지 않았습니다. 병사 카드를 눌러 전선을 세우세요.",
+    "hint.loss.flour_idle": "밀가루가 가득 찬 채 남았습니다. 병사를 더 자주 내보내세요.",
+    "hint.loss.no_baker": "제빵사를 고용하지 않았습니다. 초반에 고용하면 밀가루가 빨리 모입니다.",
+    "hint.loss.hero_fell": "영웅이 여러 번 쓰러졌습니다. 병사 뒤에 세우고 위험 표시는 피하세요.",
+    "hint.loss.no_skill": "기력이 남았습니다. 적이 몰렸을 때 스킬을 쓰세요."
   }
 }

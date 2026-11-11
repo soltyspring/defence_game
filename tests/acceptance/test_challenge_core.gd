@@ -63,10 +63,10 @@ func _data_checks(c) -> void:
 		var u: Dictionary = c.units[id]
 		if u.has("heavy") or u.has("link") or u.has("hold_behind"): ruled.append(id)
 	ruled.sort()
-	check(ruled == ["boss_nestcore", "e_binder", "e_thrall"], "only the three chapter-4 units use the new rules (%s)" % [ruled])
-	for n in range(1, 31):
+	check(ruled == ["boss_frostguard", "boss_nestcore", "e_binder", "e_burrower", "e_frostshell", "e_icerunner", "e_sporesac", "e_thrall"], "the rule-driven units are the frost and nest rosters (%s)" % [ruled])
+	for n in range(1, 21):       # meadow and orchard stay as they were; frost road (r21+) has its own test
 		for id in c.round_enemy_roster(c.get_round("r%02d" % n)):
-			check(not ruled.has(id), "r%02d does not use a chapter-4 unit (%s)" % [n, id])
+			check(not ruled.has(id), "r%02d does not use a rule-driven unit (%s)" % [n, id])
 	var first: Dictionary = c.get_round("r31")
 	var solo := true
 	for w in first.waves:

@@ -10,7 +10,7 @@ from atlas import Atlas
 from pixel import Canvas, c
 
 PAGE = "char_challenge"
-NOTE = "Nest Depths roster: guard, knot and core. Loaded only when used by a battle."
+NOTE = "Late-campaign roster: nest guard, knot, core; frost carapace, rime charger, ferment sac, burrower. Loaded only when used by a battle."
 
 
 def frame(unit, pose="idle", step=0):
@@ -191,7 +191,8 @@ def frame(unit, pose="idle", step=0):
 
 def make_atlas():
     page = Atlas(PAGE, "character", "battle_roster", NOTE)
-    for uid, pivot, hit in [("e_thrall", 16, 3), ("e_binder", 14, 2), ("boss_nestcore", 35, 3)]:
+    for uid, pivot, hit in [("e_thrall", 16, 3), ("e_binder", 14, 2), ("boss_nestcore", 35, 3),
+                            ("e_frostshell", 16, 3), ("e_icerunner", 20, 2), ("e_sporesac", 15, 2), ("e_burrower", 16, 2)]:
         def anim(pose, n, fps, loop=False, events=None):
             return dict(frames=[frame(uid, pose, i) for i in range(n)], fps=fps, loop=loop, events=events)
         attack = [frame(uid, p) for p in (["idle"] * hit + ["attack", "hit", "idle"])]

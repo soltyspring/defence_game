@@ -35,11 +35,17 @@ func _run() -> void:
 					var hero_hit := 0
 					var breaks := 0
 					var hero_dmg := 0.0
+					var flour_lost := 0
+					var dead := {}
 					while not sim.ended and sim.t < 900:
 						bot.act(sim, STEP)
 						var hp0: float = sim.hero.hp
 						sim.step(STEP)
 						if sim.hero.hp < hp0: hero_dmg += hp0 - sim.hero.hp
+						for u in sim.players:
+							if u.dying and not dead.has(u.uid):
+								dead[u.uid] = true
+								flour_lost += int(u.def.cost)
 						for e in sim.events:
 							if e[0] == "heavy_hit":
 								heavy += 1
@@ -48,7 +54,7 @@ func _run() -> void:
 						sim.events.clear()
 						sim.cues.clear()
 					rows.append({"won": sim.won, "t": snappedf(sim.t, 1.0), "base": snappedf(sim.player_base.hp / sim.player_base.hp_max, 0.01),
-						"hero_deaths": sim.hero_deaths, "heavy": heavy, "hero_hit": hero_hit, "breaks": breaks, "kills": sim.kills, "hero_dmg": int(hero_dmg),
+						"hero_deaths": sim.hero_deaths, "heavy": heavy, "hero_hit": hero_hit, "breaks": breaks, "kills": sim.kills, "hero_dmg": int(hero_dmg), "flour_lost": flour_lost,
 						"lost": int(sim.stats.deployed) - sim.army_count(1), "deployed": int(sim.stats.deployed), "bakers": int(sim.workers), "bot": bot.stats})
 				print("[challenge] ", JSON.stringify({"round": id, "reads": reads, "skill": skill, "level": level, "runs": rows}))
 	quit(0)

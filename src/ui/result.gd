@@ -116,11 +116,17 @@ func _draw() -> void:
 			var hint := UiText.t("hint.loss.r05.tactic" if i == 0 else "hint.loss.upgrade")
 			var fit := UiStyle.fit_text(hint, panel.size.x - 24, UiStyle.FONT_S)
 			UiStyle.draw_text_centered(self, fit[0], Vector2(cx, y0 + 3 * 22 + 14 + i * 18), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
+	elif not won and str(result.get("hint", "")) != "" and UiText.has("hint.loss." + str(result.hint)):
+		# every other defeat: one line taken from what happened in this battle (BattleResult.hint)
+		loss_hint_shown = str(result.hint)
+		var fit2 := UiStyle.fit_text(UiText.t("hint.loss." + loss_hint_shown), panel.size.x - 24, UiStyle.FONT_S)
+		UiStyle.draw_text_centered(self, fit2[0], Vector2(cx, y0 + 3 * 22 + 14), UiStyle.FONT_S, UiStyle.C_TEXT)
 	if stars != reasons.filter(func(r): return r.met).size():
 		# engine star count and UI reason derivation disagree: show engine count, flag for QA
 		reason_mismatch = true
 
 var reason_mismatch := false      # QA: UI reasons disagree with engine stars
+var loss_hint_shown := ""         # QA: hint id drawn on the last defeat panel
 var row_markers := ["", "", ""]   # QA: "filled" | "hollow" | "pending" (pop-in not reached yet)
 
 ## Star conditions (INTERFACES §2.4: 1 = win, +1 base hp ≥ base_hp_2, +1 time ≤ time_3) with

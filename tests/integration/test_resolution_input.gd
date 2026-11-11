@@ -116,4 +116,4 @@ func _run() -> void:
 	app.show_screen(&"menu")
 	await frames()
 	print("[resolution] checks=",checks," failures=",failures)
-	quit(0 if failures == 0 else 1)
+	app.quit_game(0 if failures == 0 else 1)

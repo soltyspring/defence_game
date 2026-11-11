@@ -30,49 +30,29 @@
       "at": 12,
       "spawns": [
         {
-          "unit": "e_runner",
-          "count": 8,
-          "interval": 0.7
-        },
-        {
-          "unit": "e_spitter",
-          "count": 3,
-          "interval": 1.2
+          "unit": "e_frostshell",
+          "count": 1,
+          "interval": 0
         }
       ]
     },
     {
-      "at": 44,
+      "at": 35,
       "spawns": [
         {
-          "unit": "e_runner",
-          "count": 8,
-          "interval": 0.7
-        },
-        {
-          "unit": "e_spitter",
-          "count": 3,
-          "interval": 1.2
-        },
-        {
-          "unit": "e_spitter",
-          "count": 3,
-          "interval": 1.6
+          "unit": "e_frostshell",
+          "count": 2,
+          "interval": 5.5
         }
       ]
     },
     {
-      "at": 82,
+      "at": 72,
       "spawns": [
         {
-          "unit": "e_runner",
-          "count": 9,
-          "interval": 0.7
-        },
-        {
-          "unit": "e_spitter",
-          "count": 4,
-          "interval": 1.2
+          "unit": "e_frostshell",
+          "count": 3,
+          "interval": 6.0
         }
       ]
     },
@@ -80,19 +60,9 @@
       "at": 124,
       "spawns": [
         {
-          "unit": "e_runner",
-          "count": 9,
-          "interval": 0.7
-        },
-        {
-          "unit": "e_spitter",
-          "count": 4,
-          "interval": 1.2
-        },
-        {
-          "unit": "e_bomber",
+          "unit": "e_frostshell",
           "count": 3,
-          "interval": 1.6
+          "interval": 6.0
         }
       ]
     }
@@ -105,12 +75,12 @@
     "after_waves_loop": false
   },
   "trickle": {
-    "start": 7,
+    "start": 29,
     "pattern": [
-      "e_runner",
+      "e_frostshell",
       "e_grunt",
-      "e_swarm",
-      "e_spitter"
+      "e_frostshell",
+      "e_swarm"
     ],
     "interval": 8.2,
     "interval_min": 7.0,
@@ -121,14 +91,9 @@
       "below": 0.55,
       "spawns": [
         {
-          "unit": "e_guard",
+          "unit": "e_frostshell",
           "count": 2,
-          "interval": 1.3
-        },
-        {
-          "unit": "e_mortar",
-          "count": 1,
-          "interval": 0
+          "interval": 2.0
         }
       ]
     },
@@ -136,9 +101,9 @@
       "below": 0.25,
       "spawns": [
         {
-          "unit": "e_runner",
-          "count": 5,
-          "interval": 0.6
+          "unit": "e_frostshell",
+          "count": 2,
+          "interval": 5.0
         }
       ]
     }
@@ -160,5 +125,5 @@
   "tutorial": [],
   "boss_round": false,
   "provisional": true,
-  "balance_note": "Campaign 30: distinct wave compositions, reused animation sets, gated late upgrades; bot validation in docs/qa/CAMPAIGN30_20261105.md. Human difficulty remains to be played."
+  "balance_note": "One scripted intro before reinforcement starts; early second wave gives another chance to read the cue."
 }

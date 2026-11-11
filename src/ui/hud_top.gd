@@ -33,13 +33,14 @@ func _signature(s: Dictionary) -> String:
 	var a: Dictionary = s.get("army", {})
 	var b: Dictionary = s.get("boss", {})
 	var mm := maxf(1.0, float(s.get("mana_max", 100)))
-	return "%d|%d|%.1f|%d|%d/%d|%d/%d|%d/%d/%d/%s|%d/%d|%s/%d/%d" % [
+	return "%d|%d|%.1f|%d|%d/%d|%d/%d|%d/%d/%d/%s|%d/%d|%s/%d/%d/%s%s" % [
 		int(s.get("gold", 0)), int(s.get("gold_max", 0)), float(s.get("income", 0)),
 		int(float(s.get("mana", 0)) / mm * 512.0),
 		ceili(float(pb.get("hp", 0))), int(pb.get("hp_max", 0)), ceili(float(eb.get("hp", 0))), int(eb.get("hp_max", 0)),
 		int(w.get("index", 0)), int(w.get("total", 0)), ceili(float(w.get("next_in", 0))), str(w.get("boss", false)),
 		int(a.get("player", 0)), int(a.get("cap", 0)),
-		str(b.get("alive", false)), ceili(float(b.get("hp", 0))), int(b.get("hp_max", 0))]
+		str(b.get("alive", false)), ceili(float(b.get("hp", 0))), int(b.get("hp_max", 0)),
+		"T" if bool(b.get("telegraph", false)) else "", "X" if bool(b.get("exposed", false)) else ""]
 var gold_slot_debug := Rect2()    # QA: fixed gold number slot
 var base_labels := {"player": "", "enemy": ""}        # QA: drawn HP text
 var base_label_rects := {"player": Rect2(), "enemy": Rect2()}
@@ -207,6 +208,7 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 
 ## Boss HP bar (HudSnapshot.boss, 02 R6) while a boss is alive: name (Galmuri11 12) + bar + hp numbers.
 var boss_drawn := false            # QA
+var boss_state := ""               # QA: "" | "telegraph" | "exposed" (frame drawn on the boss bar)
 func _draw_boss(br: Rect2) -> void:
 	var b: Dictionary = snap.get("boss", {})
 	boss_drawn = br.size != Vector2.ZERO and bool(b.get("alive", false))
@@ -228,3 +230,11 @@ func _draw_boss(br: Rect2) -> void:
 	var bw := floorf(bi.size.x * clampf(float(b.get("hp", 0)) / maxf(1.0, float(b.get("hp_max", 1))), 0.0, 1.0))
 	if bw > 0:
 		UiStyle.draw_hatch(self, Rect2(bi.position, Vector2(bw, bi.size.y)), UiStyle.C_HP_ENEMY)   # enemy pattern (QA-B013)
+	# The boss bar itself carries the boss state, so no extra banner has to compete with the lane:
+	# wind-up = pale frame in the marker colour, opening = bright frame + a solid light fill under the hatch.
+	boss_state = "telegraph" if bool(b.get("telegraph", false)) else ("exposed" if bool(b.get("exposed", false)) else "")
+	if boss_state == "exposed":
+		if bw > 0: draw_rect(Rect2(bi.position.x, bi.end.y - 2.0, bw, 2.0), Color("fff0b0"))
+		draw_rect(bar, Color("fff0b0"), false, 1.0)
+	elif boss_state == "telegraph":
+		draw_rect(bar, Color("bff3ee"), false, 1.0)

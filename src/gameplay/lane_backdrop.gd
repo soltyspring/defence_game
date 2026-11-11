@@ -191,7 +191,9 @@ func build(length: float, ground: float, _biome: String, player_x := 40.0, enemy
 		lane.box(Rect2(x,ground+16+posmod(i*19,35),9+posmod(i*7,10),2),Color("897354"))
 		if not v2: lane.box(Rect2(x+11,ground-9,3,6),Color("b7a77d"))
 		if _biome == "biome_frost" and i%2 == 0:
-			lane.box(Rect2(x-2,ground-14,25,3),Color("d6e3e5"))
+			# Rime on the verge. It sits at foot height, so it stays close to the verge colour: the pale danger
+			# marker must be the only light band on the ground (was d6e3e5, which read as marker pieces).
+			lane.box(Rect2(x-2,ground-14,25,3),Color("b4c2b0") if v2 else Color("d6e3e5"))
 	if v2:
 		# Verge and path cool in two steps towards the nest; a light forecourt and a dark creep apron mark the bases.
 		lane.box(Rect2(0.6*length,ground-14,length,10),Color("8d9c7c"))

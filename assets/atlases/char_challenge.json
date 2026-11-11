@@ -4,22 +4,22 @@
  "image": "char_challenge.png",
  "image_res": "res://assets/atlases/char_challenge.png",
  "size": [
-  512,
+  1024,
   512
  ],
  "padding": 2,
  "extrude": 1,
  "group": "character",
  "load_policy": "battle_roster",
- "note": "Nest Depths roster: guard, knot and core. Loaded only when used by a battle.",
+ "note": "Late-campaign roster: nest guard, knot, core; frost carapace, rime charger, ferment sac, burrower. Loaded only when used by a battle.",
  "filter": "nearest",
  "mipmaps": false,
  "repeat": false,
  "gpu_format": "RGBA8 (lossless, no VRAM compression)",
- "gpu_bytes": 1048576,
- "disk_bytes": 7362,
- "unique_regions": 41,
- "occupancy": 0.44,
+ "gpu_bytes": 2097152,
+ "disk_bytes": 14903,
+ "unique_regions": 102,
+ "occupancy": 0.39,
  "frames": {
   "e_thrall/idle/0": {
    "x": 415,
@@ -1080,6 +1080,1456 @@
     35,
     67
    ]
+  },
+  "e_frostshell/idle/0": {
+   "x": 265,
+   "y": 447,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/idle/1": {
+   "x": 265,
+   "y": 447,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/idle/2": {
+   "x": 289,
+   "y": 255,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/idle/3": {
+   "x": 265,
+   "y": 447,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/walk/0": {
+   "x": 267,
+   "y": 327,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/walk/1": {
+   "x": 221,
+   "y": 447,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/walk/2": {
+   "x": 355,
+   "y": 295,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/walk/3": {
+   "x": 311,
+   "y": 295,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/walk/4": {
+   "x": 355,
+   "y": 295,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/walk/5": {
+   "x": 221,
+   "y": 447,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/attack/0": {
+   "x": 265,
+   "y": 447,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/attack/1": {
+   "x": 265,
+   "y": 447,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/attack/2": {
+   "x": 265,
+   "y": 447,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/attack/3": {
+   "x": 265,
+   "y": 407,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/attack/4": {
+   "x": 267,
+   "y": 367,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/attack/5": {
+   "x": 265,
+   "y": 447,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/hit/0": {
+   "x": 267,
+   "y": 367,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/hit/1": {
+   "x": 267,
+   "y": 367,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/death/0": {
+   "x": 267,
+   "y": 367,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/death/1": {
+   "x": 309,
+   "y": 407,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/death/2": {
+   "x": 221,
+   "y": 407,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/death/3": {
+   "x": 309,
+   "y": 447,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/death/4": {
+   "x": 355,
+   "y": 335,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/die/0": {
+   "x": 267,
+   "y": 367,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/die/1": {
+   "x": 309,
+   "y": 407,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/die/2": {
+   "x": 221,
+   "y": 407,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/die/3": {
+   "x": 309,
+   "y": 447,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/die/4": {
+   "x": 355,
+   "y": 335,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/heavy_prepare/0": {
+   "x": 333,
+   "y": 255,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/heavy_prepare/1": {
+   "x": 333,
+   "y": 255,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/heavy_prepare/2": {
+   "x": 311,
+   "y": 335,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/heavy_prepare/3": {
+   "x": 333,
+   "y": 255,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/heavy_release/0": {
+   "x": 265,
+   "y": 407,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/heavy_exposed/0": {
+   "x": 267,
+   "y": 367,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/heavy_exposed/1": {
+   "x": 267,
+   "y": 367,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/heavy_exposed/2": {
+   "x": 353,
+   "y": 375,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_frostshell/heavy_exposed/3": {
+   "x": 267,
+   "y": 367,
+   "w": 40,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_icerunner/idle/0": {
+   "x": 453,
+   "y": 275,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/idle/1": {
+   "x": 453,
+   "y": 275,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/idle/2": {
+   "x": 353,
+   "y": 447,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/idle/3": {
+   "x": 453,
+   "y": 275,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/walk/0": {
+   "x": 407,
+   "y": 407,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/walk/1": {
+   "x": 399,
+   "y": 307,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/walk/2": {
+   "x": 485,
+   "y": 243,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/walk/3": {
+   "x": 397,
+   "y": 375,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/walk/4": {
+   "x": 485,
+   "y": 243,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/walk/5": {
+   "x": 399,
+   "y": 307,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/attack/0": {
+   "x": 453,
+   "y": 275,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/attack/1": {
+   "x": 453,
+   "y": 275,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/attack/2": {
+   "x": 353,
+   "y": 415,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/attack/3": {
+   "x": 407,
+   "y": 439,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/attack/4": {
+   "x": 453,
+   "y": 275,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/hit/0": {
+   "x": 407,
+   "y": 439,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/hit/1": {
+   "x": 407,
+   "y": 439,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/death/0": {
+   "x": 407,
+   "y": 439,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/death/1": {
+   "x": 399,
+   "y": 339,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/death/2": {
+   "x": 399,
+   "y": 275,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/death/3": {
+   "x": 353,
+   "y": 479,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/death/4": {
+   "x": 407,
+   "y": 471,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/die/0": {
+   "x": 407,
+   "y": 439,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/die/1": {
+   "x": 399,
+   "y": 339,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/die/2": {
+   "x": 399,
+   "y": 275,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/die/3": {
+   "x": 353,
+   "y": 479,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/die/4": {
+   "x": 407,
+   "y": 471,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/heavy_prepare/0": {
+   "x": 431,
+   "y": 243,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/heavy_prepare/1": {
+   "x": 431,
+   "y": 243,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/heavy_prepare/2": {
+   "x": 451,
+   "y": 371,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/heavy_prepare/3": {
+   "x": 431,
+   "y": 243,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/heavy_release/0": {
+   "x": 353,
+   "y": 415,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/heavy_exposed/0": {
+   "x": 407,
+   "y": 439,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/heavy_exposed/1": {
+   "x": 407,
+   "y": 439,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/heavy_exposed/2": {
+   "x": 377,
+   "y": 243,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_icerunner/heavy_exposed/3": {
+   "x": 407,
+   "y": 439,
+   "w": 50,
+   "h": 28,
+   "pivot": [
+    20,
+    27
+   ]
+  },
+  "e_sporesac/idle/0": {
+   "x": 121,
+   "y": 279,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/idle/1": {
+   "x": 121,
+   "y": 279,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/idle/2": {
+   "x": 507,
+   "y": 51,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/idle/3": {
+   "x": 121,
+   "y": 279,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/walk/0": {
+   "x": 483,
+   "y": 3,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/walk/1": {
+   "x": 521,
+   "y": 3,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/walk/2": {
+   "x": 159,
+   "y": 279,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/walk/3": {
+   "x": 301,
+   "y": 207,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/walk/4": {
+   "x": 159,
+   "y": 279,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/walk/5": {
+   "x": 521,
+   "y": 3,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/attack/0": {
+   "x": 121,
+   "y": 279,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/attack/1": {
+   "x": 121,
+   "y": 279,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/attack/2": {
+   "x": 121,
+   "y": 231,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/attack/3": {
+   "x": 83,
+   "y": 231,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/attack/4": {
+   "x": 121,
+   "y": 279,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/hit/0": {
+   "x": 83,
+   "y": 231,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/hit/1": {
+   "x": 83,
+   "y": 231,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/death/0": {
+   "x": 83,
+   "y": 231,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/death/1": {
+   "x": 235,
+   "y": 239,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/death/2": {
+   "x": 507,
+   "y": 99,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/death/3": {
+   "x": 83,
+   "y": 279,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/death/4": {
+   "x": 197,
+   "y": 231,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/die/0": {
+   "x": 83,
+   "y": 231,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/die/1": {
+   "x": 235,
+   "y": 239,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/die/2": {
+   "x": 507,
+   "y": 99,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/die/3": {
+   "x": 83,
+   "y": 279,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/die/4": {
+   "x": 197,
+   "y": 231,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/heavy_prepare/0": {
+   "x": 263,
+   "y": 191,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/heavy_prepare/1": {
+   "x": 263,
+   "y": 191,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/heavy_prepare/2": {
+   "x": 339,
+   "y": 207,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/heavy_prepare/3": {
+   "x": 263,
+   "y": 191,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/heavy_release/0": {
+   "x": 121,
+   "y": 231,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/heavy_exposed/0": {
+   "x": 83,
+   "y": 231,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/heavy_exposed/1": {
+   "x": 83,
+   "y": 231,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/heavy_exposed/2": {
+   "x": 159,
+   "y": 231,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_sporesac/heavy_exposed/3": {
+   "x": 83,
+   "y": 231,
+   "w": 34,
+   "h": 44,
+   "pivot": [
+    15,
+    43
+   ]
+  },
+  "e_burrower/idle/0": {
+   "x": 83,
+   "y": 327,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/idle/1": {
+   "x": 83,
+   "y": 327,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/idle/2": {
+   "x": 175,
+   "y": 367,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/idle/3": {
+   "x": 83,
+   "y": 327,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/walk/0": {
+   "x": 83,
+   "y": 407,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/walk/1": {
+   "x": 175,
+   "y": 327,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/walk/2": {
+   "x": 129,
+   "y": 367,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/walk/3": {
+   "x": 175,
+   "y": 407,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/walk/4": {
+   "x": 129,
+   "y": 367,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/walk/5": {
+   "x": 175,
+   "y": 327,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/attack/0": {
+   "x": 83,
+   "y": 327,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/attack/1": {
+   "x": 83,
+   "y": 327,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/attack/2": {
+   "x": 221,
+   "y": 327,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/attack/3": {
+   "x": 83,
+   "y": 447,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/attack/4": {
+   "x": 83,
+   "y": 327,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/hit/0": {
+   "x": 83,
+   "y": 447,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/hit/1": {
+   "x": 83,
+   "y": 447,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/death/0": {
+   "x": 83,
+   "y": 447,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/death/1": {
+   "x": 197,
+   "y": 287,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/death/2": {
+   "x": 175,
+   "y": 447,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/death/3": {
+   "x": 129,
+   "y": 327,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/death/4": {
+   "x": 243,
+   "y": 287,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/die/0": {
+   "x": 83,
+   "y": 447,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/die/1": {
+   "x": 197,
+   "y": 287,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/die/2": {
+   "x": 175,
+   "y": 447,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/die/3": {
+   "x": 129,
+   "y": 327,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/die/4": {
+   "x": 243,
+   "y": 287,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/heavy_prepare/0": {
+   "x": 83,
+   "y": 367,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/heavy_prepare/1": {
+   "x": 83,
+   "y": 367,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/heavy_prepare/2": {
+   "x": 221,
+   "y": 367,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/heavy_prepare/3": {
+   "x": 83,
+   "y": 367,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/heavy_release/0": {
+   "x": 129,
+   "y": 407,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/heavy_exposed/0": {
+   "x": 83,
+   "y": 447,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/heavy_exposed/1": {
+   "x": 83,
+   "y": 447,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/heavy_exposed/2": {
+   "x": 129,
+   "y": 447,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
+  },
+  "e_burrower/heavy_exposed/3": {
+   "x": 83,
+   "y": 447,
+   "w": 42,
+   "h": 36,
+   "pivot": [
+    16,
+    35
+   ]
   }
  },
  "anims": {
@@ -1359,6 +2809,391 @@
      "summon": 3
     }
    }
+  },
+  "e_frostshell": {
+   "idle": {
+    "frames": [
+     "e_frostshell/idle/0",
+     "e_frostshell/idle/1",
+     "e_frostshell/idle/2",
+     "e_frostshell/idle/3"
+    ],
+    "fps": 4,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "e_frostshell/walk/0",
+     "e_frostshell/walk/1",
+     "e_frostshell/walk/2",
+     "e_frostshell/walk/3",
+     "e_frostshell/walk/4",
+     "e_frostshell/walk/5"
+    ],
+    "fps": 8,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "e_frostshell/attack/0",
+     "e_frostshell/attack/1",
+     "e_frostshell/attack/2",
+     "e_frostshell/attack/3",
+     "e_frostshell/attack/4",
+     "e_frostshell/attack/5"
+    ],
+    "fps": 9,
+    "loop": false,
+    "hit_frame": 3,
+    "events": {
+     "hit": 3
+    }
+   },
+   "hit": {
+    "frames": [
+     "e_frostshell/hit/0",
+     "e_frostshell/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "e_frostshell/death/0",
+     "e_frostshell/death/1",
+     "e_frostshell/death/2",
+     "e_frostshell/death/3",
+     "e_frostshell/death/4"
+    ],
+    "fps": 12,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "e_frostshell/die/0",
+     "e_frostshell/die/1",
+     "e_frostshell/die/2",
+     "e_frostshell/die/3",
+     "e_frostshell/die/4"
+    ],
+    "fps": 12,
+    "loop": false
+   },
+   "heavy_prepare": {
+    "frames": [
+     "e_frostshell/heavy_prepare/0",
+     "e_frostshell/heavy_prepare/1",
+     "e_frostshell/heavy_prepare/2",
+     "e_frostshell/heavy_prepare/3"
+    ],
+    "fps": 5,
+    "loop": true
+   },
+   "heavy_release": {
+    "frames": [
+     "e_frostshell/heavy_release/0"
+    ],
+    "fps": 8,
+    "loop": false
+   },
+   "heavy_exposed": {
+    "frames": [
+     "e_frostshell/heavy_exposed/0",
+     "e_frostshell/heavy_exposed/1",
+     "e_frostshell/heavy_exposed/2",
+     "e_frostshell/heavy_exposed/3"
+    ],
+    "fps": 4,
+    "loop": true
+   }
+  },
+  "e_icerunner": {
+   "idle": {
+    "frames": [
+     "e_icerunner/idle/0",
+     "e_icerunner/idle/1",
+     "e_icerunner/idle/2",
+     "e_icerunner/idle/3"
+    ],
+    "fps": 4,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "e_icerunner/walk/0",
+     "e_icerunner/walk/1",
+     "e_icerunner/walk/2",
+     "e_icerunner/walk/3",
+     "e_icerunner/walk/4",
+     "e_icerunner/walk/5"
+    ],
+    "fps": 8,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "e_icerunner/attack/0",
+     "e_icerunner/attack/1",
+     "e_icerunner/attack/2",
+     "e_icerunner/attack/3",
+     "e_icerunner/attack/4"
+    ],
+    "fps": 9,
+    "loop": false,
+    "hit_frame": 2,
+    "events": {
+     "hit": 2
+    }
+   },
+   "hit": {
+    "frames": [
+     "e_icerunner/hit/0",
+     "e_icerunner/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "e_icerunner/death/0",
+     "e_icerunner/death/1",
+     "e_icerunner/death/2",
+     "e_icerunner/death/3",
+     "e_icerunner/death/4"
+    ],
+    "fps": 12,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "e_icerunner/die/0",
+     "e_icerunner/die/1",
+     "e_icerunner/die/2",
+     "e_icerunner/die/3",
+     "e_icerunner/die/4"
+    ],
+    "fps": 12,
+    "loop": false
+   },
+   "heavy_prepare": {
+    "frames": [
+     "e_icerunner/heavy_prepare/0",
+     "e_icerunner/heavy_prepare/1",
+     "e_icerunner/heavy_prepare/2",
+     "e_icerunner/heavy_prepare/3"
+    ],
+    "fps": 5,
+    "loop": true
+   },
+   "heavy_release": {
+    "frames": [
+     "e_icerunner/heavy_release/0"
+    ],
+    "fps": 8,
+    "loop": false
+   },
+   "heavy_exposed": {
+    "frames": [
+     "e_icerunner/heavy_exposed/0",
+     "e_icerunner/heavy_exposed/1",
+     "e_icerunner/heavy_exposed/2",
+     "e_icerunner/heavy_exposed/3"
+    ],
+    "fps": 4,
+    "loop": true
+   }
+  },
+  "e_sporesac": {
+   "idle": {
+    "frames": [
+     "e_sporesac/idle/0",
+     "e_sporesac/idle/1",
+     "e_sporesac/idle/2",
+     "e_sporesac/idle/3"
+    ],
+    "fps": 4,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "e_sporesac/walk/0",
+     "e_sporesac/walk/1",
+     "e_sporesac/walk/2",
+     "e_sporesac/walk/3",
+     "e_sporesac/walk/4",
+     "e_sporesac/walk/5"
+    ],
+    "fps": 8,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "e_sporesac/attack/0",
+     "e_sporesac/attack/1",
+     "e_sporesac/attack/2",
+     "e_sporesac/attack/3",
+     "e_sporesac/attack/4"
+    ],
+    "fps": 9,
+    "loop": false,
+    "hit_frame": 2,
+    "events": {
+     "hit": 2
+    }
+   },
+   "hit": {
+    "frames": [
+     "e_sporesac/hit/0",
+     "e_sporesac/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "e_sporesac/death/0",
+     "e_sporesac/death/1",
+     "e_sporesac/death/2",
+     "e_sporesac/death/3",
+     "e_sporesac/death/4"
+    ],
+    "fps": 12,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "e_sporesac/die/0",
+     "e_sporesac/die/1",
+     "e_sporesac/die/2",
+     "e_sporesac/die/3",
+     "e_sporesac/die/4"
+    ],
+    "fps": 12,
+    "loop": false
+   },
+   "heavy_prepare": {
+    "frames": [
+     "e_sporesac/heavy_prepare/0",
+     "e_sporesac/heavy_prepare/1",
+     "e_sporesac/heavy_prepare/2",
+     "e_sporesac/heavy_prepare/3"
+    ],
+    "fps": 5,
+    "loop": true
+   },
+   "heavy_release": {
+    "frames": [
+     "e_sporesac/heavy_release/0"
+    ],
+    "fps": 8,
+    "loop": false
+   },
+   "heavy_exposed": {
+    "frames": [
+     "e_sporesac/heavy_exposed/0",
+     "e_sporesac/heavy_exposed/1",
+     "e_sporesac/heavy_exposed/2",
+     "e_sporesac/heavy_exposed/3"
+    ],
+    "fps": 4,
+    "loop": true
+   }
+  },
+  "e_burrower": {
+   "idle": {
+    "frames": [
+     "e_burrower/idle/0",
+     "e_burrower/idle/1",
+     "e_burrower/idle/2",
+     "e_burrower/idle/3"
+    ],
+    "fps": 4,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "e_burrower/walk/0",
+     "e_burrower/walk/1",
+     "e_burrower/walk/2",
+     "e_burrower/walk/3",
+     "e_burrower/walk/4",
+     "e_burrower/walk/5"
+    ],
+    "fps": 8,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "e_burrower/attack/0",
+     "e_burrower/attack/1",
+     "e_burrower/attack/2",
+     "e_burrower/attack/3",
+     "e_burrower/attack/4"
+    ],
+    "fps": 9,
+    "loop": false,
+    "hit_frame": 2,
+    "events": {
+     "hit": 2
+    }
+   },
+   "hit": {
+    "frames": [
+     "e_burrower/hit/0",
+     "e_burrower/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "e_burrower/death/0",
+     "e_burrower/death/1",
+     "e_burrower/death/2",
+     "e_burrower/death/3",
+     "e_burrower/death/4"
+    ],
+    "fps": 12,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "e_burrower/die/0",
+     "e_burrower/die/1",
+     "e_burrower/die/2",
+     "e_burrower/die/3",
+     "e_burrower/die/4"
+    ],
+    "fps": 12,
+    "loop": false
+   },
+   "heavy_prepare": {
+    "frames": [
+     "e_burrower/heavy_prepare/0",
+     "e_burrower/heavy_prepare/1",
+     "e_burrower/heavy_prepare/2",
+     "e_burrower/heavy_prepare/3"
+    ],
+    "fps": 5,
+    "loop": true
+   },
+   "heavy_release": {
+    "frames": [
+     "e_burrower/heavy_release/0"
+    ],
+    "fps": 8,
+    "loop": false
+   },
+   "heavy_exposed": {
+    "frames": [
+     "e_burrower/heavy_exposed/0",
+     "e_burrower/heavy_exposed/1",
+     "e_burrower/heavy_exposed/2",
+     "e_burrower/heavy_exposed/3"
+    ],
+    "fps": 4,
+    "loop": true
+   }
   }
  },
  "anim_sets_meta": {
@@ -1396,6 +3231,58 @@
    "pivot": [
     35,
     67
+   ],
+   "facing": "right",
+   "faction": "enemy",
+   "kind": "character"
+  },
+  "e_frostshell": {
+   "frame_size": [
+    40,
+    36
+   ],
+   "pivot": [
+    16,
+    35
+   ],
+   "facing": "right",
+   "faction": "enemy",
+   "kind": "character"
+  },
+  "e_icerunner": {
+   "frame_size": [
+    50,
+    28
+   ],
+   "pivot": [
+    20,
+    27
+   ],
+   "facing": "right",
+   "faction": "enemy",
+   "kind": "character"
+  },
+  "e_sporesac": {
+   "frame_size": [
+    34,
+    44
+   ],
+   "pivot": [
+    15,
+    43
+   ],
+   "facing": "right",
+   "faction": "enemy",
+   "kind": "character"
+  },
+  "e_burrower": {
+   "frame_size": [
+    42,
+    36
+   ],
+   "pivot": [
+    16,
+    35
    ],
    "facing": "right",
    "faction": "enemy",

@@ -234,15 +234,19 @@
    "image": "res://assets/atlases/char_challenge.png",
    "frames": "res://assets/atlases/char_challenge.json",
    "size": [
-    512,
+    1024,
     512
    ],
-   "disk_bytes": 7362,
-   "gpu_bytes": 1048576,
+   "disk_bytes": 14903,
+   "gpu_bytes": 2097152,
    "biome": "",
    "anim_sets": [
     "boss_nestcore",
     "e_binder",
+    "e_burrower",
+    "e_frostshell",
+    "e_icerunner",
+    "e_sporesac",
     "e_thrall"
    ],
    "image_frames": 0
@@ -284,7 +288,11 @@
   "coin": "fx_combat",
   "e_thrall": "char_challenge",
   "e_binder": "char_challenge",
-  "boss_nestcore": "char_challenge"
+  "boss_nestcore": "char_challenge",
+  "e_frostshell": "char_challenge",
+  "e_icerunner": "char_challenge",
+  "e_sporesac": "char_challenge",
+  "e_burrower": "char_challenge"
  },
  "bases": {
   "player": {
@@ -517,8 +525,8 @@
   "license": "Original work created for this project; owned by the project owner. No third-party assets included."
  },
  "totals": {
-  "disk_bytes": 99811,
-  "gpu_bytes_all_pages": 10485760,
+  "disk_bytes": 107352,
+  "gpu_bytes_all_pages": 11534336,
   "note": "GPU = w*h*4 (RGBA8, lossless import, no mipmaps). See docs/art/ATLAS_BUDGET.md"
  }
 }

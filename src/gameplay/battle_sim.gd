@@ -58,6 +58,17 @@ class Unit:
 	var exposed_t := 0.0   # > 0: damage taken x exposed_mul (recovering, or its link was just cut)
 	var exposed_mul := 1.0
 	var guard_mul := 1.0   # < 1 while a living link source protects this unit
+	var ab: Dictionary = {}  # the `heavy` entry in use ({} = none); units with a list switch after each use
+	var ab_i := 0
+	var heavy_r := 0.0     # half width of the announced zone around heavy_x (0 = no ground zone)
+	var heavy_acc := 0.0   # damage taken during the current prepare (interrupt_damage)
+	var fire_t := -1.0     # >= 0: dashing (charge), s left
+	var fire_dur := 0.1
+	var fire_x0 := 0.0
+	var fire_x1 := 0.0
+	var hidden := false    # burrowed: not in the target lanes, drawn as a trail
+	var burrow_t := 0.0
+	var shell_mul := 1.0   # `shell`.closed_mult: damage factor while not exposed
 	var link_src := 0      # uid of that source (0 = none); the view draws the strand
 
 class Projectile:
@@ -82,6 +93,9 @@ class Projectile:
 class Fx:
 	var alive := false
 	var kind := ""
+	var warning_owner := 0    # unit uid for wind-ups; 0 for a released hazard
+	var warning_shape := ""
+	var warning_track := 0    # three visible rails, then the overflow rail
 	var x := 0.0
 	var y := 0.0
 	var t := 0.0
@@ -186,7 +200,8 @@ var _in_step := false
 var _linear_targets := false        # A/B benchmark switch only (selftest/perf); never set in gameplay
 var _link_sources := 0              # living enemy units with a `link` key; 0 = the link pass is skipped
 var _links_dirty := false           # a source died: clear the protection it gave
-var stats := {"deployed": 0, "workers_bought": 0, "skills_cast": 0, "enemy_spawned": 0, "max_units": 0, "max_projectiles": 0, "hero_deaths": 0}
+var stats := {"deployed": 0, "workers_bought": 0, "skills_cast": 0, "enemy_spawned": 0, "max_units": 0, "max_projectiles": 0, "hero_deaths": 0,
+	"gold_capped_s": 0.0, "mana_capped_s": 0.0}
 
 func setup(p_content, round_id: String, seed_value: int = 1, p_upgrades: Dictionary = {}) -> void:
 	content = p_content
@@ -423,6 +438,8 @@ func _step_inner(dt: float) -> void:
 	t += dt
 	gold = minf(gold_max, gold + income() * dt)
 	mana = minf(mana_max, mana + mana_regen * dt)
+	if gold >= gold_max - 0.01: stats.gold_capped_s += dt          # flour sat at its cap: nothing was being bought
+	if mana >= mana_max - 0.01 and not skill_ids.is_empty(): stats.mana_capped_s += dt
 	for k in card_cd: card_cd[k] = maxf(0.0, card_cd[k] - dt)
 	for k in skill_cd: skill_cd[k] = maxf(0.0, skill_cd[k] - dt)
 	player_base.flash = maxf(0.0, player_base.flash - dt)
@@ -461,14 +478,14 @@ func _sorted_into(src: Array[Unit], dst: Array[Unit]) -> void:
 	var w := 0
 	for r in dst.size():
 		var u: Unit = dst[r]
-		if u.alive and not u.dying:
+		if u.alive and not u.dying and not u.hidden:
 			dst[w] = u
 			w += 1
 		else:
 			u.in_lane = false
 	dst.resize(w)
 	for u in src:
-		if not u.dying and not u.in_lane:
+		if not u.dying and not u.in_lane and not u.hidden:
 			u.in_lane = true
 			dst.append(u)
 	for i in range(1, dst.size()):
@@ -556,7 +573,15 @@ func _step_delayed() -> void:
 	while i >= 0:
 		var d: Dictionary = delayed[i]
 		if t >= float(d.at):
-			_area_damage(float(d.x), float(d.radius), float(d.power), float(d.kb), 1.0)
+			if d.has("side"):
+				# a zone dropped by a unit (heavy kind "lob"): hits the other side, and its base if inside
+				var victim: int = -int(d.side)
+				_area_damage_side(victim, float(d.x), float(d.radius), float(d.power), float(d.kb), null)
+				var wall: float = (player_base.x + BASE_HALF) if victim == SIDE_PLAYER else (enemy_base.x - BASE_HALF)
+				if absf(wall - float(d.x)) <= float(d.radius):
+					_damage_base(victim, float(d.power) * float(d.get("struct", 1.0)))
+			else:
+				_area_damage(float(d.x), float(d.radius), float(d.power), float(d.kb), 1.0)
 			_fx(str(d.fx), float(d.x), 0.0, 0.6, float(d.radius))
 			delayed.remove_at(i)
 		i -= 1
@@ -635,7 +660,7 @@ func _step_unit(u: Unit, dt: float) -> void:
 	var in_reach: bool = tgt != null and absf(tgt.x - u.x) - tgt.contact <= reach
 	var base_x: float = (enemy_base.x - BASE_HALF) if u.side == SIDE_PLAYER else (player_base.x + BASE_HALF)
 	var base_reach: bool = (base_x - u.x) * u.side <= reach
-	if u.def.has("heavy") and _step_heavy(u, in_reach or base_reach, dt):
+	if not u.ab.is_empty() and _step_heavy(u, tgt, in_reach or base_reach, dt):
 		return
 	if not in_reach and not base_reach and u.windup < 0.0 and u.kb <= 0.0 and _held_back(u):
 		u.state = S_IDLE      # `hold_behind`: stays behind its own front line
@@ -645,40 +670,155 @@ func _step_unit(u: Unit, dt: float) -> void:
 	_attack_logic(u, tgt, in_reach, base_reach and not in_reach, dt)
 
 # ---- chapter 4 data rules: announced heavy attack, link protection, hold behind the front ----
-## Unit key `heavy`: {interval, windup, radius, offset, power, knockback, recover, exposed_mult, structure_mult, first}.
-## Every `interval` s (counted while not busy) the unit, once something is in reach, announces a zone for `windup` s
-## (fx "telegraph", event "heavy"), then hits everything of the other side inside it for atk x power, and then
-## recovers for `recover` s: no move, no attack, damage taken x exposed_mult. The zone is fixed when the
-## announcement starts, so whoever leaves it takes nothing. Returns true while the unit is busy with it.
-func _step_heavy(u: Unit, engaged: bool, dt: float) -> bool:
-	var h: Dictionary = u.def.heavy
+## Unit key `heavy`: ONE announced action per unit at a time, as prepare -> fire -> recover (+ cancel / death).
+## A Dictionary, or an Array of them that the unit uses in turn (boss variations; never two at once).
+## Common keys: kind ("slam" default | "vent" | "charge" | "lob" | "burrow"), interval, first, windup, radius, power,
+## knockback, recover, exposed_mult, structure_mult, interrupt_damage, interrupt_recover.
+##   prepare  `windup` s. The danger zone [heavy_x - heavy_r, heavy_x + heavy_r] is fixed here (fx "telegraph",
+##            event "heavy") and the hit later tests exactly that zone, so whoever leaves it takes nothing.
+##   fire     slam: everything of the other side in the zone takes atk x power.      (key: offset)
+##            vent: no hit; the unit only opens up (see `shell`).                    (key: always)
+##            charge: dashes along the announced path and hits the FIRST unit standing in it; nothing behind
+##                    that unit is touched. With the path empty it runs to its end.  (keys: trigger, dist, dash_speed)
+##            lob: drops a delayed zone on its target's position; that zone gets its own marker for `delay` s
+##                 and then hits what is still inside.                                (keys: trigger, delay)
+##            burrow: the unit went under before (hidden: no targeted attack reaches it, area damage does), ran
+##                    past the opposing front and announced where it comes up.       (keys: trigger, burrow_speed, past, burrow_max)
+##   recover  `recover` s: no move, no attack, damage taken x exposed_mult.
+##   cancel   death, a cut link, or interrupt_damage taken during prepare: no hit, the marker is removed.
+## Returns true while the unit is busy with it.
+func _step_heavy(u: Unit, tgt: Unit, engaged: bool, dt: float) -> bool:
+	var h: Dictionary = u.ab
 	if u.recover_t > 0.0:
 		u.recover_t -= dt
 		if u.anim_t > 0.5: u.state = S_IDLE
 		return true
+	if u.fire_t >= 0.0:
+		u.fire_t -= dt
+		u.x = lerpf(u.fire_x1, u.fire_x0, clampf(u.fire_t / u.fire_dur, 0.0, 1.0))
+		if u.fire_t < 0.0:
+			u.x = u.fire_x1
+			_resolve_heavy(u, h)
+		return true
 	if u.heavy_t >= 0.0:
 		u.heavy_t -= dt
-		if u.heavy_t < 0.0: _resolve_heavy(u, h)
+		if u.heavy_t < 0.0: _fire_heavy(u, h)
+		return true
+	var kind := str(h.get("kind", "slam"))
+	if u.hidden:
+		_step_burrow(u, h, dt)
 		return true
 	u.heavy_cd -= dt
-	if u.heavy_cd > 0.0 or not engaged or u.windup >= 0.0 or u.kb > 0.0:
+	if u.heavy_cd > 0.0 or u.windup >= 0.0 or u.kb > 0.0:
 		return false
-	u.heavy_t = float(h.get("windup", 1.2))
-	u.heavy_x = u.x + u.side * float(h.get("offset", 0.0))
-	u.state = S_IDLE
-	u.anim_t = 0.0
-	_fx("telegraph", u.heavy_x, 0.0, u.heavy_t, float(h.get("radius", 40.0)))
-	events.append(["heavy", {"unit": u.id, "uid": u.uid, "x": u.heavy_x, "windup": u.heavy_t, "boss": u.is_boss}])
+	var dist := 1e9
+	if tgt != null: dist = absf(tgt.x - u.x) - tgt.contact
+	var base_x: float = (enemy_base.x - BASE_HALF) if u.side == SIDE_PLAYER else (player_base.x + BASE_HALF)
+	dist = minf(dist, (base_x - u.x) * u.side)
+	match kind:
+		"vent":
+			if not engaged and not bool(h.get("always", false)): return false
+		"charge", "lob":
+			if dist > float(h.get("trigger", 120.0)): return false
+		"burrow":
+			if dist > float(h.get("trigger", 180.0)) or dist < 40.0: return false
+			u.hidden = true
+			u.burrow_t = 0.0
+			u.state = S_WALK
+			_fx("burrow_dive", u.x, 0.0, 0.4, 0.0)
+			events.append(["burrow", {"unit": u.id, "uid": u.uid, "x": u.x}])
+			return true
+		_:
+			if not engaged: return false
+	_begin_heavy(u, h, kind)
 	return true
 
+func _begin_heavy(u: Unit, h: Dictionary, kind: String) -> void:
+	u.heavy_t = float(h.get("windup", 1.2))
+	u.heavy_acc = 0.0
+	u.heavy_x = u.x
+	u.heavy_r = 0.0
+	match kind:
+		"slam":
+			u.heavy_x = u.x + u.side * float(h.get("offset", 0.0))
+			u.heavy_r = float(h.get("radius", 40.0))
+		"burrow":
+			u.heavy_r = float(h.get("radius", 30.0))
+		"charge":
+			# the path stops short of the opposing base wall
+			var wall: float = (enemy_base.x - BASE_HALF) if u.side == SIDE_PLAYER else (player_base.x + BASE_HALF)
+			var far: float = u.x + u.side * float(h.get("dist", 150.0))
+			if (far - wall) * u.side > 0.0: far = wall
+			u.heavy_x = (u.x + far) * 0.5
+			u.heavy_r = absf(far - u.x) * 0.5
+	u.state = S_IDLE
+	u.anim_t = 0.0
+	if u.heavy_r > 0.0:
+		_fx("telegraph", u.heavy_x, 0.0, u.heavy_t, u.heavy_r, u.uid, kind)
+	events.append(["heavy", {"unit": u.id, "uid": u.uid, "kind": kind, "x": u.heavy_x, "r": u.heavy_r, "windup": u.heavy_t, "boss": u.is_boss}])
+
+## End of prepare. charge starts its dash (the hit lands when it arrives); the other kinds resolve at once.
+func _fire_heavy(u: Unit, h: Dictionary) -> void:
+	if str(h.get("kind", "slam")) != "charge":
+		_resolve_heavy(u, h)
+		return
+	var lo := u.heavy_x - u.heavy_r
+	var hi := u.heavy_x + u.heavy_r
+	var best: Unit = null
+	var best_d := 1e9
+	var foes: Array[Unit] = players if u.side == SIDE_ENEMY else enemies
+	for e in foes:
+		if e.dying or e.hidden or e.x < lo or e.x > hi: continue
+		var d := absf(e.x - u.x)
+		if d < best_d:
+			best_d = d
+			best = e
+	if u.side == SIDE_ENEMY and hero_respawn <= 0.0 and not hero.dying and hero.x >= lo and hero.x <= hi and absf(hero.x - u.x) < best_d:
+		best = hero
+	u.w_target = best
+	u.fire_x0 = u.x
+	u.fire_x1 = (best.x - u.side * (best.contact + u.contact)) if best != null else (u.heavy_x + u.side * u.heavy_r)
+	if (u.fire_x1 - u.x) * u.side < 0.0: u.fire_x1 = u.x
+	u.fire_dur = maxf(0.06, absf(u.fire_x1 - u.x) / maxf(60.0, float(h.get("dash_speed", 480.0))))
+	u.fire_t = u.fire_dur
+	u.state = S_ATTACK
+	u.anim_t = 0.0
+	events.append(["heavy_dash", {"unit": u.id, "uid": u.uid, "x": u.x, "to": u.fire_x1, "boss": u.is_boss}])
+
 func _resolve_heavy(u: Unit, h: Dictionary) -> void:
-	var radius := float(h.get("radius", 40.0))
+	var kind := str(h.get("kind", "slam"))
 	var power := u.atk * u.buff_mul * float(h.get("power", 3.0))
-	_area_damage_side(-u.side, u.heavy_x, radius, power, float(h.get("knockback", 0.0)), null)
-	var bx: float = (player_base.x + BASE_HALF) if u.side == SIDE_ENEMY else (enemy_base.x - BASE_HALF)
-	if absf(bx - u.heavy_x) <= radius:
-		_damage_base(-u.side, power * float(h.get("structure_mult", 1.0)))
-	_fx("explosion", u.heavy_x, -6.0, 0.4, radius)
+	var kb := float(h.get("knockback", 0.0))
+	var hit_x := u.heavy_x
+	match kind:
+		"slam", "burrow":
+			u.hidden = false
+			_area_damage_side(-u.side, u.heavy_x, u.heavy_r, power, kb, null)
+			var bx: float = (player_base.x + BASE_HALF) if u.side == SIDE_ENEMY else (enemy_base.x - BASE_HALF)
+			if absf(bx - u.heavy_x) <= u.heavy_r:
+				_damage_base(-u.side, power * float(h.get("structure_mult", 1.0)))
+			_fx("explosion", u.heavy_x, -6.0, 0.4, u.heavy_r)
+		"charge":
+			hit_x = u.x
+			var tgt := u.w_target
+			if tgt != null and not tgt.dying and tgt.alive and absf(tgt.x - u.x) <= tgt.contact + u.contact + 16.0:
+				_damage(tgt, power, kb)
+				_fx("hit_spark", tgt.x, -12.0, 0.25, 0.0)
+			elif tgt == null:
+				var wall: float = (player_base.x + BASE_HALF) if u.side == SIDE_ENEMY else (enemy_base.x - BASE_HALF)
+				if absf(wall - u.x) <= 2.0:
+					_damage_base(-u.side, power * float(h.get("structure_mult", 1.0)))
+			u.w_target = null
+		"lob":
+			var tx: float = u.x + u.side * float(h.get("trigger", 120.0)) * 0.6
+			var foe := _find_target(u)
+			if foe != null and absf(foe.x - u.x) <= float(h.get("trigger", 120.0)) * 1.3: tx = foe.x
+			var delay := float(h.get("delay", 1.2))
+			var r := float(h.get("radius", 40.0))
+			delayed.append({"at": t + delay, "x": tx, "radius": r, "power": power, "kb": kb, "fx": "explosion", "side": u.side,
+				"struct": float(h.get("structure_mult", 1.0))})
+			_fx("telegraph", tx, 0.0, delay, r, 0, "lob")
+			hit_x = tx
 	u.state = S_ATTACK
 	u.anim_t = 0.0
 	u.heavy_cd = float(h.get("interval", 8.0))
@@ -686,16 +826,76 @@ func _resolve_heavy(u: Unit, h: Dictionary) -> void:
 	u.exposed_t = u.recover_t
 	u.exposed_mul = float(h.get("exposed_mult", 1.5))
 	u.atk_cd = maxf(u.atk_cd, u.recover_t)
-	events.append(["heavy_hit", {"unit": u.id, "uid": u.uid, "x": u.heavy_x, "recover": u.recover_t, "boss": u.is_boss}])
+	events.append(["heavy_hit", {"unit": u.id, "uid": u.uid, "kind": kind, "x": hit_x, "recover": u.recover_t, "boss": u.is_boss}])
+	_next_ability(u)
 
-## Drops an announcement that will not happen (unit died, or its link was cut): removes the zone marker.
+## Units with a list of abilities take the next one for their following cycle.
+func _next_ability(u: Unit) -> void:
+	var raw = u.def.get("heavy")
+	if raw is Array and raw.size() > 1:
+		u.ab_i = (u.ab_i + 1) % raw.size()
+		u.ab = raw[u.ab_i]
+		u.heavy_cd = float(u.ab.get("interval", 8.0))
+
+## Under ground: runs past the opposing front (or for burrow_max s), then announces where it comes up.
+func _step_burrow(u: Unit, h: Dictionary, dt: float) -> void:
+	u.burrow_t += dt
+	var foes: Array[Unit] = players if u.side == SIDE_ENEMY else enemies
+	var found := false
+	var front := 0.0
+	for e in foes:
+		if e.dying or e.hidden: continue
+		if not found or (e.x - front) * u.side < 0.0:
+			front = e.x
+			found = true
+	if u.side == SIDE_ENEMY and hero_respawn <= 0.0 and not hero.dying and (not found or hero.x > front):
+		front = hero.x
+		found = true
+	var home: float = (player_base.x + BASE_HALF + 34.0) if u.side == SIDE_ENEMY else (enemy_base.x - BASE_HALF - 34.0)
+	var dest: float = home if not found else front + u.side * float(h.get("past", 50.0))
+	if (dest - home) * u.side > 0.0: dest = home
+	var arrived: bool = (dest - u.x) * u.side <= 0.0
+	if not arrived and u.burrow_t < float(h.get("burrow_max", 7.0)):
+		u.x += u.side * float(h.get("burrow_speed", 80.0)) * dt
+		u.state = S_WALK
+		return
+	_begin_heavy(u, h, "burrow")
+
+## Drops an announcement that will not happen (unit died, its link was cut, or it was interrupted): removes the marker.
 func _cancel_heavy(u: Unit) -> void:
 	if u.heavy_t < 0.0:
 		return
 	u.heavy_t = -1.0
-	for f in fxs:
-		if f.alive and f.kind == "telegraph" and is_equal_approx(f.x, u.heavy_x):
-			f.alive = false
+	if u.heavy_r > 0.0:
+		for f in fxs:
+			if f.alive and f.kind == "telegraph" and f.warning_owner == u.uid:
+				f.alive = false
+
+## Called for damage taken while preparing: interrupt_damage in total calls the action off and leaves the unit open.
+func _interrupt_heavy(u: Unit, dmg: float) -> void:
+	var need := float(u.ab.get("interrupt_damage", 0.0))
+	if need <= 0.0: return
+	u.heavy_acc += dmg
+	if u.heavy_acc < need: return
+	_cancel_heavy(u)
+	u.hidden = false
+	u.heavy_cd = float(u.ab.get("interval", 8.0))
+	u.recover_t = float(u.ab.get("interrupt_recover", u.ab.get("recover", 2.0)))
+	u.exposed_t = u.recover_t
+	u.exposed_mul = float(u.ab.get("exposed_mult", 1.5))
+	u.atk_cd = maxf(u.atk_cd, u.recover_t)
+	events.append(["heavy_cancel", {"unit": u.id, "uid": u.uid, "x": u.x, "boss": u.is_boss}])
+
+## Unit key `shell`: {closed_mult, pry_knockback, pry_open}. While the unit is not exposed, damage is x closed_mult.
+## A hit that carries at least pry_knockback (hero skills) forces it open for pry_open s. Bosses cannot be pried.
+func _pry_shell(u: Unit) -> void:
+	_cancel_heavy(u)
+	var open_s := float(u.def.shell.get("pry_open", 1.5))
+	u.recover_t = maxf(u.recover_t, open_s)
+	u.exposed_t = maxf(u.exposed_t, open_s)
+	u.exposed_mul = maxf(u.exposed_mul, float(u.ab.get("exposed_mult", 1.5)))
+	u.atk_cd = maxf(u.atk_cd, open_s)
+	events.append(["shell_pry", {"unit": u.id, "uid": u.uid, "x": u.x}])
 
 ## Unit key `hold_behind` (px): the unit does not walk closer than this to its own side's front unit (a unit
 ## without the key). With nobody in front of it, it walks on like any other unit.
@@ -736,7 +936,7 @@ func _step_links() -> void:
 			var best: Unit = null
 			var best_d := 1e9
 			for e in enemies:
-				if e.dying or e.link_src != 0 or e.def.has("link"): continue
+				if e.dying or e.hidden or e.link_src != 0 or e.def.has("link"): continue
 				var d := absf(e.x - s.x)
 				if d > radius: continue
 				if prefer_boss and e.is_boss: d -= 10000.0
@@ -761,7 +961,7 @@ func _break_links(src: Unit) -> void:
 		e.exposed_t = maxf(e.exposed_t, float(lk.get("break_exposed_s", 3.0)))
 		if e.heavy_t >= 0.0:
 			_cancel_heavy(e)
-			e.heavy_cd = float(e.def.heavy.get("interval", 8.0))
+			e.heavy_cd = float(e.ab.get("interval", 8.0))
 			e.recover_t = stagger
 		_fx("link_break", e.x, -16.0, 0.5, 0.0)
 	_links_dirty = true
@@ -932,7 +1132,7 @@ func _find_target_linear(u: Unit) -> Unit:
 	var best_d := 1e9
 	var foes: Array[Unit] = enemies if u.side == SIDE_PLAYER else players
 	for e in foes:
-		if e.dying: continue
+		if e.dying or e.hidden: continue
 		var d := (e.x - u.x) * u.side
 		if d >= -10.0 and d < best_d:
 			best_d = d
@@ -946,7 +1146,7 @@ func _find_target_linear(u: Unit) -> Unit:
 func _frontmost_enemy_x() -> float:
 	var x: float = enemy_base.x
 	for e in enemies:
-		if not e.dying and e.x < x: x = e.x
+		if not e.dying and not e.hidden and e.x < x: x = e.x
 	return x
 
 ## Player-sourced area damage at x (skills): hits enemies and the enemy base if in radius.
@@ -970,6 +1170,11 @@ func _damage(target: Unit, amount: float, kb: float) -> void:
 	var dmg := maxf(1.0, amount - float(target.def.get("armor", 0.0)))
 	if target.guard_mul != 1.0 or target.exposed_mul != 1.0:
 		dmg = maxf(1.0, dmg * target.guard_mul * target.exposed_mul)   # link protection / exposed window
+	if target.shell_mul != 1.0 and target.exposed_t <= 0.0:
+		dmg = maxf(1.0, dmg * target.shell_mul)                         # closed shell
+		if kb > 0.0 and not target.is_boss and kb >= float(target.def.shell.get("pry_knockback", 1e9)):
+			_pry_shell(target)
+	if target.heavy_t >= 0.0: _interrupt_heavy(target, dmg)
 	target.hp -= dmg
 	target.flash = 0.12
 	if kb > 0.0 and not target.is_boss:
@@ -1066,7 +1271,7 @@ func _step_towers(dt: float) -> void:
 		var best_d := 1e9
 		var foes: Array[Unit] = enemies if side == SIDE_PLAYER else players
 		for e in foes:
-			if e.dying: continue
+			if e.dying or e.hidden: continue
 			var d := absf(e.x - float(b.x))
 			if d <= rng_px and d < best_d:
 				best_d = d
@@ -1205,7 +1410,16 @@ func _new_unit(d: Dictionary, side: int, x: float) -> Unit:
 	u.summon_t = 0.0
 	u.in_lane = false
 	u.wave_tag = 0
-	u.heavy_cd = float(d.heavy.get("first", float(d.heavy.get("interval", 8.0)) * 0.5)) if d.has("heavy") else 0.0
+	var raw_ab = d.get("heavy")
+	u.ab_i = 0
+	u.ab = raw_ab if raw_ab is Dictionary else (raw_ab[0] if raw_ab is Array and not raw_ab.is_empty() else {})
+	u.heavy_cd = float(u.ab.get("first", float(u.ab.get("interval", 8.0)) * 0.5)) if not u.ab.is_empty() else 0.0
+	u.heavy_r = 0.0
+	u.heavy_acc = 0.0
+	u.fire_t = -1.0
+	u.hidden = false
+	u.burrow_t = 0.0
+	u.shell_mul = float(d.shell.get("closed_mult", 1.0)) if d.get("shell") is Dictionary else 1.0
 	u.heavy_t = -1.0
 	u.heavy_x = 0.0
 	u.recover_t = 0.0
@@ -1229,7 +1443,7 @@ func _new_projectile() -> Projectile:
 	projectiles.append(np)
 	return np
 
-func _fx(kind: String, x: float, y: float, dur: float, radius: float) -> void:
+func _fx(kind: String, x: float, y: float, dur: float, radius: float, warning_owner := 0, warning_shape := "") -> void:
 	if kind == "explosion":
 		_cue(&"explosion", "", {"x": x})
 	var f: Fx = null
@@ -1237,17 +1451,34 @@ func _fx(kind: String, x: float, y: float, dur: float, radius: float) -> void:
 		if not e.alive:
 			f = e
 			break
+	if f == null and fxs.size() >= caps.fx and kind == "telegraph":
+		# A danger marker is never dropped for lack of room: it takes the place of a cosmetic effect.
+		for e in fxs:
+			if e.kind != "telegraph":
+				f = e
+				break
 	if f == null:
 		if fxs.size() >= caps.fx: return
 		f = Fx.new()
 		fxs.append(f)
 	f.alive = true
 	f.kind = kind
+	f.warning_owner = warning_owner
+	f.warning_shape = warning_shape
 	f.x = x
 	f.y = y
 	f.t = 0.0
 	f.dur = dur
 	f.radius = radius
+	f.warning_track = 0
+	if kind == "telegraph":
+		var used := [false, false, false]
+		for other in fxs:
+			if other == f or not other.alive or other.kind != "telegraph" or other.warning_track >= used.size(): continue
+			if absf(other.x - x) < other.radius + radius + 4.0:
+				used[other.warning_track] = true
+		var slot := used.find(false)
+		f.warning_track = slot if slot >= 0 else used.size()
 
 func _text(x: float, y: float, s: String, kind: StringName, uid := 0, value := 0, anchor_set := "") -> void:
 	# QA-B012: repeated hits on the same target within 0.35 s merge into one rising number.
@@ -1355,4 +1586,14 @@ func result() -> Dictionary:
 	return {"round_id": str(round_def.id), "won": won, "stars": stars, "time": t, "kills": kills,
 		"kill_coins": kill_coins, "coins": kill_coins if won else int(kill_coins * loss_ratio),
 		"player_base_ratio": player_base.hp / player_base.hp_max,
-		"first_clear": false, "next_round_id": "", "hero_deaths": hero_deaths}
+		"first_clear": false, "next_round_id": "", "hero_deaths": hero_deaths, "hint": "" if won else loss_hint()}
+
+## After a defeat: the ONE thing in this battle's own record that the player can change next time (text key
+## hint.loss.<id>). Ordered from the most basic habit to the least; "upgrade" only when none of them applies.
+func loss_hint() -> String:
+	if int(stats.deployed) == 0: return "no_units"
+	if float(stats.gold_capped_s) >= 12.0: return "flour_idle"
+	if int(stats.workers_bought) == 0 and workers_max > int(econ.workers_start) and t >= 40.0: return "no_baker"
+	if hero_deaths >= 2: return "hero_fell"
+	if not skill_ids.is_empty() and (int(stats.skills_cast) == 0 or float(stats.mana_capped_s) >= 20.0): return "no_skill"
+	return "upgrade"

@@ -35,9 +35,9 @@
           "interval": 0
         },
         {
-          "unit": "e_runner",
-          "count": 8,
-          "interval": 0.7
+          "unit": "e_frostshell",
+          "count": 2,
+          "interval": 3.0
         }
       ],
       "boss": true
@@ -46,19 +46,14 @@
       "at": 44,
       "spawns": [
         {
-          "unit": "e_runner",
-          "count": 8,
-          "interval": 0.7
+          "unit": "e_frostshell",
+          "count": 2,
+          "interval": 3.0
         },
         {
-          "unit": "e_spitter",
+          "unit": "e_icerunner",
           "count": 3,
-          "interval": 1.2
-        },
-        {
-          "unit": "e_spitter",
-          "count": 3,
-          "interval": 1.6
+          "interval": 2.5
         }
       ]
     },
@@ -66,14 +61,14 @@
       "at": 82,
       "spawns": [
         {
-          "unit": "e_runner",
-          "count": 9,
-          "interval": 0.7
+          "unit": "e_icerunner",
+          "count": 4,
+          "interval": 2.0
         },
         {
-          "unit": "e_spitter",
-          "count": 4,
-          "interval": 1.2
+          "unit": "e_frostshell",
+          "count": 2,
+          "interval": 3.0
         }
       ]
     },
@@ -81,14 +76,14 @@
       "at": 124,
       "spawns": [
         {
-          "unit": "e_runner",
-          "count": 9,
-          "interval": 0.7
+          "unit": "e_frostshell",
+          "count": 3,
+          "interval": 3.0
         },
         {
-          "unit": "e_spitter",
-          "count": 4,
-          "interval": 1.2
+          "unit": "e_icerunner",
+          "count": 3,
+          "interval": 2.0
         },
         {
           "unit": "e_bomber",
@@ -108,10 +103,10 @@
   "trickle": {
     "start": 7,
     "pattern": [
-      "e_runner",
+      "e_frostshell",
       "e_grunt",
-      "e_swarm",
-      "e_spitter"
+      "e_icerunner",
+      "e_swarm"
     ],
     "interval": 7.88,
     "interval_min": 7.0,
@@ -122,12 +117,12 @@
       "below": 0.55,
       "spawns": [
         {
-          "unit": "e_guard",
+          "unit": "e_frostshell",
           "count": 2,
-          "interval": 1.3
+          "interval": 2.0
         },
         {
-          "unit": "e_mortar",
+          "unit": "e_icerunner",
           "count": 1,
           "interval": 0
         }
@@ -137,9 +132,9 @@
       "below": 0.25,
       "spawns": [
         {
-          "unit": "e_runner",
-          "count": 5,
-          "interval": 0.6
+          "unit": "e_icerunner",
+          "count": 4,
+          "interval": 1.0
         }
       ]
     }
