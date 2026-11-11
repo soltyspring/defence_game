@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "id": "r31",
+  "index": 31,
+  "chapter": 4,
+  "name": "균사의 문턱",
+  "name_key": "round.r31.name",
+  "biome": "biome_nest",
+  "lane_length": 1500,
+  "player_base_hp": 2875,
+  "enemy_base_hp": 3200,
+  "start_gold": 150,
+  "gold_max": 500,
+  "workers_max": 8,
+  "hero": "hero_captain",
+  "cards": [
+    "melee_basic",
+    "ranged_basic",
+    "tank",
+    "fast",
+    "siege"
+  ],
+  "skills": [
+    "skill_slam",
+    "skill_rally",
+    "skill_barrage"
+  ],
+  "waves": [
+    {
+      "at": 14,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 1,
+          "interval": 0
+        }
+      ]
+    },
+    {
+      "at": 44,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 2,
+          "interval": 6.0
+        }
+      ]
+    },
+    {
+      "at": 80,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 3,
+          "interval": 4.0
+        }
+      ]
+    },
+    {
+      "at": 120,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 4,
+          "interval": 3.0
+        }
+      ]
+    },
+    {
+      "at": 230,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 5,
+          "interval": 2.5
+        }
+      ],
+      "pressure": true
+    },
+    {
+      "at": 290,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 7,
+          "interval": 2.0
+        }
+      ],
+      "pressure": true
+    }
+  ],
+  "enemy_ai": {
+    "pool": [],
+    "income": 0,
+    "start_gold": 0,
+    "think": 2.5,
+    "after_waves_loop": false
+  },
+  "trickle": {
+    "start": 36,
+    "pattern": [
+      "e_thrall"
+    ],
+    "interval": 15.0,
+    "interval_min": 9.0,
+    "ramp_per_min": 1.2
+  },
+  "enemy_base_spawns_on_hp": [
+    {
+      "below": 0.5,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 2,
+          "interval": 2.0
+        }
+      ]
+    }
+  ],
+  "reward": {
+    "coins": 300,
+    "first_clear_coins": 720,
+    "three_star_bonus_coins": 180
+  },
+  "stars": {
+    "time_3": 300,
+    "base_hp_2": 0.4
+  },
+  "enemy_scaling": {
+    "hp": 1.82,
+    "atk": 1.442
+  },
+  "enemy_tower_atk_mult": 0.5,
+  "tutorial": [],
+  "provisional": true,
+  "balance_note": "Challenge chapter (docs/design/CHALLENGE_R31_R40.md). enemy_scaling stays at the r30 value: difficulty comes from the heavy/link rules, not from stats. Bot runs only; human difficulty not played.",
+  "challenge": true
+}

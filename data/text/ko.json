@@ -180,6 +180,25 @@
     "round.r27.name": "검은 효모의 밤",
     "round.r28.name": "마지막 보급로",
     "round.r29.name": "오븐 심장 앞",
-    "round.r30.name": "곰팡이 오븐 심장"
+    "round.r30.name": "곰팡이 오븐 심장",
+    "unit.e_thrall.name": "균사 호위병",
+    "unit.e_thrall.desc": "바닥에 표시가 차오르면 크게 내려찍습니다. 표시 밖으로 물러났다가, 숨을 고르는 동안 몰아치세요.",
+    "unit.e_binder.name": "균사 매듭",
+    "unit.e_binder.desc": "앞줄 뒤에서 균사로 아군을 감싸 피해를 줄입니다. 스킬로 매듭을 끊으면 묶여 있던 적이 잠시 무방비가 됩니다.",
+    "unit.boss_nestcore.name": "둥지의 핵",
+    "unit.boss_nestcore.desc": "매듭을 불러 스스로를 감싸고 넓게 내려찍습니다. 매듭을 끊어 공격을 막거나, 내려찍은 뒤의 빈틈을 노리세요.",
+    "toast.enemy_heavy": "바닥 표시가 차오르면 큰 공격이 옵니다!",
+    "toast.boss_heavy": "보스가 내려찍기를 준비합니다!",
+    "toast.link_break": "균사 연결이 끊겼습니다!",
+    "round.r31.name": "균사의 문턱",
+    "round.r32.name": "엇갈린 내려찍기",
+    "round.r33.name": "첫 매듭",
+    "round.r34.name": "이어지는 진동",
+    "round.r35.name": "얽힌 호위대",
+    "round.r36.name": "겹매듭",
+    "round.r37.name": "포자 엄호",
+    "round.r38.name": "다시 잇는 균사",
+    "round.r39.name": "핵 앞의 방벽",
+    "round.r40.name": "둥지의 핵"
   }
 }

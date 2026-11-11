@@ -36,16 +36,20 @@ func run(q, _tree) -> void:
 	skills = _collect("skills")
 	rounds = _collect("rounds")
 	var od = Q.read_json("res://data/rounds/order.json")
-	order = od.rounds if od is Dictionary and od.get("rounds") is Array else []
+	order = od.rounds.duplicate() if od is Dictionary and od.get("rounds") is Array else []
+	var challenge: Array = od.challenge.rounds if od is Dictionary and od.get("challenge") is Dictionary and od.challenge.get("rounds") is Array else []
+	if not challenge.is_empty() and bool(od.challenge.get("enabled", false)):
+		order.append_array(challenge)
 	q.check("DATA-01", "data/rounds/order.json lists >= 3 rounds", order.size() >= 3, "order=%s" % [order], {"order": order})
 	var missing_order := []
 	for id in order:
 		if not rounds.has(str(id)): missing_order.append(id)
 	q.check("DATA-02", "every round in order.json has a data file", missing_order.is_empty(), "missing: %s" % [missing_order])
 	var unlisted := []
+	# order.json "challenge".rounds (R31-R40) are listed but stay out of the player's order until the chapter is complete
 	for id in rounds:
-		if not order.has(id): unlisted.append(id)
-	q.check("DATA-03", "every round file is reachable from order.json", unlisted.is_empty(), "unlisted: %s" % [unlisted])
+		if not order.has(id) and not challenge.has(id): unlisted.append(id)
+	q.check("DATA-03", "every round file is reachable from order.json (rounds or challenge.rounds)", unlisted.is_empty(), "unlisted: %s" % [unlisted])
 
 	var problems := []
 	for rid in order:

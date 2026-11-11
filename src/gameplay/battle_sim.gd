@@ -50,6 +50,15 @@ class Unit:
 	var in_lane := false
 	var wave_tag := 0      # 1-based scripted wave that spawned this unit; 0 = trickle/AI/trigger/summon/pressure
 	var anim_set := ""
+	# Chapter 4 data rules (unit keys `heavy`, `link`, `hold_behind`; docs/design/CHALLENGE_R31_R40.md). All neutral by default.
+	var heavy_cd := 0.0    # s until the next announced heavy attack may start
+	var heavy_t := -1.0    # >= 0: announcing (telegraph), s left before the hit
+	var heavy_x := 0.0     # centre of the announced zone (fixed when the telegraph starts, so it can be left)
+	var recover_t := 0.0   # > 0: recovering after a heavy attack: no move, no attack
+	var exposed_t := 0.0   # > 0: damage taken x exposed_mul (recovering, or its link was just cut)
+	var exposed_mul := 1.0
+	var guard_mul := 1.0   # < 1 while a living link source protects this unit
+	var link_src := 0      # uid of that source (0 = none); the view draws the strand
 
 class Projectile:
 	var alive := false
@@ -175,6 +184,8 @@ var _base_dead_enemy := false
 var _base_dead_player := false
 var _in_step := false
 var _linear_targets := false        # A/B benchmark switch only (selftest/perf); never set in gameplay
+var _link_sources := 0              # living enemy units with a `link` key; 0 = the link pass is skipped
+var _links_dirty := false           # a source died: clear the protection it gave
 var stats := {"deployed": 0, "workers_bought": 0, "skills_cast": 0, "enemy_spawned": 0, "max_units": 0, "max_projectiles": 0, "hero_deaths": 0}
 
 func setup(p_content, round_id: String, seed_value: int = 1, p_upgrades: Dictionary = {}) -> void:
@@ -424,6 +435,7 @@ func _step_inner(dt: float) -> void:
 	_step_delayed()
 	_step_aura()
 	_sort_lanes()
+	_step_links()
 	_step_hero(dt)
 	for u in players: _step_unit(u, dt)
 	for u in enemies: _step_unit(u, dt)
@@ -506,6 +518,7 @@ func _spawn_enemy(unit_id: String) -> Unit:
 	u.hp_max *= enemy_hp_mult
 	u.hp = u.hp_max
 	u.atk *= enemy_atk_mult
+	if d.has("link"): _link_sources += 1
 	enemies.append(u)
 	stats.enemy_spawned += 1
 	if u.is_boss:
@@ -614,15 +627,145 @@ func _step_unit(u: Unit, dt: float) -> void:
 	_apply_kb(u, dt)
 	if u.is_boss:
 		_step_boss_summon(u, dt)
+	if u.exposed_t > 0.0:
+		u.exposed_t -= dt
+		if u.exposed_t <= 0.0: u.exposed_mul = 1.0
 	var tgt := _find_target(u)
 	var reach: float = float(u.def.range) + u.contact
 	var in_reach: bool = tgt != null and absf(tgt.x - u.x) - tgt.contact <= reach
 	var base_x: float = (enemy_base.x - BASE_HALF) if u.side == SIDE_PLAYER else (player_base.x + BASE_HALF)
 	var base_reach: bool = (base_x - u.x) * u.side <= reach
-	if not in_reach and not base_reach and u.windup < 0.0 and u.kb <= 0.0:
+	if u.def.has("heavy") and _step_heavy(u, in_reach or base_reach, dt):
+		return
+	if not in_reach and not base_reach and u.windup < 0.0 and u.kb <= 0.0 and _held_back(u):
+		u.state = S_IDLE      # `hold_behind`: stays behind its own front line
+	elif not in_reach and not base_reach and u.windup < 0.0 and u.kb <= 0.0:
 		u.state = S_WALK
 		u.x += u.side * float(u.def.speed) * u.buff_mul * dt
 	_attack_logic(u, tgt, in_reach, base_reach and not in_reach, dt)
+
+# ---- chapter 4 data rules: announced heavy attack, link protection, hold behind the front ----
+## Unit key `heavy`: {interval, windup, radius, offset, power, knockback, recover, exposed_mult, structure_mult, first}.
+## Every `interval` s (counted while not busy) the unit, once something is in reach, announces a zone for `windup` s
+## (fx "telegraph", event "heavy"), then hits everything of the other side inside it for atk x power, and then
+## recovers for `recover` s: no move, no attack, damage taken x exposed_mult. The zone is fixed when the
+## announcement starts, so whoever leaves it takes nothing. Returns true while the unit is busy with it.
+func _step_heavy(u: Unit, engaged: bool, dt: float) -> bool:
+	var h: Dictionary = u.def.heavy
+	if u.recover_t > 0.0:
+		u.recover_t -= dt
+		if u.anim_t > 0.5: u.state = S_IDLE
+		return true
+	if u.heavy_t >= 0.0:
+		u.heavy_t -= dt
+		if u.heavy_t < 0.0: _resolve_heavy(u, h)
+		return true
+	u.heavy_cd -= dt
+	if u.heavy_cd > 0.0 or not engaged or u.windup >= 0.0 or u.kb > 0.0:
+		return false
+	u.heavy_t = float(h.get("windup", 1.2))
+	u.heavy_x = u.x + u.side * float(h.get("offset", 0.0))
+	u.state = S_IDLE
+	u.anim_t = 0.0
+	_fx("telegraph", u.heavy_x, 0.0, u.heavy_t, float(h.get("radius", 40.0)))
+	events.append(["heavy", {"unit": u.id, "uid": u.uid, "x": u.heavy_x, "windup": u.heavy_t, "boss": u.is_boss}])
+	return true
+
+func _resolve_heavy(u: Unit, h: Dictionary) -> void:
+	var radius := float(h.get("radius", 40.0))
+	var power := u.atk * u.buff_mul * float(h.get("power", 3.0))
+	_area_damage_side(-u.side, u.heavy_x, radius, power, float(h.get("knockback", 0.0)), null)
+	var bx: float = (player_base.x + BASE_HALF) if u.side == SIDE_ENEMY else (enemy_base.x - BASE_HALF)
+	if absf(bx - u.heavy_x) <= radius:
+		_damage_base(-u.side, power * float(h.get("structure_mult", 1.0)))
+	_fx("explosion", u.heavy_x, -6.0, 0.4, radius)
+	u.state = S_ATTACK
+	u.anim_t = 0.0
+	u.heavy_cd = float(h.get("interval", 8.0))
+	u.recover_t = float(h.get("recover", 2.0))
+	u.exposed_t = u.recover_t
+	u.exposed_mul = float(h.get("exposed_mult", 1.5))
+	u.atk_cd = maxf(u.atk_cd, u.recover_t)
+	events.append(["heavy_hit", {"unit": u.id, "uid": u.uid, "x": u.heavy_x, "recover": u.recover_t, "boss": u.is_boss}])
+
+## Drops an announcement that will not happen (unit died, or its link was cut): removes the zone marker.
+func _cancel_heavy(u: Unit) -> void:
+	if u.heavy_t < 0.0:
+		return
+	u.heavy_t = -1.0
+	for f in fxs:
+		if f.alive and f.kind == "telegraph" and is_equal_approx(f.x, u.heavy_x):
+			f.alive = false
+
+## Unit key `hold_behind` (px): the unit does not walk closer than this to its own side's front unit (a unit
+## without the key). With nobody in front of it, it walks on like any other unit.
+func _held_back(u: Unit) -> bool:
+	var hb := float(u.def.get("hold_behind", 0.0))
+	if hb <= 0.0:
+		return false
+	var mates: Array[Unit] = enemies if u.side == SIDE_ENEMY else players
+	var found := false
+	var front := 0.0
+	for m in mates:
+		if m.dying or m == u or float(m.def.get("hold_behind", 0.0)) > 0.0: continue
+		if not found or (m.x - front) * u.side > 0.0:
+			front = m.x
+			found = true
+	return found and (front - u.x) * u.side < hb
+
+## Unit key `link`: {radius, damage_taken, max_links, prefer_boss, break_stagger, break_exposed, break_exposed_s}.
+## A living source protects its `max_links` nearest side mates within `radius` (bosses first with prefer_boss):
+## they take damage x damage_taken. When the source dies, each of them is staggered for break_stagger s, takes
+## damage x break_exposed for break_exposed_s s, and an announced heavy attack is called off. Enemy side only.
+func _step_links() -> void:
+	if _link_sources <= 0 and not _links_dirty:
+		return
+	_links_dirty = false
+	for e in enemies:
+		e.guard_mul = 1.0
+		e.link_src = 0
+	if _link_sources <= 0:
+		return
+	for s in enemies:
+		if s.dying or not s.def.has("link"): continue
+		var lk: Dictionary = s.def.link
+		var radius := float(lk.get("radius", 100.0))
+		var mul := float(lk.get("damage_taken", 0.5))
+		var prefer_boss := bool(lk.get("prefer_boss", false))
+		for n in int(lk.get("max_links", 3)):
+			var best: Unit = null
+			var best_d := 1e9
+			for e in enemies:
+				if e.dying or e.link_src != 0 or e.def.has("link"): continue
+				var d := absf(e.x - s.x)
+				if d > radius: continue
+				if prefer_boss and e.is_boss: d -= 10000.0
+				if d < best_d:
+					best_d = d
+					best = e
+			if best == null: break
+			best.guard_mul = mul
+			best.link_src = s.uid
+
+func _break_links(src: Unit) -> void:
+	var lk: Dictionary = src.def.link
+	var stagger := float(lk.get("break_stagger", 1.0))
+	var n := 0
+	for e in enemies:
+		if e.link_src != src.uid or e.dying: continue
+		n += 1
+		e.link_src = 0
+		e.guard_mul = 1.0
+		e.atk_cd = maxf(e.atk_cd, stagger)
+		e.exposed_mul = maxf(e.exposed_mul, float(lk.get("break_exposed", 1.3)))
+		e.exposed_t = maxf(e.exposed_t, float(lk.get("break_exposed_s", 3.0)))
+		if e.heavy_t >= 0.0:
+			_cancel_heavy(e)
+			e.heavy_cd = float(e.def.heavy.get("interval", 8.0))
+			e.recover_t = stagger
+		_fx("link_break", e.x, -16.0, 0.5, 0.0)
+	_links_dirty = true
+	events.append(["link_break", {"x": src.x, "freed": n}])
 
 func _step_boss_summon(u: Unit, dt: float) -> void:
 	var sm = u.def.get("summon")
@@ -825,6 +968,8 @@ func _area_damage_side(victim_side: int, x: float, radius: float, power: float, 
 func _damage(target: Unit, amount: float, kb: float) -> void:
 	if target.dying or target.invuln > 0.0: return
 	var dmg := maxf(1.0, amount - float(target.def.get("armor", 0.0)))
+	if target.guard_mul != 1.0 or target.exposed_mul != 1.0:
+		dmg = maxf(1.0, dmg * target.guard_mul * target.exposed_mul)   # link protection / exposed window
 	target.hp -= dmg
 	target.flash = 0.12
 	if kb > 0.0 and not target.is_boss:
@@ -840,6 +985,10 @@ func _kill(u: Unit, rewarded: bool) -> void:
 	u.anim_t = 0.0
 	u.dead_t = 0.7
 	u.windup = -1.0
+	_cancel_heavy(u)
+	if u.side == SIDE_ENEMY and u.def.has("link"):
+		_link_sources -= 1
+		_break_links(u)
 	if u.is_hero:
 		hero_deaths += 1
 		stats.hero_deaths += 1
@@ -1056,6 +1205,14 @@ func _new_unit(d: Dictionary, side: int, x: float) -> Unit:
 	u.summon_t = 0.0
 	u.in_lane = false
 	u.wave_tag = 0
+	u.heavy_cd = float(d.heavy.get("first", float(d.heavy.get("interval", 8.0)) * 0.5)) if d.has("heavy") else 0.0
+	u.heavy_t = -1.0
+	u.heavy_x = 0.0
+	u.recover_t = 0.0
+	u.exposed_t = 0.0
+	u.exposed_mul = 1.0
+	u.guard_mul = 1.0
+	u.link_src = 0
 	u.anim_set = str(d.get("anim_set", d.id))
 	u.contact = 5.0 * float(d.get("size", 1.0))
 	return u
@@ -1166,7 +1323,8 @@ func snapshot() -> Dictionary:
 func _boss_info() -> Dictionary:
 	for e in enemies:
 		if e.is_boss and not e.dying:
-			return {"alive": true, "hp": e.hp, "hp_max": e.hp_max, "id": e.id, "name_key": str(e.def.get("name_key", ""))}
+			return {"alive": true, "hp": e.hp, "hp_max": e.hp_max, "id": e.id, "name_key": str(e.def.get("name_key", "")),
+				"telegraph": e.heavy_t >= 0.0, "exposed": e.exposed_t > 0.0, "linked": e.link_src != 0}
 	return {"alive": false}
 
 func battle_info() -> Dictionary:

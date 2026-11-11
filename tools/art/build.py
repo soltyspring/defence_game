@@ -177,6 +177,9 @@ def build():
             sheets[sid] = (an, body.W, body.H, (body.px, body.H - 1))
     pages.append(cp)
 
+    import chars_challenge
+    pages.append(chars_challenge.make_atlas())
+
     for aid, group_map, faction, note in [
         ("char_boss_warlord", chars_r04.BOSS, "enemy", "boss_warlord (r05+). Own page: boss pixels resident only in boss rounds."),
         ("char_boss_overlord", chars_boss.BOSS, "enemy", "boss_overlord (r10). Own page; summon anim spawns e_swarm (char_player page)."),

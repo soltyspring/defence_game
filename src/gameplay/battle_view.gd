@@ -100,9 +100,12 @@ func _draw() -> void:
 		if u.dying: continue
 		var foot := _unit_pos(u)
 		draw_rect(Rect2(foot + Vector2(-7,0),Vector2(14,2)),Color(0.08,0.08,0.07,0.32))
+	_draw_links()
+	_state_marks.clear()
 	for u in _order:
 		_draw_unit(u)
 	for u in _variant_marks: _draw_variant(u)
+	for u in _state_marks: _draw_state_mark(u)
 	for badge in _crowd_badges:
 		if not _render_positions.has(badge.uid): continue
 		var bp := Vector2((_render_positions[badge.uid] as Vector2).x-20*badge.side,ground_y-52)
@@ -367,14 +370,61 @@ func _draw_workers() -> void:
 
 # ---------------- units ----------------
 func _anim_name(u) -> String:
+	if not u.dying and u.def.has("heavy"):
+		if u.heavy_t >= 0.0: return "heavy_prepare"
+		if u.recover_t > 0.0:
+			return "heavy_release" if float(u.def.heavy.get("recover", 2.0)) - u.recover_t < 0.20 else "heavy_exposed"
+		if u.exposed_t > 0.0: return "heavy_exposed"
 	match u.state:
 		SimS.S_WALK: return "walk"
 		SimS.S_ATTACK: return "attack"
 		SimS.S_DYING: return "death"
 	return "idle"
 
+# ---- chapter 4 readouts: link strands, wind-up and weak-point marks ----
+var _state_marks: Array = []
+
+## A sagging strand from every living link source to each unit it protects, drawn under the units.
+func _draw_links() -> void:
+	var sources := {}
+	for e in sim.enemies:
+		if not e.dying and e.def.has("link"): sources[e.uid] = e
+	if sources.is_empty(): return
+	for e in sim.enemies:
+		if e.dying or e.link_src == 0 or not sources.has(e.link_src): continue
+		var s = sources[e.link_src]
+		var a: Vector2 = _unit_pos(s) + Vector2(0, -float(s.def.get("visual_mark_height", 20.0)) - 5.0)
+		var b: Vector2 = _unit_pos(e) + Vector2(0, -14.0 * float(e.def.get("size", 1.0)))
+		var line := PackedVector2Array([a, (a + b) * 0.5 + Vector2(0, 6.0), b])
+		draw_polyline(line, C_OUTLINE, 3.0)
+		draw_polyline(line, Color("8fd6cf"), 1.0)
+
+## Wind-up: a wedge over the head that grows until the hit. Exposed (recovering / link cut): an open pale ring at
+## chest height. Both keep the unit's own colours, so they also read in greyscale by shape.
+func _draw_state_mark(u) -> void:
+	var pos := _unit_pos(u)
+	var size := float(u.def.get("size", 1.0))
+	if u.heavy_t >= 0.0:
+		var total := maxf(0.1, float(u.def.heavy.get("windup", 1.2)))
+		var k := 1.0 - clampf(u.heavy_t / total, 0.0, 1.0)
+		var w := 4.0 + 5.0 * k
+		var p := pos + Vector2(0, -float(u.def.get("visual_mark_height", 26.0)) - 12.0 - 3.0 * size)
+		draw_colored_polygon(PackedVector2Array([p + Vector2(-w - 2, -w - 2), p + Vector2(w + 2, -w - 2), p + Vector2(0, 4)]), C_OUTLINE)
+		draw_colored_polygon(PackedVector2Array([p + Vector2(-w, -w), p + Vector2(w, -w), p + Vector2(0, 1)]), Color("bff3ee"))
+	elif u.exposed_t > 0.0:
+		var c := pos + Vector2(0, -11.0 * size)
+		var r := 5.0 * size + 1.5 * sin(u.exposed_t * 12.0)
+		draw_arc(c, r + 1.0, 0, TAU, 16, C_OUTLINE, 3.0)
+		draw_arc(c, r + 1.0, 0, TAU, 16, Color("fff0b0"), 1.0)
+		draw_rect(Rect2(c - Vector2(1, 1), Vector2(3, 3)), Color("fff0b0"))
+
 func _draw_unit(u) -> void:
 	var pos := _unit_pos(u)
+	if not u.dying:
+		if u.heavy_t >= 0.0:
+			_state_marks.append(u)
+		elif u.exposed_t > 0.0:
+			_state_marks.append(u)
 	var flip: bool = u.side < 0
 	if u.is_hero:
 		flip = sim.hero_dir < 0
@@ -418,11 +468,41 @@ func _draw_variant(u) -> void:
 	# Atlas cells contain transparent padding above the head. These anchors were
 	# measured from opaque walk pixels relative to the foot pivot, not cell height.
 	var h := float(u.def.get("visual_mark_height",26.0))
+	if mark == "thrall":
+		# two back stalks with bulbs + a block fist held low in front: reads as "heavy hitter" without the sprite
+		for dx in [5.0, 10.0]:
+			var top := pos + Vector2(-u.side * dx, -h - (9.0 if dx > 6.0 else 4.0))
+			draw_rect(Rect2(top + Vector2(-2, 0), Vector2(4, 12)), C_OUTLINE)
+			draw_rect(Rect2(top + Vector2(-1, 1), Vector2(2, 11)), Color("6d857f"))
+			draw_rect(Rect2(top + Vector2(-3, -4), Vector2(6, 6)), C_OUTLINE)
+			draw_rect(Rect2(top + Vector2(-2, -3), Vector2(4, 4)), Color("93ada2"))
+		var fist := pos + Vector2(u.side * 11.0, -12.0)
+		draw_rect(Rect2(fist + Vector2(-4, -4), Vector2(9, 10)), C_OUTLINE)
+		draw_rect(Rect2(fist + Vector2(-3, -3), Vector2(7, 8)), Color("54726f"))
+		draw_rect(Rect2(fist + Vector2(-3, -3), Vector2(7, 2)), Color("93ada2"))
+		return
+	if mark == "binder":
+		# a knot ring floating over the head; the strands start here
+		var kc := pos + Vector2(0, -h - 5.0)
+		draw_arc(kc, 5.0, 0, TAU, 12, C_OUTLINE, 4.0)
+		draw_arc(kc, 5.0, 0, TAU, 12, Color("8fd6cf"), 2.0)
+		draw_rect(Rect2(kc - Vector2(1, 1), Vector2(3, 3)), Color("e4fbf6"))
+		return
+	if mark == "core":
+		# the nest core: a diamond over the crown that opens (pale) while the boss is exposed
+		var cc := pos + Vector2(0, -h - 4.0)
+		var open: bool = u.exposed_t > 0.0
+		var rr := 8.0 if open else 6.0
+		draw_colored_polygon(PackedVector2Array([cc + Vector2(0, -rr - 2), cc + Vector2(rr + 2, 0), cc + Vector2(0, rr + 2), cc + Vector2(-rr - 2, 0)]), C_OUTLINE)
+		draw_colored_polygon(PackedVector2Array([cc + Vector2(0, -rr), cc + Vector2(rr, 0), cc + Vector2(0, rr), cc + Vector2(-rr, 0)]), Color("fff0b0") if open else Color("5fa5a6"))
+		if not open: draw_rect(Rect2(cc - Vector2(1, 3), Vector2(3, 6)), Color("bff3ee"))
+		return
 	if mark == "shield" or mark == "warden":
-		var p := pos+Vector2(u.side*8,-15)
-		draw_rect(Rect2(p-Vector2(5,0),Vector2(10,16)),C_OUTLINE)
-		draw_rect(Rect2(p-Vector2(4,-1),Vector2(8,13)),Color("b8a37b"))
-		draw_rect(Rect2(p+Vector2(-1,1),Vector2(2,12)),Color("eadcb4"))
+		var scale_px := 2.0 if mark == "warden" else 1.0
+		var p := pos + Vector2(u.side * 10, -13) * scale_px
+		draw_colored_polygon(PackedVector2Array([p+Vector2(-6,-4)*scale_px,p+Vector2(6,-4)*scale_px,p+Vector2(6,6)*scale_px,p+Vector2(0,11)*scale_px,p+Vector2(-6,6)*scale_px]), C_OUTLINE)
+		draw_colored_polygon(PackedVector2Array([p+Vector2(-4,-2)*scale_px,p+Vector2(4,-2)*scale_px,p+Vector2(4,5)*scale_px,p+Vector2(0,8)*scale_px,p+Vector2(-4,5)*scale_px]), Color("688b88"))
+		draw_rect(Rect2(p+Vector2(-1,-2)*scale_px,Vector2(2,8)*scale_px),Color("a2c9ba"))
 	if mark == "spore":
 		var p := pos+Vector2(0,-h)
 		draw_rect(Rect2(p+Vector2(-8,-2),Vector2(16,4)),C_OUTLINE)
@@ -430,15 +510,29 @@ func _draw_variant(u) -> void:
 		draw_rect(Rect2(p+Vector2(-2,-6),Vector2(4,3)),Color("f0e7ff"))
 	elif mark == "runner":
 		var p := pos+Vector2(-u.side*5,-h+3)
-		draw_rect(Rect2(p,Vector2(8,3)),Color("e6c887"))
-		draw_rect(Rect2(p+Vector2(-u.side*3,3),Vector2(6,2)),Color("bb754d"))
+		draw_rect(Rect2(p,Vector2(8,3)),Color("a8ccbe"))
+		draw_rect(Rect2(p+Vector2(-u.side*3,3),Vector2(6,2)),Color("698d88"))
 	elif mark in ["root","frost","ember","warden"]:
-		var p := pos+Vector2(0,-h)
-		var color := Color("a2dbeb") if mark == "frost" else (Color("edb15e") if mark == "ember" else Color("c4ce86"))
-		draw_rect(Rect2(p+Vector2(-12,-3),Vector2(24,5)),C_OUTLINE)
-		for dx in [-9,0,9]:
-			draw_rect(Rect2(p+Vector2(dx-2,-9),Vector2(4,10)),color)
-		draw_rect(Rect2(p+Vector2(-11,-2),Vector2(22,3)),color)
+		var p := pos+Vector2(0,-h+5)
+		var crown: PackedVector2Array
+		var color: Color
+		match mark:
+			"frost":
+				crown = PackedVector2Array([Vector2(-14,0),Vector2(-11,-10),Vector2(-6,-5),Vector2(0,-16),Vector2(5,-5),Vector2(10,-10),Vector2(14,0)])
+				color = Color("a2dbeb")
+			"root":
+				crown = PackedVector2Array([Vector2(-15,0),Vector2(-17,-12),Vector2(-11,-10),Vector2(-5,-3),Vector2(1,-13),Vector2(5,-9),Vector2(8,-3),Vector2(14,-10),Vector2(15,0)])
+				color = Color("a8bd91")
+			"ember":
+				crown = PackedVector2Array([Vector2(-13,0),Vector2(-11,-6),Vector2(-5,-9),Vector2(-1,-15),Vector2(4,-9),Vector2(10,-11),Vector2(13,-5),Vector2(13,0)])
+				color = Color("c1acd8")
+			_:
+				crown = PackedVector2Array([Vector2(-12,0),Vector2(-12,-7),Vector2(-8,-7),Vector2(-8,-11),Vector2(8,-11),Vector2(8,-7),Vector2(12,-7),Vector2(12,0)])
+				color = Color("9bbab8")
+		for i in crown.size(): crown[i] = p + (crown[i] * 0.8).round()
+		draw_colored_polygon(crown, color)
+		crown.append(crown[0])
+		draw_polyline(crown, C_OUTLINE, 1.0)
 
 ## Draw frame `i` of a cached AnimRec. Flip = negative-width destination rect placed at the mirrored left edge;
 ## pixel-identical to draw_set_transform(pos, 0, (-1,1)) (src/core/diag/flip_check.gd: 0 px difference) without
@@ -586,6 +680,20 @@ func _draw_fx(f) -> void:
 			draw_rect(Rect2(pos - Vector2(0.5, s), Vector2(1.0, s * 2.0)), Color(1, 1, 0.7, 1.0 - k))
 		"explosion":
 			draw_circle(pos, maxf(4.0, f.radius) * (0.4 + k * 0.6), Color(1.0, 0.6, 0.2, 0.7 * (1.0 - k)))
+		"telegraph":
+			# announced enemy zone: a ground band that fills from both ends; full = the hit lands
+			var band := Rect2(f.x - f.radius, ground_y - 2.0, f.radius * 2.0, 6.0)
+			draw_rect(band.grow(1.0), C_OUTLINE)
+			draw_rect(band, Color("2f5a5c"))
+			var half := band.size.x * 0.5 * k
+			draw_rect(Rect2(band.position, Vector2(half, band.size.y)), Color("bff3ee"))
+			draw_rect(Rect2(Vector2(band.end.x - half, band.position.y), Vector2(half, band.size.y)), Color("bff3ee"))
+			for ex in [band.position.x - 1.0, band.end.x - 2.0]:
+				draw_rect(Rect2(ex - 1.0, ground_y - 10.0, 5.0, 9.0), C_OUTLINE)
+				draw_rect(Rect2(ex, ground_y - 9.0, 3.0, 7.0), Color("bff3ee"))
+		"link_break":
+			for dx in [-1.0, 1.0]:
+				draw_line(pos + Vector2(dx * 2.0, 0), pos + Vector2(dx * (5.0 + 8.0 * k), -4.0 - 6.0 * k), Color(0.56, 0.84, 0.81, 1.0 - k), 2.0)
 		"target_mark":
 			draw_arc(Vector2(f.x, ground_y), f.radius, 0, TAU, 24, Color(1, 0.3, 0.2, 0.4 + 0.4 * sin(f.t * 20.0)), 1.0)
 		"rally", "skill_rally":

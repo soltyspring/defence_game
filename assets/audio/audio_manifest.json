@@ -1283,8 +1283,8 @@
      "file": "flour_delivery.wav",
      "seconds": 0.14,
      "bytes": 6218,
-     "peak_dbfs": -5.0,
-     "rms_dbfs": -17.53
+     "peak_dbfs": -5.29,
+     "rms_dbfs": -19.72
     }
    ]
   },
@@ -1319,6 +1319,102 @@
      "bytes": 3572,
      "peak_dbfs": -5.3,
      "rms_dbfs": -16.42
+    }
+   ]
+  },
+  "nest_windup": {
+   "bus": "SFX",
+   "vol_db": -9,
+   "max": 1,
+   "gap": 0.52,
+   "prio": 7,
+   "pitch": 0.0,
+   "peak_dbfs_target": -3.5,
+   "faction": "mold",
+   "desc": "two rising pulses for the marked slam",
+   "provenance": {
+    "recipes": [
+     "r_nest_windup"
+    ],
+    "seeds": [
+     1046
+    ]
+   },
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/nest_windup.wav"
+   ],
+   "variants": [
+    {
+     "file": "nest_windup.wav",
+     "seconds": 0.62,
+     "bytes": 27386,
+     "peak_dbfs": -3.5,
+     "rms_dbfs": -13.76
+    }
+   ]
+  },
+  "nest_slam": {
+   "bus": "SFX",
+   "vol_db": -11,
+   "max": 1,
+   "gap": 0.2,
+   "prio": 6,
+   "pitch": 0.0,
+   "peak_dbfs_target": -4.0,
+   "faction": "mold",
+   "desc": "low impact with a rubble tail",
+   "provenance": {
+    "recipes": [
+     "r_nest_slam"
+    ],
+    "seeds": [
+     1047
+    ]
+   },
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/nest_slam.wav"
+   ],
+   "variants": [
+    {
+     "file": "nest_slam.wav",
+     "seconds": 0.36,
+     "bytes": 15920,
+     "peak_dbfs": -4.0,
+     "rms_dbfs": -22.91
+    }
+   ]
+  },
+  "nest_link_snap": {
+   "bus": "SFX",
+   "vol_db": -10,
+   "max": 1,
+   "gap": 0.28,
+   "prio": 6,
+   "pitch": 0.0,
+   "peak_dbfs_target": -4.0,
+   "faction": "mold",
+   "desc": "dry snap and falling twang for a cut link",
+   "provenance": {
+    "recipes": [
+     "r_nest_link_snap"
+    ],
+    "seeds": [
+     1048
+    ]
+   },
+   "duck": 0,
+   "files": [
+    "res://assets/audio/sfx/nest_link_snap.wav"
+   ],
+   "variants": [
+    {
+     "file": "nest_link_snap.wav",
+     "seconds": 0.29,
+     "bytes": 12832,
+     "peak_dbfs": -4.0,
+     "rms_dbfs": -18.75
     }
    ]
   }

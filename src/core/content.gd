@@ -33,6 +33,11 @@ var heroes: Dictionary = {}
 var skills: Dictionary = {}
 var rounds: Dictionary = {}
 var round_order: Array[String] = []
+## Challenge chapter (data/rounds/order.json "challenge": {"enabled": bool, "rounds": [ids]}). The listed rounds join
+## round_order only when enabled is true AND every listed file exists; until then the ones that exist are dev rounds:
+## loadable by id (App --round=<id>), never listed, never unlocked, never written to the save.
+var challenge_order: Array[String] = []
+var challenge_enabled := false
 var warnings: PackedStringArray = []
 var data_root := "res://data"
 ## "c1-" + first 12 hex of sha256 over every data/**/*.json (sorted path + bytes). Changes whenever 01 edits data.
@@ -177,6 +182,21 @@ func _build_order() -> void:
 				round_order.append(str(id))
 			else:
 				warnings.append("order.json references missing round " + str(id))
+	challenge_order.clear()
+	challenge_enabled = false
+	var ch = o.get("challenge") if o is Dictionary else null
+	if ch is Dictionary and ch.get("rounds") is Array and not round_order.is_empty():
+		var listed := 0
+		for id in ch.rounds:
+			listed += 1
+			if rounds.has(str(id)) and not round_order.has(str(id)):
+				challenge_order.append(str(id))
+		challenge_enabled = bool(ch.get("enabled", false)) and listed > 0 and challenge_order.size() == listed
+		if bool(ch.get("enabled", false)) and not challenge_enabled:
+			warnings.append("order.json challenge is enabled but %d of %d rounds are missing: chapter stays closed" % [listed - challenge_order.size(), listed])
+		if challenge_enabled:
+			for id in challenge_order:
+				round_order.append(id)
 	if round_order.is_empty():
 		var ids := rounds.keys()
 		ids.sort_custom(func(a, b): return [rounds[a].index, a] < [rounds[b].index, b])
@@ -313,5 +333,15 @@ func get_round_list() -> Array[Dictionary]:
 func next_round_id(id: String) -> String:
 	var i := round_order.find(id)
 	if i >= 0 and i + 1 < round_order.size():
+		# The main campaign still ends at its last round: the challenge chapter is entered from round select.
+		if is_challenge(round_order[i + 1]) and not is_challenge(id):
+			return ""
 		return round_order[i + 1]
 	return ""
+
+func is_challenge(id: String) -> bool:
+	return rounds.has(id) and bool(rounds[id].get("challenge", false))
+
+## A round that exists as data but is not part of the player's order (see challenge_order).
+func is_dev_round(id: String) -> bool:
+	return rounds.has(id) and not round_order.has(id)

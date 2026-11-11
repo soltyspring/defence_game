@@ -323,7 +323,10 @@ def r_quality_mold(rng, var):
 
 
 def r_flour_delivery(rng):
-    return lowpass(mix(thump(180, 110, 0.14, 0.035, drive=0.0), burst(rng, 0.12, 0.04, 300, 1800) * 0.22), 2000, SR)
+    # Light canvas contact in front of the bass so the delivery survives small speakers.
+    cloth = burst(rng, 0.11, 0.033, 680, 2900)
+    body = thump(460, 310, 0.14, 0.031, drive=0.0)
+    return highpass(lowpass(mix(body * 0.38, cloth * 0.56), 2800, SR), 170, SR)
 
 
 def r_ui_scout(rng):
@@ -969,6 +972,42 @@ CUES.update({
                            peak_dbfs_target=-5.0, fade_in=0.004, fade_out=0.02, faction="bakery", desc="a flour sack settles onto the delivery pallet"),
     "ui_scout": dict(r=[r_ui_scout], bus="UI", vol_db=-13, max=1, gap=0.2, prio=6, pitch=0.0,
                      peak_dbfs_target=-5.0, fade_in=0.003, fade_out=0.01, faction="neutral", desc="soft scouting and return-to-hero cue"),
+})
+def r_nest_windup(rng):
+    # Two rising wet pulses. Audible on small speakers before the ground marker fills.
+    n = n_samples(0.62, SR)
+    out = np.zeros(n)
+    for offset, start, end in [(0.0, 240, 390), (0.26, 330, 590)]:
+        k = n_samples(0.34, SR)
+        sweep = ramp(start, end, k)
+        layer = osc(sweep, k, SR, "tri") + 0.20 * osc(sweep * 1.51, k, SR)
+        layer += 0.18 * bandpass(noise(k, rng), 470, 2400, SR)
+        place(out, layer * env_adsr(k, SR, 0.045, 0.05, 0.72, 0.19), n_samples(offset, SR) if offset else 0)
+    return out
+
+
+def r_nest_slam(rng):
+    n = n_samples(0.36, SR)
+    thud = osc(ramp(174, 46, n), n, SR, "tri") * env_exp(n, SR, 0.085, 0.005)
+    rubble = bandpass(noise(n, rng), 500, 3000, SR) * env_exp(n, SR, 0.057, 0.002)
+    snap = osc(ramp(910, 380, n), n, SR, "tri") * env_exp(n, SR, 0.026, 0.003)
+    return 0.26 * thud + 0.63 * rubble + 0.58 * snap
+
+
+def r_nest_link_snap(rng):
+    n = n_samples(0.29, SR)
+    snap = bandpass(noise(n, rng), 1000, 4500, SR) * env_exp(n, SR, 0.027)
+    tail = osc(ramp(870, 280, n), n, SR, "tri") * env_exp(n, SR, 0.079, 0.004)
+    return 0.48 * snap + 0.72 * tail
+
+
+CUES.update({
+    "nest_windup": dict(r=[r_nest_windup], bus="SFX", vol_db=-9, max=1, gap=0.52, prio=7, pitch=0.0,
+                        peak_dbfs_target=-3.5, faction="mold", desc="two rising pulses for the marked slam"),
+    "nest_slam": dict(r=[r_nest_slam], bus="SFX", vol_db=-11, max=1, gap=0.20, prio=6, pitch=0.0,
+                      peak_dbfs_target=-4.0, faction="mold", desc="low impact with a rubble tail"),
+    "nest_link_snap": dict(r=[r_nest_link_snap], bus="SFX", vol_db=-10, max=1, gap=0.28, prio=6, pitch=0.0,
+                           peak_dbfs_target=-4.0, faction="mold", desc="dry snap and falling twang for a cut link"),
 })
 CUE_GROUPS = {"hit": {"min_gap": 0.36}}   # same-seed A/B: 83 -> 49 hits/min (target 48-56); NOT yet confirmed by listening
 # v3.9 onset-cluster limit (docs/audio/ONSET_PEAK_CHECK.md): from the 4th SFX start within 0.1 s, low-priority cues

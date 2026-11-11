@@ -31,5 +31,21 @@
     "r28",
     "r29",
     "r30"
-  ]
+  ],
+  "challenge": {
+    "enabled": true,
+    "note": "R31-R40 unlock in round select after clearing r30. The chapter stays closed if any listed round is missing.",
+    "rounds": [
+      "r31",
+      "r32",
+      "r33",
+      "r34",
+      "r35",
+      "r36",
+      "r37",
+      "r38",
+      "r39",
+      "r40"
+    ]
+  }
 }

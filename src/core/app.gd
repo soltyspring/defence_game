@@ -18,6 +18,7 @@ var ui_layer: CanvasLayer = null
 var screen: StringName = &""
 var battle: Node2D = null
 var current_round := ""
+var _dev_round := ""          # a dev-only round started with --round=<id>; retry may restart it, nothing is saved
 var last_result: Dictionary = {}
 var autoplay := false
 var autoplay_rounds := 0
@@ -49,7 +50,7 @@ func _capture(file: String) -> void:
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	Events.cmd_start_round.connect(start_round)
-	Events.cmd_retry.connect(func(): start_round(current_round))
+	Events.cmd_retry.connect(func(): start_round(current_round, false, _dev_round == current_round))
 	Events.cmd_next_round.connect(_on_next_round)
 	Events.cmd_open_screen.connect(func(s): show_screen(StringName(s)))
 	Events.cmd_set_setting.connect(_on_setting)
@@ -170,7 +171,7 @@ func boot(p_main: Node, p_world: Node2D, p_ui: CanvasLayer) -> void:
 	if autoplay and direct == "":
 		direct = Content.round_order[0]
 	if direct != "":
-		start_round(direct, true)
+		start_round(direct, true, Content.is_challenge(direct))
 	else:
 		show_screen(&"menu")
 	print("[App] boot ok platform=%s renderer=%s view=%s window=%s title=%s screen=%s ui_source=%s atlas=%s save_recovered=%s" % [OS.get_name(),
@@ -255,14 +256,16 @@ func _end_battle() -> void:
 		battle = null
 	_result_delay = -1.0
 
-func start_round(round_id: String, force := false) -> void:
+func start_round(round_id: String, force := false, preview := false) -> void:
 	var idx := Content.round_order.find(round_id)
-	if idx < 0:
+	var dev: bool = Content.is_challenge(round_id) and (preview or (force and idx < 0))
+	if idx < 0 and not dev:
 		push_warning("[App] unknown round " + round_id)
 		return
-	if not force and not autoplay and not Save.is_unlocked(idx):
+	if not dev and not force and not autoplay and not Save.is_unlocked(idx):
 		Events.toast.emit("round_locked", {"round_id": round_id})
 		return
+	_dev_round = round_id if dev else ""
 	_end_battle()
 	_clear_ui()
 	current_round = round_id
@@ -283,6 +286,20 @@ func start_round(round_id: String, force := false) -> void:
 func _on_battle_finished(r: Dictionary) -> void:
 	var result := r.duplicate()
 	var idx := Content.round_order.find(result.round_id)
+	if idx < 0 or _dev_round == str(result.round_id):
+		# Explicit challenge preview never awards progress, even after the chapter is published.
+		result.coins = 0
+		result.first_clear = false
+		result.next_round_id = ""
+		result["saved"] = true
+		result["dev_round"] = true
+		last_result = result
+		print("[App] dev round ended (not saved) ", JSON.stringify(result))
+		_pending_result = result
+		_result_delay = 1.2
+		if autoplay:
+			autoplay_rounds -= 1
+		return
 	var rd: Dictionary = Content.get_round(result.round_id)
 	var rw: Dictionary = rd.get("reward", {})
 	var prev_stars := int(Save.progress.stars.get(result.round_id, 0))
@@ -320,7 +337,7 @@ func _show_result(result: Dictionary) -> void:
 		if result.next_round_id != "":
 			start_round(result.next_round_id, true)
 		else:
-			start_round(result.round_id, true)
+			start_round(result.round_id, true, bool(result.get("dev_round", false)))
 		return
 	# keep battle visible under the result panel; freeze it
 	if battle and battle.sim: battle.sim.paused = true

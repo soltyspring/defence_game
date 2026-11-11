@@ -242,6 +242,8 @@ func _threat_snapshot() -> Dictionary:
 			result["enemy_left"] = maxf(float(result.get("enemy_left", -INF)), enemy.x)
 	return result
 
+var _heavy_toast_shown := false
+
 func _drain_events() -> void:
 	_emit_cues()
 	_step_tutorial()
@@ -257,6 +259,19 @@ func _drain_events() -> void:
 			"boss":
 				Events.toast.emit("boss_incoming", e[1])
 				if tutorial: tutorial.boss_seen = true
+			"heavy":
+				Events.sfx.emit(&"nest_windup", {"x": e[1].x, "pitch": 0.8 if bool(e[1].boss) else 1.0})
+				# announced heavy attack: every boss wind-up, and the first one of ordinary enemies per battle
+				if bool(e[1].boss):
+					Events.toast.emit("boss_heavy", e[1])
+				elif not _heavy_toast_shown:
+					_heavy_toast_shown = true
+					Events.toast.emit("enemy_heavy", e[1])
+			"heavy_hit":
+				Events.sfx.emit(&"nest_slam", {"x": e[1].x, "pitch": 0.82 if bool(e[1].boss) else 1.0})
+			"link_break":
+				Events.toast.emit("link_break", e[1])
+				Events.sfx.emit(&"nest_link_snap", {"x": e[1].x})
 			"hero_dead":
 				Events.toast.emit("hero_dead", e[1])
 				Events.sfx.emit(&"hero_death", {})

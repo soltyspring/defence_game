@@ -180,6 +180,25 @@
     "round.r27.name": "Black Yeast Night",
     "round.r28.name": "Last Supply Route",
     "round.r29.name": "Before the Oven Heart",
-    "round.r30.name": "Mold Oven Heart"
+    "round.r30.name": "Mold Oven Heart",
+    "unit.e_thrall.name": "Hypha Thrall",
+    "unit.e_thrall.desc": "Slams hard once the ground marker fills. Step out of the marker, then strike while it recovers.",
+    "unit.e_binder.name": "Hypha Knot",
+    "unit.e_binder.desc": "Stays behind the front and shields allies with hyphae. Cut the knot with a skill and the bound enemies are briefly exposed.",
+    "unit.boss_nestcore.name": "Nest Core",
+    "unit.boss_nestcore.desc": "Calls knots to shield itself and slams a wide area. Cut the knots to stop the slam, or punish the opening after it.",
+    "toast.enemy_heavy": "A heavy attack lands when the ground marker fills!",
+    "toast.boss_heavy": "The boss is winding up a slam!",
+    "toast.link_break": "Hypha link cut!",
+    "round.r31.name": "Hypha Threshold",
+    "round.r32.name": "Staggered Slams",
+    "round.r33.name": "The First Knot",
+    "round.r34.name": "Rolling Tremors",
+    "round.r35.name": "Entangled Escort",
+    "round.r36.name": "Twin Knots",
+    "round.r37.name": "Spore Cover",
+    "round.r38.name": "Living Thread",
+    "round.r39.name": "Before the Core",
+    "round.r40.name": "The Nest Core"
   }
 }

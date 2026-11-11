@@ -16,7 +16,7 @@ func _run() -> void:
 	save.path = "user://campaign_tests/save.json"
 	DirAccess.make_dir_recursive_absolute(save.path.get_base_dir())
 	save.progress = save.fresh()
-	check(c.round_order.size() == 30 and c.warnings.is_empty(),"30 valid rounds without fallback warnings")
+	check(c.round_order.size() == 40 and c.warnings.is_empty(),"40 valid rounds without fallback warnings")
 	check(c.next_round_id("r10") == "r11" and c.next_round_id("r30") == "","chapter transitions and final round")
 	for n in range(11,31):
 		var rd: Dictionary = c.get_round("r%02d" % n)
@@ -42,11 +42,13 @@ func _run() -> void:
 	check(save.buy_upgrade("up_melee_basic",7) == save.UPG_LOCKED,"tier 7 held until r16")
 	save.progress.unlocked_round = 16
 	check(save.buy_upgrade("up_melee_basic",7) == save.UPG_OK,"tier 7 at r16")
-	save.progress.unlocked_round = 30
+	save.progress.unlocked_round = 31
+	save.progress.stars["r30"] = 1
 	var select = load("res://src/ui/round_select.gd").new()
 	root.add_child(select)
 	await process_frame
-	check(select._pages() == 3 and select.page == 2 and select.tiles[9].get_meta("number") == 30,"three pages reach r30")
+	check(select._pages() == 4 and select.page == 3 and select.tiles[0].get_meta("number") == 31 and select.tiles[9].get_meta("number") == 40,"fourth page contains r31–r40")
+	check(not select.tiles[0].disabled and select.tiles[1].disabled and select.tiles[9].disabled,"r30 clear unlocks only the first challenge tile")
 	select.queue_free()
 	var sim = Sim.new()
 	sim.setup(c,"r11",41)

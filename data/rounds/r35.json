@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "id": "r35",
+  "index": 35,
+  "chapter": 4,
+  "name": "얽힌 호위대",
+  "name_key": "round.r35.name",
+  "biome": "biome_nest",
+  "lane_length": 1900,
+  "player_base_hp": 2875,
+  "enemy_base_hp": 3400,
+  "start_gold": 150,
+  "gold_max": 500,
+  "workers_max": 8,
+  "hero": "hero_captain",
+  "cards": [
+    "melee_basic",
+    "ranged_basic",
+    "tank",
+    "fast",
+    "siege"
+  ],
+  "skills": [
+    "skill_slam",
+    "skill_rally",
+    "skill_barrage"
+  ],
+  "waves": [
+    {
+      "at": 12,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 2,
+          "interval": 3.0
+        },
+        {
+          "unit": "e_binder",
+          "count": 1,
+          "interval": 0
+        }
+      ]
+    },
+    {
+      "at": 48,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 3,
+          "interval": 3.0
+        },
+        {
+          "unit": "e_binder",
+          "count": 2,
+          "interval": 4.0
+        }
+      ]
+    },
+    {
+      "at": 88,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 2,
+          "interval": 3.0
+        },
+        {
+          "unit": "e_binder",
+          "count": 2,
+          "interval": 3.0
+        },
+        {
+          "unit": "e_runner",
+          "count": 4,
+          "interval": 0.7
+        }
+      ]
+    },
+    {
+      "at": 130,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 4,
+          "interval": 2.5
+        },
+        {
+          "unit": "e_binder",
+          "count": 3,
+          "interval": 3.0
+        }
+      ]
+    },
+    {
+      "at": 240,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 5,
+          "interval": 2.5
+        },
+        {
+          "unit": "e_binder",
+          "count": 3,
+          "interval": 3.0
+        }
+      ],
+      "pressure": true
+    },
+    {
+      "at": 300,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 7,
+          "interval": 2.0
+        },
+        {
+          "unit": "e_binder",
+          "count": 4,
+          "interval": 3.0
+        }
+      ],
+      "pressure": true
+    }
+  ],
+  "enemy_ai": {
+    "pool": [],
+    "income": 0,
+    "start_gold": 0,
+    "think": 2.5,
+    "after_waves_loop": false
+  },
+  "trickle": {
+    "start": 30,
+    "pattern": [
+      "e_thrall",
+      "e_binder",
+      "e_thrall"
+    ],
+    "interval": 12.0,
+    "interval_min": 8.0,
+    "ramp_per_min": 0.8
+  },
+  "enemy_base_spawns_on_hp": [
+    {
+      "below": 0.5,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 2,
+          "interval": 2.0
+        },
+        {
+          "unit": "e_binder",
+          "count": 1,
+          "interval": 0
+        }
+      ]
+    }
+  ],
+  "reward": {
+    "coins": 330,
+    "first_clear_coins": 790,
+    "three_star_bonus_coins": 200
+  },
+  "stars": {
+    "time_3": 320,
+    "base_hp_2": 0.4
+  },
+  "enemy_scaling": {
+    "hp": 1.82,
+    "atk": 1.442
+  },
+  "enemy_tower_atk_mult": 0.5,
+  "tutorial": [],
+  "provisional": true,
+  "balance_note": "Challenge chapter (docs/design/CHALLENGE_R31_R40.md). enemy_scaling stays at the r30 value: difficulty comes from the heavy/link rules, not from stats. Bot runs only; human difficulty not played.",
+  "challenge": true
+}
