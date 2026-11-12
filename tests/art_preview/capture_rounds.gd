@@ -91,6 +91,27 @@ func _run() -> void:
 						e.hp_max *= 40.0
 						e.hp = e.hp_max
 						i += 1
+				"boss":
+					# the round's boss(es) close to the hero, mid swing: shape and wind-up at battle size
+					var bx: float = sim.L * 0.45
+					sim.hero.x = bx - 40.0
+					var bosses := {5: ["boss_warlord"], 10: ["boss_overlord", "boss_warlord"], 15: ["boss_millward"], 20: ["boss_rootking"],
+						25: ["boss_frostguard"], 30: ["boss_ovenheart"]}
+					var k := 0
+					for bid in bosses.get(n, []):
+						var e = sim._spawn_enemy(bid)
+						e.x = bx + 30.0 + k * 70.0
+						e.hp_max *= 40.0
+						e.hp = e.hp_max
+						k += 1
+					for off in [-10.0, 6.0]:
+						sim.gold = 999.0
+						sim.card_cd["melee_basic"] = 0.0
+						if sim.deploy("melee_basic") == "":
+							var u = sim.players.back()
+							u.x = bx + off
+							u.hp_max *= 40.0
+							u.hp = u.hp_max
 				"home":
 					sim.hero.x = sim.player_base.x + 90.0
 				"nest":

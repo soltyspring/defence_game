@@ -24,6 +24,101 @@ class Layer extends Node2D:
 			if item[2] != null and src.size.x > 0.0:
 				draw_texture_rect_region(item[2], Rect2(item[1], src.size), src)
 
+## Moving life per chapter, the kind of small ambient motion lane games use to make a static field feel alive:
+## 1 butterflies over the meadow and a flock of birds, 2 falling leaves and fruit-fly motes, 3 snowfall,
+## 4 glowing spores rising. Deterministic (seeded), ~40-70 rects a frame, drawn behind the units.
+class Ambient extends Node2D:
+	var chapter := 1
+	var t := 0.0
+	var span := 1000.0
+	var ground := 0.0
+	var parts: Array = []        # [x, y, speed, phase, size]
+	var intensity := 1.0
+	func setup(ch: int, length: float, g: float, stage: float) -> void:
+		chapter = ch
+		span = length
+		ground = g
+		intensity = 0.6 + stage * 0.8
+		var rng := RandomNumberGenerator.new()
+		rng.seed = 7000 + ch
+		var n := int(float([0, 70, 90, 220, 110][ch]) * intensity)
+		for i in n:
+			parts.append([rng.randf_range(-300.0, length + 300.0), rng.randf_range(-150.0, -20.0), rng.randf_range(0.6, 1.4), rng.randf() * TAU, rng.randi_range(1, 2)])
+	func _draw() -> void:
+		match chapter:
+			1: _meadow()
+			2: _orchard()
+			3: _snow()
+			4: _spores()
+	func _meadow() -> void:
+		for i in parts.size():
+			var p: Array = parts[i]
+			if i % 3 == 0:     # butterflies low over the field, wings opening and closing
+				var x: float = p[0] + sin(t * 0.4 * p[2] + p[3]) * 40.0
+				var y: float = ground - 30.0 - 12.0 * absf(sin(t * 0.9 + p[3])) + p[1] * 0.08
+				var open: bool = int(t * 8.0 + p[3] * 3.0) % 2 == 0
+				var c: Color = [Color("f6d36a"), Color("f2f2f2"), Color("e88a7a")][(i / 3) % 3]
+				draw_rect(Rect2(x, y, 1, 2), Color("3a2a24"))
+				if open:
+					draw_rect(Rect2(x - 3, y - 2, 3, 3), c)
+					draw_rect(Rect2(x + 1, y - 2, 3, 3), c)
+				else:
+					draw_rect(Rect2(x - 1, y - 2, 1, 2), c)
+					draw_rect(Rect2(x + 1, y - 2, 1, 2), c)
+		# a small flock crossing the sky now and then
+		var cyc := fmod(t, 40.0)
+		if cyc < 26.0:
+			var fx := -200.0 + cyc / 26.0 * (span + 400.0)
+			for k in 5:
+				var bx := fx - k * 9.0 - (k % 2) * 4.0
+				var by := ground - 160.0 + absf(k - 2.0) * 4.0 + sin(t * 2.0 + k) * 2.0
+				var up := int(t * 6.0 + k) % 2 == 0
+				draw_rect(Rect2(bx - 2, by + (0 if up else 1), 2, 1), Color("4a4458"))
+				draw_rect(Rect2(bx, by + 1, 1, 1), Color("4a4458"))
+				draw_rect(Rect2(bx + 1, by + (0 if up else 1), 2, 1), Color("4a4458"))
+	func _orchard() -> void:
+		for i in parts.size():
+			var p: Array = parts[i]
+			if i % 2 == 0:     # leaves: fall, sway, loop over the height
+				var h := 150.0
+				var y: float = fmod(p[1] + 150.0 + t * 10.0 * p[2], h) - h + ground - 10.0
+				var x: float = p[0] + sin(t * 1.3 * p[2] + p[3]) * 8.0 - t * 4.0 * p[2]
+				x = fposmod(x + 300.0, span + 600.0) - 300.0
+				var c: Color = [Color("d9903a"), Color("b8603a"), Color("8e9c88")][i % 3]
+				var flip: bool = int(t * 4.0 + p[3] * 2.0) % 2 == 0
+				draw_rect(Rect2(x, y, 3 if flip else 2, 2 if flip else 3), c)
+				draw_rect(Rect2(x, y, 1, 1), c.darkened(0.3))
+			else:              # fruit-fly motes buzzing around a point
+				var x: float = p[0] + sin(t * 5.0 * p[2] + p[3]) * 4.0
+				var y: float = ground - 40.0 + p[1] * 0.2 + cos(t * 6.3 * p[2] + p[3]) * 3.0
+				draw_rect(Rect2(x, y, 2, 1), Color("3e4152"))
+				draw_rect(Rect2(x, y - 1, 1, 1), Color(0.9, 0.95, 1.0, 0.7))
+	func _snow() -> void:
+		for i in parts.size():
+			var p: Array = parts[i]
+			var h := 170.0
+			var y: float = fmod(p[1] + 170.0 + t * 9.0 * p[2], h) - h + ground
+			var x: float = p[0] + sin(t * 0.8 + p[3]) * 6.0 - t * 3.0
+			x = fposmod(x + 300.0, span + 600.0) - 300.0
+			var s: int = p[4] + 1
+			draw_rect(Rect2(x + 1, y + 1, s, s), Color("8a9cb8"))      # cool edge so a flake reads on a pale sky
+			draw_rect(Rect2(x, y, s, s), Color.WHITE)
+	func _spores() -> void:
+		for i in parts.size():
+			var p: Array = parts[i]
+			var h := 150.0
+			var y: float = ground - fmod(-p[1] + t * 6.0 * p[2], h) - 5.0
+			var x: float = p[0] + sin(t * 0.7 * p[2] + p[3]) * 10.0
+			var a: float = 0.45 + 0.4 * sin(t * 2.0 + p[3])
+			var c: Color = Color("9fe6cf") if i % 3 else Color("c7b1c8")
+			c.a = a
+			draw_rect(Rect2(x, y, p[4] + 1, p[4] + 1), c)
+			if p[4] == 2:
+				var g: Color = c
+				g.a = a * 0.3
+				draw_rect(Rect2(x - 1, y - 1, 4, 4), g)
+
+var ambient: Ambient = null
 var layers: Array[Node2D] = []
 var factors: Array[float] = []
 var drifts: Array[float] = []
@@ -162,6 +257,14 @@ func build(length: float, ground: float, _biome: String, player_x := 40.0, enemy
 		x += lw
 	if bool(round_def.get("forecourt", true)):
 		_put(lane, "lane_home", Vector2(player_x + float(layout.lane.home_x), ly))
+	# ambient life: in front of the middle ground, behind the units (same plane as the base sets)
+	ambient = Ambient.new()
+	add_child(ambient)
+	move_child(ambient, lane.get_index())
+	layers.append(ambient)
+	factors.append(1.0)
+	drifts.append(0.0)
+	ambient.setup(chapter, length, ground, float((round_index - 1) % 10) / 9.0 if round_index > 0 else 0.0)
 	# soil below the tile, for views taller than the tile
 	var soil := str(table.get("soil", {}).get(str(chapter), "6a4e38"))
 	lane.fills.append([Rect2(-3000, ly + _size("lane_a").y - 1.0, length + 8000, 400), Color(soil)])
@@ -170,6 +273,9 @@ func live_update(_boss_on: bool, _boss_x: float, _core: bool, _linked: bool, _ex
 	pass
 
 func present(camera: float, zoom: float, device_scale: float, seconds: float) -> void:
+	if ambient != null:
+		ambient.t = seconds
+		ambient.queue_redraw()
 	for i in layers.size():
 		var shift := Raster.layer_origin(camera, factors[i], zoom, device_scale)
 		if drifts[i] != 0.0: shift += Raster.world_position(-seconds * drifts[i], zoom, device_scale)

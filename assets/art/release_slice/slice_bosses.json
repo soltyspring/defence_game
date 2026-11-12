@@ -1,0 +1,2251 @@
+{
+ "schema": "defence.atlas/1",
+ "atlas": "release_slice_bosses",
+ "image": "slice_bosses.png",
+ "size": [
+  1024,
+  1152
+ ],
+ "padding": 2,
+ "extrude": 0,
+ "group": "release_slice",
+ "filter": "nearest",
+ "mipmaps": false,
+ "repeat": false,
+ "gpu_format": "RGBA8",
+ "gpu_bytes": 4718592,
+ "used_rows": 1096,
+ "boss_sets": {
+  "boss_millward": "slice_boss_millward",
+  "boss_frostguard": "slice_boss_frostguard",
+  "boss_rootking": "slice_boss_rootking",
+  "boss_ovenheart": "slice_boss_ovenheart"
+ },
+ "frames": {
+  "boss_warlord/idle/0": {
+   "x": 2,
+   "y": 2,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/idle/1": {
+   "x": 70,
+   "y": 2,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/idle/2": {
+   "x": 138,
+   "y": 2,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/idle/3": {
+   "x": 206,
+   "y": 2,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/walk/0": {
+   "x": 274,
+   "y": 2,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/walk/1": {
+   "x": 342,
+   "y": 2,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/walk/2": {
+   "x": 410,
+   "y": 2,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/walk/3": {
+   "x": 478,
+   "y": 2,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/walk/4": {
+   "x": 546,
+   "y": 2,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/walk/5": {
+   "x": 614,
+   "y": 2,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/attack/0": {
+   "x": 682,
+   "y": 2,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/attack/1": {
+   "x": 750,
+   "y": 2,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/attack/2": {
+   "x": 818,
+   "y": 2,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/attack/3": {
+   "x": 886,
+   "y": 2,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/attack/4": {
+   "x": 954,
+   "y": 2,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/attack/5": {
+   "x": 2,
+   "y": 70,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/hit/0": {
+   "x": 70,
+   "y": 70,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/hit/1": {
+   "x": 138,
+   "y": 70,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/death/0": {
+   "x": 206,
+   "y": 70,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/death/1": {
+   "x": 274,
+   "y": 70,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/death/2": {
+   "x": 342,
+   "y": 70,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/death/3": {
+   "x": 410,
+   "y": 70,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/death/4": {
+   "x": 478,
+   "y": 70,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/death/5": {
+   "x": 546,
+   "y": 70,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_warlord/death/6": {
+   "x": 614,
+   "y": 70,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/idle/0": {
+   "x": 682,
+   "y": 70,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/idle/1": {
+   "x": 750,
+   "y": 70,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/idle/2": {
+   "x": 818,
+   "y": 70,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/idle/3": {
+   "x": 886,
+   "y": 70,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/walk/0": {
+   "x": 954,
+   "y": 70,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/walk/1": {
+   "x": 2,
+   "y": 138,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/walk/2": {
+   "x": 70,
+   "y": 138,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/walk/3": {
+   "x": 138,
+   "y": 138,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/walk/4": {
+   "x": 206,
+   "y": 138,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/walk/5": {
+   "x": 274,
+   "y": 138,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/attack/0": {
+   "x": 342,
+   "y": 138,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/attack/1": {
+   "x": 410,
+   "y": 138,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/attack/2": {
+   "x": 478,
+   "y": 138,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/attack/3": {
+   "x": 546,
+   "y": 138,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/attack/4": {
+   "x": 614,
+   "y": 138,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/attack/5": {
+   "x": 682,
+   "y": 138,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/hit/0": {
+   "x": 750,
+   "y": 138,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/hit/1": {
+   "x": 818,
+   "y": 138,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/death/0": {
+   "x": 886,
+   "y": 138,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/death/1": {
+   "x": 954,
+   "y": 138,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/death/2": {
+   "x": 2,
+   "y": 206,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/death/3": {
+   "x": 70,
+   "y": 206,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/death/4": {
+   "x": 138,
+   "y": 206,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/death/5": {
+   "x": 206,
+   "y": 206,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_millward/death/6": {
+   "x": 274,
+   "y": 206,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/idle/0": {
+   "x": 342,
+   "y": 206,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/idle/1": {
+   "x": 410,
+   "y": 206,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/idle/2": {
+   "x": 478,
+   "y": 206,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/idle/3": {
+   "x": 546,
+   "y": 206,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/walk/0": {
+   "x": 614,
+   "y": 206,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/walk/1": {
+   "x": 682,
+   "y": 206,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/walk/2": {
+   "x": 750,
+   "y": 206,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/walk/3": {
+   "x": 818,
+   "y": 206,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/walk/4": {
+   "x": 886,
+   "y": 206,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/walk/5": {
+   "x": 954,
+   "y": 206,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/attack/0": {
+   "x": 2,
+   "y": 274,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/attack/1": {
+   "x": 70,
+   "y": 274,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/attack/2": {
+   "x": 138,
+   "y": 274,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/attack/3": {
+   "x": 206,
+   "y": 274,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/attack/4": {
+   "x": 274,
+   "y": 274,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/attack/5": {
+   "x": 342,
+   "y": 274,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/hit/0": {
+   "x": 410,
+   "y": 274,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/hit/1": {
+   "x": 478,
+   "y": 274,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/death/0": {
+   "x": 546,
+   "y": 274,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/death/1": {
+   "x": 614,
+   "y": 274,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/death/2": {
+   "x": 682,
+   "y": 274,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/death/3": {
+   "x": 750,
+   "y": 274,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/death/4": {
+   "x": 818,
+   "y": 274,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/death/5": {
+   "x": 886,
+   "y": 274,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "slice_boss_frostguard/death/6": {
+   "x": 954,
+   "y": 274,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    28,
+    63
+   ]
+  },
+  "boss_overlord/idle/0": {
+   "x": 2,
+   "y": 342,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/idle/1": {
+   "x": 94,
+   "y": 342,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/idle/2": {
+   "x": 186,
+   "y": 342,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/idle/3": {
+   "x": 278,
+   "y": 342,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/walk/0": {
+   "x": 370,
+   "y": 342,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/walk/1": {
+   "x": 462,
+   "y": 342,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/walk/2": {
+   "x": 554,
+   "y": 342,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/walk/3": {
+   "x": 646,
+   "y": 342,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/walk/4": {
+   "x": 738,
+   "y": 342,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/walk/5": {
+   "x": 830,
+   "y": 342,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/attack/0": {
+   "x": 922,
+   "y": 342,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/attack/1": {
+   "x": 2,
+   "y": 426,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/attack/2": {
+   "x": 94,
+   "y": 426,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/attack/3": {
+   "x": 186,
+   "y": 426,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/attack/4": {
+   "x": 278,
+   "y": 426,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/attack/5": {
+   "x": 370,
+   "y": 426,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/summon/0": {
+   "x": 462,
+   "y": 426,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/summon/1": {
+   "x": 554,
+   "y": 426,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/summon/2": {
+   "x": 646,
+   "y": 426,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/summon/3": {
+   "x": 738,
+   "y": 426,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/summon/4": {
+   "x": 830,
+   "y": 426,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/summon/5": {
+   "x": 922,
+   "y": 426,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/hit/0": {
+   "x": 2,
+   "y": 510,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/hit/1": {
+   "x": 94,
+   "y": 510,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/death/0": {
+   "x": 186,
+   "y": 510,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/death/1": {
+   "x": 278,
+   "y": 510,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/death/2": {
+   "x": 370,
+   "y": 510,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/death/3": {
+   "x": 462,
+   "y": 510,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/death/4": {
+   "x": 554,
+   "y": 510,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/death/5": {
+   "x": 646,
+   "y": 510,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/death/6": {
+   "x": 738,
+   "y": 510,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "boss_overlord/death/7": {
+   "x": 830,
+   "y": 510,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/idle/0": {
+   "x": 922,
+   "y": 510,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/idle/1": {
+   "x": 2,
+   "y": 594,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/idle/2": {
+   "x": 94,
+   "y": 594,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/idle/3": {
+   "x": 186,
+   "y": 594,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/walk/0": {
+   "x": 278,
+   "y": 594,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/walk/1": {
+   "x": 370,
+   "y": 594,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/walk/2": {
+   "x": 462,
+   "y": 594,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/walk/3": {
+   "x": 554,
+   "y": 594,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/walk/4": {
+   "x": 646,
+   "y": 594,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/walk/5": {
+   "x": 738,
+   "y": 594,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/attack/0": {
+   "x": 830,
+   "y": 594,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/attack/1": {
+   "x": 922,
+   "y": 594,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/attack/2": {
+   "x": 2,
+   "y": 678,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/attack/3": {
+   "x": 94,
+   "y": 678,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/attack/4": {
+   "x": 186,
+   "y": 678,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/attack/5": {
+   "x": 278,
+   "y": 678,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/summon/0": {
+   "x": 370,
+   "y": 678,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/summon/1": {
+   "x": 462,
+   "y": 678,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/summon/2": {
+   "x": 554,
+   "y": 678,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/summon/3": {
+   "x": 646,
+   "y": 678,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/summon/4": {
+   "x": 738,
+   "y": 678,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/summon/5": {
+   "x": 830,
+   "y": 678,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/hit/0": {
+   "x": 922,
+   "y": 678,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/hit/1": {
+   "x": 2,
+   "y": 762,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/death/0": {
+   "x": 94,
+   "y": 762,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/death/1": {
+   "x": 186,
+   "y": 762,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/death/2": {
+   "x": 278,
+   "y": 762,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/death/3": {
+   "x": 370,
+   "y": 762,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/death/4": {
+   "x": 462,
+   "y": 762,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/death/5": {
+   "x": 554,
+   "y": 762,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/death/6": {
+   "x": 646,
+   "y": 762,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_rootking/death/7": {
+   "x": 738,
+   "y": 762,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/idle/0": {
+   "x": 830,
+   "y": 762,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/idle/1": {
+   "x": 922,
+   "y": 762,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/idle/2": {
+   "x": 2,
+   "y": 846,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/idle/3": {
+   "x": 94,
+   "y": 846,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/walk/0": {
+   "x": 186,
+   "y": 846,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/walk/1": {
+   "x": 278,
+   "y": 846,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/walk/2": {
+   "x": 370,
+   "y": 846,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/walk/3": {
+   "x": 462,
+   "y": 846,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/walk/4": {
+   "x": 554,
+   "y": 846,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/walk/5": {
+   "x": 646,
+   "y": 846,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/attack/0": {
+   "x": 738,
+   "y": 846,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/attack/1": {
+   "x": 830,
+   "y": 846,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/attack/2": {
+   "x": 922,
+   "y": 846,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/attack/3": {
+   "x": 2,
+   "y": 930,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/attack/4": {
+   "x": 94,
+   "y": 930,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/attack/5": {
+   "x": 186,
+   "y": 930,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/summon/0": {
+   "x": 278,
+   "y": 930,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/summon/1": {
+   "x": 370,
+   "y": 930,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/summon/2": {
+   "x": 462,
+   "y": 930,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/summon/3": {
+   "x": 554,
+   "y": 930,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/summon/4": {
+   "x": 646,
+   "y": 930,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/summon/5": {
+   "x": 738,
+   "y": 930,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/hit/0": {
+   "x": 830,
+   "y": 930,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/hit/1": {
+   "x": 922,
+   "y": 930,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/death/0": {
+   "x": 2,
+   "y": 1014,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/death/1": {
+   "x": 94,
+   "y": 1014,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/death/2": {
+   "x": 186,
+   "y": 1014,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/death/3": {
+   "x": 278,
+   "y": 1014,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/death/4": {
+   "x": 370,
+   "y": 1014,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/death/5": {
+   "x": 462,
+   "y": 1014,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/death/6": {
+   "x": 554,
+   "y": 1014,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  },
+  "slice_boss_ovenheart/death/7": {
+   "x": 646,
+   "y": 1014,
+   "w": 88,
+   "h": 80,
+   "pivot": [
+    36,
+    79
+   ]
+  }
+ },
+ "anims": {
+  "boss_warlord": {
+   "idle": {
+    "frames": [
+     "boss_warlord/idle/0",
+     "boss_warlord/idle/1",
+     "boss_warlord/idle/2",
+     "boss_warlord/idle/3"
+    ],
+    "fps": 4,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "boss_warlord/walk/0",
+     "boss_warlord/walk/1",
+     "boss_warlord/walk/2",
+     "boss_warlord/walk/3",
+     "boss_warlord/walk/4",
+     "boss_warlord/walk/5"
+    ],
+    "fps": 7,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "boss_warlord/attack/0",
+     "boss_warlord/attack/1",
+     "boss_warlord/attack/2",
+     "boss_warlord/attack/3",
+     "boss_warlord/attack/4",
+     "boss_warlord/attack/5"
+    ],
+    "fps": 9,
+    "loop": false,
+    "hit_frame": 3,
+    "events": {
+     "hit": 3
+    }
+   },
+   "hit": {
+    "frames": [
+     "boss_warlord/hit/0",
+     "boss_warlord/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "boss_warlord/death/0",
+     "boss_warlord/death/1",
+     "boss_warlord/death/2",
+     "boss_warlord/death/3",
+     "boss_warlord/death/4",
+     "boss_warlord/death/5",
+     "boss_warlord/death/6"
+    ],
+    "fps": 14,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "boss_warlord/death/0",
+     "boss_warlord/death/1",
+     "boss_warlord/death/2",
+     "boss_warlord/death/3",
+     "boss_warlord/death/4",
+     "boss_warlord/death/5",
+     "boss_warlord/death/6"
+    ],
+    "fps": 14,
+    "loop": false
+   }
+  },
+  "slice_boss_millward": {
+   "idle": {
+    "frames": [
+     "slice_boss_millward/idle/0",
+     "slice_boss_millward/idle/1",
+     "slice_boss_millward/idle/2",
+     "slice_boss_millward/idle/3"
+    ],
+    "fps": 4,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "slice_boss_millward/walk/0",
+     "slice_boss_millward/walk/1",
+     "slice_boss_millward/walk/2",
+     "slice_boss_millward/walk/3",
+     "slice_boss_millward/walk/4",
+     "slice_boss_millward/walk/5"
+    ],
+    "fps": 7,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "slice_boss_millward/attack/0",
+     "slice_boss_millward/attack/1",
+     "slice_boss_millward/attack/2",
+     "slice_boss_millward/attack/3",
+     "slice_boss_millward/attack/4",
+     "slice_boss_millward/attack/5"
+    ],
+    "fps": 9,
+    "loop": false,
+    "hit_frame": 3,
+    "events": {
+     "hit": 3
+    }
+   },
+   "hit": {
+    "frames": [
+     "slice_boss_millward/hit/0",
+     "slice_boss_millward/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "slice_boss_millward/death/0",
+     "slice_boss_millward/death/1",
+     "slice_boss_millward/death/2",
+     "slice_boss_millward/death/3",
+     "slice_boss_millward/death/4",
+     "slice_boss_millward/death/5",
+     "slice_boss_millward/death/6"
+    ],
+    "fps": 14,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "slice_boss_millward/death/0",
+     "slice_boss_millward/death/1",
+     "slice_boss_millward/death/2",
+     "slice_boss_millward/death/3",
+     "slice_boss_millward/death/4",
+     "slice_boss_millward/death/5",
+     "slice_boss_millward/death/6"
+    ],
+    "fps": 14,
+    "loop": false
+   }
+  },
+  "slice_boss_frostguard": {
+   "idle": {
+    "frames": [
+     "slice_boss_frostguard/idle/0",
+     "slice_boss_frostguard/idle/1",
+     "slice_boss_frostguard/idle/2",
+     "slice_boss_frostguard/idle/3"
+    ],
+    "fps": 4,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "slice_boss_frostguard/walk/0",
+     "slice_boss_frostguard/walk/1",
+     "slice_boss_frostguard/walk/2",
+     "slice_boss_frostguard/walk/3",
+     "slice_boss_frostguard/walk/4",
+     "slice_boss_frostguard/walk/5"
+    ],
+    "fps": 7,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "slice_boss_frostguard/attack/0",
+     "slice_boss_frostguard/attack/1",
+     "slice_boss_frostguard/attack/2",
+     "slice_boss_frostguard/attack/3",
+     "slice_boss_frostguard/attack/4",
+     "slice_boss_frostguard/attack/5"
+    ],
+    "fps": 9,
+    "loop": false,
+    "hit_frame": 3,
+    "events": {
+     "hit": 3
+    }
+   },
+   "hit": {
+    "frames": [
+     "slice_boss_frostguard/hit/0",
+     "slice_boss_frostguard/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "slice_boss_frostguard/death/0",
+     "slice_boss_frostguard/death/1",
+     "slice_boss_frostguard/death/2",
+     "slice_boss_frostguard/death/3",
+     "slice_boss_frostguard/death/4",
+     "slice_boss_frostguard/death/5",
+     "slice_boss_frostguard/death/6"
+    ],
+    "fps": 14,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "slice_boss_frostguard/death/0",
+     "slice_boss_frostguard/death/1",
+     "slice_boss_frostguard/death/2",
+     "slice_boss_frostguard/death/3",
+     "slice_boss_frostguard/death/4",
+     "slice_boss_frostguard/death/5",
+     "slice_boss_frostguard/death/6"
+    ],
+    "fps": 14,
+    "loop": false
+   }
+  },
+  "boss_overlord": {
+   "idle": {
+    "frames": [
+     "boss_overlord/idle/0",
+     "boss_overlord/idle/1",
+     "boss_overlord/idle/2",
+     "boss_overlord/idle/3"
+    ],
+    "fps": 4,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "boss_overlord/walk/0",
+     "boss_overlord/walk/1",
+     "boss_overlord/walk/2",
+     "boss_overlord/walk/3",
+     "boss_overlord/walk/4",
+     "boss_overlord/walk/5"
+    ],
+    "fps": 6,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "boss_overlord/attack/0",
+     "boss_overlord/attack/1",
+     "boss_overlord/attack/2",
+     "boss_overlord/attack/3",
+     "boss_overlord/attack/4",
+     "boss_overlord/attack/5"
+    ],
+    "fps": 8,
+    "loop": false,
+    "hit_frame": 3,
+    "events": {
+     "hit": 3
+    }
+   },
+   "summon": {
+    "frames": [
+     "boss_overlord/summon/0",
+     "boss_overlord/summon/1",
+     "boss_overlord/summon/2",
+     "boss_overlord/summon/3",
+     "boss_overlord/summon/4",
+     "boss_overlord/summon/5"
+    ],
+    "fps": 8,
+    "loop": false,
+    "events": {
+     "spawn": 3
+    },
+    "points": {
+     "spawn_origin": [
+      24,
+      79
+     ]
+    }
+   },
+   "hit": {
+    "frames": [
+     "boss_overlord/hit/0",
+     "boss_overlord/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "boss_overlord/death/0",
+     "boss_overlord/death/1",
+     "boss_overlord/death/2",
+     "boss_overlord/death/3",
+     "boss_overlord/death/4",
+     "boss_overlord/death/5",
+     "boss_overlord/death/6",
+     "boss_overlord/death/7"
+    ],
+    "fps": 16,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "boss_overlord/death/0",
+     "boss_overlord/death/1",
+     "boss_overlord/death/2",
+     "boss_overlord/death/3",
+     "boss_overlord/death/4",
+     "boss_overlord/death/5",
+     "boss_overlord/death/6",
+     "boss_overlord/death/7"
+    ],
+    "fps": 16,
+    "loop": false
+   }
+  },
+  "slice_boss_rootking": {
+   "idle": {
+    "frames": [
+     "slice_boss_rootking/idle/0",
+     "slice_boss_rootking/idle/1",
+     "slice_boss_rootking/idle/2",
+     "slice_boss_rootking/idle/3"
+    ],
+    "fps": 4,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "slice_boss_rootking/walk/0",
+     "slice_boss_rootking/walk/1",
+     "slice_boss_rootking/walk/2",
+     "slice_boss_rootking/walk/3",
+     "slice_boss_rootking/walk/4",
+     "slice_boss_rootking/walk/5"
+    ],
+    "fps": 6,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "slice_boss_rootking/attack/0",
+     "slice_boss_rootking/attack/1",
+     "slice_boss_rootking/attack/2",
+     "slice_boss_rootking/attack/3",
+     "slice_boss_rootking/attack/4",
+     "slice_boss_rootking/attack/5"
+    ],
+    "fps": 8,
+    "loop": false,
+    "hit_frame": 3,
+    "events": {
+     "hit": 3
+    }
+   },
+   "summon": {
+    "frames": [
+     "slice_boss_rootking/summon/0",
+     "slice_boss_rootking/summon/1",
+     "slice_boss_rootking/summon/2",
+     "slice_boss_rootking/summon/3",
+     "slice_boss_rootking/summon/4",
+     "slice_boss_rootking/summon/5"
+    ],
+    "fps": 8,
+    "loop": false,
+    "events": {
+     "spawn": 3
+    },
+    "points": {
+     "spawn_origin": [
+      24,
+      79
+     ]
+    }
+   },
+   "hit": {
+    "frames": [
+     "slice_boss_rootking/hit/0",
+     "slice_boss_rootking/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "slice_boss_rootking/death/0",
+     "slice_boss_rootking/death/1",
+     "slice_boss_rootking/death/2",
+     "slice_boss_rootking/death/3",
+     "slice_boss_rootking/death/4",
+     "slice_boss_rootking/death/5",
+     "slice_boss_rootking/death/6",
+     "slice_boss_rootking/death/7"
+    ],
+    "fps": 16,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "slice_boss_rootking/death/0",
+     "slice_boss_rootking/death/1",
+     "slice_boss_rootking/death/2",
+     "slice_boss_rootking/death/3",
+     "slice_boss_rootking/death/4",
+     "slice_boss_rootking/death/5",
+     "slice_boss_rootking/death/6",
+     "slice_boss_rootking/death/7"
+    ],
+    "fps": 16,
+    "loop": false
+   }
+  },
+  "slice_boss_ovenheart": {
+   "idle": {
+    "frames": [
+     "slice_boss_ovenheart/idle/0",
+     "slice_boss_ovenheart/idle/1",
+     "slice_boss_ovenheart/idle/2",
+     "slice_boss_ovenheart/idle/3"
+    ],
+    "fps": 4,
+    "loop": true
+   },
+   "walk": {
+    "frames": [
+     "slice_boss_ovenheart/walk/0",
+     "slice_boss_ovenheart/walk/1",
+     "slice_boss_ovenheart/walk/2",
+     "slice_boss_ovenheart/walk/3",
+     "slice_boss_ovenheart/walk/4",
+     "slice_boss_ovenheart/walk/5"
+    ],
+    "fps": 6,
+    "loop": true
+   },
+   "attack": {
+    "frames": [
+     "slice_boss_ovenheart/attack/0",
+     "slice_boss_ovenheart/attack/1",
+     "slice_boss_ovenheart/attack/2",
+     "slice_boss_ovenheart/attack/3",
+     "slice_boss_ovenheart/attack/4",
+     "slice_boss_ovenheart/attack/5"
+    ],
+    "fps": 8,
+    "loop": false,
+    "hit_frame": 3,
+    "events": {
+     "hit": 3
+    }
+   },
+   "summon": {
+    "frames": [
+     "slice_boss_ovenheart/summon/0",
+     "slice_boss_ovenheart/summon/1",
+     "slice_boss_ovenheart/summon/2",
+     "slice_boss_ovenheart/summon/3",
+     "slice_boss_ovenheart/summon/4",
+     "slice_boss_ovenheart/summon/5"
+    ],
+    "fps": 8,
+    "loop": false,
+    "events": {
+     "spawn": 3
+    },
+    "points": {
+     "spawn_origin": [
+      24,
+      79
+     ]
+    }
+   },
+   "hit": {
+    "frames": [
+     "slice_boss_ovenheart/hit/0",
+     "slice_boss_ovenheart/hit/1"
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "death": {
+    "frames": [
+     "slice_boss_ovenheart/death/0",
+     "slice_boss_ovenheart/death/1",
+     "slice_boss_ovenheart/death/2",
+     "slice_boss_ovenheart/death/3",
+     "slice_boss_ovenheart/death/4",
+     "slice_boss_ovenheart/death/5",
+     "slice_boss_ovenheart/death/6",
+     "slice_boss_ovenheart/death/7"
+    ],
+    "fps": 16,
+    "loop": false
+   },
+   "die": {
+    "frames": [
+     "slice_boss_ovenheart/death/0",
+     "slice_boss_ovenheart/death/1",
+     "slice_boss_ovenheart/death/2",
+     "slice_boss_ovenheart/death/3",
+     "slice_boss_ovenheart/death/4",
+     "slice_boss_ovenheart/death/5",
+     "slice_boss_ovenheart/death/6",
+     "slice_boss_ovenheart/death/7"
+    ],
+    "fps": 16,
+    "loop": false
+   }
+  }
+ }
+}
