@@ -1,0 +1,335 @@
+{
+ "schema": "defence.atlas/1",
+ "atlas": "release_slice",
+ "image": "slice_atlas.png",
+ "image_res": "res://assets/art/release_slice/slice_atlas.png",
+ "size": [
+  1024,
+  1024
+ ],
+ "padding": 2,
+ "extrude": 1,
+ "group": "release_slice",
+ "filter": "nearest",
+ "mipmaps": false,
+ "repeat": false,
+ "gpu_format": "RGBA8",
+ "gpu_bytes": 4194304,
+ "used_rows": 562,
+ "frames": {
+  "base_player/idle/0": {
+   "x": 2,
+   "y": 2,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_enemy/idle/0": {
+   "x": 102,
+   "y": 2,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_player/idle/1": {
+   "x": 202,
+   "y": 2,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_enemy/idle/1": {
+   "x": 302,
+   "y": 2,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_player/damaged/0": {
+   "x": 402,
+   "y": 2,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_enemy/damaged/0": {
+   "x": 502,
+   "y": 2,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_player/damaged/1": {
+   "x": 602,
+   "y": 2,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_enemy/damaged/1": {
+   "x": 702,
+   "y": 2,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_player/ruined/0": {
+   "x": 802,
+   "y": 2,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_enemy/ruined/0": {
+   "x": 902,
+   "y": 2,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_player/ruined/1": {
+   "x": 2,
+   "y": 134,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "base_enemy/ruined/1": {
+   "x": 102,
+   "y": 134,
+   "w": 96,
+   "h": 128,
+   "pivot": [
+    48,
+    127
+   ]
+  },
+  "enemy_set": {
+   "x": 202,
+   "y": 134,
+   "w": 320,
+   "h": 124,
+   "pivot": [
+    160,
+    123
+   ]
+  },
+  "home_set": {
+   "x": 526,
+   "y": 134,
+   "w": 320,
+   "h": 112,
+   "pivot": [
+    160,
+    111
+   ]
+  },
+  "mill": {
+   "x": 850,
+   "y": 134,
+   "w": 112,
+   "h": 112,
+   "pivot": [
+    56,
+    111
+   ]
+  },
+  "mid_home": {
+   "x": 2,
+   "y": 266,
+   "w": 512,
+   "h": 76,
+   "pivot": [
+    256,
+    75
+   ]
+  },
+  "mid_blight": {
+   "x": 2,
+   "y": 346,
+   "w": 512,
+   "h": 76,
+   "pivot": [
+    256,
+    75
+   ]
+  },
+  "mid_edge": {
+   "x": 518,
+   "y": 346,
+   "w": 120,
+   "h": 76,
+   "pivot": [
+    60,
+    75
+   ]
+  },
+  "far": {
+   "x": 2,
+   "y": 426,
+   "w": 512,
+   "h": 70,
+   "pivot": [
+    256,
+    69
+   ]
+  },
+  "lane": {
+   "x": 518,
+   "y": 426,
+   "w": 256,
+   "h": 60,
+   "pivot": [
+    128,
+    59
+   ]
+  },
+  "lane_blight": {
+   "x": 2,
+   "y": 500,
+   "w": 256,
+   "h": 60,
+   "pivot": [
+    128,
+    59
+   ]
+  },
+  "lane_home": {
+   "x": 262,
+   "y": 500,
+   "w": 192,
+   "h": 60,
+   "pivot": [
+    96,
+    59
+   ]
+  },
+  "lane_edge": {
+   "x": 458,
+   "y": 500,
+   "w": 64,
+   "h": 60,
+   "pivot": [
+    32,
+    59
+   ]
+  },
+  "cloud_c": {
+   "x": 526,
+   "y": 500,
+   "w": 96,
+   "h": 28,
+   "pivot": [
+    48,
+    27
+   ]
+  },
+  "cloud_a": {
+   "x": 626,
+   "y": 500,
+   "w": 72,
+   "h": 24,
+   "pivot": [
+    36,
+    23
+   ]
+  },
+  "cloud_b": {
+   "x": 702,
+   "y": 500,
+   "w": 48,
+   "h": 18,
+   "pivot": [
+    24,
+    17
+   ]
+  }
+ },
+ "anims": {
+  "base_player": {
+   "idle": {
+    "frames": [
+     "base_player/idle/0",
+     "base_player/idle/1"
+    ],
+    "fps": 3,
+    "loop": true
+   },
+   "damaged": {
+    "frames": [
+     "base_player/damaged/0",
+     "base_player/damaged/1"
+    ],
+    "fps": 5,
+    "loop": true
+   },
+   "ruined": {
+    "frames": [
+     "base_player/ruined/0",
+     "base_player/ruined/1"
+    ],
+    "fps": 5,
+    "loop": true
+   }
+  },
+  "base_enemy": {
+   "idle": {
+    "frames": [
+     "base_enemy/idle/0",
+     "base_enemy/idle/1"
+    ],
+    "fps": 3,
+    "loop": true
+   },
+   "damaged": {
+    "frames": [
+     "base_enemy/damaged/0",
+     "base_enemy/damaged/1"
+    ],
+    "fps": 5,
+    "loop": true
+   },
+   "ruined": {
+    "frames": [
+     "base_enemy/ruined/0",
+     "base_enemy/ruined/1"
+    ],
+    "fps": 5,
+    "loop": true
+   }
+  }
+ }
+}
