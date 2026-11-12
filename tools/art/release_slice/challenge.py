@@ -369,17 +369,25 @@ def nestcore(b=0, lean=0, legs=0, open_=0.0, pulse=1.0, state="n", ph=0, arc=Non
     W, H = 76, 68
     img = Img(W, H)
     cx = 35 + lean
-    cy = 37 + b - raise_
-    # root legs, six, crawling
-    for k in range(6):
+    cy = 36 + b - raise_
+    # no legs: the core sits in a low nest of roots and hyphae that drags itself along on short tendrils
+    for k in range(7):                                      # tendrils on the ground, reaching forward in turn
         side = -1 if k < 3 else 1
-        j = k % 3
-        sx = cx + side * (6 + j * 4)
-        swing = math.sin(legs * math.pi / 3 + k) * 3
-        knee = (cx + side * (19 + j * 5), cy + 2 - j * 2)
-        foot = (cx + side * (17 + j * 7) + swing, 66)
-        rt = m_curve(W, H, [(sx, cy + 8), knee, foot], 5.0, 2.6)
-        mass(img, rt, "bark", "flat", INK, base=1 + (j % 2))
+        j = k % 4
+        reach = math.sin(legs * math.pi / 3 + k * 1.7) * 3
+        x0 = cx + (k - 3) * 6
+        x1 = x0 + side * (6 + j * 2) + reach + (4 if k >= 4 else 0)
+        tn = m_curve(W, H, [(x0, 58), ((x0 + x1) / 2, 63), (x1, 66)], 3.0, 1.2)
+        mass(img, tn, "bark", "flat", INK, base=1 + (k % 2))
+    nest = m_ellipse(W, H, cx, 58 + b * 0.5, 27, 9) & m_rect(W, H, 0, 0, W, 66)
+    lvn = mass(img, nest, "bark", "round", INK, base=2)
+    for k in range(9):                                      # woven roots across the nest
+        x = cx - 24 + k * 6
+        step(img, nest & m_curve(W, H, [(x, 51), (x + 3, 57), (x + 1, 64)], 1.0), "bark", lvn, -1)
+    for (dx, dy, rr) in ((-18, 54, 4), (16, 53, 3.5), (-6, 61, 3), (22, 59, 2.5)):
+        mo = m_ellipse(W, H, cx + dx, dy + b * 0.5, rr, rr * 0.6) & m_rect(W, H, 0, 0, W, int(dy + b * 0.5) + 1)
+        mass(img, mo, "cap", "round", INK, base=3)              # little mould caps on the nest
+    put(img, m_ellipse(W, H, cx, 52 + b * 0.5, 14, 3) & nest, RAMP["mould"][1])   # hollow the core sits in
     r = 16 + pulse
     hotcol = HOT if state == "h" else RAMP["organ"]
     # rib cage of roots behind the core; the ribs swing wide when it is exposed
