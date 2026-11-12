@@ -87,49 +87,49 @@ def hero(bob=0, lean=0, legs=((0, 0), (0, 0)), hand=(29, 36), pin=-48.0, cape=0,
     hx = 22 + lean                      # head / shoulders shift further than the hips
     b = bob
     # cape (behind everything)
-    cp = m_poly(W, H, [(hx - 5, 29 + b), (hx - 1, 29 + b), (cx - 2, 44 + b), (cx - 11 - cape, 44 + b - abs(cape) * 0.5), (cx - 9 - cape * 0.5, 36 + b)])
+    cp = m_poly(W, H, [(hx - 5, 26 + b), (hx - 1, 26 + b), (cx - 2, 44 + b), (cx - 11 - cape, 44 + b - abs(cape) * 0.5), (cx - 9 - cape * 0.5, 36 + b)])
     mass(img, cp, "cloth", "flat", INK, base=2)
     put(img, cp & m_rect(W, H, 0, 42 + b, W, 3), RAMP["cloth"][1])
     # legs: back leg darker
     for i, (off, lift) in enumerate(legs):
         lx = 18 + i * 5 + off
-        leg = m_rect(W, H, int(round(lx)), 40 + b, 3, 8 - b - lift)
+        leg = m_rect(W, H, int(round(lx)), 37 + b, 3, 11 - b - lift)
         boot = m_rect(W, H, int(round(lx)), 45 - lift, 5, 3)
         mass(img, leg | boot, "timber", "flat", INK, base=1 if i == 0 else 2)
     # body: white double-breasted jacket, round
-    body = m_ellipse(W, H, cx, 35 + b, 7.5, 7)
+    body = m_ellipse(W, H, cx, 32.5 + b, 7, 8)
     lv = mass(img, body, "white", "round", INK, base=3)
-    for by in (31, 35):
+    for by in (29, 33):
         for bx in (0, 4):
             put(img, m_rect(W, H, int(cx) + bx, by + b, 2, 2), RAMP["wheat"][2])
-    put(img, m_rect(W, H, int(cx) - 7, 40 + b, 15, 2) & body, RAMP["timber"][2])       # belt
+    put(img, m_rect(W, H, int(cx) - 7, 38 + b, 15, 2) & body, RAMP["timber"][2])       # belt
     # neckerchief
-    nk = m_poly(W, H, [(hx - 3, 28 + b), (hx + 5, 28 + b), (hx + 2, 32 + b)])
+    nk = m_poly(W, H, [(hx - 3, 25 + b), (hx + 4, 25 + b), (hx + 1, 28 + b)])
     mass(img, nk, "cloth", "flat", INK, base=3)
     # head
-    head = m_ellipse(W, H, hx + 1, 23.5 + b, 7.0, 5.5)
+    head = m_ellipse(W, H, hx + 1, 20.5 + b, 6.0, 4.8)
     mass(img, head, "skin", "round", INK, base=2)
     if eyes:
-        eye(img, int(hx) + 4, 20 + b)
+        eye(img, int(hx) + 3, 18 + b)
     else:
-        put(img, m_rect(W, H, int(hx) + 3, 22 + b, 3, 1), INK)
-    put(img, m_rect(W, H, int(hx) + 6, 23 + b, 2, 2), RAMP["skin"][1])                 # nose
-    blush(img, int(hx) + 1, 23 + b)                                                       # cheek
-    mo = m_rect(W, H, int(hx) + 1, 25 + b, 8, 2) | m_rect(W, H, int(hx), 26 + b, 3, 2) | m_rect(W, H, int(hx) + 7, 26 + b, 2, 2)
+        put(img, m_rect(W, H, int(hx) + 3, 19 + b, 3, 1), INK)
+    put(img, m_rect(W, H, int(hx) + 5, 20 + b, 2, 2), RAMP["skin"][1])                 # nose
+    blush(img, int(hx) + 1, 21 + b)                                                       # cheek
+    mo = m_rect(W, H, int(hx) + 1, 22 + b, 7, 1) | m_rect(W, H, int(hx), 23 + b, 2, 1) | m_rect(W, H, int(hx) + 6, 23 + b, 2, 1)
     put(img, mo, RAMP["wood"][0])
-    put(img, m_rect(W, H, int(hx) + 2, 25 + b, 5, 1), RAMP["wood"][2])
+    put(img, m_rect(W, H, int(hx) + 2, 22 + b, 4, 1), RAMP["wood"][2])
     # toque: band + one tall puff, leaning with the motion
-    band = m_rect(W, H, int(hx) - 4, 17 + b, 11, 3)
-    puff = m_ellipse(W, H, hx + 1 + tilt, 11.5 + b, 7.5, 6.5) | m_rect(W, H, int(hx) - 3 + int(tilt * 0.5), 13 + b, 9, 5)
+    band = m_rect(W, H, int(hx) - 3, 14 + b, 9, 3)
+    puff = m_ellipse(W, H, hx + 1 + tilt, 9.5 + b, 6.0, 5.0) | m_rect(W, H, int(hx) - 2 + int(tilt * 0.5), 10 + b, 8, 5)
     lvh = mass(img, puff, "white", "round", INK, base=3)
-    step(img, puff & (m_line(W, H, hx - 2 + tilt, 8 + b, hx - 3, 16 + b, 1.2) | m_line(W, H, hx + 4 + tilt, 8 + b, hx + 4, 16 + b, 1.2)), "white", lvh, -1)
+    step(img, puff & (m_line(W, H, hx - 1 + tilt, 6 + b, hx - 2, 13 + b, 1.2) | m_line(W, H, hx + 4 + tilt, 6 + b, hx + 4, 13 + b, 1.2)), "white", lvh, -1)
     mass(img, band, "white", "flat", INK, base=2)
     # arc of the swing (behind the pin, in front of the body)
     if arc:
         am = m_curve(W, H, arc, 3.2, 1.0)
         put(img, am, ARC_ALLY)
     # arm + rolling pin
-    sx, sy = hx + 3, 31 + b
+    sx, sy = hx + 3, 28 + b
     gx, gy = hand[0] + lean, hand[1] + b
     arm = m_line(W, H, sx, sy, gx, gy, 3.4)
     mass(img, arm, "white", "flat", INK, base=2)

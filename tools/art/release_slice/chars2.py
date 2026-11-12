@@ -44,31 +44,31 @@ def worker(bob=0, lean=0, legs=((0, 0), (0, 0)), sack=None, tool=None, eyes=True
     img = Img(W, H)
     b = bob
     hx = 14 + lean
-    _legs(img, W, H, 11, 4, 25, b, legs)
-    body = m_ellipse(W, H, 14 + lean * 0.5, 23 + b, 5, 4.5)
+    _legs(img, W, H, 11, 4, 23, b, legs)
+    body = m_ellipse(W, H, 14 + lean * 0.5, 20.5 + b, 4.5, 5)
     mass(img, body, "white", "round", INK, base=3)
-    put(img, m_rect(W, H, 10 + lean, 24 + b, 9, 4) & body, RAMP["cloth"][3])        # apron... in jam red, the bakery colour
-    head = m_ellipse(W, H, hx + 1, 15.5 + b, 4.5, 4)
+    put(img, m_rect(W, H, 10 + lean, 21 + b, 9, 5) & body, RAMP["cloth"][3])        # apron... in jam red, the bakery colour
+    head = m_ellipse(W, H, hx + 1, 13 + b, 3.8, 3.4)
     mass(img, head, "skin", "round", INK, base=2)
     if eyes:
-        eye(img, hx + 2, 14 + b)
+        eye(img, hx + 2, 11 + b)
     else:
-        put(img, m_rect(W, H, hx + 2, 15 + b, 2, 1), INK)
-    blush(img, hx, 17 + b)
-    blush(img, hx + 4, 17 + b, 1)
+        put(img, m_rect(W, H, hx + 2, 12 + b, 2, 1), INK)
+    blush(img, hx, 14 + b)
+    blush(img, hx + 4, 14 + b, 1)
     # short toque (half the captain's), flopped back
-    tq = m_ellipse(W, H, hx - 0.5, 9.5 + b, 4.5, 3.5) | m_rect(W, H, hx - 3, 10 + b, 7, 2)
+    tq = m_ellipse(W, H, hx - 0.5, 7.5 + b, 3.8, 2.8) | m_rect(W, H, hx - 3, 8 + b, 6, 2)
     mass(img, tq, "white", "round", INK, base=3)
     if sack is not None:                                  # flour sack carried over the head
         sx, sy = sack
         s = m_ellipse(W, H, sx, sy + b, 6, 4)
         lv = mass(img, s, "sack", "round", INK, base=3)
         put(img, m_rect(W, H, int(sx) - 1, int(sy) - 1 + b, 3, 2) & s, RAMP["cloth"][2])
-        put(img, m_line(W, H, hx + 2, 21 + b, sx + 2, sy + 3 + b, 2.0), RAMP["white"][2])
+        put(img, m_line(W, H, hx + 2, 18 + b, sx + 2, sy + 3 + b, 2.0), RAMP["white"][2])
     if tool is not None:                                  # wooden peel / mallet for work
         tx, ty, ang = tool
         e = _ang(tx, ty + b, ang, 10)
-        mass(img, m_line(W, H, hx + 3, 21 + b, tx, ty + b, 2.2), "white", "flat", INK, base=2)
+        mass(img, m_line(W, H, hx + 3, 18 + b, tx, ty + b, 2.2), "white", "flat", INK, base=2)
         mass(img, m_line(W, H, tx, ty + b, e[0], e[1], 1.6), "wood", "flat", INK, base=3)
         hd = m_ellipse(W, H, e[0], e[1], 2.8, 2.2)
         mass(img, hd, "wood", "round", INK, base=3)

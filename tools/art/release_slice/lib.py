@@ -212,11 +212,31 @@ def rim(img: Img, mask, col=INK, only_empty=False):
     img.a[edge] = col
 
 
+SELOUT = True     # sprites: selective outline (see rim_sel); set False for the old uniform near-black contour
+
+
+def rim_sel(img: Img, mask, ramp, ink):
+    """Selective outline: the contour takes the mass's own darkest tone, darkened toward the ink only on the
+    shadow side (below / right). Reads as a painted edge instead of a cartoon line, still separates figures."""
+    r = RAMP[ramp] if isinstance(ramp, str) else ramp
+    edge = grow(mask) & ~mask
+    lit = edge & (shift(mask, 0, -1) | shift(mask, -1, 0)) & ~(shift(mask, 0, 1) | shift(mask, 1, 0))
+    d = np.array(r[0][:3], np.float32)
+    k = np.array(ink[:3], np.float32)
+    dark = tuple(int(v) for v in d * 0.45 + k * 0.55) + (255,)
+    light = tuple(int(v) for v in d * 0.85 + k * 0.15) + (255,)
+    img.a[edge] = dark
+    img.a[lit] = light
+
+
 def mass(img: Img, mask, ramp, form="flat", ink=None, base=2):
     """Paint a mass and (optionally) its contour. Returns the level map for textures."""
     lvl = paint(img, mask, ramp, form, base)
     if ink is not None:
-        rim(img, mask, ink)
+        if SELOUT and (ink == INK or ink == INK_MOULD):
+            rim_sel(img, mask, ramp, ink)
+        else:
+            rim(img, mask, ink)
     return lvl
 
 
