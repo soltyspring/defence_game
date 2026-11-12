@@ -2,7 +2,8 @@ extends SceneTree
 ## Real game frames of the R01 battle with the current art (--mode=before) or the release slice (--mode=after).
 ## Same round, staging, camera and resolution in both modes. Needs a renderer:
 ##   godot --path . --resolution 640x360 -s tests/art_preview/capture_slice.gd -- --out=<abs dir> --mode=after
-##   --shots=home,mid,nest,crowd,melee,damaged_home,damaged_nest,ruined_nest   --frames=0 (N > 0: also save N
+##   --chars=off (new field, current characters)   --tag=<name in the file names>
+##   --shots=home,mid,nest,crowd,grunts,duel,melee,damaged_home,damaged_nest,ruined_nest   --frames=0 (N > 0: also save N
 ##   consecutive frames of the `melee` shot, 6 game frames apart, as engine-output animation evidence)
 ## Isolated save (user://art_preview/), dev-forced round: nothing is written to the player's save.
 const Adapter = preload("res://src/art_preview/slice_adapter.gd")
@@ -10,6 +11,8 @@ var out_dir := "user://art_preview/out"
 var mode := "after"
 var shots: Array = ["home", "mid", "nest", "crowd", "melee", "damaged_home", "damaged_nest", "ruined_nest"]
 var strip := 0
+var chars := true      # --chars=off: release-slice field and bases with the current characters
+var tag := ""          # file name tag (default = mode)
 func _initialize() -> void: _run.call_deferred()
 func frames(n := 4) -> void:
 	for i in n: await process_frame
@@ -38,6 +41,9 @@ func _run() -> void:
 		if a.begins_with("--mode="): mode = a.get_slice("=", 1)
 		if a.begins_with("--shots="): shots = Array(a.get_slice("=", 1).split(","))
 		if a.begins_with("--frames="): strip = int(a.get_slice("=", 1))
+		if a == "--chars=off": chars = false
+		if a.begins_with("--tag="): tag = a.get_slice("=", 1)
+	if tag == "": tag = mode
 	DirAccess.make_dir_recursive_absolute(out_dir)
 	var app = root.get_node("App")
 	var save = root.get_node("Save")
@@ -53,7 +59,7 @@ func _run() -> void:
 		app.start_round("r01", true)
 		await frames(6)
 		if mode == "after":
-			var ok: bool = Adapter.apply(app, atlas)
+			var ok: bool = Adapter.apply(app, atlas, chars)
 			if not ok: printerr("[slice] adapter failed")
 		var sim = app.battle.sim
 		sim.spawn_queue.clear()
@@ -78,6 +84,19 @@ func _run() -> void:
 				sim.hero.x = mid
 				_army(sim, mid, [["melee_basic", 22.0], ["melee_basic", 30.0], ["melee_basic", 12.0], ["melee_basic", -20.0]])
 				_foes(sim, mid, [["e_grunt", 44.0], ["e_grunt", 52.0], ["e_grunt", 60.0], ["e_grunt", 74.0], ["e_grunt", 90.0]])
+			"grunts":
+				# eight of the same enemy on top of each other, walking in on the hero
+				sim.hero.x = mid - 60.0
+				sim.hero.hp_max *= 40.0
+				sim.hero.hp = sim.hero.hp_max
+				_foes(sim, mid, [["e_grunt", 0.0], ["e_grunt", 3.0], ["e_grunt", 6.0], ["e_grunt", 9.0], ["e_grunt", 12.0], ["e_grunt", 15.0], ["e_grunt", 18.0], ["e_grunt", 21.0]])
+			"duel":
+				# one of each, close to the camera centre: the attack poses frame by frame (use --frames)
+				sim.hero.x = mid
+				sim.hero.hp_max *= 40.0
+				sim.hero.hp = sim.hero.hp_max
+				_army(sim, mid, [["melee_basic", -30.0]])
+				_foes(sim, mid, [["e_grunt", 34.0], ["e_grunt", 70.0]])
 			"damaged_home":
 				sim.player_base.hp = sim.player_base.hp_max * 0.4
 			"damaged_nest", "ruined_nest":
@@ -85,13 +104,20 @@ func _run() -> void:
 				sim.enemy_base.hp = sim.enemy_base.hp_max * (0.4 if shot == "damaged_nest" else 0.001)
 				sim.enemy_tower_mult = 0.0
 		await frames(70)
-		var path := "%s/r01_%s_%s_%dx%d.png" % [out_dir, shot, mode, size.x, size.y]
+		# The game pauses itself when its window loses focus (another program took it). A paused frame shows the
+		# pause menu, not the battle: resume and let the fight run again before the shot.
+		for attempt in 5:
+			if not sim.paused: break
+			root.get_node("Events").cmd_set_paused.emit(false)
+			await frames(40)
+		if sim.paused: printerr("[slice] still paused at shot ", shot)
+		var path := "%s/r01_%s_%s_%dx%d.png" % [out_dir, shot, tag, size.x, size.y]
 		root.get_texture().get_image().save_png(path)
 		print("[slice] ", path)
-		if strip > 0 and str(shot) == "melee":
+		if strip > 0 and str(shot) in ["melee", "duel"]:
 			for i in strip:
-				await frames(6)
-				root.get_texture().get_image().save_png("%s/r01_melee_%s_strip%02d_%dx%d.png" % [out_dir, mode, i, size.x, size.y])
+				await frames(3 if str(shot) == "duel" else 6)
+				root.get_texture().get_image().save_png("%s/r01_%s_%s_strip%02d_%dx%d.png" % [out_dir, shot, tag, i, size.x, size.y])
 		if mode == "after": Adapter.restore(atlas)
 		app.show_screen(&"menu")
 		await frames(4)
