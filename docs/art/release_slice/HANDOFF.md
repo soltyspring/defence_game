@@ -21,3 +21,11 @@
 - **통합 접점**: `INTEGRATION.md`. 요약 — `Atlas.anim_sets`의 `base_player`/`base_enemy`를 새 페이지로, `battle_view.environment`를 `slice_backdrop.gd`로 교체. 기본 실행에는 아직 적용되지 않는다.
 - **다음에 열 파일**: 타이틀은 `src/ui/main_menu.gd`(읽기만)와 `slice_backdrop.gd` 조각 재사용. 캐릭터를 더 다듬을 때는 `tools/art/release_slice/chars.py`의 `toast`(무더기 칼날), `_fall`(사망).
 - **라이선스**: 외부 에셋·이미지 도구 없음. 모든 그림은 이 저장소의 Python 생성기(`tools/art/release_slice/*.py`, numpy·Pillow)가 만든다.
+
+## R02–R40 확장(2026-11-13)
+- **실행**: `slice_preview.tscn -- --round=r25`처럼 라운드를 고르면 그 라운드 구성으로 나온다. 기본 실행에는 아직 적용되지 않는다(Codex 통합 필요, `INTEGRATION.md`).
+- **파일**: `tools/art/release_slice/chapters.py` → `assets/art/release_slice/slice_ch1..4.png/.json`(챕터별 전장 세트·랜드마크)·`rounds.json`(라운드별 하늘색·오염 경계 위치·적 기지 주변·랜드마크). `src/art_preview/slice_backdrop.gd`가 `round_index`로 이를 읽는다. 캡처 `tests/art_preview/capture_rounds.gd`, 시트 `tools/art/release_slice/round_sheets.py`.
+- **챕터**: 1 밀밭 마을(가게·울타리·연기가 점점 무너짐), 2 오염 과수원(풍차 원경, 과수원→회색 밭, 수레·상자·압착기), 3 서리길(설산, 얼음 벽, 사일로·굴뚝, 눈 덮인 빵집 마당), 4 둥지 심부(동굴 갈비뼈, 포자 주머니, 기둥·굴, 전진 야영지). 챕터 안에서 오염 경계가 적 쪽에서 아군 쪽으로 다가오고 하늘이 저물거나 어두워진다.
+- **캡처**: `captures/rounds/` — `rounds_ch1..4_front.png`(챕터별 10라운드, 실제 게임 렌더 절반 크기), `pair_rNN_*.png`(왼쪽 기존, 오른쪽 새 아트). 120장 전부 실제 게임 렌더(off-screen 창, 별도 APPDATA).
+- **안 바꾼 것**: 영웅·식빵병·졸개 외 유닛과 보스, 둥지 기지 스프라이트(모든 챕터 같은 기지), 타이틀. `live_update`는 비어 있어 R40 핵 노출 배경 연출은 기존 `lane_backdrop`의 것이 빠진다.
+- **약한 점**: 챕터 2 둥지 앞은 적 기지 스프라이트가 주변 세트를 대부분 가려 `enemy_a/b` 차이가 거의 안 보인다. 챕터 4는 어두운 청록 한 톤이라 라운드끼리 차이가 기둥·굴 정도다. 랜드마크는 라운드마다 2–3개뿐이라 긴 레인(2000px+)에서는 빈 구간이 길다.

@@ -1,0 +1,120 @@
+{
+ "schema": "defence.atlas/1",
+ "atlas": "release_slice_ch1",
+ "image": "slice_ch1.png",
+ "size": [
+  1024,
+  256
+ ],
+ "padding": 2,
+ "extrude": 1,
+ "group": "release_slice",
+ "filter": "nearest",
+ "mipmaps": false,
+ "repeat": false,
+ "gpu_format": "RGBA8",
+ "gpu_bytes": 1048576,
+ "frames": {
+  "enemy_b": {
+   "x": 2,
+   "y": 2,
+   "w": 320,
+   "h": 140,
+   "pivot": [
+    160,
+    139
+   ]
+  },
+  "smoke": {
+   "x": 326,
+   "y": 2,
+   "w": 44,
+   "h": 84,
+   "pivot": [
+    22,
+    83
+   ]
+  },
+  "smoke_dark": {
+   "x": 374,
+   "y": 2,
+   "w": 44,
+   "h": 84,
+   "pivot": [
+    22,
+    83
+   ]
+  },
+  "shop_lit": {
+   "x": 422,
+   "y": 2,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    32,
+    63
+   ]
+  },
+  "shop_dark": {
+   "x": 490,
+   "y": 2,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    32,
+    63
+   ]
+  },
+  "shop_boarded": {
+   "x": 558,
+   "y": 2,
+   "w": 64,
+   "h": 64,
+   "pivot": [
+    32,
+    63
+   ]
+  },
+  "palisade": {
+   "x": 626,
+   "y": 2,
+   "w": 120,
+   "h": 44,
+   "pivot": [
+    60,
+    43
+   ]
+  },
+  "palisade_gap": {
+   "x": 750,
+   "y": 2,
+   "w": 120,
+   "h": 44,
+   "pivot": [
+    60,
+    43
+   ]
+  },
+  "palisade_ruin": {
+   "x": 874,
+   "y": 2,
+   "w": 120,
+   "h": 44,
+   "pivot": [
+    60,
+    43
+   ]
+  },
+  "cart": {
+   "x": 2,
+   "y": 146,
+   "w": 56,
+   "h": 36,
+   "pivot": [
+    28,
+    35
+   ]
+  }
+ },
+ "anims": {}
+}
