@@ -62,3 +62,9 @@
 - **비율**: 영웅은 머리·모자를 줄이고 몸·다리를 늘려 약 2.5등신, 제빵사도 같은 방향. 식빵병·롤빵병·통식빵·화덕포 등은 빵 자체가 몸인 디자인이라 비율은 그대로 두고 외곽선만 바꿨다. 피벗·프레임 수·타격 프레임 변화 없음.
 - **일러스트 배경**: `PAINTED_BACKGROUND_NOTES.md`(진단·재생성 프롬프트), 재조명본 `assets/art/release_slice/painted_relit/`(`relight.py`).
 - **캡처**: `captures/units/proportions_selout_3x.png`(에셋 시트, 재조명 배경 위), `r15_r05_after_proportions.png`(실제 게임, 픽셀 배경).
+
+## 미리보기 배경 = 재조명 일러스트(2026-11-13)
+- `src/art_preview/painted_backdrop.gd`: `painted_relit/*.png`를 Codex `painted_chapter_backdrop.gd`와 같은 배치(챕터별 도로·발 위치 실측값, 좌우 반사 반복, 풍경 28 % 속도, 도로 고정)로 그리고 챕터 움직임(`Ambient`)과 제분소 영역을 더한다. Codex 파일은 수정·참조하지 않는다(값만 복사).
+- 어댑터 기본값 `Adapter.background = "painted"`. 픽셀 전장으로 보려면 `slice_preview.tscn -- --bg=pixel`(캡처 스크립트도 `--bg=`).
+- 캡처(실제 게임): `captures/painted/pairs_r05_r15_r25_r35.png` — 왼쪽은 같은 시각 작업 트리의 기본 실행(Codex 진행 중 배경이 평면 대체 그림으로 나옴), 오른쪽은 재조명 일러스트 + 새 유닛·보스·HUD 연출.
+- 약한 점: 배경 디테일 대비 유닛이 작다. 일러스트 배경에는 전선(오염 경계)·적 둥지 쪽 변화가 없다. 일러스트 건물의 광원 한계는 `PAINTED_BACKGROUND_NOTES.md`.

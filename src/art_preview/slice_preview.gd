@@ -25,6 +25,7 @@ func _start() -> void:
 		if a.begins_with("--round="): round_id = a.get_slice("=", 1)
 		if a == "--slice=off": on = false
 		if a == "--chars=off": chars = false
+		if a.begins_with("--bg="): Adapter.background = a.get_slice("=", 1)
 	if on and chars: Adapter.apply_ui(atlas)
 	app.start_round(round_id, true)
 	for i in 6: await get_tree().process_frame

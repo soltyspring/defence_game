@@ -20,6 +20,7 @@ func _run() -> void:
 		if a.begins_with("--mode="): mode = a.get_slice("=", 1)
 		if a.begins_with("--rounds="): spec = a.get_slice("=", 1)
 		if a.begins_with("--views="): views = Array(a.get_slice("=", 1).split(","))
+		if a.begins_with("--bg="): Adapter.background = a.get_slice("=", 1)
 	for part in spec.split(","):
 		if part.contains("-"):
 			for n in range(int(part.get_slice("-", 0)), int(part.get_slice("-", 1)) + 1): rounds.append(n)

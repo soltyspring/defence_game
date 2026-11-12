@@ -10,6 +10,9 @@ extends RefCounted
 ## Nothing is written to assets/manifest.json or to any file. restore() puts the Atlas back.
 const SliceBackdrop := preload("res://src/art_preview/slice_backdrop.gd")
 const HudSkin := preload("res://src/art_preview/hud_skin.gd")
+const PaintedBackdrop := preload("res://src/art_preview/painted_backdrop.gd")
+## Background for the preview: "painted" = relit painted panorama (painted_backdrop.gd), "pixel" = the slice field.
+static var background := "painted"
 const PAGE := "release_slice"
 const SETS := ["base_player", "base_enemy"]
 ## Characters live on their own page (slice_chars.png), so the battlefield page is not touched when they change.
@@ -59,10 +62,20 @@ static func apply(app, atlas, chars := true) -> bool:
 	var view = app.battle.view
 	var sim = app.battle.sim
 	var old = view.environment
-	var bd = SliceBackdrop.new()
-	bd.z_index = -10
-	view.add_child(bd)
-	bd.build(float(sim.L), float(view.ground_y), str(sim.round_def.biome), float(sim.player_base.x), float(sim.enemy_base.x), int(sim.round_def.get("index", 0)))
+	var bd = null
+	var args := [float(sim.L), float(view.ground_y), str(sim.round_def.biome), float(sim.player_base.x), float(sim.enemy_base.x), int(sim.round_def.get("index", 0))]
+	if background == "painted":
+		bd = PaintedBackdrop.new()
+		bd.z_index = -10
+		view.add_child(bd)
+		if not bd.callv("build", args):
+			bd.queue_free()
+			bd = null
+	if bd == null:
+		bd = SliceBackdrop.new()
+		bd.z_index = -10
+		view.add_child(bd)
+		bd.callv("build", args)
 	view.environment = bd
 	if old != null: old.queue_free()
 	if chars:
