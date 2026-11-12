@@ -17,6 +17,8 @@ var _was_ready := {}
 var _pop := {}
 var t := 0.0
 
+var top_skin: Control = null
+
 static func attach(p_hud: Node) -> Node:
 	var old = p_hud.get_node_or_null("SliceHudSkin")
 	if old != null: return old
@@ -24,7 +26,79 @@ static func attach(p_hud: Node) -> Node:
 	s.name = "SliceHudSkin"
 	s.hud = p_hud
 	p_hud.add_child(s)
+	var ts := TopSkin.new()
+	ts.name = "SliceTopSkin"
+	ts.hud = p_hud
+	ts.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ts.set_anchors_preset(Control.PRESET_FULL_RECT)
+	p_hud.add_child(ts)
+	p_hud.move_child(ts, p_hud.top.get_index() + 1)
+	s.top_skin = ts
 	return s
+
+func _exit_tree() -> void:
+	if is_instance_valid(top_skin): top_skin.queue_free()
+
+## Ornaments and feedback over the top bar (hud_top.gd draws the numbers; this only adds on top):
+##   resource panel: crust frame with corner studs; flour at its cap -> a gold pulse (spend it!)
+##   base HP bars: a white "damage ghost" chunk that drains after a hit (fighting-game bars);
+##   your base below 30 % -> a red pulsing outline.
+class TopSkin extends Control:
+	var hud: Node
+	var t := 0.0
+	var ghost := {"player": 1.0, "enemy": 1.0}
+	var shown := {"player": 1.0, "enemy": 1.0}
+	var hold := {"player": 0.0, "enemy": 0.0}
+	func _process(dt: float) -> void:
+		t += dt
+		if hud == null: return
+		var snap: Dictionary = hud.snap if hud.get("snap") is Dictionary else {}
+		for side in ["player", "enemy"]:
+			var b: Dictionary = snap.get(side + "_base", {})
+			var r := float(b.get("hp", 1)) / maxf(1.0, float(b.get("hp_max", 1)))
+			if r < shown[side]: hold[side] = 0.45
+			shown[side] = r
+			if r > ghost[side]: ghost[side] = r
+			elif hold[side] > 0.0: hold[side] -= dt
+			else: ghost[side] = maxf(r, ghost[side] - dt * 0.35)
+		queue_redraw()
+	func _draw() -> void:
+		var lay: Dictionary = hud.top.layout if hud.top.get("layout") is Dictionary else {}
+		if lay.is_empty(): return
+		var snap: Dictionary = hud.snap if hud.get("snap") is Dictionary else {}
+		var crust := Color("c27d3e")
+		var crust_d := Color("6b3a24")
+		var res: Rect2 = lay.resources
+		_frame(res, crust, crust_d)
+		var gold := float(snap.get("gold", 0))
+		var gmax := float(snap.get("gold_max", 0))
+		if gmax > 0 and gold >= gmax:
+			var c := Color(1.0, 0.85, 0.35, 0.45 + 0.35 * sin(t * 5.0))
+			draw_rect(res.grow(1), c, false, 2.0)
+		var r: Rect2 = lay.bases
+		var half := floorf((r.size.x - 18) / 2)
+		var y := r.position.y + 4
+		var pr := Rect2(r.position.x, y, half, 16)
+		var er := Rect2(r.position.x + half + 18, y, half, 16)
+		_ghost(pr.grow(-1), shown.player, ghost.player, false)
+		_ghost(er.grow(-1), shown.enemy, ghost.enemy, true)
+		_frame(pr, crust, crust_d)
+		_frame(er, Color("5f8387"), Color("24383c"))
+		if shown.player < 0.3:
+			draw_rect(pr.grow(1), Color(1.0, 0.3, 0.25, 0.4 + 0.4 * sin(t * 8.0)), false, 2.0)
+	func _ghost(inner: Rect2, now: float, was: float, mirror: bool) -> void:
+		if was <= now + 0.002: return
+		var x0 := inner.size.x * now
+		var w := inner.size.x * (was - now)
+		var rr := Rect2(inner.position.x + x0, inner.position.y, w, inner.size.y)
+		if mirror: rr.position.x = inner.end.x - inner.size.x * was
+		draw_rect(rr, Color(1, 0.97, 0.85, 0.85))
+	func _frame(r: Rect2, c: Color, d: Color) -> void:
+		draw_rect(Rect2(r.position.x, r.position.y - 1, r.size.x, 1), c)
+		draw_rect(Rect2(r.position.x, r.end.y, r.size.x, 1), d)
+		for p in [r.position, Vector2(r.end.x - 3, r.position.y), Vector2(r.position.x, r.end.y - 3), r.end - Vector2(3, 3)]:
+			draw_rect(Rect2(p - Vector2(1, 1), Vector2(4, 4)), d)
+			draw_rect(Rect2(p, Vector2(2, 2)), c.lightened(0.3))
 
 func _process(dt: float) -> void:
 	t += dt

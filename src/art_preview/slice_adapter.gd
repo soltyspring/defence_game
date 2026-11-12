@@ -22,6 +22,11 @@ const CHAR_SETS := ["hero_captain", "melee_basic", "e_grunt"]
 const CHAR2_PAGE := "release_slice_chars2"
 const CHAR2_JSON := "res://assets/art/release_slice/slice_chars2.json"
 const CHAR2_PNG := "res://assets/art/release_slice/slice_chars2.png"
+## Challenge enemies and the nest core (tools/art/release_slice/challenge.py), same set ids as char_challenge.
+const CH_PAGE := "release_slice_challenge"
+const CH_JSON := "res://assets/art/release_slice/slice_challenge.json"
+const CH_PNG := "res://assets/art/release_slice/slice_challenge.png"
+const CH_SETS := ["e_thrall", "e_binder", "e_frostshell", "e_icerunner", "e_sporesac", "e_burrower", "boss_nestcore"]
 const CHAR2_SETS := ["worker", "ranged_basic", "tank", "fast", "siege", "e_spitter", "e_swarm", "e_brute", "e_bomber"]
 
 static func apply(app, atlas, chars := true) -> bool:
@@ -38,7 +43,8 @@ static func apply(app, atlas, chars := true) -> bool:
 		atlas.set_meta("slice_prev_sets", prev)
 	for s in SETS: atlas.anim_sets[s] = PAGE
 	if chars:
-		for spec in [[CHAR_PAGE, CHAR_JSON, CHAR_PNG, CHAR_SETS], [CHAR2_PAGE, CHAR2_JSON, CHAR2_PNG, CHAR2_SETS]]:
+		for spec in [[CHAR_PAGE, CHAR_JSON, CHAR_PNG, CHAR_SETS], [CHAR2_PAGE, CHAR2_JSON, CHAR2_PNG, CHAR2_SETS],
+				[CH_PAGE, CH_JSON, CH_PNG, CH_SETS]]:
 			if not FileAccess.file_exists(spec[1]): continue
 			if not atlas.pages.has(spec[0]):
 				atlas.pages[spec[0]] = {"meta": {"id": spec[0], "frames": spec[1], "image": spec[2], "group": PAGE},
@@ -119,7 +125,7 @@ static func restore(atlas) -> void:
 		var prev: Dictionary = atlas.get_meta("slice_prev_sets")
 		for s in prev: atlas.anim_sets[s] = prev[s]
 		atlas.remove_meta("slice_prev_sets")
-	for page in [PAGE, CHAR_PAGE, CHAR2_PAGE]:
+	for page in [PAGE, CHAR_PAGE, CHAR2_PAGE, CH_PAGE]:
 		if atlas.pages.has(page):
 			atlas.release(page)
 			atlas.pages.erase(page)

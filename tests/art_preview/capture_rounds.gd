@@ -112,6 +112,19 @@ func _run() -> void:
 							u.x = bx + off
 							u.hp_max *= 40.0
 							u.hp = u.hp_max
+				"challenge":
+					# every challenge enemy in a row (and the nest core in r40), facing the hero
+					var qx: float = sim.L * 0.42
+					sim.hero.x = qx - 50.0
+					var k := 0
+					var list := ["e_thrall", "e_binder", "e_frostshell", "e_icerunner", "e_sporesac", "e_burrower"]
+					if n == 40: list = ["boss_nestcore", "e_binder", "e_thrall"]
+					for eid in list:
+						var e = sim._spawn_enemy(eid)
+						e.x = qx + 10.0 + k * (34.0 if n != 40 else 60.0)
+						e.hp_max *= 40.0
+						e.hp = e.hp_max
+						k += 1
 				"home":
 					sim.hero.x = sim.player_base.x + 90.0
 				"nest":
