@@ -13,6 +13,61 @@ const SET_BLIGHT := Rect2(0, 112, 320, 108)
 const SET_MILL := Rect2(324, 0, 112, 112)
 var set_texture: Texture2D
 var v2 := false
+## Per-round scene (backdrop_scenes.gd). Empty = the generic meadow build below (rounds outside R01-R40, tests).
+const Scenes := preload("res://src/gameplay/backdrop_scenes.gd")
+var scene := {}
+var live: Live
+var _tension := 0.0            # 0..1 eased: a boss is on the field
+var _tension_target := 0.0
+var _mods: Array = []          # per layer: modulate without tension
+var _last_seconds := -1.0
+
+## Drawn every frame while a boss is alive, world-locked, behind the units. Nothing here sits at foot height (the
+## pale ground band is reserved for announced attacks) and nothing depends on screen shake.
+##   arrival   0.9 s: two pale bars run out along the ridge line from where the boss stands. No input is held.
+##   core (a boss with `link_break`, R40): linked = violet strands from the ceiling with beads running down into it
+##             and a hood above it; exposed = the strands hang cut and a pale shaft of light stands on the boss. The
+##             shaft narrows as the exposure runs out, so its width is the time left to attack.
+class Live extends Node2D:
+	var ground := 290.0
+	var core := false
+	var boss_on := false
+	var boss_x := 0.0
+	var linked := false
+	var exposed := 0.0
+	var exposed_max := 0.0
+	var enter_t := 0.0
+	var t := 0.0
+	var state := ""            # QA: "" | "linked" | "exposed" | "open"
+	func _draw() -> void:
+		if not boss_on:
+			return
+		if enter_t > 0.0:
+			var a := enter_t / 0.9
+			var w := 40.0 + 260.0 * (1.0 - a)
+			draw_rect(Rect2(boss_x - w, ground - 108.0, w * 2.0, 3.0), Color(1.0, 0.96, 0.8, 0.7 * a))
+			draw_rect(Rect2(boss_x - w * 0.6, ground - 116.0, w * 1.2, 2.0), Color(1.0, 0.96, 0.8, 0.5 * a))
+		if not core:
+			return
+		var xs := [boss_x - 27.0, boss_x + 4.0, boss_x + 30.0]
+		if linked:
+			draw_rect(Rect2(boss_x - 46.0, ground - 150.0, 92.0, 12.0), Color("8f7fd6"))
+			for i in 3:
+				draw_rect(Rect2(xs[i], ground - 150.0, 4.0, 86.0 - i * 6.0), Color("8f7fd6"))
+				var ph := fposmod(t * 0.9 + i * 0.37, 1.0)
+				draw_rect(Rect2(xs[i] - 2.0, ground - 150.0 + ph * (78.0 - i * 6.0), 8.0, 8.0), Color("d9d2ea"))
+		elif exposed > 0.0:
+			var k := clampf(exposed / maxf(0.1, exposed_max), 0.0, 1.0)
+			var half := 12.0 + 36.0 * k
+			draw_colored_polygon(PackedVector2Array([Vector2(boss_x - half * 0.5, ground - 150.0), Vector2(boss_x + half * 0.5, ground - 150.0),
+				Vector2(boss_x + half, ground - 48.0), Vector2(boss_x - half, ground - 48.0)]), Color(1.0, 0.94, 0.69, 0.45))
+			draw_colored_polygon(PackedVector2Array([Vector2(boss_x - half * 0.25, ground - 150.0), Vector2(boss_x + half * 0.25, ground - 150.0),
+				Vector2(boss_x + half * 0.5, ground - 48.0), Vector2(boss_x - half * 0.5, ground - 48.0)]), Color(1.0, 0.97, 0.82, 0.5))
+			for i in 3:
+				draw_rect(Rect2(xs[i], ground - 150.0, 4.0, 12.0 + i * 5.0), Color("b9b3ba"))
+		else:
+			for i in 3:
+				draw_rect(Rect2(xs[i], ground - 150.0, 4.0, 12.0 + i * 5.0), Color("b9b3ba"))
 
 class SetPieces extends Node2D:
 	var texture: Texture2D
@@ -75,12 +130,16 @@ class Shapes extends Node2D:
 		commands.clear()
 		queue_redraw()
 
-func build(length: float, ground: float, _biome: String, player_x := 40.0, enemy_x := -1.0) -> void:
+func build(length: float, ground: float, _biome: String, player_x := 40.0, enemy_x := -1.0, round_index := 0) -> void:
 	if enemy_x < 0.0: enemy_x = length - 40.0
 	v2 = ResourceLoader.exists(SET_PATH)
 	if v2:
 		set_texture = load(SET_PATH)
 		factors[4] = 1.0   # set pieces are world-locked: they frame the two bases
+	scene = Scenes.spec(round_index)
+	if not scene.is_empty():
+		_build_scene(length, ground, _biome, player_x, enemy_x)
+		return
 	for i in factors.size():
 		var layer := Shapes.new()
 		add_child(layer)
@@ -180,7 +239,161 @@ func build(length: float, ground: float, _biome: String, player_x := 40.0, enemy
 			_house(village, x, y, 68 + posmod(i*31,35), 41 + posmod(i*17,25), posmod(i,4), dark)
 			if i % 3 == 0: _tree(village, x+132, y, dark)
 			elif i % 3 == 1: _well(village,x+126,y)
-	var lane = layers[5]
+	_paint_lane(layers[5], length, ground, _biome, player_x, enemy_x)
+	for i in layers.size():
+		var layer = layers[i]
+		if layer is Shapes: layer.bake()
+		if _biome == "biome_orchard":
+			layer.modulate = Color("e3d0a8") if i < 3 else Color("d9c3a2")
+		elif _biome == "biome_frost":
+			layer.modulate = Color("a8bddc") if i < 3 else Color("a9bfd1")
+		elif _biome == "biome_nest":
+			# Challenge chapter (R31-R40): the same layers under a dim grey-teal cast; no new texture.
+			layer.modulate = Color("9fb3ac") if i < 3 else Color("94a9a2")
+
+## R01-R40: sky, ridge, field and set planes from the round's scene; the walking lane keeps its earlier look.
+func _build_scene(length: float, ground: float, biome: String, player_x: float, enemy_x: float) -> void:
+	factors[4] = 1.0
+	var pal: Dictionary = scene.pal
+	var ch: int = scene.chapter
+	for i in factors.size():
+		var layer := Shapes.new()
+		add_child(layer)
+		layers.append(layer)
+	var far := length + 6000.0
+	# sky: the two lower bands sit just above the ridge so the time of day also shows at 2x zoom
+	var sky = layers[0]
+	var sc: Array = scene.sky
+	sky.box(Rect2(-2000, ground - 900, far, 702), sc[0])
+	sky.box(Rect2(-2000, ground - 198, far, 36), sc[1])
+	sky.box(Rect2(-2000, ground - 162, far, 30), sc[2])
+	sky.box(Rect2(-2000, ground - 132, far, 320), sc[3])
+	var clouds = layers[1]
+	if ch == 3:
+		# under ground: a ceiling instead of clouds, with uneven lobes hanging from it
+		clouds.box(Rect2(-2000, ground - 900, far, 760), Color(str(pal.cloud_lo)))
+		for i in range(-6, int(length / 90.0) + 10):
+			var cx := float(i * 90 + posmod(i * 53, 40))
+			var cw := 34.0 + float(posmod(i * 17, 30))
+			clouds.poly(PackedVector2Array([Vector2(cx, ground - 141), Vector2(cx + cw, ground - 141), Vector2(cx + cw * 0.7, ground - 129 + posmod(i * 7, 6)), Vector2(cx + cw * 0.3, ground - 127 + posmod(i * 5, 5))]), Color(str(pal.cloud_lo)))
+	else:
+		# fewer, lower clouds as each chapter goes on
+		var every := 1 + int(float(scene.stage) * 2.0)
+		for i in range(-4, int(length / 180.0) + 8):
+			if posmod(i, every) != 0: continue
+			var x := float(i * 180 + posmod(i * 71, 80))
+			var y := ground - 128 - posmod(i * 19, 24)
+			clouds.box(Rect2(x, y, 55, 8), Color(str(pal.cloud_lo)))
+			clouds.box(Rect2(x + 7, y - 7, 40, 9), Color(str(pal.cloud)))
+			clouds.box(Rect2(x + 18, y - 12, 20, 7), Color(str(pal.cloud)))
+	var hills = layers[2]
+	var ridge_y := ground - 100.0
+	if ch == 3:
+		# the back wall of the tunnel: two flat bands, no horizon
+		hills.box(Rect2(-2000, ground - 150, far, 70), Color(str(pal.ridge_a)))
+		hills.box(Rect2(-2000, ground - 112, far, 40), Color(str(pal.ridge_b)))
+	elif ch != 2:
+		var span := 235 if ch == 0 else 310
+		for i in range(-8, int(length / float(span)) + 12):
+			var x := float(i * span)
+			var h := float(22 + posmod(i * 37, 43)) * (1.0 if ch == 0 else 0.6)
+			hills.poly(PackedVector2Array([Vector2(x-45,ridge_y+18),Vector2(x-14,ridge_y-3),Vector2(x+25,ridge_y-h*0.45),Vector2(x+72,ridge_y-h*0.62),Vector2(x+116,ridge_y-h*0.57),Vector2(x+176,ridge_y-h*0.26),Vector2(x+253,ridge_y+10),Vector2(x+269,ridge_y+28)]),Color(str(pal.ridge_a)))
+			hills.poly(PackedVector2Array([Vector2(x+12,ridge_y+23),Vector2(x+57,ridge_y+4),Vector2(x+111,ridge_y-h*0.22),Vector2(x+155,ridge_y-h*0.26),Vector2(x+211,ridge_y-2),Vector2(x+263,ridge_y+21),Vector2(x+270,ridge_y+31)]),Color(str(pal.ridge_b)))
+	else:
+		hills.box(Rect2(-2000, ridge_y - 4, far, 40), Color(str(pal.ridge_b)))
+	var fields = layers[3]
+	fields.box(Rect2(-1000, ground - 102, length + 3000, 110), Color(str(pal.field)))
+	fields.box(Rect2(-1000, ground - 88, length + 3000, 34), Color(str(pal.band)))
+	fields.box(Rect2(-1000, ground - 88, length + 3000, 3), Color(str(pal.band_hi)))
+	match ch:
+		0:
+			for i in range(-1, int(length * 0.4 / 420.0) + 3):
+				var sx := float(i * 420 + 150)
+				fields.box(Rect2(sx, ground - 66, 12, 12), Color("b7a468"))
+				fields.box(Rect2(sx + 2, ground - 70, 8, 4), Color("c9b877"))
+			# the blight takes the far fields in two flat steps; it starts earlier as the chapter goes on
+			var lead: float = lerpf(0.0, 0.22, float(scene.stage))
+			for step in [[0.4 * (0.58 - lead) * length + 130.0, "9aa888", "bcb992"], [0.4 * (0.8 - lead) * length + 190.0, "93a290", "a9b09c"]]:
+				var b: float = step[0]
+				fields.poly(PackedVector2Array([Vector2(b+70,ground-102),Vector2(far,ground-102),Vector2(far,ground+8),Vector2(b,ground+8)]),Color(str(step[1])))
+				fields.poly(PackedVector2Array([Vector2(b+61,ground-88),Vector2(far,ground-88),Vector2(far,ground-54),Vector2(b+39,ground-54)]),Color(str(step[2])))
+		1:
+			# windfall rows in the dry grass: short uneven dashes above the unit band
+			for i in range(-2, int(length * 0.4 / 150.0) + 4):
+				var wx := float(i * 150 + posmod(i * 41, 70))
+				fields.box(Rect2(wx, ground - 62, 22 + posmod(i * 13, 18), 4), Color("a2965e"))
+				if float(scene.stage) < 0.5: fields.box(Rect2(wx + 8, ground - 66, 5, 5), Color("cf8f62"))
+		2:
+			# snow lies in drifts on the upper field only; the strip behind the units stays mid-tone
+			for i in range(-2, int(length * 0.4 / 130.0) + 4):
+				var dx := float(i * 130 + posmod(i * 29, 60))
+				fields.poly(PackedVector2Array([Vector2(dx, ground - 86), Vector2(dx + 22, ground - 96), Vector2(dx + 70, ground - 94), Vector2(dx + 100, ground - 86)]), Color("dfe8ea"))
+		3:
+			# floor ridges of the tunnel, uneven
+			for i in range(-2, int(length * 0.4 / 170.0) + 4):
+				var fx := float(i * 170 + posmod(i * 37, 80))
+				fields.poly(PackedVector2Array([Vector2(fx, ground - 54), Vector2(fx + 18, ground - 64), Vector2(fx + 60, ground - 62), Vector2(fx + 84, ground - 54)]), Color(str(pal.band_hi)))
+	var near = layers[4]
+	var pieces: SetPieces = null
+	if v2:
+		pieces = SetPieces.new()
+		pieces.texture = set_texture
+		pieces.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		# chapters 1-3 keep the bakery town by the keep; under ground a forward camp stands there instead.
+		if ch < 3: pieces.items.append([SET_HOME, Vector2(player_x + 52.0, ground - 12.0 - 107.0)])
+		# the mould thicket frames the enemy base until the road reaches a built place (ice works, nest wall)
+		if ch < 2 or (ch == 2 and int(scene.index) < 27): pieces.items.append([SET_BLIGHT, Vector2(enemy_x - 250.0, ground - 12.0 - 107.0)])
+	var has_enemy_piece := false
+	for lm in scene.landmarks:
+		var kind := str(lm[0])
+		var plane := str(lm[1])
+		var k: float = float(lm[4]) if lm.size() > 4 else 1.0
+		match plane:
+			"far": Scenes.paint(hills, kind, 0.22 * float(lm[2]) * length, ridge_y + 2.0, lm[3], k)
+			"mid": Scenes.paint(fields, kind, 0.4 * float(lm[2]) * length, ground - 54.0, lm[3], k)
+			"near": Scenes.paint(near, kind, float(lm[2]) * length, ground - 12.0, lm[3], k)
+			"home": Scenes.paint(near, kind, player_x + float(lm[2]), ground - 12.0, lm[3], k)
+			"enemy":
+				has_enemy_piece = true
+				Scenes.paint(near, kind, enemy_x + float(lm[2]), ground - 12.0, lm[3], k)
+	if ch == 3 and not has_enemy_piece:
+		Scenes.paint(near, "knot_wall", enemy_x - 150.0, ground - 12.0, 1, 0.9)
+	if pieces != null:
+		add_child(pieces)
+		move_child(pieces, 5)       # above the painted near plane, below the lane
+	_paint_lane(layers[5], length, ground, biome, player_x, enemy_x)
+	var light: Color = scene.light
+	var home_tint := [Color.WHITE, Color("f0e2c4"), Color("cfd8e6"), Color.WHITE]
+	for i in layers.size():
+		var layer = layers[i]
+		layer.bake()
+		layer.modulate = Color(str(pal.lane_tint)) if i == 5 else (light if i >= 1 else Color.WHITE)
+		_mods.append(layer.modulate)
+	if pieces != null: pieces.modulate = home_tint[ch] * light
+	live = Live.new()
+	live.ground = ground
+	add_child(live)
+
+## Called every frame by the battle view. `core` = the boss can be linked and exposed (unit key `link_break`).
+func live_update(boss_on: bool, boss_x: float, core: bool, linked: bool, exposed: float, dt: float) -> void:
+	_tension_target = 1.0 if boss_on else 0.0
+	if live == null:
+		return
+	if boss_on and not live.boss_on: live.enter_t = 0.9
+	live.boss_on = boss_on
+	live.boss_x = boss_x
+	live.core = core
+	live.linked = linked
+	if exposed > live.exposed + 0.05: live.exposed_max = exposed      # a new opening began
+	live.exposed = exposed
+	live.enter_t = maxf(0.0, live.enter_t - dt)
+	live.t += dt
+	live.state = "" if not (boss_on and core) else ("linked" if linked else ("exposed" if exposed > 0.0 else "open"))
+	live.visible = boss_on
+	if boss_on: live.queue_redraw()
+
+## The walking lane (verge, path, soil), the two base aprons, route signposts and the mould near the nest.
+func _paint_lane(lane, length: float, ground: float, _biome: String, player_x: float, enemy_x: float) -> void:
 	# Clear, low-detail walking lane; the farm reads as a separate plane above it.
 	lane.box(Rect2(-450,ground-14,length+1000,10),Color("91a06a"))
 	lane.box(Rect2(-450,ground-4,length+1000,13),Color("c9bd9f"))
@@ -223,16 +436,6 @@ func build(length: float, ground: float, _biome: String, player_x := 40.0, enemy
 		var x := length * 0.72 + i * length * 0.029
 		lane.box(Rect2(x,ground-17,3,14),Color("5d7771"))
 		lane.poly(PackedVector2Array([Vector2(x-8,ground-17),Vector2(x-5,ground-24),Vector2(x+6,ground-24),Vector2(x+11,ground-17)]),Color("82958a"))
-	for i in layers.size():
-		var layer = layers[i]
-		if layer is Shapes: layer.bake()
-		if _biome == "biome_orchard":
-			layer.modulate = Color("e3d0a8") if i < 3 else Color("d9c3a2")
-		elif _biome == "biome_frost":
-			layer.modulate = Color("a8bddc") if i < 3 else Color("a9bfd1")
-		elif _biome == "biome_nest":
-			# Challenge chapter (R31-R40): the same layers under a dim grey-teal cast; no new texture.
-			layer.modulate = Color("9fb3ac") if i < 3 else Color("94a9a2")
 
 ## A single silhouette per chapter. Keep the shapes above the unit band and
 ## bake them into the field mesh so all three chapters share the same sheet.
@@ -297,6 +500,15 @@ func _well(layer, x: float, y: float) -> void:
 	layer.poly(PackedVector2Array([Vector2(x-21,y-44),Vector2(x,y-57),Vector2(x+21,y-44)]),Color("9d7550"))
 
 func present(camera: float, zoom: float, device_scale: float, seconds: float) -> void:
+	# A boss on the field: sky, clouds, ridge and field shift towards the chapter's tension colour within ~0.8 s and back
+	# when it falls. The lane, the set pieces and every marker keep their colours.
+	if not _mods.is_empty() and not is_equal_approx(_tension, _tension_target):
+		var dt := clampf(seconds - _last_seconds, 0.0, 0.1) if _last_seconds >= 0.0 else 0.0
+		_tension = move_toward(_tension, _tension_target, dt / 0.8)
+		var tint := Color(str(scene.pal.tension))
+		for i in 4:
+			layers[i].modulate = (_mods[i] as Color).lerp((_mods[i] as Color) * tint, _tension)
+	_last_seconds = seconds
 	for i in layers.size():
 		var shift := Raster.layer_origin(camera, factors[i], zoom, device_scale)
 		if i == 1: shift += Raster.world_position(-seconds * 1.3, zoom, device_scale)

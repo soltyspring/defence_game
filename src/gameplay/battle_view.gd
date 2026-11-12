@@ -62,7 +62,7 @@ func setup(p_sim, p_atlas, p_ground_y: float, p_biome: String) -> void:
 	environment = Backdrop.new()
 	environment.z_index = -10
 	add_child(environment)
-	environment.build(float(sim.L), ground_y, biome, float(sim.player_base.x), float(sim.enemy_base.x))
+	environment.build(float(sim.L), ground_y, biome, float(sim.player_base.x), float(sim.enemy_base.x), int(sim.round_def.get("index", 0)))
 	_font = ThemeDB.fallback_font
 	_num_font = _font
 	if ResourceLoader.exists(NUM_FONT_PATH):
@@ -78,6 +78,13 @@ func setup(p_sim, p_atlas, p_ground_y: float, p_biome: String) -> void:
 func _process(_dt: float) -> void:
 	_update_formation(0.0 if sim != null and (sim.paused or sim.ended) else _dt)
 	if environment and sim:
+		var boss = null
+		for e in sim.enemies:
+			if e.is_boss and not e.dying:
+				boss = e
+				break
+		if boss != null: environment.live_update(true, boss.x, boss.def.has("link_break"), boss.link_src != 0, boss.exposed_t, 0.0 if sim.paused or sim.ended else _dt)
+		else: environment.live_update(false, 0.0, false, false, 0.0, _dt)
 		environment.present(cam_x, world_zoom, device_scale, float(sim.t))
 	queue_redraw()
 

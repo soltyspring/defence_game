@@ -182,6 +182,7 @@ func _process(delta: float) -> void:
 		if steps == Perf.SIM_MAX_STEPS:
 			_acc = 0.0   # spiral-of-death guard: drop backlog
 	_drain_events()
+	_track_core()
 	_supply_audio()
 	Perf.sim_ms_last = (Time.get_ticks_usec() - t0) / 1000.0
 	Perf.sim_ms_max = maxf(Perf.sim_ms_max, Perf.sim_ms_last)
@@ -244,6 +245,22 @@ func _threat_snapshot() -> Dictionary:
 	return result
 
 var _heavy_toast_shown := false
+var _core_linked := false      # last frame: the linkable boss (unit key `link_break`) was held by a knot
+
+## A soft wet cue when a knot takes hold of the core again (the cut has its own snap in _drain_events). One per
+## change of state, lower and quieter in character than the wind-up cue, so an announced attack is never masked.
+func _track_core() -> void:
+	var now := false
+	var x := 0.0
+	for e in sim.enemies:
+		if e.is_boss and not e.dying and e.def.has("link_break"):
+			now = e.link_src != 0
+			x = e.x
+			break
+	if now and not _core_linked:
+		Events.sfx.emit(&"shoot_spit", {"x": x, "pitch": 0.6})
+	_core_linked = now
+
 var _heavy_kinds_shown := {}
 const HEAVY_PITCH := {"slam": 1.0, "charge": 1.35, "lob": 1.2, "burrow": 0.9, "vent": 1.5}
 const HEAVY_TOAST := {"slam": "enemy_heavy", "charge": "enemy_charge", "lob": "enemy_lob", "burrow": "enemy_heavy", "vent": "enemy_vent"}
