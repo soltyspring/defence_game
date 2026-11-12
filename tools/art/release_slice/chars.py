@@ -32,6 +32,20 @@ ARC_ALLY = hexc("fff0a8")
 ARC_FOE = hexc("9fe6cf")
 
 
+HILITE = hexc("ffffff")
+BLUSH = hexc("f2a08a")
+
+
+def eye(img, x, y, ink=INK, h=3, hi=HILITE):
+    """The shared cute eye: 2 px wide, h tall, a white catch-light in the upper-left pixel."""
+    put(img, m_rect(img.w, img.h, int(x), int(y), 2, h), ink)
+    put(img, m_rect(img.w, img.h, int(x), int(y), 1, 1), hi)
+
+
+def blush(img, x, y, w=2):
+    put(img, m_rect(img.w, img.h, int(x), int(y), w, 1), BLUSH)
+
+
 def _ang(x, y, deg, ln):
     r = math.radians(deg)
     return x + math.cos(r) * ln, y + math.sin(r) * ln
@@ -96,11 +110,11 @@ def hero(bob=0, lean=0, legs=((0, 0), (0, 0)), hand=(29, 36), pin=-48.0, cape=0,
     head = m_ellipse(W, H, hx + 1, 23.5 + b, 7.0, 5.5)
     mass(img, head, "skin", "round", INK, base=2)
     if eyes:
-        put(img, m_rect(W, H, int(hx) + 4, 20 + b, 2, 3), INK)
+        eye(img, int(hx) + 4, 20 + b)
     else:
         put(img, m_rect(W, H, int(hx) + 3, 22 + b, 3, 1), INK)
     put(img, m_rect(W, H, int(hx) + 6, 23 + b, 2, 2), RAMP["skin"][1])                 # nose
-    put(img, m_rect(W, H, int(hx) + 1, 24 + b, 2, 1), RAMP["cloth"][4])                # cheek
+    blush(img, int(hx) + 1, 23 + b)                                                       # cheek
     mo = m_rect(W, H, int(hx) + 1, 25 + b, 8, 2) | m_rect(W, H, int(hx), 26 + b, 3, 2) | m_rect(W, H, int(hx) + 7, 26 + b, 2, 2)
     put(img, mo, RAMP["wood"][0])
     put(img, m_rect(W, H, int(hx) + 2, 25 + b, 5, 1), RAMP["wood"][2])
@@ -196,11 +210,13 @@ def toast(bob=0, lean=0, legs=((0, 0), (0, 0)), hand=(21, 21), knife=-88.0, arc=
     # face on the right half (it looks where it walks)
     ey = 18 + b
     if eyes:
-        put(img, m_rect(W, H, x0 + 7, ey, 2, 2) | m_rect(W, H, x0 + 11, ey, 2, 2), INK)
+        eye(img, x0 + 7, ey - 1)
+        eye(img, x0 + 11, ey - 1)
     else:
         put(img, m_rect(W, H, x0 + 7, ey + 1, 2, 1) | m_rect(W, H, x0 + 10, ey + 1, 2, 1), INK)
     put(img, m_rect(W, H, x0 + 9, ey + 4, 2, 1), RAMP["crust"][0])
-    put(img, m_rect(W, H, x0 + 6, ey + 3, 2, 1), RAMP["cloth"][4])
+    blush(img, x0 + 5, ey + 3)
+    blush(img, x0 + 12, ey + 3)
     # red headband with a knot tail behind
     hb = m_rect(W, H, x0, 15 + b, 15, 2) & sl
     put(img, hb, RAMP["cloth"][2])

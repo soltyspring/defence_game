@@ -35,3 +35,9 @@
 - **카드 초상**: `tools/art/release_slice/ui_portraits.py` → `slice_ui.png/.json`(ui_main 복사본, `card_*`·`portrait_e_*` 12칸만 교체, 배지 모양·색은 유지). 어댑터 `apply_ui()`가 `ui_main` 페이지 텍스처를 잠시 바꾼다(`start_round` 전에 호출). 통합 시에는 `ui_main.png`의 해당 칸을 교체하면 된다.
 - **캡처(실제 게임)**: `captures/units/` — `r15_army_before|after_640x360.png`, `pair_r25_army.png`, `cards_old_top_new_bottom_3x.png`. `units_old_3x.png`·`units_new_3x.png`는 에셋 시트(게임 화면 아님).
 - **남은 것**: 보스(곰팡이 장군·부패 대군주와 이를 쓰는 4보스), 도전 적 7종(`char_challenge`), 스킬 아이콘·HUD 패널 프레임, FX(`fx_combat`), 타이틀. 약한 점: 프레첼 기사 몸통(매듭)이 작아 매듭으로 안 읽힌다. 통식빵은 정면이 넓은 상자라 동작이 작다.
+
+## 전투 화면 귀여움 보정(2026-11-13)
+- 공통 얼굴 규칙: 눈 2×3 + 왼쪽 위 흰 하이라이트(`chars.py`의 `eye()`), 볼 홍조(`blush()`). 영웅·식빵병·제빵사·롤빵병·통식빵·프레첼(기사·조랑말)·화덕포에 적용. 적은 기존 발광 눈 유지.
+- 개별 수정: 롤빵병 고글을 이마로 올려 눈이 보이게, 화덕포는 화덕 자체에 얼굴(눈·볼·입=화구), 프레첼은 매듭 구멍(두 번째 얼굴처럼 보이던 것)을 지우고 창을 비스듬히 들어 조랑말 얼굴이 보이게, 멧돼지 몸의 청록 반점(눈처럼 보이던 것)을 어두운 곰팡이 얼룩으로.
+- 캡처: `captures/units/army_3x_before_cute.png`·`army_3x_after_cute.png`(실제 R15 전투 3배 확대), `r15_army_after_640x360.png`.
+- 카드 초상: 사용자 의견(기존이 더 귀엽다)에 따라 보류 대상. `slice_ui`는 새 얼굴로 재생성만 했고 전용 초상은 그리지 않았다.

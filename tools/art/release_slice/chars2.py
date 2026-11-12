@@ -22,7 +22,7 @@ from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib import INK, INK_MOULD, RAMP, Img, hexc, m_curve, m_ellipse, m_line, m_poly, m_rect, mass, put, shift, step  # noqa: E402
-from chars import ARC_ALLY, ARC_FOE, _ang, _fall, _walk_legs  # noqa: E402  (also registers skin / white ramps)
+from chars import ARC_ALLY, ARC_FOE, _ang, _fall, _walk_legs, blush, eye  # noqa: E402  (also registers skin / white ramps)
 
 RAMP["fly"] = [hexc(c) for c in ("2a2c38", "3e4152", "5a5f72", "7d8496", "a9b0c0")]
 RAMP["wing"] = [hexc(c) for c in ("9fb4c4", "bcd0dc", "d6e6ee", "eef6fa", "ffffff")]
@@ -50,8 +50,12 @@ def worker(bob=0, lean=0, legs=((0, 0), (0, 0)), sack=None, tool=None, eyes=True
     put(img, m_rect(W, H, 10 + lean, 24 + b, 9, 4) & body, RAMP["cloth"][3])        # apron... in jam red, the bakery colour
     head = m_ellipse(W, H, hx + 1, 15.5 + b, 4.5, 4)
     mass(img, head, "skin", "round", INK, base=2)
-    put(img, m_rect(W, H, hx + 3, 14 + b, 1, 2) if eyes else m_rect(W, H, hx + 2, 15 + b, 2, 1), INK)
-    put(img, m_rect(W, H, hx + 1, 17 + b, 2, 1), RAMP["cloth"][4])
+    if eyes:
+        eye(img, hx + 2, 14 + b)
+    else:
+        put(img, m_rect(W, H, hx + 2, 15 + b, 2, 1), INK)
+    blush(img, hx, 17 + b)
+    blush(img, hx + 4, 17 + b, 1)
     # short toque (half the captain's), flopped back
     tq = m_ellipse(W, H, hx - 0.5, 9.5 + b, 4.5, 3.5) | m_rect(W, H, hx - 3, 10 + b, 7, 2)
     mass(img, tq, "white", "round", INK, base=3)
@@ -103,13 +107,19 @@ def roll(bob=0, lean=0, legs=((0, 0), (0, 0)), hand=(21, 16), ball=None, eyes=Tr
     put(img, m_ellipse(W, H, cx - 3, 14 + b, 2, 1) & body, RAMP["crust"][4])
     put(img, m_rect(W, H, cx - 6, 24 + b, 13, 2) & body, RAMP["crumb"][2])
     # face: goggles band (a slinger), two eyes
-    put(img, m_rect(W, H, cx - 7, 17 + b, 15, 2) & body, RAMP["timber"][1])
+    put(img, m_rect(W, H, cx - 7, 13 + b, 15, 1) & body, RAMP["timber"][1])         # goggle strap on the brow
+    for gx0 in (cx + 1, cx + 5):
+        g = m_rect(W, H, gx0, 12 + b, 3, 3)
+        mass(img, g, "iron", "flat", INK, base=3)
+        put(img, m_rect(W, H, gx0 + 1, 13 + b, 1, 1), RAMP["wing"][4])
     if eyes:
-        put(img, m_rect(W, H, cx + 2, 17 + b, 2, 2) | m_rect(W, H, cx + 6, 17 + b, 2, 2), RAMP["wheat"][4])
-        put(img, m_rect(W, H, cx + 3, 18 + b, 1, 1) | m_rect(W, H, cx + 7, 18 + b, 1, 1), INK)
+        eye(img, cx + 2, 17 + b)
+        eye(img, cx + 6, 17 + b)
     else:
         put(img, m_rect(W, H, cx + 2, 18 + b, 6, 1), INK)
-    put(img, m_rect(W, H, cx + 4, 22 + b, 2, 1), RAMP["crust"][0])
+    blush(img, cx, 20 + b)
+    blush(img, cx + 8, 20 + b, 1)
+    put(img, m_rect(W, H, cx + 4, 21 + b, 2, 1), RAMP["crust"][0])
     if arc:
         put(img, m_curve(W, H, arc, 2.2, 1.0), ARC_ALLY)
     gx, gy = hand[0] + lean, hand[1] + b
@@ -156,10 +166,12 @@ def loaf(bob=0, lean=0, legs=((0, 0), (0, 0)), shield=(20, 0), eyes=True, arc=No
     put(img, m_rect(W, H, x0, 11 + b, 14, 2) & body, RAMP["cloth"][2])
     if eyes:
         put(img, m_rect(W, H, x0 + 7, ey - 1, 4, 1) | m_rect(W, H, x0 + 11, ey - 1, 3, 1), RAMP["crust"][0])
-        put(img, m_rect(W, H, x0 + 8, ey, 2, 2) | m_rect(W, H, x0 + 12, ey, 2, 2), INK)
+        eye(img, x0 + 8, ey)
+        eye(img, x0 + 12, ey)
     else:
         put(img, m_rect(W, H, x0 + 8, ey + 1, 6, 1), INK)
-    put(img, m_rect(W, H, x0 + 10, ey + 4, 3, 1), RAMP["crust"][0])
+    blush(img, x0 + 6, ey + 3)
+    put(img, m_rect(W, H, x0 + 10, ey + 4, 2, 1), RAMP["crust"][0])
     if arc:
         put(img, m_curve(W, H, arc, 2.4, 1.0), ARC_ALLY)
     # the cutting-board shield: thick plank with a handle hole, held in front
@@ -192,7 +204,7 @@ def loaf_frames():
     return f
 
 
-def pretzel(gait=0.0, bob=0, lance=-8.0, reach=0, eyes=True, arc=None, rear=0):
+def pretzel(gait=0.0, bob=0, lance=-42.0, reach=0, eyes=True, arc=None, rear=0):
     W, H = 40, 32
     img = Img(W, H)
     b = bob
@@ -212,7 +224,7 @@ def pretzel(gait=0.0, bob=0, lance=-8.0, reach=0, eyes=True, arc=None, rear=0):
     mass(img, neck, "crust", "flat", INK, base=3)
     head = m_ellipse(W, H, 33, 13 + b - rear * 2, 4.5, 3)
     mass(img, head, "crust", "round", INK, base=3)
-    put(img, m_rect(W, H, 33, 12 + b - rear * 2, 1, 1), INK)
+    eye(img, 33, 11 + b - rear * 2, h=2)
     mane = m_line(W, H, 25, 16 + b - rear, 28, 9 + b - rear * 2, 2.0)
     mass(img, mane, "cloth", "flat", INK, base=2)
     put(img, m_line(W, H, 6, 19 + b, 3, 24 + b, 2), RAMP["cloth"][2])        # tail ribbon
@@ -220,15 +232,21 @@ def pretzel(gait=0.0, bob=0, lance=-8.0, reach=0, eyes=True, arc=None, rear=0):
     rx, ry = 16, 11 + b - rear
     knot = m_ellipse(W, H, rx - 2, ry + 3, 3.5, 3) | m_ellipse(W, H, rx + 2, ry + 3, 3.5, 3) | m_line(W, H, rx - 3, ry + 7, rx + 3, ry + 4, 2.4)
     holes = m_ellipse(W, H, rx - 2, ry + 3, 1.2, 1) | m_ellipse(W, H, rx + 2, ry + 3, 1.2, 1)
-    lvk = mass(img, knot & ~holes, "crust", "round", INK, base=2)
+    lvk = mass(img, knot, "crust", "round", INK, base=2)
+    put(img, m_line(W, H, rx - 4, ry + 1, rx + 4, ry + 6, 1.0) & knot, RAMP["crust"][4])
+    put(img, m_line(W, H, rx + 4, ry + 1, rx - 4, ry + 6, 1.0) & knot, RAMP["crust"][4])
     for sx in (-3, 1, 3):
         put(img, m_rect(W, H, rx + sx, ry + 2, 1, 1), RAMP["white"][4])
-    hd = m_ellipse(W, H, rx + 1, ry - 3, 3, 3)
+    hd = m_ellipse(W, H, rx + 1, ry - 3, 4, 3.5)
     mass(img, hd, "crust", "round", INK, base=3)
     helm = m_ellipse(W, H, rx + 1, ry - 5, 3.2, 2) & m_rect(W, H, 0, 0, W, ry - 4)
     mass(img, helm, "iron", "round", INK, base=3)
     put(img, m_rect(W, H, rx, ry - 8, 2, 2), RAMP["cloth"][3])
-    put(img, m_rect(W, H, rx + 2, ry - 3, 1, 1) if eyes else m_rect(W, H, rx + 1, ry - 3, 2, 1), INK)
+    if eyes:
+        eye(img, rx + 2, ry - 4)
+        blush(img, rx + 1, ry - 1)
+    else:
+        put(img, m_rect(W, H, rx + 1, ry - 3, 2, 1), INK)
     if arc:
         put(img, m_curve(W, H, arc, 2.0, 1.0), ARC_ALLY)
     # lance, couched under the arm, pennant near the grip
@@ -246,13 +264,13 @@ def pretzel(gait=0.0, bob=0, lance=-8.0, reach=0, eyes=True, arc=None, rear=0):
 def pretzel_frames():
     f = {"idle/0": pretzel(gait=-1), "idle/1": pretzel(gait=-1, bob=1)}
     for i in range(6):
-        f[f"walk/{i}"] = pretzel(gait=i / 6, bob=1 if i % 3 == 1 else 0, lance=-6)
-    f["attack/0"] = pretzel(gait=-1, rear=1, lance=-20, reach=-2)
-    f["attack/1"] = pretzel(gait=0.25, lance=2, reach=4, arc=[(30, 10), (37, 14), (39, 19)])
-    f["attack/2"] = pretzel(gait=0.5, bob=1, lance=6, reach=3)
-    f["attack/3"] = pretzel(gait=-1, lance=-4)
-    f["hit/0"] = pretzel(gait=-1, rear=1, lance=-30, eyes=False)
-    f["hit/1"] = pretzel(gait=-1, lance=-16, eyes=False)
+        f[f"walk/{i}"] = pretzel(gait=i / 6, bob=1 if i % 3 == 1 else 0, lance=-42)
+    f["attack/0"] = pretzel(gait=-1, rear=1, lance=-55, reach=-2)
+    f["attack/1"] = pretzel(gait=0.25, lance=-28, reach=4, arc=[(30, 1), (36, 3), (39, 7)])
+    f["attack/2"] = pretzel(gait=0.5, bob=1, lance=-26, reach=3)
+    f["attack/3"] = pretzel(gait=-1, lance=-42)
+    f["hit/0"] = pretzel(gait=-1, rear=1, lance=-50, eyes=False)
+    f["hit/1"] = pretzel(gait=-1, lance=-50, eyes=False)
     base = pretzel(gait=-1, lance=-20, eyes=False)
     for i, (deg, sq) in enumerate(((10, 1.0), (24, 1.0), (40, 0.95), (60, 0.85), (70, 0.75))):
         f[f"death/{i}"] = _fall(base, 18, 31, deg, sq)
@@ -284,9 +302,16 @@ def oven(roll_ph=0.0, recoil=0, aim=-18.0, fire=0, smoke=0, broken=False, bob=0)
             put(img, m_rect(W, H, xx, yy + b, 1, 1) & dome, RAMP["brick"][0])
     if broken:
         put(img, m_poly(W, H, [(x0 + 10, 13 + b), (x0 + 14, 20 + b), (x0 + 11, 22 + b), (x0 + 16, 27 + b)]) & dome, INK)
-    mouth = m_ellipse(W, H, x0 + 21, 24 + b, 4, 3) & m_rect(W, H, 0, 0, W, 27 + b)
+    if not broken:
+        eye(img, x0 + 15, 18 + b)
+        eye(img, x0 + 24, 18 + b)
+    else:
+        put(img, m_rect(W, H, x0 + 15, 19 + b, 2, 1) | m_rect(W, H, x0 + 24, 19 + b, 2, 1), INK)
+    blush(img, x0 + 12, 22 + b, 3)
+    blush(img, x0 + 26, 22 + b, 2)
+    mouth = m_ellipse(W, H, x0 + 20.5, 25 + b, 3.5, 2.5) & m_rect(W, H, 0, 0, W, 28 + b)
     put(img, mouth, RAMP["fire"][1 + min(3, fire)])
-    put(img, m_ellipse(W, H, x0 + 21, 25 + b, 2, 1) & mouth, RAMP["fire"][min(4, 2 + fire)])
+    put(img, m_ellipse(W, H, x0 + 20.5, 26 + b, 2, 1) & mouth, RAMP["fire"][min(4, 2 + fire)])
     # barrel: an iron chimney pipe swung forward
     px, py = x0 + 20, 14 + b
     e = _ang(px, py, aim, 14)
@@ -444,7 +469,7 @@ def boar(bob=0, lean=0, gait=0.0, head=0, mouth=0, eyes=True, arc=None):
         cp = m_ellipse(W, H, mx + lean, my + b, r, r * 0.6) & m_rect(W, H, 0, 0, W, my + b + 1)
         mass(img, cp, "cap", "round", INK_MOULD, base=2 + (k % 2))
         put(img, m_rect(W, H, mx + lean - 1, my + b + 1, 2, 3), RAMP["hypha"][3])
-    put(img, m_ellipse(W, H, 18 + lean, 30 + b, 3, 2) & body, RAMP["organ"][2])          # rot patch glow
+    put(img, m_ellipse(W, H, 18 + lean, 31 + b, 4, 2) & body, RAMP["mould"][2])          # rot patch
     # head: low, heavy, snout forward, two pale tusks
     hx, hy = 38 + lean + head, 30 + b + abs(head) // 2
     hd = m_ellipse(W, H, hx, hy, 7, 6) | m_rect(W, H, hx + 2, hy - 1, 7, 6)
