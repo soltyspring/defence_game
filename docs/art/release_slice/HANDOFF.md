@@ -29,3 +29,9 @@
 - **캡처**: `captures/rounds/` — `rounds_ch1..4_front.png`(챕터별 10라운드, 실제 게임 렌더 절반 크기), `pair_rNN_*.png`(왼쪽 기존, 오른쪽 새 아트). 120장 전부 실제 게임 렌더(off-screen 창, 별도 APPDATA).
 - **안 바꾼 것**: 영웅·식빵병·졸개 외 유닛과 보스, 둥지 기지 스프라이트(모든 챕터 같은 기지), 타이틀. `live_update`는 비어 있어 R40 핵 노출 배경 연출은 기존 `lane_backdrop`의 것이 빠진다.
 - **약한 점**: 챕터 2 둥지 앞은 적 기지 스프라이트가 주변 세트를 대부분 가려 `enemy_a/b` 차이가 거의 안 보인다. 챕터 4는 어두운 청록 한 톤이라 라운드끼리 차이가 기둥·굴 정도다. 랜드마크는 라운드마다 2–3개뿐이라 긴 레인(2000px+)에서는 빈 구간이 길다.
+
+## 나머지 일반 유닛 9종·카드 초상(2026-11-13)
+- **그림**: `tools/art/release_slice/chars2.py` → `slice_chars2.png/.json`(1024×512). 제빵사(작은 토크·밀가루 자루), 롤빵병(고글 띠 롤빵, 빵 부스러기 투척), 통식빵(긴 식빵+도마 방패), 프레첼(프레첼 기사+비스킷 조랑말), 화덕포(벽돌 화덕 수레+쇠 굴뚝 포), 포자 뱉개(구근 머리+주름 깃), 초파리 떼(파리 3마리), 썩은 멧돼지(곰팡이 갈기·엄니), 부푼 효모(곰팡이 핀 효모 공+도화선, 공격 때 터짐). 크기·피벗·프레임 수·fps·타격 프레임은 `char_player.json`과 대조해 다르면 빌드 실패. 사용처 e_guard/e_runner/e_mortar 등 같은 anim_set을 쓰는 적도 함께 바뀐다.
+- **카드 초상**: `tools/art/release_slice/ui_portraits.py` → `slice_ui.png/.json`(ui_main 복사본, `card_*`·`portrait_e_*` 12칸만 교체, 배지 모양·색은 유지). 어댑터 `apply_ui()`가 `ui_main` 페이지 텍스처를 잠시 바꾼다(`start_round` 전에 호출). 통합 시에는 `ui_main.png`의 해당 칸을 교체하면 된다.
+- **캡처(실제 게임)**: `captures/units/` — `r15_army_before|after_640x360.png`, `pair_r25_army.png`, `cards_old_top_new_bottom_3x.png`. `units_old_3x.png`·`units_new_3x.png`는 에셋 시트(게임 화면 아님).
+- **남은 것**: 보스(곰팡이 장군·부패 대군주와 이를 쓰는 4보스), 도전 적 7종(`char_challenge`), 스킬 아이콘·HUD 패널 프레임, FX(`fx_combat`), 타이틀. 약한 점: 프레첼 기사 몸통(매듭)이 작아 매듭으로 안 읽힌다. 통식빵은 정면이 넓은 상자라 동작이 작다.

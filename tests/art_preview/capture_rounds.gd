@@ -39,6 +39,7 @@ func _run() -> void:
 	var size: Vector2i = DisplayServer.window_get_size()
 	for n in rounds:
 		var rid := "r%02d" % n
+		if mode == "after": Adapter.apply_ui(atlas)
 		app.start_round(rid, true)
 		await frames(6)
 		if mode == "after" and not Adapter.apply(app, atlas, true):
@@ -69,6 +70,27 @@ func _run() -> void:
 						e.x = fx + off
 						e.hp_max *= 40.0
 						e.hp = e.hp_max
+				"army":
+					# every regular unit on one screen: the five ally cards and the five common enemies
+					var ax: float = sim.L * 0.45
+					sim.hero.x = ax - 70.0
+					var i := 0
+					for cid in ["worker", "melee_basic", "ranged_basic", "tank", "fast", "siege"]:
+						sim.gold = 999.0
+						sim.card_cd[cid] = 0.0
+						if sim.deploy(cid) == "":
+							var u = sim.players.back()
+							u.x = ax - 60.0 + i * 16.0
+							u.hp_max *= 40.0
+							u.hp = u.hp_max
+						i += 1
+					i = 0
+					for eid in ["e_grunt", "e_spitter", "e_swarm", "e_brute", "e_bomber"]:
+						var e = sim._spawn_enemy(eid)
+						e.x = ax + 70.0 + i * 22.0
+						e.hp_max *= 40.0
+						e.hp = e.hp_max
+						i += 1
 				"home":
 					sim.hero.x = sim.player_base.x + 90.0
 				"nest":
@@ -84,7 +106,9 @@ func _run() -> void:
 			var path := "%s/%s_%s_%s_%dx%d.png" % [out_dir, rid, view, mode, size.x, size.y]
 			root.get_texture().get_image().save_png(path)
 			print("[rounds] ", path)
-		if mode == "after": Adapter.restore(atlas)
+		if mode == "after":
+			Adapter.restore(atlas)
+			Adapter.restore_ui(atlas)
 		app.show_screen(&"menu")
 		await frames(4)
 	quit(0)

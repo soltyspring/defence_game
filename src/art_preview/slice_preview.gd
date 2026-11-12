@@ -25,6 +25,7 @@ func _start() -> void:
 		if a.begins_with("--round="): round_id = a.get_slice("=", 1)
 		if a == "--slice=off": on = false
 		if a == "--chars=off": chars = false
+	if on and chars: Adapter.apply_ui(atlas)
 	app.start_round(round_id, true)
 	for i in 6: await get_tree().process_frame
 	if on and not Adapter.apply(app, atlas, chars):
