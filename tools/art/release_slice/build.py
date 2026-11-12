@@ -29,7 +29,7 @@ LAYOUT = {
     "sky": [["6fa9d8", -1000], ["8cc0e2", -190], ["aad3e8", -160], ["c9e2ea", -134], ["e6eedc", -112], ["f3ecd2", -96]],
     "clouds": {"y": -150, "parallax": 0.06, "drift": 1.3},
     "far": {"y": -150, "parallax": 0.15},
-    "mid": {"y": -90, "parallax": 0.4, "blight_from": 0.62},
+    "mid": {"y": -90 - backdrop.MID_HEADROOM, "parallax": 0.4, "blight_from": 0.62},
     "lane": {"y": -16, "blight_from": 0.62, "home_x": -96},
     "home_set": {"x": -168, "bottom": -10},
     "enemy_set": {"x": -236, "bottom": -10},

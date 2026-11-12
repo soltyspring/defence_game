@@ -2,12 +2,12 @@
 
 Pieces (all 1 art px = 1 world px; scenery contours use the material's own dark step, never the sprite ink):
     far         512x70 tile   two hazy ridges with a far village (steeple, mill) - parallax layer
-    mid_home    512x76 tile   wheat and pasture strips divided by hedges, an uneven windbreak, stooks
-    mid_blight  512x76 tile   the same land taken: grey fields, bare trees, first caps
-    mid_edge    120x76        the ragged front where the blight crosses the fields (drawn over the join)
+    mid_home    512x96 tile   wheat and pasture strips divided by hedges, an uneven windbreak, stooks
+    mid_blight  512x96 tile   the same land taken: grey fields, bare trees, first caps
+    mid_edge    120x96        the ragged front where the blight crosses the fields (drawn over the join)
     lane / lane_blight 128x60 tiles; lane_home 192x60 (cobbled forecourt)
     home_set    320x112       wall, annex, cart and trees around the bakery (world-locked, behind the units)
-    enemy_set   320x124       stalks, great roots and hanging hyphae around the nest
+    enemy_set   320x140       stalks, great roots and hanging hyphae around the nest
     mill        112x112       the flour mill the bakers walk to (bakery_supply draws it)
     cloud_a/b/c
 The lower 44 px of every piece that stands behind the units is a calm, flat mass: detail starts above it.
@@ -141,27 +141,39 @@ def _fields(W, H, blight: bool) -> Img:
     return img, top, b1, b2
 
 
+# Keep the original field at its world height, with extra room above it for complete silhouettes.
+MID_HEADROOM = 20
+MID_HEIGHT = 76 + MID_HEADROOM
+
+
+def _tall_fields(blight: bool):
+    field, top, b1, b2 = _fields(512, 76, blight)
+    img = Img(512, MID_HEIGHT)
+    img.a[MID_HEADROOM:] = field.a
+    return img, top + MID_HEADROOM, b1 + MID_HEADROOM, b2 + MID_HEADROOM
+
+
 def mid_home() -> Img:
-    img, top, b1, b2 = _fields(512, 76, False)
+    img, top, b1, b2 = _tall_fields(False)
     # an uneven windbreak: a cluster of three, a pair, a single tall one
     for x, h, lean in ((52, 30, 0), (70, 24, 1), (84, 34, -1), (238, 28, 0), (256, 22, 1), (398, 36, 0), (470, 20, 0)):
         tree(img, x, int(top[x]) + 4, h, "leaf", "wood", lean)
     # wheat stooks standing in the strip
     for x in (150, 176, 320, 344, 366):
         y = int((b1[x] + b2[x]) * 0.5) + 3
-        st = m_poly(512, 76, [(x - 4, y), (x - 1, y - 9), (x + 2, y - 9), (x + 5, y)])
+        st = m_poly(512, MID_HEIGHT, [(x - 4, y), (x - 1, y - 9), (x + 2, y - 9), (x + 5, y)])
         mass(img, st, "wheat", "flat", RAMP["wheat"][0], base=3)
     # a field barn with a red roof far in the strip
     bx, by = 300, int(top[300]) + 3
-    barn = m_rect(512, 76, bx, by - 10, 18, 11)
+    barn = m_rect(512, MID_HEIGHT, bx, by - 10, 18, 11)
     mass(img, barn, "plaster", "wall", RAMP["plaster"][0], base=2)
-    roof = m_poly(512, 76, [(bx - 2, by - 10), (bx + 4, by - 18), (bx + 14, by - 18), (bx + 20, by - 10)])
+    roof = m_poly(512, MID_HEIGHT, [(bx - 2, by - 10), (bx + 4, by - 18), (bx + 14, by - 18), (bx + 20, by - 10)])
     mass(img, roof, "brick", "flat", RAMP["brick"][0], base=2)
     return img
 
 
 def mid_blight() -> Img:
-    img, top, b1, b2 = _fields(512, 76, True)
+    img, top, b1, b2 = _tall_fields(True)
     for x, h in ((40, 28), (120, 22), (300, 30), (452, 24)):
         bare_tree(img, x, int(top[x]) + 4, h)
     for x, h, r, d in ((84, 26, 9, 0.6), (190, 34, 12, -0.4), (212, 20, 7, 0.3), (364, 30, 10, 0.5), (486, 22, 8, -0.3)):
@@ -172,7 +184,7 @@ def mid_blight() -> Img:
 def mid_edge() -> Img:
     """The front of the blight. The piece is the blighted field itself (the 60 columns either side of the tile
     join), cut along a ragged line, so it continues the tile to its right exactly; pale fingers reach further left."""
-    W, H = 120, 76
+    W, H = 120, MID_HEIGHT
     tile = mid_blight()
     tile.a[:, 0] = tile.a[:, 1]             # same border fix as the tile in the atlas (_tile)
     tile.a[:, -1] = tile.a[:, -2]
@@ -180,9 +192,11 @@ def mid_edge() -> Img:
     img.a[:, 60:] = tile.a[:, :60]
     img.a[:, :60] = tile.a[:, 452:512]
     xx, yy = grid(W, H)
-    edge = 56 + 20 * np.sin(yy * 0.21) + 9 * np.sin(yy * 0.53 + 1.0) - (yy - 26) * 0.5
+    field_y = yy - MID_HEADROOM
+    edge = 56 + 20 * np.sin(field_y * 0.21) + 9 * np.sin(field_y * 0.53 + 1.0) - (field_y - 26) * 0.5
     img.a[xx < edge] = (0, 0, 0, 0)
     for y0, ln in ((36, 30), (47, 44), (58, 26), (68, 36)):
+        y0 += MID_HEADROOM
         finger = m_curve(W, H, [(edge[y0, 0] + 4, y0), (edge[y0, 0] - ln * 0.5, y0 + 2), (edge[y0, 0] - ln, y0 - 1)], 3.4, 1.2)
         paint(img, finger, "hypha", "flat", base=3)
     return img
@@ -313,10 +327,10 @@ def home_set() -> Img:
     for px in (224, 262):
         paint(img, m_rect(W, H, px, B - 56, 2, 14), "timber", "flat")
     # lamp post at the far right: the last warm light before the open field
-    paint(img, m_rect(W, H, 292, B - 58, 3, 32), "iron", "flat", base=1)
-    lamp = m_rect(W, H, 288, B - 68, 11, 11)
+    paint(img, m_rect(W, H, 276, B - 58, 3, 32), "iron", "flat", base=1)
+    lamp = m_rect(W, H, 272, B - 68, 11, 11)
     mass(img, lamp, "iron", "flat", RAMP["iron"][0], base=1)
-    put(img, m_rect(W, H, 290, B - 66, 7, 7), RAMP["fire"][3])
+    put(img, m_rect(W, H, 274, B - 66, 7, 7), RAMP["fire"][3])
     # flour sacks stacked on the wall cap
     for sx in (130, 139, 134):
         sy = B - 33 if sx != 134 else B - 40
@@ -326,7 +340,7 @@ def home_set() -> Img:
 
 def enemy_set() -> Img:
     """Around the nest: the wood the mould grew, and the roots it sends down the road."""
-    W, H = 320, 124
+    W, H = 320, 140
     img = Img(W, H)
     B = H
     # hazy back row of caps (one value)

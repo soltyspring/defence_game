@@ -53,7 +53,7 @@
    "parallax": 0.15
   },
   "mid": {
-   "y": -90,
+   "y": -110,
    "parallax": 0.4,
    "blight_from": 0.62
   },
