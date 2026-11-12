@@ -33,14 +33,15 @@ func _signature(s: Dictionary) -> String:
 	var a: Dictionary = s.get("army", {})
 	var b: Dictionary = s.get("boss", {})
 	var mm := maxf(1.0, float(s.get("mana_max", 100)))
-	return "%d|%d|%.1f|%d|%d/%d|%d/%d|%d/%d/%d/%s|%d/%d|%s/%d/%d/%s%s" % [
+	return "%d|%d|%.1f|%d|%d/%d|%d/%d|%d/%d/%d/%s|%d/%d|%s/%d/%d/%s%s%s%d" % [
 		int(s.get("gold", 0)), int(s.get("gold_max", 0)), float(s.get("income", 0)),
 		int(float(s.get("mana", 0)) / mm * 512.0),
 		ceili(float(pb.get("hp", 0))), int(pb.get("hp_max", 0)), ceili(float(eb.get("hp", 0))), int(eb.get("hp_max", 0)),
 		int(w.get("index", 0)), int(w.get("total", 0)), ceili(float(w.get("next_in", 0))), str(w.get("boss", false)),
 		int(a.get("player", 0)), int(a.get("cap", 0)),
 		str(b.get("alive", false)), ceili(float(b.get("hp", 0))), int(b.get("hp_max", 0)),
-		"T" if bool(b.get("telegraph", false)) else "", "X" if bool(b.get("exposed", false)) else ""]
+		"T" if bool(b.get("telegraph", false)) else "", "X" if bool(b.get("exposed", false)) else "",
+		"L" if bool(b.get("linked", false)) else "", int(b.get("phase", 1))]
 var gold_slot_debug := Rect2()    # QA: fixed gold number slot
 var base_labels := {"player": "", "enemy": ""}        # QA: drawn HP text
 var base_label_rects := {"player": Rect2(), "enemy": Rect2()}
@@ -208,7 +209,7 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 
 ## Boss HP bar (HudSnapshot.boss, 02 R6) while a boss is alive: name (Galmuri11 12) + bar + hp numbers.
 var boss_drawn := false            # QA
-var boss_state := ""               # QA: "" | "telegraph" | "exposed" (frame drawn on the boss bar)
+var boss_state := ""               # QA: "" | "telegraph" | "exposed" | "linked" (frame drawn on the boss bar)
 func _draw_boss(br: Rect2) -> void:
 	var b: Dictionary = snap.get("boss", {})
 	boss_drawn = br.size != Vector2.ZERO and bool(b.get("alive", false))
@@ -232,8 +233,15 @@ func _draw_boss(br: Rect2) -> void:
 		UiStyle.draw_hatch(self, Rect2(bi.position, Vector2(bw, bi.size.y)), UiStyle.C_HP_ENEMY)   # enemy pattern (QA-B013)
 	# The boss bar itself carries the boss state, so no extra banner has to compete with the lane:
 	# wind-up = pale frame in the marker colour, opening = bright frame + a solid light fill under the hatch.
-	boss_state = "telegraph" if bool(b.get("telegraph", false)) else ("exposed" if bool(b.get("exposed", false)) else "")
-	if boss_state == "exposed":
+	# linked (a knot shields it) = the fill is dimmed inside a dull violet frame: hits barely count until the strands are cut.
+	# Phase marks (boss key `phases`) are thin notches at the HP shares where the fight changes.
+	for m in b.get("phase_marks", []):
+		draw_rect(Rect2(bi.position.x + floorf(bi.size.x * float(m)), bi.position.y, 1.0, bi.size.y), Color("fff0b0"))
+	boss_state = "telegraph" if bool(b.get("telegraph", false)) else ("exposed" if bool(b.get("exposed", false)) else ("linked" if bool(b.get("linked", false)) else ""))
+	if boss_state == "linked":
+		if bw > 0: draw_rect(Rect2(bi.position, Vector2(bw, bi.size.y)), Color(0.05, 0.05, 0.08, 0.6))
+		draw_rect(bar, Color("8f7fd6"), false, 1.0)
+	elif boss_state == "exposed":
 		if bw > 0: draw_rect(Rect2(bi.position.x, bi.end.y - 2.0, bw, 2.0), Color("fff0b0"))
 		draw_rect(bar, Color("fff0b0"), false, 1.0)
 	elif boss_state == "telegraph":

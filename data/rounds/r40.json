@@ -36,6 +36,11 @@
         },
         {
           "unit": "e_thrall",
+          "count": 2,
+          "interval": 2.0
+        },
+        {
+          "unit": "e_binder",
           "count": 1,
           "interval": 0
         }
@@ -43,52 +48,37 @@
       "boss": true
     },
     {
-      "at": 52,
+      "at": 55,
       "spawns": [
         {
           "unit": "e_thrall",
-          "count": 2,
-          "interval": 3.0
-        },
-        {
-          "unit": "e_binder",
-          "count": 1,
-          "interval": 0
-        }
-      ]
-    },
-    {
-      "at": 96,
-      "spawns": [
-        {
-          "unit": "e_thrall",
-          "count": 3,
-          "interval": 3.0
-        },
-        {
-          "unit": "e_binder",
           "count": 2,
           "interval": 3.0
         }
       ]
     },
     {
-      "at": 142,
+      "at": 100,
       "spawns": [
         {
           "unit": "e_thrall",
           "count": 3,
-          "interval": 2.5
-        },
-        {
-          "unit": "e_binder",
-          "count": 2,
           "interval": 3.0
         },
         {
           "unit": "e_runner",
           "count": 3,
           "interval": 0.7
+        }
+      ]
+    },
+    {
+      "at": 145,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 3,
+          "interval": 2.5
         }
       ]
     },
@@ -102,7 +92,7 @@
         },
         {
           "unit": "e_binder",
-          "count": 3,
+          "count": 2,
           "interval": 3.0
         }
       ],
@@ -118,7 +108,7 @@
         },
         {
           "unit": "e_binder",
-          "count": 4,
+          "count": 3,
           "interval": 3.0
         }
       ],
@@ -135,10 +125,9 @@
   "trickle": {
     "start": 34,
     "pattern": [
-      "e_thrall",
-      "e_binder"
+      "e_thrall"
     ],
-    "interval": 13.0,
+    "interval": 14.0,
     "interval_min": 9.0,
     "ramp_per_min": 0.6
   },

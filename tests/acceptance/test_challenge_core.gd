@@ -220,6 +220,101 @@ func _boss_checks(c) -> void:
 	sim._damage(boss, 107.0, 0.0)
 	check(hp0 - boss.hp > linked_open * 1.9, "an opening without the knot is worth more than one with it (%d vs %d per 100 after armour)" % [int(hp0 - boss.hp), int(linked_open)])
 
+## R40: shield while linked -> cut every strand -> the core stops, exposed -> phases 2 and 3.
+func _core_phase_checks(c) -> void:
+	var sim = arena(c, "r40", 300.0)
+	var boss = place(sim, "boss_nestcore", 900.0)
+	boss.heavy_cd = 999.0
+	var k1 = place(sim, "e_binder", 920.0)
+	var k2 = place(sim, "e_binder", 930.0)
+	for i in 3: sim.step(STEP)
+	sim.events.clear()
+	var hp0: float = boss.hp
+	sim._damage(boss, 109.0, 0.0)
+	check(boss.link_src != 0 and is_equal_approx(hp0 - boss.hp, 25.0), "a linked core takes a quarter of the damage (%.1f of 100 after armour)" % (hp0 - boss.hp))
+	sim._damage(k1, 1e6, 0.0)
+	var ev := until(sim, "core_exposed", 0.2)
+	check(ev.is_empty() and boss.link_src == k2.uid, "one of two knots cut: the other still holds the core, no exposure")
+	sim._damage(k2, 1e6, 0.0)
+	ev = until(sim, "core_exposed", 0.2)
+	check(not ev.is_empty() and float(ev.s) >= 4.0 and boss.link_src == 0, "the last knot cut exposes the core for %.1f s" % float(ev.get("s", 0.0)))
+	check(boss.recover_t >= 2.0 and boss.exposed_mul >= 2.0 and bool(sim.snapshot().boss.exposed) and not bool(sim.snapshot().boss.linked),
+		"exposed: it stops for %.1f s and takes x%.1f" % [boss.recover_t, boss.exposed_mul])
+	hp0 = boss.hp
+	sim._damage(boss, 109.0, 0.0)
+	check(is_equal_approx(hp0 - boss.hp, 200.0), "the same hit now does eight times the linked damage (%.1f)" % (hp0 - boss.hp))
+	var calm := true
+	var t0: float = sim.t
+	while sim.t - t0 < 6.0:
+		sim.step(STEP)
+		for e in sim.enemies:
+			if e.id == "e_binder" and not e.dying: calm = false
+	check(calm, "no new knot for 6 s after the cut")
+	sim.events.clear()
+	# phase 2: two knots at once
+	boss.hp = boss.hp_max * 0.65
+	ev = until(sim, "boss_phase", 0.2)
+	check(int(ev.get("phase", 0)) == 2 and int(sim.snapshot().boss.phase) == 2 and boss.recover_t > 0.0, "below 66 %: phase 2, with a pause")
+	t0 = sim.t
+	var knots := 0
+	while sim.t - t0 < 2.5: sim.step(STEP)
+	for e in sim.enemies:
+		if e.id == "e_binder" and not e.dying: knots += 1
+	check(knots == 2 and boss.link_src != 0, "phase 2 calls two knots at once (%d)" % knots)
+	sim.events.clear()
+	# phase 3: no more knots, a faster slam with a longer opening
+	boss.hp = boss.hp_max * 0.29
+	ev = until(sim, "boss_phase", 0.2)
+	check(int(ev.get("phase", 0)) == 3 and boss.sm.is_empty(), "below 30 %: phase 3 ends the calls")
+	for e in sim.enemies:
+		if e.id == "e_binder": sim._damage(e, 1e6, 0.0)
+	for i in 3: sim.step(STEP)      # the cut strands resolve (exposure) before the slam is forced
+	sim.events.clear()
+	sim.hero.x = boss.x - 20.0
+	boss.heavy_cd = 0.0
+	boss.recover_t = 0.0
+	boss.atk_cd = 99.0
+	var tele := until(sim, "heavy", 6.0)
+	var hit := until(sim, "heavy_hit", 4.0)
+	check(not tele.is_empty() and is_equal_approx(float(tele.windup), 1.6) and not hit.is_empty() and float(hit.recover) >= 3.5,
+		"last phase: %.1f s wind-up, %.1f s opening" % [float(tele.get("windup", 0.0)), float(hit.get("recover", 0.0))])
+	knots = 0
+	t0 = sim.t
+	while sim.t - t0 < 20.0: sim.step(STEP)
+	for e in sim.enemies:
+		if e.id == "e_binder" and not e.dying: knots += 1
+	check(knots == 0, "and no knot comes back in the last phase")
+
+## Round key danger_gap: enemy zones are announced one at a time, with a calm stretch after each hit.
+func _gap_checks(c) -> void:
+	var starts := {}
+	for id in ["r31", "r37"]:
+		var sim = arena(c, id, 600.0)
+		for i in 3:
+			var th = place(sim, "e_thrall", 615.0 + 4.0 * i)
+			th.heavy_cd = 0.0
+		var times: Array = []
+		var hits: Array = []
+		while sim.t < 14.0:
+			sim.hero.hp = sim.hero.hp_max
+			sim.step(STEP)
+			for e in sim.events:
+				if e[0] == "heavy": times.append(sim.t)
+				elif e[0] == "heavy_hit": hits.append(sim.t)
+			sim.events.clear()
+			sim.cues.clear()
+		starts[id] = [times, hits]
+	var plain: Array = starts.r31[0]
+	check(plain.size() >= 3 and float(plain[2]) - float(plain[0]) < 0.5, "without the key three thralls announce together (%s)" % [plain])
+	var gap := float(c.get_round("r37").get("danger_gap", 0.0))
+	var times37: Array = starts.r37[0]
+	var hits37: Array = starts.r37[1]
+	var ok: bool = gap >= 2.0 and times37.size() >= 2
+	for i in range(1, times37.size()):
+		if i - 1 < hits37.size() and float(times37[i]) - float(hits37[i - 1]) < gap - 0.05: ok = false
+	check(ok, "r37: each announcement waits %.1f s after the previous hit (starts %s, hits %s)" % [gap, times37, hits37])
+	check(float(c.get_round("r38").get("danger_gap", 0.0)) >= 2.0, "r38 has the calm stretch as well")
+
 func _save_checks(c, save) -> void:
 	var real_path: String = save.path
 	var real_progress: Dictionary = save.progress
@@ -378,6 +473,8 @@ func _run() -> void:
 	check(bool(through.cleared) and bool(cutting.cleared), "both plans clear the r35 pack")
 	check(float(cutting.knot_dead_at) > 0.0 and (float(through.knot_dead_at) < 0.0 or float(cutting.knot_dead_at) < float(through.knot_dead_at)), "the cut plan removes the knot earlier")
 	_boss_checks(c)
+	_core_phase_checks(c)
+	_gap_checks(c)
 	_save_checks(c, save)
 	await _dev_path_checks(c, save)
 	print("[challenge] checks=", checks, " failures=", failures)

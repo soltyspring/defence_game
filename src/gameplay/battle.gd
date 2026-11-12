@@ -298,6 +298,13 @@ func _drain_events() -> void:
 			"link_break":
 				Events.toast.emit("link_break", e[1])
 				Events.sfx.emit(&"nest_link_snap", {"x": e[1].x})
+			"core_exposed":
+				# the last strand to the boss was cut: its own cue (lower, longer than a single snap) and a toast every time
+				Events.toast.emit("core_exposed", e[1])
+				Events.sfx.emit(&"nest_link_snap", {"x": e[1].x, "pitch": 0.62})
+			"boss_phase":
+				Events.toast.emit("boss_phase%d" % int(e[1].phase), e[1])
+				Events.sfx.emit(&"boss_incoming", e[1])
 			"lob_burst":
 				Events.sfx.emit(&"spore_burst", {"x": e[1].x})
 			"hero_dead":

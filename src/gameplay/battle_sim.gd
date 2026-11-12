@@ -70,6 +70,9 @@ class Unit:
 	var burrow_t := 0.0
 	var shell_mul := 1.0   # `shell`.closed_mult: damage factor while not exposed
 	var link_src := 0      # uid of that source (0 = none); the view draws the strand
+	var link_lost := false # a source of this unit died this step; resolved in _step_links (unit key `link_break`)
+	var phase := 0         # boss key `phases`: entries already entered
+	var sm: Dictionary = {}  # the `summon` entry in use (a phase may replace or clear it)
 
 class Projectile:
 	var alive := false
@@ -200,6 +203,8 @@ var _in_step := false
 var _linear_targets := false        # A/B benchmark switch only (selftest/perf); never set in gameplay
 var _link_sources := 0              # living enemy units with a `link` key; 0 = the link pass is skipped
 var _links_dirty := false           # a source died: clear the protection it gave
+var danger_gap := 0.0               # round key `danger_gap` (s): enemy danger zones come one at a time, with this calm after each
+var _danger_free_at := 0.0          # t from which the next enemy announcement may start
 var stats := {"deployed": 0, "workers_bought": 0, "skills_cast": 0, "enemy_spawned": 0, "max_units": 0, "max_projectiles": 0, "hero_deaths": 0,
 	"gold_capped_s": 0.0, "mana_capped_s": 0.0}
 
@@ -223,6 +228,7 @@ func setup(p_content, round_id: String, seed_value: int = 1, p_upgrades: Diction
 	enemy_atk_mult = float(sc.get("atk", 1.0))
 	tower = econ.get("base_tower", {})
 	enemy_tower_mult = float(round_def.get("enemy_tower_atk_mult", 1.0))
+	danger_gap = float(round_def.get("danger_gap", 0.0))
 	var bd = econ.get("base_defense", {})
 	base_defense = {"dps_cap": 0.0, "push_px": 0.0, "stagger_s": 0.0, "tower_splash": 0.0}
 	if bd is Dictionary:
@@ -652,6 +658,7 @@ func _step_unit(u: Unit, dt: float) -> void:
 	_step_buff(u, dt)
 	_apply_kb(u, dt)
 	if u.is_boss:
+		_step_boss_phase(u)
 		_step_boss_summon(u, dt)
 	if u.exposed_t > 0.0:
 		u.exposed_t -= dt
@@ -731,8 +738,18 @@ func _step_heavy(u: Unit, tgt: Unit, engaged: bool, dt: float) -> bool:
 			return true
 		_:
 			if not engaged: return false
+	if danger_gap > 0.0 and u.side == SIDE_ENEMY and kind != "vent":
+		if t < _danger_free_at: return false      # another zone is announced or just hit: act normally until the lane is calm
+		_claim_danger(h, kind)
 	_begin_heavy(u, h, kind)
 	return true
+
+## Round key `danger_gap`: the announcing unit books the lane until its zone has hit plus `danger_gap` s, so the
+## player always gets that long to walk back in before the next zone is announced.
+func _claim_danger(h: Dictionary, kind: String) -> void:
+	var busy := float(h.get("windup", 1.2))
+	if kind == "lob": busy += float(h.get("delay", 1.2))
+	_danger_free_at = t + busy + danger_gap
 
 func _begin_heavy(u: Unit, h: Dictionary, kind: String) -> void:
 	u.heavy_t = float(h.get("windup", 1.2))
@@ -860,6 +877,9 @@ func _step_burrow(u: Unit, h: Dictionary, dt: float) -> void:
 		u.x += u.side * float(h.get("burrow_speed", 80.0)) * dt
 		u.state = S_WALK
 		return
+	if danger_gap > 0.0 and u.side == SIDE_ENEMY:
+		if t < _danger_free_at: return             # waits under ground until the lane is calm
+		_claim_danger(h, "burrow")
 	_begin_heavy(u, h, "burrow")
 
 ## Drops an announcement that will not happen (unit died, its link was cut, or it was interrupted): removes the marker.
@@ -925,9 +945,8 @@ func _step_links() -> void:
 	for e in enemies:
 		e.guard_mul = 1.0
 		e.link_src = 0
-	if _link_sources <= 0:
-		return
 	for s in enemies:
+		if _link_sources <= 0: break
 		if s.dying or not s.def.has("link"): continue
 		var lk: Dictionary = s.def.link
 		var radius := float(lk.get("radius", 100.0))
@@ -945,8 +964,27 @@ func _step_links() -> void:
 					best_d = d
 					best = e
 			if best == null: break
-			best.guard_mul = mul
+			best.guard_mul = float(best.def.get("link_taken", mul))    # a unit may set its own protected factor (the core)
 			best.link_src = s.uid
+	# Unit key `link_break` {stagger, exposed, exposed_s, summon_hold}: when the LAST strand to such a unit is cut it
+	# stops (no move, no attack) for `stagger` s, takes damage x `exposed` for `exposed_s` s and calls nothing for
+	# `summon_hold` s. While another source still holds it, a cut only gives the source's own short break values.
+	for e in enemies:
+		if not e.link_lost: continue
+		e.link_lost = false
+		var lb = e.def.get("link_break")
+		if e.dying or e.link_src != 0 or not (lb is Dictionary): continue
+		var open_s := float(lb.get("exposed_s", 4.0))
+		_cancel_heavy(e)
+		e.heavy_cd = maxf(e.heavy_cd, open_s)
+		e.recover_t = maxf(e.recover_t, float(lb.get("stagger", 2.0)))
+		e.atk_cd = maxf(e.atk_cd, e.recover_t)
+		e.exposed_mul = maxf(e.exposed_mul, float(lb.get("exposed", 1.5)))
+		e.exposed_t = maxf(e.exposed_t, open_s)
+		if not e.sm.is_empty() and lb.has("summon_hold"):      # the next call comes summon_hold s after the cut
+			e.summon_t = float(e.sm.get("interval", 12.0)) - float(lb.summon_hold)
+		_fx("link_break", e.x, -24.0, 0.6, 0.0)
+		events.append(["core_exposed", {"x": e.x, "uid": e.uid, "s": open_s, "boss": e.is_boss}])
 
 func _break_links(src: Unit) -> void:
 	var lk: Dictionary = src.def.link
@@ -957,6 +995,7 @@ func _break_links(src: Unit) -> void:
 		n += 1
 		e.link_src = 0
 		e.guard_mul = 1.0
+		e.link_lost = true
 		e.atk_cd = maxf(e.atk_cd, stagger)
 		e.exposed_mul = maxf(e.exposed_mul, float(lk.get("break_exposed", 1.3)))
 		e.exposed_t = maxf(e.exposed_t, float(lk.get("break_exposed_s", 3.0)))
@@ -968,9 +1007,34 @@ func _break_links(src: Unit) -> void:
 	_links_dirty = true
 	events.append(["link_break", {"x": src.x, "freed": n}])
 
+## Boss key `phases`: [{below, heavy?, summon?, stagger?}] in falling `below` order. When hp / hp_max drops under the
+## next entry's `below`, an announced attack is called off, the boss stops for `stagger` s, and from then on uses that
+## entry's `heavy` and `summon` (`summon: {}` = calls nothing any more). Event "boss_phase" {phase: 2, 3, ...}.
+func _step_boss_phase(u: Unit) -> void:
+	var ph = u.def.get("phases")
+	if not (ph is Array) or u.phase >= ph.size() or u.fire_t >= 0.0:
+		return
+	var p: Dictionary = ph[u.phase]
+	if u.hp / u.hp_max >= float(p.get("below", 0.0)):
+		return
+	u.phase += 1
+	_cancel_heavy(u)
+	if p.get("heavy") is Dictionary:
+		u.ab = p.heavy
+		u.heavy_cd = float(u.ab.get("first", float(u.ab.get("interval", 8.0)) * 0.5))
+	if p.get("summon") is Dictionary:
+		u.sm = p.summon
+		u.summon_t = float(u.sm.get("interval", 12.0)) - float(u.sm.get("first", u.sm.get("interval", 12.0)))
+	var st := float(p.get("stagger", 0.0))
+	if st > 0.0:
+		u.recover_t = maxf(u.recover_t, st)
+		u.atk_cd = maxf(u.atk_cd, st)
+		u.heavy_cd = maxf(u.heavy_cd, st)
+	events.append(["boss_phase", {"phase": u.phase + 1, "x": u.x, "uid": u.uid, "unit": u.id}])
+
 func _step_boss_summon(u: Unit, dt: float) -> void:
-	var sm = u.def.get("summon")
-	if not (sm is Dictionary):
+	var sm: Dictionary = u.sm
+	if sm.is_empty():
 		return
 	u.summon_t += dt
 	if u.summon_t < float(sm.get("interval", 12.0)):
@@ -1429,6 +1493,9 @@ func _new_unit(d: Dictionary, side: int, x: float) -> Unit:
 	u.exposed_mul = 1.0
 	u.guard_mul = 1.0
 	u.link_src = 0
+	u.link_lost = false
+	u.phase = 0
+	u.sm = d.summon if d.get("summon") is Dictionary else {}
 	u.anim_set = str(d.get("anim_set", d.id))
 	u.contact = 5.0 * float(d.get("size", 1.0))
 	return u
@@ -1557,7 +1624,7 @@ func _boss_info() -> Dictionary:
 	for e in enemies:
 		if e.is_boss and not e.dying:
 			return {"alive": true, "hp": e.hp, "hp_max": e.hp_max, "id": e.id, "name_key": str(e.def.get("name_key", "")),
-				"telegraph": e.heavy_t >= 0.0, "exposed": e.exposed_t > 0.0, "linked": e.link_src != 0}
+				"telegraph": e.heavy_t >= 0.0, "exposed": e.exposed_t > 0.0, "linked": e.link_src != 0, "phase": e.phase + 1, "phase_marks": e.def.get("phase_marks", [])}
 	return {"alive": false}
 
 func battle_info() -> Dictionary:

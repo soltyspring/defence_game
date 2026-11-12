@@ -187,5 +187,6 @@
   "tutorial": [],
   "provisional": true,
   "balance_note": "Old mortars support one wave, competing for the player’s next area skill.",
-  "challenge": true
+  "challenge": true,
+  "danger_gap": 3.5
 }
