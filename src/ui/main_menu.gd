@@ -156,19 +156,34 @@ func _layout() -> void:
 	if notice_dialog != null and notice_dialog.visible:
 		notice_dialog.open(notice_dialog.text, view, safe, target)
 
-func _draw() -> void:
-	# Background placeholder until 03 ships menu art: sky gradient bands + pixel hills.
+## Pixel menu art (docs/art/release_slice/menu_regen): bakery keep left, mould nest right, quiet centre for the
+## logo and buttons. Scaled to cover the view, centred; the scale is a whole number of device pixels per art pixel
+## when the screen is scaled up (k >= 2), so the pixels stay even. Old placeholder bands if the file is missing.
+const MENU_BG := "res://assets/backgrounds/menu_bg.png"
+static var _menu_bg: Texture2D = null
+
+func _draw_background() -> void:
+	if _menu_bg == null and ResourceLoader.exists(MENU_BG): _menu_bg = load(MENU_BG)
 	var h := view.y
+	if _menu_bg != null:
+		var ts := Vector2(_menu_bg.get_size())
+		var s := maxf(view.x / ts.x, view.y / ts.y)
+		var app := autoload("App")
+		var k := float(app.pixel_scale) if app != null and app.get("pixel_scale") != null else 1.0
+		if k >= 2.0: s = ceilf(s * k) / k
+		var size := ts * s
+		texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		draw_texture_rect(_menu_bg, Rect2(((view - size) * 0.5).round(), size), false)
+		draw_rect(Rect2(0, 0, view.x, h * 0.5), Color(0.06, 0.04, 0.10, 0.18))   # a touch darker behind the logo
+		return
 	var bands := [Color(0.14, 0.18, 0.32), Color(0.18, 0.24, 0.40), Color(0.24, 0.32, 0.48), Color(0.32, 0.40, 0.52)]
 	for i in bands.size():
 		draw_rect(Rect2(0, i * h * 0.15, view.x, h * 0.15 + 1), bands[i])
 	draw_rect(Rect2(0, h * 0.6, view.x, h * 0.4), Color(0.20, 0.36, 0.22))
-	var x := 0.0
-	while x < view.x:
-		var hh := 18.0 + 14.0 * absf(sin(x * 0.013)) + 8.0 * absf(sin(x * 0.041))
-		draw_rect(Rect2(x, h * 0.6 - hh, 8, hh), Color(0.16, 0.30, 0.20))
-		x += 8
 	draw_rect(Rect2(0, h * 0.82, view.x, h * 0.18), Color(0.36, 0.27, 0.18))
+
+func _draw() -> void:
+	_draw_background()
 	# title slot: between the coin row and the play button; logo (03) or text (title_block.gd)
 	var slot_top := safe.position.y + 28
 	var slot_bottom := btn_play.position.y - 22    # leave room for the subtitle line

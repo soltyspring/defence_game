@@ -1,7 +1,7 @@
 {
  "version": 1,
  "generator": "tools/audio/synth.py",
- "generator_version": 8,
+ "generator_version": 9,
  "technique": "deterministic numpy synthesis (oscillators/noise/envelopes/filters); no samples, no AI services",
  "license": "Original work created for this project by the 05-audio worker with tools/audio/synth.py. No third-party samples, loops, presets, downloaded audio or AI audio services were used, so no third-party licence or attribution applies. Rights belong to the project owner; the public licence (if any) is the project owner’s decision and has not been chosen.",
  "provenance": {
@@ -50,7 +50,7 @@
      "seconds": 0.045,
      "bytes": 2028,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -11.27
+     "rms_dbfs": -11.51
     }
    ]
   },
@@ -81,7 +81,7 @@
      "seconds": 0.12,
      "bytes": 5336,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -12.24
+     "rms_dbfs": -12.43
     }
    ]
   },
@@ -112,7 +112,7 @@
      "seconds": 0.32,
      "bytes": 14156,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -16.39
+     "rms_dbfs": -15.77
     }
    ]
   },
@@ -143,7 +143,7 @@
      "seconds": 0.2,
      "bytes": 8864,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -8.17
+     "rms_dbfs": -8.23
     }
    ]
   },
@@ -173,8 +173,8 @@
      "file": "deploy.wav",
      "seconds": 0.42,
      "bytes": 18566,
-     "peak_dbfs": -1.34,
-     "rms_dbfs": -14.72
+     "peak_dbfs": -1.37,
+     "rms_dbfs": -14.45
     }
    ]
   },
@@ -205,7 +205,7 @@
      "seconds": 0.45,
      "bytes": 19888,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -14.69
+     "rms_dbfs": -14.0
     }
    ]
   },
@@ -239,14 +239,14 @@
      "seconds": 0.11,
      "bytes": 4896,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -12.17
+     "rms_dbfs": -12.33
     },
     {
      "file": "gold_tick_v2.wav",
      "seconds": 0.12,
      "bytes": 5336,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -11.99
+     "rms_dbfs": -12.3
     }
    ]
   },
@@ -292,36 +292,36 @@
      "file": "hit_melee_1.wav",
      "seconds": 0.105,
      "bytes": 4674,
-     "peak_dbfs": -5.36,
-     "rms_dbfs": -17.08
+     "peak_dbfs": -5.21,
+     "rms_dbfs": -16.98
     },
     {
      "file": "hit_melee_2.wav",
      "seconds": 0.105,
      "bytes": 4674,
-     "peak_dbfs": -4.58,
-     "rms_dbfs": -16.27
+     "peak_dbfs": -4.62,
+     "rms_dbfs": -16.37
     },
     {
      "file": "hit_melee_3.wav",
      "seconds": 0.105,
      "bytes": 4674,
-     "peak_dbfs": -5.18,
-     "rms_dbfs": -17.12
+     "peak_dbfs": -5.22,
+     "rms_dbfs": -17.18
     },
     {
      "file": "hit_melee_4.wav",
      "seconds": 0.105,
      "bytes": 4674,
-     "peak_dbfs": -5.23,
-     "rms_dbfs": -17.0
+     "peak_dbfs": -5.04,
+     "rms_dbfs": -16.86
     },
     {
      "file": "hit_melee_5.wav",
      "seconds": 0.105,
      "bytes": 4674,
-     "peak_dbfs": -5.48,
-     "rms_dbfs": -17.13
+     "peak_dbfs": -5.35,
+     "rms_dbfs": -16.87
     }
    ]
   },
@@ -361,22 +361,22 @@
      "file": "hit_bread_1.wav",
      "seconds": 0.105,
      "bytes": 4674,
-     "peak_dbfs": -6.05,
-     "rms_dbfs": -17.45
+     "peak_dbfs": -5.7,
+     "rms_dbfs": -17.13
     },
     {
      "file": "hit_bread_2.wav",
      "seconds": 0.105,
      "bytes": 4674,
-     "peak_dbfs": -4.75,
-     "rms_dbfs": -16.66
+     "peak_dbfs": -4.71,
+     "rms_dbfs": -16.46
     },
     {
      "file": "hit_bread_3.wav",
      "seconds": 0.105,
      "bytes": 4674,
-     "peak_dbfs": -5.58,
-     "rms_dbfs": -17.06
+     "peak_dbfs": -5.3,
+     "rms_dbfs": -16.8
     }
    ]
   },
@@ -416,22 +416,22 @@
      "file": "hit_mold_1.wav",
      "seconds": 0.095,
      "bytes": 4234,
-     "peak_dbfs": -5.02,
-     "rms_dbfs": -16.77
+     "peak_dbfs": -4.93,
+     "rms_dbfs": -16.68
     },
     {
      "file": "hit_mold_2.wav",
      "seconds": 0.095,
      "bytes": 4234,
-     "peak_dbfs": -5.83,
-     "rms_dbfs": -17.06
+     "peak_dbfs": -5.84,
+     "rms_dbfs": -17.08
     },
     {
      "file": "hit_mold_3.wav",
      "seconds": 0.095,
      "bytes": 4234,
-     "peak_dbfs": -5.18,
-     "rms_dbfs": -16.85
+     "peak_dbfs": -5.08,
+     "rms_dbfs": -16.79
     }
    ]
   },
@@ -463,11 +463,12 @@
      "seconds": 0.08,
      "bytes": 3572,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -14.62
+     "rms_dbfs": -13.49
     }
    ]
   },
   "shoot_arrow": {
+   "polish_hz": 10500.0,
    "vol_jitter": 1.0,
    "bus": "SFX",
    "vol_db": -12,
@@ -497,14 +498,14 @@
      "seconds": 0.12,
      "bytes": 5336,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -14.73
+     "rms_dbfs": -14.43
     },
     {
      "file": "shoot_arrow_v2.wav",
      "seconds": 0.11,
      "bytes": 4896,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -14.09
+     "rms_dbfs": -14.49
     }
    ]
   },
@@ -535,7 +536,7 @@
      "seconds": 0.16,
      "bytes": 7100,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -17.81
+     "rms_dbfs": -18.39
     }
    ]
   },
@@ -571,21 +572,21 @@
      "seconds": 0.18,
      "bytes": 7982,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -14.17
+     "rms_dbfs": -14.31
     },
     {
      "file": "shoot_spit_v2.wav",
      "seconds": 0.18,
      "bytes": 7982,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -13.67
+     "rms_dbfs": -13.52
     },
     {
      "file": "shoot_spit_v3.wav",
      "seconds": 0.18,
      "bytes": 7982,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -14.29
+     "rms_dbfs": -14.16
     }
    ]
   },
@@ -617,8 +618,8 @@
      "file": "hit_base.wav",
      "seconds": 0.34,
      "bytes": 15038,
-     "peak_dbfs": -1.0,
-     "rms_dbfs": -18.93
+     "peak_dbfs": -1.5,
+     "rms_dbfs": -19.44
     }
    ]
   },
@@ -649,7 +650,7 @@
      "seconds": 0.35,
      "bytes": 15478,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -13.95
+     "rms_dbfs": -13.99
     }
    ]
   },
@@ -680,7 +681,7 @@
      "seconds": 0.5,
      "bytes": 22094,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -17.48
+     "rms_dbfs": -17.39
     }
    ]
   },
@@ -713,7 +714,7 @@
      "seconds": 0.34,
      "bytes": 15038,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -15.52
+     "rms_dbfs": -14.68
     }
    ]
   },
@@ -747,14 +748,14 @@
      "seconds": 0.42,
      "bytes": 18566,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -14.33
+     "rms_dbfs": -14.1
     },
     {
      "file": "death_enemy_v2.wav",
      "seconds": 0.42,
      "bytes": 18566,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -13.92
+     "rms_dbfs": -13.98
     }
    ]
   },
@@ -785,7 +786,7 @@
      "seconds": 0.52,
      "bytes": 22976,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -10.5
+     "rms_dbfs": -10.46
     }
    ]
   },
@@ -816,7 +817,7 @@
      "seconds": 0.62,
      "bytes": 27386,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -15.31
+     "rms_dbfs": -15.15
     }
    ]
   },
@@ -847,7 +848,7 @@
      "seconds": 0.6,
      "bytes": 26504,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -19.85
+     "rms_dbfs": -20.05
     }
    ]
   },
@@ -878,7 +879,7 @@
      "seconds": 0.9,
      "bytes": 39734,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -17.59
+     "rms_dbfs": -17.44
     }
    ]
   },
@@ -909,7 +910,7 @@
      "seconds": 1.6,
      "bytes": 70604,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -21.55
+     "rms_dbfs": -19.76
     }
    ]
   },
@@ -940,7 +941,7 @@
      "seconds": 0.8,
      "bytes": 35324,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -13.37
+     "rms_dbfs": -13.38
     }
    ]
   },
@@ -971,7 +972,7 @@
      "seconds": 0.35,
      "bytes": 15478,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -11.96
+     "rms_dbfs": -11.66
     }
    ]
   },
@@ -1002,7 +1003,7 @@
      "seconds": 1.0,
      "bytes": 44144,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -14.83
+     "rms_dbfs": -14.72
     }
    ]
   },
@@ -1033,7 +1034,7 @@
      "seconds": 2.0,
      "bytes": 88244,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -14.61
+     "rms_dbfs": -14.45
     }
    ]
   },
@@ -1064,7 +1065,7 @@
      "seconds": 2.8,
      "bytes": 123524,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -15.42
+     "rms_dbfs": -15.27
     }
    ]
   },
@@ -1095,7 +1096,7 @@
      "seconds": 0.7,
      "bytes": 30914,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -16.37
+     "rms_dbfs": -15.81
     }
    ]
   },
@@ -1126,7 +1127,7 @@
      "seconds": 0.55,
      "bytes": 24300,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -15.67
+     "rms_dbfs": -15.09
     }
    ]
   },
@@ -1157,7 +1158,7 @@
      "seconds": 0.25,
      "bytes": 11068,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -15.49
+     "rms_dbfs": -15.53
     }
    ]
   },
@@ -1188,7 +1189,7 @@
      "seconds": 0.4,
      "bytes": 17684,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -16.07
+     "rms_dbfs": -15.91
     }
    ]
   },
@@ -1219,7 +1220,7 @@
      "seconds": 0.35,
      "bytes": 15478,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -9.97
+     "rms_dbfs": -9.32
     }
    ]
   },
@@ -1250,7 +1251,7 @@
      "seconds": 3.0,
      "bytes": 132344,
      "peak_dbfs": -1.0,
-     "rms_dbfs": -14.2
+     "rms_dbfs": -14.23
     }
    ]
   },
@@ -1283,8 +1284,8 @@
      "file": "flour_delivery.wav",
      "seconds": 0.14,
      "bytes": 6218,
-     "peak_dbfs": -5.29,
-     "rms_dbfs": -19.72
+     "peak_dbfs": -5.24,
+     "rms_dbfs": -19.59
     }
    ]
   },
@@ -1317,8 +1318,8 @@
      "file": "ui_scout.wav",
      "seconds": 0.08,
      "bytes": 3572,
-     "peak_dbfs": -5.3,
-     "rms_dbfs": -16.42
+     "peak_dbfs": -5.0,
+     "rms_dbfs": -16.23
     }
    ]
   },
@@ -1350,7 +1351,7 @@
      "seconds": 0.62,
      "bytes": 27386,
      "peak_dbfs": -3.5,
-     "rms_dbfs": -13.76
+     "rms_dbfs": -13.64
     }
    ]
   },
@@ -1381,8 +1382,8 @@
      "file": "nest_slam.wav",
      "seconds": 0.36,
      "bytes": 15920,
-     "peak_dbfs": -4.0,
-     "rms_dbfs": -22.91
+     "peak_dbfs": -4.05,
+     "rms_dbfs": -22.57
     }
    ]
   },
@@ -1414,7 +1415,7 @@
      "seconds": 0.34,
      "bytes": 15038,
      "peak_dbfs": -4.0,
-     "rms_dbfs": -18.17
+     "rms_dbfs": -17.79
     }
    ]
   },
@@ -1446,7 +1447,7 @@
      "seconds": 0.5,
      "bytes": 22094,
      "peak_dbfs": -3.5,
-     "rms_dbfs": -15.35
+     "rms_dbfs": -15.45
     }
    ]
   },
@@ -1478,7 +1479,7 @@
      "seconds": 0.22,
      "bytes": 9746,
      "peak_dbfs": -4.0,
-     "rms_dbfs": -19.43
+     "rms_dbfs": -19.57
     }
    ]
   }

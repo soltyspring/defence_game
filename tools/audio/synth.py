@@ -35,7 +35,7 @@ SFX_SR = 22050          # mono 16-bit PCM; chip-style SFX do not need >11 kHz ba
 MUSIC_SR = 44100        # stereo, encoded to Ogg Vorbis (streamed, not decompressed into RAM)
 SFX_PEAK = 10 ** (-1.0 / 20)    # -1 dBFS sample peak ceiling
 MUSIC_PEAK = 10 ** (-3.0 / 20)  # -3 dBFS before lossy encode (leaves inter-sample/encoder headroom)
-GENERATOR_VERSION = 8
+GENERATOR_VERSION = 9
 
 # ----------------------------------------------------------------------------------------------
 # DSP primitives
@@ -87,7 +87,7 @@ def noise(n: int, rng: np.random.Generator) -> np.ndarray:
     return rng.uniform(-1.0, 1.0, n)
 
 
-def env_exp(n: int, sr: int, tau: float, attack: float = 0.002) -> np.ndarray:
+def env_exp(n: int, sr: int, tau: float, attack: float = 0.003) -> np.ndarray:
     t = np.arange(n) / sr
     e = np.exp(-t / max(tau, 1e-4))
     a = n_samples(attack, sr)
@@ -150,6 +150,12 @@ def fade_edges(x: np.ndarray, sr: int, fin: float = 0.002, fout: float = 0.008) 
     x[:a] *= np.linspace(0, 1, a)
     x[-b:] *= np.linspace(1, 0, b)
     return x
+
+
+def polish(x: np.ndarray, sr: int, cutoff: float = 7500.0) -> np.ndarray:
+    """v4.0 final SFX stage: 2-pole low-pass (two one-pole passes) at 7.5 kHz. At 22.05 kHz the white-noise layers
+    and square/saw edges left 26-46 % of the energy above 6 kHz - heard as hiss and digital fizz on phones."""
+    return lowpass(lowpass(x, cutoff, sr), cutoff, sr)
 
 
 def normalize(x: np.ndarray, peak: float) -> np.ndarray:
@@ -218,7 +224,7 @@ SR = SFX_SR
 def blip(f0, f1, dur, shape="square", duty=0.5, tau=None, curve="exp"):
     n = n_samples(dur, SR)
     s = osc(ramp(f0, f1, n, curve), n, SR, shape, duty)
-    return s * (env_exp(n, SR, tau) if tau else env_adsr(n, SR, 0.002, dur * 0.3, 0.6, dur * 0.5))
+    return s * (env_exp(n, SR, tau) if tau else env_adsr(n, SR, 0.003, dur * 0.3, 0.6, dur * 0.5))
 
 
 def mix(*xs):
@@ -245,7 +251,7 @@ def thump(f0, f1, dur, tau, drive=3.0):
     s = osc(ramp(f0, f1, n), n, SR, "sine")
     if drive > 0:
         s = np.tanh(drive * s) / np.tanh(drive)
-    return s * env_exp(n, SR, tau, 0.001)
+    return s * env_exp(n, SR, tau, 0.0015)
 
 
 def crunch_layer(rng, dur, tau, gain=0.6):
@@ -260,7 +266,7 @@ def burst(rng, dur, tau, lo, hi, cutoff_end=None):
         x = lowpass(highpass(x, lo, SR), ramp(hi, cutoff_end, n), SR)
     else:
         x = bandpass(x, lo, hi, SR)
-    return x * env_exp(n, SR, tau, 0.001)
+    return x * env_exp(n, SR, tau, 0.002)
 
 
 def r_ui_tap(rng):
@@ -416,8 +422,8 @@ def r_hero_respawn(rng):
 def r_skill_slam(rng):
     boom = mix(thump(170, 70, 0.5, 0.15) * 0.35, crunch_layer(rng, 0.3, 0.08, 1.0))
     n = n_samples(0.5, SR)
-    sweep = lowpass(noise(n, rng), ramp(6000, 300, n), SR) * env_exp(n, SR, 0.12)
-    crack = burst(rng, 0.05, 0.012, 1500, 8000) * 0.7
+    sweep = lowpass(noise(n, rng), ramp(4000, 300, n), SR) * env_exp(n, SR, 0.12)     # v4.0: 6 -> 4 kHz start (fizz)
+    crack = burst(rng, 0.05, 0.012, 1500, 5000) * 0.7                                   # v4.0: 8 -> 5 kHz top
     return seq([(0, crack), (0.005, boom), (0.0, sweep * 0.8)], 0.6)
 
 
@@ -554,12 +560,14 @@ def bell(f, dur, tau=None, bright=1.0):
 
 
 def crumbs(rng, dur, count, lo=1800, hi=7000, gain=1.0):
-    """Dry crust crackle: `count` tiny noise grains (3-9 ms) scattered over `dur` seconds."""
+    """Dry crust crackle: `count` small noise grains (6-14 ms) scattered over `dur` seconds.
+    v4.0: the grains were 3-9 ms with a 0.3 ms attack and up to 7 kHz - single-sample-sharp ticks that read as the
+    speaker or file breaking up (first-run review). Now softer grains: 2 ms attack, top band capped at 4.5 kHz."""
     out = np.zeros(n_samples(dur, SR))
     for _ in range(count):
-        g = n_samples(rng.uniform(0.003, 0.009), SR)
-        grain = bandpass(noise(g, rng), lo, hi, SR) * env_exp(g, SR, g / SR * 0.35, 0.0003)
-        place(out, grain * rng.uniform(0.4, 1.0) * gain, int(rng.uniform(0, 0.85) * len(out)))
+        g = n_samples(rng.uniform(0.006, 0.014), SR)
+        grain = bandpass(noise(g, rng), lo, min(hi, 4500), SR) * env_exp(g, SR, g / SR * 0.45, 0.002)
+        place(out, grain * rng.uniform(0.4, 1.0) * gain * 0.75, int(rng.uniform(0, 0.85) * len(out)))
     return out
 
 
@@ -711,7 +719,7 @@ def r3_explosion(rng):
     out = mix(body, thump(180, 90, 0.45, 0.10) * 0.35, squelch(rng, 0.3, 300, 1200, 250, wet=0.8) * 0.9)
     for i in range(6):
         place(out, bubble(rng.uniform(350, 900), 0.03) * 0.3, n_samples(0.12 + 0.05 * i, SR))
-    hiss = highpass(noise(n, rng), 4000, SR) * env_adsr(n, SR, 0.05, 0.1, 0.25, 0.2) * 0.1
+    hiss = bandpass(noise(n, rng), 3000, 6000, SR) * env_adsr(n, SR, 0.05, 0.1, 0.25, 0.2) * 0.08   # v4.0: band, not open top
     return mix(out, hiss)
 
 
@@ -940,7 +948,7 @@ CUES = {
                             bus="SFX", vol_db=-6, max=2, gap=0.22, prio=1, pitch=0.08, faction="mold", group="hit",
                             desc="a mold unit is hit: soft plop with restrained noise"),
     "hit_arrow":       dict(r=[r_hit_arrow], bus="SFX", vol_db=-10, max=2, gap=0.05, prio=1, pitch=0.08, faction="neutral", group="hit", desc="ranged impact fallback"),
-    "shoot_arrow":     dict(r=[r_shoot_arrow], rx=[lambda g: r38_shoot_arrow_v(g, 1)], vol_jitter=1.0, bus="SFX", vol_db=-12, max=2, gap=0.06, prio=1, pitch=0.08, faction="bakery", desc="baguette thrower whoosh"),
+    "shoot_arrow":     dict(r=[r_shoot_arrow], rx=[lambda g: r38_shoot_arrow_v(g, 1)], polish_hz=10500.0, vol_jitter=1.0, bus="SFX", vol_db=-12, max=2, gap=0.06, prio=1, pitch=0.08, faction="bakery", desc="baguette thrower whoosh"),
     "shoot_rock":      dict(r=[r_shoot_rock], bus="SFX", vol_db=-10, max=1, gap=0.12, prio=2, pitch=0.06, faction="bakery", desc="oven cannon puff + thunk"),
     "shoot_spit":      dict(r=[r3_shoot_spit], rx=[lambda g: r38_shoot_spit_v(g, 1), lambda g: r38_shoot_spit_v(g, 2)], vol_jitter=1.0, bus="SFX", vol_db=-11, max=2, gap=0.08, prio=1, pitch=0.08, faction="mold", desc="spore spit: wet ptoo + bubbles"),
     "hit_base":        dict(r=[r3_hit_base_bakery], bus="SFX", vol_db=-4.5, max=1, gap=0.35, prio=5, pitch=0.05, duck_sfx=-6, duck_sfx_below=5, faction="bakery", desc="bakery tower hit: wooden crack + crust shower"),
@@ -1265,6 +1273,17 @@ def stats(x: np.ndarray) -> dict:
     return {"peak_dbfs": round(20 * math.log10(max(pk, 1e-9)), 2), "rms_dbfs": round(20 * math.log10(max(rms, 1e-9)), 2)}
 
 
+def render_sfx(raw, c: dict) -> np.ndarray:
+    """Recipe output -> final SFX: 30 Hz high-pass, polish low-pass (cue `polish_hz`, default 7.5 kHz), peak
+    normalisation, edge fades (fade-in at least 3 ms for cues longer than 0.1 s), then DC removal again."""
+    x = polish(highpass(np.asarray(raw, dtype=np.float64), 30.0, SR), SR, float(c.get("polish_hz", 7500.0)))
+    x = normalize(x, 10 ** (float(c.get("peak_dbfs_target", -1.0)) / 20))
+    fin = float(c.get("fade_in", 0.002))
+    if len(x) > 0.1 * SR: fin = max(0.003, fin)
+    x = fade_edges(x, SR, fin, float(c.get("fade_out", 0.008)))
+    return x - float(np.mean(x)) if len(x) < 0.1 * SR else x     # very short cues: the fade moved the mean
+
+
 def main() -> int:
     only = set()
     for arg in sys.argv[1:]:
@@ -1305,7 +1324,7 @@ def main() -> int:
         for vi, recipe in enumerate(c["r"]):
             seed += 1
             rng = np.random.default_rng(seed)
-            x = fade_edges(normalize(highpass(np.asarray(recipe(rng), dtype=np.float64), 30.0, SR), 10 ** (float(c.get("peak_dbfs_target", -1.0)) / 20)), SR, float(c.get("fade_in", 0.002)), float(c.get("fade_out", 0.008)))
+            x = render_sfx(recipe(rng), c)
             name = f"{cue}.wav" if len(c["r"]) == 1 else f"{cue}_{vi + 1}.wav"
             write_wav(SFX_DIR / name, x, SR, seed)
             files.append(f"res://assets/audio/sfx/{name}")
@@ -1316,7 +1335,7 @@ def main() -> int:
             xs = 70000 + 10 * list(CUES).index(cue) + xi
             xseeds.append(xs)
             rng = np.random.default_rng(xs)
-            x = fade_edges(normalize(highpass(np.asarray(recipe(rng), dtype=np.float64), 30.0, SR), 10 ** (float(c.get("peak_dbfs_target", -1.0)) / 20)), SR, float(c.get("fade_in", 0.002)), float(c.get("fade_out", 0.008)))
+            x = render_sfx(recipe(rng), c)
             name = f"{cue}_v{xi + 2}.wav"
             write_wav(SFX_DIR / name, x, SR, xs)
             files.append(f"res://assets/audio/sfx/{name}")
