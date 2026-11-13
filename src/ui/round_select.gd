@@ -11,6 +11,7 @@ var page := 0
 var tiles: Array = []            # TouchButton per visible slot
 var btn_back: Control
 var btn_upgrades: Control
+var btn_roster: Control
 var btn_prev: Control
 var btn_next: Control
 var tile_rects: Array[Rect2] = []
@@ -19,6 +20,7 @@ func _build() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	btn_back = make_button(UiText.t("ui.back"), _on_back)
 	btn_upgrades = make_button(UiText.t("ui.upgrades"), open_upgrades)
+	btn_roster = make_button(UiText.t("roster.title"), func(): emit_cmd(&"cmd_open_screen", [&"roster"]))
 	btn_back.glyph = &""
 	btn_prev = make_button("", func(): _set_page(page - 1))
 	btn_prev.glyph = &"left"
@@ -79,7 +81,7 @@ func _refresh() -> void:
 		t.disabled = not unlocked
 		t.glyph = &"" if unlocked else &"lock"
 		t.icon = null if unlocked else UiStyle.ui_icon("icon_lock")
-		t.badge = ""
+		t.badge = "!" if bool(r.get("growth_gate", false)) else ""
 		t.set_meta("stars", int(stars.get(str(r.id), 0)))
 		t.set_meta("number", int(r.get("index", idx + 1)))
 		t.fill = UiStyle.C_PANEL_LIGHT if unlocked else UiStyle.C_DISABLED
@@ -107,6 +109,7 @@ func _layout() -> void:
 	var t := maxf(target, 40.0)
 	place(btn_back, Rect2(safe.position + Vector2(4, 4), Vector2(72, t)))
 	place(btn_upgrades, Rect2(Vector2(safe.end.x - 4 - 80, safe.position.y + 4), Vector2(80, t)))
+	place(btn_roster, Rect2(Vector2(safe.position.x + 90, safe.position.y + 4), Vector2(76, t)))
 	var top := safe.position.y + t + 12
 	var bottom := safe.end.y - 6
 	var side := t + 10

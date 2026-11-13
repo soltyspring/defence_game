@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "calibration": "Boss gate candidate, casual bot seed11; factors relative to public exponential curve. Independent validation in docs/design/balance.",
+  "gate_factors": {
+    "23": 1.5291,
+    "42": 1.4521,
+    "61": 1.6575,
+    "79": 0.7663,
+    "96": 1.1476
+  }
+}

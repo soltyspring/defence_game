@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "id": "r78",
+  "index": 78,
+  "chapter": 8,
+  "name": "원정 78",
+  "name_key": "round.r78.name",
+  "biome": "biome_nest",
+  "lane_length": 2080,
+  "player_base_hp": 4484,
+  "enemy_base_hp": 7880,
+  "start_gold": 150,
+  "gold_max": 500,
+  "workers_max": 8,
+  "hero": "hero_captain",
+  "cards": [
+    "melee_basic",
+    "ranged_basic",
+    "tank",
+    "fast",
+    "siege"
+  ],
+  "skills": [
+    "skill_slam",
+    "skill_rally",
+    "skill_barrage"
+  ],
+  "waves": [
+    {
+      "at": 12,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 2,
+          "interval": 4
+        },
+        {
+          "unit": "e_burrower",
+          "count": 1,
+          "interval": 0
+        }
+      ]
+    },
+    {
+      "at": 51,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 3,
+          "interval": 4
+        },
+        {
+          "unit": "e_binder",
+          "count": 1,
+          "interval": 0
+        },
+        {
+          "unit": "e_burrower",
+          "count": 2,
+          "interval": 6
+        }
+      ]
+    },
+    {
+      "at": 90,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 3,
+          "interval": 3.5
+        },
+        {
+          "unit": "e_binder",
+          "count": 1,
+          "interval": 0
+        },
+        {
+          "unit": "e_burrower",
+          "count": 2,
+          "interval": 5
+        }
+      ]
+    },
+    {
+      "at": 135,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 4,
+          "interval": 3.5
+        },
+        {
+          "unit": "e_binder",
+          "count": 1,
+          "interval": 0
+        },
+        {
+          "unit": "e_burrower",
+          "count": 3,
+          "interval": 5
+        }
+      ]
+    },
+    {
+      "at": 251,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 4,
+          "interval": 3
+        },
+        {
+          "unit": "e_binder",
+          "count": 1,
+          "interval": 0
+        }
+      ],
+      "pressure": true
+    },
+    {
+      "at": 311,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 5,
+          "interval": 2.5
+        },
+        {
+          "unit": "e_binder",
+          "count": 2,
+          "interval": 4
+        }
+      ],
+      "pressure": true
+    }
+  ],
+  "enemy_ai": {
+    "pool": [],
+    "income": 0,
+    "start_gold": 0,
+    "think": 2.5,
+    "after_waves_loop": false
+  },
+  "trickle": {
+    "start": 34,
+    "pattern": [
+      "e_thrall",
+      "e_binder",
+      "e_thrall",
+      "e_burrower"
+    ],
+    "interval": 11.5,
+    "interval_min": 8,
+    "ramp_per_min": 1.2
+  },
+  "enemy_base_spawns_on_hp": [
+    {
+      "below": 0.5,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 2,
+          "interval": 2.0
+        },
+        {
+          "unit": "e_burrower",
+          "count": 1,
+          "interval": 0
+        }
+      ]
+    }
+  ],
+  "reward": {
+    "coins": 640,
+    "first_clear_coins": 1993,
+    "three_star_bonus_coins": 382
+  },
+  "stars": {
+    "time_3": 360,
+    "base_hp_2": 0.4
+  },
+  "enemy_scaling": {
+    "hp": 6.7836,
+    "atk": 3.7484
+  },
+  "enemy_tower_atk_mult": 0.5,
+  "tutorial": [],
+  "provisional": true,
+  "balance_note": "Campaign100 candidate: fixed public growth gates R23/42/61/79/96. Late HP x1.027/round, ATK x1.020. No spending-dependent difficulty. See CAMPAIGN100.md and simulator evidence.",
+  "challenge": false,
+  "danger_gap": 3.5,
+  "growth_gate": false
+}

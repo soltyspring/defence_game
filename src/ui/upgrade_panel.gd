@@ -131,7 +131,12 @@ func effect_text(u: Dictionary) -> String:
 	for k in pl:
 		var v := float(pl[k])
 		if str(k).ends_with("_mult"):
-			parts.append("+%d%%" % int(roundf(v * 100)))
+			var lv := level_of(str(u.id))
+			var rate := float(u.get("compound_rate", 0.0))
+			var after := int(u.get("compound_after_level", 999))
+			var before := (1.0 + v * (lv - 1)) * pow(1.0 + rate, maxi(0, lv - after))
+			var next := (1.0 + v * lv) * pow(1.0 + rate, maxi(0, lv + 1 - after))
+			parts.append("+%d%%" % int(roundf((next / before - 1.0) * 100)))
 		else:
 			parts.append(("+%.2f" % v).rstrip("0").rstrip("."))
 	return " ".join(parts.slice(0, 2))

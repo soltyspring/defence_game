@@ -38,10 +38,10 @@ var _shake := 0.0
 var world_zoom := 1.0                  # camera zoom used in the last frame (1 = off; App.world_zoom())
 const GROUND_FROM_BOTTOM := 70.0       # ground row, view px above the view bottom (04 CamFix / R17)
 
-func start(p_round_id: String, seed_value: int, upgrades: Dictionary, autoplay := false) -> void:
+func start(p_round_id: String, seed_value: int, upgrades: Dictionary, autoplay := false, loadout: Array = []) -> void:
 	round_id = p_round_id
 	sim = SimS.new()
-	sim.setup(Content, round_id, seed_value, upgrades)
+	sim.setup(Content, round_id, seed_value, upgrades, loadout)
 	var gy := float(Content.config.get("lane", {}).get("ground_y", 290.0))
 	# atlas residency for this battle only
 	var sets: Array = []

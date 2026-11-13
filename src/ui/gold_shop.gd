@@ -5,15 +5,54 @@ var btn_back: Control
 var pack_buttons: Array[Control] = []
 var receipt := ""
 var credit_busy := false
+var growth_buttons: Array[Control] = []
+var btn_category: Control
+var growth_mode := false
 
 func _build() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	btn_back = make_button(UiText.t("ui.back"), _back)
+	btn_category = make_button(UiText.t("shop.growth"), _switch_category)
 	for amount: int in Catalog.PACKS:
 		var digits := Catalog.formatted(amount)
 		var b := make_button(UiText.t("shop.pack") % digits, _buy.bind(amount))
 		b.sub_text = UiText.t("shop.price") % digits
 		pack_buttons.append(b)
+	for product in Content.meta.get("iap_catalog", {}).get("products", []):
+		var b := make_button(UiText.t("shop.growth_name") % int(product.target_round), _buy_growth.bind(str(product.id)))
+		b.font_size = UiStyle.FONT_S
+		b.text = "R%d\n%s G" % [int(product.target_round), Catalog.formatted(int(product.gold))]
+		b.sub_text = "%s KRW" % Catalog.formatted(int(product.price_krw))
+		b.wrap_lines = 2
+		b.badge = "R%d" % int(product.unlock_round)
+		b.visible = false
+		growth_buttons.append(b)
+	_refresh_growth()
+
+func _refresh_growth() -> void:
+	var products: Array = Content.meta.get("iap_catalog", {}).get("products", [])
+	for i in growth_buttons.size():
+		var p: Dictionary = products[i]
+		growth_buttons[i].disabled = Save.round_reach() < int(p.unlock_round) or Save.progress.get("growth_purchases", {}).has(str(p.id)) or Save.read_only or Save._gold_shop_uncertain
+
+func _switch_category() -> void:
+	growth_mode = not growth_mode
+	for b in pack_buttons: b.visible = not growth_mode
+	for b in growth_buttons: b.visible = growth_mode
+	btn_category.text = UiText.t("shop.regular" if growth_mode else "shop.growth")
+	_layout()
+
+func _buy_growth(id: String) -> void:
+	if credit_busy: return
+	credit_busy = true
+	var code: String = Save.buy_preview_growth(id)
+	credit_busy = false
+	receipt = UiText.t("shop." + code)
+	if code == "ok":
+		for p in Content.meta.iap_catalog.products:
+			if str(p.id) == id: receipt = receipt % Catalog.formatted(int(p.gold))
+	_refresh_growth()
+	queue_redraw()
 
 func _buy(amount: int) -> void:
 	if credit_busy: return
@@ -44,6 +83,7 @@ func _layout() -> void:
 	if btn_back == null: return
 	var t := maxf(target, 40.0)
 	place(btn_back, Rect2(safe.position + Vector2(6, 6), Vector2(76, t)))
+	place(btn_category, Rect2(safe.end.x - 116, safe.position.y + 6, 110, t))
 	var cols := 4 if safe.size.x >= 540 or safe.size.y < 208 else 2
 	var rows := 4 / cols
 	var width := clampf(safe.size.x - 24.0, 1.0, 600.0)
@@ -54,6 +94,9 @@ func _layout() -> void:
 	var left := safe.get_center().x - (bw * cols + gap * (cols - 1)) * 0.5
 	for i in pack_buttons.size():
 		place(pack_buttons[i], Rect2(left + (i % cols) * (bw + gap), start_y + (i / cols) * (bh + gap), bw, bh))
+	var gw := floorf((width - gap * 4) / 5)
+	for i in growth_buttons.size():
+		place(growth_buttons[i], Rect2(safe.get_center().x - width * 0.5 + i * (gw + gap), start_y, gw, bh))
 
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, view), UiStyle.C_BG)

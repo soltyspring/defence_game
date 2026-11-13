@@ -6,7 +6,9 @@ param(
     [string]$OutDir = '',
     [string]$PresetFile = '',
     [switch]$FromWorkingTree,
-    [switch]$GoldShopPreview
+    [switch]$GoldShopPreview,
+    [string]$UserDataName = '',
+    [switch]$SkipRuntimeTests
 )
 $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
@@ -32,6 +34,13 @@ if ($FromWorkingTree) {
     Remove-Item -LiteralPath $archive
 }
 if ($PresetFile) { Copy-Item -LiteralPath (Resolve-Path -LiteralPath $PresetFile).Path -Destination (Join-Path $work 'export_presets.cfg') }
+if ($UserDataName) {
+    if ($UserDataName -notmatch '^[A-Za-z0-9_-]+$') { throw 'UserDataName must contain letters, digits, hyphens or underscores.' }
+    $projectPath = Join-Path $work 'project.godot'
+    $projectText = [IO.File]::ReadAllText($projectPath)
+    $projectText = $projectText.Replace('[application]', "[application]`nconfig/use_custom_user_dir=true`nconfig/custom_user_dir_name=`"$UserDataName`"")
+    [IO.File]::WriteAllText($projectPath, $projectText, [Text.UTF8Encoding]::new($false))
+}
 if ([IO.File]::ReadAllText((Join-Path $work 'export_presets.cfg')) -notmatch 'name="Windows Desktop"') { throw 'The selected ref has no Windows Desktop preset.' }
 if ($GoldShopPreview) {
     $cfgPath = Join-Path $work 'export_presets.cfg'
@@ -54,7 +63,7 @@ try {
     & $Godot --headless --language en --path $work --import *> (Join-Path $OutDir 'import.log')
     $ErrorActionPreference = 'Stop'
     if ($LASTEXITCODE -ne 0) { throw 'Import failed. See import.log.' }
-    if ($GoldShopPreview) {
+    if ($GoldShopPreview -and -not $SkipRuntimeTests) {
         foreach ($preview in @($false, $true)) {
             $shopLog = Join-Path $OutDir "shop-source-$preview.log"
             $shopArgs = @('--headless','--language','en','--path',$work,'-s','tests/integration/test_gold_shop.gd')
@@ -102,6 +111,8 @@ func _initialize():
     $ErrorActionPreference = 'Stop'
     if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $exe)) { throw 'Export failed. See export.log.' }
     # Test the shipped executable from a directory with no project source or PCK beside it.
+    $smoke = @()
+    if (-not $SkipRuntimeTests) {
     $menuLog = Join-Path $OutDir 'exe-menu.log'
     $battleLog = Join-Path $OutDir 'exe-battle.log'
     $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--log-file',('"' + $menuLog + '"'),'--','--quit-after=2') -WorkingDirectory $package -WindowStyle Hidden -Wait -PassThru
@@ -113,16 +124,17 @@ func _initialize():
         if ($text -match 'SCRIPT ERROR|Parse Error|ERROR:|Failed loading|not found') { throw "Runtime errors in $name" }
         if ($text -notmatch '\[App\] boot ok') { throw "No boot evidence in $name" }
     }
-    $hash = (Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash.ToLowerInvariant()
     $smoke = @('menu','r01 autoplay')
-    if ($GoldShopPreview) {
+    }
+    $hash = (Get-FileHash -LiteralPath $exe -Algorithm SHA256).Hash.ToLowerInvariant()
+    if ($GoldShopPreview -and -not $SkipRuntimeTests) {
         $log = Join-Path $OutDir 'exe-shop.log'
         $run = Start-Process -FilePath $exe -ArgumentList @('--headless','--log-file',('"' + $log + '"'),'--','--open-gold-shop','--quit-after=2') -WorkingDirectory $package -WindowStyle Hidden -Wait -PassThru
         $contents = [IO.File]::ReadAllText($log)
         if ($run.ExitCode -ne 0 -or $contents -notmatch 'screen=gold_shop.*"gold_shop":"scenes/ui"' -or $contents -match 'SCRIPT ERROR|Parse Error|ERROR:') { throw 'EXE shop smoke test failed.' }
         $smoke += 'gold shop'
     }
-    $info = [ordered]@{ source_commit=$sha; from_working_tree=[bool]$FromWorkingTree; gold_shop_preview=[bool]$GoldShopPreview; engine=$version; platform='Windows x86_64'; embedded_pck=$true; sha256=$hash; smoke_tests=$smoke; signed=$false }
+    $info = [ordered]@{ source_commit=$sha; from_working_tree=[bool]$FromWorkingTree; gold_shop_preview=[bool]$GoldShopPreview; user_data_name=$UserDataName; engine=$version; platform='Windows x86_64'; embedded_pck=$true; sha256=$hash; smoke_tests=$smoke; runtime_verification= $(if ($SkipRuntimeTests) { 'deferred_by_user' } else { 'passed' }); signed=$false }
     $info | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $package 'BUILD_INFO.json') -Encoding utf8
     "$hash  BakeryKnights.exe" | Set-Content -LiteralPath (Join-Path $package 'SHA256SUMS.txt') -Encoding ascii
     if (Test-Path -LiteralPath (Join-Path $root 'README.md')) { Copy-Item -LiteralPath (Join-Path $root 'README.md') -Destination (Join-Path $package 'README.md') }

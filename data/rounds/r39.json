@@ -164,12 +164,12 @@
     "base_hp_2": 0.4
   },
   "enemy_scaling": {
-    "hp": 1.82,
-    "atk": 1.442
+    "hp": 2.4212,
+    "atk": 1.7452
   },
   "enemy_tower_atk_mult": 0.5,
   "tutorial": [],
   "provisional": true,
-  "balance_note": "A three-knot escort rehearses the final boss fight without a boss.",
+  "balance_note": "Campaign100 candidate: fixed public growth gates R23/42/61/79/96. Late HP x1.027/round, ATK x1.020. No spending-dependent difficulty. See CAMPAIGN100.md and simulator evidence.",
   "challenge": true
 }

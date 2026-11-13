@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "id": "r90",
+  "index": 90,
+  "chapter": 9,
+  "name": "원정 90",
+  "name_key": "round.r90.name",
+  "biome": "biome_frost",
+  "lane_length": 2260,
+  "player_base_hp": 5175,
+  "enemy_base_hp": 10475,
+  "start_gold": 140,
+  "gold_max": 500,
+  "workers_max": 8,
+  "hero": "hero_captain",
+  "cards": [
+    "melee_basic",
+    "ranged_basic",
+    "tank",
+    "fast",
+    "siege"
+  ],
+  "skills": [
+    "skill_slam",
+    "skill_rally",
+    "skill_barrage"
+  ],
+  "waves": [
+    {
+      "at": 12,
+      "spawns": [
+        {
+          "unit": "boss_ovenheart",
+          "count": 1,
+          "interval": 0
+        },
+        {
+          "unit": "e_frostshell",
+          "count": 2,
+          "interval": 6
+        }
+      ],
+      "boss": true
+    },
+    {
+      "at": 44,
+      "spawns": [
+        {
+          "unit": "e_frostshell",
+          "count": 2,
+          "interval": 6
+        },
+        {
+          "unit": "e_icerunner",
+          "count": 3,
+          "interval": 4
+        }
+      ]
+    },
+    {
+      "at": 82,
+      "spawns": [
+        {
+          "unit": "e_frostshell",
+          "count": 3,
+          "interval": 6
+        },
+        {
+          "unit": "e_icerunner",
+          "count": 3,
+          "interval": 3.5
+        }
+      ]
+    },
+    {
+      "at": 124,
+      "spawns": [
+        {
+          "unit": "e_frostshell",
+          "count": 3,
+          "interval": 6
+        },
+        {
+          "unit": "e_icerunner",
+          "count": 4,
+          "interval": 3.5
+        }
+      ]
+    }
+  ],
+  "enemy_ai": {
+    "pool": [],
+    "income": 0,
+    "start_gold": 0,
+    "think": 2.5,
+    "after_waves_loop": false
+  },
+  "trickle": {
+    "start": 7,
+    "pattern": [
+      "e_frostshell",
+      "e_icerunner",
+      "e_frostshell",
+      "e_grunt"
+    ],
+    "interval": 7.48,
+    "interval_min": 7.0,
+    "ramp_per_min": 0.25
+  },
+  "enemy_base_spawns_on_hp": [
+    {
+      "below": 0.55,
+      "spawns": [
+        {
+          "unit": "e_frostshell",
+          "count": 1,
+          "interval": 0
+        },
+        {
+          "unit": "e_icerunner",
+          "count": 1,
+          "interval": 0
+        }
+      ]
+    },
+    {
+      "below": 0.25,
+      "spawns": [
+        {
+          "unit": "e_icerunner",
+          "count": 2,
+          "interval": 4
+        }
+      ]
+    }
+  ],
+  "reward": {
+    "coins": 831,
+    "first_clear_coins": 2681,
+    "three_star_bonus_coins": 484
+  },
+  "stars": {
+    "time_3": 360,
+    "base_hp_2": 0.4
+  },
+  "enemy_scaling": {
+    "hp": 9.3391,
+    "atk": 4.7539
+  },
+  "enemy_tower_atk_mult": 0.5,
+  "tutorial": [],
+  "boss_round": true,
+  "provisional": true,
+  "balance_note": "Campaign100 candidate: fixed public growth gates R23/42/61/79/96. Late HP x1.027/round, ATK x1.020. No spending-dependent difficulty. See CAMPAIGN100.md and simulator evidence.",
+  "challenge": false,
+  "growth_gate": false
+}

@@ -477,6 +477,11 @@ static var _icon_cache: Dictionary = {}
 
 ## Frame from the always-resident UI atlas (manifest "ui".atlas, default ui_main). Cached; null if absent.
 static func ui_icon(frame: String) -> Texture2D:
+	if frame.begins_with("card_"):
+		var uid := frame.trim_prefix("card_")
+		if uid in ["baguette", "macaron", "chili", "donut", "waffle"]:
+			if not _icon_cache.has(frame): _icon_cache[frame] = load("res://assets/art/roster10/" + uid + ".svg")
+			return _icon_cache[frame]
 	if _icon_cache.has(frame):
 		return _icon_cache[frame]
 	var atlas_id := "ui_main"

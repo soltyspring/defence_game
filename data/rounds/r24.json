@@ -133,12 +133,12 @@
     "base_hp_2": 0.4
   },
   "enemy_scaling": {
-    "hp": 1.64,
-    "atk": 1.334
+    "hp": 1.6695,
+    "atk": 1.35
   },
   "enemy_tower_atk_mult": 0.5,
   "tutorial": [],
   "boss_round": false,
   "provisional": true,
-  "balance_note": "Sequential charges to reward replacing the first blocker. Encounter composition only; original rewards and enemy stat scaling."
+  "balance_note": "Campaign100 candidate: fixed public growth gates R23/42/61/79/96. Late HP x1.027/round, ATK x1.020. No spending-dependent difficulty. See CAMPAIGN100.md and simulator evidence."
 }

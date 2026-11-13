@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "id": "r92",
+  "index": 92,
+  "chapter": 10,
+  "name": "원정 92",
+  "name_key": "round.r92.name",
+  "biome": "biome_nest",
+  "lane_length": 1580,
+  "player_base_hp": 5299,
+  "enemy_base_hp": 10984,
+  "start_gold": 150,
+  "gold_max": 500,
+  "workers_max": 8,
+  "hero": "hero_captain",
+  "cards": [
+    "melee_basic",
+    "ranged_basic",
+    "tank",
+    "fast",
+    "siege"
+  ],
+  "skills": [
+    "skill_slam",
+    "skill_rally",
+    "skill_barrage"
+  ],
+  "waves": [
+    {
+      "at": 12,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 2,
+          "interval": 6
+        }
+      ]
+    },
+    {
+      "at": 40,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 3,
+          "interval": 6
+        }
+      ]
+    },
+    {
+      "at": 77,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 3,
+          "interval": 5
+        }
+      ]
+    },
+    {
+      "at": 118,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 4,
+          "interval": 5
+        }
+      ]
+    },
+    {
+      "at": 233,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 4,
+          "interval": 3
+        }
+      ],
+      "pressure": true
+    },
+    {
+      "at": 293,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 5,
+          "interval": 2.5
+        }
+      ],
+      "pressure": true
+    }
+  ],
+  "enemy_ai": {
+    "pool": [],
+    "income": 0,
+    "start_gold": 0,
+    "think": 2.5,
+    "after_waves_loop": false
+  },
+  "trickle": {
+    "start": 34,
+    "pattern": [
+      "e_thrall"
+    ],
+    "interval": 16,
+    "interval_min": 11,
+    "ramp_per_min": 1.2
+  },
+  "enemy_base_spawns_on_hp": [
+    {
+      "below": 0.5,
+      "spawns": [
+        {
+          "unit": "e_thrall",
+          "count": 2,
+          "interval": 3
+        }
+      ]
+    }
+  ],
+  "reward": {
+    "coins": 868,
+    "first_clear_coins": 2817,
+    "three_star_bonus_coins": 504
+  },
+  "stars": {
+    "time_3": 360,
+    "base_hp_2": 0.4
+  },
+  "enemy_scaling": {
+    "hp": 9.8502,
+    "atk": 4.9459
+  },
+  "enemy_tower_atk_mult": 0.5,
+  "tutorial": [],
+  "provisional": true,
+  "balance_note": "Campaign100 candidate: fixed public growth gates R23/42/61/79/96. Late HP x1.027/round, ATK x1.020. No spending-dependent difficulty. See CAMPAIGN100.md and simulator evidence.",
+  "challenge": false,
+  "growth_gate": false
+}

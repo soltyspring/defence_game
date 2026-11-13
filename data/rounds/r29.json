@@ -138,12 +138,12 @@
     "base_hp_2": 0.4
   },
   "enemy_scaling": {
-    "hp": 1.79,
-    "atk": 1.424
+    "hp": 1.9922,
+    "atk": 1.5297
   },
   "enemy_tower_atk_mult": 0.5,
   "tutorial": [],
   "boss_round": false,
   "provisional": true,
-  "balance_note": "Fast reinforcements ask for sustained replacements before the final boss. Encounter composition only; original rewards and enemy stat scaling."
+  "balance_note": "Campaign100 candidate: fixed public growth gates R23/42/61/79/96. Late HP x1.027/round, ATK x1.020. No spending-dependent difficulty. See CAMPAIGN100.md and simulator evidence."
 }

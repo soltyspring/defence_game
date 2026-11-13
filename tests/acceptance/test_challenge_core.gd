@@ -19,7 +19,7 @@ func frames(n := 4) -> void:
 ## A quiet lane of round `id`: no scheduled spawns, max upgrades, hero parked at `hero_x`.
 func arena(c, id: String, hero_x: float):
 	var lv := {}
-	for u in c.meta.upgrades: lv[u.id] = int(u.max_level)
+	for u in c.meta.upgrades: lv[u.id] = mini(9, int(u.max_level))
 	var sim = Sim.new()
 	sim.setup(c, id, 7, lv)
 	sim.spawn_queue.clear()
@@ -46,7 +46,7 @@ func until(sim, event: String, limit: float) -> Dictionary:
 	return {}
 
 func _data_checks(c) -> void:
-	check(c.round_order.size() == 40 and c.warnings.is_empty(), "player order includes all forty rounds without warnings: %s" % [c.warnings])
+	check(c.round_order.size() == 100 and c.warnings.is_empty(), "player order includes all hundred rounds without warnings: %s" % [c.warnings])
 	var locale_ko: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/text/ko.json"))
 	var locale_en: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/text/en.json"))
 	for n in range(31, 41):
@@ -56,8 +56,8 @@ func _data_checks(c) -> void:
 			"%s is playable and in order" % id)
 		check(locale_ko.strings.has("round.%s.name" % id) and locale_en.strings.has("round.%s.name" % id), "%s has both localized titles" % id)
 		if n < 40: check(c.next_round_id(id) == "r%02d" % (n + 1), "%s has the correct next round" % id)
-	check(c.challenge_enabled and c.next_round_id("r40") == "", "chapter is open and r40 ends it")
-	check(c.next_round_id("r30") == "", "r30 is still the last round of the campaign")
+	check(c.challenge_enabled and c.next_round_id("r40") == "r41", "chapter is open and continues to r41")
+	check(c.next_round_id("r30") == "r31", "r30 continues into the nest chapter")
 	var ruled := []
 	for id in c.units:
 		var u: Dictionary = c.units[id]
@@ -78,7 +78,7 @@ func _data_checks(c) -> void:
 	for id in ["r31", "r35", "r40"]:
 		var sc: Dictionary = c.get_round(id).enemy_scaling
 		var ref: Dictionary = c.get_round("r30").enemy_scaling
-		check(is_equal_approx(float(sc.hp), float(ref.hp)) and is_equal_approx(float(sc.atk), float(ref.atk)), "%s keeps the r30 stat scaling" % id)
+		check(float(sc.hp) > float(ref.hp) and float(sc.atk) > float(ref.atk), "%s advances the public campaign growth curve" % id)
 
 func _heavy_checks(c) -> void:
 	# ignored: the hero stands in the announced zone
@@ -342,8 +342,8 @@ func _save_checks(c, save) -> void:
 	check(not save.is_unlocked(30), "with the chapter closed there is no round after r30 to unlock")
 	# The same saves under the actual published data, without fabricated rounds.
 	c.load_all("res://data")
-	check(c.challenge_enabled and c.round_order.size() == 40 and c.round_order[30] == "r31", "all ten rounds present + enabled: order has 40 rounds")
-	check(c.next_round_id("r30") == "" and c.next_round_id("r31") == "r32", "r30 still ends the campaign; r31 leads to r32")
+	check(c.challenge_enabled and c.round_order.size() == 100 and c.round_order[30] == "r31", "all expansion rounds present + enabled: order has 100 rounds")
+	check(c.next_round_id("r30") == "r31" and c.next_round_id("r31") == "r32", "published chapters continue in sequence")
 	save.path = dir + "/cleared.json"
 	save.load_progress()
 	check(save.is_unlocked(30) and not save.is_unlocked(31), "a save that cleared r30 opens r31 only")

@@ -149,12 +149,12 @@
     "base_hp_2": 0.4
   },
   "enemy_scaling": {
-    "hp": 1.67,
-    "atk": 1.352
+    "hp": 1.7307,
+    "atk": 1.3846
   },
   "enemy_tower_atk_mult": 0.5,
   "tutorial": [],
   "boss_round": true,
   "provisional": true,
-  "balance_note": "Campaign 30: distinct wave compositions, reused animation sets, gated late upgrades; bot validation in docs/qa/CAMPAIGN30_20261105.md. Human difficulty remains to be played."
+  "balance_note": "Campaign100 candidate: fixed public growth gates R23/42/61/79/96. Late HP x1.027/round, ATK x1.020. No spending-dependent difficulty. See CAMPAIGN100.md and simulator evidence."
 }
