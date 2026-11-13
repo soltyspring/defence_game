@@ -51,7 +51,7 @@ func setup(p_audio: Node, p_events: Node) -> void:
 	_c(&"cmd_start_round", func(_id): _ui(&"ui_confirm"))
 	_c(&"cmd_retry", func(): _ui(&"ui_confirm"))
 	_c(&"cmd_next_round", func(): _ui(&"ui_confirm"))
-	_c(&"cmd_open_screen", func(s): _ui(&"ui_back" if StringName(s) == &"menu" else &"ui_tap"))
+	_c(&"cmd_open_screen", _on_open_screen)
 	_c(&"cmd_set_paused", func(_p): _ui(&"ui_tap"))
 	_c(&"cmd_set_setting", _on_setting)
 	_c(&"cmd_preview_volume", _on_volume_preview)
@@ -118,8 +118,15 @@ func _on_direct(cue: StringName, params: Dictionary) -> void:
 	audio.play(c, params)
 
 # ------------------------------------------------------------ derived cues
-func _ui(cue: StringName) -> void:
-	if derived.ui: audio.play(cue)
+func _on_open_screen(destination: StringName) -> void:
+	if destination == &"menu" and screen == &"gold_shop":
+		# The regular back cue has two notes. Use a softer single tick when leaving the shop.
+		_ui(&"ui_tap", {"vol_db": -4.0, "pitch": 0.8})
+	else:
+		_ui(&"ui_back" if destination == &"menu" else &"ui_tap")
+
+func _ui(cue: StringName, params: Dictionary = {}) -> void:
+	if derived.ui: audio.play(cue, params)
 
 ## Command feedback is optimistic: the engine handles the command synchronously and emits an
 ## error toast on failure, so we wait until the end of the frame and drop the cue if one arrived.

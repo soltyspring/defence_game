@@ -79,9 +79,15 @@ func _run() -> void:
 			check(save.buy_preview_gold(1000) == "save_failed" and int(save.progress.coins) == before, "failed save rolls back the grant")
 			save.progress.coins = save._coins_cap() - 1
 			check(save.buy_preview_gold(1000) == "wallet_full" and int(save.progress.coins) == save._coins_cap() - 1, "wallet cap never truncates a pack")
+			await create_timer(0.15, true, false, true).timeout
+			var back_cues: Array[StringName] = []
+			var record_cue := func(cue: StringName, _voice: int): back_cues.append(cue)
+			root.get_node("Audio").cue_played.connect(record_cue)
 			tap(shop.btn_back, true)
 			await frames()
+			root.get_node("Audio").cue_played.disconnect(record_cue)
 			check(app.screen == &"menu", "back returns to the main menu")
+			check(back_cues == [&"ui_tap"], "back plays a single tick: %s" % str(back_cues))
 	print("[gold-shop] checks=", checks, " failures=", failures, " preview=", Catalog.enabled())
 	root.get_node("Audio").prepare_quit()
 	await create_timer(0.3, true, false, true).timeout
