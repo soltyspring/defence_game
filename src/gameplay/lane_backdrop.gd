@@ -1,7 +1,9 @@
 extends Node2D
-## Six cached scenery planes. One original village texture supplies material detail;
-## simple geometry supplies sky, fields and a clear combat lane. No extra viewports.
+## Painted chapter backgrounds for R01-R40, with cached geometry as an import
+## fallback. The six-plane API and live boss cues are shared by both paths.
 const Raster := preload("res://src/gameplay/pixel_camera.gd")
+const Painted := preload("res://src/gameplay/painted_chapter_backdrop.gd")
+var painted: Node2D
 var layers: Array[Node2D] = []
 var village_texture: Texture2D
 var factors := [0.0, 0.08, 0.22, 0.4, 0.68, 1.0]
@@ -137,6 +139,19 @@ func build(length: float, ground: float, _biome: String, player_x := 40.0, enemy
 		set_texture = load(SET_PATH)
 		factors[4] = 1.0   # set pieces are world-locked: they frame the two bases
 	scene = Scenes.spec(round_index)
+	if round_index >= 1 and round_index <= 40:
+		var art := Painted.new()
+		if art.build(length, ground, round_index):
+			painted = art
+			add_child(art)
+			layers = art.layers
+			factors = art.factors
+			for layer in layers: _mods.append(layer.modulate)
+			live = Live.new()
+			live.ground = ground
+			add_child(live)
+			return
+		art.free()
 	if not scene.is_empty():
 		_build_scene(length, ground, _biome, player_x, enemy_x)
 		return
