@@ -24,6 +24,17 @@ def main():
             pixels = list(art.getdata())
             art.putdata([(0, 0, 0, 0) if p[:3] == (255, 0, 255) else p for p in pixels])
             art.save(OUTPUT / f"{name}.png", optimize=True)
+            if name == "speed":
+                # Recolor the supplied face for x2 without changing its outline or pixel grid.
+                amber = {
+                    (61, 43, 39): (133, 76, 25),
+                    (106, 85, 77): (180, 115, 48),
+                    (106, 61, 41): (150, 82, 30),
+                    (132, 80, 50): (183, 105, 40),
+                    (170, 102, 54): (216, 143, 56),
+                }
+                art.putdata([(*amber.get(p[:3], p[:3]), p[3]) for p in art.getdata()])
+                art.save(OUTPUT / "speed_active.png", optimize=True)
 
 
 if __name__ == "__main__":

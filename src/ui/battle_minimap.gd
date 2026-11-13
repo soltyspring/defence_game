@@ -63,8 +63,9 @@ func _notification(what: int) -> void:
 ##   bakery and nest at the ends, allies as ticks above the lane and enemies below it (a boss is a larger block),
 ##   the hero as an outlined gold diamond, and the part of the lane on screen as corner brackets
 ##   (a full frame while the player is scouting away from the hero).
-const C_ALLY := Color("5cd96b")
-const C_FOE := Color("ed5a4d")
+const Palette := preload("res://src/ui/battle_hud_palette.gd")
+const C_ALLY := Palette.ALLY
+const C_FOE := Palette.FOE
 const C_INK := Color(0.05, 0.04, 0.04)
 
 const MINIMAP_SKIN := preload("res://assets/art/hud_skin/minimap.png")
@@ -92,16 +93,16 @@ func _draw() -> void:
 		ef = af
 	draw_rect(Rect2(7, y - 2, size.x - 14, 5), C_INK)
 	draw_rect(Rect2(8, y - 1, size.x - 16, 3), Color(0.20, 0.15, 0.12))
-	if af > bx: draw_rect(Rect2(bx, y - 1, af - bx, 3), Color(C_ALLY, 0.55))
-	if ex > ef: draw_rect(Rect2(ef, y - 1, ex - ef, 3), Color(C_FOE, 0.55))
+	if af > bx: draw_rect(Rect2(bx, y - 1, af - bx, 2), Color(C_ALLY, 0.68))
+	if ex > ef: draw_rect(Rect2(ef, y, ex - ef, 2), Color(C_FOE, 0.68))
 	# bakery (cream block, brown roof) and nest (grey-green mound), each with a dark outline
 	draw_rect(Rect2(bx - 5, y - 7, 10, 10), C_INK)
 	draw_rect(Rect2(bx - 4, y - 3, 8, 5), Color("e5c28c"))
-	draw_rect(Rect2(bx - 4, y - 6, 8, 3), Color("ad7048"))
+	draw_rect(Rect2(bx - 4, y - 6, 8, 3), Palette.ALLY)
 	draw_rect(Rect2(ex - 5, y - 7, 10, 10), C_INK)
-	draw_rect(Rect2(ex - 4, y - 4, 8, 6), Color("7f9a8a"))
-	draw_rect(Rect2(ex - 2, y - 6, 4, 2), Color("7f9a8a"))
-	draw_rect(Rect2(ex - 1, y - 2, 2, 2), Color("2a3a34"))
+	draw_rect(Rect2(ex - 4, y - 4, 8, 6), Palette.FOE)
+	draw_rect(Rect2(ex - 2, y - 6, 4, 2), Palette.FOE_LIGHT)
+	draw_rect(Rect2(ex - 1, y - 2, 2, 2), C_INK)
 	for dot in dots:
 		var x := map_x(float(dot[0]))
 		if int(dot[1]) > 0:

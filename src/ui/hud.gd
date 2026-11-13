@@ -190,7 +190,8 @@ func _on_speed() -> void:
 
 func _refresh_speed(v: float) -> void:
 	btn_speed.text = "x2" if v > 1.0 else "x1"
-	btn_speed.face_tint = Color.WHITE if v > 1.0 else Color(0.74, 0.74, 0.74)
+	btn_speed.face_texture = preload("res://assets/art/hud_skin/speed_active.png") if v > 1.0 else preload("res://assets/art/hud_skin/speed.png")
+	btn_speed.queue_redraw()
 
 # ---------------- engine -> UI ----------------
 

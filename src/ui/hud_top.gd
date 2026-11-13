@@ -4,6 +4,7 @@ extends Control
 
 const UiStyle := preload("res://src/ui/ui_style.gd")
 const UiText := preload("res://src/ui/ui_text.gd")
+const Palette := preload("res://src/ui/battle_hud_palette.gd")
 
 var snap: Dictionary = {}:
 	set(v):
@@ -191,12 +192,13 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 			if w <= 0: continue
 			# our fill is anchored at the bakery (left), theirs at the nest (right)
 			var fill := Rect2(bar.position.x if side == 0 else bar.end.x - w, bar.position.y, w, bar.size.y)
-			if side == 0:
-				draw_rect(fill, UiStyle.C_HP_PLAYER)
-			else:
-				UiStyle.draw_hatch(self, fill, UiStyle.C_HP_ENEMY)      # pattern: not hue alone (QA-B013)
-			draw_rect(Rect2(fill.position, Vector2(w, 2)), Color(1, 1, 1, 0.30))                      # lit top edge
-			draw_rect(Rect2(fill.position.x, fill.end.y - 2, w, 2), Color(0, 0, 0, 0.22))              # shaded bottom edge
+			draw_rect(fill, Palette.ALLY if side == 0 else Palette.FOE)
+			if side == 1: # Keep a shape cue for players who cannot distinguish the two hues.
+				var x := bar.end.x - 3.0
+				while x >= fill.position.x:
+					draw_rect(Rect2(x, fill.position.y + 1, 1, fill.size.y - 2), Palette.FOE_STRIPE)
+					x -= 5.0
+			draw_rect(Rect2(fill.position, Vector2(w, 1)), Palette.ALLY_LIGHT if side == 0 else Palette.FOE_LIGHT)
 			if side == 1 and ratio < 0.3:   # their base nearly down: a pale frame (ours pulses, hud_skin.gd TopSkin)
 				draw_rect(bar.grow(1), Color("fff0b0"), false, 1.0)
 		# centre mark: a small gold diamond where the two fronts meet (was the text "VS")

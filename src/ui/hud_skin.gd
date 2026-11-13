@@ -154,7 +154,7 @@ class CardSkin extends Control:
 
 ## Ornaments and feedback over the top bar (hud_top.gd draws the numbers; this only adds on top):
 ##   resource panel: crust frame with corner studs; flour at its cap -> a gold pulse (spend it!)
-##   base HP bars: a white "damage ghost" chunk that drains after a hit (fighting-game bars);
+##   base HP bars: a muted damage trail that drains after a hit (fighting-game bars);
 ##   your base below 30 % -> a red pulsing outline.
 class TopSkin extends Control:
 	var hud: Node
@@ -210,7 +210,7 @@ class TopSkin extends Control:
 		var w := inner.size.x * (was - now)
 		var rr := Rect2(inner.position.x + x0, inner.position.y, w, inner.size.y)
 		if mirror: rr.position.x = inner.end.x - inner.size.x * was
-		draw_rect(rr, Color(1, 0.97, 0.85, 0.85))
+		draw_rect(rr, Color("85594b") if mirror else Color("587363"))
 	func _frame(r: Rect2, c: Color, d: Color) -> void:
 		draw_rect(Rect2(r.position.x, r.position.y - 1, r.size.x, 1), c)
 		draw_rect(Rect2(r.position.x, r.end.y, r.size.x, 1), d)
