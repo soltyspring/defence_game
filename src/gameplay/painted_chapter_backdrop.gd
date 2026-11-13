@@ -1,12 +1,12 @@
 extends Node2D
-## Original painted panoramas. Only the active chapter is loaded; the road stays
+## Pixel art panoramas. Only the active chapter is loaded; the road stays
 ## world-locked while scenery moves at 28% camera speed. No runtime image edits.
-const DIR := "res://assets/backgrounds/painted_chapters/"
+const DIR := "res://assets/backgrounds/pixel_chapters/"
 const NAMES := ["meadow", "orchard", "frost", "nest"]
 const ART_HEIGHT := 220.0
 ## Authored road edge and foot line measured on each unmodified generated PNG.
-const ROAD_EDGE := [0.775, 0.790, 0.820, 0.770]
-const FOOT_LINE := [0.812, 0.820, 0.850, 0.805]
+const ROAD_EDGE := [0.791, 0.778, 0.803, 0.776]
+const FOOT_LINE := [0.830, 0.826, 0.838, 0.808]
 var chapter := 0
 var texture: Texture2D
 var layers: Array[Node2D] = []
@@ -65,7 +65,7 @@ func build(length: float, ground: float, round_index: int) -> bool:
 		layers.append(layer)
 		if layer is Strip:
 			layer.texture = texture
-			layer.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+			layer.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			layer.length = length
 			layer.upper = i == 2
 			layer.source = Rect2(0, 0 if i == 2 else cut, size.x, cut if i == 2 else size.y - cut)
