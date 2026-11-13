@@ -27,7 +27,9 @@ var texture: Texture2D
 var layers: Array[Node2D] = []
 ## Scenery at 55 % of the camera speed: close enough to read as the land beside the road (0.28 read as the horizon).
 const SCENERY_SPEED := 0.55
-var factors := [0.0, 0.0, SCENERY_SPEED, 0.0, 1.0, 1.0]
+## Plane 1 (clouds) also drifts with time in lane_backdrop.present().
+const CLOUD_SPEED := 0.08
+var factors := [0.0, CLOUD_SPEED, SCENERY_SPEED, 0.0, 1.0, 1.0]
 
 class Strip extends Node2D:
 	var texture: Texture2D
@@ -42,11 +44,117 @@ class Strip extends Node2D:
 		for i in range(-3, int(ceil(length / width)) + 4):
 			var tile := Rect2(destination.position + Vector2(i * width, 0), destination.size)
 			draw_texture_rect_region(texture, tile, source)
-			# Taller views: the tile's main sky colour above it, with the top row repeated on every other line for a few
-			# pixels so clouds or roots that touch the edge fade out instead of being stretched into vertical stripes.
-			draw_rect(Rect2(tile.position.x, tile.position.y - 1024, width, 1024), sky)
+			# The Sky plane continues above; the top row is repeated on every other line for a few pixels so clouds or
+			# roots that touch the edge fade into it instead of ending on a hard line.
 			for k in [1, 3, 6]:
 				draw_texture_rect_region(texture, Rect2(tile.position.x, tile.position.y - k, width, 1), edge)
+
+## Chapters drawn as caves: the space above the picture is a ceiling with hanging roots instead of sky with clouds.
+const CAVES := [3, 7, 9]
+const CAVE_GLOW := {3: "7fe6cf", 7: "f2c46a", 9: "c99cf2"}
+
+## Plane 0: what taller views show above the 176-px picture (phones show ~270 world px, tablets ~380). The tile's
+## top colour steps darker upward in 6 bands of 22 px with a checker seam between bands, then holds. Static on screen.
+class SkyPlane extends Node2D:
+	var top := 0.0          # world y of the picture's top row
+	var sky := Color.BLACK
+	var zenith := Color.BLACK
+	var aurora := false
+	var _bands: ImageTexture
+	const BAND := 22
+	const STEPS := 6
+	const LEFT := -2048.0
+	const SPAN := 8192.0
+
+	func _ready() -> void:
+		# one 4-px-wide strip of all bands with their checker seams, repeated across the view by the GPU
+		var img := Image.create(4, BAND * STEPS, false, Image.FORMAT_RGBA8)
+		for b in STEPS:
+			var c := sky.lerp(zenith, float(STEPS - 1 - b) / float(STEPS))   # image row 0 is the top (darkest) band
+			var lower := sky.lerp(zenith, float(STEPS - 2 - b) / float(STEPS)) if b < STEPS - 1 else c
+			for y in BAND:
+				for x in 4:
+					var seam := b < STEPS - 1 and ((y == BAND - 1 and x % 2 == 0) or (y == BAND - 2 and x == 1))
+					img.set_pixel(x, b * BAND + y, lower if seam else c)
+		_bands = ImageTexture.create_from_image(img)
+		texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+		texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+
+	func _draw() -> void:
+		var h := float(BAND * STEPS)
+		draw_rect(Rect2(LEFT, top - 4000, SPAN, 4000 - h), zenith)
+		if _bands != null:
+			draw_texture_rect(_bands, Rect2(LEFT, top - h, SPAN, h), true)
+		if aurora:
+			for i in range(int(LEFT / 8.0), int((LEFT + SPAN) / 8.0)):
+				var x := float(i) * 8.0
+				var wave := roundf(sin(x * 0.012) * 9.0 + sin(x * 0.031) * 4.0)
+				draw_rect(Rect2(x, top - 118 + wave, 8, 6), Color(0.55, 0.95, 0.75, 0.28))
+				draw_rect(Rect2(x, top - 124 + wave, 8, 6), Color(0.95, 0.65, 0.9, 0.2))
+
+## Plane 1: pixel clouds in the upper sky, or roots hanging from the cave ceiling with a glowing tip.
+class CloudPlane extends Node2D:
+	var top := 0.0
+	var sky := Color.BLACK
+	var zenith := Color.BLACK
+	var cave := false
+	var glow := Color.WHITE
+	var items: Array = []
+
+	func setup(seed_value: int) -> void:
+		var rng := RandomNumberGenerator.new()
+		rng.seed = seed_value
+		var x := -3000.0
+		while x < 12000.0:
+			if cave:
+				items.append([roundf(x), rng.randi_range(10, 120), rng.randi_range(3, 7), rng.randf() < 0.55, rng.randi() % 997])
+				x += rng.randf_range(16.0, 52.0)
+			else:
+				items.append([roundf(x), rng.randi_range(24, 150), rng.randi_range(22, 54), rng.randi_range(7, 13)])
+				x += rng.randf_range(120.0, 300.0)
+
+	func _draw() -> void:
+		if cave:
+			# thick roots that wiggle in 10-px steps, a lit left edge, a knot now and then and a glowing bud at the tip
+			var root := zenith.darkened(0.3)
+			var lit := root.lightened(0.22)
+			for it in items:
+				var x0: float = it[0]
+				var end_y: float = top - float(it[1])
+				var w: int = it[2]
+				var seed: int = it[4]
+				var y := end_y - 600.0
+				while y < end_y:
+					var step := minf(10.0, end_y - y)
+					var wiggle := float(posmod(int(y) / 10 + seed, 5) - 2)
+					var taper := w if end_y - y > 24.0 else maxi(2, w - 2)
+					draw_rect(Rect2(x0 + wiggle, y, taper, step), root)
+					draw_rect(Rect2(x0 + wiggle, y, 1, step), lit)
+					if posmod(int(y) / 10 + seed, 7) == 0:
+						draw_rect(Rect2(x0 + wiggle - 2, y + 3, taper + 4, 3), root)
+					y += step
+				var tip_x := x0 + float(posmod(int(end_y) / 10 + seed, 5) - 2)
+				if it[3]:
+					draw_rect(Rect2(tip_x - 2, end_y - 1, w + 4, 6), glow.darkened(0.35))
+					draw_rect(Rect2(tip_x - 1, end_y, w + 2, 4), glow)
+					draw_rect(Rect2(tip_x, end_y + 1, 2, 2), glow.lightened(0.5))
+			return
+		var light := sky.lightened(0.62).lerp(Color("fff3e2"), 0.35)
+		var shade := sky.lightened(0.3)
+		for it in items:
+			var cx: float = it[0]
+			var base: float = top - float(it[1])
+			var w: int = it[2]
+			var h: int = it[3]
+			# three lumps on one flat bottom: centre tallest
+			for lump in [[-0.28, 0.55, 0.62], [0.0, 1.0, 0.5], [0.3, 0.7, 0.56]]:
+				var lx: float = cx + roundf(float(lump[0]) * w)
+				var lh: int = maxi(3, int(roundf(h * float(lump[1]))))
+				var lw: float = w * float(lump[2])
+				for row in lh:
+					var t := float(row + 1) / float(lh)
+					var half := floorf(lw * 0.5 * sqrt(maxf(0.0, 1.0 - (1.0 - t) * (1.0 - t))) + 0.5)
+					draw_rect(Rect2(lx - half, base - lh + row, half * 2, 1), shade if row >= lh - 2 else light)
 
 ## Ground colour of each tile just above the road (sampled from the PNGs) and the small things that grow there.
 ## Main colour of each tile's top row (sampled from the PNGs): fills taller views above the picture.
@@ -230,6 +338,21 @@ func build(length: float, ground: float, round_index: int) -> bool:
 	road.top = top
 	road.length = length
 	road.palette = ROAD_PALETTES[chapter]
+	var sky_colour := Color(SKY_TOP[chapter])
+	var zenith := sky_colour.darkened(0.36 if chapter == 8 else 0.24)
+	var sky_plane := SkyPlane.new()
+	sky_plane.top = top - size.y
+	sky_plane.sky = sky_colour
+	sky_plane.zenith = zenith
+	sky_plane.aurora = chapter == 8
+	var cloud_plane := CloudPlane.new()
+	cloud_plane.top = top - size.y
+	cloud_plane.sky = sky_colour
+	cloud_plane.zenith = zenith
+	cloud_plane.cave = chapter in CAVES
+	cloud_plane.glow = Color(CAVE_GLOW.get(chapter, "ffffff"))
+	cloud_plane.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	cloud_plane.setup(7300 + chapter)
 	var props := Props.new()
 	props.top = top
 	props.length = length
@@ -237,7 +360,7 @@ func build(length: float, ground: float, round_index: int) -> bool:
 	props.setup()
 	# Keep the six-plane contract used by the battle renderer and boss tint.
 	for i in 6:
-		var layer: Node2D = scenery if i == 2 else props if i == 4 else road if i == 5 else Node2D.new()
+		var layer: Node2D = sky_plane if i == 0 else cloud_plane if i == 1 else scenery if i == 2 else props if i == 4 			else road if i == 5 else Node2D.new()
 		add_child(layer)
 		layers.append(layer)
 	return true
