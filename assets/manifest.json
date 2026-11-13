@@ -129,18 +129,9 @@
    "anim_sets": [
     "arrow",
     "coin",
-    "death_poof",
-    "dust",
-    "explosion",
     "fire",
     "heal",
-    "hit_spark",
-    "hit_spit",
     "rock",
-    "skill_barrage",
-    "skill_rally",
-    "skill_slam",
-    "spawn",
     "spit",
     "tower_bolt"
    ],
@@ -336,6 +327,216 @@
     "slice_boss_rootking",
     "slice_boss_ovenheart"
    ]
+  },
+  {
+   "id": "gpt_fx",
+   "group": "fx",
+   "load_policy": "battle",
+   "image": "res://assets/art/gpt/gpt_fx.png",
+   "frames": "res://assets/art/gpt/gpt_fx.json",
+   "size": [
+    1024,
+    256
+   ],
+   "disk_bytes": 93952,
+   "gpu_bytes": 1048576,
+   "biome": "",
+   "image_frames": 0,
+   "anim_sets": [
+    "skill_flour",
+    "skill_shield",
+    "skill_frost",
+    "skill_oven",
+    "skill_slam",
+    "skill_rally",
+    "skill_barrage",
+    "hit_spark",
+    "hit_spit",
+    "explosion",
+    "death_poof",
+    "dust",
+    "spawn"
+   ]
+  },
+  {
+   "id": "gpt_nest_c01",
+   "group": "nest",
+   "load_policy": "battle",
+   "image": "res://assets/art/gpt/gpt_nest_c01.png",
+   "frames": "res://assets/art/gpt/gpt_nest_c01.json",
+   "size": [
+    512,
+    256
+   ],
+   "disk_bytes": 44235,
+   "gpu_bytes": 524288,
+   "biome": "",
+   "image_frames": 0,
+   "anim_sets": [
+    "base_enemy_c01"
+   ]
+  },
+  {
+   "id": "gpt_nest_c02",
+   "group": "nest",
+   "load_policy": "battle",
+   "image": "res://assets/art/gpt/gpt_nest_c02.png",
+   "frames": "res://assets/art/gpt/gpt_nest_c02.json",
+   "size": [
+    512,
+    256
+   ],
+   "disk_bytes": 35381,
+   "gpu_bytes": 524288,
+   "biome": "",
+   "image_frames": 0,
+   "anim_sets": [
+    "base_enemy_c02"
+   ]
+  },
+  {
+   "id": "gpt_nest_c03",
+   "group": "nest",
+   "load_policy": "battle",
+   "image": "res://assets/art/gpt/gpt_nest_c03.png",
+   "frames": "res://assets/art/gpt/gpt_nest_c03.json",
+   "size": [
+    512,
+    256
+   ],
+   "disk_bytes": 48031,
+   "gpu_bytes": 524288,
+   "biome": "",
+   "image_frames": 0,
+   "anim_sets": [
+    "base_enemy_c03"
+   ]
+  },
+  {
+   "id": "gpt_nest_c04",
+   "group": "nest",
+   "load_policy": "battle",
+   "image": "res://assets/art/gpt/gpt_nest_c04.png",
+   "frames": "res://assets/art/gpt/gpt_nest_c04.json",
+   "size": [
+    512,
+    256
+   ],
+   "disk_bytes": 47927,
+   "gpu_bytes": 524288,
+   "biome": "",
+   "image_frames": 0,
+   "anim_sets": [
+    "base_enemy_c04"
+   ]
+  },
+  {
+   "id": "gpt_nest_c05",
+   "group": "nest",
+   "load_policy": "battle",
+   "image": "res://assets/art/gpt/gpt_nest_c05.png",
+   "frames": "res://assets/art/gpt/gpt_nest_c05.json",
+   "size": [
+    512,
+    256
+   ],
+   "disk_bytes": 42288,
+   "gpu_bytes": 524288,
+   "biome": "",
+   "image_frames": 0,
+   "anim_sets": [
+    "base_enemy_c05"
+   ]
+  },
+  {
+   "id": "gpt_nest_c06",
+   "group": "nest",
+   "load_policy": "battle",
+   "image": "res://assets/art/gpt/gpt_nest_c06.png",
+   "frames": "res://assets/art/gpt/gpt_nest_c06.json",
+   "size": [
+    512,
+    256
+   ],
+   "disk_bytes": 51925,
+   "gpu_bytes": 524288,
+   "biome": "",
+   "image_frames": 0,
+   "anim_sets": [
+    "base_enemy_c06"
+   ]
+  },
+  {
+   "id": "gpt_nest_c07",
+   "group": "nest",
+   "load_policy": "battle",
+   "image": "res://assets/art/gpt/gpt_nest_c07.png",
+   "frames": "res://assets/art/gpt/gpt_nest_c07.json",
+   "size": [
+    512,
+    256
+   ],
+   "disk_bytes": 42149,
+   "gpu_bytes": 524288,
+   "biome": "",
+   "image_frames": 0,
+   "anim_sets": [
+    "base_enemy_c07"
+   ]
+  },
+  {
+   "id": "gpt_nest_c08",
+   "group": "nest",
+   "load_policy": "battle",
+   "image": "res://assets/art/gpt/gpt_nest_c08.png",
+   "frames": "res://assets/art/gpt/gpt_nest_c08.json",
+   "size": [
+    512,
+    256
+   ],
+   "disk_bytes": 52370,
+   "gpu_bytes": 524288,
+   "biome": "",
+   "image_frames": 0,
+   "anim_sets": [
+    "base_enemy_c08"
+   ]
+  },
+  {
+   "id": "gpt_nest_c09",
+   "group": "nest",
+   "load_policy": "battle",
+   "image": "res://assets/art/gpt/gpt_nest_c09.png",
+   "frames": "res://assets/art/gpt/gpt_nest_c09.json",
+   "size": [
+    512,
+    256
+   ],
+   "disk_bytes": 39150,
+   "gpu_bytes": 524288,
+   "biome": "",
+   "image_frames": 0,
+   "anim_sets": [
+    "base_enemy_c09"
+   ]
+  },
+  {
+   "id": "gpt_nest_c10",
+   "group": "nest",
+   "load_policy": "battle",
+   "image": "res://assets/art/gpt/gpt_nest_c10.png",
+   "frames": "res://assets/art/gpt/gpt_nest_c10.json",
+   "size": [
+    512,
+    256
+   ],
+   "disk_bytes": 58769,
+   "gpu_bytes": 524288,
+   "biome": "",
+   "image_frames": 0,
+   "anim_sets": [
+    "base_enemy_c10"
+   ]
   }
  ],
  "anim_sets": {
@@ -360,15 +561,15 @@
   "tower_bolt": "fx_combat",
   "spit": "fx_combat",
   "rock": "fx_combat",
-  "hit_spark": "fx_combat",
-  "hit_spit": "fx_combat",
-  "explosion": "fx_combat",
-  "death_poof": "fx_combat",
-  "dust": "fx_combat",
-  "skill_slam": "fx_combat",
-  "skill_rally": "fx_combat",
-  "skill_barrage": "fx_combat",
-  "spawn": "fx_combat",
+  "hit_spark": "gpt_fx",
+  "hit_spit": "gpt_fx",
+  "explosion": "gpt_fx",
+  "death_poof": "gpt_fx",
+  "dust": "gpt_fx",
+  "skill_slam": "gpt_fx",
+  "skill_rally": "gpt_fx",
+  "skill_barrage": "gpt_fx",
+  "spawn": "gpt_fx",
   "heal": "fx_combat",
   "fire": "fx_combat",
   "coin": "fx_combat",
@@ -387,7 +588,21 @@
   "slice_boss_millward": "rs_bosses",
   "slice_boss_frostguard": "rs_bosses",
   "slice_boss_rootking": "rs_bosses",
-  "slice_boss_ovenheart": "rs_bosses"
+  "slice_boss_ovenheart": "rs_bosses",
+  "skill_flour": "gpt_fx",
+  "skill_shield": "gpt_fx",
+  "skill_frost": "gpt_fx",
+  "skill_oven": "gpt_fx",
+  "base_enemy_c01": "gpt_nest_c01",
+  "base_enemy_c02": "gpt_nest_c02",
+  "base_enemy_c03": "gpt_nest_c03",
+  "base_enemy_c04": "gpt_nest_c04",
+  "base_enemy_c05": "gpt_nest_c05",
+  "base_enemy_c06": "gpt_nest_c06",
+  "base_enemy_c07": "gpt_nest_c07",
+  "base_enemy_c08": "gpt_nest_c08",
+  "base_enemy_c09": "gpt_nest_c09",
+  "base_enemy_c10": "gpt_nest_c10"
  },
  "bases": {
   "player": {

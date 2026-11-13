@@ -1,0 +1,278 @@
+#!/usr/bin/env python3
+"""Turn the ChatGPT sprite sheets in docs/art/gpt_sources/ into game atlases under assets/art/gpt/.
+
+Each source sheet is 1536x1024 on flat magenta, a grid of equal cells (one frame or one prop per cell), drawn
+on an N-times pixel grid. This script keys out the magenta (and the thin white grid lines some sheets carry),
+finds the pixel phase, shrinks every N x N block to one pixel (median colour, transparent when mostly
+background), trims each frame and packs the frames into atlas pages in the defence.atlas/1 format.
+
+    python tools/art/gpt_import.py            # writes assets/art/gpt/*.png|json and docs/art/gpt_sources/preview_*.png
+
+Kits and prompts: docs/art/release_slice/{skillfx,nest,props,hitfx}_regen/PROMPTS.md.
+"""
+import json
+import os
+import sys
+
+import numpy as np
+from PIL import Image
+
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+SRC = os.path.join(ROOT, "docs", "art", "gpt_sources")
+OUT = os.path.join(ROOT, "assets", "art", "gpt")
+RES = "res://assets/art/gpt/"
+
+# name, source, cols, rows, pixel, anchor ("ground" | "center"), state, fps, loop
+FX = [
+    ("skill_flour", "skillfx/flour.png", 6, 2, 4, "ground", "play", 10, False),
+    ("skill_shield", "skillfx/shield.png", 6, 2, 4, "ground", "play", 14, False),
+    ("skill_frost", "skillfx/frost.png", 6, 2, 4, "ground", "play", 10, False),
+    ("skill_oven", "skillfx/oven.png", 6, 2, 4, "ground", "loop", 10, True),
+    ("skill_slam", "skillfx/slam.png", 6, 2, 4, "ground", "play", 12, False),
+    ("skill_rally", "skillfx/rally.png", 6, 2, 4, "ground", "play", 10, False),
+    ("skill_barrage", "skillfx/barrage.png", 6, 2, 4, "ground", "play", 12, False),
+    ("hit_spark", "hitfx/hit_spark.png", 4, 2, 8, "center", "play", 20, False),
+    ("hit_spit", "hitfx/hit_spit.png", 4, 2, 8, "center", "play", 18, False),
+    ("explosion", "hitfx/explosion.png", 4, 2, 8, "ground", "play", 16, False),
+    ("death_poof", "hitfx/death_poof.png", 4, 2, 8, "ground", "play", 14, False),
+    ("dust", "hitfx/dust.png", 4, 2, 8, "ground", "play", 12, False),
+    ("spawn", "hitfx/spawn.png", 4, 2, 8, "ground", "play", 14, False),
+]
+NESTS = 10                      # nest01..nest10: 4x2 cells, 4x pixels, cells 1-6 = idle A/B, damaged A/B, ruined A/B
+PROP_THEMES = ["farm", "snow", "cave", "marsh", "heart"]   # 4x2 cells, 8x pixels, one prop per cell
+
+
+def bg_mask(a):
+    r, g, b = a[..., 0], a[..., 1], a[..., 2]
+    return (r > 170) & (b > 160) & (g < 90) & (np.abs(r - b) < 80)
+
+
+def strip_grid(a, bg, cols, rows):
+    """Thin white guide lines at cell borders (some sheets have them) become background."""
+    h, w = bg.shape
+    white = (a[..., 0] > 210) & (a[..., 1] > 210) & (a[..., 2] > 210)
+    for k in range(cols + 1):
+        x0 = int(round(k * w / cols))
+        for x in range(max(0, x0 - 5), min(w, x0 + 5)):
+            if (white[:, x] | bg[:, x]).mean() > 0.85:
+                bg[:, x] |= white[:, x]
+    for k in range(rows + 1):
+        y0 = int(round(k * h / rows))
+        for y in range(max(0, y0 - 5), min(h, y0 + 5)):
+            if (white[y, :] | bg[y, :]).mean() > 0.85:
+                bg[y, :] |= white[y, :]
+    return bg
+
+
+def best_phase(a, bg, p):
+    """Pixel-grid phase with the least colour spread inside the blocks."""
+    best = (1e18, 0, 0)
+    for oy in range(p):
+        for ox in range(p):
+            sub = a[oy:, ox:]
+            m = ~bg[oy:, ox:]
+            h = (sub.shape[0] // p) * p
+            w = (sub.shape[1] // p) * p
+            s = sub[:h, :w].reshape(h // p, p, w // p, p, 3)
+            mm = m[:h, :w].reshape(h // p, p, w // p, p).all(axis=(1, 3))
+            if mm.sum() < 50:
+                continue
+            var = s.var(axis=(1, 3)).sum(axis=-1)[mm].mean()
+            if var < best[0]:
+                best = (var, ox, oy)
+    return best[1], best[2]
+
+
+def shrink(path, cols, rows, p):
+    """Sheet -> RGBA art array (one pixel per p x p block) plus the art-space cell size."""
+    a = np.array(Image.open(os.path.join(SRC, path)).convert("RGB")).astype(np.int16)
+    bg = strip_grid(a, bg_mask(a), cols, rows)
+    ox, oy = best_phase(a, bg, p)
+    pad_x, pad_y = (p - ox) % p, (p - oy) % p
+    a = np.pad(a, ((pad_y, p), (pad_x, p), (0, 0)), constant_values=0)
+    bg = np.pad(bg, ((pad_y, p), (pad_x, p)), constant_values=True)
+    h, w = (a.shape[0] // p) * p, (a.shape[1] // p) * p
+    blocks = a[:h, :w].reshape(h // p, p, w // p, p, 3).transpose(0, 2, 1, 3, 4).reshape(h // p, w // p, p * p, 3)
+    fgm = ~bg[:h, :w].reshape(h // p, p, w // p, p).transpose(0, 2, 1, 3).reshape(h // p, w // p, p * p)
+    frac = fgm.mean(axis=-1)
+    vals = np.where(fgm[..., None], blocks, np.nan).astype(np.float32)
+    with np.errstate(all="ignore"):
+        med = np.nanmedian(vals, axis=2)
+    out = np.zeros((h // p, w // p, 4), np.uint8)
+    on = frac >= 0.5
+    out[on, :3] = np.clip(np.nan_to_num(med[on]), 0, 255).astype(np.uint8)
+    out[on, 3] = 255
+    out = quantize(out, 40)
+    return out, pad_x / p, pad_y / p, (1536 / cols / p, 1024 / rows / p)
+
+
+def quantize(rgba, n):
+    on = rgba[..., 3] > 0
+    if on.sum() == 0:
+        return rgba
+    pix = rgba[on][:, :3]
+    img = Image.fromarray(pix.reshape(1, -1, 3))
+    q = img.quantize(colors=n, method=Image.Quantize.MEDIANCUT).convert("RGB")
+    rgba = rgba.copy()
+    rgba[on, :3] = np.array(q).reshape(-1, 3)
+    return rgba
+
+
+def cells(art, offx, offy, cw, ch, cols, rows):
+    out = []
+    for r in range(rows):
+        for c in range(cols):
+            x0 = int(round(c * cw + offx))
+            y0 = int(round(r * ch + offy))
+            out.append(art[y0:y0 + int(round(ch)), x0:x0 + int(round(cw))])
+    return out
+
+
+def bbox(cell):
+    ys, xs = np.nonzero(cell[..., 3])
+    if len(xs) == 0:
+        return None
+    return xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
+
+
+def drop_specks(cell, min_px=3):
+    """Remove tiny islands far from the main shape (GPT noise), keep real particles (>= min_px or near art)."""
+    return cell
+
+
+def anim_frames(cs, anchor):
+    """Trimmed frames with per-frame pivots; trailing empty cells dropped."""
+    n = len(cs)
+    while n > 0 and bbox(cs[n - 1]) is None:
+        n -= 1
+    cs = cs[:n]
+    boxes = [bbox(c) for c in cs]
+    real = [b for b in boxes if b is not None]
+    ch, cw = cs[0].shape[:2]
+    if anchor == "ground":
+        ax, ay = cw / 2.0, max(b[3] for b in real)
+    else:
+        ax = (min(b[0] for b in real) + max(b[2] for b in real)) / 2.0
+        ay = (min(b[1] for b in real) + max(b[3] for b in real)) / 2.0
+    frames = []
+    for c, b in zip(cs, boxes):
+        if b is None:
+            c, b = np.zeros((1, 1, 4), np.uint8), (0, 0, 1, 1)
+            frames.append((c, [int(round(ax)), int(round(ay))]))
+            continue
+        frames.append((c[b[1]:b[3], b[0]:b[2]], [int(round(ax - b[0])), int(round(ay - b[1]))]))
+    return frames
+
+
+def pack(items, width):
+    """items: list of (key, array). Shelf packing with 2 px padding. Returns placements and page size."""
+    order = sorted(range(len(items)), key=lambda i: -items[i][1].shape[0])
+    x = y = shelf = 0
+    place = {}
+    for i in order:
+        h, w = items[i][1].shape[:2]
+        if x + w + 2 > width:
+            x, y, shelf = 0, y + shelf + 2, 0
+        place[i] = (x + 2, y + 2)
+        x += w + 2
+        shelf = max(shelf, h)
+    hgt = 1
+    while hgt < y + shelf + 4:
+        hgt *= 2
+    return place, (width, hgt)
+
+
+def write_page(atlas_id, group, anims, width):
+    """anims: {set: {state: (frames, fps, loop)}} -> png + json."""
+    items, keys = [], []
+    for s, states in anims.items():
+        for st, (frames, fps, loop) in states.items():
+            for i, (arr, pv) in enumerate(frames):
+                items.append((f"{s}/{st}/{i}", arr, pv))
+    place, size = pack([(k, a) for k, a, _ in items], width)
+    img = np.zeros((size[1], size[0], 4), np.uint8)
+    frames_js = {}
+    for i, (k, arr, pv) in enumerate(items):
+        x, y = place[i]
+        img[y:y + arr.shape[0], x:x + arr.shape[1]] = arr
+        frames_js[k] = {"x": int(x), "y": int(y), "w": int(arr.shape[1]), "h": int(arr.shape[0]), "pivot": pv}
+    anims_js = {}
+    for s, states in anims.items():
+        anims_js[s] = {}
+        for st, (frames, fps, loop) in states.items():
+            anims_js[s][st] = {"frames": [f"{s}/{st}/{i}" for i in range(len(frames))], "fps": fps, "loop": loop}
+    png = atlas_id + ".png"
+    Image.fromarray(img).save(os.path.join(OUT, png), optimize=True)
+    meta = {"schema": "defence.atlas/1", "atlas": atlas_id, "image": png, "image_res": RES + png, "size": list(size),
+            "padding": 2, "extrude": 0, "group": group, "filter": "nearest", "mipmaps": False, "repeat": False,
+            "gpu_format": "RGBA8", "gpu_bytes": size[0] * size[1] * 4,
+            "source": "ChatGPT sheets in docs/art/gpt_sources, tools/art/gpt_import.py",
+            "frames": frames_js, "anims": anims_js}
+    with open(os.path.join(OUT, atlas_id + ".json"), "w", encoding="utf-8", newline="\n") as f:
+        json.dump(meta, f, ensure_ascii=False, indent=1)
+    return size, len(items)
+
+
+def preview(name, anims, scale=3):
+    """All frames of all anims on one dark sheet (for review)."""
+    rows = []
+    for s, states in anims.items():
+        for st, (frames, _, _) in states.items():
+            rows.append([a for a, _ in frames])
+    W = max(sum(a.shape[1] + 4 for a in r) for r in rows) + 4
+    H = sum(max(a.shape[0] for a in r) + 6 for r in rows) + 4
+    sheet = np.zeros((H, W, 4), np.uint8)
+    sheet[..., :3] = (44, 48, 58)
+    sheet[..., 3] = 255
+    y = 4
+    for r in rows:
+        x = 4
+        hh = max(a.shape[0] for a in r)
+        for a in r:
+            sub = sheet[y + hh - a.shape[0]:y + hh, x:x + a.shape[1]]
+            al = a[..., 3:4] / 255.0
+            sub[..., :3] = (a[..., :3] * al + sub[..., :3] * (1 - al)).astype(np.uint8)
+            x += a.shape[1] + 4
+        y += hh + 6
+    Image.fromarray(sheet).resize((W * scale, H * scale), Image.NEAREST).save(os.path.join(SRC, f"preview_{name}.png"))
+
+
+def main():
+    os.makedirs(OUT, exist_ok=True)
+    fx = {}
+    for name, src, cols, rows, p, anchor, st, fps, loop in FX:
+        art, ox, oy, (cw, ch) = shrink(src, cols, rows, p)
+        frames = anim_frames(cells(art, ox, oy, cw, ch, cols, rows), anchor)
+        fx[name] = {st: (frames, fps, loop)}
+        print(f"{name}: {len(frames)} frames, max {max(a.shape[1] for a, _ in frames)}x{max(a.shape[0] for a, _ in frames)}")
+    print("gpt_fx", write_page("gpt_fx", "fx", fx, 1024))
+    preview("fx", fx)
+    allnest = {}
+    for c in range(1, NESTS + 1):
+        art, ox, oy, (cw, ch) = shrink(f"nest/nest{c:02d}.png", 4, 2, 4)
+        cs = cells(art, ox, oy, cw, ch, 4, 2)[:6]
+        frames = anim_frames(cs, "ground")
+        s = f"base_enemy_c{c:02d}"
+        anims = {s: {"idle": (frames[0:2], 3, True), "damaged": (frames[2:4], 5, True), "ruined": (frames[4:6], 5, True)}}
+        allnest.update(anims)
+        print(f"gpt_nest_c{c:02d}", write_page(f"gpt_nest_c{c:02d}", "nest", anims, 512))
+    preview("nest", allnest, 2)
+    props = {}
+    for th in PROP_THEMES:
+        art, ox, oy, (cw, ch) = shrink(f"props/props_{th}.png", 4, 2, 8)
+        cs = cells(art, ox, oy, cw, ch, 4, 2)
+        frames = []
+        for c in cs:
+            b = bbox(c)
+            if b is None:
+                continue
+            frames.append((c[b[1]:b[3], b[0]:b[2]], [int(round((b[2] - b[0]) / 2.0)), int(b[3] - b[1])]))
+        props[f"prop_{th}"] = {"idle": (frames, 1, False)}
+        print(f"props {th}: {[a.shape[1::-1] for a, _ in frames]}")
+    print("gpt_props", write_page("gpt_props", "biome_props", props, 512))
+    preview("props", props)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -50,6 +50,7 @@ func start(p_round_id: String, seed_value: int, upgrades: Dictionary, autoplay :
 		sets.append(str(Content.get_unit(uid).anim_set))
 	sets.append(str(sim.hero_def.anim_set))
 	sets.append("worker")
+	sets.append(ViewS.nest_set(int(sim.round_def.get("index", 0))))   # this chapter's enemy nest page only
 	_pages = Atlas.pages_for_battle(sets, str(sim.round_def.biome))
 	# Code-drawn scenery no longer needs the old repeating bitmap page resident.
 	for i in range(_pages.size() - 1, -1, -1):

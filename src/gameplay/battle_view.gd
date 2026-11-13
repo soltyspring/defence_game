@@ -77,6 +77,7 @@ func setup(p_sim, p_atlas, p_ground_y: float, p_biome: String) -> void:
 
 func _process(_dt: float) -> void:
 	_update_formation(0.0 if sim != null and (sim.paused or sim.ended) else _dt)
+	_track_vfx(0.0 if sim == null or sim.paused else _dt)
 	if environment and sim:
 		var boss = null
 		for e in sim.enemies:
@@ -131,6 +132,7 @@ func _draw() -> void:
 		if p.alive: _draw_projectile(p)
 	for f in sim.fxs:
 		if f.alive and f.kind != "telegraph": _draw_fx(f)
+	if atlas: _draw_vfx()
 	_draw_telegraphs()
 	if show_damage:
 		_placed_text.clear()
@@ -338,6 +340,10 @@ func _biome_palette() -> Dictionary:
 				"grass_top": Color("6cbf4a"), "ground": Color("6b4f34"), "ground_dot": Color("7d5d3e")}
 
 # ---------------- bases ----------------
+## Each chapter of ten rounds has its own enemy nest (assets/art/gpt/gpt_nest_cNN, ChatGPT sheets).
+static func nest_set(round_index: int) -> String:
+	return "base_enemy_c%02d" % clampi((maxi(round_index, 1) - 1) / 10 + 1, 1, 10)
+
 func _draw_base(b: Dictionary, side: int) -> void:
 	var x: float = b.x
 	var key := "player" if side == 1 else "enemy"
@@ -347,6 +353,15 @@ func _draw_base(b: Dictionary, side: int) -> void:
 			var ratio: float = b.hp / b.hp_max
 			var st := "idle" if ratio > 0.5 else ("damaged" if ratio > 0.0 else "ruined")
 			var rec = null
+			if side < 0:
+				# the chapter nest art already faces left (toward our army): never flipped
+				var ns := nest_set(int(sim.round_def.get("index", 0)))
+				rec = atlas.anim_rec(ns, st)
+				if rec != null:
+					var bi0: int = atlas.rec_index(rec, sim.t)
+					_blit_rec(rec, bi0, Vector2(x, ground_y), false, Color(1, 0.6, 0.6) if b.flash > 0.0 else Color.WHITE)
+					_hp_bar(Vector2(x, ground_y - rec.rects[bi0].size.y - 8.0), 44.0, b.hp / b.hp_max, side)
+					return
 			if bm.has("anim_set"):
 				rec = atlas.anim_rec(str(bm.anim_set), st)
 				if rec == null: rec = atlas.anim_rec(str(bm.anim_set), "idle")
@@ -826,6 +841,62 @@ func _draw_telegraph_overflow(span: Vector2, count: int) -> void:
 	draw_string(_num_font, p, "+%d" % count, HORIZONTAL_ALIGNMENT_LEFT, -1, NUM_PX, Color("ffe2a1"))
 	_mark_rects.append(Rect2(p + Vector2(-2, -10), Vector2(27, 13)))
 
+## Zone skills drawn as a row of sprites: kind -> px between copies.
+const TILED_FX := {"skill_oven": 16.0, "skill_frost": 44.0}
+
+## Visual-only effects the simulation does not spawn (it stays untouched): a flour poof when one of our
+## soldiers appears, a spore puff when a mould enemy falls, road dust when the hero sets off, a slime splat
+## where a spit lands. {kind, x, y, t, dur}
+var _vfx: Array = []
+var _seen_players := {}
+var _seen_dying := {}
+var _hero_moving := false
+var _hero_last_x := 0.0
+var _seen_proj := {}
+
+func _track_vfx(dt: float) -> void:
+	if sim == null or atlas == null: return
+	for v in _vfx: v.t += dt
+	_vfx = _vfx.filter(func(v): return v.t < v.dur)
+	if sim.t <= 0.0: return
+	var alive := {}
+	for u in sim.players:
+		alive[u.uid] = true
+		if not _seen_players.has(u.uid):
+			_seen_players[u.uid] = true
+			if sim.t > 0.2: _vfx.append({"kind": "spawn", "x": u.x, "y": 0.0, "t": 0.0, "dur": 0.45})
+	for k in _seen_players.keys():
+		if not alive.has(k): _seen_players.erase(k)
+	for e in sim.enemies:
+		if e.dying and not _seen_dying.has(e.uid):
+			_seen_dying[e.uid] = true
+			if not e.is_boss: _vfx.append({"kind": "death_poof", "x": e.x, "y": 0.0, "t": 0.0, "dur": 0.45})
+	if _seen_dying.size() > 256: _seen_dying.clear()
+	var hx: float = sim.hero.x
+	if _hero_last_x == 0.0: _hero_last_x = hx
+	var moving: bool = absf(hx - _hero_last_x) > 0.05 and sim.hero_respawn <= 0.0
+	if moving and not _hero_moving:
+		_vfx.append({"kind": "dust", "x": hx, "y": 0.0, "t": 0.0, "dur": 0.35})
+	_hero_moving = moving
+	_hero_last_x = hx
+	# projectiles may be pooled: remember each live spit's last position, splat once it stops being live
+	var live := {}
+	for p in sim.projectiles:
+		if p.alive and p.kind == "spit":
+			live[p] = true
+			_seen_proj[p] = p.x
+	for p in _seen_proj.keys():
+		if not live.has(p):
+			_vfx.append({"kind": "hit_spit", "x": float(_seen_proj[p]), "y": -12.0, "t": 0.0, "dur": 0.3})
+			_seen_proj.erase(p)
+
+func _draw_vfx() -> void:
+	for v in _vfx:
+		var rec = atlas.anim_rec(v.kind, "play")
+		if rec == null: continue
+		var k := clampf(v.t / v.dur, 0.0, 1.0)
+		_blit_rec(rec, atlas.rec_index(rec, k * maxf(0.0, rec.rects.size() - 0.001) / rec.fps), Vector2(roundf(v.x), ground_y + v.y), false, Color.WHITE)
+
 func _draw_fx(f) -> void:
 	var k := clampf(f.t / f.dur, 0.0, 1.0)
 	var pos := Vector2(f.x, ground_y + f.y)
@@ -834,7 +905,17 @@ func _draw_fx(f) -> void:
 		if rec == null: rec = atlas.anim_rec(f.kind, "loop")
 		if rec != null:
 			var at: float = f.t if rec.loop else k * maxf(0.0, rec.rects.size() - 0.001) / rec.fps
-			_blit_rec(rec, atlas.rec_index(rec, at), pos, false, Color.WHITE)
+			var n := 1
+			var step := 0.0
+			if f.kind in TILED_FX and f.radius > 0.0:
+				# zone skills: repeat the sprite across the zone, each copy a frame apart so they do not pulse together
+				step = float(TILED_FX[f.kind])
+				n = maxi(1, int(floorf(f.radius * 2.0 / step)) + 1)
+			for i in n:
+				var dx := (float(i) - float(n - 1) * 0.5) * step
+				var fi: int = atlas.rec_index(rec, at + (float(i * 3 % 5) / rec.fps if rec.loop else 0.0))
+				if not rec.loop and n > 1: fi = clampi(fi - (i * 2 % 3), 0, rec.rects.size() - 1)
+				_blit_rec(rec, fi, pos + Vector2(roundf(dx), 0.0), i % 2 == 1, Color.WHITE)
 			return
 	match f.kind:
 		"hit_spark":

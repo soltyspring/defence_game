@@ -1,0 +1,109 @@
+{
+ "schema": "defence.atlas/1",
+ "atlas": "gpt_nest_c09",
+ "image": "gpt_nest_c09.png",
+ "image_res": "res://assets/art/gpt/gpt_nest_c09.png",
+ "size": [
+  512,
+  256
+ ],
+ "padding": 2,
+ "extrude": 0,
+ "group": "nest",
+ "filter": "nearest",
+ "mipmaps": false,
+ "repeat": false,
+ "gpu_format": "RGBA8",
+ "gpu_bytes": 524288,
+ "source": "ChatGPT sheets in docs/art/gpt_sources, tools/art/gpt_import.py",
+ "frames": {
+  "base_enemy_c09/idle/0": {
+   "x": 2,
+   "y": 2,
+   "w": 85,
+   "h": 104,
+   "pivot": [
+    41,
+    104
+   ]
+  },
+  "base_enemy_c09/idle/1": {
+   "x": 89,
+   "y": 2,
+   "w": 85,
+   "h": 104,
+   "pivot": [
+    41,
+    104
+   ]
+  },
+  "base_enemy_c09/damaged/0": {
+   "x": 176,
+   "y": 2,
+   "w": 85,
+   "h": 104,
+   "pivot": [
+    41,
+    104
+   ]
+  },
+  "base_enemy_c09/damaged/1": {
+   "x": 263,
+   "y": 2,
+   "w": 85,
+   "h": 104,
+   "pivot": [
+    41,
+    104
+   ]
+  },
+  "base_enemy_c09/ruined/0": {
+   "x": 350,
+   "y": 2,
+   "w": 85,
+   "h": 52,
+   "pivot": [
+    41,
+    53
+   ]
+  },
+  "base_enemy_c09/ruined/1": {
+   "x": 2,
+   "y": 108,
+   "w": 85,
+   "h": 52,
+   "pivot": [
+    41,
+    53
+   ]
+  }
+ },
+ "anims": {
+  "base_enemy_c09": {
+   "idle": {
+    "frames": [
+     "base_enemy_c09/idle/0",
+     "base_enemy_c09/idle/1"
+    ],
+    "fps": 3,
+    "loop": true
+   },
+   "damaged": {
+    "frames": [
+     "base_enemy_c09/damaged/0",
+     "base_enemy_c09/damaged/1"
+    ],
+    "fps": 5,
+    "loop": true
+   },
+   "ruined": {
+    "frames": [
+     "base_enemy_c09/ruined/0",
+     "base_enemy_c09/ruined/1"
+    ],
+    "fps": 5,
+    "loop": true
+   }
+  }
+ }
+}

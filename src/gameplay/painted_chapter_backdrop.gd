@@ -168,6 +168,10 @@ const PROP_KINDS := [
 	["mound", "ice", "tuft", "mound"], ["mushroom", "crystal", "tuft", "mushroom"],
 ]
 const AUTUMN_BUSH := "a8743a"
+## Drawn props (ChatGPT sheets -> tools/art/gpt_import.py): eight per theme; the code shapes below stay as fallback.
+const PROP_SHEET := "res://assets/art/gpt/gpt_props.png"
+const PROP_JSON := "res://assets/art/gpt/gpt_props.json"
+const PROP_THEME := ["farm", "farm", "snow", "cave", "snow", "marsh", "snow", "cave", "snow", "heart"]
 
 ## Near plane: small pixel props on the strip of land right above the road, world-locked like the units. They give
 ## the eye a step between the fighters and the scenery, so the background no longer reads as the far horizon.
@@ -175,11 +179,38 @@ class Props extends Node2D:
 	var top := 0.0
 	var length := 0.0
 	var chapter := 0
-	var items: Array = []      # [kind, x, size 0..2]
+	var items: Array = []      # [kind, x, size 0..2]; with drawn props: [sprite index, x, mirrored]
+	var sheet: Texture2D = null
+	var sprites: Array = []    # [region Rect2, pivot Vector2] (pivot = bottom centre)
+
+	func _load_sprites() -> void:
+		if not ResourceLoader.exists(PROP_SHEET) or not FileAccess.file_exists(PROP_JSON): return
+		var meta = JSON.parse_string(FileAccess.get_file_as_string(PROP_JSON))
+		if not (meta is Dictionary): return
+		var st: Dictionary = meta.get("anims", {}).get("prop_" + str(PROP_THEME[chapter]), {}).get("idle", {})
+		for key in st.get("frames", []):
+			var f: Dictionary = meta.frames[key]
+			sprites.append([Rect2(f.x, f.y, f.w, f.h), Vector2(f.pivot[0], f.pivot[1])])
+		if not sprites.is_empty():
+			sheet = load(PROP_SHEET) as Texture2D
+		if sheet == null: sprites.clear()
 
 	func setup() -> void:
 		var rng := RandomNumberGenerator.new()
 		rng.seed = 9100 + chapter
+		texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		_load_sprites()
+		if sheet != null:
+			var x0 := -1024.0
+			var last := -1
+			while x0 < length + 1024.0:
+				var i := rng.randi() % sprites.size()
+				if i == last: i = (i + 1) % sprites.size()
+				last = i
+				items.append([i, roundf(x0), rng.randf() < 0.5])
+				var region: Rect2 = sprites[i][0]
+				x0 += region.size.x + rng.randf_range(14.0, 46.0)
+			return
 		var kinds: Array = PROP_KINDS[chapter]
 		var x := -1024.0
 		while x < length + 1024.0:
@@ -230,6 +261,14 @@ class Props extends Node2D:
 				px += 1.0
 
 	func _draw() -> void:
+		if sheet != null:
+			for it in items:
+				var r: Rect2 = sprites[it[0]][0]
+				var pv: Vector2 = sprites[it[0]][1]
+				var x: float = it[1]
+				if it[2]: draw_texture_rect_region(sheet, Rect2(x + pv.x, top - pv.y, -r.size.x, r.size.y), r)
+				else: draw_texture_rect_region(sheet, Rect2(x - pv.x, top - pv.y, r.size.x, r.size.y), r)
+			return
 		var g := Color(PROP_GROUND[chapter])
 		var dark := g.darkened(0.5)
 		var leaf := Color(AUTUMN_BUSH) if chapter == 1 else g.darkened(0.18)
