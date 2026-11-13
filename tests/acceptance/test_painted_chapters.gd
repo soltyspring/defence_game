@@ -37,6 +37,8 @@ func _run() -> void:
 			check(scenery.destination.size == scenery.source.size / 4.0, "one world pixel per logical pixel")
 			check(scenery.destination.size.y == 176.0 - float(Painted.TRIM_GROUND_ROWS[(n - 1) / 10]), "ground rows trimmed without scaling")
 			check(road.top < 290.0 and road.top + 17.0 > 290.0, "feet remain inside road")
+			check(art.factors[2] >= 0.5, "scenery scrolls like nearby land, not the horizon")
+			check(art.layers[4].items.size() > 20 and is_equal_approx(art.factors[4], 1.0), "world-locked near props")
 			for zoom in [1.0, 1.5, 2.0]:
 				for camera in [-160.0, 0.0, 660.0, 1260.0, 2000.0]:
 					b.present(camera, zoom, 2.0, 1.0)
