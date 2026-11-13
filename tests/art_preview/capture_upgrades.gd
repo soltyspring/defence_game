@@ -45,4 +45,11 @@ func _run() -> void:
 	for p in range(1, panel.pages()):
 		panel._set_page(p)
 		await shot("3_page%d" % (p + 1))
+	for id in ["up_ranged_basic", "up_chili", "up_waffle", "up_supply_regen"]:   # ranged, area, not joined yet, bakery
+		panel.select(id)
+		await frames(20)                                                       # into the attack example's loop
+		await shot("4_" + id)
+	load("res://src/ui/main_menu.gd").last_page = "lobby"
+	app.show_screen(&"menu")
+	await shot("5_lobby")
 	quit(0)

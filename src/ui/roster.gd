@@ -1,11 +1,17 @@
 extends "res://src/ui/ui_screen.gd"
-## Loadout (편성 / 출전 준비): up to 5 unit types (battle cards in slot order) and up to 3 energy skills.
-## Two ways in: the 편성 button on round select (saves and returns), and a round tap once there is a choice to make
-## (출전 준비: saves and starts that round). Two tabs, 유닛 and 스킬, same layout: the slots on top (tap one to take it
+## 출전 준비: up to 5 unit types (battle cards in slot order) and up to 3 energy skills, chosen right before a battle.
+## One way in: a round tap (or 이어하기) once there is a choice to make; it saves and starts that round. Unit types:
+## five by R6, then one more at R30/40/50/60/70 (data/units/roster_expansion.json). Two tabs, 유닛 and 스킬, same layout: the slots on top (tap one to take it
 ## out), every choice below as a card (tap to put it in or take it out), the last card's details on the bottom line.
 
 ## Round to start after choosing (set by round_select before opening this screen); "" = plain 편성 from the menu.
 static var pending_round := ""
+
+## True once the player has more unit types than slots (from R30) or more skills than skill slots.
+static func needs_choice(content, save) -> bool:
+	if content == null or save == null or not content.has_method("available_roster"): return false
+	var reach: int = save.round_reach()
+	return content.available_roster(reach).size() > 5 or content.available_skills(reach).size() > 3
 
 var selected: Array = []
 var roster: Array = []

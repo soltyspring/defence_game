@@ -6,6 +6,9 @@ extends Control
 ## unknown_id | locked | save_failed | read_only). The UI never edits Save.progress itself: a direct
 ## edit + failed write was shown by 10 to keep the change in memory and double-charge on retry.
 ## Until 02 provides the method the panel is browsable but inactive (buttons disabled + notice).
+## Layout (2026-11-14): list of targets on the left, the chosen one on the right with an attack example, its traits
+## and the numbers the next level changes; one buy button (`btn_buy`). `rows` = the list rows on this page,
+## `row_buttons[i]` selects `rows[i]`, `_on_buy(i)` still selects and buys row i.
 ## No monetization UI here: Q2 = "보류" (user), so no gems, ads, shop or "remove ads".
 
 signal closed
@@ -197,6 +200,18 @@ func icon_frame(u: Dictionary) -> String:
 	if tgt.begins_with("unit:") or tgt.begins_with("hero:"): return "card_" + tgt.substr(5)
 	return {"resource:supply": "icon_supply", "resource:energy": "icon_energy", "worker": "card_worker", "base:player": "icon_home"}.get(tgt, "icon_star")
 
+## ---- Screen: list on the left, the chosen target on the right -------------------------------------------------
+## Left: every upgrade target as a row (icon, name, level; a gold mark when the gold on hand buys the next level;
+## characters that have not joined yet stay listed with their round). Right: the character with a looping attack
+## example, what kind of attacker it is, the numbers the next level changes (now -> next, +delta), and one buy button.
+var list: Array = []            # every row, in display order (rows = the ones on this page)
+var selected_id := ""
+var row_buttons: Array = []     # one per visible row: tap = select
+var btn_buy: Control
+var demo: Control               # attack example (redraws on its own, the panel does not)
+var detail_rect := Rect2()
+var _locked := {}               # upgrade id -> true while its character has not joined
+
 func open(view: Vector2, safe: Rect2, p_target: float) -> void:
 	target = p_target
 	size = view
@@ -211,7 +226,6 @@ func open(view: Vector2, safe: Rect2, p_target: float) -> void:
 func _build() -> void:
 	btn_close = TouchButton.new()
 	btn_close.text = UiText.t("ui.close")
-	btn_close.fill = UiStyle.C_ACCENT.darkened(0.2)
 	btn_close.tapped.connect(_on_close)
 	add_child(btn_close)
 	btn_prev = TouchButton.new()
@@ -222,82 +236,201 @@ func _build() -> void:
 	btn_next.glyph = &"right"
 	btn_next.tapped.connect(func(): _set_page(page + 1))
 	add_child(btn_next)
+	btn_buy = TouchButton.new()
+	btn_buy.text = UiText.t("ui.upgrade_buy")
+	btn_buy.tapped.connect(_buy_selected)
+	add_child(btn_buy)
+	buy_buttons = [btn_buy]
+	demo = Demo.new()
+	demo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(demo)
+
+## Display order: hero, characters by the round they join, then the bakery (flour, energy, apprentices, base).
+func list_upgrades() -> Array:
+	var c := _content()
+	if c == null or not (c.get("meta") is Dictionary):
+		return []
+	var open_list := visible_upgrades()
+	var keys := {}
+	var out := []
+	var all: Array = c.meta.get("upgrades", [])
+	_locked.clear()
+	for i in all.size():
+		var u = all[i]
+		if not (u is Dictionary) or not u.has("id"):
+			continue
+		var tgt := str(u.get("target", ""))
+		var is_open := open_list.has(u)
+		if not is_open and not tgt.begins_with("unit:"):
+			continue
+		if not is_open: _locked[str(u.id)] = true
+		var group := 0 if tgt.begins_with("hero:") else (1 if tgt.begins_with("unit:") else 2)
+		keys[str(u.id)] = [group, join_round(u), i]
+		out.append(u)
+	out.sort_custom(func(a, b): return keys[str(a.id)] < keys[str(b.id)])
+	return out
+
+func is_locked(u: Dictionary) -> bool:
+	return _locked.has(str(u.get("id", "")))
+
+## Round at which this upgrade's character joins (1 for the hero and the bakery).
+func join_round(u: Dictionary) -> int:
+	var d := target_def(u)
+	return int(d.get("unlock_round", 1)) if str(u.get("target", "")).begins_with("unit:") else 1
+
+## Unit / hero data behind an upgrade ({} for the bakery upgrades).
+func target_def(u: Dictionary) -> Dictionary:
+	var c := _content()
+	var tgt := str(u.get("target", ""))
+	if c == null: return {}
+	if tgt.begins_with("unit:") and c.has_method("get_unit"):
+		var d: Dictionary = c.get_unit(tgt.substr(5))
+		return d if str(d.get("id", "")) == tgt.substr(5) else {}
+	if tgt.begins_with("hero:") and c.get("heroes") is Dictionary:
+		return c.heroes.get(tgt.substr(5), {})
+	return {}
+
+func target_name(u: Dictionary) -> String:
+	var tgt := str(u.get("target", ""))
+	if tgt.begins_with("unit:"): return UiText.name_of("unit", tgt.substr(5), tgt.substr(5))
+	if tgt.begins_with("hero:"): return UiText.name_of("hero", tgt.substr(5), tgt.substr(5))
+	return UiText.t(str(u.get("name_key", "")), str(u.id))
+
+func selected() -> Dictionary:
+	for u in list:
+		if str(u.id) == selected_id: return u
+	return {}
+
+func select(id: String) -> void:
+	if id == selected_id: return
+	selected_id = id
+	for i in list.size():           # bring its row onto the page
+		if str(list[i].id) == id: page = i / per_page
+	status_code = ""
+	status_text = UiText.t("ui.upgrade_unavailable") if not purchase_available() else ""
+	_refresh()
+
+## Gold on hand buys the next level right now.
+func can_buy(u: Dictionary) -> bool:
+	if u.is_empty() or is_locked(u) or is_max(u) or coins() < next_cost(u): return false
+	return not _gated(u)
+
+func gate_round(u: Dictionary) -> int:
+	var sv := _save()
+	if sv != null and sv.has_method("upgrade_level_unlock_round"):
+		return int(sv.upgrade_level_unlock_round(str(u.id), level_of(str(u.id)) + 1))
+	return 1
+
+func _gated(u: Dictionary) -> bool:
+	var sv := _save()
+	return sv != null and sv.has_method("round_reach") and int(sv.round_reach()) < gate_round(u)
 
 func _layout(_view: Vector2, safe: Rect2) -> void:
 	var w := minf(safe.size.x - 16, 620.0)
-	var row_h := maxf(target, 48.0)
+	var row_h := maxf(target, 44.0)
 	var h := safe.size.y - 16
 	panel_rect = Rect2((safe.get_center() - Vector2(w, h) / 2).round(), Vector2(w, h))
-	# title 38 + rows + status 20 + bottom bar row_h + margins
-	per_page = maxi(1, int(floor((h - 38 - 24 - row_h - 16) / (row_h + 4))))
+	var top := panel_rect.position.y + 36
 	var by := panel_rect.end.y - row_h - 8
-	btn_close.position = Vector2(panel_rect.get_center().x - 50, by).round()
-	btn_close.size = Vector2(100, row_h)
-	btn_prev.position = Vector2(panel_rect.position.x + 8, by)
-	btn_prev.size = Vector2(row_h, row_h)
-	btn_next.position = Vector2(panel_rect.end.x - 8 - row_h, by)
-	btn_next.size = Vector2(row_h, row_h)
-	for b in buy_buttons:
+	var lw := clampf(w * 0.34, 168.0, 210.0)
+	# left column: rows, then prev / page / next under them
+	per_page = maxi(1, int(floor((by - 4 - top) / (row_h + 4))))
+	for b in row_buttons:
 		b.queue_free()
-	buy_buttons.clear()
+	row_buttons.clear()
 	row_rects.clear()
 	for i in per_page:
-		var r := Rect2(panel_rect.position.x + 8, panel_rect.position.y + 38 + i * (row_h + 4), w - 16, row_h)
+		var r := Rect2(panel_rect.position.x + 8, top + i * (row_h + 4), lw, row_h)
 		row_rects.append(r)
 		var b: Control = TouchButton.new()
-		b.text = UiText.t("ui.upgrade_buy")
-		b.tapped.connect(_on_buy.bind(i))
-		b.position = Vector2(r.end.x - 76, r.position.y).round()
-		b.size = Vector2(76, row_h)
+		b.tapped.connect(_on_row.bind(i))
+		b.overlay = _draw_row.bind(i)
+		b.position = r.position.round()
+		b.size = r.size
 		add_child(b)
-		buy_buttons.append(b)
+		row_buttons.append(b)
+	btn_prev.position = Vector2(panel_rect.position.x + 8, by)
+	btn_prev.size = Vector2(row_h, row_h)
+	btn_next.position = Vector2(panel_rect.position.x + 8 + lw - row_h, by)
+	btn_next.size = Vector2(row_h, row_h)
+	# right pane: details, then close (left) and buy (right) on the bottom bar
+	detail_rect = Rect2(panel_rect.position.x + 8 + lw + 8, top, w - lw - 24, by - 4 - top)
+	btn_close.position = Vector2(detail_rect.position.x, by).round()
+	btn_close.size = Vector2(84, row_h)
+	btn_buy.position = Vector2(detail_rect.end.x - 132, by).round()
+	btn_buy.size = Vector2(132, row_h)
+	var dh := clampf(detail_rect.size.y - 34 - 16 - 3 * 18 - 22, 60.0, 120.0)
+	demo.position = (detail_rect.position + Vector2(0, 34)).round()
+	demo.size = Vector2(detail_rect.size.x, dh).round()
+	move_child(demo, -1)
 
 func pages() -> int:
-	return maxi(1, ceili(visible_upgrades().size() / float(per_page)))
+	return maxi(1, ceili(list_upgrades().size() / float(per_page)))
 
 func _set_page(p: int) -> void:
 	page = clampi(p, 0, pages() - 1)
 	_refresh()
 
 func _refresh() -> void:
-	var all := visible_upgrades()
+	list = list_upgrades()
+	if selected().is_empty():
+		selected_id = str(list[0].id) if not list.is_empty() else ""
+		for u in list:                      # open on something the player can act on
+			if can_buy(u):
+				selected_id = str(u.id)
+				break
+		for i in list.size():
+			if str(list[i].id) == selected_id: page = i / per_page
 	page = clampi(page, 0, pages() - 1)
-	rows = all.slice(page * per_page, page * per_page + per_page)
-	var active := purchase_available()
-	for i in buy_buttons.size():
-		var b: Control = buy_buttons[i]
-		if i >= rows.size():
-			b.hide()
-			continue
-		b.show()
-		var u: Dictionary = rows[i]
-		var mx := is_max(u)
-		var sv := _save()
-		var need_round := 1
-		var tier_locked := false
-		if sv != null and sv.has_method("upgrade_level_unlock_round"):
-			need_round = int(sv.upgrade_level_unlock_round(str(u.id),level_of(str(u.id))+1))
-			tier_locked = int(sv.round_reach()) < need_round
-		b.text = UiText.t("ui.max") if mx else UiText.t("ui.upgrade_buy")
-		if tier_locked and not mx: b.text = "R%d" % need_round
-		b.tooltip_text = "R%d" % need_round if tier_locked else ""
-		b.disabled = mx or not active or tier_locked
-		b.dim_reason = ""
-		b.fill = UiStyle.C_PANEL_LIGHT if mx or coins() < next_cost(u) else UiStyle.C_ACCENT.darkened(0.15)
+	rows = list.slice(page * per_page, page * per_page + per_page)
+	for i in row_buttons.size():
+		var b: Control = row_buttons[i]
+		b.visible = i < rows.size()
+		if not b.visible: continue
+		var on := str(rows[i].id) == selected_id
+		b.fill = UiStyle.C_ACCENT.darkened(0.25) if on else (UiStyle.C_DISABLED if is_locked(rows[i]) else UiStyle.C_PANEL_LIGHT)
 		b.queue_redraw()
 	btn_prev.visible = page > 0
 	btn_next.visible = page < pages() - 1
+	var u := selected()
+	var mx := not u.is_empty() and is_max(u)
+	var gated := not u.is_empty() and not mx and _gated(u)
+	btn_buy.visible = not u.is_empty()
+	btn_buy.text = UiText.t("ui.max") if mx else (("R%d" % gate_round(u)) if gated else UiText.t("ui.upgrade_buy"))
+	btn_buy.sub_text = "" if u.is_empty() or mx or is_locked(u) else str(next_cost(u))
+	btn_buy.disabled = u.is_empty() or mx or gated or is_locked(u) or not purchase_available()
+	btn_buy.fill = UiStyle.C_ACCENT.darkened(0.15) if can_buy(u) else UiStyle.C_PANEL_LIGHT
+	btn_buy.queue_redraw()
+	if demo != null:
+		var d := target_def(u) if not u.is_empty() else {}
+		var lv := level_of(str(u.id)) if not u.is_empty() else 1
+		demo.setup(d, UiStyle.ui_icon(icon_frame(u)) if not u.is_empty() else null,
+			float(d.get("atk", 0)) * (level_mult(u, "atk_mult", lv) if not u.is_empty() else 1.0), is_locked(u))
 	queue_redraw()
 
-## Purchase through the 02 contract only. Result code → distinct message (and colour + glyph).
+func _on_row(slot: int) -> void:
+	if slot < rows.size():
+		select(str(rows[slot].id))
+
+## Kept for callers that buy by row: selects that row, then buys it.
 func _on_buy(slot: int) -> void:
 	if slot >= rows.size():
 		return
-	var u: Dictionary = rows[slot]
+	selected_id = str(rows[slot].id)
+	_buy_selected()
+
+## Purchase through the 02 contract only. Result code → distinct message (and colour + glyph).
+func _buy_selected() -> void:
+	var u := selected()
+	if u.is_empty():
+		return
 	var id := str(u.id)
 	status_upgrade = id
 	if is_max(u):
 		_set_status("max_level", u)
+		return
+	if is_locked(u):
+		_set_status("locked", u)
 		return
 	if not purchase_available():
 		_set_status("unavailable", u)
@@ -359,6 +492,41 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST and visible and preload("res://src/ui/ui_screen.gd").claim_back():
 		_on_close()
 
+## One list row, drawn over its button: icon, name, level (or the round the character joins), ready mark.
+func _draw_row(b: Control, i: int) -> void:
+	if i >= rows.size(): return
+	var u: Dictionary = rows[i]
+	var locked := is_locked(u)
+	var x := 6.0
+	var tex: Texture2D = UiStyle.ui_icon(icon_frame(u))
+	if tex != null:
+		var k := maxf(1.0, floorf((b.size.y - 10) / maxf(1.0, float(tex.get_height()))))
+		var isz := Vector2(tex.get_size()) * k
+		b.draw_texture_rect(tex, Rect2(Vector2(x, b.size.y / 2 - isz.y / 2).round(), isz), false, Color(1, 1, 1, 0.5) if locked else Color.WHITE)
+		x += isz.x + 6
+	var nm: Array = UiStyle.fit_text(target_name(u), b.size.x - x - 18, UiStyle.FONT_S)
+	UiStyle.draw_text_left(b, nm[0], Vector2(x, b.size.y / 2 - 8), UiStyle.FONT_S, UiStyle.C_TEXT_DIM if locked else UiStyle.C_TEXT)
+	var sub := UiText.t("upg.joins") % join_round(u) if locked else "Lv %d / %d" % [level_of(str(u.id)), int(u.get("max_level", 1))]
+	UiStyle.draw_text_left(b, sub, Vector2(x, b.size.y / 2 + 8), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
+	if can_buy(u):       # shape + colour: an up arrow, not only gold
+		UiStyle.draw_text_centered(b, "▲", Vector2(b.size.x - 11, b.size.y / 2), UiStyle.FONT_S, UiStyle.C_GOLD)
+	elif not locked and is_max(u):
+		UiStyle.draw_star_marker(b, Vector2(b.size.x - 11, b.size.y / 2), true)
+
+## "원거리 · 사거리 110 · 1.2초마다 공격 · 밀가루 40" for a character; "" for the bakery upgrades.
+func traits_text(u: Dictionary) -> String:
+	var d := target_def(u)
+	if d.is_empty(): return ""
+	var parts := []
+	var ranged: bool = str(d.get("attack_type", "")) == "ranged" or float(d.get("range", 0)) >= 60.0
+	parts.append(UiText.t("upg.ranged") if ranged else UiText.t("upg.melee"))
+	parts.append(UiText.t("upg.range") % int(d.get("range", 0)))
+	if float(d.get("splash", 0)) > 0.0: parts.append(UiText.t("upg.splash") % int(d.splash))
+	if float(d.get("atk_interval", 0)) > 0.0: parts.append(UiText.t("upg.interval") % num(float(d.atk_interval)))
+	if float(d.get("structure_mult", 1.0)) > 1.0: parts.append(UiText.t("upg.structure") % num(float(d.structure_mult)))
+	if d.has("cost"): parts.append(UiText.t("upg.cost") % int(d.cost))
+	return " · ".join(parts)
+
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), UiStyle.C_DIM)
 	UiStyle.draw_pixel_box(self, panel_rect, UiStyle.C_PANEL)
@@ -369,66 +537,196 @@ func _draw() -> void:
 	var cw := UiStyle.number_width(str(coins()), UiStyle.FONT_M, &"bold")
 	if not UiStyle.draw_ui_icon(self, "icon_gold", Vector2(cx - cw - 10, panel_rect.position.y + 19)):
 		UiStyle.draw_glyph(self, &"coin", Vector2(cx - cw - 10, panel_rect.position.y + 19), 5)
-	for i in rows.size():
-		var u: Dictionary = rows[i]
-		var r: Rect2 = row_rects[i]
-		draw_rect(r, Color(0, 0, 0, 0.18))
-		var lv := level_of(str(u.id))
-		var mx := int(u.get("max_level", 1))
-		# icon
-		var tex: Texture2D = UiStyle.ui_icon(icon_frame(u))
-		var ix := r.position.x + 4
-		if tex != null:
-			var k := maxf(1.0, floorf((r.size.y - 8) / maxf(1.0, float(tex.get_height()))))
-			var isz := Vector2(tex.get_size()) * k
-			draw_texture_rect(tex, Rect2(Vector2(ix, r.get_center().y - isz.y / 2).round(), isz), false)
-			ix += isz.x + 6
-		else:
-			ix += 6
-		var right := r.end.x - 76 - 8 - 64          # cost column
-		# line 1: name, level and a level bar
-		var nm: Array = UiStyle.fit_text(display_name(u), right - ix - 70, UiStyle.FONT_S)
-		UiStyle.draw_text_left(self, nm[0], Vector2(ix, r.position.y + 12), UiStyle.FONT_S, UiStyle.C_TEXT)
-		var lvt := "Lv %d/%d" % [lv, mx]
-		UiStyle.draw_text_left(self, lvt, Vector2(right - 64, r.position.y + 12), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
-		var bar := Rect2(ix, r.position.y + 21, right - ix - 4, 2)
-		draw_rect(bar, Color(0, 0, 0, 0.35))
-		draw_rect(Rect2(bar.position, Vector2(bar.size.x * float(lv) / float(maxi(1, mx)), 2)), UiStyle.C_GOLD.darkened(0.15))
-		# line 2: exact values, now -> next (+delta)
-		var x := ix
-		var y := r.position.y + r.size.y - 13
-		for line in stat_lines(u):
-			var seg := [[str(line.label) + " ", UiStyle.C_TEXT_DIM], [str(line.now), UiStyle.C_TEXT]]
-			if not is_max(u):
-				seg.append([" → ", UiStyle.C_TEXT_DIM])
-				seg.append([str(line.next), UiStyle.C_GOLD])
-				if str(line.delta) != "": seg.append([" (" + str(line.delta) + ")", UiStyle.C_HP_PLAYER])
-			for sg in seg:
-				var tw := UiStyle.text_width(sg[0], UiStyle.FONT_S)
-				if x + tw > right: break
-				UiStyle.draw_text_left(self, sg[0], Vector2(x, y), UiStyle.FONT_S, sg[1])
-				x += tw
-			x += 12
-		if not is_max(u):
-			var cost := next_cost(u)
-			var col := UiStyle.C_GOLD if coins() >= cost else UiStyle.C_HP_ENEMY
-			UiStyle.draw_number(self, str(cost), Vector2(r.end.x - 76 - 10, r.get_center().y), UiStyle.FONT_M, col, 1, &"bold")
-			var w2 := UiStyle.number_width(str(cost), UiStyle.FONT_M, &"bold")
-			if not UiStyle.draw_ui_icon(self, "icon_gold", Vector2(r.end.x - 76 - 18 - w2, r.get_center().y)):
-				UiStyle.draw_glyph(self, &"coin", Vector2(r.end.x - 76 - 18 - w2, r.get_center().y), 5)
-		else:
-			UiStyle.draw_star_marker(self, Vector2(r.end.x - 76 - 18, r.get_center().y), true)
-	if visible_upgrades().is_empty():
-		UiStyle.draw_text_centered(self, UiText.t("ui.upgrade_none"), panel_rect.get_center(), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
+	if pages() > 1:
+		UiStyle.draw_text_centered(self, "%d / %d" % [page + 1, pages()], Vector2((btn_prev.position.x + btn_next.position.x + btn_next.size.x) / 2, btn_prev.position.y + btn_prev.size.y / 2), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
+	var u := selected()
+	if u.is_empty():
+		UiStyle.draw_text_centered(self, UiText.t("ui.upgrade_none"), detail_rect.get_center(), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
+	else:
+		_draw_detail(u)
 	if status_text != "":
 		var kind: String = STATUS_KIND.get(status_code, "info") if status_code != "" else "info"
 		var col: Color = {"good": UiStyle.C_HP_PLAYER, "warn": UiStyle.C_GOLD, "error": UiStyle.C_HP_ENEMY, "info": UiStyle.C_TEXT_DIM}[kind]
-		var sy := panel_rect.end.y - maxf(target, 40.0) - 20
 		var mark: String = {"good": "●", "warn": "▲", "error": "×", "info": "※"}[kind]   # shape differs per kind, not only colour (all in Galmuri11)
-		var line: Array = UiStyle.fit_text(mark + " " + status_text, panel_rect.size.x - 24, UiStyle.FONT_S)
-		UiStyle.draw_text_centered(self, line[0], Vector2(panel_rect.get_center().x, sy), UiStyle.FONT_S, col)
+		var line: Array = UiStyle.fit_text(mark + " " + status_text, detail_rect.size.x, UiStyle.FONT_S)
+		UiStyle.draw_text_centered(self, line[0], Vector2(detail_rect.get_center().x, detail_rect.end.y - 8), UiStyle.FONT_S, col)
 		status_kind_drawn = kind
 	else:
 		status_kind_drawn = ""
 
+## Right pane, top to bottom: name + level, one-line description, [attack example], traits, stat rows (now -> next).
+func _draw_detail(u: Dictionary) -> void:
+	var r := detail_rect
+	var locked := is_locked(u)
+	var lv := level_of(str(u.id))
+	var mx := int(u.get("max_level", 1))
+	UiStyle.draw_text_left(self, target_name(u), Vector2(r.position.x, r.position.y + 8), UiStyle.FONT_M, UiStyle.C_TEXT)
+	var lvt := UiText.t("upg.joins") % join_round(u) if locked else "Lv %d / %d" % [lv, mx]
+	var lw := UiStyle.text_width(lvt, UiStyle.FONT_S)
+	UiStyle.draw_text_left(self, lvt, Vector2(r.end.x - lw, r.position.y + 8), UiStyle.FONT_S, UiStyle.C_GOLD if locked else UiStyle.C_TEXT_DIM)
+	var d := target_def(u)
+	var dk := str(d.get("desc_key", "")) if not d.is_empty() else str(u.get("desc_key", ""))
+	var desc := UiText.t(dk) if dk != "" and UiText.has(dk) else ""
+	if desc != "":
+		UiStyle.draw_text_left(self, UiStyle.fit_text(desc, r.size.x, UiStyle.FONT_S)[0], Vector2(r.position.x, r.position.y + 24), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
+	var y := demo.position.y + demo.size.y + 10
+	var traits := traits_text(u)
+	if traits != "":
+		UiStyle.draw_text_left(self, UiStyle.fit_text(traits, r.size.x, UiStyle.FONT_S)[0], Vector2(r.position.x, y), UiStyle.FONT_S, UiStyle.C_TEXT)
+		y += 18
+	# what the next level changes
+	var maxed := is_max(u)
+	var head := UiText.t("upg.maxed") if maxed else UiText.t("upg.next") % (lv + 1)
+	if not maxed and not locked and _gated(u): head += "  ·  " + UiText.t("upg.gate") % gate_round(u)
+	if not locked:
+		UiStyle.draw_text_left(self, head, Vector2(r.position.x, y), UiStyle.FONT_S, UiStyle.C_GOLD if not maxed else UiStyle.C_TEXT_DIM)
+		y += 18
+	var col_w := floorf(r.size.x / 2.0)
+	var lines := stat_lines(u)
+	for i in lines.size():
+		var line: Dictionary = lines[i]
+		var x := r.position.x + (i % 2) * col_w
+		var ly := y + (i / 2) * 18
+		var seg := [[str(line.label) + " ", UiStyle.C_TEXT_DIM], [str(line.now), UiStyle.C_TEXT]]
+		if not maxed and not locked:
+			seg.append([" → ", UiStyle.C_TEXT_DIM])
+			seg.append([str(line.next), UiStyle.C_GOLD])
+			if str(line.delta) != "": seg.append([" (" + str(line.delta) + ")", UiStyle.C_HP_PLAYER])
+		for sg in seg:
+			var tw := UiStyle.text_width(sg[0], UiStyle.FONT_S)
+			if x + tw > r.position.x + (i % 2 + 1) * col_w: break
+			UiStyle.draw_text_left(self, sg[0], Vector2(x, ly), UiStyle.FONT_S, sg[1])
+			x += tw
+
 var status_kind_drawn := ""     # QA
+
+## Attack example: the character on the left swings / throws at a practice dummy standing at its real reach, on a
+## loop as long as its attack interval. Shows reach (ground ruler), projectile, area (ring + extra dummies) and the
+## damage number at the current level. Bakery upgrades show their icon only. Redraws ~15 times a second by itself.
+class Demo extends Control:
+	const UiStyle := preload("res://src/ui/ui_style.gd")
+	var def: Dictionary = {}
+	var icon: Texture2D
+	var atk := 0.0
+	var locked := false
+	var t := 0.0
+	var _acc := 0.0
+	var _page := ""               # atlas page held for the sprite
+
+	func setup(p_def: Dictionary, p_icon: Texture2D, p_atk: float, p_locked: bool) -> void:
+		var same: bool = not def.is_empty() and str(p_def.get("id", "")) == str(def.get("id", ""))
+		def = p_def
+		icon = p_icon
+		atk = p_atk
+		locked = p_locked
+		if not same: t = 0.0
+		_hold(str(_atlas().anim_sets.get(str(def.get("anim_set", "")), "")) if _atlas() != null and not def.is_empty() else "")
+		queue_redraw()
+
+	func _atlas() -> Node:
+		return get_node_or_null("/root/Atlas") if is_inside_tree() else null
+
+	func _hold(page: String) -> void:
+		if page == _page: return
+		var a := _atlas()
+		if a != null:
+			if _page != "": a.release(_page)
+			if page != "" and not a.acquire(page): page = ""
+		_page = page if a != null else ""
+
+	func _exit_tree() -> void:
+		_hold("")
+
+	func _notification(what: int) -> void:
+		if what == NOTIFICATION_VISIBILITY_CHANGED and not is_visible_in_tree() and _page != "":
+			_hold("")             # the panel closed: give the page back
+
+	func _process(delta: float) -> void:
+		if not is_visible_in_tree() or def.is_empty(): return
+		t += delta
+		_acc += delta
+		if _acc >= 1.0 / 15.0:
+			_acc = 0.0
+			queue_redraw()
+
+	func _draw() -> void:
+		texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		draw_rect(Rect2(Vector2.ZERO, size), Color(0, 0, 0, 0.30))
+		if def.is_empty():
+			if icon != null:
+				var k := maxf(1.0, floorf((size.y - 16) / maxf(1.0, float(icon.get_height()))))
+				var isz := Vector2(icon.get_size()) * k
+				draw_texture_rect(icon, Rect2(((size - isz) / 2).round(), isz), false)
+			return
+		var gy := size.y - 14.0
+		draw_rect(Rect2(0, gy, size.x, 1), Color(1, 1, 1, 0.16))
+		var rng := float(def.get("range", 20))
+		var px := (size.x - 96.0) / 180.0
+		var ux := 30.0
+		var tx := ux + clampf(rng * px, 30.0, size.x - 66.0)
+		var splash := float(def.get("splash", 0))
+		var ranged: bool = str(def.get("attack_type", "")) == "ranged" or rng >= 60.0
+		# reach ruler on the ground
+		draw_rect(Rect2(ux, gy + 4, tx - ux, 1), Color(UiStyle.C_GOLD, 0.55))
+		draw_rect(Rect2(tx, gy + 1, 1, 7), Color(UiStyle.C_GOLD, 0.55))
+		# one loop = swing, (flight), impact, rest
+		var cycle := maxf(float(def.get("atk_interval", 1.0)), 0.9) + 0.4
+		var ct := fmod(t, cycle)
+		var a := _atlas()
+		var rec = a.anim_rec(str(def.get("anim_set", "")), "attack") if a != null and _page != "" else null
+		var hit_t := 0.35
+		var swing_len := 0.5
+		if rec != null:
+			swing_len = rec.rects.size() / maxf(1.0, rec.fps)
+			hit_t = (rec.hit_frame / maxf(1.0, rec.fps)) if rec.hit_frame >= 0 else swing_len * 0.6
+		var fly := 0.24 if ranged else 0.0
+		var impact := hit_t + fly
+		var since := ct - impact               # seconds after the hit landed
+		var hit_now := since >= 0.0 and since < 0.22
+		# dummies
+		var spots := [tx]
+		if splash > 0.0: spots.append_array([tx + 15.0, tx + 30.0])
+		for sx in spots:
+			_dummy(Vector2(sx + (1.0 if hit_now and int(since * 40) % 2 == 0 else 0.0), gy), hit_now)
+		if splash > 0.0 and since >= 0.0 and since < 0.3:
+			draw_arc(Vector2(tx + 15.0, gy - 6), maxf(12.0, splash * px + 8.0) * minf(1.0, 0.4 + since * 4.0), 0, TAU, 24, Color(1.0, 0.6, 0.2, 0.9 - since * 2.5), 1.0)
+		# the character
+		var mod := Color(1, 1, 1, 0.55) if locked else Color.WHITE
+		var drawn := false
+		if rec != null:
+			var use = rec
+			var fi := 0
+			if ct < swing_len:
+				fi = mini(int(ct * rec.fps), rec.rects.size() - 1)
+			else:
+				var idle = a.anim_rec(str(def.get("anim_set", "")), "idle")
+				if idle != null:
+					use = idle
+					fi = int(ct * idle.fps) % idle.rects.size()
+			var rr: Rect2 = use.rects[fi]
+			var pv: Vector2 = use.pivots[fi]
+			draw_texture_rect_region(use.tex, Rect2(Vector2(ux, gy) - pv * 2.0, rr.size * 2.0), rr, mod)
+			drawn = true
+		if not drawn and icon != null:
+			var lunge := 5.0 if absf(ct - hit_t) < 0.1 else 0.0
+			var isz := Vector2(icon.get_size()) * 2.0
+			draw_texture_rect(icon, Rect2(Vector2(ux - isz.x / 2 + lunge, gy - isz.y).round(), isz), false, mod)
+		# projectile
+		if ranged and ct >= hit_t and ct < impact:
+			var f := (ct - hit_t) / fly
+			var arc := 22.0 if str(def.get("projectile", "")) == "rock" else 8.0
+			var p := Vector2(lerpf(ux + 10.0, tx, f), gy - 16.0 - sin(f * PI) * arc)
+			draw_rect(Rect2(p - Vector2(2, 2), Vector2(4, 4)), Color(0.08, 0.05, 0.04))
+			draw_rect(Rect2(p - Vector2(1, 1), Vector2(3, 3)), Color(1.0, 0.86, 0.5))
+		# damage number at the current level
+		if since >= 0.0 and since < 0.55 and atk > 0.0:
+			UiStyle.draw_number(self, "-%d" % int(roundf(atk)), Vector2(tx, gy - 30.0 - since * 18.0), UiStyle.FONT_M, Color(UiStyle.C_HP_ENEMY, 1.0 - since * 1.4), 0, &"bold")
+
+	## Practice dummy: a post, a straw body and a head; turns pale for a moment when hit.
+	func _dummy(p: Vector2, hit: bool) -> void:
+		var straw := Color(1.0, 0.95, 0.85) if hit else Color(0.80, 0.62, 0.32)
+		draw_rect(Rect2(p.x - 1, p.y - 8, 2, 8), Color(0.36, 0.22, 0.12))
+		draw_rect(Rect2(p.x - 5, p.y - 20, 10, 12), Color(0.05, 0.04, 0.04))
+		draw_rect(Rect2(p.x - 4, p.y - 19, 8, 10), straw)
+		draw_rect(Rect2(p.x - 3, p.y - 26, 6, 6), Color(0.05, 0.04, 0.04))
+		draw_rect(Rect2(p.x - 2, p.y - 25, 4, 4), straw.darkened(0.12))

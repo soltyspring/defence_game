@@ -1,6 +1,8 @@
 extends "res://src/ui/ui_screen.gd"
 ## Main menu. Owner: 04-client. Emits cmd_start_round (continue), cmd_open_screen(&"round_select").
 ## Two pages: "title" = 시작하기 / 이어하기 / 설정; 시작하기 opens "lobby" = 라운드 선택 / 강화 (+ 뒤로, shop).
+## The lobby is its own screen (기사단 본부): no logo, a header bar (뒤로 · title · gold · shop) and two large cards,
+## each with one line under it saying what waits there (next round and stars / how many upgrades the gold buys now).
 ## The page is remembered for the session, so coming back from round select / shop / a battle lands in the lobby.
 static var last_page := "title"
 var page := "title"
@@ -11,6 +13,7 @@ var btn_select: Control
 var btn_settings: Control
 var btn_upgrades: Control
 var btn_shop: Control
+const RosterScreen := preload("res://src/ui/roster.gd")
 const TitleBlock := preload("res://src/ui/title_block.gd")
 const GoldShopCatalog := preload("res://src/core/gold_shop_catalog.gd")
 var title_slot := Rect2()   # QA
@@ -70,6 +73,7 @@ func show_page(p: String) -> void:
 	for b in [btn_start, btn_play, btn_settings]: b.visible = not lobby
 	for b in [btn_select, btn_upgrades, btn_back]: b.visible = lobby
 	if btn_shop != null: btn_shop.visible = lobby
+	_refresh_labels()
 	_layout()
 	queue_redraw()
 
@@ -125,11 +129,45 @@ func _refresh_labels() -> void:
 	var started := int(p.get("unlocked_round", 1)) > 1 or not (p.get("stars", {}) as Dictionary).is_empty()
 	btn_play.disabled = not started     # nothing to continue on a fresh save: 시작하기 is the way in
 	btn_play.queue_redraw()
+	var n := upgrades_ready()
+	btn_upgrades.badge = str(n) if n > 0 else ""
+	queue_redraw()
+
+## How many upgrades the player can buy right now (unlocked, level gate reached, enough gold). Shown on the 강화 card.
+func upgrades_ready() -> int:
+	var c := autoload("Content")
+	var s := autoload("Save")
+	if c == null or s == null or not (c.get("meta") is Dictionary) or not s.has_method("upgrade_cost"):
+		return 0
+	var coins := int(progress().get("coins", 0))
+	var n := 0
+	for u in c.meta.get("upgrades", []):
+		var id := str(u.get("id", ""))
+		if id == "" or s.upgrade_locked(id): continue
+		var to := int(s.upgrade_level(id)) + 1
+		var cost := int(s.upgrade_cost(id, to))
+		if cost >= 0 and cost <= coins and int(s.round_reach()) >= int(s.upgrade_level_unlock_round(id, to)): n += 1
+	return n
+
+## [next round number or 0, stars earned, stars possible] for the 라운드 선택 card.
+func round_summary() -> Array:
+	var list := _round_list()
+	var stars: Dictionary = progress().get("stars", {})
+	var got := 0
+	var next := 0
+	for i in list.size():
+		var st := int(stars.get(str(list[i].id), 0))
+		got += st
+		if next == 0 and st == 0 and s_round_unlocked(i): next = int(list[i].get("index", i + 1))
+	return [next, got, list.size() * 3]
 
 func _on_play() -> void:
 	var id := continue_round_id()
 	if id == "":
 		emit_cmd(&"cmd_open_screen", [&"round_select"])
+	elif RosterScreen.needs_choice(autoload("Content"), autoload("Save")):
+		RosterScreen.pending_round = id          # same stop as a round tile: pick who fights, then start
+		emit_cmd(&"cmd_open_screen", [&"roster"])
 	else:
 		emit_cmd(&"cmd_start_round", [id])
 
@@ -167,11 +205,16 @@ func _layout() -> void:
 	var w2 := floorf((bw - 8) / 2.0)    # 8 px between buttons (07 LAYOUT L4 / QA-B027: 8 dp)
 	place(btn_play, Rect2(cx - bw / 2, y + bh + 14, w2, bh))
 	place(btn_settings, Rect2(cx - bw / 2 + w2 + 8, y + bh + 14, w2, bh))
-	var lw := clampf(safe.size.x * 0.58, 320.0, 400.0)   # lobby: two tall buttons, wide enough for the FONT_L labels
-	var lw2 := floorf((lw - 8) / 2.0)
-	place(btn_select, Rect2(cx - lw / 2, y, lw2, bh * 2 + 8))
-	place(btn_upgrades, Rect2(cx - lw / 2 + lw2 + 8, y, lw2, bh * 2 + 8))
-	place(btn_back, Rect2(Vector2(safe.position.x + 4, safe.end.y - bh - 4), Vector2(88, bh)))
+	# lobby: header row (뒤로 left, shop right), then two large cards centred in what is left, a caption line under each
+	var head := bh + 8
+	var lw := clampf(safe.size.x * 0.72, 320.0, 520.0)
+	var gap := 12.0
+	var lw2 := floorf((lw - gap) / 2.0)
+	var lh := clampf(safe.size.y - head - 56.0, bh * 2 + 8, 150.0)
+	var ly := safe.position.y + head + maxf(8.0, (safe.size.y - head - lh - 28.0) * 0.5)
+	place(btn_select, Rect2(cx - lw / 2, ly, lw2, lh))
+	place(btn_upgrades, Rect2(cx - lw / 2 + lw2 + gap, ly, lw2, lh))
+	place(btn_back, Rect2(safe.position + Vector2(4, 4), Vector2(72, bh)))
 	if btn_shop != null:
 		place(btn_shop, Rect2(Vector2(safe.end.x - 92, safe.position.y + 4), Vector2(88, bh)))
 	place(quit_layer, Rect2(Vector2.ZERO, view))
@@ -212,6 +255,9 @@ func _draw_background() -> void:
 
 func _draw() -> void:
 	_draw_background()
+	if page == "lobby":
+		_draw_lobby()
+		return
 	# title slot: between the coin row and the play button; logo (03) or text (title_block.gd)
 	var slot_top := safe.position.y + 28
 	var first: Control = btn_select if page == "lobby" else btn_start
@@ -230,3 +276,27 @@ func _draw() -> void:
 	UiStyle.draw_number(self, "v" + ver, Vector2(safe.end.x - 6, safe.end.y - 10), UiStyle.NUM_READ, UiStyle.C_TEXT_DIM, 1, UiStyle.NUM_READ_KIND)
 	if _notice != "":
 		UiStyle.draw_text_centered(self, _notice, Vector2(safe.get_center().x, safe.end.y - 24), UiStyle.FONT_S, UiStyle.C_ACCENT)
+
+## Lobby: the menu art pushed back behind a dark sheet, a header band, and what each card leads to.
+func _draw_lobby() -> void:
+	draw_rect(Rect2(Vector2.ZERO, view), Color(UiStyle.C_BG, 0.82))
+	var bh := maxf(target, 44.0)
+	var mid_y := safe.position.y + 4 + bh / 2
+	draw_rect(Rect2(0, 0, view.x, safe.position.y + bh + 8), Color(0, 0, 0, 0.28))
+	UiStyle.draw_text_centered(self, UiText.t("lobby.title", "Hall"), Vector2(safe.get_center().x, mid_y), UiStyle.FONT_L)
+	# gold: right side, just left of the shop button (where it is spent), as on round select
+	var right := safe.end.x - 8 - (96.0 if btn_shop != null else 0.0)
+	var cs := str(int(progress().get("coins", 0)))
+	UiStyle.draw_number(self, cs, Vector2(right, mid_y), UiStyle.FONT_M, UiStyle.C_GOLD, 1, &"bold")
+	var cw := UiStyle.number_width(cs, UiStyle.FONT_M, &"bold")
+	if not UiStyle.draw_ui_icon(self, "icon_gold", Vector2(right - cw - 10, mid_y)):
+		UiStyle.draw_glyph(self, &"coin", Vector2(right - cw - 10, mid_y), 5)
+	var sum := round_summary()
+	var a: String = UiText.t("lobby.next") % int(sum[0]) if int(sum[0]) > 0 else UiText.t("lobby.all_clear")
+	a += "  ·  " + UiText.t("lobby.stars") % [int(sum[1]), int(sum[2])]
+	var n := upgrades_ready()
+	var b: String = UiText.t("lobby.can_upgrade") % n if n > 0 else UiText.t("lobby.no_upgrade")
+	var cap_y := btn_select.position.y + btn_select.size.y + 14
+	for d in [[btn_select, a, UiStyle.C_TEXT], [btn_upgrades, b, UiStyle.C_GOLD if n > 0 else UiStyle.C_TEXT_DIM]]:
+		var line: Array = UiStyle.fit_text(d[1], d[0].size.x, UiStyle.FONT_S)
+		UiStyle.draw_text_centered(self, line[0], Vector2(d[0].position.x + d[0].size.x / 2, cap_y), UiStyle.FONT_S, d[2])

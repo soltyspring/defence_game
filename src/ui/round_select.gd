@@ -12,7 +12,6 @@ var page := 0
 var tiles: Array = []            # TouchButton per visible slot
 var btn_back: Control
 var btn_upgrades: Control
-var btn_roster: Control
 var btn_prev: Control
 var btn_next: Control
 var tile_rects: Array[Rect2] = []
@@ -21,7 +20,6 @@ func _build() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	btn_back = make_button(UiText.t("ui.back"), _on_back)
 	btn_upgrades = make_button(UiText.t("ui.upgrades"), open_upgrades)
-	btn_roster = make_button(UiText.t("roster.title"), func(): emit_cmd(&"cmd_open_screen", [&"roster"]))
 	btn_back.glyph = &""
 	btn_prev = make_button("", func(): _set_page(page - 1))
 	btn_prev.glyph = &"left"
@@ -96,9 +94,7 @@ func _on_tile(slot: int) -> void:
 	if idx >= rounds.size() or not is_round_unlocked(idx):
 		return
 	# more unit types than deck slots, or more skills than skill slots: choose first (출전 준비), then start the round
-	var c = autoload("Content")
-	var save = autoload("Save")
-	if c != null and save != null and (c.available_roster(save.round_reach()).size() > 5 or c.available_skills(save.round_reach()).size() > 3):
+	if RosterScreen.needs_choice(autoload("Content"), autoload("Save")):
 		RosterScreen.pending_round = str(rounds[idx].id)
 		emit_cmd(&"cmd_open_screen", [&"roster"])
 		return
@@ -117,7 +113,6 @@ func _layout() -> void:
 	var t := maxf(target, 40.0)
 	place(btn_back, Rect2(safe.position + Vector2(4, 4), Vector2(72, t)))
 	place(btn_upgrades, Rect2(Vector2(safe.end.x - 4 - 80, safe.position.y + 4), Vector2(80, t)))
-	place(btn_roster, Rect2(Vector2(safe.position.x + 90, safe.position.y + 4), Vector2(76, t)))
 	var top := safe.position.y + t + 12
 	var bottom := safe.end.y - 6
 	var side := t + 10

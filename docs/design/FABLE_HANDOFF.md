@@ -17,7 +17,12 @@
   - `gpt_nest_c01`–`c10`(그룹 nest): `base_enemy_cNN`. `battle.gd`가 이 라운드 챕터 페이지만 적재(`ViewS.nest_set`), `_draw_base`가 적 기지에 쓴다(뒤집지 않음).
   - 기력 스킬 아이콘 7종: 원본 `docs/art/gpt_sources/skillicon/skill_icons.png`(약 40px 격자로 그려 와서 블록 축소 대신 24×24 Lanczos + 아이콘별 24색 맞춤, `python tools/art/gpt_import.py icons`) → `assets/art/skills/<id>.png`. `UiStyle.SKILL_BADGES`가 `ui_icon`과 `icon_texture`(전투 HUD가 넘기는 ui_main 프레임) 둘 다에서 이 파일을 쓰게 한다. 옛 생성기 `tools/art/release_slice/skill_icons.py`는 쓰지 않는다.
   - `gpt_props`: `painted_chapter_backdrop.gd`의 `Props`가 챕터 테마(`PROP_THEME`)의 소품 8개를 무작위 배치·좌우 반전으로 그린다. 시트가 없으면 이전 코드 도형.
-- **메인 메뉴 2단계(2026-11-14 사용자)**: `main_menu.gd` 첫 화면 = 시작하기 / 이어하기(진행 없으면 비활성) / 설정, 시작하기 → 로비 = 라운드 선택 / 강화 / 뒤로(+상점). `static var last_page`로 라운드 선택·전투에서 돌아오면 로비, 로비에서 뒤로 → 첫 화면 → 종료 확인. 텍스트 키 `ui.start`. 테스트: `test_ui`(메뉴 페이지), `suite_flow` FLOW-03(시작하기→라운드 선택→1라운드)·FLOW-25A. `test_resolution_input`의 헤드리스 실패 10건은 변경 전부터 같다.
-- **실행한 검증**(Windows Godot 4.7.2, 격리 APPDATA, 창은 보조 모니터 `--screen 1`): UI 3,419/3,419, UI 통합 49/49, 캠페인30 351/351, 캠페인100 973/973, 도전 핵심 251/251, 챕터 배경 721/721, 스킬 캡처 CHECK 11/11, acceptance PASS 155 · FAIL 1(MON-01 iap_catalog, 이전부터). 캡처: 챕터별 R5–R95 둥지·소품, 스킬 4종, R8·R57 병력.
-- **미확인**: 사람 손으로 본 예고 가독성과 카드 반짝임 빈도, 1280×720 이상 해상도 캡처, Android 실기.
-- **다음 시작점**: 사람 손으로 본 효과 크기·빈도 의견 반영. GPT 시트를 바꾸면 `tools/art/gpt_import.py`만 다시 돌린다.
+- **메뉴·강화·출전 UX(2026-11-14 사용자, 구성만 — 그림은 Codex)**
+  - 로비: `main_menu.gd`의 `page == "lobby"`가 로고 없는 별도 화면(기사단 본부)이다. 머리줄(뒤로 · 제목 · 골드 · 상점) + 큰 카드 2장, 카드 아래 한 줄(`round_summary`: 다음 라운드·별 / `upgrades_ready`: 지금 살 수 있는 강화 수, 카드 배지에도 표시). `_draw_lobby`, `_layout`의 lobby 블록.
+  - 강화: `upgrade_panel.gd`를 왼쪽 목록 + 오른쪽 상세로 바꿨다. 목록 `list_upgrades`(영웅 → 합류 라운드순 캐릭터 → 방앗간), 아직 합류 전 캐릭터도 `R%d에서 합류`로 보인다. 상세 `_draw_detail`: 이름·레벨, 설명, 공격 예시(`Demo` 내부 클래스: 실제 사거리 위치의 허수아비, 투사체, 범위 고리, 현재 레벨 피해 숫자, 15fps로 혼자 다시 그림, 선택한 캐릭터 아틀라스 페이지만 잡았다 놓음), 특성 줄 `traits_text`, 다음 레벨 수치 `stat_lines`. 구매 버튼은 `btn_buy` 하나. **테스트 수정 필요**: `buy_buttons[i]`(행마다 버튼)가 없어졌다 → `panel.select(str(panel.rows[i].id))` 뒤 `tap(panel.btn_buy)` 또는 `panel._on_buy(i)`; `rows` 순서와 `pages()`도 달라졌다(`tests/ui/test_ui.gd` 904행 부근, `test_ui_integration`, `test_services_upgrade`).
+  - 출전: ‘편성’ 용어와 라운드 선택의 편성 버튼을 없앴다. 라운드를 누르거나 이어하기를 누르면 고를 것이 있을 때(`roster.gd`의 `needs_choice`: 유닛 6종 이상 또는 스킬 4개 이상) 출전 준비 화면을 거쳐 시작한다. 결과 화면의 다음/재도전은 이전 선택 그대로 바로 시작한다.
+  - 해금: 확장 5종을 R30 바게트 · R40 마카롱 · R50 고추빵 · R60 도넛 · R70 와플로 옮겼다(`data/units/roster_expansion.json`, `tools/build/generate_campaign100.py`의 `NEW`). 기본 5종은 R1·2·3·4·6 그대로. **밸런스 미검증**: R8–R69 구간은 예전보다 쓸 수 있는 유닛이 적다. 봇·캠페인100 검증과 해금 라운드를 기대하는 테스트는 다시 돌려야 한다.
+  - 문구: `data/text/{ko,en}.json`의 `lobby.*`, `upg.*`, `roster.title`(출전 준비)·`roster.save`.
+- **실행한 검증(이번 변경)**: 수정 스크립트 헤드리스 파싱, `tests/art_preview/capture_upgrades.gd` 640×360 캡처(강화 1–3쪽, 원거리·범위·미합류·방앗간 선택, 로비)를 눈으로 확인. **테스트 스위트는 돌리지 않았다(Codex 담당).** 직전 기준선: UI 3,419/3,419, UI 통합 49/49, 캠페인30 351/351, 캠페인100 973/973, acceptance PASS 155 · FAIL 1(MON-01).
+- **미확인**: 위 테스트 전부, 해금 변경 뒤 R8–R69 난도, 다른 해상도(480×270, 800×360)의 강화 화면, 영어 문구 길이, Android 실기.
+- **다음 시작점**: Codex가 로비 카드·강화 화면 그림을 입힌다(`main_menu._draw_lobby`, `upgrade_panel._draw_detail`·`Demo._draw`). 테스트 갱신 후 해금 변경에 따른 밸런스 재검증. 남은 UX 후보: 결과 화면에서 새 캐릭터 합류 알림(R30/40/…), 480×270에서 스킬 버튼 48px 미달, 방어막 아이콘을 덮는 쿨다운 숫자.
