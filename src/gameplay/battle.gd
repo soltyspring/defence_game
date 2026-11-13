@@ -35,6 +35,13 @@ var tutorial = null
 var tutorial_key := ""
 var _evbuf: Array = []
 var _shake := 0.0
+
+## Fast-forward chosen by the player (HUD x1 / x2 button, setting "battle_speed"): more sim steps per frame, same
+## fixed step, so the battle itself (and star times, which count sim seconds) is unchanged. R1-R2 always run at x1.
+const SPEED_FROM_ROUND := 3
+func player_speed() -> float:
+	if sim == null or int(sim.round_def.get("index", 0)) < SPEED_FROM_ROUND: return 1.0
+	return clampf(float(Save.progress.settings.get("battle_speed", 1.0)), 1.0, 2.0)
 var world_zoom := 1.0                  # camera zoom used in the last frame (1 = off; App.world_zoom())
 const GROUND_FROM_BOTTOM := 70.0       # ground row, view px above the view bottom (04 CamFix / R17)
 
@@ -174,7 +181,7 @@ func _process(delta: float) -> void:
 			autoplay_bot.act(sim, delta)
 		else:
 			sim.set_hero_dir(_ui_dir if _ui_dir != 0 else _key_dir)
-		_acc += minf(delta, 0.25) * time_scale
+		_acc += minf(delta, 0.25) * time_scale * player_speed()
 		var steps := 0
 		while _acc >= Perf.SIM_STEP and steps < Perf.SIM_MAX_STEPS:
 			sim.step(Perf.SIM_STEP)

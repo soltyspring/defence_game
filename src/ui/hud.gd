@@ -22,6 +22,8 @@ var paused := false
 var top: Control                 # resources + base bars + wave (custom drawn, no input)
 var minimap: Control
 var btn_follow: Control
+var btn_speed: Control           # x1 / x2 fast-forward; shares the follow button's slot (follow shows only while scouting)
+var _round_index := 0
 var btn_pause: Control
 var btn_left: Control
 var btn_right: Control
@@ -83,6 +85,8 @@ func _build() -> void:
 	btn_follow = make_button(UiText.t("ui.follow_hero"), _on_map_follow)
 	btn_follow.font_size = UiStyle.FONT_S
 
+	btn_speed = make_button("x1", _on_speed)
+	btn_speed.font_size = UiStyle.FONT_S
 	btn_pause = make_button("", _on_pause_pressed)
 	btn_pause.glyph = &"pause"
 	btn_pause.icon = UiStyle.ui_icon("icon_pause")
@@ -177,6 +181,19 @@ func _build_pause_layer() -> void:
 # ---------------- engine -> UI ----------------
 
 func _on_battle_started(p_info: Dictionary) -> void:
+## Battle speed chosen by the player; kept in the settings, so it stays for the next battle.
+func battle_speed() -> float:
+	return clampf(float((progress().get("settings", {}) as Dictionary).get("battle_speed", 1.0)), 1.0, 2.0)
+
+func _on_speed() -> void:
+	var next := 1.0 if battle_speed() > 1.0 else 2.0
+	if bus and bus.has_signal("cmd_set_setting"): bus.cmd_set_setting.emit("battle_speed", next)
+	_refresh_speed(next)
+
+func _refresh_speed(v: float) -> void:
+	btn_speed.text = "x2" if v > 1.0 else "x1"
+	btn_speed.fill = UiStyle.C_ACCENT.darkened(0.15) if v > 1.0 else UiStyle.C_PANEL_LIGHT
+
 	info = p_info
 	snap = {}
 	_held.clear()
@@ -248,6 +265,8 @@ func _on_battle_started(p_info: Dictionary) -> void:
 
 func _on_snapshot(s: Dictionary) -> void:
 	snap = s
+	_round_index = ri
+	_refresh_speed(battle_speed())
 	top.snap = s            # hud_top redraws itself only if a drawn value changed
 	minimap.state = s.get("map", {})
 	btn_follow.visible = bool(s.get("map", {}).get("scouting", false))
@@ -269,6 +288,7 @@ func _on_snapshot(s: Dictionary) -> void:
 		b.dim_reason = UiText.t("ui.full") if army_full else ""
 	var skills_by := {}
 	for c in s.get("skills", []):
+	btn_speed.visible = not btn_follow.visible and _round_index >= 3      # R1-R2 teach at x1 (battle.gd SPEED_FROM_ROUND)
 		skills_by[str(c.get("id", ""))] = c
 	var sk: Array = info.get("skills", [])
 	for i in mini(skill_buttons.size(), sk.size()):
@@ -582,6 +602,7 @@ func _layout() -> void:
 	var bh := maxf(target, 40.0)
 	var total_h := pause_buttons.size() * (bh + 6) - 6
 	var y0 := safe.get_center().y - total_h / 2 + 14
+	place(btn_speed, layout.follow)
 	for i in pause_buttons.size():
 		pause_buttons[i].position = Vector2(view.x / 2 - bw / 2, y0 + i * (bh + 6)).round()
 		pause_buttons[i].size = Vector2(bw, bh)
