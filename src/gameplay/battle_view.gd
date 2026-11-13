@@ -817,9 +817,11 @@ func _draw_fx(f) -> void:
 			# oven heat: flickering flame tongues along the strip
 			for i in 9:
 				var cx2: float = f.x - f.radius + (i + 0.5) * f.radius * 2.0 / 9.0
-				var fl := 5.0 + 5.0 * absf(sin(f.t * 14.0 + i * 1.7))
-				draw_rect(Rect2(cx2 - 2.0, ground_y - fl, 4.0, fl), Color(1.0, 0.55, 0.18, 0.75 * (1.0 - k * 0.7)))
-				draw_rect(Rect2(cx2 - 1.0, ground_y - fl * 0.6, 2.0, fl * 0.6), Color(1.0, 0.88, 0.45, 0.8 * (1.0 - k * 0.7)))
+				var fl := roundf(12.0 + 10.0 * absf(sin(f.t * 14.0 + i * 1.7)))
+				draw_rect(Rect2(cx2 - 4.0, ground_y - fl, 8.0, fl), Color(0.86, 0.3, 0.12, 0.8 * (1.0 - k * 0.6)))
+				draw_rect(Rect2(cx2 - 3.0, ground_y - fl * 0.75, 6.0, fl * 0.75), Color(1.0, 0.58, 0.2, 0.85 * (1.0 - k * 0.6)))
+				draw_rect(Rect2(cx2 - 1.0, ground_y - fl * 0.4, 2.0, fl * 0.4), Color(1.0, 0.92, 0.55, 0.9 * (1.0 - k * 0.6)))
+			draw_rect(Rect2(f.x - f.radius, ground_y - 2.0, f.radius * 2.0, 2.0), Color(1.0, 0.45, 0.15, 0.6 * (1.0 - k)))
 		_:  # shockwave / slam / meteor / barrage
 			var r := maxf(8.0, f.radius) * (0.2 + 0.8 * k)
 			draw_arc(Vector2(f.x, ground_y), r, PI, TAU, 20, Color(1.0, 0.95, 0.7, 1.0 - k), 3.0)

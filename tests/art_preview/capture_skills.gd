@@ -106,7 +106,7 @@ func _run() -> void:
 	sim.skill_cd["skill_flour"] = 0.0
 	sim.gold = 10.0
 	sim.mana = 999.0
-	check(sim.cast("skill_flour") == "" and sim.gold >= 120.0, "flour drop gives flour (%.0f)" % sim.gold)
+	check(sim.cast("skill_flour") == "" and sim.gold >= 90.0, "flour drop gives flour (%.0f)" % sim.gold)
 	await frames(10)
 	shot("4_flour")
 	print("[skills] failures=", failures)

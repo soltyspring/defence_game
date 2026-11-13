@@ -10,7 +10,7 @@
   "cooldown": 35.0,
   "kind": "oven",
   "radius": 180,
-  "power": 40,
+  "power": 32,
   "ticks": 6,
   "duration": 3.0,
   "fx": "skill_oven",

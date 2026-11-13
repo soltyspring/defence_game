@@ -33,6 +33,10 @@ static func sack(v: Node2D, pos: Vector2, scale := 1.0) -> void:
 		v.draw_rect(Rect2(pos + Vector2(-2, y - 1) * scale, Vector2(2, 1) * scale), Color("9e743d"))
 		v.draw_rect(Rect2(pos + Vector2(1, y - 1) * scale, Vector2(2, 1) * scale), Color("9e743d"))
 
+## The home windmill: a 112x112 sprite standing on the ground at its bottom-centre (from the release-slice atlas).
+const MILL_PATH := "res://assets/backgrounds/home_mill.png"
+static var _mill: Texture2D = null
+
 static func draw(v: Node2D, sim, atlas, ground: float) -> void:
 	var base := float(sim.player_base.x)
 	var mill := base - MILL_FROM_BASE
@@ -45,7 +49,11 @@ static func draw(v: Node2D, sim, atlas, ground: float) -> void:
 	# It is shared with the backdrop, so this does not allocate another texture page.
 	var texture: Texture2D = v.environment.village_texture if v.environment else null
 	var set_texture: Texture2D = v.environment.set_texture if v.environment else null
-	if set_texture:
+	if _mill == null and ResourceLoader.exists(MILL_PATH): _mill = load(MILL_PATH)
+	if _mill != null:
+		# release-slice windmill (docs/art/release_slice): outlined, lit from the upper left like the units
+		v.draw_texture(_mill, Vector2(mill - 56, ground - 111))
+	elif set_texture:
 		# v2 lane set: the windmill is the home landmark, drawn on the same pixel grid as the units.
 		var region: Rect2 = v.environment.SET_MILL
 		v.draw_texture_rect_region(set_texture, Rect2(mill - 56, ground - 111, region.size.x, region.size.y), region)
