@@ -11,7 +11,8 @@ static var pending_round := ""
 static func needs_choice(content, save) -> bool:
 	if content == null or save == null or not content.has_method("available_roster"): return false
 	var reach: int = save.round_reach()
-	return content.available_roster(reach).size() > 5 or content.available_skills(reach).size() > 3
+	var n: int = save.owned_roster().size() if save.has_method("owned_roster") else content.available_roster(reach).size()
+	return n > 5 or content.available_skills(reach).size() > 3
 
 var selected: Array = []
 var roster: Array = []
@@ -117,11 +118,14 @@ func _refresh() -> void:
 		var id: String = roster[i]
 		var unit: Dictionary = Content.units[id]
 		var locked := int(unit.get("unlock_round", 1)) > reach
+		var hire: bool = not locked and Save.unit_recruitable(id)      # round reached, not bought yet (강화 화면 → 합류)
+		tiles[i].dim_reason = UiText.t("roster.need_recruit") if hire else ""
+		locked = locked or hire
 		var on := selected.has(id)
 		tiles[i].disabled = locked
 		tiles[i].badge = str(selected.find(id) + 1) if on else ""
 		tiles[i].fill = UiStyle.C_BG.lightened(0.1) if on else UiStyle.C_PANEL_LIGHT     # taken: dark, its slot number shows
-		tiles[i].sub_text = "R%d" % int(unit.unlock_round) if locked else str(int(unit.cost))
+		tiles[i].sub_text = str(int(unit.cost)) if not locked or hire else "R%d" % int(unit.unlock_round)
 	for i in 5:
 		_fill_slot(slots[i], i, selected, "unit")
 	for i in skill_list.size():

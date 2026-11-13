@@ -147,6 +147,9 @@ func upgrades_ready() -> int:
 		var to := int(s.upgrade_level(id)) + 1
 		var cost := int(s.upgrade_cost(id, to))
 		if cost >= 0 and cost <= coins and int(s.round_reach()) >= int(s.upgrade_level_unlock_round(id, to)): n += 1
+	if s.has_method("unit_recruitable") and c.get("units") is Dictionary:      # characters the gold can recruit now
+		for uid in c.units:
+			if s.unit_recruitable(str(uid)) and int(s.recruit_cost(str(uid))) <= coins: n += 1
 	return n
 
 ## [next round number or 0, stars earned, stars possible] for the 라운드 선택 card.

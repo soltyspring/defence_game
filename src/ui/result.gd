@@ -73,7 +73,7 @@ func _joined_now() -> Array:
 		for id in c.units:
 			var u: Dictionary = c.units[id]
 			if str(u.get("faction", "")) == "player" and not bool(u.get("is_worker", false)) and int(u.get("unlock_round", 1)) == opened:
-				out.append({"kind": "unit", "id": str(id)})
+				out.append({"kind": "unit", "id": str(id), "hire": int(u.get("recruit_cost", 0)) > 0})
 	if c.get("skills") is Dictionary:
 		for id in c.skills:
 			if int(c.skills[id].get("unlock_round", 1)) == opened: out.append({"kind": "skill", "id": str(id)})
@@ -95,7 +95,10 @@ func _affordable_upgrade() -> bool:
 	if sv == null or c == null or not sv.has_method("upgrade_cost"): return false
 	var coins := int(sv.progress.get("coins", 0))
 	for u in c.meta.get("upgrades", []):
-		if sv.has_method("upgrade_locked") and sv.upgrade_locked(str(u.id)): continue
+		if sv.has_method("upgrade_locked") and sv.upgrade_locked(str(u.id)):
+			var tg := str(u.get("target", ""))     # a character the gold can recruit also lights the 강화 button
+			if tg.begins_with("unit:") and sv.has_method("unit_recruitable") and sv.unit_recruitable(tg.substr(5)) and int(sv.recruit_cost(tg.substr(5))) <= coins: return true
+			continue
 		var cost := int(sv.upgrade_cost(str(u.id), int(sv.upgrade_level(str(u.id))) + 1))
 		if cost > 0 and cost <= coins: return true
 	return false
@@ -171,7 +174,9 @@ func _draw() -> void:
 		_draw_joined(cx, y0 + 3 * 22 + 6)
 	elif bool(result.get("first_clear", false)) and won:
 		UiStyle.draw_text_centered(self, UiText.t("ui.first_clear"), Vector2(cx, y0 + 3 * 22 + 6), UiStyle.FONT_M, UiStyle.C_ACCENT)
-	if won and not joined.is_empty() and RosterScreen.needs_choice(autoload("Content"), autoload("Save")):
+	if won and joined.any(func(j): return bool(j.get("hire", false))):
+		UiStyle.draw_text_centered(self, UiText.t("result.recruit_hint"), Vector2(cx, y0 + 3 * 22 + 26), UiStyle.FONT_S, UiStyle.C_TEXT)
+	elif won and not joined.is_empty() and RosterScreen.needs_choice(autoload("Content"), autoload("Save")):
 		UiStyle.draw_text_centered(self, UiText.t("result.joined_hint"), Vector2(cx, y0 + 3 * 22 + 26), UiStyle.FONT_S, UiStyle.C_TEXT)
 	elif won and can_upgrade:
 		UiStyle.draw_text_centered(self, UiText.t("ui.upgrade_hint"), Vector2(cx, y0 + 3 * 22 + 26), UiStyle.FONT_S, UiStyle.C_GOLD)
@@ -198,7 +203,8 @@ func _draw_joined(cx: float, y: float) -> void:
 		var tex: Texture2D = UiStyle.ui_icon(("card_" if j.kind == "unit" else "icon_") + str(j.id))
 		if tex != null: icons.append(tex)
 	var iw := icons.size() * 20.0
-	var fit: Array = UiStyle.fit_text(UiText.t("result.joined") % ", ".join(names), panel.size.x - 40 - iw, UiStyle.FONT_M)
+	var key := "result.recruitable" if joined.any(func(j): return bool(j.get("hire", false))) else "result.joined"
+	var fit: Array = UiStyle.fit_text(UiText.t(key) % ", ".join(names), panel.size.x - 40 - iw, UiStyle.FONT_M)
 	var tw := UiStyle.text_width(fit[0], UiStyle.FONT_M)
 	var x := cx - (iw + tw) / 2
 	draw_rect(Rect2(panel.position.x + 10, y - 10, panel.size.x - 20, 20), Color(UiStyle.C_ACCENT, 0.22))

@@ -749,7 +749,55 @@ func _upgrade_locked(u: Dictionary) -> bool:
 	var c := _content()
 	if c == null or not c.units.has(uid):
 		return false
-	return int(c.units[uid].get("unlock_round", 1)) > round_reach()
+	return not unit_owned(uid)
+
+## ---- Recruiting (2026-11-14) ----
+## A character with `recruit_cost` > 0 does not join by itself when its round is reached: the player buys it once
+## with gold (강화 화면 → 합류). Until then it is not in the deploy list and its upgrades stay locked.
+func recruit_cost(uid: String) -> int:
+	var c := _content()
+	return int(c.units[uid].get("recruit_cost", 0)) if c != null and c.units.has(uid) else 0
+
+func unit_owned(uid: String) -> bool:
+	var c := _content()
+	if c == null or not c.units.has(uid): return false
+	if int(c.units[uid].get("unlock_round", 1)) > round_reach(): return false
+	var got = progress.get("recruited", [])
+	return recruit_cost(uid) <= 0 or (got is Array and (got as Array).has(uid))
+
+## Round reached, not bought yet.
+func unit_recruitable(uid: String) -> bool:
+	var c := _content()
+	return c != null and c.units.has(uid) and recruit_cost(uid) > 0 and not unit_owned(uid) \
+		and int(c.units[uid].get("unlock_round", 1)) <= round_reach()
+
+## Deployable unit types: reached and (free or recruited), in unlock order.
+func owned_roster() -> Array:
+	var c := _content()
+	if c == null: return []
+	return c.available_roster(round_reach()).filter(func(id): return unit_owned(str(id)))
+
+## Buy a character: coins and the recruited list change in ONE save; both roll back if the write fails.
+## Codes as buy_upgrade: ok | already_applied | locked | not_enough_coins | unknown_id | save_failed | read_only.
+func recruit(uid: String) -> String:
+	if read_only: return UPG_READ_ONLY
+	var c := _content()
+	if c == null or not c.units.has(uid) or recruit_cost(uid) <= 0: return UPG_UNKNOWN
+	if unit_owned(uid): return UPG_ALREADY
+	if not unit_recruitable(uid): return UPG_LOCKED
+	var cost := recruit_cost(uid)
+	var coins := int(progress.coins)
+	if coins < cost: return UPG_COINS
+	var before = progress.get("recruited")
+	var list: Array = (before as Array).duplicate() if before is Array else []
+	list.append(uid)
+	progress.coins = coins - cost
+	progress["recruited"] = list
+	if save_progress(): return UPG_OK
+	progress.coins = coins
+	if before is Array: progress["recruited"] = before
+	else: progress.erase("recruited")
+	return "save_uncertain" if last_failure_uncertain else "save_failed"
 
 ## For UI (04 upgrade panel): true while the upgrade's target unit is not unlocked yet. An upgrade the player already
 ## bought (level >= 2) is never locked again, whatever a content update did to the round order (10 v0.34 U5).
@@ -826,8 +874,8 @@ func buy_preview_gold(amount: int) -> String:
 func selected_loadout() -> Array:
 	var c := get_node_or_null("/root/Content")
 	if c == null: return []
-	var ids: Array = c.valid_loadout(progress.get("loadout", []), round_reach())
-	return ids if not ids.is_empty() else c.available_roster(round_reach()).slice(0, 5)
+	var ids: Array = c.valid_loadout(progress.get("loadout", []), round_reach()).filter(func(id): return unit_owned(str(id)))
+	return ids if not ids.is_empty() else owned_roster().slice(0, 5)
 
 ## The player's 3 battle skills; [] = none chosen yet (the round's default skills are used).
 func selected_skills() -> Array:
@@ -849,6 +897,7 @@ func set_loadout(ids: Array) -> bool:
 	if read_only: return false
 	var c := get_node_or_null("/root/Content")
 	if c == null or ids.is_empty() or ids.size() > 5 or c.valid_loadout(ids, round_reach()) != ids: return false
+	if ids.any(func(id): return not unit_owned(str(id))): return false     # not recruited yet
 	var before: Array = progress.get("loadout", []).duplicate()
 	progress.loadout = ids.duplicate()
 	if save_progress(): return true

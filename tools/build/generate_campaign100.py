@@ -14,6 +14,10 @@ def write(path, obj):
     (ROOT / path).write_text(json.dumps(obj, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
 
 GATES = [23, 42, 61, 79, 96]
+# gold to recruit each expansion character once its round is reached: about 1.5 first clears of that round,
+# ~16% of the first-clear gold earned in the ten rounds before it (7,900 in total, 6% of R1-100)
+RECRUIT = {'baguette': 1000, 'macaron': 1200, 'chili': 1500, 'donut': 1800, 'waffle': 2400}
+
 NEW = [
     # id, name, role, unlock, cost, cd, hp, atk, interval, range, speed, armor, splash, kb, structure
     ('baguette','바게트','장창 · 근접 선제 타격',30,65,5,155,23,1.25,48,33,1,0,8,1),
@@ -32,7 +36,7 @@ def main():
     for uid,name,role,unlock,cost,cd,hp,atk,interval,reach,speed,armor,splash,kb,structure in NEW:
         u = dict(base)
         u.update(id=uid,name=name,name_key=f'unit.{uid}.name',desc_key=f'unit.{uid}.desc',
-                 unlock_round=unlock,cost=cost,cooldown=cd,hp=hp,atk=atk,atk_interval=interval,
+                 unlock_round=unlock,recruit_cost=RECRUIT[uid],cost=cost,cooldown=cd,hp=hp,atk=atk,atk_interval=interval,
                  range=reach,speed=speed,armor=armor,splash=splash,knockback=kb,structure_mult=structure,
                  anim_set=uid,hit_frame=2,role=role,tags=[role.split(' · ')[0]],
                  attack_type='melee' if reach<60 else 'ranged',projectile='' if reach<60 else 'rock' if uid=='waffle' else 'arrow')

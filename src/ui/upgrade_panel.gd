@@ -273,6 +273,28 @@ func list_upgrades() -> Array:
 func is_locked(u: Dictionary) -> bool:
 	return _locked.has(str(u.get("id", "")))
 
+## Gold needed to recruit this row's character (round reached, not bought yet); 0 = nothing to recruit here.
+## Such a row is still "locked" for upgrades: the buy button recruits instead (Save.recruit).
+func hire_cost(u: Dictionary) -> int:
+	var sv := _save()
+	var tgt := str(u.get("target", ""))
+	if u.is_empty() or sv == null or not tgt.begins_with("unit:") or not sv.has_method("unit_recruitable"): return 0
+	return int(sv.recruit_cost(tgt.substr(5))) if sv.unit_recruitable(tgt.substr(5)) else 0
+
+func _recruit(u: Dictionary) -> void:
+	var now := Time.get_ticks_msec()
+	if now < _lock_until_ms:
+		return
+	_lock_until_ms = now + BUY_LOCK_MS
+	var cost := hire_cost(u)
+	buy_calls += 1
+	var code := str(_save().recruit(str(u.target).substr(5)))
+	status_upgrade = str(u.id)
+	_set_status(code, u)
+	if code in ["ok", "already_applied"]: status_text = UiText.t("upg.recruit_ok") % target_name(u)
+	elif code == "not_enough_coins": status_text = UiText.t("ui.upgrade_not_enough") % maxi(0, cost - coins())
+	_refresh()
+
 ## Round at which this upgrade's character joins (1 for the hero and the bakery).
 func join_round(u: Dictionary) -> int:
 	var d := target_def(u)
@@ -312,7 +334,9 @@ func select(id: String) -> void:
 
 ## Gold on hand buys the next level right now.
 func can_buy(u: Dictionary) -> bool:
-	if u.is_empty() or is_locked(u) or is_max(u) or coins() < next_cost(u): return false
+	if u.is_empty(): return false
+	if hire_cost(u) > 0: return coins() >= hire_cost(u)
+	if is_locked(u) or is_max(u) or coins() < next_cost(u): return false
 	return not _gated(u)
 
 func gate_round(u: Dictionary) -> int:
@@ -388,7 +412,7 @@ func _refresh() -> void:
 		b.visible = i < rows.size()
 		if not b.visible: continue
 		var on := str(rows[i].id) == selected_id
-		b.fill = UiStyle.C_ACCENT.darkened(0.25) if on else (UiStyle.C_DISABLED if is_locked(rows[i]) else UiStyle.C_PANEL_LIGHT)
+		b.fill = UiStyle.C_ACCENT.darkened(0.25) if on else (UiStyle.C_DISABLED if is_locked(rows[i]) and hire_cost(rows[i]) == 0 else UiStyle.C_PANEL_LIGHT)
 		b.queue_redraw()
 	btn_prev.visible = page > 0
 	btn_next.visible = page < pages() - 1
@@ -399,13 +423,18 @@ func _refresh() -> void:
 	btn_buy.text = UiText.t("ui.max") if mx else (("R%d" % gate_round(u)) if gated else UiText.t("ui.upgrade_buy"))
 	btn_buy.sub_text = "" if u.is_empty() or mx or is_locked(u) else str(next_cost(u))
 	btn_buy.disabled = u.is_empty() or mx or gated or is_locked(u) or not purchase_available()
+	var hire := hire_cost(u)
+	if hire > 0:                    # recruit instead of upgrade; stays tappable so a short purse gets its message
+		btn_buy.text = UiText.t("upg.recruit")
+		btn_buy.sub_text = str(hire)
+		btn_buy.disabled = false
 	btn_buy.fill = UiStyle.C_ACCENT.darkened(0.15) if can_buy(u) else UiStyle.C_PANEL_LIGHT
 	btn_buy.queue_redraw()
 	if demo != null:
 		var d := target_def(u) if not u.is_empty() else {}
 		var lv := level_of(str(u.id)) if not u.is_empty() else 1
 		demo.setup(d, UiStyle.ui_icon(icon_frame(u)) if not u.is_empty() else null,
-			float(d.get("atk", 0)) * (level_mult(u, "atk_mult", lv) if not u.is_empty() else 1.0), is_locked(u))
+			float(d.get("atk", 0)) * (level_mult(u, "atk_mult", lv) if not u.is_empty() else 1.0), is_locked(u) and hire == 0)
 	queue_redraw()
 
 func _on_row(slot: int) -> void:
@@ -428,6 +457,9 @@ func _buy_selected() -> void:
 	status_upgrade = id
 	if is_max(u):
 		_set_status("max_level", u)
+		return
+	if hire_cost(u) > 0:
+		_recruit(u)
 		return
 	if is_locked(u):
 		_set_status("locked", u)
@@ -507,7 +539,8 @@ func _draw_row(b: Control, i: int) -> void:
 	var nm: Array = UiStyle.fit_text(target_name(u), b.size.x - x - 18, UiStyle.FONT_S)
 	UiStyle.draw_text_left(b, nm[0], Vector2(x, b.size.y / 2 - 8), UiStyle.FONT_S, UiStyle.C_TEXT_DIM if locked else UiStyle.C_TEXT)
 	var sub := UiText.t("upg.joins") % join_round(u) if locked else "Lv %d / %d" % [level_of(str(u.id)), int(u.get("max_level", 1))]
-	UiStyle.draw_text_left(b, sub, Vector2(x, b.size.y / 2 + 8), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
+	if hire_cost(u) > 0: sub = UiText.t("upg.recruit_ready")
+	UiStyle.draw_text_left(b, sub, Vector2(x, b.size.y / 2 + 8), UiStyle.FONT_S, UiStyle.C_GOLD if hire_cost(u) > 0 else UiStyle.C_TEXT_DIM)
 	if can_buy(u):       # shape + colour: an up arrow, not only gold
 		UiStyle.draw_text_centered(b, "▲", Vector2(b.size.x - 11, b.size.y / 2), UiStyle.FONT_S, UiStyle.C_GOLD)
 	elif not locked and is_max(u):
@@ -562,6 +595,7 @@ func _draw_detail(u: Dictionary) -> void:
 	var mx := int(u.get("max_level", 1))
 	UiStyle.draw_text_left(self, target_name(u), Vector2(r.position.x, r.position.y + 8), UiStyle.FONT_M, UiStyle.C_TEXT)
 	var lvt := UiText.t("upg.joins") % join_round(u) if locked else "Lv %d / %d" % [lv, mx]
+	if hire_cost(u) > 0: lvt = UiText.t("upg.recruit_ready")
 	var lw := UiStyle.text_width(lvt, UiStyle.FONT_S)
 	UiStyle.draw_text_left(self, lvt, Vector2(r.end.x - lw, r.position.y + 8), UiStyle.FONT_S, UiStyle.C_GOLD if locked else UiStyle.C_TEXT_DIM)
 	var d := target_def(u)
@@ -578,7 +612,10 @@ func _draw_detail(u: Dictionary) -> void:
 	var maxed := is_max(u)
 	var head := UiText.t("upg.maxed") if maxed else UiText.t("upg.next") % (lv + 1)
 	if not maxed and not locked and _gated(u): head += "  ·  " + UiText.t("upg.gate") % gate_round(u)
-	if not locked:
+	if hire_cost(u) > 0:
+		UiStyle.draw_text_left(self, UiText.t("upg.recruit_line") % hire_cost(u), Vector2(r.position.x, y), UiStyle.FONT_S, UiStyle.C_GOLD)
+		y += 18
+	elif not locked:
 		UiStyle.draw_text_left(self, head, Vector2(r.position.x, y), UiStyle.FONT_S, UiStyle.C_GOLD if not maxed else UiStyle.C_TEXT_DIM)
 		y += 18
 	var col_w := floorf(r.size.x / 2.0)
