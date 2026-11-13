@@ -18,13 +18,13 @@
 | `tiles/_sheet.png` | 타일 6장 전체 |
 | `tiles/_in_game.png` | 챕터마다 3화면(A 부분, B 부분, 반복 이음매)에 길과 현재 유닛을 얹은 합성. 실제 게임 캡처가 아니다. |
 
-## Codex 통합 시 필요한 변경 (`src/gameplay/painted_chapter_backdrop.gd`)
+## 게임 통합 (2026-11-13 적용)
 
-- 새 타일에는 하단 단색 띠가 없다. 그림 아래 끝이 길 위쪽 경계에 바로 닿아야 한다.
-  - 이 타일들에서는 `TRIM_GROUND_ROWS = 0`으로 둔다.
-  - 배경 아래 끝을 `top`(ground − 7, 길 위쪽)에 맞춘다. 지금 코드는 `destination`이 `top - size.y`부터라 그대로 맞는다.
-- R01–R40의 기존 4장은 하단 띠가 36행이라 기존 값 20이 필요하다. 챕터별 값으로 나누거나, 기존 4장도 같은 방식으로 다시 만든다.
-- 파일 이름은 기존 `assets/backgrounds/chapter_tile_layers/`와 같다. 확인 후 복사하면 된다.
+- 6장을 `assets/backgrounds/chapter_tile_layers/`에 복사했다.
+- `src/gameplay/painted_chapter_backdrop.gd`의 `TRIM_GROUND_ROWS`를 챕터별 배열로 바꿨다. R01–R40은 20, R41–R100은 0이다.
+- R71–80 길 색을 따뜻한 갈색으로 바꿨다.
+- 검증: `tests/acceptance/test_painted_chapters.gd`(R01–R100 641개 검사)를 통과했다.
+- 실제 게임 화면은 `tests/art_preview/capture_late_chapters.gd`로 확인했다. main에는 R41 이후 라운드가 아직 없어서, R40을 시작한 뒤 배경만 41–91번으로 다시 만들어 찍었다.
 
 ## 남은 약점
 

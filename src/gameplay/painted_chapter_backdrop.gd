@@ -6,8 +6,9 @@ const NAMES := [
 	"meadow", "orchard", "frost", "nest", "frost_quarry", "spore_marsh",
 	"frozen_bastion", "root_vault", "aurora_pass", "mould_heart",
 ]
-## Preserve 16 of the 36 quiet logical rows above the road.
-const TRIM_GROUND_ROWS := 20
+## Logical rows cut from the bottom of each tile. R01-R40 end in 36 quiet rows (keep 16 above the road);
+## R41-R100 (docs/art/release_slice/bg_regen) end in their own ground, which meets the road directly.
+const TRIM_GROUND_ROWS := [20, 20, 20, 20, 0, 0, 0, 0, 0, 0]
 const ROAD_PALETTES := [
 	["a18c5e", "c1a878", "967c55", "675340", "776045"],
 	["8d7858", "ae8b65", "886b50", "53463a", "6a5543"],
@@ -16,7 +17,7 @@ const ROAD_PALETTES := [
 	["8494a5", "b6c1cc", "95a5b4", "4a5562", "5c6a77"],
 	["5f7267", "879b87", "738375", "3b4b43", "4b5e53"],
 	["8193a9", "afc1d2", "91a6bc", "47576b", "596c81"],
-	["706570", "928492", "7a6e7b", "49404c", "5c4e5b"],
+	["8a7254", "a88d68", "7c6448", "4c3d30", "5f4c3a"],
 	["6b839c", "9fb6ca", "829cb4", "3b4c62", "50657b"],
 	["646772", "8a8591", "746e7c", "3b3743", "514752"],
 ]
@@ -73,7 +74,7 @@ func build(length: float, ground: float, round_index: int) -> bool:
 	texture = load(path) as Texture2D
 	if texture == null:
 		return false
-	var source_size := Vector2(texture.get_size()) - Vector2(0, TRIM_GROUND_ROWS * 4)
+	var source_size := Vector2(texture.get_size()) - Vector2(0, int(TRIM_GROUND_ROWS[chapter]) * 4)
 	var size := source_size / 4.0
 	var top := ground - 7.0
 	var scenery := Strip.new()

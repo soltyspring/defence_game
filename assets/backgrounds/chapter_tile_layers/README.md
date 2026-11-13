@@ -1,7 +1,7 @@
 # 챕터별 반복 배경 레이어
 
 일반 전투에서 10라운드마다 바뀌는 배경 PNG 10장이다. 같은 방향으로 반복하고 도로는 게임이 따로 그린다. 기존 회화와 도트 원본은 보존한다.
-PNG 하단 36개 단색 행 중 16개만 화면에 사용해 배경과 도로 사이의 여백을 줄인다. 41–100라운드 배경은 별도 100라운드 캠페인 데이터가 들어왔을 때 사용된다.
+R01–R40 PNG는 하단 36개 단색 행 중 16개만 화면에 쓴다(`TRIM_GROUND_ROWS` 20). R41–R100 PNG는 단색 띠 없이 풍경의 땅이 길 위쪽에 바로 닿는다(0). 41–100라운드 배경은 100라운드 캠페인 데이터가 들어왔을 때 사용된다.
 
 | 라운드 | 배경 | 생성본에서 평지 시작 행 |
 |---|---|---:|
@@ -9,12 +9,12 @@ PNG 하단 36개 단색 행 중 16개만 화면에 사용해 배경과 도로 �
 | R11–20 | [가을 과수원](orchard.png) | 510 |
 | R21–30 | [얼어붙은 제분소](frost.png) | 535 |
 | R31–40 | [균사 동굴](nest.png) | 547 |
-| R41–50 | [설원 채석장](frost_quarry.png) | 640 |
-| R51–60 | [포자 습지](spore_marsh.png) | 623 |
-| R61–70 | [얼어붙은 요새](frozen_bastion.png) | 644 |
-| R71–80 | [뿌리 전당](root_vault.png) | 633 |
-| R81–90 | [오로라 빙하](aurora_pass.png) | 626 |
-| R91–100 | [균사 핵실](mould_heart.png) | 629 |
+| R41–50 | [설원 채석장](frost_quarry.png) | 하단 띠 없음 |
+| R51–60 | [포자 습지](spore_marsh.png) | 하단 띠 없음 |
+| R61–70 | [얼어붙은 요새](frozen_bastion.png) | 하단 띠 없음 |
+| R71–80 | [뿌리 전당](root_vault.png) | 하단 띠 없음 |
+| R81–90 | [오로라 빙하](aurora_pass.png) | 하단 띠 없음 |
+| R91–100 | [균사 핵실](mould_heart.png) | 하단 띠 없음 |
 
 내장 `image_gen`으로 제작하고 `tools/art/export_chapter_tile.ps1`로 논리 픽셀 1024×176, 32색으로 정리한 뒤 보간 없이 4배 확대했다. 좌우 끝 열은 반전 없이 동일한 색으로 연결된다. 하단 36행은 단색이며 도로와 흙 단면은 포함하지 않는다. 네 PNG 모두 실제 크기, 4×4 블록, 색상 수, 끝 열 일치와 하단 단색을 확인했다.
 
@@ -31,3 +31,7 @@ PNG 하단 36개 단색 행 중 16개만 화면에 사용해 배경과 도로 �
 > CH4 nest (R31–40): inside a vast mould nest cavern; grey-green rock arches and root ribs, hanging glowing spore sacs in teal and violet as the only bright accents, dim misty depth; light comes from a cold opening high on the upper left. Distant cavern replaces sky. Root ribs are overhead only, never in the ground zone.
 
 동굴은 집과 인공 구조물을 제거하고 자연 암석 아치로 대체하도록 내장 이미지 편집으로 한 번 더 수정했다.
+
+## R41–R100 재생성 (2026-11-13)
+
+6장은 ChatGPT로 챕터마다 A/B 두 장을 생성해 `tools/art/release_slice/bg_tiles.py`로 이은 결과로 교체했다. 원본, 프롬프트, 참고 이미지, 이음매 방식은 [bg_regen](../../../docs/art/release_slice/bg_regen/README.md)에 있다. 위 프롬프트는 이전 생성본의 기록이다.

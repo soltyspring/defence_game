@@ -35,7 +35,7 @@ func _run() -> void:
 			var road = art.layers[5]
 			check(is_equal_approx(scenery.destination.end.y, road.top), "no gap between landscape and road")
 			check(scenery.destination.size == scenery.source.size / 4.0, "one world pixel per logical pixel")
-			check(scenery.destination.size.y == 156.0, "quiet strip is shortened without scaling")
+			check(scenery.destination.size.y == 176.0 - float(Painted.TRIM_GROUND_ROWS[(n - 1) / 10]), "ground rows trimmed without scaling")
 			check(road.top < 290.0 and road.top + 17.0 > 290.0, "feet remain inside road")
 			for zoom in [1.0, 1.5, 2.0]:
 				for camera in [-160.0, 0.0, 660.0, 1260.0, 2000.0]:
