@@ -35,3 +35,6 @@ __pycache__/
 Thumbs.db
 .android/
 mono_crash.*
+
+# Local render intermediates, stems and diagnostics
+/tools/audio/_render/
