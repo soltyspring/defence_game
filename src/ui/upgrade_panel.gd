@@ -646,6 +646,7 @@ var status_kind_drawn := ""     # QA
 ## damage number at the current level. Bakery upgrades show their icon only. Redraws ~15 times a second by itself.
 class Demo extends Control:
 	const UiStyle := preload("res://src/ui/ui_style.gd")
+	const TRAINING := preload("res://assets/art/lobby/training.png")
 	var def: Dictionary = {}
 	var icon: Texture2D
 	var atk := 0.0
@@ -700,6 +701,12 @@ class Demo extends Control:
 				draw_texture_rect(icon, Rect2(((size - isz) / 2).round(), isz), false)
 			return
 		var gy := size.y - 14.0
+		var tex_size := TRAINING.get_size()
+		var source_width := minf(tex_size.x, size.x * tex_size.y / size.y)
+		var source_x := floorf((tex_size.x - source_width) * 0.5)
+		# The wall-to-floor seam in the crop is at pixel 98; keep it at the unit baseline.
+		draw_texture_rect_region(TRAINING, Rect2(0, 0, size.x, gy), Rect2(source_x, 0, source_width, 98))
+		draw_texture_rect_region(TRAINING, Rect2(0, gy, size.x, size.y - gy), Rect2(source_x, 98, source_width, tex_size.y - 98))
 		draw_rect(Rect2(0, gy, size.x, 1), Color(1, 1, 1, 0.16))
 		var rng := float(def.get("range", 20))
 		var px := (size.x - 96.0) / 180.0

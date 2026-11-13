@@ -32,8 +32,10 @@ func _build() -> void:
 	btn_select = make_button(UiText.t("ui.select_round"), _on_select)
 	btn_select.fill = UiStyle.C_ACCENT.darkened(0.15)
 	btn_select.font_size = UiStyle.FONT_L
+	btn_select.illustration = preload("res://assets/art/lobby/round_select.png")
 	btn_upgrades = make_button(UiText.t("ui.upgrades"), open_upgrades)
 	btn_upgrades.font_size = UiStyle.FONT_L
+	btn_upgrades.illustration = preload("res://assets/art/lobby/upgrades.png")
 	btn_back = make_button(UiText.t("ui.back"), func(): show_page("title"))
 	btn_settings = make_button(UiText.t("ui.settings"), _on_settings)
 	if GoldShopCatalog.enabled():

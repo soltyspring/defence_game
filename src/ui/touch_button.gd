@@ -77,6 +77,7 @@ var dim_reason := "":              # shown centred when disabled (e.g. "가득")
 var is_pressed := false
 ## Optional extra drawing on top of the button: func(button: Control) -> void
 var overlay: Callable
+var illustration: Texture2D
 var _finger := -2                  # -2 none, -1 mouse, >=0 touch index
 const UiStyle := preload("res://src/ui/ui_style.gd")
 
@@ -174,6 +175,14 @@ func _draw() -> void:
 		UiStyle.draw_pixel_octagon(self, r, f, UiStyle.C_GOLD if not disabled else UiStyle.C_TEXT_DIM, is_pressed)
 	else:
 		UiStyle.draw_pixel_box(self, r, f, is_pressed)
+	if illustration != null:
+		var inner := r.grow(-3)
+		var pixels := illustration.get_size()
+		var source_size := pixels / maxf(pixels.x / inner.size.x, pixels.y / inner.size.y)
+		# Keep the quiet bottom of the card when cropping to fit.
+		var source := Rect2(Vector2((pixels.x - source_size.x) * 0.5, pixels.y - source_size.y), source_size)
+		draw_texture_rect_region(illustration, inner, source, Color(0.74, 0.74, 0.74) if is_pressed else Color.WHITE)
+		draw_rect(Rect2(3, size.y - 35, size.x - 6, 32), Color(0.12, 0.08, 0.06, 0.67))
 	var off := Vector2(0, 1) if is_pressed else Vector2.ZERO
 	var has_sub := sub_text != ""
 	var has_visual := icon != null or glyph != &""
@@ -191,6 +200,8 @@ func _draw() -> void:
 		icon_c = Vector2(size.x / 2, size.y / 2) + off
 	if not has_visual:
 		name_y = size.y / 2 - (6.0 if has_sub else 0.0)
+	if illustration != null:
+		name_y = size.y - 19.0
 	# ---- pass 2: icon (ui_main page) or its vector stand-in
 	if icon:
 		# integer scale keeps pixel art crisp; never fractional
