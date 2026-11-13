@@ -3,6 +3,7 @@ extends "res://src/ui/ui_screen.gd"
 ## Reads Content.get_round_list() + Save.progress (read-only); emits cmd_start_round(id) / cmd_open_screen(&"menu").
 ## Paged grid (5×2 per page) instead of a scroll view so every tile is a plain tap target.
 
+const RosterScreen := preload("res://src/ui/roster.gd")
 const COLS := 5
 const ROWS := 2
 
@@ -93,6 +94,13 @@ func _refresh() -> void:
 func _on_tile(slot: int) -> void:
 	var idx := page * COLS * ROWS + slot
 	if idx >= rounds.size() or not is_round_unlocked(idx):
+		return
+	# more unit types than deck slots: choose the five first (출전 준비), then the roster screen starts the round
+	var c = autoload("Content")
+	var save = autoload("Save")
+	if c != null and save != null and c.available_roster(save.round_reach()).size() > 5:
+		RosterScreen.pending_round = str(rounds[idx].id)
+		emit_cmd(&"cmd_open_screen", [&"roster"])
 		return
 	emit_cmd(&"cmd_start_round", [str(rounds[idx].id)])
 
