@@ -106,6 +106,23 @@ def unit_frames(uid: str) -> dict:
     return frames
 
 
+def blue_steel(frames: dict) -> dict:
+    """Donut only: its steel helmet and frying pan were grey, which made the unit's mean colour match the grey-green
+    mould enemies for protan/deutan viewers (suite_theme TH-COL). Grey metal becomes blue steel, value kept."""
+    out = {}
+    for k, f in frames.items():
+        g = f.astype(np.float32)
+        rgb = g[..., :3] / 255.0
+        mx, mn = rgb.max(axis=2), rgb.min(axis=2)
+        grey = (g[..., 3] > 0) & ((mx - mn) < 0.12) & (mx > 0.3) & (mx < 0.97)
+        v = mx[grey]
+        g[..., 0][grey] = np.clip(v * 0.62, 0, 1) * 255
+        g[..., 1][grey] = np.clip(v * 0.74, 0, 1) * 255
+        g[..., 2][grey] = np.clip(v * 1.02, 0, 1) * 255
+        out[k] = g.astype(np.uint8)
+    return out
+
+
 def palette(frames: dict) -> dict:
     """One palette per unit across all frames, no dither."""
     keys = [k for k in frames]
@@ -136,7 +153,8 @@ def main() -> None:
     sheet = np.zeros((FH * len(IDS), FW * 16, 4), np.uint8)
     atlas = {"schema": "defence.atlas/1", "atlas": "roster10", "frames": {}, "anims": {}}
     for row, uid in enumerate(IDS):
-        frames = palette(unit_frames(uid))
+        raw = unit_frames(uid)
+        frames = palette(blue_steel(raw) if uid == "donut" else raw)
         atlas["anims"][uid] = {}
         col = 0
         for name, (seq, fps, loop) in ANIMS.items():

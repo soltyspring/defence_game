@@ -450,7 +450,9 @@ def ovengolem(b=0, lean=0, door=0.0, heart=1.0, peel=-60.0, eyes=True, arc=None,
         for xx in range(int(cx) - 20 + (yy // 4 % 2) * 4, int(cx) + 21, 8):
             put(img, m_rect(W, H, xx, yy + b, 1, 3) & body, RAMP["brick"][0])
         put(img, m_rect(W, H, int(cx) - 20, yy + b + 3, 41, 1) & body, RAMP["brick"][1])
-    mould = body & (m_ellipse(W, H, cx - 18, 58 + b, 12, 10) | m_ellipse(W, H, cx - 12, 36 + b, 6, 5))
+    # v2: wider mould (left flank, shoulder, right hip) so the boss reads as a mould-eaten oven, not as our oven cannon
+    # (protan mean-colour check against `siege` was 1.67 < 2.3)
+    mould = body & (m_ellipse(W, H, cx - 14, 56 + b, 16, 13) | m_ellipse(W, H, cx - 10, 34 + b, 9, 7) | m_ellipse(W, H, cx + 15, 58 + b, 8, 6))
     lvm = mass(img, mould, "mould", "round", None, base=2)
     for (sx, sy) in ((-20, 50), (-14, 30), (-22, 60)):
         c = m_ellipse(W, H, cx + sx, sy + b, 3.5, 2) & m_rect(W, H, 0, 0, W, sy + b + 1)

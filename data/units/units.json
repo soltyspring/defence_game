@@ -492,7 +492,7 @@
       "targets": "ground",
       "bounty": 60,
       "size": 2,
-      "anim_set": "boss_warlord",
+      "anim_set": "slice_boss_millward",
       "tags": [
         "boss"
       ],
@@ -501,9 +501,8 @@
       "kill_coins": 30,
       "is_boss": true,
       "visual_mark": "warden",
-      "visual_tint": "829da4",
       "audio_pitch": 0.83,
-      "visual_mark_height": 44,
+      "visual_mark_height": 62,
       "desc_key": "unit.boss_millward.desc"
     },
     {
@@ -527,7 +526,7 @@
       "targets": "ground",
       "bounty": 100,
       "size": 2,
-      "anim_set": "boss_overlord",
+      "anim_set": "slice_boss_rootking",
       "tags": [
         "boss"
       ],
@@ -543,9 +542,8 @@
         "summon_frame": 3
       },
       "visual_mark": "root",
-      "visual_tint": "93bb91",
       "audio_pitch": 0.76,
-      "visual_mark_height": 55,
+      "visual_mark_height": 78,
       "desc_key": "unit.boss_rootking.desc"
     },
     {
@@ -569,7 +567,7 @@
       "targets": "ground",
       "bounty": 60,
       "size": 2,
-      "anim_set": "boss_warlord",
+      "anim_set": "slice_boss_frostguard",
       "tags": [
         "boss"
       ],
@@ -578,9 +576,8 @@
       "kill_coins": 30,
       "is_boss": true,
       "visual_mark": "frost",
-      "visual_tint": "93c7df",
       "audio_pitch": 0.8,
-      "visual_mark_height": 44,
+      "visual_mark_height": 62,
       "shell": {
         "closed_mult": 0.6
       },
@@ -635,7 +632,7 @@
       "targets": "ground",
       "bounty": 100,
       "size": 2,
-      "anim_set": "boss_overlord",
+      "anim_set": "slice_boss_ovenheart",
       "tags": [
         "boss"
       ],
@@ -651,9 +648,8 @@
         "summon_frame": 3
       },
       "visual_mark": "ember",
-      "visual_tint": "a19ab9",
       "audio_pitch": 0.7,
-      "visual_mark_height": 55,
+      "visual_mark_height": 78,
       "desc_key": "unit.boss_ovenheart.desc"
     },
     {

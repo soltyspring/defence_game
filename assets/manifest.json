@@ -58,20 +58,7 @@
    "disk_bytes": 31912,
    "gpu_bytes": 2097152,
    "biome": "",
-   "anim_sets": [
-    "e_bomber",
-    "e_brute",
-    "e_grunt",
-    "e_spitter",
-    "e_swarm",
-    "fast",
-    "hero_captain",
-    "melee_basic",
-    "ranged_basic",
-    "siege",
-    "tank",
-    "worker"
-   ],
+   "anim_sets": [],
    "image_frames": 0
   },
   {
@@ -87,9 +74,7 @@
    "disk_bytes": 8416,
    "gpu_bytes": 1048576,
    "biome": "",
-   "anim_sets": [
-    "boss_warlord"
-   ],
+   "anim_sets": [],
    "image_frames": 0
   },
   {
@@ -105,9 +90,7 @@
    "disk_bytes": 11642,
    "gpu_bytes": 2097152,
    "biome": "",
-   "anim_sets": [
-    "boss_overlord"
-   ],
+   "anim_sets": [],
    "image_frames": 1
   },
   {
@@ -240,15 +223,7 @@
    "disk_bytes": 14903,
    "gpu_bytes": 2097152,
    "biome": "",
-   "anim_sets": [
-    "boss_nestcore",
-    "e_binder",
-    "e_burrower",
-    "e_frostshell",
-    "e_icerunner",
-    "e_sporesac",
-    "e_thrall"
-   ],
+   "anim_sets": [],
    "image_frames": 0
   },
   {
@@ -268,23 +243,116 @@
     "donut",
     "waffle"
    ]
+  },
+  {
+   "id": "rs_chars",
+   "group": "character",
+   "load_policy": "battle",
+   "image": "res://assets/art/release_slice/slice_chars.png",
+   "frames": "res://assets/art/release_slice/slice_chars.json",
+   "size": [
+    512,
+    512
+   ],
+   "disk_bytes": 31909,
+   "gpu_bytes": 1048576,
+   "biome": "",
+   "image_frames": 0,
+   "anim_sets": [
+    "hero_captain",
+    "melee_basic",
+    "e_grunt"
+   ]
+  },
+  {
+   "id": "rs_chars2",
+   "group": "character",
+   "load_policy": "battle",
+   "image": "res://assets/art/release_slice/slice_chars2.png",
+   "frames": "res://assets/art/release_slice/slice_chars2.json",
+   "size": [
+    1024,
+    512
+   ],
+   "disk_bytes": 54437,
+   "gpu_bytes": 2097152,
+   "biome": "",
+   "image_frames": 0,
+   "anim_sets": [
+    "worker",
+    "ranged_basic",
+    "tank",
+    "fast",
+    "siege",
+    "e_spitter",
+    "e_swarm",
+    "e_brute",
+    "e_bomber"
+   ]
+  },
+  {
+   "id": "rs_challenge",
+   "group": "character",
+   "load_policy": "battle_roster",
+   "image": "res://assets/art/release_slice/slice_challenge.png",
+   "frames": "res://assets/art/release_slice/slice_challenge.json",
+   "size": [
+    1024,
+    640
+   ],
+   "disk_bytes": 67095,
+   "gpu_bytes": 2621440,
+   "biome": "",
+   "image_frames": 0,
+   "anim_sets": [
+    "e_thrall",
+    "e_binder",
+    "e_frostshell",
+    "e_icerunner",
+    "e_sporesac",
+    "e_burrower",
+    "boss_nestcore"
+   ]
+  },
+  {
+   "id": "rs_bosses",
+   "group": "character",
+   "load_policy": "battle_roster",
+   "image": "res://assets/art/release_slice/slice_bosses.png",
+   "frames": "res://assets/art/release_slice/slice_bosses.json",
+   "size": [
+    1024,
+    1152
+   ],
+   "disk_bytes": 124733,
+   "gpu_bytes": 4718592,
+   "biome": "",
+   "image_frames": 0,
+   "anim_sets": [
+    "boss_warlord",
+    "slice_boss_millward",
+    "slice_boss_frostguard",
+    "boss_overlord",
+    "slice_boss_rootking",
+    "slice_boss_ovenheart"
+   ]
   }
  ],
  "anim_sets": {
-  "hero_captain": "char_player",
-  "worker": "char_player",
-  "melee_basic": "char_player",
-  "ranged_basic": "char_player",
-  "tank": "char_player",
-  "fast": "char_player",
-  "siege": "char_player",
-  "e_grunt": "char_player",
-  "e_spitter": "char_player",
-  "e_swarm": "char_player",
-  "e_brute": "char_player",
-  "e_bomber": "char_player",
-  "boss_warlord": "char_boss_warlord",
-  "boss_overlord": "char_boss_overlord",
+  "hero_captain": "rs_chars",
+  "worker": "rs_chars2",
+  "melee_basic": "rs_chars",
+  "ranged_basic": "rs_chars2",
+  "tank": "rs_chars2",
+  "fast": "rs_chars2",
+  "siege": "rs_chars2",
+  "e_grunt": "rs_chars",
+  "e_spitter": "rs_chars2",
+  "e_swarm": "rs_chars2",
+  "e_brute": "rs_chars2",
+  "e_bomber": "rs_chars2",
+  "boss_warlord": "rs_bosses",
+  "boss_overlord": "rs_bosses",
   "base_player": "bases",
   "base_enemy": "bases",
   "prop_mine": "bases",
@@ -304,18 +372,22 @@
   "heal": "fx_combat",
   "fire": "fx_combat",
   "coin": "fx_combat",
-  "e_thrall": "char_challenge",
-  "e_binder": "char_challenge",
-  "boss_nestcore": "char_challenge",
-  "e_frostshell": "char_challenge",
-  "e_icerunner": "char_challenge",
-  "e_sporesac": "char_challenge",
-  "e_burrower": "char_challenge",
+  "e_thrall": "rs_challenge",
+  "e_binder": "rs_challenge",
+  "boss_nestcore": "rs_challenge",
+  "e_frostshell": "rs_challenge",
+  "e_icerunner": "rs_challenge",
+  "e_sporesac": "rs_challenge",
+  "e_burrower": "rs_challenge",
   "baguette": "roster10",
   "macaron": "roster10",
   "chili": "roster10",
   "donut": "roster10",
-  "waffle": "roster10"
+  "waffle": "roster10",
+  "slice_boss_millward": "rs_bosses",
+  "slice_boss_frostguard": "rs_bosses",
+  "slice_boss_rootking": "rs_bosses",
+  "slice_boss_ovenheart": "rs_bosses"
  },
  "bases": {
   "player": {
