@@ -141,6 +141,62 @@ func effect_text(u: Dictionary) -> String:
 			parts.append(("+%.2f" % v).rstrip("0").rstrip("."))
 	return " ".join(parts.slice(0, 2))
 
+## Multiplier of an upgrade at a level: (1 + per_level x (lv - 1)) x (1 + rate)^(lv - compound_after), as BattleSim.
+func level_mult(u: Dictionary, key: String, lv: int) -> float:
+	var base := 1.0 + float(u.get("per_level", {}).get(key, 0.0)) * (lv - 1)
+	var after := int(u.get("compound_after_level", 999))
+	return base * pow(1.0 + float(u.get("compound_rate", 0.0)), maxi(0, lv - after))
+
+func level_add(u: Dictionary, key: String, lv: int) -> float:
+	return float(u.get("per_level", {}).get(key, 0.0)) * (lv - 1)
+
+static func num(v: float) -> String:
+	if absf(v) >= 100.0: return str(int(roundf(v)))
+	var t := "%.1f" % v
+	return t.trim_suffix(".0")
+
+## The real numbers this upgrade changes, now and after the next level: [{label, now, next, delta}].
+## Units / hero: HP and attack from their data. Base: HP multiplier. Flour, energy, baker: the in-battle values.
+func stat_lines(u: Dictionary) -> Array:
+	var c := _content()
+	var lv := level_of(str(u.id))
+	var nx := mini(lv + 1, int(u.get("max_level", lv)))
+	var tgt := str(u.get("target", ""))
+	var out := []
+	var add_line := func(key: String, now: float, nxt: float, suffix := "") -> void:
+		out.append({"label": UiText.t("stat." + key), "now": num(now) + suffix, "next": num(nxt) + suffix,
+			"delta": ("+" + num(nxt - now) + suffix) if nxt > now else ""})
+	if c == null: return out
+	var econ: Dictionary = c.get("economy") if c.get("economy") is Dictionary else {}
+	if tgt.begins_with("unit:") or tgt.begins_with("hero:"):
+		var id := tgt.substr(5)
+		var d: Dictionary = c.get_unit(id) if tgt.begins_with("unit:") else c.heroes.get(id, {})
+		for key in ["hp", "atk"]:
+			if u.get("per_level", {}).has(key + "_mult"):
+				var b := float(d.get(key, 0))
+				add_line.call(key, b * level_mult(u, key + "_mult", lv), b * level_mult(u, key + "_mult", nx))
+	elif tgt == "base:player":
+		out.append({"label": UiText.t("stat.base_hp"), "now": "x" + "%.2f" % level_mult(u, "hp_mult", lv),
+			"next": "x" + "%.2f" % level_mult(u, "hp_mult", nx), "delta": ""})
+	elif tgt == "resource:supply":
+		var r := float(econ.get("base_income", 0))
+		add_line.call("flour_regen", r + level_add(u, "regen_add", lv), r + level_add(u, "regen_add", nx), "/s")
+		var m := float(econ.get("gold_max", 0))
+		add_line.call("flour_max", m + level_add(u, "cap_add", lv), m + level_add(u, "cap_add", nx))
+	elif tgt == "resource:energy":
+		var h: Dictionary = c.heroes.values()[0] if not c.heroes.is_empty() else {}
+		add_line.call("mana_regen", float(h.get("mana_regen", 0)) + level_add(u, "regen_add", lv), float(h.get("mana_regen", 0)) + level_add(u, "regen_add", nx), "/s")
+		add_line.call("mana_max", float(h.get("mana_max", 0)) + level_add(u, "cap_add", lv), float(h.get("mana_max", 0)) + level_add(u, "cap_add", nx))
+	elif tgt == "worker":
+		var w := float(econ.get("worker_income", 0))
+		add_line.call("worker_income", w + level_add(u, "income_add", lv), w + level_add(u, "income_add", nx), "/s")
+	return out
+
+func icon_frame(u: Dictionary) -> String:
+	var tgt := str(u.get("target", ""))
+	if tgt.begins_with("unit:") or tgt.begins_with("hero:"): return "card_" + tgt.substr(5)
+	return {"resource:supply": "icon_supply", "resource:energy": "icon_energy", "worker": "card_worker", "base:player": "icon_home"}.get(tgt, "icon_star")
+
 func open(view: Vector2, safe: Rect2, p_target: float) -> void:
 	target = p_target
 	size = view
@@ -168,8 +224,8 @@ func _build() -> void:
 	add_child(btn_next)
 
 func _layout(_view: Vector2, safe: Rect2) -> void:
-	var w := minf(safe.size.x - 16, 460.0)
-	var row_h := maxf(target, 40.0)
+	var w := minf(safe.size.x - 16, 620.0)
+	var row_h := maxf(target, 48.0)
 	var h := safe.size.y - 16
 	panel_rect = Rect2((safe.get_center() - Vector2(w, h) / 2).round(), Vector2(w, h))
 	# title 38 + rows + status 20 + bottom bar row_h + margins
@@ -317,14 +373,42 @@ func _draw() -> void:
 		var u: Dictionary = rows[i]
 		var r: Rect2 = row_rects[i]
 		draw_rect(r, Color(0, 0, 0, 0.18))
-		var name_w := r.size.x - 76 - 8 - 130
-		var nm: Array = UiStyle.fit_text(display_name(u), name_w, UiStyle.FONT_S)
-		UiStyle.draw_text_left(self, nm[0], Vector2(r.position.x + 6, r.position.y + 12), UiStyle.FONT_S, UiStyle.C_TEXT)
-		UiStyle.draw_number(self, effect_text(u), Vector2(r.position.x + 6, r.position.y + 29), UiStyle.NUM_READ, UiStyle.C_HP_PLAYER, -1, UiStyle.NUM_READ_KIND)
 		var lv := level_of(str(u.id))
 		var mx := int(u.get("max_level", 1))
-		var lx := r.end.x - 76 - 8 - 124
-		UiStyle.draw_number(self, "Lv %d/%d" % [lv, mx], Vector2(lx, r.get_center().y), UiStyle.NUM_READ, UiStyle.C_TEXT_DIM, -1, UiStyle.NUM_READ_KIND)
+		# icon
+		var tex: Texture2D = UiStyle.ui_icon(icon_frame(u))
+		var ix := r.position.x + 4
+		if tex != null:
+			var k := maxf(1.0, floorf((r.size.y - 8) / maxf(1.0, float(tex.get_height()))))
+			var isz := Vector2(tex.get_size()) * k
+			draw_texture_rect(tex, Rect2(Vector2(ix, r.get_center().y - isz.y / 2).round(), isz), false)
+			ix += isz.x + 6
+		else:
+			ix += 6
+		var right := r.end.x - 76 - 8 - 64          # cost column
+		# line 1: name, level and a level bar
+		var nm: Array = UiStyle.fit_text(display_name(u), right - ix - 70, UiStyle.FONT_S)
+		UiStyle.draw_text_left(self, nm[0], Vector2(ix, r.position.y + 12), UiStyle.FONT_S, UiStyle.C_TEXT)
+		var lvt := "Lv %d/%d" % [lv, mx]
+		UiStyle.draw_text_left(self, lvt, Vector2(right - 64, r.position.y + 12), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
+		var bar := Rect2(ix, r.position.y + 21, right - ix - 4, 2)
+		draw_rect(bar, Color(0, 0, 0, 0.35))
+		draw_rect(Rect2(bar.position, Vector2(bar.size.x * float(lv) / float(maxi(1, mx)), 2)), UiStyle.C_GOLD.darkened(0.15))
+		# line 2: exact values, now -> next (+delta)
+		var x := ix
+		var y := r.position.y + r.size.y - 13
+		for line in stat_lines(u):
+			var seg := [[str(line.label) + " ", UiStyle.C_TEXT_DIM], [str(line.now), UiStyle.C_TEXT]]
+			if not is_max(u):
+				seg.append([" → ", UiStyle.C_TEXT_DIM])
+				seg.append([str(line.next), UiStyle.C_GOLD])
+				if str(line.delta) != "": seg.append([" (" + str(line.delta) + ")", UiStyle.C_HP_PLAYER])
+			for sg in seg:
+				var tw := UiStyle.text_width(sg[0], UiStyle.FONT_S)
+				if x + tw > right: break
+				UiStyle.draw_text_left(self, sg[0], Vector2(x, y), UiStyle.FONT_S, sg[1])
+				x += tw
+			x += 12
 		if not is_max(u):
 			var cost := next_cost(u)
 			var col := UiStyle.C_GOLD if coins() >= cost else UiStyle.C_HP_ENEMY
