@@ -58,25 +58,76 @@ func _notification(what: int) -> void:
 		_mouse_down = false
 		_finger = -1
 
+## Overview strip, drawn to match the base HP strip beside it (same dark plate, same side colours):
+##   lane track with the ground each side holds tinted in its colour (the front line is where the tints meet),
+##   bakery and nest at the ends, allies as ticks above the lane and enemies below it (a boss is a larger block),
+##   the hero as an outlined gold diamond, and the part of the lane on screen as corner brackets
+##   (a full frame while the player is scouting away from the hero).
+const C_ALLY := Color("5cd96b")
+const C_FOE := Color("ed5a4d")
+const C_INK := Color(0.05, 0.04, 0.04)
+
 func _draw() -> void:
-	# 20 px ink inside a 40–48 px touch area: the overview no longer owns a HUD row.
-	Style.draw_pixel_box(self, Rect2(2, 4, size.x-4, 20), Color(0.12,0.16,0.16,0.82))
+	# 18 px ink inside a 40-48 px touch area, level with the base HP strip
+	Style.draw_pixel_box(self, Rect2(0, 3, size.x, 18), Style.C_PANEL)
 	if state.is_empty(): return
-	var y := 15.0
-	draw_rect(Rect2(10, y - 2, size.x - 20, 5), Color("68745a"))
+	var y := 12.0
 	var bx := map_x(float(state.get("player_base", 0)))
 	var ex := map_x(float(state.get("enemy_base", 1)))
-	draw_rect(Rect2(bx - 4, y - 6, 8, 8), Color("e5c28c"))
-	draw_rect(Rect2(bx - 6, y - 8, 12, 3), Color("ad7048"))
-	draw_rect(Rect2(ex - 5, y - 7, 10, 9), Color("85999a"))
-	for dot in state.get("dots", []):
+	var dots: Array = state.get("dots", [])
+	var hero_on := bool(state.get("hero_alive", true))
+	var hx := map_x(float(state.get("hero", 0)))
+	# fronts: the furthest ally and the nearest enemy; where they overlap the line sits between them
+	var af := bx
+	var ef := ex
+	if hero_on: af = maxf(af, hx)
+	for dot in dots:
+		var dx := map_x(float(dot[0]))
+		if int(dot[1]) > 0: af = maxf(af, dx)
+		else: ef = minf(ef, dx)
+	if af > ef:
+		af = roundf((af + ef) * 0.5)
+		ef = af
+	draw_rect(Rect2(7, y - 2, size.x - 14, 5), C_INK)
+	draw_rect(Rect2(8, y - 1, size.x - 16, 3), Color(0.20, 0.15, 0.12))
+	if af > bx: draw_rect(Rect2(bx, y - 1, af - bx, 3), Color(C_ALLY, 0.55))
+	if ex > ef: draw_rect(Rect2(ef, y - 1, ex - ef, 3), Color(C_FOE, 0.55))
+	# bakery (cream block, brown roof) and nest (grey-green mound), each with a dark outline
+	draw_rect(Rect2(bx - 5, y - 7, 10, 10), C_INK)
+	draw_rect(Rect2(bx - 4, y - 3, 8, 5), Color("e5c28c"))
+	draw_rect(Rect2(bx - 4, y - 6, 8, 3), Color("ad7048"))
+	draw_rect(Rect2(ex - 5, y - 7, 10, 10), C_INK)
+	draw_rect(Rect2(ex - 4, y - 4, 8, 6), Color("7f9a8a"))
+	draw_rect(Rect2(ex - 2, y - 6, 4, 2), Color("7f9a8a"))
+	draw_rect(Rect2(ex - 1, y - 2, 2, 2), Color("2a3a34"))
+	for dot in dots:
 		var x := map_x(float(dot[0]))
-		var ally := int(dot[1]) > 0
-		var h := 6.0 if bool(dot[2]) else 3.0
-		draw_rect(Rect2(x - 1, y - 1 - h if ally else y + 3, 2, h), Color("70d7df") if ally else Color("ed9b78"))
-	if bool(state.get("hero_alive", true)):
-		var hx := map_x(float(state.get("hero", 0)))
-		draw_colored_polygon(PackedVector2Array([Vector2(hx,y-10), Vector2(hx+3,y-6), Vector2(hx,y-2), Vector2(hx-3,y-6)]), Color("ffe19a"))
+		if int(dot[1]) > 0:
+			draw_rect(Rect2(x - 1, y - 5, 2, 3), C_ALLY)
+		elif bool(dot[2]):         # boss: a block with an outline, so it is not just "one more tick"
+			draw_rect(Rect2(x - 3, y + 1, 6, 7), C_INK)
+			draw_rect(Rect2(x - 2, y + 2, 4, 5), C_FOE)
+			draw_rect(Rect2(x - 2, y + 2, 4, 1), Color("ffd0c0"))
+		else:
+			draw_rect(Rect2(x - 1, y + 3, 2, 3), C_FOE)
+	if hero_on:
+		for k in 2:
+			var r := 4.0 - k
+			var c := Vector2(hx, y - 5)
+			draw_colored_polygon(PackedVector2Array([c + Vector2(0, -r), c + Vector2(r, 0), c + Vector2(0, r), c + Vector2(-r, 0)]), C_INK if k == 0 else Color("ffe19a"))
+	# the part of the lane on screen
 	var a := map_x(float(state.get("view_left", 0)))
-	var b := map_x(float(state.get("view_right", 1)))
-	draw_rect(Rect2(a, y - 9, maxf(3, b - a), 16), Color("ffe5a9"), false, 1.0)
+	var b := maxf(a + 5.0, map_x(float(state.get("view_right", 1))))
+	var top := 4.0
+	var bot := 20.0
+	var col := Color("ffe5a9")
+	if bool(state.get("scouting", false)):
+		draw_rect(Rect2(a, top, b - a, bot - top), Style.C_ACCENT, false, 1.0)
+	else:
+		for cx in [a, b - 1]:
+			draw_rect(Rect2(cx, top, 1, 4), col)
+			draw_rect(Rect2(cx, bot - 4, 1, 4), col)
+		draw_rect(Rect2(a, top, 3, 1), col)
+		draw_rect(Rect2(b - 3, top, 3, 1), col)
+		draw_rect(Rect2(a, bot - 1, 3, 1), col)
+		draw_rect(Rect2(b - 3, bot - 1, 3, 1), col)
