@@ -39,7 +39,7 @@ func _ready() -> void:
 
 static func fresh() -> Dictionary:
 	return {"version": VERSION, "revision": 0, "unlocked_round": 1, "stars": {}, "best_time": {}, "coins": 0,
-		"clears": 0, "tutorial_done": [], "upgrades": {}, "upgrade_paid": {}, "applied_battles": [],
+		"clears": 0, "tutorial_done": [], "upgrades": {}, "upgrade_paid": {}, "applied_battles": [], "loadout": [], "growth_purchases": {},
 		"settings": {"fps_cap": 60, "sfx": 1.0, "music": 0.8, "show_damage": true, "screen_shake": true}}
 
 # ---------------------------------------------------------------- load
@@ -201,7 +201,7 @@ func _migrate(p: Dictionary, _from_version: int) -> Dictionary:
 			for k in p.open_rounds:
 				if k is String and not orr.has(k): orr.append(k)
 		if orr.is_empty(): p.erase("open_rounds")
-		else: p.open_rounds = orr.slice(0, 64)
+		else: p.open_rounds = orr.slice(0, maxi(64, rounds_n))
 	if p.has("migration_notice"):
 		var n = p.migration_notice
 		if n is Dictionary and (n.get("levels") is int or n.get("levels") is float) and (n.get("coins") is int or n.get("coins") is float):
@@ -822,6 +822,44 @@ func buy_preview_gold(amount: int) -> String:
 	progress.coins = old
 	_gold_shop_uncertain = last_failure_uncertain
 	return "save_uncertain" if _gold_shop_uncertain else "save_failed"
+
+func selected_loadout() -> Array:
+	var c := get_node_or_null("/root/Content")
+	if c == null: return []
+	var ids: Array = c.valid_loadout(progress.get("loadout", []), round_reach())
+	return ids if not ids.is_empty() else c.available_roster(round_reach()).slice(0, 5)
+
+func set_loadout(ids: Array) -> bool:
+	if read_only: return false
+	var c := get_node_or_null("/root/Content")
+	if c == null or ids.is_empty() or ids.size() > 5 or c.valid_loadout(ids, round_reach()) != ids: return false
+	var before: Array = progress.get("loadout", []).duplicate()
+	progress.loadout = ids.duplicate()
+	if save_progress(): return true
+	progress.loadout = before
+	return false
+
+## Test storefront only: fixed contents, one purchase per pack, saved atomically.
+func buy_preview_growth(product_id: String) -> String:
+	if not GoldShopCatalog.enabled(): return "unavailable"
+	if read_only: return "read_only"
+	if _gold_shop_uncertain: return "save_uncertain"
+	var c := get_node_or_null("/root/Content")
+	if c == null: return "unavailable"
+	for p in c.meta.get("iap_catalog", {}).get("products", []):
+		if str(p.id) != product_id: continue
+		if round_reach() < int(p.unlock_round): return "locked"
+		if progress.growth_purchases.has(product_id): return "owned"
+		var old := int(progress.coins)
+		if int(p.gold) > _coins_cap() - old: return "wallet_full"
+		progress.coins = old + int(p.gold)
+		progress.growth_purchases[product_id] = true
+		if save_progress(): return "ok"
+		progress.coins = old
+		progress.growth_purchases.erase(product_id)
+		_gold_shop_uncertain = last_failure_uncertain
+		return "save_uncertain" if _gold_shop_uncertain else "save_failed"
+	return "unavailable"
 
 func set_setting(key: String, value: Variant) -> void:
 	progress.settings[key] = value

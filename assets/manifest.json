@@ -250,6 +250,24 @@
     "e_thrall"
    ],
    "image_frames": 0
+  },
+  {
+   "id": "roster10",
+   "group": "character",
+   "load_policy": "battle",
+   "image": "res://assets/art/roster10/roster10.svg",
+   "frames": "res://assets/art/roster10/roster10.json",
+   "size": [
+    768,
+    240
+   ],
+   "anim_sets": [
+    "baguette",
+    "macaron",
+    "chili",
+    "donut",
+    "waffle"
+   ]
   }
  ],
  "anim_sets": {
@@ -292,7 +310,12 @@
   "e_frostshell": "char_challenge",
   "e_icerunner": "char_challenge",
   "e_sporesac": "char_challenge",
-  "e_burrower": "char_challenge"
+  "e_burrower": "char_challenge",
+  "baguette": "roster10",
+  "macaron": "roster10",
+  "chili": "roster10",
+  "donut": "roster10",
+  "waffle": "roster10"
  },
  "bases": {
   "player": {

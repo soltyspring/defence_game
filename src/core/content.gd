@@ -42,8 +42,26 @@ var warnings: PackedStringArray = []
 var data_root := "res://data"
 ## "c1-" + first 12 hex of sha256 over every data/**/*.json (sorted path + bytes). Changes whenever 01 edits data.
 var content_version := ""
-## data/migrations.json (01): {"schema_version":1, "upgrade_renames":{old:new}, "round_renames":{old:new}} (PROVISIONAL schema)
+## data/migrations.json upgrade/round rename rules.
 var migrations: Dictionary = {}
+
+## Available collection follows account reach, so unlocked units work in earlier rounds too.
+func available_roster(reach: int) -> Array:
+	var out: Array = []
+	for id in units:
+		var u: Dictionary = units[id]
+		if str(u.faction) == "player" and not bool(u.get("is_worker", false)) and int(u.get("unlock_round", 1)) <= reach:
+			out.append(id)
+	out.sort_custom(func(a, b): return int(units[a].get("unlock_round", 1)) < int(units[b].get("unlock_round", 1)))
+	return out
+
+func valid_loadout(ids: Array, reach: int) -> Array:
+	var available := available_roster(reach)
+	var out: Array = []
+	for id in ids:
+		if id is String and available.has(id) and not out.has(id) and out.size() < 5:
+			out.append(id)
+	return out
 
 func _ready() -> void:
 	load_all()
@@ -327,15 +345,13 @@ func get_round_list() -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	for id in round_order:
 		var r: Dictionary = rounds[id]
-		out.append({"id": id, "index": r.index, "name": r.name, "biome": r.biome})
+		out.append({"id": id, "index": r.index, "name": r.name, "biome": r.biome, "growth_gate": bool(r.get("growth_gate", false))})
 	return out
 
 func next_round_id(id: String) -> String:
 	var i := round_order.find(id)
 	if i >= 0 and i + 1 < round_order.size():
-		# The main campaign still ends at its last round: the challenge chapter is entered from round select.
-		if is_challenge(round_order[i + 1]) and not is_challenge(id):
-			return ""
+		# Published chapters now form one continuous 100-round campaign.
 		return round_order[i + 1]
 	return ""
 

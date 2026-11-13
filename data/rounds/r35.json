@@ -169,12 +169,12 @@
     "base_hp_2": 0.4
   },
   "enemy_scaling": {
-    "hp": 1.82,
-    "atk": 1.442
+    "hp": 2.2545,
+    "atk": 1.6639
   },
   "enemy_tower_atk_mult": 0.5,
   "tutorial": [],
   "provisional": true,
-  "balance_note": "Challenge chapter (docs/design/CHALLENGE_R31_R40.md). enemy_scaling stays at the r30 value: difficulty comes from the heavy/link rules, not from stats. Bot runs only; human difficulty not played.",
+  "balance_note": "Campaign100 candidate: fixed public growth gates R23/42/61/79/96. Late HP x1.027/round, ATK x1.020. No spending-dependent difficulty. See CAMPAIGN100.md and simulator evidence.",
   "challenge": true
 }

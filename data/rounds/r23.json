@@ -30,6 +30,11 @@
       "at": 12,
       "spawns": [
         {
+          "unit": "boss_frostguard",
+          "count": 1,
+          "interval": 0
+        },
+        {
           "unit": "e_frostshell",
           "count": 2,
           "interval": 5.0
@@ -39,7 +44,8 @@
           "count": 1,
           "interval": 0
         }
-      ]
+      ],
+      "boss": true
     },
     {
       "at": 44,
@@ -135,7 +141,7 @@
   ],
   "reward": {
     "coins": 252,
-    "first_clear_coins": 576,
+    "first_clear_coins": 749,
     "three_star_bonus_coins": 148
   },
   "stars": {
@@ -143,12 +149,14 @@
     "base_hp_2": 0.4
   },
   "enemy_scaling": {
-    "hp": 1.61,
-    "atk": 1.316
+    "hp": 3.1512,
+    "atk": 1.8877
   },
   "enemy_tower_atk_mult": 0.5,
   "tutorial": [],
-  "boss_round": false,
+  "boss_round": true,
   "provisional": true,
-  "balance_note": "Alternating guard and charger; first mixed encounter. Encounter composition only; original rewards and enemy stat scaling."
+  "balance_note": "Campaign100 candidate: fixed public growth gates R23/42/61/79/96. Late HP x1.027/round, ATK x1.020. No spending-dependent difficulty. See CAMPAIGN100.md and simulator evidence.",
+  "growth_gate": true,
+  "growth_pressure_factor": 1.5291
 }

@@ -180,13 +180,13 @@
     "base_hp_2": 0.4
   },
   "enemy_scaling": {
-    "hp": 1.82,
-    "atk": 1.442
+    "hp": 2.3364,
+    "atk": 1.7041
   },
   "enemy_tower_atk_mult": 0.5,
   "tutorial": [],
   "provisional": true,
-  "balance_note": "Old mortars support one wave, competing for the player’s next area skill.",
+  "balance_note": "Campaign100 candidate: fixed public growth gates R23/42/61/79/96. Late HP x1.027/round, ATK x1.020. No spending-dependent difficulty. See CAMPAIGN100.md and simulator evidence.",
   "challenge": true,
   "danger_gap": 3.5
 }

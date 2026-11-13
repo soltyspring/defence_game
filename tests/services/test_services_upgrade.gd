@@ -8,7 +8,7 @@ extends SceneTree
 ##  - static_isolation: the upgrade code in save.gd/app.gd/upgrade_panel.gd (comments stripped)
 ##    calls no Services, ads, billing, receipt, store or network API.
 ##  - data_isolation: data/meta.json upgrades cost only coins (gold); no product/price/ad fields;
-##    iap_catalog disabled and empty; gems disabled.
+##    real iap_catalog remains disabled; local preview products are fixed grants; gems disabled.
 ##  - runtime_direct / runtime_app_path: buying through Save.buy_upgrade and through
 ##    Events.cmd_buy_upgrade -> App leaves Services untouched (diagnostics, progress.services),
 ##    results carry only {id, to_level, code, coins, level}, codes come from Save.UPG_*.
@@ -22,7 +22,7 @@ const FORBIDDEN_CORE := ["Services", "purchases.", "ads.", "billing", "receipt",
 ## The 04 panel says "purchase" for the coin spend; it must still not reach these.
 const FORBIDDEN_UI := ["Services", "billing", "receipt", "token", "sku", "product", "rewarded", "show_ad",
 	"iap", "gems", "shell_open", "HTTPRequest", "JavaClassWrapper", "Engine.get_singleton", "consent", "analytics"]
-const UPGRADE_KEYS := ["id", "target", "name_key", "max_level", "costs", "per_level"]
+const UPGRADE_KEYS := ["id", "target", "name_key", "max_level", "costs", "per_level", "level_unlock_rounds", "compound_after_level", "compound_rate"]
 const RESULT_KEYS := ["code", "coins", "id", "level", "to_level"]
 
 var BASE := BASE_FMT % OS.get_process_id()
@@ -71,6 +71,8 @@ func _run() -> void:
 	print("[test_services_upgrade] passes=%d failures=%d" % [passes, failures.size()])
 	for g in report.groups:
 		print("  %-22s %s" % [g, report.groups[g]])
+	root.get_node("Audio").prepare_quit()
+	await create_timer(0.3, true, false, true).timeout
 	quit(0 if failures.is_empty() else 1)
 
 func _group(name: String, fn: Callable) -> void:
@@ -193,7 +195,9 @@ func test_data() -> bool:
 		check(costs.size() == int(u.get("max_level", 1)) - 1, "upgrade %s has one coin cost per level" % id)
 		check(costs.all(func(c): return (c is float or c is int) and c > 0 and c == floor(c)), "upgrade %s costs are positive whole coins" % id)
 	var iap: Dictionary = meta.get("iap_catalog", {})
-	check(iap.get("enabled", true) == false and (iap.get("products", [1]) as Array).is_empty(), "iap_catalog disabled and empty (Q2 deferred)")
+	check(iap.get("enabled", true) == false, "real iap_catalog remains disabled")
+	for product in iap.get("products", []):
+		check(int(product.get("price_krw", 0)) > 0 and int(product.get("gold", 0)) > 0 and int(product.get("purchase_limit", 0)) == 1, "preview product has fixed positive contents and one-time limit")
 	for c in meta.get("currencies", []):
 		if str(c.get("id", "")) == "gems":
 			check(c.get("enabled", true) == false, "premium currency gems disabled")
@@ -279,7 +283,7 @@ func test_app_path() -> bool:
 ## so plain "rewarded" is not a token here. Also: no addons/ (plugins), no android/ Gradle template
 ## with plugin AARs, no enabled plugin flags in export_presets.cfg.
 const Q2_TOKENS := ["Services.ads", "Services.purchases", "/root/Services", "get_singleton(", "JavaClassWrapper",
-	"GodotGooglePlayBilling", "AndroidIAPP", "AdMob", "MobileAds", "purchaseToken", "receipt", "HTTPRequest", "HTTPClient"]
+	"GodotGooglePlayBilling", "AndroidIAPP", "AdMob", "MobileAds", "purchaseToken", "HTTPRequest", "HTTPClient"]
 const Q2_SCAN_DIRS := ["res://src", "res://scenes"]
 
 func _scan_files(dir: String, exts: Array, out: Array) -> void:

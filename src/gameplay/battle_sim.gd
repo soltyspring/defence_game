@@ -208,7 +208,7 @@ var _danger_free_at := 0.0          # t from which the next enemy announcement m
 var stats := {"deployed": 0, "workers_bought": 0, "skills_cast": 0, "enemy_spawned": 0, "max_units": 0, "max_projectiles": 0, "hero_deaths": 0,
 	"gold_capped_s": 0.0, "mana_capped_s": 0.0}
 
-func setup(p_content, round_id: String, seed_value: int = 1, p_upgrades: Dictionary = {}) -> void:
+func setup(p_content, round_id: String, seed_value: int = 1, p_upgrades: Dictionary = {}, loadout: Array = []) -> void:
 	content = p_content
 	upgrades = p_upgrades
 	round_def = content.get_round(round_id)
@@ -250,7 +250,9 @@ func setup(p_content, round_id: String, seed_value: int = 1, p_upgrades: Diction
 	workers = int(econ.workers_start)
 	mana = float(hero_def.get("mana_start", mana_max * 0.5))
 	card_ids.clear()
-	for c in content.round_cards(round_def):
+	# The caller validates account unlocks; this layer also rejects enemies, duplicates and a sixth slot.
+	var selected: Array = content.valid_loadout(loadout, 100)
+	for c in (selected if not selected.is_empty() else content.round_cards(round_def)):
 		card_ids.append(str(c))
 		card_cd[str(c)] = 0.0
 	skill_ids.clear()
@@ -316,13 +318,17 @@ func _upgrade_mult(target: String, key: String) -> float:
 	for u in content.meta.get("upgrades", []):
 		if str(u.get("target", "")) == target:
 			var lvl := int(upgrades.get(str(u.id), 1))
-			return 1.0 + float(u.get("per_level", {}).get(key, 0.0)) * (lvl - 1)
+			lvl = clampi(lvl, 1, int(u.get("max_level", 1)))
+			var base := 1.0 + float(u.get("per_level", {}).get(key, 0.0)) * (lvl - 1)
+			var after := int(u.get("compound_after_level", lvl))
+			return base * pow(1.0 + float(u.get("compound_rate", 0.0)), maxi(0, lvl - after))
 	return 1.0
 
 func _upgrade_add(target: String, key: String) -> float:
 	for u in content.meta.get("upgrades", []):
 		if str(u.get("target", "")) == target:
 			var lvl := int(upgrades.get(str(u.id), 1))
+			lvl = clampi(lvl, 1, int(u.get("max_level", 1)))
 			return float(u.get("per_level", {}).get(key, 0.0)) * (lvl - 1)
 	return 0.0
 
