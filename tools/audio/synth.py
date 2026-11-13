@@ -274,8 +274,9 @@ def r_ui_tap(rng):
 
 
 def r_ui_back(rng):
-    return seq([(0, blip(990, 880, 0.04, "square", 0.25, tau=0.012)),
-                (0.045, blip(700, 620, 0.06, "square", 0.25, tau=0.02))], 0.12)
+    # one soft falling tick (was two ticks 45 ms apart, which read as two sounds overlapping);
+    # falls where ui_tap rises, so back and forward stay distinct
+    return blip(860, 600, 0.07, "square", 0.2, tau=0.02)
 
 
 def r_ui_confirm(rng):
@@ -932,7 +933,7 @@ def r38_shoot_arrow_v(rng, k):
 CUES = {
     # faction: bakery (player side), mold (enemy side), neutral (UI/flow). desc = sound design intent.
     "ui_tap":          dict(r=[r_ui_tap], bus="UI", vol_db=-8, max=2, gap=0.03, prio=6, pitch=0.03, faction="neutral", desc="short square tick"),
-    "ui_back":         dict(r=[r_ui_back], bus="UI", vol_db=-8, max=1, gap=0.05, prio=6, pitch=0.0, faction="neutral", desc="two falling ticks"),
+    "ui_back":         dict(r=[r_ui_back], bus="UI", vol_db=-8, max=1, gap=0.05, prio=6, pitch=0.0, faction="neutral", desc="one soft falling tick"),
     "ui_confirm":      dict(r=[r34_ui_confirm], bus="UI", vol_db=-8, max=1, gap=0.05, prio=7, pitch=0.0, faction="bakery", desc="whisk swish + small tray bell (01 R1)"),
     "ui_error":        dict(r=[r_ui_error], bus="UI", vol_db=-9, max=1, gap=0.25, prio=6, pitch=0.0, faction="neutral", desc="double low buzz"),
     "deploy":          dict(r=[r3_deploy], bus="SFX", vol_db=-7, max=2, gap=0.06, prio=7, pitch=0.04, faction="bakery", desc="oven-door bell + crust footsteps"),

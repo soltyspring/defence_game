@@ -87,7 +87,7 @@ func _run() -> void:
 			await frames()
 			root.get_node("Audio").cue_played.disconnect(record_cue)
 			check(app.screen == &"menu", "back returns to the main menu")
-			check(back_cues == [&"ui_tap"], "back plays a single tick: %s" % str(back_cues))
+			check(back_cues == [&"ui_back"], "back plays the single-tick back cue once: %s" % str(back_cues))
 	print("[gold-shop] checks=", checks, " failures=", failures, " preview=", Catalog.enabled())
 	root.get_node("Audio").prepare_quit()
 	await create_timer(0.3, true, false, true).timeout
