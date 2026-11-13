@@ -1,6 +1,8 @@
 """24x24 icons for the four new energy skills, in the style of the ui_main skill icons: dark 1-px rim, a coloured
 frame, a dark tinted field and one simple pictogram lit from the upper left.
   python tools/art/release_slice/skill_icons.py   -> assets/art/skills/<skill id>.png
+Superseded (2026-11-14): the shipped icons come from the ChatGPT sheet via `python tools/art/gpt_import.py icons`.
+Running this script would overwrite four of them with the old code-drawn versions.
 """
 from pathlib import Path
 from PIL import Image, ImageDraw

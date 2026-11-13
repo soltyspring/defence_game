@@ -7,6 +7,11 @@ finds the pixel phase, shrinks every N x N block to one pixel (median colour, tr
 background), trims each frame and packs the frames into atlas pages in the defence.atlas/1 format.
 
     python tools/art/gpt_import.py            # writes assets/art/gpt/*.png|json and docs/art/gpt_sources/preview_*.png
+    python tools/art/gpt_import.py icons      # only the 24x24 skill icons -> assets/art/skills/<skill id>.png
+
+Skill icons (docs/art/gpt_sources/skillicon/skill_icons.png) were drawn on a finer grid than asked (~40 px per
+icon), so they are not block-shrunk: each badge is resampled to 24x24 (Lanczos) and snapped to its own 24-colour
+palette, which keeps the symbols readable. They replace tools/art/release_slice/skill_icons.py output.
 
 Kits and prompts: docs/art/release_slice/{skillfx,nest,props,hitfx}_regen/PROMPTS.md.
 """
@@ -40,6 +45,7 @@ FX = [
 ]
 NESTS = 10                      # nest01..nest10: 4x2 cells, 4x pixels, cells 1-6 = idle A/B, damaged A/B, ruined A/B
 PROP_THEMES = ["farm", "snow", "cave", "marsh", "heart"]   # 4x2 cells, 8x pixels, one prop per cell
+SKILL_ICONS = ["skill_slam", "skill_rally", "skill_barrage", "skill_flour", "skill_shield", "skill_frost", "skill_oven"]
 
 
 def bg_mask(a):
@@ -237,8 +243,44 @@ def preview(name, anims, scale=3):
     Image.fromarray(sheet).resize((W * scale, H * scale), Image.NEAREST).save(os.path.join(SRC, f"preview_{name}.png"))
 
 
+def skill_icons():
+    """Seven badges in sheet order -> assets/art/skills/<id>.png (24x24) + a preview."""
+    from scipy import ndimage
+    src = Image.open(os.path.join(SRC, "skillicon", "skill_icons.png")).convert("RGB")
+    a = np.array(src).astype(np.int16)
+    bg = bg_mask(a)
+    lab, _ = ndimage.label(~bg)
+    boxes = []
+    for sl in ndimage.find_objects(lab):
+        if sl[0].stop - sl[0].start > 150 and sl[1].stop - sl[1].start > 150:
+            boxes.append((sl[1].start, sl[0].start, sl[1].stop, sl[0].stop))
+    boxes.sort(key=lambda b: (b[1] // 300, b[0]))
+    assert len(boxes) == len(SKILL_ICONS), boxes
+    out_dir = os.path.join(ROOT, "assets", "art", "skills")
+    icons = []
+    for sid, b in zip(SKILL_ICONS, boxes):
+        c = a[b[1]:b[3], b[0]:b[2]].copy()
+        cbg = bg[b[1]:b[3], b[0]:b[2]]
+        c[cbg] = (26, 18, 30)                        # corners: outline colour, so the resample does not bleed pink
+        crop = Image.fromarray(c.astype(np.uint8))
+        pal = crop.quantize(colors=24, method=Image.Quantize.MEDIANCUT)
+        small = crop.resize((24, 24), Image.LANCZOS).quantize(palette=pal, dither=Image.Dither.NONE).convert("RGB")
+        icon = np.zeros((24, 24, 4), np.uint8)
+        icon[..., :3] = np.array(small)
+        icon[..., 3] = 255
+        corner = np.array(Image.fromarray(cbg.astype(np.uint8) * 255).resize((24, 24), Image.BOX)) > 140
+        icon[corner, 3] = 0
+        Image.fromarray(icon).save(os.path.join(out_dir, sid + ".png"))
+        icons.append((icon, [12, 12]))
+    preview("skill_icons", {"skill_icons": {"idle": (icons, 1, False)}}, 8)
+    print("skill icons:", ", ".join(SKILL_ICONS))
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
+    skill_icons()
+    if len(sys.argv) > 1 and sys.argv[1] == "icons":
+        return 0
     fx = {}
     for name, src, cols, rows, p, anchor, st, fps, loop in FX:
         art, ox, oy, (cw, ch) = shrink(src, cols, rows, p)

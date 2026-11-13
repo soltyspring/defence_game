@@ -475,6 +475,8 @@ static func draw_glyph(ci: CanvasItem, glyph: StringName, c: Vector2, s: float, 
 
 static var _icon_cache: Dictionary = {}
 
+const SKILL_BADGES := ["skill_slam", "skill_rally", "skill_barrage", "skill_flour", "skill_shield", "skill_frost", "skill_oven"]
+
 ## Frame from the always-resident UI atlas (manifest "ui".atlas, default ui_main). Cached; null if absent.
 static func ui_icon(frame: String) -> Texture2D:
 	if frame.begins_with("card_"):
@@ -482,9 +484,9 @@ static func ui_icon(frame: String) -> Texture2D:
 		if uid in ["baguette", "macaron", "chili", "donut", "waffle"]:
 			if not _icon_cache.has(frame): _icon_cache[frame] = load("res://assets/art/roster10/" + uid + ".png")
 			return _icon_cache[frame]
-	# skills added after ui_main was packed: their 24x24 icons live in assets/art/skills (tools/art/release_slice/skill_icons.py)
+	# all seven energy-skill icons: 24x24 badges in assets/art/skills (ChatGPT sheet -> tools/art/gpt_import.py icons)
 	for pre in ["icon_", "skill_"]:
-		if frame.begins_with(pre) and frame.trim_prefix(pre) in ["skill_flour", "skill_shield", "skill_frost", "skill_oven"]:
+		if frame.begins_with(pre) and frame.trim_prefix(pre) in SKILL_BADGES:
 			if not _icon_cache.has(frame): _icon_cache[frame] = load("res://assets/art/skills/" + frame.trim_prefix(pre) + ".png")
 			return _icon_cache[frame]
 	if _icon_cache.has(frame):
@@ -587,6 +589,9 @@ static func draw_ui_icon(ci: CanvasItem, frame: String, c: Vector2, k := 1.0, mo
 static func icon_texture(icon: Variant) -> Texture2D:
 	if not (icon is Dictionary) or not icon.has("atlas") or not icon.has("frame"):
 		return null
+	var fr := str(icon.frame)
+	if (fr.begins_with("icon_") or fr.begins_with("skill_")) and fr.substr(fr.find("_") + 1) in SKILL_BADGES:
+		return ui_icon(fr)   # the redrawn skill badges (assets/art/skills) win over the old ui_main frames
 	var atlas := _atlas_node()
 	if atlas == null or not atlas.has_method("get_frame_texture"):
 		return null
