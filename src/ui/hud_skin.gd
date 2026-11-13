@@ -122,9 +122,6 @@ class CardSkin extends Control:
 		# role stripe under the top edge
 		draw_rect(Rect2(o + Vector2(2, 2), Vector2(w - 4, 3)), col if not b.disabled else col.darkened(0.55))
 		draw_rect(Rect2(o + Vector2(2, 2), Vector2(w - 4, 1)), col.lightened(0.35) if not b.disabled else col.darkened(0.4))
-		if b.cooldown_ratio > 0.0:
-			var y := 2.0 + floorf((h - 4.0) * clampf(b.cooldown_ratio, 0.0, 1.0))
-			draw_rect(Rect2(o + Vector2(2, y), Vector2(w - 4, 1)), Color(1, 1, 1, 0.55))
 		var t: float = skin.t
 		if ready:
 			var g := GOLD
