@@ -1,12 +1,15 @@
 extends Node2D
-## Pixel art panoramas. Only the active chapter is loaded; the road stays
-## world-locked while scenery moves at 28% camera speed. No runtime image edits.
-const DIR := "res://assets/backgrounds/pixel_chapters/"
+## One background tile per chapter, repeated without flips. Each 4×4 source
+## block occupies one world pixel; the road is drawn independently of the art.
+const DIR := "res://assets/backgrounds/chapter_tile_layers/"
 const NAMES := ["meadow", "orchard", "frost", "nest"]
-const ART_HEIGHT := 220.0
-## Authored road edge and foot line measured on each unmodified generated PNG.
-const ROAD_EDGE := [0.791, 0.778, 0.803, 0.776]
-const FOOT_LINE := [0.830, 0.826, 0.838, 0.808]
+const ROAD_PALETTES := [
+	["a18c5e", "c1a878", "967c55", "675340", "776045"],
+	["8d7858", "ae8b65", "886b50", "53463a", "6a5543"],
+	["879eb4", "bac9d4", "96aabc", "4b5c6e", "5e7284"],
+	["657164", "899081", "6c7668", "414c47", "515d53"],
+]
+
 var chapter := 0
 var texture: Texture2D
 var layers: Array[Node2D] = []
@@ -14,28 +17,35 @@ var factors := [0.0, 0.0, 0.28, 0.0, 1.0, 1.0]
 
 class Strip extends Node2D:
 	var texture: Texture2D
-	var source := Rect2()
 	var destination := Rect2()
 	var length := 0.0
-	var upper := false
+
 	func _draw() -> void:
 		var width := destination.size.x
-		# Adjacent tiles share the very same edge texels through reflection.
+		var edge := Rect2(0, 0, texture.get_width(), 4)
 		for i in range(-3, int(ceil(length / width)) + 4):
-			var x := float(i) * width
-			var flip := posmod(i, 2) == 1
-			draw_set_transform(Vector2(x + (width if flip else 0.0), 0.0), 0.0, Vector2(-1.0 if flip else 1.0, 1.0))
-			draw_texture_rect_region(texture, destination, source)
-			# Cover extreme aspect expansion, then reflect the full painted strip
-			# at its vertical edge. Nearby sky/soil keeps its natural texture;
-			# stretching a single edge row here would leave visible color streaks.
-			var edge_y := 0.0 if upper else float(texture.get_height() - 1)
-			var extension := Rect2(0.0, destination.position.y - 1600.0 if upper else destination.end.y, width, 1600.0)
-			draw_texture_rect_region(texture, extension, Rect2(0.0, edge_y, texture.get_width(), 1.0))
-			var boundary := destination.position.y if upper else destination.end.y
-			draw_set_transform(Vector2(x + (width if flip else 0.0), boundary * 2.0), 0.0, Vector2(-1.0 if flip else 1.0, -1.0))
-			draw_texture_rect_region(texture, destination, source)
-		draw_set_transform(Vector2.ZERO)
+			var tile := Rect2(destination.position + Vector2(i * width, 0), destination.size)
+			draw_texture_rect(texture, tile, false)
+			# Continue the top row in taller views. The first sky row joins exactly.
+			draw_texture_rect_region(texture, Rect2(tile.position.x, tile.position.y - 1024, width, 1024), edge)
+
+class Road extends Node2D:
+	var top := 0.0
+	var length := 0.0
+	var palette: Array = []
+
+	func _draw() -> void:
+		var left := -1024.0
+		var span := length + 2048.0
+		draw_rect(Rect2(left, top, span, 1024), Color(palette[3]))
+		draw_rect(Rect2(left, top, span, 17), Color(palette[1]))
+		draw_rect(Rect2(left, top, span, 2), Color(palette[0]))
+		draw_rect(Rect2(left, top + 15, span, 2), Color(palette[2]))
+		# Subtle wear marks on the road and a few strata below the walkable strip.
+		for i in range(-30, int(length / 37.0) + 32):
+			var x := float(i * 37 + posmod(i * 17, 14))
+			draw_rect(Rect2(x, top + 3 + posmod(i * 11, 10), 3 + posmod(i * 7, 6), 1), Color(palette[0]))
+			draw_rect(Rect2(x, top + 23 + posmod(i * 13, 42), 9 + posmod(i * 11, 20), 2), Color(palette[4]))
 
 static func chapter_of(round_index: int) -> int:
 	return clampi((maxi(round_index, 1) - 1) / 10, 0, NAMES.size() - 1)
@@ -46,28 +56,26 @@ static func path_for(round_index: int) -> String:
 func build(length: float, ground: float, round_index: int) -> bool:
 	chapter = chapter_of(round_index)
 	var path := path_for(round_index)
-	if ResourceLoader.exists(path):
-		texture = load(path) as Texture2D
-	elif FileAccess.file_exists(path):
-		var image := Image.load_from_file(ProjectSettings.globalize_path(path))
-		if image != null: texture = ImageTexture.create_from_image(image)
+	if not ResourceLoader.exists(path):
+		return false
+	texture = load(path) as Texture2D
 	if texture == null:
 		return false
-	var size := Vector2(texture.get_size())
-	var width := ART_HEIGHT * size.x / size.y
-	var cut := roundf(size.y * ROAD_EDGE[chapter])
-	var top: float = ground - ART_HEIGHT * FOOT_LINE[chapter]
-	var cut_y: float = top + ART_HEIGHT * cut / size.y
+	var size := Vector2(texture.get_size()) / 4.0
+	var top := ground - 7.0
+	var scenery := Strip.new()
+	scenery.texture = texture
+	scenery.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	scenery.length = length
+	# Put the main landmarks behind the early combat area.
+	scenery.destination = Rect2(Vector2(-size.x * 0.35, top - size.y), size)
+	var road := Road.new()
+	road.top = top
+	road.length = length
+	road.palette = ROAD_PALETTES[chapter]
 	# Keep the six-plane contract used by the battle renderer and boss tint.
 	for i in 6:
-		var layer: Node2D = Strip.new() if i == 2 or i == 5 else Node2D.new()
+		var layer := Node2D.new() if i != 2 and i != 5 else (scenery as Node2D if i == 2 else road as Node2D)
 		add_child(layer)
 		layers.append(layer)
-		if layer is Strip:
-			layer.texture = texture
-			layer.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-			layer.length = length
-			layer.upper = i == 2
-			layer.source = Rect2(0, 0 if i == 2 else cut, size.x, cut if i == 2 else size.y - cut)
-			layer.destination = Rect2(0, top if i == 2 else cut_y, width, cut_y - top if i == 2 else top + ART_HEIGHT - cut_y)
 	return true

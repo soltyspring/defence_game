@@ -30,12 +30,12 @@ func _run() -> void:
 		check(b.painted != null and b.painted.chapter == (n - 1) / 10, "production mounts chapter r%02d" % n)
 		if b.painted != null:
 			var art = b.painted
-			check(art.texture.get_width() >= 2000 and art.texture.get_height() >= 700, "full resolution artwork")
+			check(art.texture.get_size() == Vector2(4096, 704), "full resolution tile")
 			var scenery = art.layers[2]
 			var road = art.layers[5]
-			check(is_equal_approx(scenery.destination.end.y, road.destination.position.y), "no gap between landscape and road")
-			check(is_equal_approx(scenery.source.end.y, road.source.position.y), "adjacent original image regions")
-			check(road.destination.position.y < 290.0 and road.destination.end.y > 290.0, "feet remain inside road")
+			check(is_equal_approx(scenery.destination.end.y, road.top), "no gap between landscape and road")
+			check(scenery.destination.size == Vector2(1024, 176), "one world pixel per logical pixel")
+			check(road.top < 290.0 and road.top + 17.0 > 290.0, "feet remain inside road")
 			for zoom in [1.0, 1.5, 2.0]:
 				for camera in [-160.0, 0.0, 660.0, 1260.0, 2000.0]:
 					b.present(camera, zoom, 2.0, 1.0)
