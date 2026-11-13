@@ -177,6 +177,8 @@ func _draw() -> void:
 	var off := Vector2(0, 1) if is_pressed else Vector2.ZERO
 	var has_sub := sub_text != ""
 	var has_visual := icon != null or glyph != &""
+	# on cooldown with a picture: the seconds go on the bottom line (in place of the cost), so the icon stays readable
+	var cd_strip := has_visual and cooldown_ratio > 0.0 and cooldown_left > 0.5 and not (disabled and dim_reason != "")
 	var numeric_text := text != "" and text.is_valid_int()
 	var show_name := text != "" and (not has_visual or not has_sub or size.y >= 54 or numeric_text)
 	var tc := UiStyle.C_TEXT if not disabled else UiStyle.C_TEXT_DIM
@@ -222,7 +224,7 @@ func _draw() -> void:
 				y0 = name_y - (lines.size() - 1) * lh
 			for li in lines.size():
 				UiStyle.draw_text_centered(self, lines[li], Vector2(size.x / 2, y0 + li * lh) + off, fl.size, tc, true, fl.kind)
-	if has_sub:
+	if has_sub and not cd_strip:
 		UiStyle.draw_number(self, sub_text, Vector2(size.x / 2, cost_y) + off, UiStyle.NUM_READ, UiStyle.C_GOLD if not disabled else UiStyle.C_TEXT_DIM, 0, UiStyle.NUM_READ_KIND)
 	passes_drawn = 3
 	# ---- pass 4: overlay shapes (must cover icon and name): cooldown shade, dim-reason strip
@@ -241,7 +243,9 @@ func _draw() -> void:
 		UiStyle.draw_number(self, badge, Vector2(size.x - 4, 9), UiStyle.NUM_READ, UiStyle.C_ACCENT, 1, UiStyle.NUM_READ_KIND)
 	if reason:
 		UiStyle.draw_text_centered(self, UiStyle.fit_text(dim_reason, size.x - 6, UiStyle.FONT_S)[0], dr.get_center(), UiStyle.FONT_S, UiStyle.C_HP_ENEMY)
-	if cooldown_ratio > 0.0 and cooldown_left > 0.5 and not reason:
+	if cd_strip:
+		UiStyle.draw_number(self, str(ceili(cooldown_left)), Vector2(size.x / 2, cost_y) + off, UiStyle.NUM_READ, Color.WHITE, 0, &"bold")
+	elif cooldown_ratio > 0.0 and cooldown_left > 0.5 and not reason:
 		UiStyle.draw_text_centered(self, str(ceili(cooldown_left)), Vector2(size.x / 2, size.y * 0.42), UiStyle.FONT_L, Color.WHITE)
 	if overlay.is_valid():
 		overlay.call(self)
