@@ -17,16 +17,16 @@ func _initialize() -> void:
 func _run() -> void:
 	var content = root.get_node("Content")
 	var seen := {}
-	for n in range(1, 41):
+	for n in range(1, 101):
 		var path := Painted.path_for(n)
 		check(path == Painted.DIR + Painted.NAMES[(n - 1) / 10] + ".png", "chapter selection r%02d" % n)
 		check(ResourceLoader.exists(path), "imported texture r%02d" % n)
 		seen[path] = true
-	check(seen.size() == 4, "exactly four chapter images")
-	for n in [1, 10, 11, 20, 21, 30, 31, 40]:
+	check(seen.size() == 10, "exactly ten chapter images")
+	for n in [1, 10, 11, 20, 21, 30, 31, 40, 41, 50, 51, 60, 61, 70, 71, 80, 81, 90, 91, 100]:
 		var b = Backdrop.new()
 		root.add_child(b)
-		b.build(1800.0, 290.0, str(content.get_round("r%02d" % n).biome), 40.0, 1760.0, n)
+		b.build(1800.0, 290.0, str(content.get_round("r%02d" % n).get("biome", "")), 40.0, 1760.0, n)
 		check(b.painted != null and b.painted.chapter == (n - 1) / 10, "production mounts chapter r%02d" % n)
 		if b.painted != null:
 			var art = b.painted
@@ -34,7 +34,8 @@ func _run() -> void:
 			var scenery = art.layers[2]
 			var road = art.layers[5]
 			check(is_equal_approx(scenery.destination.end.y, road.top), "no gap between landscape and road")
-			check(scenery.destination.size == Vector2(1024, 176), "one world pixel per logical pixel")
+			check(scenery.destination.size == scenery.source.size / 4.0, "one world pixel per logical pixel")
+			check(scenery.destination.size.y == 156.0, "quiet strip is shortened without scaling")
 			check(road.top < 290.0 and road.top + 17.0 > 290.0, "feet remain inside road")
 			for zoom in [1.0, 1.5, 2.0]:
 				for camera in [-160.0, 0.0, 660.0, 1260.0, 2000.0]:

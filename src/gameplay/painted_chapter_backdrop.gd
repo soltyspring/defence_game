@@ -2,12 +2,23 @@ extends Node2D
 ## One background tile per chapter, repeated without flips. Each 4×4 source
 ## block occupies one world pixel; the road is drawn independently of the art.
 const DIR := "res://assets/backgrounds/chapter_tile_layers/"
-const NAMES := ["meadow", "orchard", "frost", "nest"]
+const NAMES := [
+	"meadow", "orchard", "frost", "nest", "frost_quarry", "spore_marsh",
+	"frozen_bastion", "root_vault", "aurora_pass", "mould_heart",
+]
+## Preserve 16 of the 36 quiet logical rows above the road.
+const TRIM_GROUND_ROWS := 20
 const ROAD_PALETTES := [
 	["a18c5e", "c1a878", "967c55", "675340", "776045"],
 	["8d7858", "ae8b65", "886b50", "53463a", "6a5543"],
 	["879eb4", "bac9d4", "96aabc", "4b5c6e", "5e7284"],
 	["657164", "899081", "6c7668", "414c47", "515d53"],
+	["8494a5", "b6c1cc", "95a5b4", "4a5562", "5c6a77"],
+	["5f7267", "879b87", "738375", "3b4b43", "4b5e53"],
+	["8193a9", "afc1d2", "91a6bc", "47576b", "596c81"],
+	["706570", "928492", "7a6e7b", "49404c", "5c4e5b"],
+	["6b839c", "9fb6ca", "829cb4", "3b4c62", "50657b"],
+	["646772", "8a8591", "746e7c", "3b3743", "514752"],
 ]
 
 var chapter := 0
@@ -17,6 +28,7 @@ var factors := [0.0, 0.0, 0.28, 0.0, 1.0, 1.0]
 
 class Strip extends Node2D:
 	var texture: Texture2D
+	var source := Rect2()
 	var destination := Rect2()
 	var length := 0.0
 
@@ -25,7 +37,7 @@ class Strip extends Node2D:
 		var edge := Rect2(0, 0, texture.get_width(), 4)
 		for i in range(-3, int(ceil(length / width)) + 4):
 			var tile := Rect2(destination.position + Vector2(i * width, 0), destination.size)
-			draw_texture_rect(texture, tile, false)
+			draw_texture_rect_region(texture, tile, source)
 			# Continue the top row in taller views. The first sky row joins exactly.
 			draw_texture_rect_region(texture, Rect2(tile.position.x, tile.position.y - 1024, width, 1024), edge)
 
@@ -61,11 +73,13 @@ func build(length: float, ground: float, round_index: int) -> bool:
 	texture = load(path) as Texture2D
 	if texture == null:
 		return false
-	var size := Vector2(texture.get_size()) / 4.0
+	var source_size := Vector2(texture.get_size()) - Vector2(0, TRIM_GROUND_ROWS * 4)
+	var size := source_size / 4.0
 	var top := ground - 7.0
 	var scenery := Strip.new()
 	scenery.texture = texture
 	scenery.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	scenery.source = Rect2(Vector2.ZERO, source_size)
 	scenery.length = length
 	# Put the main landmarks behind the early combat area.
 	scenery.destination = Rect2(Vector2(-size.x * 0.35, top - size.y), size)

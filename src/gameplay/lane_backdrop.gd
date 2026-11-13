@@ -1,5 +1,5 @@
 extends Node2D
-## Painted chapter backgrounds for R01-R40, with cached geometry as an import
+## Painted chapter backgrounds for R01-R100, with cached geometry as an import
 ## fallback. The six-plane API and live boss cues are shared by both paths.
 const Raster := preload("res://src/gameplay/pixel_camera.gd")
 const Painted := preload("res://src/gameplay/painted_chapter_backdrop.gd")
@@ -139,7 +139,7 @@ func build(length: float, ground: float, _biome: String, player_x := 40.0, enemy
 		set_texture = load(SET_PATH)
 		factors[4] = 1.0   # set pieces are world-locked: they frame the two bases
 	scene = Scenes.spec(round_index)
-	if round_index >= 1 and round_index <= 40:
+	if round_index >= 1 and round_index <= Painted.NAMES.size() * 10:
 		var art := Painted.new()
 		if art.build(length, ground, round_index):
 			painted = art
@@ -520,7 +520,7 @@ func present(camera: float, zoom: float, device_scale: float, seconds: float) ->
 	if not _mods.is_empty() and not is_equal_approx(_tension, _tension_target):
 		var dt := clampf(seconds - _last_seconds, 0.0, 0.1) if _last_seconds >= 0.0 else 0.0
 		_tension = move_toward(_tension, _tension_target, dt / 0.8)
-		var tint := Color(str(scene.pal.tension))
+		var tint := Color(str(scene.pal.tension)) if not scene.is_empty() else Color("d1c9d9")
 		for i in 4:
 			layers[i].modulate = (_mods[i] as Color).lerp((_mods[i] as Color) * tint, _tension)
 	_last_seconds = seconds
