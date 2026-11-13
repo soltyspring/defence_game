@@ -353,6 +353,8 @@ func _on_paused(p: bool) -> void:
 		_release_all_holds()
 	pause_layer.visible = p and not settings_panel.visible
 	tutorial_label.visible = not p          # the hint must not sit on top of the pause dialog
+	# also via alpha: per-frame feedback code may re-set `visible`, the alpha stays until the pause ends
+	tutorial_label.modulate.a = 0.0 if p else (1.0 if tutorial_key != "" else 0.0)
 	if pointer != null: pointer.visible = not p
 	queue_redraw()
 
@@ -363,7 +365,7 @@ func _on_tutorial_step(key: String) -> void:
 		tutorial_label.modulate.a = 0.0
 		return
 	tutorial_label.text = UiText.t(key, key)
-	tutorial_label.modulate.a = 1.0
+	tutorial_label.modulate.a = 0.0 if paused else 1.0     # a hint (re)sent during the pause waits for the resume
 	if toast_label.modulate.a > 0.0 and (toast_label.text == tutorial_label.text or TOAST_SAME_AS_HINT.get(_toast_key, "") == key):
 		_toast_left = 0.0                 # toast arrived first with the same sentence → keep only the hint
 		toast_label.modulate.a = 0.0
