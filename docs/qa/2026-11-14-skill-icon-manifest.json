@@ -1,0 +1,71 @@
+{
+  "reviewed_commit": "bd8f34b07ef5b7d1373839a07ae458adcf46fe24",
+  "source": {
+    "kind": "ai_generated",
+    "tool": "ChatGPT",
+    "path": "docs/art/gpt_sources/skillicon/skill_icons.png",
+    "sha256": "56179acabe9aaa67893d56c069fd856bf446deb5373d0f061a823466eb38b324",
+    "license_status": "No separate third-party asset license recorded; distribution rights not independently verified."
+  },
+  "conversion": "python tools/art/gpt_import.py icons",
+  "requirements": {
+    "dimensions": [
+      24,
+      24
+    ],
+    "mode": "RGBA",
+    "visible_rgb_max": 24,
+    "rgba_max_including_transparent_pixels": 26
+  },
+  "assets": [
+    {
+      "id": "skill_barrage",
+      "path": "assets/art/skills/skill_barrage.png",
+      "sha256": "be144b60579adcbc3ec39db238bb338bf9190bbf6b56f84f2a21d33a6e2c38ab",
+      "technical_checks_passed": true,
+      "reproduced_pixel_exact": true
+    },
+    {
+      "id": "skill_flour",
+      "path": "assets/art/skills/skill_flour.png",
+      "sha256": "1c50d0e5fb132f04dbe1dd11e806bc882fbf4a65832e76f4c180b64e1f46072e",
+      "technical_checks_passed": true,
+      "reproduced_pixel_exact": true
+    },
+    {
+      "id": "skill_frost",
+      "path": "assets/art/skills/skill_frost.png",
+      "sha256": "7485e3da2f55491d44abd5de0a35cc9137e10c54a3dc3961589c8113628d2c7b",
+      "technical_checks_passed": true,
+      "reproduced_pixel_exact": true
+    },
+    {
+      "id": "skill_oven",
+      "path": "assets/art/skills/skill_oven.png",
+      "sha256": "799c8e34dda5a2746aa5bf591edec6827292317bdb004c90290550e01882cafe",
+      "technical_checks_passed": true,
+      "reproduced_pixel_exact": true
+    },
+    {
+      "id": "skill_rally",
+      "path": "assets/art/skills/skill_rally.png",
+      "sha256": "7a9b7c090d6eb1673991040f027f378dc49ee8315ee414eeb9515ad8da5241b9",
+      "technical_checks_passed": true,
+      "reproduced_pixel_exact": true
+    },
+    {
+      "id": "skill_shield",
+      "path": "assets/art/skills/skill_shield.png",
+      "sha256": "5ff453d3a1264fa7b8b3a789780eb187d38e551cafa834a140028ca56101dcf5",
+      "technical_checks_passed": true,
+      "reproduced_pixel_exact": true
+    },
+    {
+      "id": "skill_slam",
+      "path": "assets/art/skills/skill_slam.png",
+      "sha256": "d4145184e9e2d848c7890b4dd4e1e0f7b83d8bb009102bb6dfef2d5a87f5da72",
+      "technical_checks_passed": true,
+      "reproduced_pixel_exact": true
+    }
+  ]
+}
