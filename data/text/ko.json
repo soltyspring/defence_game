@@ -343,6 +343,8 @@
     "upg.joins": "R%d에서 합류",
     "upg.gate": "R%d 도달 후 강화 가능",
     "upg.maxed": "최대 레벨",
+    "result.joined": "새로 합류: %s",
+    "result.joined_hint": "다음 전투 전에 출전 명단을 고를 수 있어요",
     "roster.title": "출전 준비",
     "roster.save": "저장",
     "roster.heading": "출전 %d / 5",

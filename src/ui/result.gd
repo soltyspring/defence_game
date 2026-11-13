@@ -14,7 +14,7 @@ var _fx_t := 0.0                   # result flourish clock: crown stars land, sp
 func _build() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	btn_retry = make_button(UiText.t("ui.retry"), func(): emit_cmd(&"cmd_retry"))
-	btn_next = make_button(UiText.t("ui.next"), func(): emit_cmd(&"cmd_next_round"))
+	btn_next = make_button(UiText.t("ui.next"), _on_next)
 	btn_next.fill = UiStyle.C_ACCENT.darkened(0.15)
 	btn_menu = make_button(UiText.t("ui.menu"), func(): emit_cmd(&"cmd_open_screen", [&"round_select"]))
 	btn_upgrades = make_button(UiText.t("ui.upgrades"), open_upgrades)
@@ -51,12 +51,43 @@ func _apply() -> void:
 	btn_retry.fill = UiStyle.C_ACCENT.darkened(0.15) if not won else UiStyle.C_PANEL_LIGHT
 	# coins now cover an upgrade: make 강화 stand out (first runs never opened it on their own)
 	can_upgrade = _affordable_upgrade()
+	joined = _joined_now()
 	btn_upgrades.fill = UiStyle.C_GOLD.darkened(0.35) if can_upgrade else UiStyle.C_PANEL_LIGHT
 	btn_upgrades.badge = "!" if can_upgrade else ""
 	_layout()
 	queue_redraw()
 
 var can_upgrade := false
+var joined: Array = []            # [{kind: "unit"|"skill", id}] that this first clear opened (shown as "새로 합류: …")
+const RosterScreen := preload("res://src/ui/roster.gd")
+
+## Characters and skills whose unlock round is the one this first clear just opened.
+func _joined_now() -> Array:
+	var out := []
+	var c := autoload("Content")
+	if c == null or not bool(result.get("won", false)) or not bool(result.get("first_clear", false)) or not c.has_method("get_round"):
+		return out
+	var opened := int((c.get_round(str(result.get("round_id", ""))) as Dictionary).get("index", 0)) + 1
+	if opened <= 1: return out
+	if c.get("units") is Dictionary:
+		for id in c.units:
+			var u: Dictionary = c.units[id]
+			if str(u.get("faction", "")) == "player" and not bool(u.get("is_worker", false)) and int(u.get("unlock_round", 1)) == opened:
+				out.append({"kind": "unit", "id": str(id)})
+	if c.get("skills") is Dictionary:
+		for id in c.skills:
+			if int(c.skills[id].get("unlock_round", 1)) == opened: out.append({"kind": "skill", "id": str(id)})
+	return out
+
+## 다음: straight into the next round, except right after someone joined and there is now a choice to make —
+## then through 출전 준비, so the new character can be put in before the battle.
+func _on_next() -> void:
+	var nid := str(result.get("next_round_id", ""))
+	if not joined.is_empty() and nid != "" and RosterScreen.needs_choice(autoload("Content"), autoload("Save")):
+		RosterScreen.pending_round = nid
+		emit_cmd(&"cmd_open_screen", [&"roster"])
+		return
+	emit_cmd(&"cmd_next_round")
 
 func _affordable_upgrade() -> bool:
 	var sv := autoload("Save")
@@ -136,9 +167,13 @@ func _draw() -> void:
 		UiStyle.draw_text_left(self, fit[0], Vector2(lx + 20, y), UiStyle.FONT_S, UiStyle.C_TEXT if met else UiStyle.C_TEXT_DIM)
 		UiStyle.draw_text_left(self, lines[k][0], Vector2(rx, y), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
 		UiStyle.draw_number(self, lines[k][1], Vector2(panel.end.x - 18, y), UiStyle.FONT_M, UiStyle.C_GOLD if k == 2 else UiStyle.C_TEXT, 1, &"bold")
-	if bool(result.get("first_clear", false)) and won:
+	if won and not joined.is_empty():
+		_draw_joined(cx, y0 + 3 * 22 + 6)
+	elif bool(result.get("first_clear", false)) and won:
 		UiStyle.draw_text_centered(self, UiText.t("ui.first_clear"), Vector2(cx, y0 + 3 * 22 + 6), UiStyle.FONT_M, UiStyle.C_ACCENT)
-	if won and can_upgrade:
+	if won and not joined.is_empty() and RosterScreen.needs_choice(autoload("Content"), autoload("Save")):
+		UiStyle.draw_text_centered(self, UiText.t("result.joined_hint"), Vector2(cx, y0 + 3 * 22 + 26), UiStyle.FONT_S, UiStyle.C_TEXT)
+	elif won and can_upgrade:
 		UiStyle.draw_text_centered(self, UiText.t("ui.upgrade_hint"), Vector2(cx, y0 + 3 * 22 + 26), UiStyle.FONT_S, UiStyle.C_GOLD)
 	if not won and str(result.get("round_id", "")) == "r05":
 		for i in 2:
@@ -153,6 +188,26 @@ func _draw() -> void:
 	if stars != reasons.filter(func(r): return r.met).size():
 		# engine star count and UI reason derivation disagree: show engine count, flag for QA
 		reason_mismatch = true
+
+## "새로 합류: 바게트" on a strip, the newcomers' icons in front of the text (takes the place of the first-clear line).
+func _draw_joined(cx: float, y: float) -> void:
+	var names := []
+	var icons := []
+	for j in joined:
+		names.append(UiText.name_of(str(j.kind), str(j.id), str(j.id)))
+		var tex: Texture2D = UiStyle.ui_icon(("card_" if j.kind == "unit" else "icon_") + str(j.id))
+		if tex != null: icons.append(tex)
+	var iw := icons.size() * 20.0
+	var fit: Array = UiStyle.fit_text(UiText.t("result.joined") % ", ".join(names), panel.size.x - 40 - iw, UiStyle.FONT_M)
+	var tw := UiStyle.text_width(fit[0], UiStyle.FONT_M)
+	var x := cx - (iw + tw) / 2
+	draw_rect(Rect2(panel.position.x + 10, y - 10, panel.size.x - 20, 20), Color(UiStyle.C_ACCENT, 0.22))
+	for tex in icons:
+		var k := minf(1.0, 16.0 / maxf(1.0, float(maxi(tex.get_width(), tex.get_height()))))
+		var sz := Vector2(tex.get_size()) * k
+		draw_texture_rect(tex, Rect2(Vector2(x + 8 - sz.x / 2, y - sz.y / 2).round(), sz), false)
+		x += 20
+	UiStyle.draw_text_left(self, fit[0], Vector2(x, y), UiStyle.FONT_M, UiStyle.C_GOLD)
 
 ## Coins tick up from 0 once the stars have landed (the number QA reads stays result.coins).
 func _counted_coins() -> int:

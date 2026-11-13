@@ -343,6 +343,8 @@
     "upg.joins": "Joins at R%d",
     "upg.gate": "Reach R%d to upgrade",
     "upg.maxed": "Max level",
+    "result.joined": "Joined: %s",
+    "result.joined_hint": "Pick who fights before the next battle",
     "roster.title": "Deploy",
     "roster.save": "Save",
     "roster.heading": "Squad %d / 5",
