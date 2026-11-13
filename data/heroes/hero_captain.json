@@ -16,7 +16,11 @@
   "skills": [
     "skill_slam",
     "skill_rally",
-    "skill_barrage"
+    "skill_barrage",
+    "skill_flour",
+    "skill_shield",
+    "skill_frost",
+    "skill_oven"
   ],
   "anim_set": "hero_captain",
   "leash": 0.85,

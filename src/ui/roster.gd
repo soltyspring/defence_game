@@ -1,8 +1,8 @@
 extends "res://src/ui/ui_screen.gd"
-## Loadout (편성): pick up to 5 of the unlocked unit types; they become the battle's cards in slot order.
-## Two ways in: the 편성 button on round select (saves and returns), and a round tap once more than five types are
-## unlocked (출전 준비: saves and starts that round). Top: the five slots (tap one to take the unit out).
-## Below: every type as a card (tap to put it in the first free slot or take it out). Bottom: the last card's role.
+## Loadout (편성 / 출전 준비): up to 5 unit types (battle cards in slot order) and up to 3 energy skills.
+## Two ways in: the 편성 button on round select (saves and returns), and a round tap once there is a choice to make
+## (출전 준비: saves and starts that round). Two tabs, 유닛 and 스킬, same layout: the slots on top (tap one to take it
+## out), every choice below as a card (tap to put it in or take it out), the last card's details on the bottom line.
 
 ## Round to start after choosing (set by round_select before opening this screen); "" = plain 편성 from the menu.
 static var pending_round := ""
@@ -11,10 +11,18 @@ var selected: Array = []
 var roster: Array = []
 var tiles: Array = []            # one card per unit type (10)
 var slots: Array = []            # the five deck slots
+var skill_sel: Array = []
+var skill_list: Array = []
+var skill_tiles: Array = []      # one card per skill (7)
+var skill_slots: Array = []      # the three skill slots
+var tab := "units"
+var tab_units: Control
+var tab_skills: Control
 var back: Control
 var confirm: Control
 var message := ""
 var focus_id := ""
+var focus_skill := ""
 var round_id := ""
 var _slot_label_y := 0.0
 var _grid_label_y := 0.0
@@ -25,8 +33,17 @@ func _build() -> void:
 	pending_round = ""
 	selected = Save.selected_loadout().duplicate()
 	roster = Content.available_roster(100)
+	skill_list = Content.available_skills(100)
+	skill_sel = Save.selected_skills().duplicate()
+	if skill_sel.is_empty():      # nothing chosen yet: start from what this round would give (the old default)
+		var r: Dictionary = Content.get_round(round_id) if round_id != "" else {}
+		var reach: int = Save.round_reach()
+		for s in (Content.round_skills(r) if not r.is_empty() else skill_list):
+			if skill_sel.size() < 3 and int(Content.skills[s].get("unlock_round", 1)) <= reach: skill_sel.append(str(s))
 	back = make_button(UiText.t("ui.back"), _back)
 	confirm = make_button(UiText.t("roster.start") if round_id != "" else UiText.t("roster.save"), _save)
+	tab_units = make_button(UiText.t("roster.tab_units"), _set_tab.bind("units"))
+	tab_skills = make_button(UiText.t("roster.tab_skills"), _set_tab.bind("skills"))
 	for i in 5:
 		var slot = make_button("", _take_out.bind(i))
 		slot.font_size = UiStyle.FONT_S
@@ -37,7 +54,25 @@ func _build() -> void:
 		button.icon = UiStyle.ui_icon("card_" + str(id))
 		button.wrap_lines = 1
 		tiles.append(button)
+	for i in 3:
+		var slot = make_button("", _take_out_skill.bind(i))
+		slot.font_size = UiStyle.FONT_S
+		skill_slots.append(slot)
+	for id in skill_list:
+		var button = make_button(UiText.name_of("skill", id), _toggle_skill.bind(id))
+		button.font_size = UiStyle.FONT_S
+		button.icon = UiStyle.ui_icon("icon_" + str(id))
+		button.wrap_lines = 1
+		skill_tiles.append(button)
 	if not selected.is_empty(): focus_id = str(selected[0])
+	if not skill_sel.is_empty(): focus_skill = str(skill_sel[0])
+	_set_tab("units")
+
+func _set_tab(t: String) -> void:
+	tab = t
+	message = ""
+	for c in slots + tiles: c.visible = tab == "units"
+	for c in skill_slots + skill_tiles: c.visible = tab == "skills"
 	_refresh()
 
 func _toggle(id: String) -> void:
@@ -55,6 +90,21 @@ func _take_out(i: int) -> void:
 		message = ""
 		_refresh()
 
+func _toggle_skill(id: String) -> void:
+	focus_skill = id
+	message = ""
+	if skill_sel.has(id): skill_sel.erase(id)
+	elif skill_sel.size() < 3: skill_sel.append(id)
+	else: message = UiText.t("roster.skill_full")
+	_refresh()
+
+func _take_out_skill(i: int) -> void:
+	if i < skill_sel.size():
+		focus_skill = str(skill_sel[i])
+		skill_sel.remove_at(i)
+		message = ""
+		_refresh()
+
 func _refresh() -> void:
 	var reach: int = Save.round_reach()
 	for i in roster.size():
@@ -66,29 +116,43 @@ func _refresh() -> void:
 		tiles[i].badge = str(selected.find(id) + 1) if on else ""
 		tiles[i].fill = UiStyle.C_BG.lightened(0.1) if on else UiStyle.C_PANEL_LIGHT     # taken: dark, its slot number shows
 		tiles[i].sub_text = "R%d" % int(unit.unlock_round) if locked else str(int(unit.cost))
-		if not locked: tiles[i].tooltip_text = UiText.t(str(unit.get("desc_key", "")))
 	for i in 5:
-		var slot = slots[i]
-		if i < selected.size():
-			var id := str(selected[i])
-			slot.text = UiText.name_of("unit", id)
-			slot.sub_text = str(int(Content.units[id].cost))
-			slot.icon = UiStyle.ui_icon("card_" + id)
-			slot.fill = UiStyle.C_ACCENT.darkened(0.3)
-			slot.disabled = false
-		else:
-			slot.text = UiText.t("roster.empty")
-			slot.sub_text = ""
-			slot.icon = null
-			slot.fill = UiStyle.C_BG.lightened(0.08)
-			slot.disabled = true
-		slot.badge = str(i + 1)
+		_fill_slot(slots[i], i, selected, "unit")
+	for i in skill_list.size():
+		var id: String = skill_list[i]
+		var sk: Dictionary = Content.skills[id]
+		var locked := int(sk.get("unlock_round", 1)) > reach
+		var on := skill_sel.has(id)
+		skill_tiles[i].disabled = locked
+		skill_tiles[i].badge = str(skill_sel.find(id) + 1) if on else ""
+		skill_tiles[i].fill = UiStyle.C_BG.lightened(0.1) if on else Color(0.24, 0.3, 0.5)
+		skill_tiles[i].sub_text = "R%d" % int(sk.unlock_round) if locked else str(int(sk.mana))
+	for i in 3:
+		_fill_slot(skill_slots[i], i, skill_sel, "skill")
+	tab_units.fill = UiStyle.C_ACCENT.darkened(0.2) if tab == "units" else UiStyle.C_PANEL_LIGHT
+	tab_skills.fill = UiStyle.C_ACCENT.darkened(0.2) if tab == "skills" else UiStyle.C_PANEL_LIGHT
 	confirm.disabled = selected.is_empty()
 	queue_redraw()
 
+func _fill_slot(slot, i: int, list: Array, kind: String) -> void:
+	if i < list.size():
+		var id := str(list[i])
+		slot.text = UiText.name_of(kind, id)
+		slot.sub_text = str(int(Content.units[id].cost)) if kind == "unit" else str(int(Content.skills[id].mana))
+		slot.icon = UiStyle.ui_icon(("card_" if kind == "unit" else "icon_") + id)
+		slot.fill = UiStyle.C_ACCENT.darkened(0.3) if kind == "unit" else Color(0.3, 0.4, 0.7)
+		slot.disabled = false
+	else:
+		slot.text = UiText.t("roster.empty")
+		slot.sub_text = ""
+		slot.icon = null
+		slot.fill = UiStyle.C_BG.lightened(0.08)
+		slot.disabled = true
+	slot.badge = str(i + 1)
+
 func _save() -> void:
 	if selected.is_empty(): return
-	if not Save.set_loadout(selected):
+	if not Save.set_loadout(selected) or (not skill_sel.is_empty() and not Save.set_skills(skill_sel)):
 		message = UiText.t("roster.failed")
 		queue_redraw()
 		return
@@ -108,12 +172,14 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		_back()
 
-## Rows: top bar | slot label | 5 slots | card label | 2 rows of 5 cards | role line.
+## Rows: top bar (back, tabs, title, confirm) | slot label | slots | card label | 2 rows of 5 cards | details line.
 func _layout() -> void:
 	if back == null: return
 	var t := maxf(40, target)
 	var top := safe.position.y + 6
 	place(back, Rect2(safe.position.x + 6, top, 76, t))
+	place(tab_units, Rect2(safe.position.x + 88, top, 60, t))
+	place(tab_skills, Rect2(safe.position.x + 152, top, 60, t))
 	place(confirm, Rect2(safe.end.x - 106, top, 100, t))
 	var gap := 6.0
 	var x0 := safe.position.x + 12
@@ -127,14 +193,25 @@ func _layout() -> void:
 	var y := top + t + label
 	for i in 5:
 		place(slots[i], Rect2(x0 + i * (width + gap), y, width, slot_h))
+	for i in 3:
+		place(skill_slots[i], Rect2(x0 + i * (width + gap), y, width, slot_h))
 	y += slot_h + gap
 	_grid_label_y = y + label * 0.5
 	y += label
 	for i in tiles.size():
 		place(tiles[i], Rect2(x0 + (i % 5) * (width + gap), y + (i / 5) * (card_h + gap), width, card_h))
+	for i in skill_tiles.size():
+		place(skill_tiles[i], Rect2(x0 + (i % 5) * (width + gap), y + (i / 5) * (card_h + gap), width, card_h))
 
 func _info_line() -> String:
 	if message != "": return message
+	if tab == "skills":
+		if focus_skill == "" or not Content.skills.has(focus_skill): return UiText.t("roster.hint")
+		var s: Dictionary = Content.skills[focus_skill]
+		if int(s.get("unlock_round", 1)) > Save.round_reach():
+			return UiText.t("roster.unlock") % int(s.unlock_round)
+		return "%s · %s · %s" % [UiText.name_of("skill", focus_skill), UiText.t(str(s.get("desc_key", ""))),
+			UiText.t("roster.skill_stats") % [int(s.mana), int(s.cooldown)]]
 	if focus_id == "" or not Content.units.has(focus_id): return UiText.t("roster.hint")
 	var u: Dictionary = Content.units[focus_id]
 	if int(u.get("unlock_round", 1)) > Save.round_reach():
@@ -147,8 +224,11 @@ func _draw() -> void:
 	var heading := UiText.t("roster.heading") % selected.size()
 	if round_id != "":
 		heading = UiText.t("roster.prep") % int(Content.get_round(round_id).get("index", 0))
-	UiStyle.draw_text_centered(self, heading, Vector2(safe.get_center().x, safe.position.y + 26), UiStyle.FONT_L)
+	UiStyle.draw_text_centered(self, heading, Vector2(safe.get_center().x + 40, safe.position.y + 26), UiStyle.FONT_L)
 	var left := safe.position.x + 14
-	UiStyle.draw_text_left(self, UiText.t("roster.slots") % selected.size(), Vector2(left, _slot_label_y), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
-	UiStyle.draw_text_left(self, UiText.t("roster.units"), Vector2(left, _grid_label_y), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
-	UiStyle.draw_text_centered(self, _info_line(), Vector2(safe.get_center().x, safe.end.y - 12), UiStyle.FONT_S)
+	var slot_label := UiText.t("roster.slots") % selected.size() if tab == "units" else UiText.t("roster.skill_slots") % skill_sel.size()
+	var list_label := UiText.t("roster.units") if tab == "units" else UiText.t("roster.skill_list")
+	UiStyle.draw_text_left(self, slot_label, Vector2(left, _slot_label_y), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
+	UiStyle.draw_text_left(self, list_label, Vector2(left, _grid_label_y), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
+	var line: Array = UiStyle.fit_text(_info_line(), safe.size.x - 16, UiStyle.FONT_S)
+	UiStyle.draw_text_centered(self, line[0], Vector2(safe.get_center().x, safe.end.y - 12), UiStyle.FONT_S)

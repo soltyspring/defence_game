@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "provisional": true,
+  "id": "skill_oven",
+  "name": "skill_oven",
+  "name_key": "skill.skill_oven.name",
+  "desc_key": "skill.skill_oven.desc",
+  "unlock_round": 24,
+  "mana": 90,
+  "cooldown": 35.0,
+  "kind": "oven",
+  "radius": 180,
+  "power": 40,
+  "ticks": 6,
+  "duration": 3.0,
+  "fx": "skill_oven",
+  "cast_time": 0.4
+}

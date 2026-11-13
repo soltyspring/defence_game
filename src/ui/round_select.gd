@@ -95,10 +95,10 @@ func _on_tile(slot: int) -> void:
 	var idx := page * COLS * ROWS + slot
 	if idx >= rounds.size() or not is_round_unlocked(idx):
 		return
-	# more unit types than deck slots: choose the five first (출전 준비), then the roster screen starts the round
+	# more unit types than deck slots, or more skills than skill slots: choose first (출전 준비), then start the round
 	var c = autoload("Content")
 	var save = autoload("Save")
-	if c != null and save != null and c.available_roster(save.round_reach()).size() > 5:
+	if c != null and save != null and (c.available_roster(save.round_reach()).size() > 5 or c.available_skills(save.round_reach()).size() > 3):
 		RosterScreen.pending_round = str(rounds[idx].id)
 		emit_cmd(&"cmd_open_screen", [&"roster"])
 		return

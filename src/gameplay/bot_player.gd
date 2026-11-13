@@ -96,3 +96,9 @@ func act(sim, dt: float) -> void:
 			sim.cast(sid)
 		elif str(s.kind) in ["heal_allies", "meteor", "summon"] and near >= 3:
 			sim.cast(sid)
+		elif str(s.kind) == "supply" and sim.gold < sim.gold_max * 0.3:
+			sim.cast(sid)
+		elif str(s.kind) in ["shield", "oven"] and near >= 3:
+			sim.cast(sid)
+		elif str(s.kind) == "frost" and near >= 4:
+			sim.cast(sid)

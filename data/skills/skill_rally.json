@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
+  "provisional": true,
   "id": "skill_rally",
   "name": "갓 구운 함성",
   "name_key": "skill.skill_rally.name",
   "desc_key": "skill.skill_rally.desc",
   "unlock_round": 4,
-  "mana": 60,
+  "mana": 50,
   "cooldown": 20.0,
   "kind": "rally",
   "radius": 200,
   "power": 30,
   "duration": 6.0,
   "fx": "skill_rally",
-  "cast_time": 0.3,
-  "provisional": true
+  "cast_time": 0.3
 }

@@ -297,6 +297,22 @@ func round_enemy_roster(r: Dictionary) -> Array:
 		if sm is Dictionary: add.call(sm.get("unit", ""))
 	return ids
 
+## Skills the player may take into battle at this progress (3 slots), in unlock order.
+func available_skills(reach: int) -> Array:
+	var out: Array = []
+	for id in skills:
+		if int(skills[id].get("unlock_round", 1)) <= reach: out.append(id)
+	out.sort_custom(func(a, b): return int(skills[a].get("unlock_round", 1)) < int(skills[b].get("unlock_round", 1)))
+	return out
+
+func valid_skills(ids: Array, reach: int) -> Array:
+	var available := available_skills(reach)
+	var out: Array = []
+	for id in ids:
+		if id is String and available.has(id) and not out.has(id) and out.size() < 3:
+			out.append(id)
+	return out
+
 ## Hero skills for a round: explicit round list, else hero skills with unlock_round <= index.
 func round_skills(r: Dictionary) -> Array:
 	var hero: Dictionary = heroes.get(str(r.hero), {})

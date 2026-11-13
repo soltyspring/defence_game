@@ -488,6 +488,7 @@ func _draw_unit(u) -> void:
 	# maroon, so a unit under focus fire (flashing most of the time) lost its colours and merged with its neighbours.
 	if u.flash > 0.0: mod = Color(1.5, 1.12, 1.12)
 	if u.dying: mod.a = clampf(u.dead_t / 0.7, 0.0, 1.0)
+	elif u.buff_t > 0.0 and u.buff_mul < 1.0: mod = mod * Color(0.7, 0.85, 1.3)     # frost cream: chilled blue
 	elif u.buff_t > 0.0: mod = mod * Color(1.0, 1.0, 0.8)
 	var drawn := false
 	if atlas:
@@ -502,6 +503,10 @@ func _draw_unit(u) -> void:
 			drawn = true
 			if not u.dying:
 				_hp_bar(pos + Vector2(0, -rec.rects[fi].size.y - 3.0), 12.0 + 4.0 * float(u.def.get("size", 1.0)), u.hp / u.hp_max, u.side)
+				if u.shield > 0.0:     # sugar barrier: a pink line over the HP bar, as long as the shield is strong
+					var bw := 12.0 + 4.0 * float(u.def.get("size", 1.0))
+					var sw := bw * clampf(u.shield / maxf(1.0, u.hp_max), 0.0, 1.0)
+					draw_rect(Rect2(pos + Vector2(-bw * 0.5, -rec.rects[fi].size.y - 6.0), Vector2(sw, 2.0)), Color(1.0, 0.72, 0.86))
 	if not drawn:
 		_draw_placeholder(u, pos, flip, mod)
 
@@ -788,6 +793,33 @@ func _draw_fx(f) -> void:
 			draw_arc(Vector2(f.x, ground_y - 12.0), 10.0 + k * f.radius * 0.5, 0, TAU, 24, Color(1.0, 0.85, 0.3, 1.0 - k), 2.0)
 		"heal":
 			draw_arc(Vector2(f.x, ground_y - 12.0), 8.0 + k * f.radius, 0, TAU, 24, Color(0.4, 1.0, 0.5, 1.0 - k), 2.0)
+		"skill_flour":
+			# flour sacks drop on the hero: three pale sacks falling with a puff
+			for i in 3:
+				var sx: float = f.x - 10.0 + i * 10.0
+				var sy := ground_y - 40.0 + minf(1.0, k * 2.0 + i * 0.15) * 26.0
+				draw_rect(Rect2(sx - 3, sy - 4, 7, 6), Color(0.94, 0.89, 0.76, 1.0 - k * 0.6))
+				draw_rect(Rect2(sx - 3, sy - 4, 7, 1), Color(0.8, 0.66, 0.45, 1.0 - k * 0.6))
+			draw_rect(Rect2(f.x - 16.0 * k - 4, ground_y - 4, 32.0 * k + 8, 3), Color(1, 1, 1, 0.5 * (1.0 - k)))
+		"skill_shield":
+			# sugar barrier: a pale pink dome growing over the allies
+			var r2: float = 10.0 + k * f.radius
+			draw_arc(Vector2(f.x, ground_y), r2, PI, TAU, 28, Color(1.0, 0.78, 0.88, 0.9 * (1.0 - k)), 2.0)
+			draw_arc(Vector2(f.x, ground_y), r2 * 0.8, PI, TAU, 24, Color(1.0, 0.95, 0.98, 0.5 * (1.0 - k)), 1.0)
+		"skill_frost":
+			# frost cream: a cold sheet over the zone with crystals rising
+			draw_rect(Rect2(f.x - f.radius, ground_y - 3.0, f.radius * 2.0, 3.0), Color(0.7, 0.9, 1.0, 0.7 * (1.0 - k)))
+			for i in 7:
+				var cx: float = f.x - f.radius + (i + 0.5) * f.radius * 2.0 / 7.0
+				var h := (6.0 + float((i * 5) % 7)) * (1.0 - absf(k - 0.4))
+				draw_rect(Rect2(cx - 1.0, ground_y - 3.0 - h, 3.0, h), Color(0.82, 0.95, 1.0, 0.85 * (1.0 - k)))
+		"skill_oven":
+			# oven heat: flickering flame tongues along the strip
+			for i in 9:
+				var cx2: float = f.x - f.radius + (i + 0.5) * f.radius * 2.0 / 9.0
+				var fl := 5.0 + 5.0 * absf(sin(f.t * 14.0 + i * 1.7))
+				draw_rect(Rect2(cx2 - 2.0, ground_y - fl, 4.0, fl), Color(1.0, 0.55, 0.18, 0.75 * (1.0 - k * 0.7)))
+				draw_rect(Rect2(cx2 - 1.0, ground_y - fl * 0.6, 2.0, fl * 0.6), Color(1.0, 0.88, 0.45, 0.8 * (1.0 - k * 0.7)))
 		_:  # shockwave / slam / meteor / barrage
 			var r := maxf(8.0, f.radius) * (0.2 + 0.8 * k)
 			draw_arc(Vector2(f.x, ground_y), r, PI, TAU, 20, Color(1.0, 0.95, 0.7, 1.0 - k), 3.0)
@@ -805,6 +837,7 @@ func _draw_text(tx) -> void:
 	match tx.kind:
 		&"gold": c = Color(1.0, 0.85, 0.3, a)
 		&"heal": c = Color(0.4, 1.0, 0.5, a)
+		&"shield": c = Color(1.0, 0.75, 0.88, a)
 		&"crit": c = Color(1.0, 0.4, 0.3, a)
 	if tx.uid < 0: c = Color(1.0,0.87,0.48,a)
 	# QA-B012: bundled Galmuri9 numerals at their native 10 px grid, 1 px shadow (no outline pass); centred on x.

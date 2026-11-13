@@ -482,6 +482,11 @@ static func ui_icon(frame: String) -> Texture2D:
 		if uid in ["baguette", "macaron", "chili", "donut", "waffle"]:
 			if not _icon_cache.has(frame): _icon_cache[frame] = load("res://assets/art/roster10/" + uid + ".png")
 			return _icon_cache[frame]
+	# skills added after ui_main was packed: their 24x24 icons live in assets/art/skills (tools/art/release_slice/skill_icons.py)
+	for pre in ["icon_", "skill_"]:
+		if frame.begins_with(pre) and frame.trim_prefix(pre) in ["skill_flour", "skill_shield", "skill_frost", "skill_oven"]:
+			if not _icon_cache.has(frame): _icon_cache[frame] = load("res://assets/art/skills/" + frame.trim_prefix(pre) + ".png")
+			return _icon_cache[frame]
 	if _icon_cache.has(frame):
 		return _icon_cache[frame]
 	var atlas_id := "ui_main"

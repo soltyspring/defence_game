@@ -39,6 +39,8 @@ class Unit:
 	var dead_t := 0.0
 	var buff_t := 0.0
 	var buff_mul := 1.0
+	var shield := 0.0      # sugar barrier (skill_shield): absorbs damage before HP
+	var shield_t := 0.0
 	var aura_mul := 1.0
 	var flash := 0.0
 	var kb := 0.0
@@ -208,7 +210,7 @@ var _danger_free_at := 0.0          # t from which the next enemy announcement m
 var stats := {"deployed": 0, "workers_bought": 0, "skills_cast": 0, "enemy_spawned": 0, "max_units": 0, "max_projectiles": 0, "hero_deaths": 0,
 	"gold_capped_s": 0.0, "mana_capped_s": 0.0}
 
-func setup(p_content, round_id: String, seed_value: int = 1, p_upgrades: Dictionary = {}, loadout: Array = []) -> void:
+func setup(p_content, round_id: String, seed_value: int = 1, p_upgrades: Dictionary = {}, loadout: Array = [], skill_pick: Array = []) -> void:
 	content = p_content
 	upgrades = p_upgrades
 	round_def = content.get_round(round_id)
@@ -256,7 +258,9 @@ func setup(p_content, round_id: String, seed_value: int = 1, p_upgrades: Diction
 		card_ids.append(str(c))
 		card_cd[str(c)] = 0.0
 	skill_ids.clear()
-	for s in content.round_skills(round_def):
+	# the player's chosen 3 (validated against their progress by Save) or the round's default skills
+	var picked: Array = content.valid_skills(skill_pick, 100) if content.has_method("valid_skills") else []
+	for s in (picked if not picked.is_empty() else content.round_skills(round_def)):
 		skill_ids.append(str(s))
 		skill_cd[str(s)] = 0.0
 	hero = _new_unit(hero_def, SIDE_PLAYER, player_base.x + 30.0)
@@ -428,6 +432,40 @@ func cast(skill_id: String) -> String:
 					a.buff_t = float(s.duration)
 					a.buff_mul = 1.0 + float(s.power) / 100.0
 			_fx(fx if fx != "" else "rally", hero.x, 0.0, 0.8, radius)
+		"supply":
+			# flour drop: instant flour, may pass the cap by nothing
+			var before := gold
+			gold = minf(gold_max, gold + float(s.power))
+			_text(hero.x, -40.0, "+%d" % int(gold - before), &"heal")
+			_fx(fx if fx != "" else "skill_flour", hero.x, 0.0, 0.8, 40.0)
+		"shield":
+			# sugar barrier: every ally in range absorbs power % of its max HP for `duration`
+			for a in players + [hero]:
+				if not a.dying and absf(a.x - cx) <= radius:
+					a.shield = maxf(a.shield, a.hp_max * float(s.power) / 100.0)
+					a.shield_t = float(s.duration)
+			_fx(fx if fx != "" else "skill_shield", hero.x, 0.0, 0.8, radius)
+		"frost":
+			# frost cream: around the front of the enemy line, slow + weaken (bosses half as much) and a little damage
+			var fx_x := _frontmost_enemy_x()
+			if fx_x - hero.x > 320.0 or fx_x < hero.x - 40.0:
+				fx_x = hero.x + 100.0
+			var slow := float(s.get("slow", 0.5))
+			for e in enemies:
+				if not e.dying and absf(e.x - fx_x) <= radius:
+					e.buff_mul = minf(e.buff_mul, 1.0 - (1.0 - slow) * (0.5 if e.is_boss else 1.0))
+					e.buff_t = maxf(e.buff_t, float(s.duration))
+			_area_damage(fx_x, radius, power, 0.0, 0.5)
+			_fx(fx if fx != "" else "skill_frost", fx_x, 0.0, 0.9, radius)
+		"oven":
+			# oven heat: a strip of fire from the hero forward, `ticks` hits over `duration`
+			var ticks := maxi(1, int(s.get("ticks", 4)))
+			var span := float(s.duration)
+			var mid := hero.x + radius * 0.5 + 10.0
+			for i in ticks:
+				delayed.append({"at": t + 0.15 + span * float(i) / float(ticks), "x": mid, "radius": radius * 0.5,
+					"power": power, "kb": 0.0, "fx": "skill_oven"})
+			_fx(fx if fx != "" else "skill_oven", mid, 0.0, span + 0.2, radius * 0.5)
 		"summon":
 			for i in int(s.get("count", 1)):
 				if army_count(SIDE_PLAYER) < caps.ally and content.units.has(str(s.unit)):
@@ -645,6 +683,9 @@ func _step_buff(u: Unit, dt: float) -> void:
 	if u.buff_t > 0.0:
 		u.buff_t -= dt
 		if u.buff_t <= 0.0: u.buff_mul = 1.0
+	if u.shield_t > 0.0:
+		u.shield_t -= dt
+		if u.shield_t <= 0.0: u.shield = 0.0
 
 func _apply_kb(u: Unit, dt: float) -> void:
 	if u.kb > 0.0:
@@ -1246,6 +1287,14 @@ func _damage(target: Unit, amount: float, kb: float) -> void:
 		if kb > 0.0 and not target.is_boss and kb >= float(target.def.shell.get("pry_knockback", 1e9)):
 			_pry_shell(target)
 	if target.heavy_t >= 0.0: _interrupt_heavy(target, dmg)
+	if target.shield > 0.0:
+		var soak := minf(target.shield, dmg)
+		target.shield -= soak
+		dmg -= soak
+		if dmg <= 0.0:
+			target.flash = 0.06
+			_text(target.x, -28.0, "0", &"shield", target.uid, 0, target.anim_set)
+			return
 	target.hp -= dmg
 	target.flash = 0.12
 	if kb > 0.0 and not target.is_boss:
@@ -1473,6 +1522,8 @@ func _new_unit(d: Dictionary, side: int, x: float) -> Unit:
 	u.dead_t = 0.0
 	u.buff_t = 0.0
 	u.buff_mul = 1.0
+	u.shield = 0.0
+	u.shield_t = 0.0
 	u.aura_mul = 1.0
 	u.flash = 0.0
 	u.kb = 0.0

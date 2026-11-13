@@ -285,7 +285,7 @@ func start_round(round_id: String, force := false, preview := false) -> void:
 	battle.finished.connect(_on_battle_finished)
 	var seed_v := int(Content.config.get("combat", {}).get("deterministic_seed_default", 12345)) + idx
 	if not autoplay: seed_v = randi()
-	battle.start(round_id, seed_v, Save.progress.get("upgrades", {}), autoplay, Save.selected_loadout() if not force else [])
+	battle.start(round_id, seed_v, Save.progress.get("upgrades", {}), autoplay, Save.selected_loadout() if not force else [], Save.selected_skills() if not force else [])
 	if hud.has_method("ui_setup"):
 		hud.ui_setup({"info": battle.battle_info()})
 	Events.screen_changed.emit(&"battle", {"round_id": round_id})

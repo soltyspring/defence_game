@@ -39,7 +39,7 @@ func _ready() -> void:
 
 static func fresh() -> Dictionary:
 	return {"version": VERSION, "revision": 0, "unlocked_round": 1, "stars": {}, "best_time": {}, "coins": 0,
-		"clears": 0, "tutorial_done": [], "upgrades": {}, "upgrade_paid": {}, "applied_battles": [], "loadout": [], "growth_purchases": {},
+		"clears": 0, "tutorial_done": [], "upgrades": {}, "upgrade_paid": {}, "applied_battles": [], "loadout": [], "skills": [], "growth_purchases": {},
 		"settings": {"fps_cap": 60, "sfx": 1.0, "music": 0.8, "show_damage": true, "screen_shake": true}}
 
 # ---------------------------------------------------------------- load
@@ -828,6 +828,22 @@ func selected_loadout() -> Array:
 	if c == null: return []
 	var ids: Array = c.valid_loadout(progress.get("loadout", []), round_reach())
 	return ids if not ids.is_empty() else c.available_roster(round_reach()).slice(0, 5)
+
+## The player's 3 battle skills; [] = none chosen yet (the round's default skills are used).
+func selected_skills() -> Array:
+	var c := get_node_or_null("/root/Content")
+	if c == null: return []
+	return c.valid_skills(progress.get("skills", []), round_reach())
+
+func set_skills(ids: Array) -> bool:
+	if read_only: return false
+	var c := get_node_or_null("/root/Content")
+	if c == null or ids.size() > 3 or c.valid_skills(ids, round_reach()) != ids: return false
+	var before: Array = progress.get("skills", []).duplicate()
+	progress.skills = ids.duplicate()
+	if save_progress(): return true
+	progress.skills = before
+	return false
 
 func set_loadout(ids: Array) -> bool:
 	if read_only: return false

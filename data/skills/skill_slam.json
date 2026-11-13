@@ -1,12 +1,13 @@
 {
   "schema_version": 1,
+  "provisional": true,
   "id": "skill_slam",
   "name": "밀대 내려찍기",
   "name_key": "skill.skill_slam.name",
   "desc_key": "skill.skill_slam.desc",
   "unlock_round": 2,
-  "mana": 40,
-  "cooldown": 8.0,
+  "mana": 30,
+  "cooldown": 7.0,
   "kind": "aoe_damage",
   "radius": 60,
   "power": 60,
@@ -14,6 +15,5 @@
   "knockback": 30,
   "offset_x": 30,
   "fx": "skill_slam",
-  "cast_time": 0.25,
-  "provisional": true
+  "cast_time": 0.25
 }

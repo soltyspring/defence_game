@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "provisional": true,
+  "id": "skill_frost",
+  "name": "skill_frost",
+  "name_key": "skill.skill_frost.name",
+  "desc_key": "skill.skill_frost.desc",
+  "unlock_round": 16,
+  "mana": 60,
+  "cooldown": 24.0,
+  "kind": "frost",
+  "radius": 110,
+  "power": 20,
+  "slow": 0.45,
+  "duration": 4.0,
+  "fx": "skill_frost",
+  "cast_time": 0.3
+}

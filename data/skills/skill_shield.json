@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "provisional": true,
+  "id": "skill_shield",
+  "name": "skill_shield",
+  "name_key": "skill.skill_shield.name",
+  "desc_key": "skill.skill_shield.desc",
+  "unlock_round": 12,
+  "mana": 50,
+  "cooldown": 22.0,
+  "kind": "shield",
+  "radius": 160,
+  "power": 35,
+  "duration": 6.0,
+  "fx": "skill_shield",
+  "cast_time": 0.3
+}
