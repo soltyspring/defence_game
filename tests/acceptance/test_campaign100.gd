@@ -111,8 +111,9 @@ func _run() -> void:
 	atlas.release("roster10")
 	var preview := Image.create(240,48,false,Image.FORMAT_RGBA8)
 	for i in deck.size():
-		var character := Image.new()
-		check(character.load_svg_from_string(FileAccess.get_file_as_string("res://assets/art/roster10/"+str(deck[i])+".svg")) == OK, "SVG portrait renders")
+		var portrait = load("res://assets/art/roster10/"+str(deck[i])+".png")
+		check(portrait is Texture2D, "portrait loads")
+		var character: Image = portrait.get_image() if portrait is Texture2D else Image.create(24,24,false,Image.FORMAT_RGBA8)
 		check(character.get_size() == Vector2i(24,24), "portrait matches the existing HUD footprint")
 		character.resize(48,48,Image.INTERPOLATE_NEAREST)
 		preview.blit_rect(character,Rect2i(0,0,48,48),Vector2i(i*48,0))

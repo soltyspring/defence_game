@@ -255,10 +255,10 @@
    "id": "roster10",
    "group": "character",
    "load_policy": "battle",
-   "image": "res://assets/art/roster10/roster10.svg",
+   "image": "res://assets/art/roster10/roster10.png",
    "frames": "res://assets/art/roster10/roster10.json",
    "size": [
-    768,
+    1024,
     240
    ],
    "anim_sets": [

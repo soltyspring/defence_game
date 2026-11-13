@@ -480,7 +480,7 @@ static func ui_icon(frame: String) -> Texture2D:
 	if frame.begins_with("card_"):
 		var uid := frame.trim_prefix("card_")
 		if uid in ["baguette", "macaron", "chili", "donut", "waffle"]:
-			if not _icon_cache.has(frame): _icon_cache[frame] = load("res://assets/art/roster10/" + uid + ".svg")
+			if not _icon_cache.has(frame): _icon_cache[frame] = load("res://assets/art/roster10/" + uid + ".png")
 			return _icon_cache[frame]
 	if _icon_cache.has(frame):
 		return _icon_cache[frame]
