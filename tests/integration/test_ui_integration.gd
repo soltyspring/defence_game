@@ -182,36 +182,39 @@ func _run() -> void:
 	if up != null:
 		var real_api: bool = up.purchase_available()
 		check(real_api, "real engine exposes the purchase contract (Events.cmd_buy_upgrade / upgrade_result)")
-		if real_api and up.rows.size() >= 3:
+		if real_api:
 			# real purchases on the isolated test save (02 Save.buy_upgrade through App)
-			var id0 := str(up.rows[0].id)
+			var id0 := "up_melee_basic"
+			up.select(id0)
 			var lv0: int = save.upgrade_level(id0)
 			var cost0: int = save.upgrade_cost(id0, lv0 + 1)
 			save.progress.coins = cost0 + 5
 			up._refresh()
 			await _frames(1)
-			check(not up.buy_buttons[0].disabled, "buy button enabled with enough coins")
+			check(not up.btn_buy.disabled, "buy button enabled with enough coins")
 			up._lock_until_ms = 0
-			tap(up.buy_buttons[0])
-			tap(up.buy_buttons[0])          # double tap in the same frame
+			tap(up.btn_buy)
+			tap(up.btn_buy)          # double tap in the same frame
 			await _frames(2)
 			check(up.status_code == "ok" and save.upgrade_level(id0) == lv0 + 1 and int(save.progress.coins) == 5, "real purchase ok once: level %d→%d, coins %d (double tap ignored)" % [lv0, save.upgrade_level(id0), int(save.progress.coins)])
 			await shot("2b_upgrade_ok")
 			up._lock_until_ms = 0
-			var id1 := str(up.rows[1].id)
+			var id1 := id0
+			save.progress.coins = 5
+			up._refresh()
 			var lv1: int = save.upgrade_level(id1)
-			tap(up.buy_buttons[1])
+			tap(up.btn_buy)
 			await _frames(2)
 			check(up.status_code == "not_enough_coins" and save.upgrade_level(id1) == lv1 and int(save.progress.coins) == 5, "real not_enough_coins: nothing charged (%s)" % up.status_text)
 			await shot("2c_upgrade_coins")
-			var id2 := str(up.rows[2].id)
+			var id2 := id0
 			var calls: int = up.buy_calls
-			save.progress.upgrades[id2] = int(up.rows[2].max_level)   # test-only setup on the isolated save
+			save.progress.upgrades[id2] = int(up.selected().max_level)   # test-only setup on the isolated save
 			up._refresh()
 			up._lock_until_ms = 0
-			tap(up.buy_buttons[2])
+			tap(up.btn_buy)
 			await _frames(2)
-			check(up.status_code == "max_level" and up.buy_calls == calls and up.buy_buttons[2].disabled, "real max level: no request sent, button disabled")
+			check(up.status_code == "max_level" and up.buy_calls == calls and up.btn_buy.disabled, "real max level: no request sent, button disabled")
 			await shot("2d_upgrade_max")
 		await shot("2b_upgrades")
 		tap(up.btn_close)
@@ -270,11 +273,10 @@ func _run() -> void:
 	# readable numbers (≥ 1.7 mm): HUD numbers use NUM_READ = Galmuri11 12 px; log the drawn HP label boxes and font size
 	var US := load("res://src/ui/ui_style.gd")
 	check(int(US.NUM_READ) == 12, "HUD numbers drawn at NUM_READ %d px (%s); HP label rects %s / %s; card cost '%s'" % [US.NUM_READ, US.NUM_READ_KIND, hud.top.base_label_rects.player, hud.top.base_label_rects.enemy, hud.card_buttons[0].sub_text])
-	# base HP numbers follow a real base hit
+	# Base bars still receive real damage; the HUD intentionally omits HP text.
 	sim._damage_base(sim.SIDE_PLAYER, 100.0)
 	await _seconds(0.25)
-	var want := "%d/%d" % [ceili(sim.player_base.hp), ceili(sim.player_base.hp_max)]
-	check(hud.top.base_labels.player == want, "player base number after a real hit = %s (drawn %s)" % [want, hud.top.base_labels.player])
+	check(is_equal_approx(float(hud.top.snap.player_base.hp), float(sim.player_base.hp)) and hud.top.base_labels.player.is_empty(), "base bar receives damage without drawing an HP number")
 	if spawn_boss:
 		sim._spawn_enemy(boss_id)
 		var bw := 0.0

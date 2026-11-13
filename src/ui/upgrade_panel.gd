@@ -381,9 +381,11 @@ func _layout(_view: Vector2, safe: Rect2) -> void:
 	detail_rect = Rect2(panel_rect.position.x + 8 + lw + 8, top, w - lw - 24, by - 4 - top)
 	btn_close.position = Vector2(detail_rect.position.x, by).round()
 	btn_close.size = Vector2(84, row_h)
-	btn_buy.position = Vector2(detail_rect.end.x - 132, by).round()
-	btn_buy.size = Vector2(132, row_h)
-	var dh := clampf(detail_rect.size.y - 34 - 16 - 3 * 18 - 22, 60.0, 120.0)
+	var buy_width := minf(132.0, detail_rect.size.x - btn_close.size.x - 8.0)
+	btn_buy.position = Vector2(detail_rect.end.x - buy_width, by).round()
+	btn_buy.size = Vector2(buy_width, row_h)
+	# Leave room for traits, next-level stats and the purchase notice on short screens.
+	var dh := clampf(detail_rect.size.y - 34 - 16 - 3 * 18 - 22, 44.0, 120.0)
 	demo.position = (detail_rect.position + Vector2(0, 34)).round()
 	demo.size = Vector2(detail_rect.size.x, dh).round()
 	move_child(demo, -1)
@@ -593,10 +595,12 @@ func _draw_detail(u: Dictionary) -> void:
 	var locked := is_locked(u)
 	var lv := level_of(str(u.id))
 	var mx := int(u.get("max_level", 1))
-	UiStyle.draw_text_left(self, target_name(u), Vector2(r.position.x, r.position.y + 8), UiStyle.FONT_M, UiStyle.C_TEXT)
 	var lvt := UiText.t("upg.joins") % join_round(u) if locked else "Lv %d / %d" % [lv, mx]
 	if hire_cost(u) > 0: lvt = UiText.t("upg.recruit_ready")
+	lvt = UiStyle.fit_text(lvt, r.size.x * 0.52, UiStyle.FONT_S)[0]
 	var lw := UiStyle.text_width(lvt, UiStyle.FONT_S)
+	var name_fit: Array = UiStyle.fit_text(target_name(u), maxf(1.0, r.size.x - lw - 8), UiStyle.FONT_M)
+	UiStyle.draw_text_left(self, name_fit[0], Vector2(r.position.x, r.position.y + 8), UiStyle.FONT_M, UiStyle.C_TEXT)
 	UiStyle.draw_text_left(self, lvt, Vector2(r.end.x - lw, r.position.y + 8), UiStyle.FONT_S, UiStyle.C_GOLD if locked else UiStyle.C_TEXT_DIM)
 	var d := target_def(u)
 	var dk := str(d.get("desc_key", "")) if not d.is_empty() else str(u.get("desc_key", ""))
@@ -613,10 +617,10 @@ func _draw_detail(u: Dictionary) -> void:
 	var head := UiText.t("upg.maxed") if maxed else UiText.t("upg.next") % (lv + 1)
 	if not maxed and not locked and _gated(u): head += "  ·  " + UiText.t("upg.gate") % gate_round(u)
 	if hire_cost(u) > 0:
-		UiStyle.draw_text_left(self, UiText.t("upg.recruit_line") % hire_cost(u), Vector2(r.position.x, y), UiStyle.FONT_S, UiStyle.C_GOLD)
+		UiStyle.draw_text_left(self, UiStyle.fit_text(UiText.t("upg.recruit_line") % hire_cost(u), r.size.x, UiStyle.FONT_S)[0], Vector2(r.position.x, y), UiStyle.FONT_S, UiStyle.C_GOLD)
 		y += 18
 	elif not locked:
-		UiStyle.draw_text_left(self, head, Vector2(r.position.x, y), UiStyle.FONT_S, UiStyle.C_GOLD if not maxed else UiStyle.C_TEXT_DIM)
+		UiStyle.draw_text_left(self, UiStyle.fit_text(head, r.size.x, UiStyle.FONT_S)[0], Vector2(r.position.x, y), UiStyle.FONT_S, UiStyle.C_GOLD if not maxed else UiStyle.C_TEXT_DIM)
 		y += 18
 	var col_w := floorf(r.size.x / 2.0)
 	var lines := stat_lines(u)

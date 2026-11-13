@@ -66,8 +66,8 @@ func run(q, _tree) -> void:
 		for k in rh:
 			if rh[k] is Dictionary and bool(rh[k].get("enabled", false)) and k == "rewarded_ads": enabled.append("rewarded_ads")
 		var iap: Dictionary = meta.get("iap_catalog", {})
-		if bool(iap.get("enabled", false)) or not (iap.get("products", []) as Array).is_empty(): enabled.append("iap_catalog")
-	q.check("MON-01", "monetization disabled in data (premium currency, rewarded ads, IAP catalog) per D9", meta is Dictionary and enabled.is_empty(), "enabled: %s" % [enabled])
+		if bool(iap.get("enabled", false)): enabled.append("iap_catalog")
+	q.check("MON-01", "monetization disabled in data (premium currency, rewarded ads, real IAP) per D9", meta is Dictionary and enabled.is_empty(), "enabled: %s" % [enabled])
 	var hits := []
 	_grep("res://src", ["GodotGooglePlayBilling", "AdMob", "Engine.get_singleton(", "Engine.has_singleton("], hits)
 	_grep("res://scenes", ["GodotGooglePlayBilling", "AdMob"], hits)

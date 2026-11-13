@@ -25,9 +25,25 @@ func _run() -> void:
 		sim.setup(c,rid,123)
 		for tick in 30: sim.step(1.0/30.0)
 		check(sim.enemy_hp_mult > 0 and sim.card_ids.size() <= 5, "valid simulation " + rid)
-	save.progress.unlocked_round = 20
 	var deck := ["baguette","macaron","chili","donut","waffle"]
-	check(save.set_loadout(deck), "save five new types")
+	var joins := [30,40,50,60,70]
+	var costs := [1000,1200,1500,1800,2400]
+	save.progress.coins = 10000
+	for i in deck.size():
+		var id: String = deck[i]
+		var before_recruit: int = save.progress.coins
+		save.progress.unlocked_round = joins[i] - 1
+		check(save.recruit(id) == "locked" and save.progress.coins == before_recruit, "recruit locked before join: " + id)
+		save.progress.unlocked_round = joins[i]
+		check(save.recruit_cost(id) == costs[i] and save.unit_recruitable(id) and not save.set_loadout([id]), "join requires purchase: " + id)
+		if i == 0:
+			check(save.save_progress(), "persist a pre-recruit save before testing write failure")
+			save._fault = "after_tmp_write"
+			check(save.recruit(id) == "save_failed" and save.progress.coins == before_recruit and not save.unit_owned(id), "failed recruit rolls back coins and ownership")
+			save._fault = ""
+		check(save.recruit(id) == "ok" and save.unit_owned(id) and save.progress.coins == before_recruit - costs[i], "recruit charges once: " + id)
+		check(save.recruit(id) == "already_applied" and save.progress.coins == before_recruit - costs[i], "duplicate recruit does not charge: " + id)
+	check(save.set_loadout(deck), "save five recruited types")
 	save.load_progress()
 	check(save.selected_loadout() == deck, "squad survives reload")
 	check(not save.set_loadout(deck + ["tank"]), "sixth type rejected")
@@ -118,14 +134,33 @@ func _run() -> void:
 		character.resize(48,48,Image.INTERPOLATE_NEAREST)
 		preview.blit_rect(character,Rect2i(0,0,48,48),Vector2i(i*48,0))
 	preview.resize(960,192,Image.INTERPOLATE_NEAREST)
-	preview.save_png("res://build/campaign100/roster-preview.png")
+	preview.save_png("user://campaign100-tests/roster-preview.png")
 	var app = root.get_node("App")
 	root.add_child(load("res://scenes/gameplay/main.tscn").instantiate())
 	await process_frame
 	await process_frame
 	save.progress.unlocked_round = 100
 	save.set_loadout(deck)
-	app.start_round("r42")
+	app.show_screen(&"round_select")
+	await process_frame
+	var select_screen = app.ui_layer.get_child(-1)
+	var tile_index: int = c.round_order.find("r42")
+	var tiles_per_page: int = select_screen.tiles.size()
+	select_screen._set_page(tile_index / tiles_per_page)
+	select_screen._on_tile(tile_index % tiles_per_page)
+	await process_frame
+	check(app.screen == &"roster", "late round opens deploy preparation before battle")
+	if app.screen != &"roster":
+		quit(1)
+		return
+	var prep = app.ui_layer.get_child(-1)
+	check(prep.round_id == "r42" and prep.selected == deck, "deploy preparation keeps round and recruited selection")
+	prep._save()
+	await process_frame
+	check(app.screen == &"battle" and app.battle != null, "confirm starts the chosen battle")
+	if app.battle == null:
+		quit(1)
+		return
 	await process_frame
 	check(Array(app.battle.sim.card_ids) == deck, "App passes saved selection into real battle")
 	var hud = app.ui_layer.get_child(-1)

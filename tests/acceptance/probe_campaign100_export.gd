@@ -19,6 +19,9 @@ func _run() -> void:
 	save.progress=save.fresh()
 	save.progress.unlocked_round=100
 	var deck: Array=["baguette","macaron","chili","donut","waffle"]
+	save.progress.coins=7900
+	for id in deck: check(save.recruit(id)=="ok","packaged recruitment: " + id)
+	check(save.progress.coins==0,"packaged recruitment costs 7900 total")
 	check(save.set_loadout(deck),"selection saves")
 	root.add_child(load("res://scenes/gameplay/main.tscn").instantiate())
 	await process_frame
