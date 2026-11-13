@@ -34,6 +34,7 @@ class Strip extends Node2D:
 	var source := Rect2()
 	var destination := Rect2()
 	var length := 0.0
+	var sky := Color.BLACK
 
 	func _draw() -> void:
 		var width := destination.size.x
@@ -41,10 +42,15 @@ class Strip extends Node2D:
 		for i in range(-3, int(ceil(length / width)) + 4):
 			var tile := Rect2(destination.position + Vector2(i * width, 0), destination.size)
 			draw_texture_rect_region(texture, tile, source)
-			# Continue the top row in taller views. The first sky row joins exactly.
-			draw_texture_rect_region(texture, Rect2(tile.position.x, tile.position.y - 1024, width, 1024), edge)
+			# Taller views: the tile's main sky colour above it, with the top row repeated on every other line for a few
+			# pixels so clouds or roots that touch the edge fade out instead of being stretched into vertical stripes.
+			draw_rect(Rect2(tile.position.x, tile.position.y - 1024, width, 1024), sky)
+			for k in [1, 3, 6]:
+				draw_texture_rect_region(texture, Rect2(tile.position.x, tile.position.y - k, width, 1), edge)
 
 ## Ground colour of each tile just above the road (sampled from the PNGs) and the small things that grow there.
+## Main colour of each tile's top row (sampled from the PNGs): fills taller views above the picture.
+const SKY_TOP := ["7fa3d2", "9da7df", "79aee8", "4a6b62", "95bafd", "9cd5c9", "97b8fc", "9f6f54", "7091e5", "4d4f81"]
 const PROP_GROUND := ["7f8c52", "81824c", "7faedb", "54837e", "b4c9fb", "90ac68", "b6c7fc", "a4b160", "aec3fa", "52767c"]
 const PROP_KINDS := [
 	["bush", "tuft", "flower", "rock", "tuft"], ["bush", "tuft", "rock", "flower", "tuft"],
@@ -77,15 +83,43 @@ class Props extends Node2D:
 	func _px(x: float, y: float, w: float, h: float, c: Color) -> void:
 		draw_rect(Rect2(x, y, w, h), c)
 
-	func _dome(x: float, w: int, h: int, body: Color, light: Color, dark: Color) -> void:
-		# a rounded mound standing on the road edge: outline, body, a lit upper-left and a shaded lower-right
+	func _dome(x: float, w: int, h: int, body: Color, light: Color, dark: Color, style := "leaf") -> void:
+		# A mound on the road edge, drawn row by row as runs of one colour: a 1-px outline, a lit upper-left, a shaded
+		# lower-right. "leaf" gets a lumpy edge and leaf speckles, "stone" a few chips, "snow" a smooth crest and glints.
+		var seed := int(absf(x)) * 7 + w
+		var lumps := [0, 1, 0, -1, 1, 0, 1, -1] if style == "leaf" else ([0, 0, 1, 0, -1, 0] if style == "stone" else [0])
+		var shade := body.darkened(0.16)
 		for row in h:
 			var t := float(row + 1) / float(h)      # 0 at the crown, 1 on the ground
 			var half := floorf(w * 0.5 * sqrt(maxf(0.0, 1.0 - (1.0 - t) * (1.0 - t))) + 0.5)
+			if row < h - 2: half = maxf(0.0, half + float(lumps[(row + seed) % lumps.size()]))
 			var y := top - h + row
 			_px(x - half - 1, y, half * 2 + 2, 1, dark)
-			if half > 0: _px(x - half, y, half * 2, 1, body)
-			if row * 2 < h and half > 1: _px(x - half, y, maxf(1, half - 1), 1, light)
+			var run_start := x - half
+			var run_colour := Color(0, 0, 0, 0)
+			var px := x - half
+			while px <= x + half:
+				var c := body
+				if px < x + half:
+					var u := (px - x) / maxf(1.0, half)          # -1 left edge .. 1 right edge
+					if style == "snow":
+						if row <= 1 and u < 0.5: c = light
+						elif u > 0.35 and t > 0.45: c = shade
+						elif (int(px) * 5 + row * 3 + seed) % 23 == 0: c = light
+					else:
+						var n := (int(px) * 3 + row * 5 + seed) % 7
+						if u < -0.05 and t < 0.6 and n != 0 and (style == "leaf" or n < 4): c = light
+						elif u > 0.3 and t > 0.4: c = shade
+						if style == "leaf" and n == 0 and row > 0: c = dark.lerp(body, 0.45)
+						elif style == "stone" and n == 3 and row > 1 and u > -0.4: c = shade.darkened(0.2)
+				else:
+					c = Color(0, 0, 0, 0)                       # flush the last run
+				if c != run_colour:
+					if px > run_start and run_colour.a > 0.0:
+						_px(run_start, y, px - run_start, 1, run_colour)
+					run_start = px
+					run_colour = c
+				px += 1.0
 
 	func _draw() -> void:
 		var g := Color(PROP_GROUND[chapter])
@@ -110,7 +144,7 @@ class Props extends Node2D:
 					_px(x + 3, top - 7, 3, 3, Color("ffffff"))
 				"rock":
 					var r := Color("8e877c").lerp(g, 0.25)
-					_dome(x, 12 + s * 3, 7 + s * 2, r, r.lightened(0.25), r.darkened(0.5))
+					_dome(x, 12 + s * 3, 7 + s * 2, r, r.lightened(0.25), r.darkened(0.5), "stone")
 					if chapter in [2, 6]: _px(x - 4 - s, top - 8 - s * 2, 8 + s * 2, 2, Color("f4f7ff"))
 				"block":
 					var r := Color("9aa0b4")
@@ -120,7 +154,7 @@ class Props extends Node2D:
 					_px(x + 3, top - 7, 4, 7, r.darkened(0.15))
 				"mound":
 					var snow := g.lightened(0.45)
-					_dome(x, 22 + s * 6, 7 + s * 2, snow, Color("ffffff"), g.darkened(0.25))
+					_dome(x, 22 + s * 6, 7 + s * 2, snow, Color("ffffff"), g.darkened(0.25), "snow")
 				"mushroom":
 					var cap := Color("efe2c4") if chapter != 9 else Color("e9d3ef")
 					_px(x, top - 6 - s, 3, 6 + s, Color("e8dcc4").darkened(0.1))
@@ -189,6 +223,7 @@ func build(length: float, ground: float, round_index: int) -> bool:
 	scenery.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	scenery.source = Rect2(Vector2.ZERO, source_size)
 	scenery.length = length
+	scenery.sky = Color(SKY_TOP[chapter])
 	# Put the main landmarks behind the early combat area.
 	scenery.destination = Rect2(Vector2(-size.x * 0.35, top - size.y), size)
 	var road := Road.new()

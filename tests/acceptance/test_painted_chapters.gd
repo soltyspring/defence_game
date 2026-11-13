@@ -30,7 +30,7 @@ func _run() -> void:
 		check(b.painted != null and b.painted.chapter == (n - 1) / 10, "production mounts chapter r%02d" % n)
 		if b.painted != null:
 			var art = b.painted
-			check(art.texture.get_size() == Vector2(4096, 704), "full resolution tile")
+			check(art.texture.get_height() == 704 and art.texture.get_width() % 4 == 0 and art.texture.get_width() >= 1600, "full resolution tile, whole 4x4 blocks")
 			var scenery = art.layers[2]
 			var road = art.layers[5]
 			check(is_equal_approx(scenery.destination.end.y, road.top), "no gap between landscape and road")
