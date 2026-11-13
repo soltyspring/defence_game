@@ -113,8 +113,9 @@ static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min
 	out.skills_in_row = skills_in_row
 	out.group_gap = gg
 	out.overflow = need > avail + 0.5
-	out.move_left = Rect2(Vector2(s.position.x, row_bottom - move), Vector2(move, move))
-	out.move_right = Rect2(Vector2(s.position.x + move + mg, row_bottom - move), Vector2(move, move))
+	var move_h := card_h if fit else move      # fit row: same idea as the skills below
+	out.move_left = Rect2(Vector2(s.position.x, row_bottom - move_h), Vector2(move, move_h))
+	out.move_right = Rect2(Vector2(s.position.x + move + mg, row_bottom - move_h), Vector2(move, move_h))
 	out.worker = Rect2(Vector2((out.move_right as Rect2).end.x + gg, row_bottom - card_h), Vector2(card_w, card_h))
 	var sk_w := skills_w
 	var lo: float = (out.worker as Rect2).end.x + gg
@@ -130,7 +131,10 @@ static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min
 	for i in n_skills:
 		if skills_in_row:
 			var x := s.end.x - (n_skills - i) * skill - (n_skills - 1 - i) * tg
-			skills.append(Rect2(Vector2(x, row_bottom - skill), Vector2(skill, skill)))
+			# fit row: the width is all there is (e.g. 34 px at 480x270 with side insets), so the skill buttons
+			# take the cards' height instead of staying small squares: 34x56 is a larger target than 48x48 lost
+			var sh := card_h if fit else skill
+			skills.append(Rect2(Vector2(x, row_bottom - sh), Vector2(skill, sh)))
 		else:
 			var y := row_bottom - card_h - GAP * 2 - (i + 1) * skill - i * TOUCH_GAP
 			skills.append(Rect2(Vector2(s.end.x - skill, y), Vector2(skill, skill)))
