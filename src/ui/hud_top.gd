@@ -101,7 +101,7 @@ func _draw_resources(r: Rect2) -> void:
 	var cap_w := UiStyle.number_width(cap_txt, UiStyle.NUM_READ, UiStyle.NUM_READ_KIND)
 	var avail := r.size.x - 20 - 6
 	# priority: amount > resource name > income rate (the name must stay visible, QA-J3)
-	var show_name := name_w + 4 + slot + cap_w <= avail
+	var show_name := false      # 2026-11-14 (user): icons only, no "밀가루" / "기력" words in the resource box
 	var show_income := slot + cap_w + 4 + income_w + (name_w + 4 if show_name else 0.0) <= avail
 	name_shown = show_name
 	if show_name:
@@ -157,29 +157,26 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 	var w := floorf(inner.size.x * clampf(er, 0, 1))
 	# exact HP numbers (09 R09-04-5): fixed-cell Galmuri11 12 digits (NUM_READ, ≥ 1.7 mm on phones) inside each bar, at
 	# the OUTER end so they never touch "VS"; "hp/max" when it fits, else "hp". Bar is 16 high → 14 px inner.
-	base_labels.player = _hp_text(pb, half - 8)
-	base_labels.enemy = _hp_text(eb, half - 8)
-	var cy := y + h / 2
+	# 2026-11-14 (user): no HP numbers on the base bars; the fill alone tells how the fight stands.
+	base_labels.player = ""
+	base_labels.enemy = ""
 	# solid backing plate under the digits so the enemy stripes never run through glyph strokes; same
 	# plate on both bars so only the bar fill differs. (Correction: the "8 read as 3" given as the reason
 	# in commit 5eab876 was wrong — r05 enemy base HP really is 1300 in data, c15e43a.)
 	var pw := UiStyle.number_width(base_labels.player, UiStyle.NUM_READ, UiStyle.NUM_READ_KIND)
 	var ew0 := UiStyle.number_width(base_labels.enemy, UiStyle.NUM_READ, UiStyle.NUM_READ_KIND)
-	var plate := Color(0.05, 0.05, 0.08, 0.78)
 	if _pass == P_SHAPES:
 		UiStyle.draw_bar(self, Rect2(r.position.x, y, half, h), pr, UiStyle.C_HP_PLAYER)
 		draw_rect(er_rect, UiStyle.C_EDGE)
 		draw_rect(inner, Color(0.05, 0.05, 0.08))
 		if w > 0:
 			UiStyle.draw_hatch(self, Rect2(inner.end.x - w, inner.position.y, w, inner.size.y), UiStyle.C_HP_ENEMY)   # pattern: not hue alone (QA-B013)
-		if pw > 0:
-			draw_rect(Rect2(r.position.x + 2, y + 2, pw + 4, h - 4), plate)
-		if ew0 > 0:
-			draw_rect(Rect2(er_rect.end.x - 6 - ew0, y + 2, ew0 + 4, h - 4), plate)
+		# a light line along the top of each fill, so the bars read as raised strips instead of flat blocks
+		var pw_fill := floorf((half - 2) * clampf(pr, 0, 1))
+		if pw_fill > 2: draw_rect(Rect2(r.position.x + 1, y + 1, pw_fill, 2), Color(1, 1, 1, 0.28))
+		if w > 2: draw_rect(Rect2(inner.end.x - w, inner.position.y, w, 2), Color(1, 1, 1, 0.22))
 	if _pass == P_TEXT:
 		UiStyle.draw_number(self, "VS", Vector2(r.position.x + half + 9, y + h / 2), UiStyle.NUM_READ, UiStyle.C_TEXT_DIM, 0, UiStyle.NUM_READ_KIND)
-		UiStyle.draw_number(self, base_labels.player, Vector2(r.position.x + 4, cy), UiStyle.NUM_READ, UiStyle.C_TEXT, -1, UiStyle.NUM_READ_KIND)
-		UiStyle.draw_number(self, base_labels.enemy, Vector2(er_rect.end.x - 4, cy), UiStyle.NUM_READ, UiStyle.C_TEXT, 1, UiStyle.NUM_READ_KIND)
 	base_label_rects.player = Rect2(r.position.x + 4, y, pw, h)
 	base_label_rects.enemy = Rect2(er_rect.end.x - 4 - ew0, y, ew0, h)
 	var wave: Dictionary = snap.get("wave", {})
