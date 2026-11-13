@@ -143,42 +143,66 @@ func _draw_resources(r: Rect2) -> void:
 var name_shown := false
 var name_rect := Rect2()
 var income_rect := Rect2()
+## Geometry of the base HP strip inside layout.bases, shared with the skin overlay (hud_skin.gd TopSkin).
+static func base_bars(r: Rect2) -> Dictionary:
+	var h := 18.0
+	var y := r.position.y + 3
+	var cy := y + h / 2
+	var icon_w := 18.0
+	var mid := roundf(r.get_center().x)
+	var bar_h := 8.0
+	var x0 := r.position.x + icon_w + 2
+	return {"plate": Rect2(r.position.x, y, r.size.x, h), "cy": cy, "icon_w": icon_w, "mid": mid,
+		"left": Rect2(x0, cy - bar_h / 2, mid - 6 - x0, bar_h), "right": Rect2(mid + 6, cy - bar_h / 2, r.end.x - icon_w - 2 - (mid + 6), bar_h)}
+
 func _draw_bases(r: Rect2, wr: Rect2) -> void:
 	var pb: Dictionary = snap.get("player_base", {})
 	var eb: Dictionary = snap.get("enemy_base", {})
-	var half := floorf((r.size.x - 18) / 2)
-	var h := 16.0   # 14 px inner: Galmuri11 12 digits (ink 11) + 1 px shadow on the dark plate
-	var y := r.position.y + 4
-	var pr := float(pb.get("hp", 1)) / maxf(1.0, float(pb.get("hp_max", 1)))
-	var er := float(eb.get("hp", 1)) / maxf(1.0, float(eb.get("hp_max", 1)))
-	# enemy bar drains towards the centre (mirror)
-	var er_rect := Rect2(r.position.x + half + 18, y, half, h)
-	var inner := er_rect.grow(-1)
-	var w := floorf(inner.size.x * clampf(er, 0, 1))
-	# exact HP numbers (09 R09-04-5): fixed-cell Galmuri11 12 digits (NUM_READ, ≥ 1.7 mm on phones) inside each bar, at
-	# the OUTER end so they never touch "VS"; "hp/max" when it fits, else "hp". Bar is 16 high → 14 px inner.
-	# 2026-11-14 (user): no HP numbers on the base bars; the fill alone tells how the fight stands.
+	# One dark plate holding both sides: [bakery icon][our bar >  <> < their bar][nest icon]. No numbers (2026-11-14
+	# user): the fills show how the fight stands. Each bar empties towards its own icon, so the two fills meet at the
+	# centre mark while both bases are whole and pull apart as a base is worn down.
+	var g := base_bars(r)
+	var h: float = g.plate.size.y
+	var y: float = g.plate.position.y
+	var cy: float = g.cy
+	var icon_w: float = g.icon_w
+	var mid: float = g.mid
+	var left: Rect2 = g.left
+	var right: Rect2 = g.right
+	var pr := clampf(float(pb.get("hp", 1)) / maxf(1.0, float(pb.get("hp_max", 1))), 0.0, 1.0)
+	var er := clampf(float(eb.get("hp", 1)) / maxf(1.0, float(eb.get("hp_max", 1))), 0.0, 1.0)
 	base_labels.player = ""
 	base_labels.enemy = ""
-	# solid backing plate under the digits so the enemy stripes never run through glyph strokes; same
-	# plate on both bars so only the bar fill differs. (Correction: the "8 read as 3" given as the reason
-	# in commit 5eab876 was wrong — r05 enemy base HP really is 1300 in data, c15e43a.)
-	var pw := UiStyle.number_width(base_labels.player, UiStyle.NUM_READ, UiStyle.NUM_READ_KIND)
-	var ew0 := UiStyle.number_width(base_labels.enemy, UiStyle.NUM_READ, UiStyle.NUM_READ_KIND)
 	if _pass == P_SHAPES:
-		UiStyle.draw_bar(self, Rect2(r.position.x, y, half, h), pr, UiStyle.C_HP_PLAYER)
-		draw_rect(er_rect, UiStyle.C_EDGE)
-		draw_rect(inner, Color(0.05, 0.05, 0.08))
-		if w > 0:
-			UiStyle.draw_hatch(self, Rect2(inner.end.x - w, inner.position.y, w, inner.size.y), UiStyle.C_HP_ENEMY)   # pattern: not hue alone (QA-B013)
-		# a light line along the top of each fill, so the bars read as raised strips instead of flat blocks
-		var pw_fill := floorf((half - 2) * clampf(pr, 0, 1))
-		if pw_fill > 2: draw_rect(Rect2(r.position.x + 1, y + 1, pw_fill, 2), Color(1, 1, 1, 0.28))
-		if w > 2: draw_rect(Rect2(inner.end.x - w, inner.position.y, w, 2), Color(1, 1, 1, 0.22))
-	if _pass == P_TEXT:
-		UiStyle.draw_number(self, "VS", Vector2(r.position.x + half + 9, y + h / 2), UiStyle.NUM_READ, UiStyle.C_TEXT_DIM, 0, UiStyle.NUM_READ_KIND)
-	base_label_rects.player = Rect2(r.position.x + 4, y, pw, h)
-	base_label_rects.enemy = Rect2(er_rect.end.x - 4 - ew0, y, ew0, h)
+		UiStyle.draw_pixel_box(self, Rect2(r.position.x, y, r.size.x, h), UiStyle.C_PANEL)
+		for side in 2:
+			var bar: Rect2 = left if side == 0 else right
+			var ratio := pr if side == 0 else er
+			draw_rect(bar.grow(1), UiStyle.C_EDGE)
+			draw_rect(bar, Color(0.10, 0.07, 0.06))
+			var w := floorf(bar.size.x * ratio)
+			if w <= 0: continue
+			# our fill is anchored at the bakery (left), theirs at the nest (right)
+			var fill := Rect2(bar.position.x if side == 0 else bar.end.x - w, bar.position.y, w, bar.size.y)
+			if side == 0:
+				draw_rect(fill, UiStyle.C_HP_PLAYER)
+			else:
+				UiStyle.draw_hatch(self, fill, UiStyle.C_HP_ENEMY)      # pattern: not hue alone (QA-B013)
+			draw_rect(Rect2(fill.position, Vector2(w, 2)), Color(1, 1, 1, 0.30))                      # lit top edge
+			draw_rect(Rect2(fill.position.x, fill.end.y - 2, w, 2), Color(0, 0, 0, 0.22))              # shaded bottom edge
+			if side == 1 and ratio < 0.3:   # their base nearly down: a pale frame (ours pulses, hud_skin.gd TopSkin)
+				draw_rect(bar.grow(1), Color("fff0b0"), false, 1.0)
+		# centre mark: a small gold diamond where the two fronts meet (was the text "VS")
+		for k in 4:
+			draw_rect(Rect2(mid - (3 - k), cy - k if k < 3 else cy - 3, (3 - k) * 2, 1), UiStyle.C_GOLD)
+			draw_rect(Rect2(mid - (3 - k), cy + k if k < 3 else cy + 3, (3 - k) * 2, 1), UiStyle.C_GOLD.darkened(0.25))
+	if _pass == P_ICONS:
+		if not UiStyle.draw_ui_icon(self, "icon_home", Vector2(r.position.x + icon_w / 2 + 1, cy)):
+			UiStyle.draw_glyph(self, &"coin", Vector2(r.position.x + icon_w / 2 + 1, cy), 4, UiStyle.C_HP_PLAYER)
+		if not UiStyle.draw_ui_icon(self, "icon_nest", Vector2(r.end.x - icon_w / 2 - 1, cy)):
+			UiStyle.draw_glyph(self, &"coin", Vector2(r.end.x - icon_w / 2 - 1, cy), 4, UiStyle.C_HP_ENEMY)
+	base_label_rects.player = Rect2(left.position, Vector2.ZERO)
+	base_label_rects.enemy = Rect2(right.end, Vector2.ZERO)
 	var wave: Dictionary = snap.get("wave", {})
 	var txt := ""
 	if not wave.is_empty():

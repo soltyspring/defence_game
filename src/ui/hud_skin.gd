@@ -196,17 +196,15 @@ class TopSkin extends Control:
 		if gmax > 0 and gold >= gmax:
 			var c := Color(1.0, 0.85, 0.35, 0.45 + 0.35 * sin(t * 5.0))
 			draw_rect(res.grow(1), c, false, 2.0)
-		var r: Rect2 = lay.bases
-		var half := floorf((r.size.x - 18) / 2)
-		var y := r.position.y + 4
-		var pr := Rect2(r.position.x, y, half, 16)
-		var er := Rect2(r.position.x + half + 18, y, half, 16)
-		_ghost(pr.grow(-1), shown.player, ghost.player, false)
-		_ghost(er.grow(-1), shown.enemy, ghost.enemy, true)
-		_frame(pr, crust, crust_d)
-		_frame(er, Color("5f8387"), Color("24383c"))
+		# base HP strip: one crust frame around the plate, the damage trail and the low-HP pulse on the bars themselves
+		var g: Dictionary = hud.top.base_bars(lay.bases)
+		var pr: Rect2 = g.left
+		var er: Rect2 = g.right
+		_ghost(pr, shown.player, ghost.player, false)
+		_ghost(er, shown.enemy, ghost.enemy, true)
+		_frame(g.plate, crust, crust_d)
 		if shown.player < 0.3:
-			draw_rect(pr.grow(1), Color(1.0, 0.3, 0.25, 0.4 + 0.4 * sin(t * 8.0)), false, 2.0)
+			draw_rect(pr.grow(2), Color(1.0, 0.3, 0.25, 0.4 + 0.4 * sin(t * 8.0)), false, 2.0)
 	func _ghost(inner: Rect2, now: float, was: float, mirror: bool) -> void:
 		if was <= now + 0.002: return
 		var x0 := inner.size.x * now

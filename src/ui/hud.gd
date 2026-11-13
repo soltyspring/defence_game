@@ -178,9 +178,6 @@ func _build_pause_layer() -> void:
 		pause_buttons.append(b)
 	pause_buttons[0].fill = UiStyle.C_ACCENT.darkened(0.15)
 
-# ---------------- engine -> UI ----------------
-
-func _on_battle_started(p_info: Dictionary) -> void:
 ## Battle speed chosen by the player; kept in the settings, so it stays for the next battle.
 func battle_speed() -> float:
 	return clampf(float((progress().get("settings", {}) as Dictionary).get("battle_speed", 1.0)), 1.0, 2.0)
@@ -194,6 +191,9 @@ func _refresh_speed(v: float) -> void:
 	btn_speed.text = "x2" if v > 1.0 else "x1"
 	btn_speed.fill = UiStyle.C_ACCENT.darkened(0.15) if v > 1.0 else UiStyle.C_PANEL_LIGHT
 
+# ---------------- engine -> UI ----------------
+
+func _on_battle_started(p_info: Dictionary) -> void:
 	info = p_info
 	snap = {}
 	_held.clear()
@@ -247,6 +247,8 @@ func _refresh_speed(v: float) -> void:
 	# NEW on the cards and skills this round introduces (unlock round == this round)
 	var content := get_node_or_null("/root/Content")
 	var ri := int(info.get("round_index", 0))
+	_round_index = ri
+	_refresh_speed(battle_speed())
 	if content != null and ri > 1:     # R01 has one card and no skills: nothing to set apart
 		var cl: Array = info.get("cards", [])
 		for i in mini(cl.size(), card_buttons.size()):
@@ -265,11 +267,10 @@ func _refresh_speed(v: float) -> void:
 
 func _on_snapshot(s: Dictionary) -> void:
 	snap = s
-	_round_index = ri
-	_refresh_speed(battle_speed())
 	top.snap = s            # hud_top redraws itself only if a drawn value changed
 	minimap.state = s.get("map", {})
 	btn_follow.visible = bool(s.get("map", {}).get("scouting", false))
+	btn_speed.visible = not btn_follow.visible and _round_index >= 3      # R1-R2 teach at x1 (battle.gd SPEED_FROM_ROUND)
 	btn_follow.fill = UiStyle.C_ACCENT.darkened(0.25) if bool(s.get("map", {}).get("scouting", false)) else UiStyle.C_PANEL_LIGHT
 	var gold := float(s.get("gold", 0))
 	var army: Dictionary = s.get("army", {})
@@ -288,7 +289,6 @@ func _on_snapshot(s: Dictionary) -> void:
 		b.dim_reason = UiText.t("ui.full") if army_full else ""
 	var skills_by := {}
 	for c in s.get("skills", []):
-	btn_speed.visible = not btn_follow.visible and _round_index >= 3      # R1-R2 teach at x1 (battle.gd SPEED_FROM_ROUND)
 		skills_by[str(c.get("id", ""))] = c
 	var sk: Array = info.get("skills", [])
 	for i in mini(skill_buttons.size(), sk.size()):

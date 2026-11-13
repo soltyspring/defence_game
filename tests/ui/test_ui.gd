@@ -344,7 +344,7 @@ func test_hud_state() -> void:
 	s = mock.snapshot(); s.player_base = {"hp": 1234.4, "hp_max": 1500}; s.enemy_base = {"hp": 7.0, "hp_max": 1200}
 	bus.hud_snapshot.emit(s)
 	await _frames(2)
-	check(hud.top.base_labels.player == "1235/1500" and hud.top.base_labels.enemy == "7/1200", "base HP numbers match snapshot (%s / %s)" % [hud.top.base_labels.player, hud.top.base_labels.enemy])
+	check(hud.top.base_labels.player.is_empty() and hud.top.base_labels.enemy.is_empty(), "base HP bars omit numbers (%s / %s)" % [hud.top.base_labels.player, hud.top.base_labels.enemy])
 	var br: Rect2 = hud.layout.bases
 	var half := floorf((br.size.x - 18) / 2)
 	var pr: Rect2 = hud.top.base_label_rects.player
@@ -890,7 +890,7 @@ func test_qaj3_and_upgrades() -> void:
 		bus.hud_snapshot.emit(s)
 		await _frames(2)
 		check(hud.btn_worker.shape == &"econ" and hud.card_buttons[0].shape == &"rect", "[%s] worker button shape differs from unit cards" % loc)
-		check(hud.top.name_shown, "[%s] resource name '%s' shown in narrowest HUD" % [loc, UiText.t("res.supply")])
+		check(not hud.top.name_shown, "[%s] resource name omitted in narrow HUD" % loc)
 		check(not hud.top.name_rect.intersects(hud.top.gold_slot_debug) and (hud.top.income_rect.size == Vector2.ZERO or not hud.top.income_rect.intersects(hud.top.gold_slot_debug)), "[%s] resource name / amount / income do not overlap" % loc)
 		hud.queue_free()
 		await _frames()
@@ -919,34 +919,43 @@ func test_qaj3_and_upgrades() -> void:
 	check(ids.has("up_tank") and not ids.has("up_fast") and not ids.has("up_siege") and ids.has("up_hero"), "only unlocked unit targets shown at unlocked_round 3 (%s)" % [ids])
 	check(panel.purchase_available(), "fake Save → purchase available")
 	check(Rect2(0, 0, 640, 360).encloses(panel.panel_rect), "panel inside 640x360")
-	for i in panel.rows.size():
-		var b: Control = panel.buy_buttons[i]
-		check(b.size.y >= 40 and panel.panel_rect.encloses(b.get_rect()), "buy button %d target ok" % i)
+	var listed: Array = panel.list_upgrades()
+	check(str(listed.front().id) == "up_hero" and listed.any(func(u): return u.id == "up_waffle" and panel.is_locked(u)), "hero first; future recruits visible but locked")
+	for view in [Vector2(480,270), Vector2(640,360), Vector2(800,360)]:
+		var safe := Rect2(34, 0, view.x - 68, view.y - 16)
+		panel.open(view, safe, 40.0)
+		check(safe.encloses(panel.panel_rect) and panel.btn_buy.size.y >= 40 and panel.panel_rect.encloses(panel.btn_buy.get_rect()), "upgrade action fits safe area at %s" % view)
+		check(not panel.btn_buy.get_rect().intersects(panel.btn_close.get_rect()), "upgrade and close controls stay separate at %s" % view)
+	panel.open(Vector2(640, 360), Rect2(0, 0, 640, 360), 40.0)
+	panel.select("up_hero")
 	# ok
-	var first: Dictionary = panel.rows[0]
+	var first: Dictionary = panel.selected()
 	var c0: int = fs.progress.coins
-	tap(panel.buy_buttons[0])
+	tap(panel.btn_buy)
 	check(panel.status_code == "ok" and fs.calls.back() == [str(first.id), 2] and fs.progress.coins == c0 - fs.costs[first.id], "buy → ok, to_level 2, coins spent (%s %s)" % [panel.status_code, fs.calls.back()])
 	# not enough coins (each case is a separate press → clear the 400 ms double-tap lock)
 	fs.progress.coins = 0
 	panel._lock_until_ms = 0
-	tap(panel.buy_buttons[1])
+	panel.select("up_melee_basic")
+	tap(panel.btn_buy)
 	await _frames(1)
-	check(panel.status_code == "not_enough_coins" and panel.status_text.contains(str(int(panel.rows[1].costs[0]))), "not enough coins → shows missing amount (%s)" % panel.status_text)
+	check(panel.status_code == "not_enough_coins" and panel.status_text.contains(str(int(panel.selected().costs[0]))), "not enough coins → shows missing amount (%s)" % panel.status_text)
 	# save failed
 	fs.progress.coins = 9999
 	fs.next_code = "save_failed"
 	panel._lock_until_ms = 0
-	tap(panel.buy_buttons[1])
+	panel.select("up_melee_basic")
+	tap(panel.btn_buy)
 	await _frames(1)
 	check(panel.status_code == "save_failed" and panel.status_text == UiText.t("ui.upgrade_save_failed") and P.STATUS_KIND["save_failed"] == "error", "save_failed → distinct error message")
 	# max level (UI-side, no call)
 	fs.next_code = ""
-	fs.progress.upgrades[str(panel.rows[2].id)] = int(panel.rows[2].max_level)
+	panel.select("up_ranged_basic")
+	fs.progress.upgrades["up_ranged_basic"] = int(panel.selected().max_level)
 	panel._refresh()
 	var n_calls: int = fs.calls.size()
-	tap(panel.buy_buttons[2])
-	check(panel.status_code == "max_level" and fs.calls.size() == n_calls and panel.buy_buttons[2].disabled, "max level → no purchase call, button disabled, distinct message")
+	tap(panel.btn_buy)
+	check(panel.status_code == "max_level" and fs.calls.size() == n_calls and panel.btn_buy.disabled, "max level → no purchase call, button disabled, distinct message")
 	var msgs := {}
 	for code in ["ok", "not_enough_coins", "max_level", "save_failed"]:
 		panel._set_status(code, panel.rows[0])
@@ -955,9 +964,10 @@ func test_qaj3_and_upgrades() -> void:
 	# double tap in the same frame → exactly one purchase request
 	fs.progress.coins = 9999
 	panel._lock_until_ms = 0
+	panel.select("up_hero")
 	var calls_before: int = fs.calls.size()
-	tap(panel.buy_buttons[0])
-	tap(panel.buy_buttons[0])
+	tap(panel.btn_buy)
+	tap(panel.btn_buy)
 	check(fs.calls.size() == calls_before + 1, "double tap → one buy_upgrade call (%d)" % (fs.calls.size() - calls_before))
 	# bus contract path (02 R7): cmd_buy_upgrade → upgrade_result, on a private bus
 	var pbus: Node = EventsScript.new()
@@ -966,7 +976,7 @@ func test_qaj3_and_upgrades() -> void:
 	pbus.cmd_buy_upgrade.connect(func(id, to): seen.append([id, to]); pbus.upgrade_result.emit({"id": id, "to_level": to, "code": "save_uncertain", "coins": 1, "level": to - 1}))
 	panel.bus = pbus
 	panel._lock_until_ms = 0
-	tap(panel.buy_buttons[0])
+	tap(panel.btn_buy)
 	check(seen.size() == 1 and panel.status_code == "save_uncertain" and P.STATUS_KIND["save_uncertain"] == "error" and panel.status_text == UiText.t("ui.upgrade_save_uncertain"), "bus path: cmd_buy_upgrade sent once, upgrade_result code shown (%s %s)" % [seen, panel.status_code])
 	pbus.queue_free()
 	# inactive without the 02 contract
@@ -975,7 +985,7 @@ func test_qaj3_and_upgrades() -> void:
 	panel.add_child(panel.bus)
 	panel.add_child(panel.save)
 	panel.open(Vector2(640, 360), Rect2(0, 0, 640, 360), 40.0)
-	check(not panel.purchase_available() and panel.buy_buttons[0].disabled and panel.status_text == UiText.t("ui.upgrade_unavailable"), "no Save.buy_upgrade → inactive buttons + notice")
+	check(not panel.purchase_available() and panel.btn_buy.disabled and panel.status_text == UiText.t("ui.upgrade_unavailable"), "no Save.buy_upgrade → inactive buttons + notice")
 	check(UiText.t("ui.upgrades").find("보석") < 0 and not panel.status_text.contains("광고"), "no premium currency / ad wording (Q2 보류)")
 	panel.queue_free()
 	fs.queue_free()
@@ -1218,7 +1228,7 @@ func test_readable_numbers() -> void:
 	check(offenders.is_empty(), "no UI number drawn with Galmuri9 10 px (UiStyle.NUM_S users: %s)" % [offenders])
 	# fixed cells keep readouts stable at the new size
 	check(UiStyle_.number_width("1111/1111", 12, &"ui") == UiStyle_.number_width("8888/8888", 12, &"ui"), "NUM_READ fixed digit cells (1111 vs 8888)")
-	# HP numbers still fit their bar half in the narrowest top bar (640 + notches, target 48)
+	# Base HP stays icon/bar-only in the narrowest top bar.
 	SafeArea.override_view_size = Vector2(640, 360)
 	SafeArea.override_safe_rect = Rect2(34, 0, 572, 360)
 	var hud: Control = _mount("res://scenes/ui/hud.tscn")
@@ -1227,11 +1237,7 @@ func test_readable_numbers() -> void:
 	bus.hud_snapshot.emit({"gold": 120, "gold_max": 999, "income": 6.0, "cards": [], "skills": [], "army": {"player": 12, "cap": 36},
 		"player_base": {"hp": 1800.0, "hp_max": 1800.0}, "enemy_base": {"hp": 2400.0, "hp_max": 2400.0}, "wave": {"index": 2, "total": 4, "next_in": 9.0}})
 	await _frames(2)
-	var t: Control = hud.top
-	var bases: Rect2 = hud.layout.bases
-	var half := floorf((bases.size.x - 18) / 2)
-	check(t.base_labels.player == "1800/1800" and t.base_labels.enemy == "2400/2400", "full hp/max shown at NUM_READ in the narrowest bar (%s / %s)" % [t.base_labels.player, t.base_labels.enemy])
-	check((t.base_label_rects.player as Rect2).end.x <= bases.position.x + half and (t.base_label_rects.enemy as Rect2).position.x >= bases.position.x + half + 18, "HP labels stay in their bar half, clear of VS (%s %s, half %.0f)" % [t.base_label_rects.player, t.base_label_rects.enemy, half])
+	check(hud.top.base_labels.player.is_empty() and hud.top.base_labels.enemy.is_empty(), "narrow HUD uses base bars without HP text")
 	hud.queue_free()
 	SafeArea.override_safe_rect = Rect2(0, 0, 640, 360)
 	await _frames()
