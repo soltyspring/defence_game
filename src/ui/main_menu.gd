@@ -1,7 +1,12 @@
 extends "res://src/ui/ui_screen.gd"
 ## Main menu. Owner: 04-client. Emits cmd_start_round (continue), cmd_open_screen(&"round_select").
-
-var btn_play: Control
+## Two pages: "title" = 시작하기 / 이어하기 / 설정; 시작하기 opens "lobby" = 라운드 선택 / 강화 (+ 뒤로, shop).
+## The page is remembered for the session, so coming back from round select / shop / a battle lands in the lobby.
+static var last_page := "title"
+var page := "title"
+var btn_start: Control
+var btn_back: Control
+var btn_play: Control         # 이어하기: the first unlocked round without stars (disabled before any progress)
 var btn_select: Control
 var btn_settings: Control
 var btn_upgrades: Control
@@ -17,11 +22,16 @@ var _notice := ""
 
 func _build() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP   # menu owns the whole screen
-	btn_play = make_button(UiText.t("ui.play"), _on_play)
-	btn_play.fill = UiStyle.C_ACCENT.darkened(0.15)
-	btn_play.font_size = UiStyle.FONT_L
+	btn_start = make_button(UiText.t("ui.start"), func(): show_page("lobby"))
+	btn_start.fill = UiStyle.C_ACCENT.darkened(0.15)
+	btn_start.font_size = UiStyle.FONT_L
+	btn_play = make_button(UiText.t("ui.continue"), _on_play)
 	btn_select = make_button(UiText.t("ui.select_round"), _on_select)
+	btn_select.fill = UiStyle.C_ACCENT.darkened(0.15)
+	btn_select.font_size = UiStyle.FONT_L
 	btn_upgrades = make_button(UiText.t("ui.upgrades"), open_upgrades)
+	btn_upgrades.font_size = UiStyle.FONT_L
+	btn_back = make_button(UiText.t("ui.back"), func(): show_page("title"))
 	btn_settings = make_button(UiText.t("ui.settings"), _on_settings)
 	if GoldShopCatalog.enabled():
 		btn_shop = make_button(UiText.t("shop.title"), func(): emit_cmd(&"cmd_open_screen", [&"gold_shop"]))
@@ -50,7 +60,18 @@ func _build() -> void:
 		var n: Dictionary = s.migration_notice()
 		if not n.is_empty():
 			_on_content_migrated(n)
+	show_page(last_page)
 	_refresh_labels()
+
+func show_page(p: String) -> void:
+	page = p if p in ["title", "lobby"] else "title"
+	last_page = page
+	var lobby := page == "lobby"
+	for b in [btn_start, btn_play, btn_settings]: b.visible = not lobby
+	for b in [btn_select, btn_upgrades, btn_back]: b.visible = lobby
+	if btn_shop != null: btn_shop.visible = lobby
+	_layout()
+	queue_redraw()
 
 func _bus_links() -> Array:
 	return [[&"progress_changed", func(_p): _refresh_labels()], [&"content_migrated", _on_content_migrated]]
@@ -102,7 +123,7 @@ func _round_list() -> Array:
 func _refresh_labels() -> void:
 	var p := progress()
 	var started := int(p.get("unlocked_round", 1)) > 1 or not (p.get("stars", {}) as Dictionary).is_empty()
-	btn_play.text = UiText.t("ui.continue") if started else UiText.t("ui.play")
+	btn_play.disabled = not started     # nothing to continue on a fresh save: 시작하기 is the way in
 	btn_play.queue_redraw()
 
 func _on_play() -> void:
@@ -130,20 +151,27 @@ func _notification(what: int) -> void:
 			return
 		if settings_panel.visible or modal_open() or not claim_back():
 			return   # panel handles it / press already used by the screen that navigated here
+		if page == "lobby" and not quit_layer.visible:
+			show_page("title")   # back steps out of the lobby first
+			return
 		quit_layer.visible = not quit_layer.visible
 
 func _layout() -> void:
 	if btn_play == null:
 		return
-	var bw := clampf(safe.size.x * 0.44, 252.0, 300.0)   # play + a row of three (select / upgrades / settings)
+	var bw := clampf(safe.size.x * 0.44, 252.0, 300.0)   # title: start + a row of two; lobby: two big buttons
 	var bh := maxf(target, 44.0)
 	var cx := safe.get_center().x
 	var y := safe.position.y + safe.size.y * 0.50
-	place(btn_play, Rect2(cx - bw / 2, y, bw, bh + 6))
-	var w3 := floorf((bw - 16) / 3.0)   # 8 px between the three buttons (07 LAYOUT L4 / QA-B027: 8 dp)
-	place(btn_select, Rect2(cx - bw / 2, y + bh + 14, w3, bh))
-	place(btn_upgrades, Rect2(cx - bw / 2 + w3 + 8, y + bh + 14, w3, bh))
-	place(btn_settings, Rect2(cx - bw / 2 + 2 * (w3 + 8), y + bh + 14, w3, bh))
+	place(btn_start, Rect2(cx - bw / 2, y, bw, bh + 6))
+	var w2 := floorf((bw - 8) / 2.0)    # 8 px between buttons (07 LAYOUT L4 / QA-B027: 8 dp)
+	place(btn_play, Rect2(cx - bw / 2, y + bh + 14, w2, bh))
+	place(btn_settings, Rect2(cx - bw / 2 + w2 + 8, y + bh + 14, w2, bh))
+	var lw := clampf(safe.size.x * 0.58, 320.0, 400.0)   # lobby: two tall buttons, wide enough for the FONT_L labels
+	var lw2 := floorf((lw - 8) / 2.0)
+	place(btn_select, Rect2(cx - lw / 2, y, lw2, bh * 2 + 8))
+	place(btn_upgrades, Rect2(cx - lw / 2 + lw2 + 8, y, lw2, bh * 2 + 8))
+	place(btn_back, Rect2(Vector2(safe.position.x + 4, safe.end.y - bh - 4), Vector2(88, bh)))
 	if btn_shop != null:
 		place(btn_shop, Rect2(Vector2(safe.end.x - 92, safe.position.y + 4), Vector2(88, bh)))
 	place(quit_layer, Rect2(Vector2.ZERO, view))
@@ -186,13 +214,14 @@ func _draw() -> void:
 	_draw_background()
 	# title slot: between the coin row and the play button; logo (03) or text (title_block.gd)
 	var slot_top := safe.position.y + 28
-	var slot_bottom := btn_play.position.y - 22    # leave room for the subtitle line
+	var first: Control = btn_select if page == "lobby" else btn_start
+	var slot_bottom := first.position.y - 22    # leave room for the subtitle line
 	title_slot = Rect2(safe.position.x + 8, slot_top, safe.size.x - 16, maxf(40.0, slot_bottom - slot_top))
 	var loc := "en" if UiText.t("ui.play") == "Play" else "ko"
 	title_page = TitleBlock.hold_page(title_page, loc)   # only this locale's logo page (03 A10); switches with language
 	var bottom := TitleBlock.draw(self, title_slot, loc)
 	var sub: Array = UiStyle.fit_text(UiText.t("ui.subtitle"), safe.size.x - 16, UiStyle.FONT_M)
-	UiStyle.draw_text_centered(self, sub[0], Vector2(safe.get_center().x, minf(bottom + 10, btn_play.position.y - 10)), UiStyle.FONT_M, UiStyle.C_TEXT)
+	UiStyle.draw_text_centered(self, sub[0], Vector2(safe.get_center().x, minf(bottom + 10, first.position.y - 10)), UiStyle.FONT_M, UiStyle.C_TEXT)
 	var p := progress()
 	if not UiStyle.draw_ui_icon(self, "icon_gold", Vector2(safe.position.x + 14, safe.position.y + 14)):
 		UiStyle.draw_glyph(self, &"coin", Vector2(safe.position.x + 14, safe.position.y + 14), 5)

@@ -187,12 +187,24 @@ func run(p_q, p_tree) -> void:
 	await _frames(2)
 	q.check("FLOW-02", "locked round %s refused on fresh save (toast round_locked, stays on menu)" % p0[2], app.screen == &"menu" and rec.toast.has("round_locked"), "screen=%s toasts=%s" % [app.screen, rec.toast])
 	await _touch_targets("TOUCH-MENU", "main menu", _top())
-	# play via real touch
-	var play := _btn(UiText.t("ui.play"))
+	# play via real touch: 시작하기 -> lobby -> 라운드 선택 -> first round tile
+	var play := _btn(UiText.t("ui.start"))
 	if play == null:
-		q.record("FLOW-03", Q.BLOCKED, "tap Play starts first round", "Play button not found")
+		q.record("FLOW-03", Q.BLOCKED, "tap Start -> Round select -> first round", "Start button not found")
 		return
 	_tap(play)
+	await _frames(2)
+	var sel := _btn(UiText.t("ui.select_round"))
+	if sel == null:
+		q.record("FLOW-03", Q.BLOCKED, "tap Start -> Round select -> first round", "Round select button not found in the lobby")
+		return
+	_tap(sel)
+	await _frames(3)
+	var rs := _ui("ui/round_select.gd")
+	if rs == null or rs.tiles.is_empty():
+		q.record("FLOW-03", Q.BLOCKED, "tap Start -> Round select -> first round", "round select not mounted")
+		return
+	_tap(rs.tiles[0])
 	await _frames(4)
 	var sim = _sim()
 	q.check("FLOW-03", "tap Play (touch) -> battle %s with HUD from scenes/ui" % p0[0], sim != null and app.current_round == str(p0[0]) and app.ui_source.get(&"hud", "") == "scenes/ui" and rec.battle_started.back() == str(p0[0]),
@@ -414,11 +426,18 @@ func _save_recovery_ux() -> void:
 		"recovered=%s unlocked %d->%s notice='%s' toasts=%s" % [save.recovered, before, save.progress.unlocked_round, notice, rec.toast.slice(toasts0)])
 
 func _back_on_menu() -> void:
+	var menu := _ui("ui/main_menu.gd")
+	if menu != null and str(menu.get("page")) == "lobby":
+		# the lobby (라운드 선택 / 강화) steps back to the title page first, never straight to the quit dialog
+		_go_back()
+		await _frames(4)
+		q.check("FLOW-25A", "Android back in the menu lobby returns to the title page", str(menu.page) == "title" and not menu.quit_layer.visible,
+			"page=%s quit_layer.visible=%s" % [menu.page, menu.quit_layer.visible])
 	# silent provisional entry: survives in the flushed report only if the process quits during the check
 	q.results.append({"id": "FLOW-25", "suite": "flow", "status": Q.FAIL, "title": "Android back on main menu shows quit confirmation instead of quitting immediately",
 		"detail": "process quit during the check"})
 	if report_cb.is_valid(): report_cb.call()
-	var menu := _ui("ui/main_menu.gd")
+	menu = _ui("ui/main_menu.gd")
 	_go_back()
 	await _frames(6)
 	q.results.pop_back()

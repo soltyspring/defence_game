@@ -161,6 +161,8 @@ func _run() -> void:
 		if not TB.force_text:
 			check(TB.last_mode == "logo", "menu draws the %s logo (mode=%s)" % [ui_loc, TB.last_mode])
 	await shot("1_menu")
+	if menu.page != "lobby":
+		tap(menu.btn_start)   # 시작하기 opens the lobby (라운드 선택 / 강화)
 	tap(menu.btn_select)
 	await _frames(3)
 

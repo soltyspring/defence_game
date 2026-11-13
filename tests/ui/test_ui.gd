@@ -471,8 +471,20 @@ func test_menu_and_settings() -> void:
 	var m: Control = _mount("res://scenes/ui/main_menu.tscn", {"version": 1, "unlocked_round": 1, "stars": {}, "coins": 0, "settings": {"fps_cap": 60, "sfx": 1.0, "music": 0.8, "show_damage": true}})
 	await _frames()
 	rec.clear()
+	m.show_page("title")
+	check(m.btn_start.visible and m.btn_play.visible and m.btn_settings.visible and not m.btn_select.visible and not m.btn_upgrades.visible,
+		"title page: 시작하기 / 이어하기 / 설정 only")
+	check(m.btn_play.position.y > m.btn_start.position.y and m.btn_settings.position.y > m.btn_start.position.y, "이어하기 and 설정 sit below 시작하기")
+	check(m.btn_play.disabled, "이어하기 disabled on a fresh save")
+	tap(m.btn_start)
+	check(m.page == "lobby" and m.btn_select.visible and m.btn_upgrades.visible and m.btn_back.visible and not m.btn_start.visible,
+		"시작하기 → lobby with 라운드 선택 / 강화")
+	for b in [m.btn_select, m.btn_upgrades, m.btn_back]:
+		check(b.size.y >= 40 and b.size.x >= 40 and Rect2(0, 0, 640, 360).encloses(b.get_rect()), "lobby button target ok (%s)" % b.get_rect())
 	tap(m.btn_select)
 	check(last() == [&"cmd_open_screen", &"round_select"], "menu → round select")
+	back(m)
+	check(m.page == "title" and not m.quit_layer.visible, "back in the lobby returns to the title page (no quit dialog)")
 	tap(m.btn_settings)
 	check(m.settings_panel.visible, "settings opens")
 	var sp: Control = m.settings_panel
@@ -515,10 +527,13 @@ func test_menu_and_settings() -> void:
 	back(m)
 	check(m.quit_layer.visible, "back on menu asks to quit (not instant exit)")
 	m.quit_layer.hide()
-	# play / continue chooses first round without stars (no Content autoload → falls back to round select)
+	# 이어하기 with progress chooses the first round without stars (no Content autoload → falls back to round select)
+	m.progress_override = {"version": 1, "unlocked_round": 3, "stars": {"r01": 3}, "coins": 0, "settings": {}}
+	m._refresh_labels()
+	check(not m.btn_play.disabled, "이어하기 enabled once there is progress")
 	tap(m.btn_play)
 	var l := last()
-	check(l.size() == 2 and (l[0] == &"cmd_start_round" or l == [&"cmd_open_screen", &"round_select"]), "play emits start or opens select (%s)" % [l])
+	check(l.size() == 2 and (l[0] == &"cmd_start_round" or l == [&"cmd_open_screen", &"round_select"]), "continue emits start or opens select (%s)" % [l])
 	m.queue_free()
 	await _frames()
 	done["menu_settings"] = true
