@@ -171,7 +171,22 @@ var shape: StringName = &"rect"
 ## instead of 7–11 (every rect/texture/glyph-cache switch starts a new draw call). Positions and colours unchanged.
 var passes_drawn := 0              # QA
 
+func _draw_fast_forward() -> void:
+	# Draw only the symbol; the Control still owns the full touch rectangle.
+	var center := (size * 0.5).round()
+	var active := text == "x2"
+	var tint := Color("ffd27a") if active else Color("fff0d2")
+	if is_pressed: tint = tint.darkened(0.25)
+	for x in [-10.0, 0.0]:
+		var p := center + Vector2(x, 0)
+		var tri := PackedVector2Array([p + Vector2(0, -6), p + Vector2(9, 0), p + Vector2(0, 6)])
+		draw_colored_polygon(tri, tint if active or x == -10.0 else Color("a69a89"))
+		draw_polyline(PackedVector2Array([tri[0], tri[1], tri[2], tri[0]]), Color("231818"), 2.0)
+
 func _draw() -> void:
+	if shape == &"fast_forward":
+		_draw_fast_forward()
+		return
 	var r := Rect2(Vector2.ZERO, size)
 	var f := fill if not disabled else UiStyle.C_DISABLED
 	if is_pressed:

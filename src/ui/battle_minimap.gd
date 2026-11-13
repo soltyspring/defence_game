@@ -1,5 +1,5 @@
 extends Control
-## A single, bounded CanvasItem: no textures, extra cameras, viewports or sim copies.
+## A single, bounded CanvasItem: no extra cameras, viewports or sim copies.
 const Style := preload("res://src/ui/ui_style.gd")
 const Text := preload("res://src/ui/ui_text.gd")
 signal seek(world_x: float)
@@ -71,10 +71,11 @@ const C_INK := Color(0.05, 0.04, 0.04)
 const MINIMAP_SKIN := preload("res://assets/art/hud_skin/minimap.png")
 
 func _draw() -> void:
-	# 18 px ink inside a 40-48 px touch area, level with the base HP strip
-	draw_texture_rect(MINIMAP_SKIN, Rect2(0, 3, size.x, 18), false)
+	# Taller face without borrowing width from the base health strip.
+	draw_texture_rect(MINIMAP_SKIN, Rect2(0, 3, size.x, 28), false)
+	draw_rect(Rect2(5, 7, size.x - 10, 20), Color("504039"))
 	if state.is_empty(): return
-	var y := 12.0
+	var y := 17.0
 	var bx := map_x(float(state.get("player_base", 0)))
 	var ex := map_x(float(state.get("enemy_base", 1)))
 	var dots: Array = state.get("dots", [])
@@ -92,37 +93,43 @@ func _draw() -> void:
 		af = roundf((af + ef) * 0.5)
 		ef = af
 	draw_rect(Rect2(7, y - 2, size.x - 14, 5), C_INK)
-	draw_rect(Rect2(8, y - 1, size.x - 16, 3), Color(0.20, 0.15, 0.12))
+	draw_rect(Rect2(8, y - 1, size.x - 16, 3), Color("836958"))
 	if af > bx: draw_rect(Rect2(bx, y - 1, af - bx, 2), Color(C_ALLY, 0.68))
 	if ex > ef: draw_rect(Rect2(ef, y, ex - ef, 2), Color(C_FOE, 0.68))
-	# bakery (cream block, brown roof) and nest (grey-green mound), each with a dark outline
-	draw_rect(Rect2(bx - 5, y - 7, 10, 10), C_INK)
-	draw_rect(Rect2(bx - 4, y - 3, 8, 5), Color("e5c28c"))
-	draw_rect(Rect2(bx - 4, y - 6, 8, 3), Palette.ALLY)
-	draw_rect(Rect2(ex - 5, y - 7, 10, 10), C_INK)
-	draw_rect(Rect2(ex - 4, y - 4, 8, 6), Palette.FOE)
-	draw_rect(Rect2(ex - 2, y - 6, 4, 2), Palette.FOE_LIGHT)
-	draw_rect(Rect2(ex - 1, y - 2, 2, 2), C_INK)
 	for dot in dots:
 		var x := map_x(float(dot[0]))
 		if int(dot[1]) > 0:
-			draw_rect(Rect2(x - 1, y - 5, 2, 3), C_ALLY)
+			draw_rect(Rect2(x - 2, y - 7, 4, 6), C_INK)
+			draw_rect(Rect2(x - 1, y - 6, 2, 4), Palette.ALLY_LIGHT)
 		elif bool(dot[2]):         # boss: a block with an outline, so it is not just "one more tick"
 			draw_rect(Rect2(x - 3, y + 1, 6, 7), C_INK)
 			draw_rect(Rect2(x - 2, y + 2, 4, 5), C_FOE)
 			draw_rect(Rect2(x - 2, y + 2, 4, 1), Color("ffd0c0"))
 		else:
-			draw_rect(Rect2(x - 1, y + 3, 2, 3), C_FOE)
+			draw_rect(Rect2(x - 2, y + 2, 5, 5), C_INK)
+			draw_rect(Rect2(x - 1, y + 3, 3, 3), Palette.FOE_LIGHT)
 	if hero_on:
 		for k in 2:
 			var r := 4.0 - k
 			var c := Vector2(hx, y - 5)
 			draw_colored_polygon(PackedVector2Array([c + Vector2(0, -r), c + Vector2(r, 0), c + Vector2(0, r), c + Vector2(-r, 0)]), C_INK if k == 0 else Color("ffe19a"))
+	# Draw bases above the unit rows so a crowd cannot erase either landmark.
+	draw_rect(Rect2(bx - 6, y - 5, 12, 13), C_INK)
+	draw_rect(Rect2(bx - 4, y - 7, 8, 3), C_INK)
+	draw_rect(Rect2(bx - 3, y - 6, 6, 2), Palette.ALLY_LIGHT)
+	draw_rect(Rect2(bx - 5, y - 4, 10, 3), C_ALLY)
+	draw_rect(Rect2(bx - 4, y - 1, 8, 8), Color("f3d8a3"))
+	draw_rect(Rect2(bx - 1, y + 2, 2, 5), C_INK)
+	draw_rect(Rect2(ex - 6, y - 3, 12, 11), C_INK)
+	draw_rect(Rect2(ex - 4, y - 6, 8, 5), C_INK)
+	draw_rect(Rect2(ex - 3, y - 5, 6, 3), Palette.FOE_LIGHT)
+	draw_rect(Rect2(ex - 5, y - 2, 10, 9), C_FOE)
+	draw_rect(Rect2(ex - 2, y + 2, 4, 5), C_INK)
 	# the part of the lane on screen
 	var a := map_x(float(state.get("view_left", 0)))
 	var b := maxf(a + 5.0, map_x(float(state.get("view_right", 1))))
-	var top := 4.0
-	var bot := 20.0
+	var top := 6.0
+	var bot := 28.0
 	var col := Color("ffe5a9")
 	if bool(state.get("scouting", false)):
 		draw_rect(Rect2(a, top, b - a, bot - top), Style.C_ACCENT, false, 1.0)
