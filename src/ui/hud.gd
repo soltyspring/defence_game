@@ -31,6 +31,7 @@ var skill_buttons: Array = []
 var toast_label: Label
 var tutorial_label: Label         # Events.tutorial_step (02): persistent, non-blocking hint
 var tutorial_key := ""
+var pointer: Control                # tutorial_pointer.gd: rings and points at the button the hint talks about
 var banner_label: Label
 var skill_tip: Label              # skill name above the pressed skill button
 var toasts_suppressed := 0        # QA
@@ -123,6 +124,8 @@ func _build() -> void:
 	revive_badge.hide()
 	revive_badge.finished.connect(_layout)
 	add_child(revive_badge)
+	pointer = preload("res://src/ui/tutorial_pointer.gd").new()
+	add_child(pointer)
 	_build_pause_layer()
 	settings_panel = SettingsPanel.new()
 	settings_panel.hide()
@@ -222,7 +225,19 @@ func _on_battle_started(p_info: Dictionary) -> void:
 		b.released.connect(func(_inside): _hide_skill_tip())
 		add_child(b)
 		skill_buttons.append(b)
-	# keep modal layers on top
+	# NEW on the cards and skills this round introduces (unlock round == this round)
+	var content := get_node_or_null("/root/Content")
+	var ri := int(info.get("round_index", 0))
+	if content != null and ri > 1:     # R01 has one card and no skills: nothing to set apart
+		var cl: Array = info.get("cards", [])
+		for i in mini(cl.size(), card_buttons.size()):
+			if int(content.get_unit(str(cl[i].get("id", ""))).get("unlock_round", 1)) == ri: card_buttons[i].badge = "NEW"
+		var sl: Array = info.get("skills", [])
+		for i in mini(sl.size(), skill_buttons.size()):
+			var sd: Dictionary = content.skills.get(str(sl[i].get("id", "")), {})
+			if int(sd.get("unlock_round", 1)) == ri: skill_buttons[i].badge = "NEW"
+	# keep modal layers on top (the tutorial pointer above the buttons it rings, below the dialogs)
+	move_child(pointer, -1)
 	move_child(pause_layer, -1)
 	move_child(settings_panel, -1)
 	top.round_title = "%d. %s" % [int(info.get("round_index", 0)), UiText.name_of("round", str(info.get("round_id", "")), str(info.get("round_name", "")))]
@@ -247,6 +262,7 @@ func _on_snapshot(s: Dictionary) -> void:
 		var c: Dictionary = by_id.get(str(cards[i].get("id", "")), {})
 		var total := float(c.get("cd_total", 0.0))
 		b.cooldown_ratio = float(c.get("cd", 0.0)) / total if total > 0 else 0.0
+		b.cooldown_left = float(c.get("cd", 0.0))
 		b.disabled = not bool(c.get("affordable", true)) or army_full
 		b.dim_reason = UiText.t("ui.full") if army_full else ""
 	var skills_by := {}
@@ -258,6 +274,7 @@ func _on_snapshot(s: Dictionary) -> void:
 		var c: Dictionary = skills_by.get(str(sk[i].get("id", "")), {})
 		var total := float(c.get("cd_total", 0.0))
 		b.cooldown_ratio = float(c.get("cd", 0.0)) / total if total > 0 else 0.0
+		b.cooldown_left = float(c.get("cd", 0.0))
 		b.disabled = not bool(c.get("ready", true))
 	var workers := int(s.get("workers", 0))
 	var wmax := int(s.get("workers_max", 0))
@@ -335,10 +352,13 @@ func _on_paused(p: bool) -> void:
 	if p:
 		_release_all_holds()
 	pause_layer.visible = p and not settings_panel.visible
+	tutorial_label.visible = not p          # the hint must not sit on top of the pause dialog
+	if pointer != null: pointer.visible = not p
 	queue_redraw()
 
 func _on_tutorial_step(key: String) -> void:
 	tutorial_key = key
+	if pointer != null: pointer.target = _tutorial_target(key)
 	if key == "":
 		tutorial_label.modulate.a = 0.0
 		return
@@ -349,6 +369,27 @@ func _on_tutorial_step(key: String) -> void:
 		toast_label.modulate.a = 0.0
 		toasts_suppressed += 1
 	_fit_label(tutorial_label, layout.get("tutorial", Rect2()))
+
+## The control a tutorial hint is about: the first card, the move button, the baker, a skill or a unit card.
+func _tutorial_target(key: String) -> Control:
+	if key == "": return null
+	match key:
+		"tut_deploy_unit": return card_buttons[0] if not card_buttons.is_empty() else null
+		"tut_move_hero": return btn_right
+		"tut_buy_worker": return btn_worker
+	var cards: Array = info.get("cards", [])
+	var skills: Array = info.get("skills", [])
+	if key.begins_with("tut_skill_"):
+		var sid := "skill_" + key.trim_prefix("tut_skill_")
+		for i in mini(skills.size(), skill_buttons.size()):
+			if str(skills[i].get("id", "")) == sid: return skill_buttons[i]
+		return null
+	if key.ends_with("_unit"):
+		var word := key.trim_prefix("tut_").trim_suffix("_unit")
+		var ids: Array = {"ranged": ["ranged_basic"], "fast": ["fast"], "tank": ["tank"], "siege": ["siege"]}.get(word, [word])
+		for i in mini(cards.size(), card_buttons.size()):
+			if str(cards[i].get("id", "")) in ids: return card_buttons[i]
+	return null
 
 func _on_battle_ended(_result: Dictionary) -> void:
 	_battle_over = true
@@ -541,6 +582,7 @@ func _layout() -> void:
 		pause_buttons[i].position = Vector2(view.x / 2 - bw / 2, y0 + i * (bh + 6)).round()
 		pause_buttons[i].size = Vector2(bw, bh)
 	pause_layer.title_y = y0 - 22
+	pause_layer.panel = Rect2(Vector2(view.x / 2 - bw / 2 - 14, y0 - 44).round(), Vector2(bw + 28, total_h + 58).round())
 	if settings_panel.visible:
 		settings_panel.open(bus, settings_panel.settings, view, safe, target)
 	top.queue_redraw()

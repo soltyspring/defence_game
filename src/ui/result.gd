@@ -47,8 +47,25 @@ func _apply() -> void:
 	var won := bool(result.get("won", false))
 	btn_next.visible = won and bool(result.get("saved", true)) and str(result.get("next_round_id", "")) != ""
 	btn_retry.fill = UiStyle.C_ACCENT.darkened(0.15) if not won else UiStyle.C_PANEL_LIGHT
+	# coins now cover an upgrade: make 강화 stand out (first runs never opened it on their own)
+	can_upgrade = _affordable_upgrade()
+	btn_upgrades.fill = UiStyle.C_GOLD.darkened(0.35) if can_upgrade else UiStyle.C_PANEL_LIGHT
+	btn_upgrades.badge = "!" if can_upgrade else ""
 	_layout()
 	queue_redraw()
+
+var can_upgrade := false
+
+func _affordable_upgrade() -> bool:
+	var sv := autoload("Save")
+	var c := autoload("Content")
+	if sv == null or c == null or not sv.has_method("upgrade_cost"): return false
+	var coins := int(sv.progress.get("coins", 0))
+	for u in c.meta.get("upgrades", []):
+		if sv.has_method("upgrade_locked") and sv.upgrade_locked(str(u.id)): continue
+		var cost := int(sv.upgrade_cost(str(u.id), int(sv.upgrade_level(str(u.id))) + 1))
+		if cost > 0 and cost <= coins: return true
+	return false
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST and is_inside_tree() and btn_menu != null and not modal_open() and claim_back():
@@ -111,6 +128,8 @@ func _draw() -> void:
 		UiStyle.draw_number(self, lines[k][1], Vector2(panel.end.x - 18, y), UiStyle.FONT_M, UiStyle.C_GOLD if k == 2 else UiStyle.C_TEXT, 1, &"bold")
 	if bool(result.get("first_clear", false)) and won:
 		UiStyle.draw_text_centered(self, UiText.t("ui.first_clear"), Vector2(cx, y0 + 3 * 22 + 6), UiStyle.FONT_M, UiStyle.C_ACCENT)
+	if won and can_upgrade:
+		UiStyle.draw_text_centered(self, UiText.t("ui.upgrade_hint"), Vector2(cx, y0 + 3 * 22 + 26), UiStyle.FONT_S, UiStyle.C_GOLD)
 	if not won and str(result.get("round_id", "")) == "r05":
 		for i in 2:
 			var hint := UiText.t("hint.loss.r05.tactic" if i == 0 else "hint.loss.upgrade")

@@ -9,6 +9,7 @@ const SIDE_PLAYER := 1
 const SIDE_ENEMY := -1
 const BASE_INSET := 40.0
 const BASE_HALF := 22.0
+const HERO_HOME := 64.0     # hero start / revive point, world px right of the player base centre
 const TIME_LIMIT := 900.0
 const KB_DECAY := 300.0
 const SIDES: Array[int] = [1, -1]
@@ -263,7 +264,8 @@ func setup(p_content, round_id: String, seed_value: int = 1, p_upgrades: Diction
 	for s in (picked if not picked.is_empty() else content.round_skills(round_def)):
 		skill_ids.append(str(s))
 		skill_cd[str(s)] = 0.0
-	hero = _new_unit(hero_def, SIDE_PLAYER, player_base.x + 30.0)
+	# start (and revive) just right of the keep: at +30 the hero stood on the keep's light wall and was hard to find
+	hero = _new_unit(hero_def, SIDE_PLAYER, player_base.x + HERO_HOME)
 	hero.is_hero = true
 	hero.hp_max *= hero_hp_mult
 	hero.hp = hero.hp_max
@@ -652,7 +654,7 @@ func _step_hero(dt: float) -> void:
 			hero.alive = true
 			hero.dying = false
 			hero.hp = hero.hp_max
-			hero.x = player_base.x + 30.0
+			hero.x = player_base.x + HERO_HOME
 			hero.state = S_IDLE
 			hero.windup = -1.0
 			hero.invuln = float(hero_def.get("invuln_on_spawn", 0.0))

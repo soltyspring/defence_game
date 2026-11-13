@@ -201,7 +201,12 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 			var title := str(UiStyle.fit_text(round_title, remain, UiStyle.FONT_S)[0])
 			txt = title + "  " + txt
 	if txt != "" and _pass == P_TEXT:
-		UiStyle.draw_text_centered(self, UiStyle.fit_text(txt, text_width, UiStyle.FONT_S)[0], Vector2(wr.position.x + army_width + text_width * 0.5, wr.get_center().y), UiStyle.FONT_S, UiStyle.C_TEXT)
+		var shown: String = UiStyle.fit_text(txt, text_width, UiStyle.FONT_S)[0]
+		var c := Vector2(wr.position.x + army_width + text_width * 0.5, wr.get_center().y)
+		var tw := UiStyle.text_width(shown, UiStyle.FONT_S) + 12.0
+		# dark plate: the line sits on the sky and was thin white on light blue (first-run review)
+		draw_rect(Rect2(roundf(c.x - tw * 0.5), roundf(c.y - 8.0), roundf(tw), 16.0), Color(0.09, 0.07, 0.06, 0.62))
+		UiStyle.draw_text_centered(self, shown, c, UiStyle.FONT_S, UiStyle.C_TEXT)
 	var army: Dictionary = snap.get("army", {})
 	if not compact and not army.is_empty() and _pass == P_TEXT:
 		UiStyle.draw_number(self, "%d/%d" % [int(army.get("player", 0)), int(army.get("cap", 0))], Vector2(r.position.x, wr.get_center().y), UiStyle.NUM_READ, UiStyle.C_HP_PLAYER, -1, UiStyle.NUM_READ_KIND)

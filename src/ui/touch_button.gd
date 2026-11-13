@@ -57,6 +57,13 @@ var cooldown_ratio := 0.0:
 			cooldown_ratio = v
 			if ceilf((size.y - 4) * clampf(v, 0, 1)) != before:
 				queue_redraw()   # only when the shade's whole-pixel height changes
+var cooldown_left := 0.0:            # seconds until ready; shown as a big number while > 0.5
+	set(v):
+		if ceili(v) != ceili(cooldown_left):
+			cooldown_left = v
+			queue_redraw()
+		else:
+			cooldown_left = v
 var badge := "":                   # small corner label e.g. "x3", "MAX"
 	set(v):
 		if v != badge:
@@ -234,5 +241,7 @@ func _draw() -> void:
 		UiStyle.draw_number(self, badge, Vector2(size.x - 4, 9), UiStyle.NUM_READ, UiStyle.C_ACCENT, 1, UiStyle.NUM_READ_KIND)
 	if reason:
 		UiStyle.draw_text_centered(self, UiStyle.fit_text(dim_reason, size.x - 6, UiStyle.FONT_S)[0], dr.get_center(), UiStyle.FONT_S, UiStyle.C_HP_ENEMY)
+	if cooldown_ratio > 0.0 and cooldown_left > 0.5 and not reason:
+		UiStyle.draw_text_centered(self, str(ceili(cooldown_left)), Vector2(size.x / 2, size.y * 0.42), UiStyle.FONT_L, Color.WHITE)
 	if overlay.is_valid():
 		overlay.call(self)

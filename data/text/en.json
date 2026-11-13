@@ -147,6 +147,7 @@
     "toast.save_failed": "Could not save. Please check your storage.",
     "toast.round_locked": "This round is still locked.",
     "ui.upgrades": "Upgrades",
+    "ui.upgrade_hint": "You can afford an upgrade! Tap [Upgrade]",
     "stat.hp": "HP",
     "stat.atk": "ATK",
     "stat.base_hp": "Base HP",

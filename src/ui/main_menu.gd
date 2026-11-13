@@ -150,6 +150,7 @@ func _layout() -> void:
 	quit_layer.title_y = safe.get_center().y - 30
 	for i in quit_buttons.size():
 		place(quit_buttons[i], Rect2(cx - 124 + i * 128, safe.get_center().y, 120, bh))
+	quit_layer.panel = Rect2(Vector2(cx - 140, quit_layer.title_y - 26).round(), Vector2(280, bh + 66).round())
 	if settings_panel.visible:
 		settings_panel.open(bus, settings_panel.settings, view, safe, target)
 	if notice_dialog != null and notice_dialog.visible:
