@@ -78,6 +78,12 @@ var is_pressed := false
 ## Optional extra drawing on top of the button: func(button: Control) -> void
 var overlay: Callable
 var illustration: Texture2D
+var face_texture: Texture2D
+var face_tint := Color.WHITE:
+	set(v):
+		if face_tint != v:
+			face_tint = v
+			queue_redraw()
 var _finger := -2                  # -2 none, -1 mouse, >=0 touch index
 const UiStyle := preload("res://src/ui/ui_style.gd")
 
@@ -171,7 +177,9 @@ func _draw() -> void:
 	if is_pressed:
 		f = f.darkened(0.25)
 	# ---- pass 1: shapes
-	if shape == &"econ":
+	if face_texture != null:
+		draw_texture_rect(face_texture, r, false, face_tint.darkened(0.25) if is_pressed else face_tint)
+	elif shape == &"econ":
 		UiStyle.draw_pixel_octagon(self, r, f, UiStyle.C_GOLD if not disabled else UiStyle.C_TEXT_DIM, is_pressed)
 	else:
 		UiStyle.draw_pixel_box(self, r, f, is_pressed)

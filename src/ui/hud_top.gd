@@ -155,6 +155,17 @@ static func base_bars(r: Rect2) -> Dictionary:
 	return {"plate": Rect2(r.position.x, y, r.size.x, h), "cy": cy, "icon_w": icon_w, "mid": mid,
 		"left": Rect2(x0, cy - bar_h / 2, mid - 6 - x0, bar_h), "right": Rect2(mid + 6, cy - bar_h / 2, r.end.x - icon_w - 2 - (mid + 6), bar_h)}
 
+const BASE_HEALTH_SKIN := preload("res://assets/art/hud_skin/base_health.png")
+
+func _draw_base_skin(plate: Rect2, mid: float) -> void:
+	# Keep the ends and center divider crisp while only the long troughs stretch.
+	var src := [0, 8, 61, 67, 120, 128]
+	var dst := [plate.position.x, plate.position.x + 8, mid - 3, mid + 3, plate.end.x - 8, plate.end.x]
+	for i in range(5):
+		draw_texture_rect_region(BASE_HEALTH_SKIN,
+			Rect2(dst[i], plate.position.y, dst[i + 1] - dst[i], plate.size.y),
+			Rect2(src[i], 0, src[i + 1] - src[i], 20))
+
 func _draw_bases(r: Rect2, wr: Rect2) -> void:
 	var pb: Dictionary = snap.get("player_base", {})
 	var eb: Dictionary = snap.get("enemy_base", {})
@@ -162,8 +173,6 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 	# user): the fills show how the fight stands. Each bar empties towards its own icon, so the two fills meet at the
 	# centre mark while both bases are whole and pull apart as a base is worn down.
 	var g := base_bars(r)
-	var h: float = g.plate.size.y
-	var y: float = g.plate.position.y
 	var cy: float = g.cy
 	var icon_w: float = g.icon_w
 	var mid: float = g.mid
@@ -174,12 +183,10 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 	base_labels.player = ""
 	base_labels.enemy = ""
 	if _pass == P_SHAPES:
-		UiStyle.draw_pixel_box(self, Rect2(r.position.x, y, r.size.x, h), UiStyle.C_PANEL)
+		_draw_base_skin(g.plate, mid)
 		for side in 2:
 			var bar: Rect2 = left if side == 0 else right
 			var ratio := pr if side == 0 else er
-			draw_rect(bar.grow(1), UiStyle.C_EDGE)
-			draw_rect(bar, Color(0.10, 0.07, 0.06))
 			var w := floorf(bar.size.x * ratio)
 			if w <= 0: continue
 			# our fill is anchored at the bakery (left), theirs at the nest (right)

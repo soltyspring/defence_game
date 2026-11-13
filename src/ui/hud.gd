@@ -87,6 +87,7 @@ func _build() -> void:
 
 	btn_speed = make_button("x1", _on_speed)
 	btn_speed.font_size = UiStyle.FONT_S
+	btn_speed.face_texture = preload("res://assets/art/hud_skin/speed.png")
 	btn_pause = make_button("", _on_pause_pressed)
 	btn_pause.glyph = &"pause"
 	btn_pause.icon = UiStyle.ui_icon("icon_pause")
@@ -189,7 +190,7 @@ func _on_speed() -> void:
 
 func _refresh_speed(v: float) -> void:
 	btn_speed.text = "x2" if v > 1.0 else "x1"
-	btn_speed.fill = UiStyle.C_ACCENT.darkened(0.15) if v > 1.0 else UiStyle.C_PANEL_LIGHT
+	btn_speed.face_tint = Color.WHITE if v > 1.0 else Color(0.74, 0.74, 0.74)
 
 # ---------------- engine -> UI ----------------
 

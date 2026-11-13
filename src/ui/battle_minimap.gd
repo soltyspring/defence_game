@@ -67,9 +67,11 @@ const C_ALLY := Color("5cd96b")
 const C_FOE := Color("ed5a4d")
 const C_INK := Color(0.05, 0.04, 0.04)
 
+const MINIMAP_SKIN := preload("res://assets/art/hud_skin/minimap.png")
+
 func _draw() -> void:
 	# 18 px ink inside a 40-48 px touch area, level with the base HP strip
-	Style.draw_pixel_box(self, Rect2(0, 3, size.x, 18), Style.C_PANEL)
+	draw_texture_rect(MINIMAP_SKIN, Rect2(0, 3, size.x, 18), false)
 	if state.is_empty(): return
 	var y := 12.0
 	var bx := map_x(float(state.get("player_base", 0)))
