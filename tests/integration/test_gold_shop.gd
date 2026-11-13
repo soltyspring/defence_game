@@ -47,7 +47,13 @@ func _run() -> void:
 		check(app.screen == &"menu" and save.buy_preview_gold(1000) == "unavailable" and int(save.progress.coins) == 0, "normal build cannot access the preview route or mint gold")
 	else:
 		check(menu.btn_shop != null, "preview exposes the shop")
-		if menu.btn_shop != null: tap(menu.btn_shop, false)
+		check(menu.btn_shop == null or not menu.btn_shop.visible, "title keeps the shop in the lobby")
+		tap(menu.btn_start, false)
+		await frames()
+		check(menu.page == "lobby", "start opens the lobby")
+		if menu.btn_shop != null:
+			check(menu.btn_shop.visible, "shop is visible in the lobby")
+			tap(menu.btn_shop, false)
 		await frames()
 		check(app.screen == &"gold_shop", "menu click opens the real shop scene")
 		if app.screen == &"gold_shop":
