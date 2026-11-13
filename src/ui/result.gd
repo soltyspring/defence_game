@@ -9,6 +9,7 @@ var btn_menu: Control
 var btn_upgrades: Control
 var panel := Rect2()
 var _shown_t := 0.0
+var _fx_t := 0.0                   # result flourish clock: crown stars land, sparkles, coin count-up (1.6 s)
 
 func _build() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -38,6 +39,7 @@ func ui_setup(params: Dictionary) -> void:
 func set_result(r: Dictionary) -> void:
 	result = r
 	_shown_t = 0.0
+	_fx_t = 0.0
 	reason_mismatch = false
 	_apply()
 
@@ -75,6 +77,9 @@ func _process(delta: float) -> void:
 	if _shown_t < 1.0:
 		_shown_t = minf(1.0, _shown_t + delta * 2.0)
 		queue_redraw()
+	if _fx_t < 1.6:
+		_fx_t = minf(1.6, _fx_t + delta)
+		queue_redraw()
 
 func _layout() -> void:
 	if btn_retry == null:
@@ -95,9 +100,14 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, view), UiStyle.C_DIM)
 	if result.is_empty():
 		return
-	UiStyle.draw_pixel_box(self, panel, UiStyle.C_PANEL)
 	var won := bool(result.get("won", false))
+	UiStyle.draw_pixel_box(self, panel, UiStyle.C_PANEL)
 	var cx := panel.get_center().x
+	if won:
+		_draw_crown_stars(cx, int(result.get("stars", 0)))
+	else:
+		# defeat: a muted red rim instead of the crown
+		draw_rect(panel.grow(-3), Color(UiStyle.C_HP_ENEMY, 0.55), false, 2.0)
 	UiStyle.draw_text_centered(self, UiText.t("ui.victory") if won else UiText.t("ui.defeat"), Vector2(cx, panel.position.y + 30), UiStyle.FONT_XL, UiStyle.C_GOLD if won else UiStyle.C_HP_ENEMY, true, &"bold")
 	if not bool(result.get("saved", true)):
 		UiStyle.draw_text_centered(self, UiText.t("toast.save_failed"), Vector2(cx, panel.position.y + 48), UiStyle.FONT_S, UiStyle.C_HP_ENEMY)
@@ -108,7 +118,7 @@ func _draw() -> void:
 	var lines := [
 		[UiText.t("ui.time"), "%d:%02d" % [seconds / 60, seconds % 60]],
 		[UiText.t("ui.kills"), str(int(result.get("kills", 0)))],
-		[UiText.t("ui.reward"), "+%d" % int(result.get("coins", 0))],
+		[UiText.t("ui.reward"), "+%d" % _counted_coins()],
 	]
 	# two columns: left = star conditions (met/unmet), right = stats. 22 px rows (12 px text grid).
 	var lx := panel.position.x + 18
@@ -143,6 +153,34 @@ func _draw() -> void:
 	if stars != reasons.filter(func(r): return r.met).size():
 		# engine star count and UI reason derivation disagree: show engine count, flag for QA
 		reason_mismatch = true
+
+## Coins tick up from 0 once the stars have landed (the number QA reads stays result.coins).
+func _counted_coins() -> int:
+	var coins := int(result.get("coins", 0))
+	return int(roundf(coins * clampf((_fx_t - 0.55) / 0.6, 0.0, 1.0)))
+
+## Three big stars sitting on the panel's top edge (middle one raised). Earned ones land one by one with a
+## short overshoot and a ring of gold pixels; unearned slots stay as hollow outlines.
+func _draw_crown_stars(cx: float, stars: int) -> void:
+	# a crust tab behind the stars so they never sit on the dimmed HUD text
+	UiStyle.draw_pixel_box(self, Rect2(cx - 66.0, panel.position.y - 26.0, 132.0, 34.0), UiStyle.C_PANEL)
+	for k in 3:
+		var c := Vector2(cx + (k - 1) * 42.0, panel.position.y - (10.0 if k == 1 else 5.0))
+		var age := _fx_t - (0.15 + k * 0.2)
+		if k >= stars or age < 0.0:
+			UiStyle.draw_star_hollow(self, c, 13.0 if k == 1 else 9.0)
+			continue
+		var base := 3.0 if k == 1 else 2.0      # whole-pixel scales once landed
+		var sc := base * (1.0 + 0.45 * maxf(0.0, 1.0 - age / 0.16)) if age < 0.16 else base
+		if not UiStyle.draw_ui_icon(self, "icon_star", c, sc):
+			UiStyle.draw_star(self, c, 8.0 * sc, true)
+		if age < 0.45:
+			var a := 1.0 - age / 0.45
+			for i in 8:
+				var dir := Vector2.RIGHT.rotated(i * TAU / 8.0 + k)
+				var p := (c + dir * (12.0 + age * 60.0)).round()
+				var s := 3.0 if i % 2 == 0 else 2.0
+				draw_rect(Rect2(p - Vector2(s, s) * 0.5, Vector2(s, s)), Color(1.0, 0.9, 0.45, a))
 
 var reason_mismatch := false      # QA: UI reasons disagree with engine stars
 var loss_hint_shown := ""         # QA: hint id drawn on the last defeat panel

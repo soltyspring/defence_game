@@ -9,7 +9,6 @@ extends RefCounted
 ##     region bakery_supply draws.
 ## Nothing is written to assets/manifest.json or to any file. restore() puts the Atlas back.
 const SliceBackdrop := preload("res://src/art_preview/slice_backdrop.gd")
-const HudSkin := preload("res://src/art_preview/hud_skin.gd")
 const PaintedBackdrop := preload("res://src/art_preview/painted_backdrop.gd")
 ## Background for the preview: "painted" = relit painted panorama (painted_backdrop.gd), "pixel" = the slice field.
 static var background := "painted"
@@ -78,9 +77,6 @@ static func apply(app, atlas, chars := true) -> bool:
 		bd.callv("build", args)
 	view.environment = bd
 	if old != null: old.queue_free()
-	if chars:
-		var hud = app.get_tree().get_first_node_in_group("battle_hud")
-		if hud != null: HudSkin.attach(hud)
 	return true
 
 ## Six bosses on their own page (tools/art/release_slice/bosses.py). boss_warlord / boss_overlord keep their set ids;
@@ -115,14 +111,6 @@ static func _apply_bosses(app, atlas) -> void:
 	atlas.set_meta("slice_prev_defs", [content, prev_defs])
 
 static func restore(atlas) -> void:
-	var tree = Engine.get_main_loop()
-	if tree is SceneTree:
-		var hud = tree.get_first_node_in_group("battle_hud")
-		if hud != null and hud.get_node_or_null("SliceHudSkin") != null:
-			var skin = hud.get_node("SliceHudSkin")
-			for b in hud.card_buttons + hud.skill_buttons:
-				if is_instance_valid(b): b.overlay = Callable()
-			skin.queue_free()
 	if atlas.has_meta("slice_prev_defs"):
 		var pd: Array = atlas.get_meta("slice_prev_defs")
 		for unit_id in pd[1]:

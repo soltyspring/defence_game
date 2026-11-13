@@ -131,6 +131,8 @@ func _build() -> void:
 	settings_panel.hide()
 	settings_panel.closed.connect(func(): pause_layer.visible = paused)
 	add_child(settings_panel)
+	# card-bar / top-bar feedback (role stripe, ready glint, damage ghost on the base bars)
+	preload("res://src/ui/hud_skin.gd").attach(self)
 
 func _make_label(fs: int) -> Label:
 	var l := Label.new()

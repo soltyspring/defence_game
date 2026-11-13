@@ -103,10 +103,16 @@ func _draw() -> void:
 	_order.sort_custom(_by_lane_y)
 	_variant_marks.clear()
 	# Grounding shadows are one shape pass, rather than a texture/shape switch per unit.
+	_halo_a = 0.5 if _bright_chapter() else 0.3
 	for u in _order:
 		if u.dying: continue
 		var foot := _unit_pos(u)
-		draw_rect(Rect2(foot + Vector2(-7,0),Vector2(14,2)),Color(0.08,0.08,0.07,0.32))
+		# stepped oval contact shadow (was a faint 14x2 bar that vanished on snow)
+		var w := 8.0 + 4.0 * float(u.def.get("size", 1.0)) + (4.0 if u.is_hero else 0.0)
+		var sc := Color(0.06, 0.06, 0.09, 0.30 + _halo_a * 0.4)
+		draw_rect(Rect2(foot + Vector2(-w, -1), Vector2(w * 2, 2)), sc)
+		draw_rect(Rect2(foot + Vector2(-w + 3, 1), Vector2(w * 2 - 6, 1)), sc)
+	_draw_telegraph_zones()
 	_draw_links()
 	_state_marks.clear()
 	_mark_rects.clear()
@@ -455,6 +461,14 @@ func _draw_burrow_trail(u) -> void:
 	draw_colored_polygon(PackedVector2Array([pos + Vector2(-8, 0), pos + Vector2(-5, -3 - wob), pos + Vector2(0, -5 + wob), pos + Vector2(5, -3 - wob), pos + Vector2(8, 0)]), Color("8c7a5c"))
 	draw_rect(Rect2(pos + Vector2(-2, -4 + wob), Vector2(4, 2)), Color("8fd6cf"))
 
+const HALO_OFFSETS := [Vector2(-1, 0), Vector2(1, 0), Vector2(0, -1), Vector2(0, 1)]
+var _halo_a := 0.3
+
+## Snow, ice and aurora chapters (R21-30, R41-50, R61-70, R81-90): light ground, so stronger halo and shadow.
+func _bright_chapter() -> bool:
+	var idx := int(sim.round_def.get("index", 0)) if sim != null else 0
+	return idx > 0 and ((idx - 1) / 10) in [2, 4, 6, 8]
+
 func _draw_unit(u) -> void:
 	if u.hidden and not u.dying:
 		_draw_burrow_trail(u)
@@ -499,6 +513,9 @@ func _draw_unit(u) -> void:
 			t = 0.0
 		if rec != null:
 			var fi: int = atlas.rec_index(rec, t)
+			if not u.dying:   # 1-px dark halo: keeps light units (white hero, pale bread) readable on snow and ice
+				var hc := Color(0.05, 0.05, 0.08, _halo_a)
+				for off in HALO_OFFSETS: _blit_rec(rec, fi, pos + off, flip, hc)
 			_blit_rec(rec, fi, pos, flip, mod)
 			drawn = true
 			if not u.dying:
@@ -711,34 +728,80 @@ func _draw_projectile(p) -> void:
 			var d := float(p.side)
 			draw_line(pos - Vector2(4.0 * d, 0), pos + Vector2(2.0 * d, 0), Color("e8e0c8"), 1.0)
 
+const TELE_INK := {"charge": Color("ff7a3a"), "lob": Color("ffb43c"), "burrow": Color("d08a48")}
+const TELE_RED := Color("ff4a3a")
+
+func _tele_ink(shape: String) -> Color:
+	return TELE_INK.get(shape, TELE_RED)
+
+## Ground half of a wind-up warning, drawn under the units: a striped danger patch over the exact hit width
+## whose bright edges close in from both sides as the hit approaches (the old pale rail sat on top of the units).
+func _draw_telegraph_zones() -> void:
+	for f in sim.fxs:
+		if not f.alive or f.kind != "telegraph" or f.warning_track >= 3: continue
+		var left := roundf(f.x - f.radius)
+		var right := roundf(f.x + f.radius)
+		var k := clampf(f.t / maxf(0.001, f.dur), 0.0, 1.0)
+		var ink := _tele_ink(str(f.warning_shape))
+		var pulse := 0.5 + 0.5 * sin(f.t * (6.0 + 18.0 * k))
+		var top := ground_y - 10.0      # bottom stays clear of the card bar at small screens
+		var h := 14.0
+		var zone := ink
+		zone.a = 0.16 + 0.14 * pulse
+		draw_rect(Rect2(left, top, right - left, h), zone)
+		# moving diagonal hazard stripes (stepped 2-px rows, clipped to the patch)
+		var st := ink.darkened(0.15)
+		st.a = 0.45 + 0.25 * pulse
+		var shift := fmod(f.t * 16.0, 8.0)
+		var sx := left - h + shift
+		while sx < right:
+			var ry := 0.0
+			while ry < h:
+				var x0 := maxf(left, sx + ry)
+				var x1 := minf(right, sx + ry + 3.0)
+				if x1 > x0: draw_rect(Rect2(x0, top + h - ry - 2.0, x1 - x0, 2.0), st)
+				ry += 2.0
+			sx += 8.0
+		# the part already "charged" (from both edges inward) glows stronger
+		var fill := roundf((right - left) * 0.5 * k)
+		var hot := ink
+		hot.a = 0.22 + 0.18 * pulse
+		draw_rect(Rect2(left, top, fill, h), hot)
+		draw_rect(Rect2(right - fill, top, fill, h), hot)
+		# closing edges: outlined bright posts at the hit extent and at the charge front
+		for ex in [left, right - 2.0]:
+			draw_rect(Rect2(ex - 1.0, top - 1.0, 4.0, h + 2.0), C_OUTLINE)
+			draw_rect(Rect2(ex, top, 2.0, h), ink.lightened(0.35))
+		if fill > 3.0 and fill < (right - left) * 0.5 - 2.0:
+			var lc := ink.lightened(0.6)
+			lc.a = 0.9
+			draw_rect(Rect2(left + fill - 1.0, top + 2.0, 1.0, h - 4.0), lc)
+			draw_rect(Rect2(right - fill, top + 2.0, 1.0, h - 4.0), lc)
+
+## Top half, drawn after the units so it is never hidden: a thin fuse rail at the feet line and the stack overflow.
 func _draw_telegraphs() -> void:
 	var overflow: Array[Vector2] = []
 	for f in sim.fxs:
 		if not f.alive or f.kind != "telegraph": continue
-		var left: float = f.x - f.radius
-		var right: float = f.x + f.radius
+		var left := roundf(f.x - f.radius)
+		var right := roundf(f.x + f.radius)
 		if f.warning_track >= 3:
 			overflow.append(Vector2(left, right))
 			continue
-		var y := ground_y - 1.0 - 7.0 * float(f.warning_track)
-		var band := Rect2(left, y, right - left, 4.0)
-		var ink := Color("bff3ee")
-		match f.warning_shape:
-			"charge": ink = Color("d9edff")
-			"lob": ink = Color("ffd47c")
-			"burrow": ink = Color("ead0af")
+		var ink := _tele_ink(str(f.warning_shape))
+		var y := ground_y + 3.0 - 3.0 * float(f.warning_track)
+		var band := Rect2(left, y, right - left, 2.0)
 		draw_rect(band.grow(1.0), C_OUTLINE)
-		draw_rect(band, ink.darkened(0.65))
-		var fill := band.size.x * 0.5 * clampf(f.t / maxf(0.001, f.dur), 0.0, 1.0)
-		draw_rect(Rect2(left, y, fill, 4), ink)
-		draw_rect(Rect2(right - fill, y, fill, 4), ink)
+		draw_rect(band, ink.darkened(0.55))
+		var fill := roundf(band.size.x * 0.5 * clampf(f.t / maxf(0.001, f.dur), 0.0, 1.0))
+		draw_rect(Rect2(left, y, fill, 2.0), ink.lightened(0.25))
+		draw_rect(Rect2(right - fill, y, fill, 2.0), ink.lightened(0.25))
 		if f.warning_shape == "lob" or f.warning_shape == "burrow":
 			# Three teeth distinguish a delayed ground hazard from the smooth slam rail.
-			for k in [0.25, 0.5, 0.75]:
-				draw_rect(Rect2(lerpf(left, right, k) - 1.0, y - 2.0, 3.0, 4.0), ink)
-		else:
-			for ex in [left, right - 2.0]:
-				draw_rect(Rect2(ex, y - 3.0, 2.0, 7.0), ink)
+			for q in [0.25, 0.5, 0.75]:
+				var tx := roundf(lerpf(left, right, q))
+				draw_rect(Rect2(tx - 2.0, y - 3.0, 4.0, 4.0), C_OUTLINE)
+				draw_rect(Rect2(tx - 1.0, y - 2.0, 2.0, 2.0), ink.lightened(0.4))
 	if overflow.is_empty(): return
 	overflow.sort_custom(func(a: Vector2, b: Vector2) -> bool: return a.x < b.x)
 	var span := overflow[0]
