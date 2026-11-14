@@ -447,7 +447,8 @@ func _refresh() -> void:
 		btn_buy.disabled = false
 	btn_buy.fill = UiStyle.C_ACCENT.darkened(0.15) if can_buy(u) else UiStyle.C_PANEL_LIGHT
 	btn_buy.queue_redraw()
-	btn_gold.visible = _gold_fits and short_of_gold(u) > 0 and GoldShopCatalog.enabled()
+	btn_gold.visible = _gold_fits and GoldShopCatalog.enabled()      # always there (2026-11-14 user); brighter when short
+	btn_gold.fill = UiStyle.C_GOLD.darkened(0.25 if short_of_gold(u) > 0 else 0.5)
 	if demo != null:
 		var d := target_def(u) if not u.is_empty() else {}
 		var lv := level_of(str(u.id)) if not u.is_empty() else 1
