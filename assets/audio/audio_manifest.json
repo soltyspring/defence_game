@@ -1542,6 +1542,7 @@
  "projectile_cue": {
   "arrow": "shoot_arrow",
   "rock": "shoot_rock",
+  "bread_ball": "shoot_rock",
   "spit": "shoot_spit"
  },
  "upgrade_result_cue": {

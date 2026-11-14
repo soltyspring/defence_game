@@ -6,7 +6,8 @@ idle, walk A, walk B, walk C / wind-up, shot, recoil, defeated.
 The sheet is not drawn on an exact 8x grid, so every cell is scaled by one factor that makes the idle pose WIDTH
 wide (premultiplied box filter), cut to hard alpha and reduced to one palette. All cells keep the same cell-relative
 x anchor (the idle pose's centre) so the gun never slides; each cell's lowest opaque row sits on the ground row.
-Output: assets/art/siege/siege.png + siege.json (atlas page `siege_v2`, anim_set `siege`) and siege_card.png (24x24).
+Output: assets/art/siege/siege.png + siege.json (atlas page `siege_v2`: anim_sets `siege` and the projectile `bread_ball`)
+and siege_card.png (24x24).
   python tools/art/release_slice/siege_sheet.py
 """
 import json
@@ -79,6 +80,72 @@ def frames() -> dict:
     return out
 
 
+BALL = 11                   # bread shot sprite size (the grey rock was 10)
+
+
+def bread_ball() -> list:
+    """The round cross-scored bread shot flying out of the muzzle in cell 6, cut out and spun in four quarter turns."""
+    sheet = np.asarray(Image.open(SRC).convert("RGB")).astype(np.float64)
+    c = cell(sheet, 6)
+    a = key(c)
+    h, w = a.shape
+    mx, mn = c.max(axis=2), c.min(axis=2)
+    smoke = (mx > 200) & ((mx - mn) / np.maximum(mx, 1) < 0.3)       # the cream flour puffs around the ball
+    m = (a > 0.5) & ~smoke
+    m[:, :int(w * 0.72)] = False
+    m[int(h * 0.45):] = False
+    m = largest_blob(m)                                               # drop stray flour specks
+    ys, xs = np.nonzero(m)
+    cy, cx = (ys.min() + ys.max() + 1) / 2.0, (xs.min() + xs.max() + 1) / 2.0
+    half = max(ys.max() + 1 - ys.min(), xs.max() + 1 - xs.min()) / 2.0 + 2   # square crop: the ball stays round
+    y0, y1 = int(round(cy - half)), int(round(cy + half))
+    x0, x1 = int(round(cx - half)), int(round(cx + half))
+    pad = np.zeros((h + 200, w + 200, 4))
+    pad[100:100 + h, 100:100 + w, :3] = c
+    pad[100:100 + h, 100:100 + w, 3] = np.where(m, a, 0) * 255
+    rgba = pad[y0 + 100:y1 + 100, x0 + 100:x1 + 100].astype(np.uint8)
+    img = Image.fromarray(rgba, "RGBA")
+    inner = BALL - 2                                                  # leave a pixel each side for the outline
+    pre = Image.fromarray(np.clip(rgba[..., :3] * (rgba[..., 3:4] / 255.0), 0, 255).astype(np.uint8), "RGB").resize((inner, inner), Image.BOX)
+    al = np.asarray(img.getchannel("A").resize((inner, inner), Image.BOX)) / 255.0
+    rgb = np.where(al[..., None] > 0, np.asarray(pre) / np.maximum(al[..., None], 1e-6), 0)
+    base = np.dstack([np.clip(rgb, 0, 255), np.where(al >= 0.5, 255, 0)]).astype(np.uint8)
+    q = np.asarray(Image.fromarray(base, "RGBA").convert("RGB").quantize(8, method=Image.Quantize.MEDIANCUT,
+                                                                         dither=Image.Dither.NONE).convert("RGB"))
+    core = np.dstack([q, base[..., 3]])
+    core[core[..., 3] == 0] = 0
+    base = np.zeros((BALL, BALL, 4), np.uint8)
+    base[1:-1, 1:-1] = core
+    on = base[..., 3] > 0
+    ring = np.zeros_like(on)                                          # 1-px dark crust outline, like the old shot
+    for dy, dx in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+        ring |= np.roll(np.roll(on, dy, 0), dx, 1)
+    ring &= ~on
+    base[ring] = (54, 28, 20, 255)
+    return [np.rot90(base, -i).copy() for i in range(4)]
+
+
+def largest_blob(m: np.ndarray) -> np.ndarray:
+    """4-connected component with the most pixels."""
+    seen = np.zeros_like(m)
+    best = None
+    for y, x in zip(*np.nonzero(m)):
+        if seen[y, x]: continue
+        stack, comp = [(y, x)], []
+        seen[y, x] = True
+        while stack:
+            cy, cx = stack.pop()
+            comp.append((cy, cx))
+            for ny, nx in ((cy - 1, cx), (cy + 1, cx), (cy, cx - 1), (cy, cx + 1)):
+                if 0 <= ny < m.shape[0] and 0 <= nx < m.shape[1] and m[ny, nx] and not seen[ny, nx]:
+                    seen[ny, nx] = True
+                    stack.append((ny, nx))
+        if best is None or len(comp) > len(best): best = comp
+    out = np.zeros_like(m)
+    for y, x in best: out[y, x] = True
+    return out
+
+
 def palette(fr: dict) -> dict:
     keys = list(fr)
     strip = np.concatenate([fr[k] for k in keys], axis=1)
@@ -115,6 +182,17 @@ def main() -> None:
             col += 1
         atlas["anims"]["siege"][name] = {"frames": names, "fps": fps, "loop": loop, "hit_frame": 2}
     atlas["anims"]["siege"]["die"] = atlas["anims"]["siege"]["death"]
+    # projectile `bread_ball` (data/units/units.json siege.projectile): 4 spin frames under the unit row
+    balls = bread_ball()
+    page = np.concatenate([page, np.zeros((BALL + 2, page.shape[1], 4), np.uint8)], axis=0)
+    names = []
+    for i, b in enumerate(balls):
+        x, y = 2 + i * (BALL + 2), FH + 1
+        page[y:y + BALL, x:x + BALL] = b
+        k = f"bread_ball/fly/{i}"
+        atlas["frames"][k] = {"x": x, "y": y, "w": BALL, "h": BALL, "pivot": [BALL // 2, BALL // 2]}
+        names.append(k)
+    atlas["anims"]["bread_ball"] = {"fly": {"frames": names, "fps": 12, "loop": True}}
     Image.fromarray(page, "RGBA").save(OUT / "siege.png", optimize=True)
     (OUT / "siege.json").write_text(json.dumps(atlas, indent=2) + "\n", encoding="utf-8")
     portrait(fr["idle"]).save(OUT / "siege_card.png")

@@ -134,7 +134,7 @@
       "range": 150,
       "speed": 22,
       "attack_type": "siege",
-      "projectile": "rock",
+      "projectile": "bread_ball",
       "splash": 30,
       "knockback": 10,
       "armor": 2,

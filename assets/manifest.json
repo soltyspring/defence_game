@@ -243,10 +243,11 @@
    "frames": "res://assets/art/siege/siege.json",
    "size": [
     1360,
-    48
+    61
    ],
    "anim_sets": [
-    "siege"
+    "siege",
+    "bread_ball"
    ]
   },
   {
@@ -634,7 +635,8 @@
   "base_enemy_c07": "gpt_nest_c07",
   "base_enemy_c08": "gpt_nest_c08",
   "base_enemy_c09": "gpt_nest_c09",
-  "base_enemy_c10": "gpt_nest_c10"
+  "base_enemy_c10": "gpt_nest_c10",
+  "bread_ball": "siege_v2"
  },
  "bases": {
   "player": {

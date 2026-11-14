@@ -814,7 +814,7 @@ class Demo extends Control:
 			if cream:
 				_cream_shot(Vector2(minf(ux + CREAM_TIP.x, tx - 8.0), gy - CREAM_TIP.y), Vector2(tx, gy - 16.0), f)
 			else:
-				var arc := 22.0 if str(def.get("projectile", "")) == "rock" else 8.0
+				var arc := 22.0 if str(def.get("projectile", "")) in ["rock", "bread_ball"] else 8.0
 				var p := Vector2(lerpf(ux + 10.0, tx, f), gy - 16.0 - sin(f * PI) * arc)
 				draw_rect(Rect2(p - Vector2(2, 2), Vector2(4, 4)), Color(0.08, 0.05, 0.04))
 				draw_rect(Rect2(p - Vector2(1, 1), Vector2(3, 3)), Color(1.0, 0.86, 0.5))

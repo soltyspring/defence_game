@@ -171,6 +171,46 @@
         34,
         44
       ]
+    },
+    "bread_ball/fly/0": {
+      "x": 2,
+      "y": 49,
+      "w": 11,
+      "h": 11,
+      "pivot": [
+        5,
+        5
+      ]
+    },
+    "bread_ball/fly/1": {
+      "x": 15,
+      "y": 49,
+      "w": 11,
+      "h": 11,
+      "pivot": [
+        5,
+        5
+      ]
+    },
+    "bread_ball/fly/2": {
+      "x": 28,
+      "y": 49,
+      "w": 11,
+      "h": 11,
+      "pivot": [
+        5,
+        5
+      ]
+    },
+    "bread_ball/fly/3": {
+      "x": 41,
+      "y": 49,
+      "w": 11,
+      "h": 11,
+      "pivot": [
+        5,
+        5
+      ]
     }
   },
   "anims": {
@@ -237,6 +277,18 @@
         "fps": 8,
         "loop": false,
         "hit_frame": 2
+      }
+    },
+    "bread_ball": {
+      "fly": {
+        "frames": [
+          "bread_ball/fly/0",
+          "bread_ball/fly/1",
+          "bread_ball/fly/2",
+          "bread_ball/fly/3"
+        ],
+        "fps": 12,
+        "loop": true
       }
     }
   }
