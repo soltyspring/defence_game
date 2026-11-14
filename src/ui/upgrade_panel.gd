@@ -781,10 +781,10 @@ class Demo extends Control:
 		for sx in spots:
 			_dummy(Vector2(sx + (1.0 if hit_now and int(since * 40) % 2 == 0 else 0.0), gy), hit_now)
 		var cream: bool = str(def.get("projectile", "")) == "cream"
-		if splash > 0.0 and since >= 0.0 and since < 0.3:
-			var ring := Color(1.0, 0.97, 0.88) if cream else Color(1.0, 0.6, 0.2)
-			ring.a = 0.9 - since * 2.5
-			draw_arc(Vector2(tx + 15.0, gy - 6), maxf(12.0, splash * px + 8.0) * minf(1.0, 0.4 + since * 4.0), 0, TAU, 24, ring, 1.0)
+		if cream:
+			if since >= 0.0 and since < CREAM_LINGER: _cream_splat(spots, gy, since)
+		elif splash > 0.0 and since >= 0.0 and since < 0.3:
+			draw_arc(Vector2(tx + 15.0, gy - 6), maxf(12.0, splash * px + 8.0) * minf(1.0, 0.4 + since * 4.0), 0, TAU, 24, Color(1.0, 0.6, 0.2, 0.9 - since * 2.5), 1.0)
 		# the character
 		var mod := Color(1, 1, 1, 0.55) if locked else Color.WHITE
 		var drawn := false
@@ -809,13 +809,67 @@ class Demo extends Control:
 		# projectile
 		if ranged and ct >= hit_t and ct < impact:
 			var f := (ct - hit_t) / fly
-			var arc := 22.0 if str(def.get("projectile", "")) == "rock" else 8.0
-			var p := Vector2(lerpf(ux + 10.0, tx, f), gy - 16.0 - sin(f * PI) * arc)
-			draw_rect(Rect2(p - Vector2(2, 2), Vector2(4, 4)), Color(0.08, 0.05, 0.04))
-			draw_rect(Rect2(p - Vector2(1, 1), Vector2(3, 3)), Color(1.0, 0.98, 0.94) if cream else Color(1.0, 0.86, 0.5))
+			if cream:
+				_cream_shot(Vector2(minf(ux + CREAM_TIP.x, tx - 8.0), gy - CREAM_TIP.y), Vector2(tx, gy - 16.0), f)
+			else:
+				var arc := 22.0 if str(def.get("projectile", "")) == "rock" else 8.0
+				var p := Vector2(lerpf(ux + 10.0, tx, f), gy - 16.0 - sin(f * PI) * arc)
+				draw_rect(Rect2(p - Vector2(2, 2), Vector2(4, 4)), Color(0.08, 0.05, 0.04))
+				draw_rect(Rect2(p - Vector2(1, 1), Vector2(3, 3)), Color(1.0, 0.86, 0.5))
 		# damage number at the current level
 		if since >= 0.0 and since < 0.55 and atk > 0.0:
 			UiStyle.draw_number(self, "-%d" % int(roundf(atk)), Vector2(tx, gy - 30.0 - since * 18.0), UiStyle.FONT_M, Color(UiStyle.C_HP_ENEMY, 1.0 - since * 1.4), 0, &"bold")
+
+	# Cake: the cream leaves the tip of the burst in its hit frame (sprite px 52,30 against the 24,44 pivot, at 2x).
+	const CREAM_TIP := Vector2(56.0, 28.0)
+	const CREAM_LINGER := 0.6
+	const CREAM := Color(1.0, 0.98, 0.94)
+	const CREAM_SHADE := Color(0.85, 0.79, 0.66)
+
+	# whipped-cream dollop, nose to the right: 1 cream, 2 shade (one row per string)
+	const DOLLOP := ["..111...", ".111111.", "11111111", "1111111.", ".22222..."]
+
+	## Cake shot: a dollop of whipped cream flying almost straight from the dispenser, two drops trailing behind.
+	func _cream_shot(from: Vector2, to: Vector2, f: float) -> void:
+		for i in [2, 1]:
+			var g := clampf(f - float(i) * 0.12, 0.0, 1.0)
+			if g <= 0.0: continue
+			var p := (from.lerp(to, g) - Vector2(0.0, sin(g * PI) * 3.0 - float(i))).round()
+			var s := 3.0 if i == 1 else 2.0
+			draw_rect(Rect2(p + Vector2(0, 1), Vector2(s, s)), CREAM_SHADE)
+			draw_rect(Rect2(p, Vector2(s, s)), CREAM)
+		var o := (from.lerp(to, f) - Vector2(4.0, 3.0 + sin(f * PI) * 3.0)).round()
+		for y in DOLLOP.size():
+			var row: String = DOLLOP[y]
+			for x in row.length():
+				var ch := row[x]
+				if ch != ".": draw_rect(Rect2(o + Vector2(x, y), Vector2.ONE), CREAM if ch == "1" else CREAM_SHADE)
+
+	## Cake hit: cream bursts over the dummies, lands on their heads and pools on the ground, then fades.
+	func _cream_splat(spots: Array, gy: float, since: float) -> void:
+		var k := since / CREAM_LINGER
+		var a := 1.0 - smoothstep(0.6, 1.0, k)
+		var shade := Color(CREAM_SHADE, a)
+		var fill := Color(CREAM, a)
+		var x0: float = spots.front() - 10.0
+		var x1: float = spots.back() + 10.0
+		var spread := minf(1.0, since * 8.0)
+		var mid := (x0 + x1) * 0.5
+		var hw := (x1 - x0) * 0.5 * spread
+		draw_rect(Rect2(roundf(mid - hw), gy - 2.0, roundf(hw * 2.0), 2.0), fill)
+		for sx in spots:
+			# a cap of cream on the head
+			draw_rect(Rect2(sx - 5.0, gy - 27.0, 10.0, 3.0), shade)
+			draw_rect(Rect2(sx - 4.0, gy - 29.0, 8.0, 3.0), fill)
+			draw_rect(Rect2(sx - 1.0, gy - 31.0, 3.0, 2.0), fill)
+		# flying blobs over the group for the first moment
+		if since < 0.25:
+			var up := sin(since / 0.25 * PI) * 10.0
+			for i in 5:
+				var bx := mid + (float(i) - 2.0) * maxf(8.0, hw * 0.45)
+				var by := gy - 22.0 - up * (1.0 - absf(float(i) - 2.0) * 0.25)
+				draw_rect(Rect2(roundf(bx) - 2.0, roundf(by), 4.0, 3.0), shade)
+				draw_rect(Rect2(roundf(bx) - 2.0, roundf(by) - 1.0, 4.0, 3.0), fill)
 
 	## Practice dummy: a post, a straw body and a head; turns pale for a moment when hit.
 	func _dummy(p: Vector2, hit: bool) -> void:
