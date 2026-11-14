@@ -66,6 +66,10 @@ func _build() -> void:
 		if not n.is_empty():
 			_on_content_migrated(n)
 	show_page(last_page)
+	if GoldShopCatalog.return_to_upgrades:      # back from the shop that the upgrade screen opened
+		GoldShopCatalog.return_to_upgrades = false
+		last_page = "lobby"
+		open_upgrades.call_deferred()
 	_refresh_labels()
 
 func show_page(p: String) -> void:

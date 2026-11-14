@@ -24,7 +24,7 @@ const FALLBACK_KO := {
 	"ui.resume": "계속하기",
 	"ui.retry": "다시하기",
 	"ui.next": "다음 라운드",
-	"ui.menu": "라운드 선택",
+	"ui.menu": "메뉴",
 	"ui.victory": "승리!",
 	"ui.defeat": "패배",
 	"ui.time": "시간",

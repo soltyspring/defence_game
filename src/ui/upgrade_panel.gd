@@ -208,6 +208,9 @@ var list: Array = []            # every row, in display order (rows = the ones o
 var selected_id := ""
 var row_buttons: Array = []     # one per visible row: tap = select
 var btn_buy: Control
+var btn_gold: Control           # 골드 구매: shown while the selected purchase is short of gold (shop builds only)
+var _gold_fits := false
+const GoldShopCatalog := preload("res://src/core/gold_shop_catalog.gd")
 var demo: Control               # attack example (redraws on its own, the panel does not)
 var detail_rect := Rect2()
 var _locked := {}               # upgrade id -> true while its character has not joined
@@ -241,6 +244,13 @@ func _build() -> void:
 	btn_buy.tapped.connect(_buy_selected)
 	add_child(btn_buy)
 	buy_buttons = [btn_buy]
+	btn_gold = TouchButton.new()
+	btn_gold.text = UiText.t("upg.buy_gold")
+	btn_gold.font_size = UiStyle.FONT_S
+	btn_gold.fill = UiStyle.C_GOLD.darkened(0.45)
+	btn_gold.tapped.connect(_on_gold)
+	btn_gold.hide()
+	add_child(btn_gold)
 	demo = Demo.new()
 	demo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(demo)
@@ -384,6 +394,11 @@ func _layout(_view: Vector2, safe: Rect2) -> void:
 	var buy_width := minf(132.0, detail_rect.size.x - btn_close.size.x - 8.0)
 	btn_buy.position = Vector2(detail_rect.end.x - buy_width, by).round()
 	btn_buy.size = Vector2(buy_width, row_h)
+	# 골드 구매 sits between 닫기 and the buy button; dropped when there is no room for a readable button
+	var gx := btn_close.position.x + btn_close.size.x + 8.0
+	_gold_fits = btn_buy.position.x - 8.0 - gx >= 64.0
+	btn_gold.position = Vector2(gx, by).round()
+	btn_gold.size = Vector2(maxf(0.0, btn_buy.position.x - 8.0 - gx), row_h)
 	# Leave room for traits, next-level stats and the purchase notice on short screens.
 	var dh := clampf(detail_rect.size.y - 34 - 16 - 3 * 18 - 22, 44.0, 120.0)
 	demo.position = (detail_rect.position + Vector2(0, 34)).round()
@@ -432,12 +447,29 @@ func _refresh() -> void:
 		btn_buy.disabled = false
 	btn_buy.fill = UiStyle.C_ACCENT.darkened(0.15) if can_buy(u) else UiStyle.C_PANEL_LIGHT
 	btn_buy.queue_redraw()
+	btn_gold.visible = _gold_fits and short_of_gold(u) > 0 and GoldShopCatalog.enabled()
 	if demo != null:
 		var d := target_def(u) if not u.is_empty() else {}
 		var lv := level_of(str(u.id)) if not u.is_empty() else 1
 		demo.setup(d, UiStyle.ui_icon(icon_frame(u)) if not u.is_empty() else null,
 			float(d.get("atk", 0)) * (level_mult(u, "atk_mult", lv) if not u.is_empty() else 1.0), is_locked(u) and hire == 0)
 	queue_redraw()
+
+## Gold missing for what the buy button would do right now (next level or recruiting); 0 = enough, or nothing to buy.
+func short_of_gold(u: Dictionary) -> int:
+	if u.is_empty(): return 0
+	if hire_cost(u) > 0: return maxi(0, hire_cost(u) - coins())
+	if is_locked(u) or is_max(u) or _gated(u): return 0
+	return maxi(0, next_cost(u) - coins())
+
+## 골드 구매: leave for the gold shop; the menu brings the player back to this screen afterwards.
+func _on_gold() -> void:
+	var b := _bus()
+	if b == null or not b.has_signal("cmd_open_screen"): return
+	GoldShopCatalog.return_to_upgrades = true
+	hide()
+	closed.emit()
+	b.emit_signal("cmd_open_screen", &"gold_shop")
 
 func _on_row(slot: int) -> void:
 	if slot < rows.size():

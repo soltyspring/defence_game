@@ -3,6 +3,9 @@ extends RefCounted
 ## Local shop preview only. No payment provider is called by this catalog.
 const PACKS := [1000, 2900, 4800, 9700]
 
+## Set by the upgrade screen's 골드 구매 button: the menu reopens the upgrade screen when the shop is left.
+static var return_to_upgrades := false
+
 static func enabled() -> bool:
 	return OS.has_feature("gold_shop_preview") or (OS.is_debug_build() and "--gold-shop-preview" in OS.get_cmdline_user_args())
 

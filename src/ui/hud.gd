@@ -493,7 +493,8 @@ func _on_retry() -> void:
 func _on_menu() -> void:
 	pause_layer.hide()
 	_cmd(&"cmd_set_paused", [false])
-	_cmd(&"cmd_open_screen", [&"round_select"])
+	load("res://src/ui/main_menu.gd").last_page = "lobby"      # 메뉴 = the lobby, not round select
+	_cmd(&"cmd_open_screen", [&"menu"])
 
 func _on_settings() -> void:
 	pause_layer.hide()

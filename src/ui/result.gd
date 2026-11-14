@@ -16,9 +16,17 @@ func _build() -> void:
 	btn_retry = make_button(UiText.t("ui.retry"), func(): emit_cmd(&"cmd_retry"))
 	btn_next = make_button(UiText.t("ui.next"), _on_next)
 	btn_next.fill = UiStyle.C_ACCENT.darkened(0.15)
-	btn_menu = make_button(UiText.t("ui.menu"), func(): emit_cmd(&"cmd_open_screen", [&"round_select"]))
+	btn_menu = make_button(UiText.t("ui.menu"), _on_menu)
 	btn_upgrades = make_button(UiText.t("ui.upgrades"), open_upgrades)
 	_apply()
+
+## 메뉴: back to the lobby (기사단 본부), where 라운드 선택 and 강화 are (2026-11-14 user; was straight to round select).
+func _to_lobby() -> void:
+	load("res://src/ui/main_menu.gd").last_page = "lobby"
+
+func _on_menu() -> void:
+	_to_lobby()
+	emit_cmd(&"cmd_open_screen", [&"menu"])
 
 func _bus_links() -> Array:
 	return [
@@ -105,7 +113,8 @@ func _affordable_upgrade() -> bool:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST and is_inside_tree() and btn_menu != null and not modal_open() and claim_back():
-		emit_cmd_deferred(&"cmd_open_screen", [&"round_select"])   # deferred: not inside the notification walk
+		_to_lobby()
+		emit_cmd_deferred(&"cmd_open_screen", [&"menu"])   # deferred: not inside the notification walk
 
 func _process(delta: float) -> void:
 	if _shown_t < 1.0:
