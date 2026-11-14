@@ -69,7 +69,7 @@ const MINIMAP_SKIN := preload("res://assets/art/hud_skin/minimap_illustrated.png
 func _draw() -> void:
 	draw_texture_rect(MINIMAP_SKIN, Rect2(0, 0, size.x, 32), false)
 	if state.is_empty(): return
-	var y := 17.0
+	var y := 21.0 # just above the illustrated ground line
 	var bx := map_x(float(state.get("player_base", 0)))
 	var ex := map_x(float(state.get("enemy_base", 1)))
 	var dots: Array = state.get("dots", [])
