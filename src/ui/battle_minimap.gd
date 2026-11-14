@@ -58,22 +58,16 @@ func _notification(what: int) -> void:
 		_mouse_down = false
 		_finger = -1
 
-## Overview strip, drawn to match the base HP strip beside it (same dark plate, same side colours):
-##   lane track with the ground each side holds tinted in its colour (the front line is where the tints meet),
-##   bakery and nest at the ends, allies as ticks above the lane and enemies below it (a boss is a larger block),
-##   the hero as an outlined gold diamond, and the part of the lane on screen as corner brackets
-##   (a full frame while the player is scouting away from the hero).
+## Illustrated battlefield with live front lines, unit markers and camera bounds.
 const Palette := preload("res://src/ui/battle_hud_palette.gd")
 const C_ALLY := Palette.ALLY
 const C_FOE := Palette.FOE
 const C_INK := Color(0.05, 0.04, 0.04)
 
-const MINIMAP_SKIN := preload("res://assets/art/hud_skin/minimap.png")
+const MINIMAP_SKIN := preload("res://assets/art/hud_skin/minimap_illustrated.png")
 
 func _draw() -> void:
-	# Taller face without borrowing width from the base health strip.
-	draw_texture_rect(MINIMAP_SKIN, Rect2(0, 3, size.x, 28), false)
-	draw_rect(Rect2(5, 7, size.x - 10, 20), Color("504039"))
+	draw_texture_rect(MINIMAP_SKIN, Rect2(0, 0, size.x, 32), false)
 	if state.is_empty(): return
 	var y := 17.0
 	var bx := map_x(float(state.get("player_base", 0)))
@@ -92,10 +86,10 @@ func _draw() -> void:
 	if af > ef:
 		af = roundf((af + ef) * 0.5)
 		ef = af
-	draw_rect(Rect2(7, y - 2, size.x - 14, 5), C_INK)
-	draw_rect(Rect2(8, y - 1, size.x - 16, 3), Color("836958"))
-	if af > bx: draw_rect(Rect2(bx, y - 1, af - bx, 2), Color(C_ALLY, 0.68))
-	if ex > ef: draw_rect(Rect2(ef, y, ex - ef, 2), Color(C_FOE, 0.68))
+	# Tint only the live front; the lane and both landmarks come from the illustration.
+	var inset := 8.0
+	if af > bx + inset: draw_rect(Rect2(bx + inset, y, af - bx - inset, 1), C_ALLY)
+	if ex - inset > ef: draw_rect(Rect2(ef, y, ex - inset - ef, 1), C_FOE)
 	for dot in dots:
 		var x := map_x(float(dot[0]))
 		if int(dot[1]) > 0:
@@ -113,18 +107,6 @@ func _draw() -> void:
 			var r := 4.0 - k
 			var c := Vector2(hx, y - 5)
 			draw_colored_polygon(PackedVector2Array([c + Vector2(0, -r), c + Vector2(r, 0), c + Vector2(0, r), c + Vector2(-r, 0)]), C_INK if k == 0 else Color("ffe19a"))
-	# Draw bases above the unit rows so a crowd cannot erase either landmark.
-	draw_rect(Rect2(bx - 6, y - 5, 12, 13), C_INK)
-	draw_rect(Rect2(bx - 4, y - 7, 8, 3), C_INK)
-	draw_rect(Rect2(bx - 3, y - 6, 6, 2), Palette.ALLY_LIGHT)
-	draw_rect(Rect2(bx - 5, y - 4, 10, 3), C_ALLY)
-	draw_rect(Rect2(bx - 4, y - 1, 8, 8), Color("f3d8a3"))
-	draw_rect(Rect2(bx - 1, y + 2, 2, 5), C_INK)
-	draw_rect(Rect2(ex - 6, y - 3, 12, 11), C_INK)
-	draw_rect(Rect2(ex - 4, y - 6, 8, 5), C_INK)
-	draw_rect(Rect2(ex - 3, y - 5, 6, 3), Palette.FOE_LIGHT)
-	draw_rect(Rect2(ex - 5, y - 2, 10, 9), C_FOE)
-	draw_rect(Rect2(ex - 2, y + 2, 4, 5), C_INK)
 	# the part of the lane on screen
 	var a := map_x(float(state.get("view_left", 0)))
 	var b := maxf(a + 5.0, map_x(float(state.get("view_right", 1))))

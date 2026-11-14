@@ -146,8 +146,8 @@ var name_rect := Rect2()
 var income_rect := Rect2()
 ## Geometry of the base HP strip inside layout.bases, shared with the skin overlay (hud_skin.gd TopSkin).
 static func base_bars(r: Rect2) -> Dictionary:
-	var h := 18.0
-	var y := r.position.y + 3
+	var h := 22.0
+	var y := r.position.y - 1
 	var cy := y + h / 2
 	var icon_w := 18.0
 	var mid := roundf(r.get_center().x)
@@ -194,10 +194,10 @@ func _draw_bases(r: Rect2, wr: Rect2) -> void:
 			var fill := Rect2(bar.position.x if side == 0 else bar.end.x - w, bar.position.y, w, bar.size.y)
 			draw_rect(fill, Palette.ALLY if side == 0 else Palette.FOE)
 			if side == 1: # Keep a shape cue for players who cannot distinguish the two hues.
-				var x := bar.end.x - 3.0
+				var x := bar.end.x - 5.0
 				while x >= fill.position.x:
-					draw_rect(Rect2(x, fill.position.y + 1, 1, fill.size.y - 2), Palette.FOE_STRIPE)
-					x -= 5.0
+					draw_rect(Rect2(x, fill.end.y - 3, 1, 2), Palette.FOE_STRIPE)
+					x -= 10.0
 			draw_rect(Rect2(fill.position, Vector2(w, 1)), Palette.ALLY_LIGHT if side == 0 else Palette.FOE_LIGHT)
 			if side == 1 and ratio < 0.3:   # their base nearly down: a pale frame (ours pulses, hud_skin.gd TopSkin)
 				draw_rect(bar.grow(1), Color("fff0b0"), false, 1.0)

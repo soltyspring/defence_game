@@ -50,7 +50,7 @@ static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min
 	var bars_x := s.position.x + res_w + GAP * 2
 	var follow_r := Rect2(pause_r.position.x-TOUCH_GAP-t,s.position.y,t,t)
 	var map_w := roundf(clampf(s.size.x*0.15,MAP_MIN,MAP_MAX))
-	var map_r := Rect2(follow_r.position.x-TOUCH_GAP-map_w,s.position.y,map_w,t)
+	var map_r := Rect2(follow_r.position.x-TOUCH_GAP-map_w,s.position.y-1,map_w,t)
 	var bars_end := map_r.position.x - GAP * 2
 	if bars_end - bars_x < 60.0:
 		# Too narrow for bars + overview: drop the overview (zero-size = hidden, no input) instead of letting it
