@@ -1,4 +1,4 @@
-# 케이크 화염병 재작화 (ChatGPT 이미지 생성용)
+# 케이크 크림병 재작화 (ChatGPT 이미지 생성용)
 
 대상: 지금의 고추빵(내부 ID `chili`)을 **케이크**로 바꾼다. 고추 모양이라 빵으로 보이지 않았다. 역할(화염, 뭉친 적 광역 공격, R14 해금)과 동작 구성은 그대로다.
 
@@ -13,6 +13,7 @@
 | `3_sheet_layout.png` | 8동작 칸 배치. 자홍색 배경, 32px 몸통을 8배로 그린 크기 |
 | `4_current_chili.png` | 바꿀 대상(고추빵). 동작 구성과 크기만 참고하고 모양은 버린다 |
 | `5_finished_sibling.png` | 같은 묶음으로 이미 들어간 도넛 시트. 선 굵기·칸 안 위치·크기를 여기에 맞춘다 |
+| `6_cake_fire_draft.png` | ②로 받은 첫 결과(토치 불꽃). 몸통은 확정, ③에서 공격만 생크림으로 바꾼다 |
 
 ## 진행 방법
 
@@ -58,6 +59,21 @@ Rules for the sheet:
 - No grid lines, no cell borders, no numbers, no text, no ground, no cast shadow, no background objects.
 
 Reply "ready" and wait for the unit prompt.
+```
+
+## ③ 생크림으로 바꾸기 (2026-11-14, ② 결과를 받은 같은 대화에서)
+
+②의 결과(`6_cake_fire_draft.png`)는 몸통이 좋아서 그대로 쓴다. 공격만 불꽃 대신 생크림으로 바꾼다. 게임 쪽 투사체와 터지는 효과는 이미 생크림으로 바뀌었고, 설명도 "케이크 크림병"이다.
+같은 대화에서 아래를 보낸다. 대화가 끊겼으면 새 대화에 이미지 1–3, 5, 6을 첨부하고 ①을 보낸 뒤 "Redraw 6_cake_fire_draft with these changes:"를 앞에 붙여 보낸다.
+
+```text
+Great cake. Keep the body, face, frosting, candles, legs, size and every cell position exactly the same. Change only the weapon and the attack:
+- Weapon: a whipped-cream dispenser instead of the blowtorch: the same small silver canister, but with a white star-shaped piping tip on a short nozzle pointing right. No brass torch head.
+- Cell 5 (wind-up): squeezes the dispenser lever, a tiny white cream bead at the tip. The candle flames stay normal size.
+- Cell 6 (hit): the dispenser shoots a thick wavy burst of fluffy WHITE whipped cream to the right (about 16 px long, chunky pixel cream swirls with ivory shading and a few flying cream drops). No fire, no orange, no yellow in the shot.
+- Cell 7 (follow-through): a small cream blob drips from the tip and a couple of cream drops fall; no smoke.
+- Cells 1-4 and 8 stay as they are, only with the new dispenser in hand.
+Same rules as before: flat #FF00FF background, true 8x8 pixel blocks, no pink, purple or magenta on the character.
 ```
 
 ## ② 케이크 프롬프트
