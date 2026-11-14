@@ -272,7 +272,7 @@ func _on_snapshot(s: Dictionary) -> void:
 	top.snap = s            # hud_top redraws itself only if a drawn value changed
 	minimap.state = s.get("map", {})
 	btn_follow.visible = bool(s.get("map", {}).get("scouting", false))
-	btn_speed.visible = _round_index >= 3      # R1-R2 teach at x1 (battle.gd SPEED_FROM_ROUND)
+	btn_speed.visible = not btn_follow.visible and _round_index >= 3      # R1-R2 teach at x1 (battle.gd SPEED_FROM_ROUND)
 	btn_follow.fill = UiStyle.C_ACCENT.darkened(0.25) if bool(s.get("map", {}).get("scouting", false)) else UiStyle.C_PANEL_LIGHT
 	var gold := float(s.get("gold", 0))
 	var army: Dictionary = s.get("army", {})

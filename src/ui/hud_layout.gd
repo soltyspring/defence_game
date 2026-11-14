@@ -48,9 +48,9 @@ static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min
 	var res_w := clampf(s.size.x * 0.26, 132.0, 180.0)
 	out.resources = Rect2(s.position, Vector2(res_w, top_h))
 	var bars_x := s.position.x + res_w + GAP * 2
-	var follow_r := Rect2(pause_r.position.x-TOUCH_GAP-t,s.position.y,t,t)
-	var map_w := roundf(clampf(s.size.x*0.15,MAP_MIN,MAP_MAX))
-	var map_r := Rect2(follow_r.position.x-TOUCH_GAP-map_w,s.position.y-1,map_w,t)
+	var follow_r := speed_r # The speed slot shows return-to-hero while scouting.
+	var map_w := roundf(clampf(s.size.x * 0.20, MAP_MIN, MAP_MAX + 24.0))
+	var map_r := Rect2(pause_r.position.x-TOUCH_GAP-map_w,s.position.y-1,map_w,t)
 	var bars_end := map_r.position.x - GAP * 2
 	if bars_end - bars_x < 60.0:
 		# Too narrow for bars + overview: drop the overview (zero-size = hidden, no input) instead of letting it
@@ -196,7 +196,7 @@ static func lane_band(view: Vector2) -> Rect2:
 static func touch_rects(l: Dictionary) -> Array[Rect2]:
 	var r: Array[Rect2] = [l.pause, l.speed, l.move_left, l.move_right, l.worker]
 	if l.has("minimap") and (l.minimap as Rect2).size.x > 0.0: r.append(l.minimap)
-	if l.has("follow"): r.append(l.follow)
+	if l.has("follow") and l.follow != l.speed: r.append(l.follow)
 	for c in l.cards:
 		r.append(c)
 	for c in l.skills:
