@@ -5,7 +5,7 @@ ground line in each cell (docs/art/release_slice/cheer_regen/PROMPTS.md). Some s
 so a margin inside every cell is ignored.
 Only units whose sheet matches the in-game sprite are imported (USE below); the others wait for a redraw.
 Each cell is keyed, scaled so the first (crouch) pose is as tall as the unit's in-game idle frame (SCALE_FIX trims a few), reduced with a
-premultiplied box filter, cut to hard alpha and reduced to one palette per unit. The pivot is the feet on the
+premultiplied box filter, cut to hard alpha and colour-matched to the unit's in-game sprite (same mean/spread, then only in-game colours). The pivot is the feet on the
 ground line, at the in-game sprite's pivot x (as a share of the crouch pose), the same in all four frames, so jumps keep their height and nothing jitters sideways.
 Output: assets/art/cheer/cheer.png + cheer.json {anim_set: {"frames": [[x, y, w, h], ...], "pivot": [px, py]}}
   python tools/art/import_cheer.py
@@ -20,9 +20,10 @@ ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "docs/art/gpt_sources/cheer"
 OUT = ROOT / "assets/art/cheer"
 CELL_W, CELL_H, MARGIN = 384, 512, 10
-COLOURS = 24
 # per-unit size trim after the height match: the oven sheet is drawn wider than the game's oven
-SCALE_FIX = {"siege": 0.8}
+SCALE_FIX = {"siege": 0.8, "melee_basic": 0.85}
+# per-unit frame swaps: the toast's landing pose stretches its legs; it ends on its happy crouch instead
+FRAME_SUB = {"melee_basic": {3: 0}}
 # anim_set: (sheet, row) — only sheets drawn from the sprites the game really uses
 USE = {
     "hero_captain": (1, 0),
@@ -62,6 +63,50 @@ def game_idle(aset: str):
     return bb[3] - bb[1], bb[2] - bb[0], (float(v["pivot"][0]) - bb[0]) / float(bb[2] - bb[0])
 
 
+def game_pixels(aset: str) -> np.ndarray:
+    """Every opaque pixel of the unit's in-game idle / walk / attack frames (N x 3, 0..255)."""
+    js, png = GAME[aset]
+    a = json.loads((ROOT / js).read_text(encoding="utf-8"))
+    img = np.asarray(Image.open(ROOT / png).convert("RGBA"))
+    px = []
+    for anim in ("idle", "walk", "attack"):
+        for fn in a["anims"][aset].get(anim, {}).get("frames", []):
+            v = a["frames"][fn]
+            f = img[v["y"]:v["y"] + v["h"], v["x"]:v["x"] + v["w"]].reshape(-1, 4)
+            px.append(f[f[:, 3] > 127][:, :3])
+    return np.concatenate(px).astype(np.float64)
+
+
+def to_lab(rgb: np.ndarray) -> np.ndarray:
+    c = rgb / 255.0
+    c = np.where(c > 0.04045, ((c + 0.055) / 1.055) ** 2.4, c / 12.92)
+    xyz = c @ np.array([[0.4124, 0.2126, 0.0193], [0.3576, 0.7152, 0.1192], [0.1805, 0.0722, 0.9505]])
+    xyz = xyz / np.array([0.95047, 1.0, 1.08883])
+    f = np.where(xyz > 0.008856, np.cbrt(xyz), 7.787 * xyz + 16.0 / 116.0)
+    return np.stack([116.0 * f[:, 1] - 16.0, 500.0 * (f[:, 0] - f[:, 1]), 200.0 * (f[:, 1] - f[:, 2])], axis=1)
+
+
+def match_colours(frames, aset: str):
+    """Colour-correct the cheer to the in-game sprite (2026-11-15 user: e.g. the roll came out darker): move the
+    cheer's Lab mean / spread onto the game sprite's, then paint every pixel with its nearest in-game colour."""
+    game = game_pixels(aset)
+    pal = np.unique(game.astype(np.uint8), axis=0).astype(np.float64)
+    pal_lab = to_lab(pal)
+    g_lab = to_lab(game)
+    c_lab = to_lab(np.concatenate([f[0][f[1]] for f in frames]).astype(np.float64))
+    mu_g, sd_g = g_lab.mean(0), g_lab.std(0) + 1e-6
+    mu_c, sd_c = c_lab.mean(0), c_lab.std(0) + 1e-6
+    gain = np.clip(sd_g / sd_c, 0.7, 1.4)
+    out = []
+    for rgb, on in frames:
+        flat = rgb.reshape(-1, 3).astype(np.float64)
+        lab = (to_lab(flat) - mu_c) * gain + mu_g
+        d = ((lab[:, None, :] - pal_lab[None, :, :]) ** 2).sum(-1)
+        q = pal[d.argmin(1)].reshape(rgb.shape).astype(np.uint8)
+        out.append(Image.fromarray(np.dstack([q, np.where(on, 255, 0).astype(np.uint8)]), "RGBA"))
+    return out
+
+
 def cells(sheet: np.ndarray, row: int):
     out = []
     for c in range(4):
@@ -98,14 +143,9 @@ def unit(sheet: np.ndarray, row: int, aset: str):
         aa = np.asarray(al).astype(np.float64) / 255.0
         rgb = np.where(aa[..., None] > 0, rgb / np.maximum(aa[..., None], 1e-6), 0)
         frames.append((np.clip(rgb, 0, 255).astype(np.uint8), aa >= 0.5))
-    # one palette per unit
-    stack = np.concatenate([f[0][f[1]] for f in frames]).reshape(-1, 1, 3)
-    pal = Image.fromarray(stack, "RGB").quantize(colors=COLOURS, method=Image.Quantize.MEDIANCUT)
-    out = []
-    for rgb, on in frames:
-        q = np.asarray(Image.fromarray(rgb, "RGB").quantize(palette=pal, dither=Image.Dither.NONE).convert("RGB"))
-        rgba = np.dstack([q, np.where(on, 255, 0).astype(np.uint8)])
-        out.append(Image.fromarray(rgba, "RGBA"))
+    out = match_colours(frames, aset)
+    for dst, src in FRAME_SUB.get(aset, {}).items():
+        out[dst] = out[src].copy()
     # trim all four frames to one shared box so the pivot stays put
     boxes = [im.getbbox() for im in out]
     l = min(b[0] for b in boxes); t = min(b[1] for b in boxes)
