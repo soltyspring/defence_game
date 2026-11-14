@@ -308,12 +308,11 @@ def characters():
                 rgba = np.zeros((512, 512, 4), np.uint8)
                 rgba[~mask, :3] = rgb[~mask]
                 rgba[~mask, 3] = 255
-                # Pillow resamples RGBA with premultiplied alpha, so keyed pink cannot bleed in.
+                # Sample the original dot colors directly. Averaging here softens eyes,
+                # outlines and flour marks before Godot can display the pixels.
                 side = round(512 * height)
-                sm = np.array(Image.fromarray(rgba).resize((side, side), Image.Resampling.BOX))
-                sm[..., 3] = np.where(sm[..., 3] >= 128, 255, 0)
-                sm[sm[..., 3] == 0] = 0
-                sm = quantize(sm, 40)
+                sm = np.array(Image.fromarray(rgba).resize((side, side), Image.Resampling.NEAREST))
+                sm = quantize(sm, 32)
                 bounds = bbox(sm)
                 if bounds is None:
                     raise ValueError(f"Empty frame: {path}, cell {i + 1}")
