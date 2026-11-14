@@ -5,17 +5,25 @@ const FLOUR_SACK := preload("res://assets/art/gpt/flour_sack.png")
 const CYCLE := 10.0
 const MILL_FROM_BASE := 152.0
 const GATE_FROM_BASE := 26.0
+const PICKUP_OFFSET := 39.0
+const PICKUP_SACK_OFFSET := 4.0
+const PICKUP_START := 4.0
+const PICKUP_END := 4.8
+const PICKUP_FPS := 8.0
+const PICKUP_GRIP := 3
 
 static func worker_state(index: int, seconds: float, base: float) -> Dictionary:
 	var phase := fposmod(seconds + index * 1.37, CYCLE)
-	var mill := base - MILL_FROM_BASE
+	var pickup := base - MILL_FROM_BASE + PICKUP_OFFSET
 	var gate := base - GATE_FROM_BASE
-	if phase < 4.0:
-		return {"x": lerpf(gate, mill, phase / 4.0), "carry": false, "left": true, "walk": true}
-	if phase < 4.8:
-		return {"x": mill, "carry": false, "left": false, "walk": false}
+	if phase < PICKUP_START:
+		return {"x": lerpf(gate, pickup, phase / PICKUP_START), "carry": false, "left": true, "walk": true}
+	if phase < PICKUP_END:
+		var elapsed := phase - PICKUP_START
+		var turning := elapsed >= 6.0 / PICKUP_FPS
+		return {"x": pickup, "carry": false, "left": not turning, "walk": false, "pickup": elapsed, "turning": turning}
 	if phase < 8.8:
-		return {"x": lerpf(mill, gate, (phase - 4.8) / 4.0), "carry": true, "left": false, "walk": true}
+		return {"x": lerpf(pickup, gate, (phase - PICKUP_END) / (8.8 - PICKUP_END)), "carry": true, "left": false, "walk": true}
 	return {"x": gate, "carry": false, "left": true, "walk": false}
 
 static func sack(v: Node2D, pos: Vector2, scale := 1.0) -> void:
@@ -66,10 +74,21 @@ static func draw(v: Node2D, sim, atlas, ground: float) -> void:
 			v.draw_line(hub, tip, Color("4c4239"), 3)
 			v.draw_colored_polygon(PackedVector2Array([(hub+dir*9-side*2).round(),(tip-side*2).round(),(tip+side*7).round(),(hub+dir*11+side*4).round()]), Color("f0dfbd"))
 		v.draw_rect(Rect2(hub - Vector2(3,3),Vector2(6,6)),Color("a27c4d"))
-	# Hopper and a clearly identifiable supply of flour, no mine entrance or coins.
-	v.draw_rect(Rect2(mill + 19, ground - 17, 18, 14), Color("806044"))
-	sack(v, Vector2(mill + 26, ground - 15), 0.9)
-	sack(v, Vector2(mill - 27, ground + 1), 1.0)
+	# Stock behind the sack at the worker's feet. The foreground sack transfers
+	# from the ground to the sprite on the first frame with a grip.
+	var worker_count := mini(int(sim.workers), 8)
+	var pickup_rec = atlas.anim_rec("worker", "pickup") if atlas else null
+	var sack_lifted := false
+	if pickup_rec != null:
+		for i in worker_count:
+			var phase := fposmod(t + i * 1.37, CYCLE)
+			if phase >= PICKUP_START + PICKUP_GRIP / PICKUP_FPS and phase < PICKUP_END + 0.65:
+				sack_lifted = true
+				break
+	sack(v, Vector2(mill + 24, ground + 1), 0.8)
+	sack(v, Vector2(mill + 20, ground - 9), 0.8)
+	if not sack_lifted:
+		sack(v, Vector2(mill + PICKUP_OFFSET - PICKUP_SACK_OFFSET, ground + 1), 0.6)
 	# A delivery pallet beside the bakery. A stylized buffer grows with available flour;
 	# it is not a second numeric inventory or a source of income.
 	var depot := base - GATE_FROM_BASE + 3
@@ -80,12 +99,20 @@ static func draw(v: Node2D, sim, atlas, ground: float) -> void:
 		var row: int = i / 3
 		var col := i % 3
 		sack(v, Vector2(depot - 13 + col * 13 + (6 if row % 2 else 0), ground - row * 11), 0.9)
-	for i in mini(int(sim.workers), 8):
+	for i in worker_count:
 		var worker := worker_state(i, t, base)
-		var pos := Vector2(roundf(worker.x), roundf(ground + 1 + (i % 3) * 2))
+		var picking := worker.has("pickup")
+		var pos := Vector2(roundf(worker.x), roundf(ground + 1 + (0 if picking else (i % 3) * 2)))
 		var state := "carry" if worker.carry else ("walk" if worker.walk else "idle")
 		var has_carry_sprite := false
 		if atlas:
+			if picking and pickup_rec != null:
+				var turning: bool = worker.turning
+				var pose = atlas.anim_rec("worker", "carry") if turning else pickup_rec
+				if pose != null:
+					var frame := 0 if turning else int(atlas.rec_index(pose, float(worker.pickup)))
+					v._blit_rec(pose, frame, pos, worker.left, Color.WHITE)
+					continue
 			var rec = atlas.anim_rec("worker", state)
 			has_carry_sprite = worker.carry and rec != null
 			if rec == null: rec = atlas.anim_rec("worker", "walk")

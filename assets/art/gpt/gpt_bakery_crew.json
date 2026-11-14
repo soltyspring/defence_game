@@ -308,7 +308,7 @@
    ]
   },
   "hero_captain/death/5": {
-   "x": 2,
+   "x": 50,
    "y": 139,
    "w": 48,
    "h": 23,
@@ -368,7 +368,7 @@
    ]
   },
   "hero_captain/die/5": {
-   "x": 52,
+   "x": 100,
    "y": 139,
    "w": 48,
    "h": 23,
@@ -536,6 +536,66 @@
     6,
     28
    ]
+  },
+  "worker/pickup/0": {
+   "x": 489,
+   "y": 95,
+   "w": 13,
+   "h": 28,
+   "pivot": [
+    6,
+    28
+   ]
+  },
+  "worker/pickup/1": {
+   "x": 33,
+   "y": 139,
+   "w": 15,
+   "h": 25,
+   "pivot": [
+    8,
+    25
+   ]
+  },
+  "worker/pickup/2": {
+   "x": 150,
+   "y": 139,
+   "w": 17,
+   "h": 22,
+   "pivot": [
+    10,
+    22
+   ]
+  },
+  "worker/pickup/3": {
+   "x": 169,
+   "y": 139,
+   "w": 16,
+   "h": 22,
+   "pivot": [
+    9,
+    22
+   ]
+  },
+  "worker/pickup/4": {
+   "x": 17,
+   "y": 139,
+   "w": 14,
+   "h": 27,
+   "pivot": [
+    8,
+    27
+   ]
+  },
+  "worker/pickup/5": {
+   "x": 2,
+   "y": 139,
+   "w": 13,
+   "h": 28,
+   "pivot": [
+    6,
+    28
+   ]
   }
  },
  "anims": {
@@ -657,6 +717,18 @@
     ],
     "fps": 9,
     "loop": true
+   },
+   "pickup": {
+    "frames": [
+     "worker/pickup/0",
+     "worker/pickup/1",
+     "worker/pickup/2",
+     "worker/pickup/3",
+     "worker/pickup/4",
+     "worker/pickup/5"
+    ],
+    "fps": 8,
+    "loop": false
    }
   }
  }

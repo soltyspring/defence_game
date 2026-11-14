@@ -288,7 +288,8 @@ def characters():
          {"idle": (4, 5, True), "walk": (6, 10, True), "attack": (6, 14, False),
           "cast": (6, 12, False), "hit": (2, 10, False), "death": (6, 12, False)}),
         ("worker", "apprentice", 28 / 303, (242, 436),
-         {"idle": (4, 4, True), "walk": (6, 10, True), "carry": (6, 9, True)}),
+         {"idle": (4, 4, True), "walk": (6, 10, True), "carry": (6, 9, True),
+          "pickup": (6, 8, False)}),
     ]:
         anims[unit] = {}
         for state, (count, fps, loop) in states.items():
