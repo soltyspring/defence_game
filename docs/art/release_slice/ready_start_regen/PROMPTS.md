@@ -1,4 +1,6 @@
-# 전투 시작 '준비 → 출전!' 연출 기획과 GPT 키트
+# 전투 시작 'READY → GO!' 연출 기획과 GPT 키트
+
+> **적용됨(2026-11-15):** 받은 시트는 `docs/art/gpt_sources/ready_start/ready_start.png`. 사용자 결정으로 **한국어 화면도 영어 READY → GO!** 를 쓰고, 시트의 한국어 줄(준비·출전!)은 쓰지 않는다. `tools/art/import_ready_start.py` → `assets/art/ui/ready_start/{ready,go,burst}.png`, 연출은 `src/ui/ready_go.gd`와 `src/gameplay/battle.gd`의 `_start_intro`. 아래는 처음 보낸 기획과 프롬프트 기록이다.
 
 지금은 라운드에 들어가면 아무 신호 없이 곧바로 시간이 흐른다(첫 웨이브까지 약 12초). 다른 게임의 'READY → GO'처럼 짧은 시작 신호를 넣어 전투가 시작되는 순간을 분명히 한다(2026-11-15 사용자 요청).
 

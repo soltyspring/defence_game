@@ -44,6 +44,12 @@ func player_speed() -> float:
 	return clampf(float(Save.progress.settings.get("battle_speed", 1.0)), 1.0, 2.0)
 var world_zoom := 1.0                  # camera zoom used in the last frame (1 = off; App.world_zoom())
 const GROUND_FROM_BOTTOM := 70.0       # ground row, view px above the view bottom (04 CamFix / R17)
+const ReadyGoS := preload("res://src/ui/ready_go.gd")
+## READY -> GO! at the start of every battle. 0 = auto (on in the game, off for autoplay and for -s test/capture
+## scripts, whose timings assume the clock starts at once), 1 = always, -1 = never.
+static var intro_mode := 0
+var intro: Control = null
+var _intro_layer: CanvasLayer = null
 
 func start(p_round_id: String, seed_value: int, upgrades: Dictionary, autoplay := false, loadout: Array = [], skill_pick: Array = []) -> void:
 	round_id = p_round_id
@@ -99,7 +105,29 @@ func start(p_round_id: String, seed_value: int, upgrades: Dictionary, autoplay :
 	world_zoom = App.world_zoom()
 	_cam_x = sim.hero.x + _camera_lead()
 	_update_camera(0.0)
+	if _intro_on(autoplay): _start_intro()
 	_publish()
+
+func _intro_on(autoplay: bool) -> bool:
+	if intro_mode != 0: return intro_mode > 0
+	return not autoplay and get_tree().get_script() == null
+
+func _start_intro() -> void:
+	_intro_layer = CanvasLayer.new()
+	_intro_layer.layer = 5                  # above the HUD layer, below dialogs
+	add_child(_intro_layer)
+	intro = ReadyGoS.new()
+	intro.go.connect(func(): Events.sfx.emit(&"ui_upgrade_ok", {}))
+	_intro_layer.add_child(intro)
+	Events.sfx.emit(&"ui_confirm", {})
+
+func _step_intro(delta: float) -> void:
+	if intro == null: return
+	if not sim.paused: intro.advance(delta)
+	if intro.finished():
+		_intro_layer.queue_free()
+		_intro_layer = null
+		intro = null
 
 ## 06 S4 / 10 R3: unique per battle instance (128 random bits + start time).
 func _make_battle_uid() -> String:
@@ -176,7 +204,8 @@ func _camera_lead() -> float:
 func _process(delta: float) -> void:
 	if sim == null: return
 	var t0 := Time.get_ticks_usec()
-	if not sim.paused and not sim.ended:
+	_step_intro(delta)
+	if not sim.paused and not sim.ended and not (intro != null and intro.holding()):
 		if autoplay_bot:
 			autoplay_bot.act(sim, delta)
 		else:
@@ -201,7 +230,7 @@ func _process(delta: float) -> void:
 	var nf := 0
 	for f in sim.fxs: if f.alive: nf += 1
 	Perf.counts.fx = nf
-	view.render_ahead = _acc if not sim.paused and not sim.ended else 0.0
+	view.render_ahead = _acc if not sim.paused and not sim.ended and not (intro != null and intro.holding()) else 0.0
 	_update_camera(delta)
 	_hud_t -= delta
 	if _hud_t <= 0.0:
@@ -386,7 +415,7 @@ func _emit_cues() -> void:
 	sim.cues.clear()
 
 func _step_tutorial() -> void:
-	if tutorial == null or sim.ended: return
+	if tutorial == null or sim.ended or intro != null: return      # first hint after GO! has gone
 	if _ui_dir != 0 or _key_dir != 0 or (autoplay_bot and sim.hero_dir != 0):
 		tutorial.moved = true
 	var k = tutorial.update(sim, get_process_delta_time() if not sim.paused else 0.0)
