@@ -524,8 +524,9 @@ def keep_v2(state: str, phase: int) -> Canvas:
     _brick_wall(cv, 8, 34, 34, PL, rng)                                     # front of the rows below it, so they are a
     _brick_wall(cv, 8, PL, 34, g - 1, rng, **KEEP_PLINTH)          # dark course (cream units stay visible)
     if not hurt:
-        _cone_roof(cv, 21, 4, 34, 15)
-        _flag(cv, 21, 0, phase)
+        # flag on a pole above the cone tip; everything from the gold knob (row 0) down stays inside the frame
+        _cone_roof(cv, 21, 11, 34, 15)
+        _flag(cv, 22, 4, phase, length=5)
     # main keep block
     _brick_wall(cv, 30, 54, 80, PL, rng)
     _brick_wall(cv, 30, PL, 80, g - 1, rng, **KEEP_PLINTH)
