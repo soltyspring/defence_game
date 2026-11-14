@@ -36,7 +36,7 @@ func _run() -> void:
 			check(is_equal_approx(scenery.destination.end.y, road.top), "no gap between landscape and road")
 			check(scenery.destination.size == scenery.source.size / 4.0, "one world pixel per logical pixel")
 			check(scenery.destination.size.y == 176.0 - float(Painted.TRIM_GROUND_ROWS[(n - 1) / 10]), "ground rows trimmed without scaling")
-			check(road.top < 290.0 and road.top + 17.0 > 290.0, "feet remain inside road")
+			check(road.top <= 290.0 - 26.0 and road.top + road.WALK > 290.0, "all three formation rows stand inside the road")
 			check(art.factors[2] >= 0.5, "scenery scrolls like nearby land, not the horizon")
 			check(art.layers[0].top == scenery.destination.position.y and art.layers[0].zenith != art.layers[0].sky, "sky plane continues the picture upward")
 			check(art.layers[1].items.size() > 10, "clouds or hanging roots above the picture")

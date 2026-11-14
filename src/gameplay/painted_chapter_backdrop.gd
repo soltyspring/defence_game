@@ -330,23 +330,30 @@ class Props extends Node2D:
 					_px(x - 5, top - 7, 11, 2, c.darkened(0.4))
 					_px(x - 8, top - 4, 6, 1, c.lightened(0.25))
 
+## The walkable strip holds all three formation rows: the back row is drawn 20 px up (battle_view _update_formation)
+## and lane_y adds up to 6, so the road starts ROAD_ABOVE px above the front row's feet. With the old 7 px the back
+## rows stood above the road, on the bushes and rocks along its edge (2026-11-15 user).
+const ROAD_ABOVE := 27.0
+const ROAD_BELOW := 10.0     # walkable strip below the front row's feet
+
 class Road extends Node2D:
 	var top := 0.0
 	var length := 0.0
 	var palette: Array = []
+	const WALK := 37             # = ROAD_ABOVE + ROAD_BELOW
 
 	func _draw() -> void:
 		var left := -1024.0
 		var span := length + 2048.0
 		draw_rect(Rect2(left, top, span, 1024), Color(palette[3]))
-		draw_rect(Rect2(left, top, span, 17), Color(palette[1]))
+		draw_rect(Rect2(left, top, span, WALK), Color(palette[1]))
 		draw_rect(Rect2(left, top, span, 2), Color(palette[0]))
-		draw_rect(Rect2(left, top + 15, span, 2), Color(palette[2]))
+		draw_rect(Rect2(left, top + WALK - 2, span, 2), Color(palette[2]))
 		# Subtle wear marks on the road and a few strata below the walkable strip.
 		for i in range(-30, int(length / 37.0) + 32):
 			var x := float(i * 37 + posmod(i * 17, 14))
-			draw_rect(Rect2(x, top + 3 + posmod(i * 11, 10), 3 + posmod(i * 7, 6), 1), Color(palette[0]))
-			draw_rect(Rect2(x, top + 23 + posmod(i * 13, 42), 9 + posmod(i * 11, 20), 2), Color(palette[4]))
+			draw_rect(Rect2(x, top + 3 + posmod(i * 11, WALK - 6), 3 + posmod(i * 7, 6), 1), Color(palette[0]))
+			draw_rect(Rect2(x, top + WALK + 6 + posmod(i * 13, 42), 9 + posmod(i * 11, 20), 2), Color(palette[4]))
 
 static func chapter_of(round_index: int) -> int:
 	return clampi((maxi(round_index, 1) - 1) / 10, 0, NAMES.size() - 1)
@@ -364,7 +371,7 @@ func build(length: float, ground: float, round_index: int) -> bool:
 		return false
 	var source_size := Vector2(texture.get_size()) - Vector2(0, int(TRIM_GROUND_ROWS[chapter]) * 4)
 	var size := source_size / 4.0
-	var top := ground - 7.0
+	var top := ground - ROAD_ABOVE
 	var scenery := Strip.new()
 	scenery.texture = texture
 	scenery.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
