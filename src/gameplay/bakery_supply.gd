@@ -6,11 +6,15 @@ const CYCLE := 10.0
 const MILL_FROM_BASE := 152.0
 const GATE_FROM_BASE := 26.0
 const PICKUP_OFFSET := 39.0
-const PICKUP_SACK_OFFSET := 4.0
 const PICKUP_START := 4.0
 const PICKUP_END := 4.8
 const PICKUP_FPS := 8.0
-const PICKUP_GRIP := 3
+
+## Bottom row first, then the gaps above it. Every upper sack rests on two below.
+const DEPOT_SLOTS := [
+	Vector2(0, 0), Vector2(-11, 0), Vector2(11, 0),
+	Vector2(-5, -10), Vector2(5, -10), Vector2(0, -20),
+]
 
 static func worker_state(index: int, seconds: float, base: float) -> Dictionary:
 	var phase := fposmod(seconds + index * 1.37, CYCLE)
@@ -74,31 +78,22 @@ static func draw(v: Node2D, sim, atlas, ground: float) -> void:
 			v.draw_line(hub, tip, Color("4c4239"), 3)
 			v.draw_colored_polygon(PackedVector2Array([(hub+dir*9-side*2).round(),(tip-side*2).round(),(tip+side*7).round(),(hub+dir*11+side*4).round()]), Color("f0dfbd"))
 		v.draw_rect(Rect2(hub - Vector2(3,3),Vector2(6,6)),Color("a27c4d"))
-	# Stock behind the sack at the worker's feet. The foreground sack transfers
-	# from the ground to the sprite on the first frame with a grip.
+	# A fixed reserve set back from the pickup point. Only the pickup animation
+	# shows the sack being lifted; no shared ground sprite flashes between workers.
 	var worker_count := mini(int(sim.workers), 8)
 	var pickup_rec = atlas.anim_rec("worker", "pickup") if atlas else null
-	var sack_lifted := false
-	if pickup_rec != null:
-		for i in worker_count:
-			var phase := fposmod(t + i * 1.37, CYCLE)
-			if phase >= PICKUP_START + PICKUP_GRIP / PICKUP_FPS and phase < PICKUP_END + 0.65:
-				sack_lifted = true
-				break
-	sack(v, Vector2(mill + 24, ground + 1), 0.8)
-	sack(v, Vector2(mill + 20, ground - 9), 0.8)
-	if not sack_lifted:
-		sack(v, Vector2(mill + PICKUP_OFFSET - PICKUP_SACK_OFFSET, ground + 1), 0.6)
-	# A delivery pallet beside the bakery. A stylized buffer grows with available flour;
-	# it is not a second numeric inventory or a source of income.
-	var depot := base - GATE_FROM_BASE + 3
-	v.draw_rect(Rect2(depot - 21, ground - 1, 43, 5), Color("694b36"))
+	var reserve := Vector2(mill + 25, ground - 2)
+	sack(v, reserve + Vector2(-8, 0), 0.8)
+	sack(v, reserve, 0.8)
+	sack(v, reserve + Vector2(-4, -9), 0.8)
+	# The pile sits against the bakery, clear of the worker's unloading stop.
+	# The displayed amount follows flour, never the animation phase of a worker.
+	var depot := Vector2(base - GATE_FROM_BASE + 20, ground - 2)
+	v.draw_rect(Rect2(depot + Vector2(-18, -1), Vector2(36, 4)), Color("694b36"))
 	var fill := clampf(float(sim.gold) / maxf(1.0, float(sim.gold_max)), 0.0, 1.0)
-	var count := 3 + int(floorf(fill * 6.0))
+	var count := 1 + int(floorf(fill * 5.0 + 0.5))
 	for i in count:
-		var row: int = i / 3
-		var col := i % 3
-		sack(v, Vector2(depot - 13 + col * 13 + (6 if row % 2 else 0), ground - row * 11), 0.9)
+		sack(v, depot + DEPOT_SLOTS[i], 0.9)
 	for i in worker_count:
 		var worker := worker_state(i, t, base)
 		var picking := worker.has("pickup")
