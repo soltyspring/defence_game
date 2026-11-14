@@ -20,24 +20,25 @@ GATES = [23, 42, 61, 79, 96]
 DESC_KO = {
     "baguette": "바게트 창병. 긴 바게트 창으로 적이 닿기 전에 먼저 찌릅니다. 방패병 바로 뒤에 세우면 좋습니다.",
     "macaron": "마카롱 저격수. 아주 멀리서 한 발씩 강하게 쏩니다. 느리게 쏘고 체력이 낮아 앞줄이 지켜 줘야 합니다.",
-    "chili": "고추빵 화염병. 매운 불꽃이 터져 뭉쳐 있는 적을 한꺼번에 태웁니다. 무리가 몰려올 때 꺼내세요.",
+    "chili": "케이크 크림병. 생크림을 터뜨려 뭉쳐 있는 적을 한꺼번에 덮칩니다. 무리가 몰려올 때 꺼내세요.",
     "donut": "도넛 수호병. 두꺼운 반죽 갑옷으로 오래 버티며 적을 밀어냅니다. 공격은 약하니 뒤에서 쏘는 병사와 함께 보내세요.",
     "waffle": "와플 공성병. 멀리서 와플 덩이를 던져 적 기지를 크게 부숩니다. 병사 상대로는 평범하고 값이 비쌉니다."
 }
 DESC_EN = {
     "baguette": "Baguette lancer. Its long baguette spear strikes before the enemy can reach. Best right behind a shield.",
     "macaron": "Macaron sniper. Hits hard, one shot at a time, from very far away. Slow and fragile, so keep a front line ahead.",
-    "chili": "Chili bun burner. Its spicy burst burns every enemy packed together. Bring it out when a swarm is coming.",
+    "chili": "Cake creamer. Its whipped-cream burst splatters every enemy packed together. Bring it out when a swarm is coming.",
     "donut": "Donut guardian. Thick dough armour soaks hits and shoves enemies back. Weak attack, so send shooters behind it.",
     "waffle": "Waffle sieger. Lobs waffle chunks from afar that wreck the enemy base. Ordinary against soldiers, and costly."
 }
+EN_NAME = {'chili': 'Cake'}   # the chili id was redrawn as a cake (2026-11-14 user)
 RECRUIT = {'baguette': 1000, 'macaron': 1200, 'chili': 1500, 'donut': 1800, 'waffle': 2400}
 
 NEW = [
     # id, name, role, unlock, cost, cd, hp, atk, interval, range, speed, armor, splash, kb, structure
     ('baguette','바게트','장창 · 근접 선제 타격',30,65,5,155,23,1.25,48,33,1,0,8,1),
     ('macaron','마카롱','저격 · 강한 단일 공격',40,95,8,65,62,2.4,180,26,0,0,0,0.65),
-    ('chili','고추빵','화염 · 밀집 적 광역 공격',50,100,9,110,24,1.8,105,29,1,46,0,0.7),
+    ('chili','케이크','크림 · 밀집 적 광역 공격',50,100,9,110,24,1.8,105,29,1,46,0,0.7),
     ('donut','도넛','수호 · 중장갑 전선 유지',60,100,9,650,8,1.6,20,21,7,0,18,0.7),
     ('waffle','와플','공성 · 기지 파괴 특화',70,145,14,200,48,2.8,165,20,2,18,8,4.2),
 ]
@@ -54,13 +55,13 @@ def main():
                  unlock_round=unlock,recruit_cost=RECRUIT[uid],cost=cost,cooldown=cd,hp=hp,atk=atk,atk_interval=interval,
                  range=reach,speed=speed,armor=armor,splash=splash,knockback=kb,structure_mult=structure,
                  anim_set=uid,hit_frame=2,role=role,tags=[role.split(' · ')[0]],
-                 attack_type='melee' if reach<60 else 'ranged',projectile='' if reach<60 else 'rock' if uid=='waffle' else 'arrow')
+                 attack_type='melee' if reach<60 else 'ranged',projectile='' if reach<60 else 'rock' if uid=='waffle' else 'cream' if uid=='chili' else 'arrow')
         extra.append(u)
     write('data/units/roster_expansion.json',{'schema_version':2,'units':extra})
     for lang in ['ko','en']:
         text = read(f'data/text/{lang}.json')
         for u in extra:
-            text['strings'][u['name_key']] = u['name'] if lang=='ko' else u['id'].capitalize()
+            text['strings'][u['name_key']] = u['name'] if lang=='ko' else EN_NAME.get(u['id'], u['id'].capitalize())
             text['strings'][u['desc_key']] = (DESC_KO if lang=='ko' else DESC_EN)[u['id']]
         for n in range(41,101):
             text['strings'][f'round.r{n:02}.name'] = f'{"성장 관문" if n in GATES else "원정"} {n}' if lang=='ko' else f'{"Growth gate" if n in GATES else "Expedition"} {n}'

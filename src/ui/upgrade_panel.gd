@@ -780,8 +780,11 @@ class Demo extends Control:
 		if splash > 0.0: spots.append_array([tx + 15.0, tx + 30.0])
 		for sx in spots:
 			_dummy(Vector2(sx + (1.0 if hit_now and int(since * 40) % 2 == 0 else 0.0), gy), hit_now)
+		var cream: bool = str(def.get("projectile", "")) == "cream"
 		if splash > 0.0 and since >= 0.0 and since < 0.3:
-			draw_arc(Vector2(tx + 15.0, gy - 6), maxf(12.0, splash * px + 8.0) * minf(1.0, 0.4 + since * 4.0), 0, TAU, 24, Color(1.0, 0.6, 0.2, 0.9 - since * 2.5), 1.0)
+			var ring := Color(1.0, 0.97, 0.88) if cream else Color(1.0, 0.6, 0.2)
+			ring.a = 0.9 - since * 2.5
+			draw_arc(Vector2(tx + 15.0, gy - 6), maxf(12.0, splash * px + 8.0) * minf(1.0, 0.4 + since * 4.0), 0, TAU, 24, ring, 1.0)
 		# the character
 		var mod := Color(1, 1, 1, 0.55) if locked else Color.WHITE
 		var drawn := false
@@ -809,7 +812,7 @@ class Demo extends Control:
 			var arc := 22.0 if str(def.get("projectile", "")) == "rock" else 8.0
 			var p := Vector2(lerpf(ux + 10.0, tx, f), gy - 16.0 - sin(f * PI) * arc)
 			draw_rect(Rect2(p - Vector2(2, 2), Vector2(4, 4)), Color(0.08, 0.05, 0.04))
-			draw_rect(Rect2(p - Vector2(1, 1), Vector2(3, 3)), Color(1.0, 0.86, 0.5))
+			draw_rect(Rect2(p - Vector2(1, 1), Vector2(3, 3)), Color(1.0, 0.98, 0.94) if cream else Color(1.0, 0.86, 0.5))
 		# damage number at the current level
 		if since >= 0.0 and since < 0.55 and atk > 0.0:
 			UiStyle.draw_number(self, "-%d" % int(roundf(atk)), Vector2(tx, gy - 30.0 - since * 18.0), UiStyle.FONT_M, Color(UiStyle.C_HP_ENEMY, 1.0 - since * 1.4), 0, &"bold")
