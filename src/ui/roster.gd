@@ -1,11 +1,14 @@
 extends "res://src/ui/ui_screen.gd"
 ## 출전 준비: up to 5 unit types (battle cards in slot order) and up to 3 energy skills, chosen right before a battle.
-## One way in: a round tap (or 이어하기) once there is a choice to make; it saves and starts that round. Unit types:
+## Ways in: a round tap (or 이어하기) once there is a choice to make (it saves and starts that round), or the 편성 card
+## in 기사단 본부 at any time (it only saves). Unit types:
 ## five by R6, then one more at R30/40/50/60/70 (data/units/roster_expansion.json). Two tabs, 유닛 and 스킬, same layout: the slots on top (tap one to take it
 ## out), every choice below as a card (tap to put it in or take it out), the last card's details on the bottom line.
 
 ## Round to start after choosing (set by round_select before opening this screen); "" = plain 편성 from the menu.
 static var pending_round := ""
+## Screen that 뒤로 returns to (set by the opener; reset after each open). The hall and 이어하기 come back to the menu.
+static var back_to: StringName = &"round_select"
 
 ## True once the player has more unit types than slots (from R30) or more skills than skill slots.
 static func needs_choice(content, save) -> bool:
@@ -31,6 +34,7 @@ var message := ""
 var focus_id := ""
 var focus_skill := ""
 var round_id := ""
+var back_target: StringName = &"round_select"
 var _slot_label_y := 0.0
 var _grid_label_y := 0.0
 
@@ -38,6 +42,8 @@ func _build() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	round_id = pending_round
 	pending_round = ""
+	back_target = back_to
+	back_to = &"round_select"
 	selected = Save.selected_loadout().duplicate()
 	roster = Content.available_roster(100)
 	skill_list = Content.available_skills(100)
@@ -172,7 +178,7 @@ func _save() -> void:
 		_back()
 
 func _back() -> void:
-	emit_cmd_deferred(&"cmd_open_screen", [&"round_select"])
+	emit_cmd_deferred(&"cmd_open_screen", [back_target])
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST and is_inside_tree() and claim_back(): _back()

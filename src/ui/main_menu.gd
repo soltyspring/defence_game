@@ -12,6 +12,7 @@ var btn_play: Control         # 이어하기: the first unlocked round without s
 var btn_select: Control
 var btn_settings: Control
 var btn_upgrades: Control
+var btn_roster: Control         # 편성: the squad screen at any time (2026-11-15 user, docs/qa/UIUX_NAVIGATION_REVIEW.md N1)
 var btn_shop: Control
 const RosterScreen := preload("res://src/ui/roster.gd")
 const TitleBlock := preload("res://src/ui/title_block.gd")
@@ -36,6 +37,10 @@ func _build() -> void:
 	btn_upgrades = make_button(UiText.t("ui.upgrades"), open_upgrades)
 	btn_upgrades.font_size = UiStyle.FONT_L
 	btn_upgrades.illustration = preload("res://assets/art/lobby/upgrades.png")
+	btn_roster = make_button(UiText.t("lobby.roster"), _on_roster)
+	btn_roster.font_size = UiStyle.FONT_L
+	btn_roster.illustration = preload("res://assets/art/lobby/training.png")
+	btn_roster.overlay = _draw_squad_icons
 	btn_back = make_button(UiText.t("ui.back"), func(): show_page("title"))
 	btn_settings = make_button(UiText.t("ui.settings"), _on_settings)
 	if GoldShopCatalog.enabled():
@@ -77,7 +82,7 @@ func show_page(p: String) -> void:
 	last_page = page
 	var lobby := page == "lobby"
 	for b in [btn_start, btn_play, btn_settings]: b.visible = not lobby
-	for b in [btn_select, btn_upgrades, btn_back]: b.visible = lobby
+	for b in [btn_select, btn_roster, btn_upgrades, btn_back]: b.visible = lobby
 	if btn_shop != null: btn_shop.visible = lobby
 	_refresh_labels()
 	_layout()
@@ -176,9 +181,34 @@ func _on_play() -> void:
 		emit_cmd(&"cmd_open_screen", [&"round_select"])
 	elif RosterScreen.needs_choice(autoload("Content"), autoload("Save")):
 		RosterScreen.pending_round = id          # same stop as a round tile: pick who fights, then start
+		RosterScreen.back_to = &"menu"
 		emit_cmd(&"cmd_open_screen", [&"roster"])
 	else:
 		emit_cmd(&"cmd_start_round", [id])
+
+## 편성 from the hall: no round to start, 저장 saves and 뒤로 returns here.
+func _on_roster() -> void:
+	RosterScreen.pending_round = ""
+	RosterScreen.back_to = &"menu"
+	emit_cmd(&"cmd_open_screen", [&"roster"])
+
+## The squad on the 편성 card: the chosen unit cards in slot order over the training-hall art.
+func _draw_squad_icons(b: Control) -> void:
+	var s := autoload("Save")
+	if s == null or not s.has_method("selected_loadout"): return
+	var ids: Array = s.selected_loadout()
+	var n := mini(ids.size(), 5)
+	if n == 0: return
+	var sz := 24.0
+	var step := minf(sz + 2.0, (b.size.x - 12.0) / float(n))
+	var x0 := roundf((b.size.x - step * float(n - 1) - sz) * 0.5)
+	var y := roundf(b.size.y * 0.42 - sz * 0.5)
+	for i in n:
+		var tex: Texture2D = UiStyle.ui_icon("card_" + str(ids[i]))
+		if tex == null: continue
+		var r := Rect2(Vector2(x0 + step * i, y).round(), Vector2(sz, sz))
+		b.draw_rect(r.grow(1.0), Color(0.08, 0.05, 0.04, 0.85))
+		b.draw_texture_rect(tex, r, false)
 
 func _on_select() -> void:
 	emit_cmd(&"cmd_open_screen", [&"round_select"])
@@ -216,13 +246,14 @@ func _layout() -> void:
 	place(btn_settings, Rect2(cx - bw / 2 + w2 + 8, y + bh + 14, w2, bh))
 	# lobby: header row (뒤로 left, shop right), then two large cards centred in what is left, a caption line under each
 	var head := bh + 8
-	var lw := clampf(safe.size.x * 0.72, 320.0, 520.0)
+	var lw := clampf(safe.size.x * 0.9, 420.0, 640.0)      # three cards: 라운드 선택 | 편성 | 강화
 	var gap := 12.0
-	var lw2 := floorf((lw - gap) / 2.0)
+	var lw2 := floorf((lw - gap * 2.0) / 3.0)
 	var lh := clampf(safe.size.y - head - 56.0, bh * 2 + 8, 150.0)
 	var ly := safe.position.y + head + maxf(8.0, (safe.size.y - head - lh - 28.0) * 0.5)
 	place(btn_select, Rect2(cx - lw / 2, ly, lw2, lh))
-	place(btn_upgrades, Rect2(cx - lw / 2 + lw2 + gap, ly, lw2, lh))
+	place(btn_roster, Rect2(cx - lw / 2 + lw2 + gap, ly, lw2, lh))
+	place(btn_upgrades, Rect2(cx - lw / 2 + (lw2 + gap) * 2.0, ly, lw2, lh))
 	place(btn_back, Rect2(safe.position + Vector2(4, 4), Vector2(72, bh)))
 	if btn_shop != null:
 		place(btn_shop, Rect2(Vector2(safe.end.x - 92, safe.position.y + 4), Vector2(88, bh)))
@@ -306,6 +337,11 @@ func _draw_lobby() -> void:
 	var n := upgrades_ready()
 	var b: String = UiText.t("lobby.can_upgrade") % n if n > 0 else UiText.t("lobby.no_upgrade")
 	var cap_y := btn_select.position.y + btn_select.size.y + 14
-	for d in [[btn_select, a, UiStyle.C_TEXT], [btn_upgrades, b, UiStyle.C_GOLD if n > 0 else UiStyle.C_TEXT_DIM]]:
+	var sv := autoload("Save")
+	var squad := ""
+	if sv != null and sv.has_method("selected_skills"):
+		var ns: int = sv.selected_skills().size()       # 0 = never chosen: each round brings its own skills
+		squad = UiText.t("lobby.squad") % [sv.selected_loadout().size(), ns] if ns > 0 else UiText.t("lobby.squad_units") % sv.selected_loadout().size()
+	for d in [[btn_select, a, UiStyle.C_TEXT], [btn_roster, squad, UiStyle.C_TEXT], [btn_upgrades, b, UiStyle.C_GOLD if n > 0 else UiStyle.C_TEXT_DIM]]:
 		var line: Array = UiStyle.fit_text(d[1], d[0].size.x, UiStyle.FONT_S)
 		UiStyle.draw_text_centered(self, line[0], Vector2(d[0].position.x + d[0].size.x / 2, cap_y), UiStyle.FONT_S, d[2])
