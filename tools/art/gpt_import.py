@@ -280,6 +280,47 @@ def skill_icons():
     print("skill icons:", ", ".join(SKILL_ICONS))
 
 
+# Open-eye anchors in the 67x67 working cells, in animation order. The last
+# two fall frames intentionally keep the original closed eye.
+HERO_EYES = {
+    "idle": [(34, 30), (34, 30), (34, 29), (34, 30)],
+    "walk": [(34, 30), (34, 30), (34, 29), (34, 30), (34, 30), (34, 30)],
+    "attack": [(34, 30), (34, 30), (34, 29), (34, 30), (34, 30), (34, 30)],
+    "cast": [(34, 30)] * 6,
+    "hit": [(29, 29), (32, 30)],
+    "death": [(31, 29), (32, 30), (33, 32), (30, 31)],
+}
+
+
+def finish_hero(states):
+    """Use one palette across poses and preserve the eye at game resolution."""
+    pixels = []
+    for frames, _, _ in states.values():
+        for cell in frames:
+            opaque = cell[..., 3] > 0
+            rgb = cell[opaque, :3].astype(np.float32)
+            # Separate the warm outlines and midtones without blurring edges.
+            light = rgb @ np.array([0.299, 0.587, 0.114])
+            bump = np.interp(light, [0, 50, 115, 180, 235, 255], [0, -6, -8, 2, 6, 0])
+            cell[opaque, :3] = np.clip(rgb + bump[:, None], 0, 255).astype(np.uint8)
+            pixels.append(cell[opaque, :3])
+    all_pixels = np.concatenate(pixels)
+    palette = Image.fromarray(all_pixels[None]).quantize(colors=40)
+    for state, (frames, _, _) in states.items():
+        anchors = HERO_EYES[state]
+        for i, cell in enumerate(frames):
+            opaque = cell[..., 3] > 0
+            rgb = Image.fromarray(cell[opaque, :3][None])
+            cell[opaque, :3] = np.asarray(rgb.quantize(palette=palette, dither=Image.Dither.NONE).convert("RGB"))[0]
+            if i < len(anchors):
+                x, y = anchors[i]
+                eye = cell[y:y + 2, x:x + 2]
+                if not np.all(eye[..., 3] == 255):
+                    raise ValueError(f"Hero eye anchor outside sprite: {state}/{i}")
+                eye[:, 0, :3] = (54, 33, 29)
+                eye[:, 1, :3] = (255, 238, 205)
+
+
 def characters():
     """Pack the approved 3x2 sheets, using a stable body origin instead of the weapon bounds."""
     anims = {}
@@ -313,14 +354,20 @@ def characters():
                 # outlines and flour marks before Godot can display the pixels.
                 side = round(512 * height)
                 sm = np.array(Image.fromarray(rgba).resize((side, side), Image.Resampling.NEAREST))
-                sm = quantize(sm, 32)
+                frames.append(sm if name == "hero" else quantize(sm, 32))
+            anims[unit][state] = (frames, fps, loop)
+        if name == "hero":
+            finish_hero(anims[unit])
+        ax, ay = (round(v * side / 512) for v in origin)
+        for state, (frames, fps, loop) in anims[unit].items():
+            trimmed = []
+            for i, sm in enumerate(frames):
                 bounds = bbox(sm)
                 if bounds is None:
-                    raise ValueError(f"Empty frame: {path}, cell {i + 1}")
+                    raise ValueError(f"Empty frame: {name}/{state}, cell {i + 1}")
                 l, t, r, b = bounds
-                ax, ay = (round(v * side / 512) for v in origin)
-                frames.append((sm[t:b, l:r], [int(ax - l), int(ay - t)]))
-            anims[unit][state] = (frames, fps, loop)
+                trimmed.append((sm[t:b, l:r], [int(ax - l), int(ay - t)]))
+            anims[unit][state] = (trimmed, fps, loop)
     anims["hero_captain"]["die"] = anims["hero_captain"]["death"]
     print("gpt_bakery_crew", write_page("gpt_bakery_crew", "character", anims, 512,
                                       {("hero_captain", "attack"): 3}))
