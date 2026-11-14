@@ -92,7 +92,9 @@
       ],
       "structure_mult": 0.7,
       "hit_frame": 2,
-      "role": "크림 · 밀집 적 광역 공격"
+      "role": "크림 · 밀집 적 광역 공격",
+      "atk_slow_mul": 0.7,
+      "atk_slow_s": 3.0
     },
     {
       "id": "donut",
