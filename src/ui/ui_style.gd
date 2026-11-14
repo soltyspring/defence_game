@@ -484,6 +484,9 @@ static func ui_icon(frame: String) -> Texture2D:
 		if uid in ["baguette", "macaron", "chili", "donut", "waffle"]:
 			if not _icon_cache.has(frame): _icon_cache[frame] = load("res://assets/art/roster10/" + uid + ".png")
 			return _icon_cache[frame]
+		if uid == "siege":      # the redrawn 화덕포 (2026-11-15, tools/art/release_slice/siege_sheet.py)
+			if not _icon_cache.has(frame): _icon_cache[frame] = load("res://assets/art/siege/siege_card.png")
+			return _icon_cache[frame]
 	# all seven energy-skill icons: 24x24 badges in assets/art/skills (ChatGPT sheet -> tools/art/gpt_import.py icons)
 	for pre in ["icon_", "skill_"]:
 		if frame.begins_with(pre) and frame.trim_prefix(pre) in SKILL_BADGES:

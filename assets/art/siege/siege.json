@@ -1,0 +1,243 @@
+{
+  "schema": "defence.atlas/1",
+  "atlas": "siege_v2",
+  "frames": {
+    "siege/idle/0": {
+      "x": 0,
+      "y": 0,
+      "w": 80,
+      "h": 48,
+      "pivot": [
+        34,
+        44
+      ]
+    },
+    "siege/idle/1": {
+      "x": 80,
+      "y": 0,
+      "w": 80,
+      "h": 48,
+      "pivot": [
+        34,
+        44
+      ]
+    },
+    "siege/idle/2": {
+      "x": 160,
+      "y": 0,
+      "w": 80,
+      "h": 48,
+      "pivot": [
+        34,
+        44
+      ]
+    },
+    "siege/idle/3": {
+      "x": 240,
+      "y": 0,
+      "w": 80,
+      "h": 48,
+      "pivot": [
+        34,
+        44
+      ]
+    },
+    "siege/walk/0": {
+      "x": 320,
+      "y": 0,
+      "w": 80,
+      "h": 48,
+      "pivot": [
+        34,
+        44
+      ]
+    },
+    "siege/walk/1": {
+      "x": 400,
+      "y": 0,
+      "w": 80,
+      "h": 48,
+      "pivot": [
+        34,
+        44
+      ]
+    },
+    "siege/walk/2": {
+      "x": 480,
+      "y": 0,
+      "w": 80,
+      "h": 48,
+      "pivot": [
+        34,
+        44
+      ]
+    },
+    "siege/walk/3": {
+      "x": 560,
+      "y": 0,
+      "w": 80,
+      "h": 48,
+      "pivot": [
+        34,
+        44
+      ]
+    },
+    "siege/attack/0": {
+      "x": 640,
+      "y": 0,
+      "w": 80,
+      "h": 48,
+      "pivot": [
+        34,
+        44
+      ]
+    },
+    "siege/attack/1": {
+      "x": 720,
+      "y": 0,
+      "w": 80,
+      "h": 48,
+      "pivot": [
+        34,
+        44
+      ]
+    },
+    "siege/attack/2": {
+      "x": 800,
+      "y": 0,
+      "w": 80,
+      "h": 48,
+      "pivot": [
+        34,
+        44
+      ]
+    },
+    "siege/attack/3": {
+      "x": 880,
+      "y": 0,
+      "w": 80,
+      "h": 48,
+      "pivot": [
+        34,
+        44
+      ]
+    },
+    "siege/hit/0": {
+      "x": 960,
+      "y": 0,
+      "w": 80,
+      "h": 48,
+      "pivot": [
+        34,
+        44
+      ]
+    },
+    "siege/death/0": {
+      "x": 1040,
+      "y": 0,
+      "w": 80,
+      "h": 48,
+      "pivot": [
+        34,
+        44
+      ]
+    },
+    "siege/death/1": {
+      "x": 1120,
+      "y": 0,
+      "w": 80,
+      "h": 48,
+      "pivot": [
+        34,
+        44
+      ]
+    },
+    "siege/death/2": {
+      "x": 1200,
+      "y": 0,
+      "w": 80,
+      "h": 48,
+      "pivot": [
+        34,
+        44
+      ]
+    },
+    "siege/death/3": {
+      "x": 1280,
+      "y": 0,
+      "w": 80,
+      "h": 48,
+      "pivot": [
+        34,
+        44
+      ]
+    }
+  },
+  "anims": {
+    "siege": {
+      "idle": {
+        "frames": [
+          "siege/idle/0",
+          "siege/idle/1",
+          "siege/idle/2",
+          "siege/idle/3"
+        ],
+        "fps": 4,
+        "loop": true,
+        "hit_frame": 2
+      },
+      "walk": {
+        "frames": [
+          "siege/walk/0",
+          "siege/walk/1",
+          "siege/walk/2",
+          "siege/walk/3"
+        ],
+        "fps": 8,
+        "loop": true,
+        "hit_frame": 2
+      },
+      "attack": {
+        "frames": [
+          "siege/attack/0",
+          "siege/attack/1",
+          "siege/attack/2",
+          "siege/attack/3"
+        ],
+        "fps": 8,
+        "loop": false,
+        "hit_frame": 2
+      },
+      "hit": {
+        "frames": [
+          "siege/hit/0"
+        ],
+        "fps": 8,
+        "loop": false,
+        "hit_frame": 2
+      },
+      "death": {
+        "frames": [
+          "siege/death/0",
+          "siege/death/1",
+          "siege/death/2",
+          "siege/death/3"
+        ],
+        "fps": 8,
+        "loop": false,
+        "hit_frame": 2
+      },
+      "die": {
+        "frames": [
+          "siege/death/0",
+          "siege/death/1",
+          "siege/death/2",
+          "siege/death/3"
+        ],
+        "fps": 8,
+        "loop": false,
+        "hit_frame": 2
+      }
+    }
+  }
+}

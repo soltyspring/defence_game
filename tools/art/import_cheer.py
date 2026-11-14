@@ -21,7 +21,7 @@ SRC = ROOT / "docs/art/gpt_sources/cheer"
 OUT = ROOT / "assets/art/cheer"
 CELL_W, CELL_H, MARGIN = 384, 512, 10
 # per-unit size trim after the height match: the oven sheet is drawn wider than the game's oven
-SCALE_FIX = {"siege": 0.8, "melee_basic": 0.85}
+SCALE_FIX = {"melee_basic": 0.85, "siege": 0.9}
 # per-unit frame swaps: the toast's landing pose stretches its legs; it ends on its happy crouch instead
 FRAME_SUB = {"melee_basic": {3: 0}}
 # anim_set: (sheet, row) — only sheets drawn from the sprites the game really uses
@@ -33,7 +33,7 @@ USE = {
     "worker": (6, 1),          # the first apprentice sheet (2026-11-15 user: better than the redraw in sheet 9)
     "melee_basic": (7, 0), "ranged_basic": (7, 1),
     "tank": (8, 0), "fast": (8, 1),
-    "siege": (9, 0),
+    "siege": ("siege/siege_cheer", 0),   # the redrawn 화덕포 (candidate D); sheet 9 row 1 was the old oven
 }
 # in-game idle frame of each set: (atlas json, atlas png) — the page assets/manifest.json anim_sets really uses
 GAME = {
@@ -43,8 +43,9 @@ for _s in ("baguette", "macaron", "chili", "donut", "waffle"):
     GAME[_s] = ("assets/art/roster10/roster10.json", "assets/art/roster10/roster10.png")
 GAME["worker"] = GAME["hero_captain"]
 GAME["melee_basic"] = ("assets/art/release_slice/slice_chars.json", "assets/art/release_slice/slice_chars.png")
-for _s in ("ranged_basic", "tank", "fast", "siege"):
+for _s in ("ranged_basic", "tank", "fast"):
     GAME[_s] = ("assets/art/release_slice/slice_chars2.json", "assets/art/release_slice/slice_chars2.png")
+GAME["siege"] = ("assets/art/siege/siege.json", "assets/art/siege/siege.png")
 
 
 def key(rgb: np.ndarray) -> np.ndarray:
@@ -161,7 +162,8 @@ def main():
     units = {}
     for aset, (n, row) in USE.items():
         if n not in sheets:
-            sheets[n] = np.asarray(Image.open(SRC / f"cheer_{n}.png").convert("RGB")).astype(np.float64)
+            src = SRC.parent / f"{n}.png" if isinstance(n, str) else SRC / f"cheer_{n}.png"
+            sheets[n] = np.asarray(Image.open(src).convert("RGB")).astype(np.float64)
         units[aset] = unit(sheets[n], row, aset)
     pad = 2
     width = max(sum(f.width + pad for f in fr) for fr, _ in units.values()) + pad

@@ -236,6 +236,20 @@
    ]
   },
   {
+   "id": "siege_v2",
+   "group": "character",
+   "load_policy": "battle",
+   "image": "res://assets/art/siege/siege.png",
+   "frames": "res://assets/art/siege/siege.json",
+   "size": [
+    1360,
+    48
+   ],
+   "anim_sets": [
+    "siege"
+   ]
+  },
+  {
    "id": "rs_chars",
    "group": "character",
    "load_policy": "battle",
@@ -274,7 +288,6 @@
     "ranged_basic",
     "tank",
     "fast",
-    "siege",
     "e_spitter",
     "e_swarm",
     "e_brute",
@@ -565,7 +578,7 @@
   "ranged_basic": "rs_chars2",
   "tank": "rs_chars2",
   "fast": "rs_chars2",
-  "siege": "rs_chars2",
+  "siege": "siege_v2",
   "e_grunt": "rs_chars",
   "e_spitter": "rs_chars2",
   "e_swarm": "rs_chars2",
