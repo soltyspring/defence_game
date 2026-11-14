@@ -189,10 +189,48 @@ func _celebrating(u) -> bool:
 func _victory_offset(u) -> Vector2:
 	var m := clampf(victory_t / MARCH_LEN, 0.0, 1.0)
 	var off := Vector2(roundf(MARCH_PX * (1.0 - (1.0 - m) * (1.0 - m))), 0.0)    # eases into the stop
-	if victory_t > MARCH_LEN:
+	if victory_t > MARCH_LEN and _cheer_data(str(u.anim_set)).is_empty():     # drawn cheers jump by themselves
 		var h := victory_t - MARCH_LEN + float(posmod(int(u.uid) * 7, 5)) * 0.05     # not all in step
 		off.y = -roundf(absf(sin(h / HOP_LEN * PI)) * HOP_PX)
 	return off
+
+## Drawn cheer frames (tools/art/import_cheer.py): 4 poses per unit, played 1-2-3-4-2-3-4 once the march ends.
+## Units without a sheet yet keep the hop above.
+const CHEER_TEX := "res://assets/art/cheer/cheer.png"
+const CHEER_JSON := "res://assets/art/cheer/cheer.json"
+const CHEER_SEQ := [0, 1, 2, 3, 1, 2, 3, 3]
+const CHEER_STEP := 0.15
+static var _cheer_tex: Texture2D = null
+static var _cheer: Dictionary = {}
+static var _cheer_loaded := false
+
+func _cheer_data(aset: String) -> Dictionary:
+	if not _cheer_loaded:
+		_cheer_loaded = true
+		if ResourceLoader.exists(CHEER_TEX) and FileAccess.file_exists(CHEER_JSON):
+			_cheer_tex = load(CHEER_TEX)
+			var d = JSON.parse_string(FileAccess.get_file_as_string(CHEER_JSON))
+			if d is Dictionary: _cheer = d
+	return _cheer.get(aset, {}) if _cheer_tex != null else {}
+
+func _draw_cheer(u, pos: Vector2, flip: bool, mod: Color) -> bool:
+	var d := _cheer_data(str(u.anim_set))
+	if d.is_empty(): return false
+	var c := victory_t - MARCH_LEN + float(posmod(int(u.uid) * 7, 5)) * 0.03
+	var fi: int = CHEER_SEQ[clampi(int(c / CHEER_STEP), 0, CHEER_SEQ.size() - 1)]
+	var r: Array = d.frames[fi]
+	var src := Rect2(r[0], r[1], r[2], r[3])
+	var pv := Vector2(d.pivot[0], d.pivot[1])
+	var hc := Color(0.05, 0.05, 0.08, _halo_a)
+	for off in HALO_OFFSETS: _blit_cheer(src, pv, pos + off, flip, hc)
+	_blit_cheer(src, pv, pos, flip, mod)
+	return true
+
+func _blit_cheer(src: Rect2, pv: Vector2, pos: Vector2, flip: bool, c: Color) -> void:
+	if flip:
+		draw_texture_rect_region(_cheer_tex, Rect2(pos.x - (src.size.x - pv.x), pos.y - pv.y, -src.size.x, src.size.y), src, c)
+	else:
+		draw_texture_rect_region(_cheer_tex, Rect2(pos - pv, src.size), src, c)
 
 ## While cheering, the friends ahead of the hero turn round to face the hero.
 func _faces_hero(u) -> bool:
@@ -566,6 +604,7 @@ func _draw_unit(u) -> void:
 	elif victory_t >= 0.0 and u.side < 0: mod.a = clampf(1.0 - victory_t / 0.4, 0.0, 1.0)    # leftover foes fade out
 	elif u.buff_t > 0.0 and u.buff_mul < 1.0: mod = mod * Color(0.7, 0.85, 1.3)     # frost cream: chilled blue
 	elif u.buff_t > 0.0: mod = mod * Color(1.0, 1.0, 0.8)
+	if _celebrating(u) and victory_t > MARCH_LEN and _draw_cheer(u, pos, flip, mod): return
 	var drawn := false
 	if atlas:
 		var rec = atlas.anim_rec(u.anim_set, _anim_name(u))
