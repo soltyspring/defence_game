@@ -737,8 +737,12 @@ func _draw_projectile(p) -> void:
 	var k: float = clampf(p.t / p.dur, 0.0, 1.0)
 	var y: float = ground_y + p.y - sin(k * PI) * p.arc
 	var pos := Vector2(roundf(p.x), roundf(y))
+	if p.kind == "cream":
+		pos = _cream_pos(p, k)
+	var aim := Vector2.ZERO
 	if p.target != null and _render_positions.has(p.target.uid):
-		pos += (_unit_pos(p.target)-Vector2(p.target.x,ground_y+p.target.lane_y))*k*k
+		aim = _unit_pos(p.target)-Vector2(p.target.x,ground_y+p.target.lane_y)
+		pos += aim*k*k
 	if atlas:
 		var rec = atlas.anim_rec(p.kind, "fly")
 		if rec != null:
@@ -752,12 +756,41 @@ func _draw_projectile(p) -> void:
 		"spit":
 			draw_rect(Rect2(pos - Vector2(1.5, 1.5), Vector2(3, 3)), Color("9ad14b"))
 		"cream":
-			# cake: a dollop of whipped cream with a shaded underside
-			draw_rect(Rect2(pos - Vector2(2, 2), Vector2(5, 4)), Color("d9c9a8"))
-			draw_rect(Rect2(pos - Vector2(2, 2), Vector2(4, 3)), Color("fffaf0"))
+			# cake: two drops trailing a whipped-cream dollop (same look as the upgrade screen's example)
+			for i in [2, 1]:
+				var g := k - float(i) * 0.12
+				if g <= 0.0: continue
+				var dp := _cream_pos(p, g) + aim * g * g
+				draw_rect(Rect2(dp - Vector2.ONE, Vector2(3, 4)), C_OUTLINE)
+				draw_rect(Rect2(dp + Vector2(0, 1), Vector2.ONE), C_CREAM_SHADE)
+				draw_rect(Rect2(dp, Vector2.ONE), C_CREAM)
+			# a 1-px dark outline first, so white cream still reads over snow and ice (like the units' halo)
+			for pass_i in 2:
+				for row in CREAM_DOLLOP.size():
+					var line: String = CREAM_DOLLOP[row]
+					for col in line.length():
+						var ch := line[col]
+						if ch == ".": continue
+						var dx := float(col) - 2.0 if p.side > 0 else 2.0 - float(col)
+						var at := pos + Vector2(dx, float(row) - 1.0)
+						if pass_i == 0:
+							draw_rect(Rect2(at - Vector2.ONE, Vector2(3, 3)), C_OUTLINE)
+						else:
+							draw_rect(Rect2(at, Vector2.ONE), C_CREAM if ch == "1" else C_CREAM_SHADE)
 		_:
 			var d := float(p.side)
 			draw_line(pos - Vector2(4.0 * d, 0), pos + Vector2(2.0 * d, 0), Color("e8e0c8"), 1.0)
+
+const C_CREAM := Color(1.0, 0.98, 0.94)
+const C_CREAM_SHADE := Color(0.85, 0.79, 0.66)
+const CREAM_DOLLOP := [".111.", "11111", ".222."]   # nose to the right: 1 cream, 2 shade
+const CREAM_TIP := 22.0   # the cake's dispenser burst ends this far ahead of the shot's spawn point
+
+## Cake shot position: it leaves the tip of the cream burst and flies almost flat (the sim's lob arc is for rocks).
+func _cream_pos(p, k: float) -> Vector2:
+	var x0: float = p.x0 + float(p.side) * CREAM_TIP
+	if (p.x1 - x0) * float(p.side) < 4.0: x0 = p.x1 - float(p.side) * 4.0
+	return Vector2(roundf(lerpf(x0, p.x1, k)), roundf(ground_y + p.y - sin(k * PI) * minf(p.arc, 3.0)))
 
 const TELE_INK := {"charge": Color("ff7a3a"), "lob": Color("ffb43c"), "burrow": Color("d08a48")}
 const TELE_RED := Color("ff4a3a")
@@ -944,12 +977,14 @@ func _draw_fx(f) -> void:
 			# cake: whipped cream bursts over the splash width and settles on the ground
 			var cr := maxf(4.0, f.radius) * (0.4 + k * 0.6)
 			var ca := 1.0 - k
-			draw_rect(Rect2(roundf(f.x - cr), ground_y - 3.0, roundf(cr * 2.0), 3.0), Color(1.0, 0.98, 0.92, 0.75 * ca))
+			draw_rect(Rect2(roundf(f.x - cr), ground_y - 2.0, roundf(cr * 2.0), 2.0), Color(C_CREAM, 0.8 * ca))
 			for i in 5:
 				var cx: float = f.x + (float(i) - 2.0) * cr * 0.45
-				var cy: float = ground_y - 6.0 - sin(k * PI) * (10.0 - absf(float(i) - 2.0) * 3.0)
-				draw_rect(Rect2(roundf(cx) - 2.0, roundf(cy) - 1.0, 4.0, 3.0), Color(0.85, 0.79, 0.66, ca))
-				draw_rect(Rect2(roundf(cx) - 2.0, roundf(cy) - 2.0, 4.0, 3.0), Color(1.0, 0.98, 0.94, ca))
+				var cy: float = ground_y - 10.0 - sin(k * PI) * (8.0 - absf(float(i) - 2.0) * 2.5)
+				draw_rect(Rect2(roundf(cx) - 2.0, roundf(cy) - 1.0, 5.0, 3.0), Color(C_OUTLINE, ca))   # rounded outline
+				draw_rect(Rect2(roundf(cx) - 1.0, roundf(cy) - 2.0, 3.0, 5.0), Color(C_OUTLINE, ca))
+				draw_rect(Rect2(roundf(cx) - 1.0, roundf(cy), 3.0, 2.0), Color(C_CREAM_SHADE, ca))
+				draw_rect(Rect2(roundf(cx) - 1.0, roundf(cy) - 1.0, 3.0, 2.0), Color(C_CREAM, ca))
 		"spore_burst":
 			# a lobbed zone going off: a low violet puff over exactly the marked width
 			draw_rect(Rect2(f.x - f.radius, ground_y - 10.0 - 8.0 * k, f.radius * 2.0, 10.0 + 8.0 * k), Color(0.66, 0.45, 0.82, 0.6 * (1.0 - k)))
