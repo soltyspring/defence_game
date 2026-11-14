@@ -20,14 +20,14 @@ GATES = [23, 42, 61, 79, 96]
 DESC_KO = {
     "baguette": "바게트 창병. 긴 바게트 창으로 적이 닿기 전에 먼저 찌릅니다. 방패병 바로 뒤에 세우면 좋습니다.",
     "macaron": "마카롱 저격수. 아주 멀리서 한 발씩 강하게 쏩니다. 느리게 쏘고 체력이 낮아 앞줄이 지켜 줘야 합니다.",
-    "chili": "케이크 크림병. 생크림을 터뜨려 뭉쳐 있는 적을 한꺼번에 덮칩니다. 무리가 몰려올 때 꺼내세요.",
+    "chili": "케이크 크림병. 생크림을 터뜨려 뭉쳐 있는 적을 한꺼번에 덮칩니다. 머리에 크림을 뒤집어쓴 적은 3초 동안 공격이 느려집니다.",
     "donut": "도넛 수호병. 두꺼운 반죽 갑옷으로 오래 버티며 적을 밀어냅니다. 공격은 약하니 뒤에서 쏘는 병사와 함께 보내세요.",
     "waffle": "와플 공성병. 멀리서 와플 덩이를 던져 적 기지를 크게 부숩니다. 병사 상대로는 평범하고 값이 비쌉니다."
 }
 DESC_EN = {
     "baguette": "Baguette lancer. Its long baguette spear strikes before the enemy can reach. Best right behind a shield.",
     "macaron": "Macaron sniper. Hits hard, one shot at a time, from very far away. Slow and fragile, so keep a front line ahead.",
-    "chili": "Cake creamer. Its whipped-cream burst splatters every enemy packed together. Bring it out when a swarm is coming.",
+    "chili": "Cake creamer. Its whipped-cream burst splatters every enemy packed together. Enemies with cream on their heads attack slower for 3 seconds.",
     "donut": "Donut guardian. Thick dough armour soaks hits and shoves enemies back. Weak attack, so send shooters behind it.",
     "waffle": "Waffle sieger. Lobs waffle chunks from afar that wreck the enemy base. Ordinary against soldiers, and costly."
 }
@@ -56,6 +56,7 @@ def main():
                  range=reach,speed=speed,armor=armor,splash=splash,knockback=kb,structure_mult=structure,
                  anim_set=uid,hit_frame=2,role=role,tags=[role.split(' · ')[0]],
                  attack_type='melee' if reach<60 else 'ranged',projectile='' if reach<60 else 'rock' if uid=='waffle' else 'cream' if uid=='chili' else 'arrow')
+        if uid=='chili': u.update(atk_slow_mul=0.7,atk_slow_s=3.0)   # cream on the head: attacks 30% slower for 3 s
         extra.append(u)
     write('data/units/roster_expansion.json',{'schema_version':2,'units':extra})
     for lang in ['ko','en']:

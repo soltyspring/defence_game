@@ -607,6 +607,8 @@ func traits_text(u: Dictionary) -> String:
 	if float(d.get("splash", 0)) > 0.0: parts.append(UiText.t("upg.splash") % int(d.splash))
 	if float(d.get("atk_interval", 0)) > 0.0: parts.append(UiText.t("upg.interval") % num(float(d.atk_interval)))
 	if float(d.get("structure_mult", 1.0)) > 1.0: parts.append(UiText.t("upg.structure") % num(float(d.structure_mult)))
+	if float(d.get("atk_slow_s", 0.0)) > 0.0:
+		parts.append(UiText.t("upg.atk_slow") % [num(float(d.atk_slow_s)), int(roundf((1.0 - float(d.get("atk_slow_mul", 1.0))) * 100.0))])
 	if d.has("cost"): parts.append(UiText.t("upg.cost") % int(d.cost))
 	return " · ".join(parts)
 
