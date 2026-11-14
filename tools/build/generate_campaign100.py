@@ -16,6 +16,21 @@ def write(path, obj):
 GATES = [23, 42, 61, 79, 96]
 # gold to recruit each expansion character once its round is reached: about 1.5 first clears of that round,
 # ~16% of the first-clear gold earned in the ten rounds before it (7,900 in total, 6% of R1-100)
+# card descriptions (name. what it does. how to use it), shown on the upgrade and deploy screens
+DESC_KO = {
+    "baguette": "바게트 창병. 긴 바게트 창으로 적이 닿기 전에 먼저 찌릅니다. 방패병 바로 뒤에 세우면 좋습니다.",
+    "macaron": "마카롱 저격수. 아주 멀리서 한 발씩 강하게 쏩니다. 느리게 쏘고 체력이 낮아 앞줄이 지켜 줘야 합니다.",
+    "chili": "고추빵 화염병. 매운 불꽃이 터져 뭉쳐 있는 적을 한꺼번에 태웁니다. 무리가 몰려올 때 꺼내세요.",
+    "donut": "도넛 수호병. 두꺼운 반죽 갑옷으로 오래 버티며 적을 밀어냅니다. 공격은 약하니 뒤에서 쏘는 병사와 함께 보내세요.",
+    "waffle": "와플 공성병. 멀리서 와플 덩이를 던져 적 기지를 크게 부숩니다. 병사 상대로는 평범하고 값이 비쌉니다."
+}
+DESC_EN = {
+    "baguette": "Baguette lancer. Its long baguette spear strikes before the enemy can reach. Best right behind a shield.",
+    "macaron": "Macaron sniper. Hits hard, one shot at a time, from very far away. Slow and fragile, so keep a front line ahead.",
+    "chili": "Chili bun burner. Its spicy burst burns every enemy packed together. Bring it out when a swarm is coming.",
+    "donut": "Donut guardian. Thick dough armour soaks hits and shoves enemies back. Weak attack, so send shooters behind it.",
+    "waffle": "Waffle sieger. Lobs waffle chunks from afar that wreck the enemy base. Ordinary against soldiers, and costly."
+}
 RECRUIT = {'baguette': 1000, 'macaron': 1200, 'chili': 1500, 'donut': 1800, 'waffle': 2400}
 
 NEW = [
@@ -46,7 +61,7 @@ def main():
         text = read(f'data/text/{lang}.json')
         for u in extra:
             text['strings'][u['name_key']] = u['name'] if lang=='ko' else u['id'].capitalize()
-            text['strings'][u['desc_key']] = u['role'] if lang=='ko' else {'baguette':'Long reach melee','macaron':'Long range single target','chili':'Area damage','donut':'Armored frontline','waffle':'Structure specialist'}[u['id']]
+            text['strings'][u['desc_key']] = (DESC_KO if lang=='ko' else DESC_EN)[u['id']]
         for n in range(41,101):
             text['strings'][f'round.r{n:02}.name'] = f'{"성장 관문" if n in GATES else "원정"} {n}' if lang=='ko' else f'{"Growth gate" if n in GATES else "Expedition"} {n}'
         labels={

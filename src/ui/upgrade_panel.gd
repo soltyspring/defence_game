@@ -208,6 +208,8 @@ var list: Array = []            # every row, in display order (rows = the ones o
 var selected_id := ""
 var row_buttons: Array = []     # one per visible row: tap = select
 var btn_buy: Control
+var desc_line: Control          # description and traits scroll sideways when they do not fit (Marquee)
+var traits_line: Control
 var btn_gold: Control           # 골드 구매: shown while the selected purchase is short of gold (shop builds only)
 var _gold_fits := false
 const GoldShopCatalog := preload("res://src/core/gold_shop_catalog.gd")
@@ -251,6 +253,11 @@ func _build() -> void:
 	btn_gold.tapped.connect(_on_gold)
 	btn_gold.hide()
 	add_child(btn_gold)
+	desc_line = Marquee.new()
+	add_child(desc_line)
+	traits_line = Marquee.new()
+	traits_line.color = UiStyle.C_TEXT
+	add_child(traits_line)
 	demo = Demo.new()
 	demo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(demo)
@@ -404,6 +411,10 @@ func _layout(_view: Vector2, safe: Rect2) -> void:
 	demo.position = (detail_rect.position + Vector2(0, 34)).round()
 	demo.size = Vector2(detail_rect.size.x, dh).round()
 	move_child(demo, -1)
+	desc_line.position = (detail_rect.position + Vector2(0, 17)).round()
+	desc_line.size = Vector2(detail_rect.size.x, 14)
+	traits_line.position = Vector2(detail_rect.position.x, demo.position.y + demo.size.y + 3).round()
+	traits_line.size = Vector2(detail_rect.size.x, 14)
 
 func pages() -> int:
 	return maxi(1, ceili(list_upgrades().size() / float(per_page)))
@@ -449,6 +460,10 @@ func _refresh() -> void:
 	btn_buy.queue_redraw()
 	btn_gold.visible = _gold_fits and GoldShopCatalog.enabled()      # always there (2026-11-14 user); brighter when short
 	btn_gold.fill = UiStyle.C_GOLD.darkened(0.25 if short_of_gold(u) > 0 else 0.5)
+	var dd := target_def(u) if not u.is_empty() else {}
+	var dk := str(dd.get("desc_key", "")) if not dd.is_empty() else str(u.get("desc_key", ""))
+	desc_line.set_text(UiText.t(dk) if dk != "" and UiText.has(dk) else "")
+	traits_line.set_text(traits_text(u) if not u.is_empty() else "")
 	if demo != null:
 		var d := target_def(u) if not u.is_empty() else {}
 		var lv := level_of(str(u.id)) if not u.is_empty() else 1
@@ -636,14 +651,9 @@ func _draw_detail(u: Dictionary) -> void:
 	UiStyle.draw_text_left(self, name_fit[0], Vector2(r.position.x, r.position.y + 8), UiStyle.FONT_M, UiStyle.C_TEXT)
 	UiStyle.draw_text_left(self, lvt, Vector2(r.end.x - lw, r.position.y + 8), UiStyle.FONT_S, UiStyle.C_GOLD if locked else UiStyle.C_TEXT_DIM)
 	var d := target_def(u)
-	var dk := str(d.get("desc_key", "")) if not d.is_empty() else str(u.get("desc_key", ""))
-	var desc := UiText.t(dk) if dk != "" and UiText.has(dk) else ""
-	if desc != "":
-		UiStyle.draw_text_left(self, UiStyle.fit_text(desc, r.size.x, UiStyle.FONT_S)[0], Vector2(r.position.x, r.position.y + 24), UiStyle.FONT_S, UiStyle.C_TEXT_DIM)
 	var y := demo.position.y + demo.size.y + 10
 	var traits := traits_text(u)
-	if traits != "":
-		UiStyle.draw_text_left(self, UiStyle.fit_text(traits, r.size.x, UiStyle.FONT_S)[0], Vector2(r.position.x, y), UiStyle.FONT_S, UiStyle.C_TEXT)
+	if traits != "":      # drawn by traits_line
 		y += 18
 	# what the next level changes
 	var maxed := is_max(u)
@@ -811,3 +821,49 @@ class Demo extends Control:
 		draw_rect(Rect2(p.x - 4, p.y - 19, 8, 10), straw)
 		draw_rect(Rect2(p.x - 3, p.y - 26, 6, 6), Color(0.05, 0.04, 0.04))
 		draw_rect(Rect2(p.x - 2, p.y - 25, 4, 4), straw.darkened(0.12))
+
+## One line of text that fits its width or, when it is longer, slides left to its end and back to the start
+## (holds 1.5 s at each end). Used for descriptions and trait lists, so nothing is cut off with an ellipsis.
+class Marquee extends Control:
+	const UiStyle := preload("res://src/ui/ui_style.gd")
+	const HOLD := 1.5
+	const SPEED := 28.0             # px per second
+	var text := ""
+	var color := UiStyle.C_TEXT_DIM
+	var _t := 0.0
+	var _acc := 0.0
+	var _over := 0.0                # px the text is wider than the line
+
+	func _init() -> void:
+		clip_contents = true
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	func set_text(v: String) -> void:
+		if v == text: return
+		text = v
+		_t = 0.0
+		_measure()
+
+	func _measure() -> void:
+		_over = maxf(0.0, UiStyle.text_width(text, UiStyle.FONT_S) - size.x)
+		queue_redraw()
+
+	func _notification(what: int) -> void:
+		if what == NOTIFICATION_RESIZED: _measure()
+
+	func scroll_x() -> float:
+		if _over <= 0.0: return 0.0
+		var c := fmod(_t, HOLD + _over / SPEED + HOLD)
+		return roundf(clampf((c - HOLD) * SPEED, 0.0, _over))
+
+	func _process(delta: float) -> void:
+		if _over <= 0.0 or not is_visible_in_tree(): return
+		_t += delta
+		_acc += delta
+		if _acc >= 0.05:
+			_acc = 0.0
+			queue_redraw()
+
+	func _draw() -> void:
+		if text != "":
+			UiStyle.draw_text_left(self, text, Vector2(-scroll_x(), size.y / 2), UiStyle.FONT_S, color)
