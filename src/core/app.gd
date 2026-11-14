@@ -27,6 +27,7 @@ var autoplay := false
 var autoplay_rounds := 0
 var _quit_after := -1.0
 var _result_delay := -1.0
+const VICTORY_LEN := 2.0      # s from the enemy base falling to the result screen
 var _pending_result: Dictionary = {}
 var ui_source := {}           # screen -> "scenes/ui" | "fallback" (evidence for QA)
 var _shots: Array = []
@@ -334,7 +335,7 @@ func _on_battle_finished(r: Dictionary) -> void:
 	last_result = result
 	print("[App] battle ended ", JSON.stringify(result))
 	_pending_result = result
-	_result_delay = 1.2
+	_result_delay = VICTORY_LEN if result.won else 1.2      # a win: march + cheer first (battle_view victory_t)
 	if autoplay:
 		autoplay_rounds -= 1
 

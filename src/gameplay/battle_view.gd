@@ -77,6 +77,7 @@ func setup(p_sim, p_atlas, p_ground_y: float, p_biome: String) -> void:
 
 func _process(_dt: float) -> void:
 	_update_formation(0.0 if sim != null and (sim.paused or sim.ended) else _dt)
+	if sim != null and sim.ended and sim.won: victory_t = maxf(victory_t, 0.0) + _dt
 	_track_vfx(0.0 if sim == null or sim.paused else _dt)
 	if environment and sim:
 		var boss = null
@@ -131,12 +132,12 @@ func _draw() -> void:
 		draw_string(_num_font,bp,label,HORIZONTAL_ALIGNMENT_LEFT,-1,NUM_PX,Color("efda9b"))
 	_flush_bars()   # all hp bars after all sprites: one batch of rects instead of breaking sprite batches (08 H2)
 	for p in sim.projectiles:
-		if p.alive: _draw_projectile(p)
+		if p.alive and victory_t < 0.0: _draw_projectile(p)      # shots frozen mid-air vanish on a win
 	for f in sim.fxs:
-		if f.alive and f.kind != "telegraph": _draw_fx(f)
-	if atlas: _draw_vfx()
+		if f.alive and f.kind != "telegraph" and victory_t < 0.0: _draw_fx(f)
+	if atlas and victory_t < 0.0: _draw_vfx()      # hits frozen at the win vanish
 	_draw_telegraphs()
-	if show_damage:
+	if show_damage and victory_t < 0.0:
 		_placed_text.clear()
 		_placed_text.append_array(_mark_rects)   # damage numbers stagger around wind-up wedges instead of covering them
 		var live := {}
@@ -170,7 +171,33 @@ func _draw_shadow(u) -> void:
 	draw_rect(Rect2(foot + Vector2(-w + 3, 1), Vector2(w * 2 - 6, 1)), sc)
 
 func _unit_pos(u) -> Vector2:
-	return _render_positions.get(u.uid,Vector2(roundf(u.x),roundf(ground_y+u.lane_y)))
+	var p: Vector2 = _render_positions.get(u.uid,Vector2(roundf(u.x),roundf(ground_y+u.lane_y)))
+	if _celebrating(u): p += _victory_offset(u)
+	return p
+
+# ---- victory: the army marches on past the broken nest, then cheers (2026-11-15 user) ----
+## Time since the enemy base fell (view only; the sim is already stopped). App shows the result at VICTORY_LEN.
+var victory_t := -1.0
+const MARCH_LEN := 0.8     # s walking right
+const MARCH_PX := 36.0     # world px covered while marching
+const HOP_LEN := 0.36      # s per cheer hop
+const HOP_PX := 7.0
+
+func _celebrating(u) -> bool:
+	return victory_t >= 0.0 and u.side > 0 and not u.dying
+
+func _victory_offset(u) -> Vector2:
+	var m := clampf(victory_t / MARCH_LEN, 0.0, 1.0)
+	var off := Vector2(roundf(MARCH_PX * (1.0 - (1.0 - m) * (1.0 - m))), 0.0)    # eases into the stop
+	if victory_t > MARCH_LEN:
+		var h := victory_t - MARCH_LEN + float(posmod(int(u.uid) * 7, 5)) * 0.05     # not all in step
+		off.y = -roundf(absf(sin(h / HOP_LEN * PI)) * HOP_PX)
+	return off
+
+## While cheering, the friends ahead of the hero turn round to face the hero.
+func _faces_hero(u) -> bool:
+	if u.is_hero or victory_t <= MARCH_LEN or sim.hero_respawn > 0.0: return false
+	return float(u.x) > float(sim.hero.x) + 4.0
 
 func _update_formation(dt: float) -> void:
 	if sim == null: return
@@ -502,6 +529,7 @@ func _bright_chapter() -> bool:
 	return idx > 0 and ((idx - 1) / 10) in [2, 4, 6, 8]
 
 func _draw_unit(u) -> void:
+	if victory_t >= 0.4 and u.side < 0: return     # leftover foes have faded out (halo included)
 	if u.hidden and not u.dying:
 		_draw_burrow_trail(u)
 		_state_marks.append(u)
@@ -514,12 +542,13 @@ func _draw_unit(u) -> void:
 			_state_marks.append(u)
 	var flip: bool = u.side < 0
 	if u.is_hero:
-		flip = sim.hero_dir < 0
+		flip = sim.hero_dir < 0 and victory_t < 0.0
 		# High-contrast pointer keeps the controlled hero identifiable in crowds,
 		# including when bread-coloured sprites pass the bakery facade.
 		var marker := pos + Vector2(0, -44)
 		draw_colored_polygon(PackedVector2Array([marker + Vector2(-5,-5), marker + Vector2(5,-5), marker + Vector2(0,2)]), C_OUTLINE)
 		draw_colored_polygon(PackedVector2Array([marker + Vector2(-3,-4), marker + Vector2(3,-4), marker]), Color("ffe7a0"))
+	if _celebrating(u) and not u.is_hero: flip = _faces_hero(u)
 	var mod := Color.WHITE
 	# Heavy green silhouettes otherwise merge into the dark mold nest during the final push.
 	# Keep their hue and animation while lifting their value above that background.
@@ -534,12 +563,17 @@ func _draw_unit(u) -> void:
 	# maroon, so a unit under focus fire (flashing most of the time) lost its colours and merged with its neighbours.
 	if u.flash > 0.0: mod = Color(1.5, 1.12, 1.12)
 	if u.dying: mod.a = clampf(u.dead_t / 0.7, 0.0, 1.0)
+	elif victory_t >= 0.0 and u.side < 0: mod.a = clampf(1.0 - victory_t / 0.4, 0.0, 1.0)    # leftover foes fade out
 	elif u.buff_t > 0.0 and u.buff_mul < 1.0: mod = mod * Color(0.7, 0.85, 1.3)     # frost cream: chilled blue
 	elif u.buff_t > 0.0: mod = mod * Color(1.0, 1.0, 0.8)
 	var drawn := false
 	if atlas:
 		var rec = atlas.anim_rec(u.anim_set, _anim_name(u))
 		var t: float = u.anim_t
+		if _celebrating(u):
+			var cheer := victory_t > MARCH_LEN
+			rec = atlas.anim_rec(u.anim_set, "idle" if cheer else "walk")
+			t = 0.0 if cheer else victory_t
 		if rec == null and u.state == SimS.S_IDLE:
 			rec = atlas.anim_rec(u.anim_set, "walk")
 			t = 0.0
@@ -550,7 +584,7 @@ func _draw_unit(u) -> void:
 				for off in HALO_OFFSETS: _blit_rec(rec, fi, pos + off, flip, hc)
 			_blit_rec(rec, fi, pos, flip, mod)
 			drawn = true
-			if not u.dying:
+			if not u.dying and not (victory_t >= 0.0 and u.side < 0):
 				_hp_bar(pos + Vector2(0, -rec.rects[fi].size.y - 3.0), 12.0 + 4.0 * float(u.def.get("size", 1.0)), u.hp / u.hp_max, u.side)
 				if u.shield > 0.0:     # sugar barrier: a pink line over the HP bar, as long as the shield is strong
 					var bw := 12.0 + 4.0 * float(u.def.get("size", 1.0))
