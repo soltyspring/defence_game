@@ -95,3 +95,31 @@ Row 2: the DONUT GUARD (ring donut with pink icing, helmet, frying-pan shield). 
 Sheet 6. Row 1: the WAFFLE SIEGE CREW (square waffle with a leather cap, next to its small catapult). Cheer: the waffle jumps beside the catapult (the catapult stays on the ground), the catapult arm flips up at the peak.
 Row 2: the APPRENTICE (small baker kid, white cap, red apron). Cheer: throws both arms up, cap lifting off the head at the peak, a happy landing.
 ```
+
+## 받은 결과 검토 (2026-11-15)
+
+원본은 `docs/art/gpt_sources/cheer/cheer_1.png`~`cheer_6.png`. 게임 크기로 줄여 지금 대기 그림 옆에 놓은 비교: `compare_1_hero_to_oven.png`, `compare_2_baguette_to_worker.png`(맨 왼쪽 = 지금 게임 그림, 오른쪽 4개 = 환호).
+
+| 유닛 | 판단 | 메모 |
+| --- | --- | --- |
+| 식빵, 통식빵, 화덕포, 바게트, 마카롱, 케이크, 도넛, 와플 | 사용 가능 | 게임 크기에서 같은 캐릭터로 읽힌다 |
+| 제빵장 | 사용 가능(조금 다름) | 머리·모자가 조금 크고 얼굴이 둥글다. 짧은 환호라 허용 범위 |
+| 프레첼 | 사용 가능(조금 다름) | 게임 말의 이마에 있는 금색 뿔이 빠졌다 |
+| 롤빵 | 다시 받기 권장 | 갈색 두건이 긴 머리처럼 그려졌다 |
+| 견습생 | 다시 받기 권장 | 게임은 마른 체형·작은 모자인데, 머리가 큰 2등신·큰 요리사 모자로 바뀌었다 |
+
+시트 5·6에는 칸 테두리 선이 그려져 있다. 자를 때 칸 안쪽 10px을 버리면 된다.
+
+### 다시 받을 때 보낼 문장 (해당 ref 이미지 첨부)
+
+```text
+Redo only row 1 of sheet 2 (the ROLL THROWER). It is NOT a girl with long hair: it wears a brown hood that wraps the head like a monk's cowl, with a pale round face showing in the opening and one big eye, exactly as in the ref image. Keep its small body size and the yellow tunic. Same 4 cheer poses, same rules.
+```
+
+```text
+Redo only row 2 of sheet 6 (the APPRENTICE). Match the ref proportions exactly: a slim kid about 3 heads tall (not a big-headed chibi), a SMALL flat white cap (not a tall chef toque), white shirt, red apron, brown trousers. Same 4 cheer poses (the small cap may pop up at the peak), same rules.
+```
+
+```text
+(optional) Sheet 3 row 1: the cream horse has a small golden horn on its forehead, as in the ref. Add it in all 4 cells, change nothing else.
+```
