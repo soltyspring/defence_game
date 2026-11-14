@@ -735,6 +735,10 @@ func _draw_projectile(p) -> void:
 			draw_rect(Rect2(pos - Vector2(2, 1), Vector2(5, 2)), Color("f2d16b"))
 		"spit":
 			draw_rect(Rect2(pos - Vector2(1.5, 1.5), Vector2(3, 3)), Color("9ad14b"))
+		"cream":
+			# cake: a dollop of whipped cream with a shaded underside
+			draw_rect(Rect2(pos - Vector2(2, 2), Vector2(5, 4)), Color("d9c9a8"))
+			draw_rect(Rect2(pos - Vector2(2, 2), Vector2(4, 3)), Color("fffaf0"))
 		_:
 			var d := float(p.side)
 			draw_line(pos - Vector2(4.0 * d, 0), pos + Vector2(2.0 * d, 0), Color("e8e0c8"), 1.0)
@@ -920,6 +924,16 @@ func _draw_fx(f) -> void:
 			draw_rect(Rect2(pos - Vector2(0.5, s), Vector2(1.0, s * 2.0)), Color(1, 1, 0.7, 1.0 - k))
 		"explosion":
 			draw_circle(pos, maxf(4.0, f.radius) * (0.4 + k * 0.6), Color(1.0, 0.6, 0.2, 0.7 * (1.0 - k)))
+		"cream_splat":
+			# cake: whipped cream bursts over the splash width and settles on the ground
+			var cr := maxf(4.0, f.radius) * (0.4 + k * 0.6)
+			var ca := 1.0 - k
+			draw_rect(Rect2(roundf(f.x - cr), ground_y - 3.0, roundf(cr * 2.0), 3.0), Color(1.0, 0.98, 0.92, 0.75 * ca))
+			for i in 5:
+				var cx: float = f.x + (float(i) - 2.0) * cr * 0.45
+				var cy: float = ground_y - 6.0 - sin(k * PI) * (10.0 - absf(float(i) - 2.0) * 3.0)
+				draw_rect(Rect2(roundf(cx) - 2.0, roundf(cy) - 1.0, 4.0, 3.0), Color(0.85, 0.79, 0.66, ca))
+				draw_rect(Rect2(roundf(cx) - 2.0, roundf(cy) - 2.0, 4.0, 3.0), Color(1.0, 0.98, 0.94, ca))
 		"spore_burst":
 			# a lobbed zone going off: a low violet puff over exactly the marked width
 			draw_rect(Rect2(f.x - f.radius, ground_y - 10.0 - 8.0 * k, f.radius * 2.0, 10.0 + 8.0 * k), Color(0.66, 0.45, 0.82, 0.6 * (1.0 - k)))

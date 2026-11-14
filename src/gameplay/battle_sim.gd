@@ -1438,7 +1438,7 @@ func _step_projectiles(dt: float) -> void:
 				_damage_base(-p.side, p.dmg * p.struct_mult)
 				if p.splash > 0.0:
 					_area_damage_side(-p.side, p.x1, p.splash, p.dmg, p.knockback, null)
-					_fx("explosion", p.x1, -6.0, 0.35, p.splash)
+					_fx("cream_splat" if p.kind == "cream" else "explosion", p.x1, -6.0, 0.35, p.splash)
 			else:
 				var hit_any := false
 				if p.target != null and not p.target.dying and (p.homing or absf(p.target.x - p.x1) <= 12.0 + p.splash):
@@ -1446,7 +1446,7 @@ func _step_projectiles(dt: float) -> void:
 					hit_any = true
 				if p.splash > 0.0:
 					_area_damage_side(-p.side, p.x1, p.splash, p.dmg, p.knockback, p.target if hit_any else null)
-					_fx("explosion", p.x1, -6.0, 0.35, p.splash)
+					_fx("cream_splat" if p.kind == "cream" else "explosion", p.x1, -6.0, 0.35, p.splash)
 				elif hit_any:
 					_fx("hit_spark", p.x1, -12.0, 0.2, 0.0)
 				if hit_any and p.kind != "tower_bolt":
