@@ -133,3 +133,5 @@ Row 2: the APPRENTICE: a slim kid about 3 heads tall (not a big-headed chibi), a
 ```
 
 결과는 `cheer_7.png`~`cheer_9.png`로 넘겨주면 `import_cheer.py`의 `USE`에 더해 넣는다. 롤빵 1장만 다시 받을 필요는 없고, 시트 7에 함께 들어 있다.
+
+**적용(2026-11-15):** 시트 7·8·9를 받아 식빵·롤빵·통식빵·프레첼·화덕포를 넣었다(실제 게임 그림과의 비교: `compare_3_slice_units.png`). 화덕포는 GPT 그림이 게임보다 넓게 그려져 `SCALE_FIX` 0.8로 줄였다. 견습생은 사용자 판단으로 시트 9의 다시 그린 그림 대신 **시트 6의 첫 그림**을 쓴다. 이로써 12종 모두 환호 그림이 있다. 견습생은 지금 승리 장면에 나오지 않는다(방앗간 일꾼은 따로 그려진다).

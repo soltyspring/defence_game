@@ -4,7 +4,7 @@ Input: docs/art/gpt_sources/cheer/cheer_N.png, 1536x1024 on flat magenta, 2 rows
 ground line in each cell (docs/art/release_slice/cheer_regen/PROMPTS.md). Some sheets also have thin cell borders,
 so a margin inside every cell is ignored.
 Only units whose sheet matches the in-game sprite are imported (USE below); the others wait for a redraw.
-Each cell is keyed, scaled so the first (crouch) pose is as tall as the unit's in-game idle frame, reduced with a
+Each cell is keyed, scaled so the first (crouch) pose is as tall as the unit's in-game idle frame (SCALE_FIX trims a few), reduced with a
 premultiplied box filter, cut to hard alpha and reduced to one palette per unit. The pivot is the feet on the
 ground line, at the in-game sprite's pivot x (as a share of the crouch pose), the same in all four frames, so jumps keep their height and nothing jitters sideways.
 Output: assets/art/cheer/cheer.png + cheer.json {anim_set: {"frames": [[x, y, w, h], ...], "pivot": [px, py]}}
@@ -21,19 +21,29 @@ SRC = ROOT / "docs/art/gpt_sources/cheer"
 OUT = ROOT / "assets/art/cheer"
 CELL_W, CELL_H, MARGIN = 384, 512, 10
 COLOURS = 24
+# per-unit size trim after the height match: the oven sheet is drawn wider than the game's oven
+SCALE_FIX = {"siege": 0.8}
 # anim_set: (sheet, row) — only sheets drawn from the sprites the game really uses
 USE = {
     "hero_captain": (1, 0),
     "baguette": (4, 0), "macaron": (4, 1),
     "chili": (5, 0), "donut": (5, 1),
     "waffle": (6, 0),
+    "worker": (6, 1),          # the first apprentice sheet (2026-11-15 user: better than the redraw in sheet 9)
+    "melee_basic": (7, 0), "ranged_basic": (7, 1),
+    "tank": (8, 0), "fast": (8, 1),
+    "siege": (9, 0),
 }
-# in-game idle frame of each set: (atlas json, atlas png)
+# in-game idle frame of each set: (atlas json, atlas png) — the page assets/manifest.json anim_sets really uses
 GAME = {
     "hero_captain": ("assets/art/gpt/gpt_bakery_crew.json", "assets/art/gpt/gpt_bakery_crew.png"),
 }
 for _s in ("baguette", "macaron", "chili", "donut", "waffle"):
     GAME[_s] = ("assets/art/roster10/roster10.json", "assets/art/roster10/roster10.png")
+GAME["worker"] = GAME["hero_captain"]
+GAME["melee_basic"] = ("assets/art/release_slice/slice_chars.json", "assets/art/release_slice/slice_chars.png")
+for _s in ("ranged_basic", "tank", "fast", "siege"):
+    GAME[_s] = ("assets/art/release_slice/slice_chars2.json", "assets/art/release_slice/slice_chars2.png")
 
 
 def key(rgb: np.ndarray) -> np.ndarray:
@@ -49,7 +59,7 @@ def game_idle(aset: str):
     v = a["frames"][a["anims"][aset]["idle"]["frames"][0]]
     f = img.crop((v["x"], v["y"], v["x"] + v["w"], v["y"] + v["h"]))
     bb = f.getbbox()
-    return bb[3] - bb[1], (float(v["pivot"][0]) - bb[0]) / float(bb[2] - bb[0])
+    return bb[3] - bb[1], bb[2] - bb[0], (float(v["pivot"][0]) - bb[0]) / float(bb[2] - bb[0])
 
 
 def cells(sheet: np.ndarray, row: int):
@@ -74,8 +84,8 @@ def unit(sheet: np.ndarray, row: int, aset: str):
     ground = int(np.median(grounds)) if grounds else cs[0][0].shape[0] - 40
     a0 = cs[0][1]
     ys, xs = np.nonzero(a0 > 0.5)
-    gh, ratio = game_idle(aset)
-    k = gh / float(ys.max() + 1 - ys.min())
+    gh, gw, ratio = game_idle(aset)
+    k = gh / float(ys.max() + 1 - ys.min()) * SCALE_FIX.get(aset, 1.0)
     px_cell = xs.min() + ratio * (xs.max() + 1 - xs.min())     # same foot point as the game sprite (waffle: its body)
     frames = []
     for cell, a, _ in cs:

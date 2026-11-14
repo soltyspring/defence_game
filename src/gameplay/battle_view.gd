@@ -604,6 +604,7 @@ func _draw_unit(u) -> void:
 	elif victory_t >= 0.0 and u.side < 0: mod.a = clampf(1.0 - victory_t / 0.4, 0.0, 1.0)    # leftover foes fade out
 	elif u.buff_t > 0.0 and u.buff_mul < 1.0: mod = mod * Color(0.7, 0.85, 1.3)     # frost cream: chilled blue
 	elif u.buff_t > 0.0: mod = mod * Color(1.0, 1.0, 0.8)
+	if _celebrating(u): mod = Color.WHITE      # the sim stopped mid-hit: no frozen hit flash or buff tint on the winners
 	if _celebrating(u) and victory_t > MARCH_LEN and _draw_cheer(u, pos, flip, mod): return
 	var drawn := false
 	if atlas:
