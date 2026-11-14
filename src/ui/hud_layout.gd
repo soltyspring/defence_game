@@ -43,6 +43,8 @@ static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min
 	var top_h := t
 	var pause_r := Rect2(Vector2(s.end.x - t, s.position.y), Vector2(t, t))
 	out.pause = pause_r
+	var speed_r := Rect2(Vector2(pause_r.position.x, pause_r.end.y + TOUCH_GAP), pause_r.size)
+	out.speed = speed_r
 	var res_w := clampf(s.size.x * 0.26, 132.0, 180.0)
 	out.resources = Rect2(s.position, Vector2(res_w, top_h))
 	var bars_x := s.position.x + res_w + GAP * 2
@@ -93,7 +95,7 @@ static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min
 	#  - on short views the skill column climbed into the top row and sat on top of the pause button.
 	# Both now collapse to ONE row in which every control shrinks equally; nothing leaves the view or stacks.
 	var col_top := row_bottom - card_h - GAP * 2 - n_skills * skill - maxi(n_skills - 1, 0) * TOUCH_GAP
-	var fit := cw_fit < t or (not skills_in_row and col_top < s.position.y + top_h + TOUCH_GAP)
+	var fit := cw_fit < t or (not skills_in_row and col_top < speed_r.end.y + TOUCH_GAP)
 	if fit:
 		skills_in_row = true
 		gg = FIT_GAP
@@ -151,7 +153,14 @@ static func compute(view: Vector2, safe: Rect2, n_cards: int, n_skills: int, min
 	# of a stacked skill column.
 	var mk := maxf(t, THREAT_MIN)
 	var ty := boss_y + (16.0 if boss_bar else 0.0)
-	out.threat_right = Rect2(Vector2(strip_end - mk, ty), Vector2(mk, mk))
+	var right_x := strip_end - mk
+	var right_y := ty
+	if Rect2(right_x, right_y, mk, mk).intersects(speed_r):
+		if speed_r.end.y + TOUCH_GAP + mk <= view.y * 0.5:
+			right_y = speed_r.end.y + TOUCH_GAP
+		else:
+			right_x = speed_r.position.x - TOUCH_GAP - mk
+	out.threat_right = Rect2(Vector2(right_x, right_y), Vector2(mk, mk))
 	out.threat_left = Rect2(Vector2(s.position.x, ty), Vector2(mk, mk))
 	# banner: between the two markers
 	var bx: float = (out.threat_left as Rect2).end.x + GAP * 2
@@ -185,7 +194,7 @@ static func lane_band(view: Vector2) -> Rect2:
 
 ## All interactive rects, for validation.
 static func touch_rects(l: Dictionary) -> Array[Rect2]:
-	var r: Array[Rect2] = [l.pause, l.move_left, l.move_right, l.worker]
+	var r: Array[Rect2] = [l.pause, l.speed, l.move_left, l.move_right, l.worker]
 	if l.has("minimap") and (l.minimap as Rect2).size.x > 0.0: r.append(l.minimap)
 	if l.has("follow"): r.append(l.follow)
 	for c in l.cards:

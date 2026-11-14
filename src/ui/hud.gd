@@ -22,7 +22,7 @@ var paused := false
 var top: Control                 # resources + base bars + wave (custom drawn, no input)
 var minimap: Control
 var btn_follow: Control
-var btn_speed: Control           # x1 / x2 fast-forward; shares the follow button's slot (follow shows only while scouting)
+var btn_speed: Control           # x1 / x2 fast-forward below pause
 var _round_index := 0
 var btn_pause: Control
 var btn_left: Control
@@ -90,8 +90,8 @@ func _build() -> void:
 	btn_speed.shape = &"fast_forward"
 	btn_speed.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	btn_pause = make_button("", _on_pause_pressed)
-	btn_pause.glyph = &"pause"
-	btn_pause.icon = UiStyle.ui_icon("icon_pause")
+	btn_pause.shape = &"compact_pause"
+	btn_pause.tooltip_text = UiText.t("ui.paused")
 
 	btn_left = make_button("", func(): pass, TouchButton.Mode.HOLD)
 	btn_left.glyph = &"left"
@@ -272,7 +272,7 @@ func _on_snapshot(s: Dictionary) -> void:
 	top.snap = s            # hud_top redraws itself only if a drawn value changed
 	minimap.state = s.get("map", {})
 	btn_follow.visible = bool(s.get("map", {}).get("scouting", false))
-	btn_speed.visible = not btn_follow.visible and _round_index >= 3      # R1-R2 teach at x1 (battle.gd SPEED_FROM_ROUND)
+	btn_speed.visible = _round_index >= 3      # R1-R2 teach at x1 (battle.gd SPEED_FROM_ROUND)
 	btn_follow.fill = UiStyle.C_ACCENT.darkened(0.25) if bool(s.get("map", {}).get("scouting", false)) else UiStyle.C_PANEL_LIGHT
 	var gold := float(s.get("gold", 0))
 	var army: Dictionary = s.get("army", {})
@@ -604,7 +604,7 @@ func _layout() -> void:
 	var bh := maxf(target, 40.0)
 	var total_h := pause_buttons.size() * (bh + 6) - 6
 	var y0 := safe.get_center().y - total_h / 2 + 14
-	place(btn_speed, layout.follow)
+	place(btn_speed, layout.speed)
 	for i in pause_buttons.size():
 		pause_buttons[i].position = Vector2(view.x / 2 - bw / 2, y0 + i * (bh + 6)).round()
 		pause_buttons[i].size = Vector2(bw, bh)

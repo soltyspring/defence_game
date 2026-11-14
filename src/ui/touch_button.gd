@@ -184,6 +184,14 @@ func _draw_fast_forward() -> void:
 		draw_polyline(PackedVector2Array([tri[0], tri[1], tri[2], tri[0]]), Color("231818"), 2.0)
 
 func _draw() -> void:
+	if shape == &"compact_pause":
+		var center := (size * 0.5).round()
+		var tint := Color("e0c9a3") if is_pressed else Color("fff0d2")
+		for x in [-7.0, 2.0]:
+			var bar := Rect2(center + Vector2(x, -6), Vector2(5, 12))
+			draw_rect(bar.grow(1), Color("231818"))
+			draw_rect(bar, tint)
+		return
 	if shape == &"fast_forward":
 		_draw_fast_forward()
 		return
