@@ -96,30 +96,40 @@ Sheet 6. Row 1: the WAFFLE SIEGE CREW (square waffle with a leather cap, next to
 Row 2: the APPRENTICE (small baker kid, white cap, red apron). Cheer: throws both arms up, cap lifting off the head at the peak, a happy landing.
 ```
 
-## 받은 결과 검토 (2026-11-15)
+## 받은 결과 검토와 적용 (2026-11-15)
 
-원본은 `docs/art/gpt_sources/cheer/cheer_1.png`~`cheer_6.png`. 게임 크기로 줄여 지금 대기 그림 옆에 놓은 비교: `compare_1_hero_to_oven.png`, `compare_2_baguette_to_worker.png`(맨 왼쪽 = 지금 게임 그림, 오른쪽 4개 = 환호).
+원본은 `docs/art/gpt_sources/cheer/cheer_1.png`~`cheer_6.png`.
 
-| 유닛 | 판단 | 메모 |
-| --- | --- | --- |
-| 식빵, 통식빵, 화덕포, 바게트, 마카롱, 케이크, 도넛, 와플 | 사용 가능 | 게임 크기에서 같은 캐릭터로 읽힌다 |
-| 제빵장 | 사용 가능(조금 다름) | 머리·모자가 조금 크고 얼굴이 둥글다. 짧은 환호라 허용 범위 |
-| 프레첼 | 사용 가능(조금 다름) | 게임 말의 이마에 있는 금색 뿔이 빠졌다 |
-| 롤빵 | 다시 받기 권장 | 갈색 두건이 긴 머리처럼 그려졌다 |
-| 견습생 | 다시 받기 권장 | 게임은 마른 체형·작은 모자인데, 머리가 큰 2등신·큰 요리사 모자로 바뀌었다 |
+**정정:** 처음 보낸 `ref_1`(2행 식빵)·`ref_2`·`ref_3`은 게임이 쓰지 않는 옛 아틀라스(`assets/atlases/char_player`)에서 뽑은 그림이었다. 게임은 식빵·롤빵·통식빵·프레첼·화덕포에 `assets/art/release_slice/slice_chars*.png`를 쓴다(머리띠 식빵, 고글 쓴 둥근 롤빵, 키 큰 식빵 방패병, 낙타 같은 말을 탄 기수, 갈색 빵 화덕포). 그래서 그 5종의 환호는 다른 캐릭터로 그려졌다. 비교 이미지 `compare_1_hero_to_oven.png`도 옛 그림과 비교한 것이라 그 5종에 대해서는 틀렸다.
 
-시트 5·6에는 칸 테두리 선이 그려져 있다. 자를 때 칸 안쪽 10px을 버리면 된다.
+| 유닛 | 상태 |
+| --- | --- |
+| 제빵장, 바게트, 마카롱, 케이크, 도넛, 와플 | **게임에 넣음** (`tools/art/import_cheer.py` → `assets/art/cheer/`) |
+| 식빵, 롤빵, 통식빵, 프레첼, 화덕포 | 다시 받기: 옛 그림을 보고 그려졌다 → 시트 7·8·9 |
+| 견습생 | 다시 받기: 체형·모자가 다르다 → 시트 9 |
 
-### 다시 받을 때 보낼 문장 (해당 ref 이미지 첨부)
+그림이 없는 유닛은 받기 전까지 코드의 깡충 환호를 쓴다.
+
+### 다시 받을 시트 (새 대화에서 ①을 보낸 뒤, 해당 ref를 첨부하고 하나씩)
+
+`ref_7_melee_basic_ranged_basic.png`, `ref_8_tank_fast.png`, `ref_9_siege_worker.png`는 게임이 실제로 쓰는 그림이다. `1_style_reference.png`의 2~6줄도 같은 캐릭터다.
 
 ```text
-Redo only row 1 of sheet 2 (the ROLL THROWER). It is NOT a girl with long hair: it wears a brown hood that wraps the head like a monk's cowl, with a pale round face showing in the opening and one big eye, exactly as in the ref image. Keep its small body size and the yellow tunic. Same 4 cheer poses, same rules.
+Sheet 7. Copy the characters EXACTLY from the attached ref image (these are the real in-game sprites).
+Row 1: the TOAST SOLDIER: a square toast slice with a light crust edge, a red headband tied at the back, a short grey sword, tiny dark legs. Cheer: waves the sword over its head, legs kicking in the jump.
+Row 2: the ROLL ARCHER: a round golden bread bun with dark goggles pushed up on top, tiny legs, holds a small bread roll. Cheer: tosses the roll straight up in the jump, catches it on landing.
 ```
 
 ```text
-Redo only row 2 of sheet 6 (the APPRENTICE). Match the ref proportions exactly: a slim kid about 3 heads tall (not a big-headed chibi), a SMALL flat white cap (not a tall chef toque), white shirt, red apron, brown trousers. Same 4 cheer poses (the small cap may pop up at the peak), same rules.
+Sheet 8. Copy the characters EXACTLY from the attached ref image (these are the real in-game sprites).
+Row 1: the LOAF TANK: a tall brown loaf with a red band across it and a cute face, holding a tall wooden bread-board shield at its side. Cheer: heavy and proud, a small hop only (about half the height of the others), raises the board shield high at the peak.
+Row 2: the PRETZEL RIDER: a small round bread rider in a grey helmet with a red top knot, a red cloth and a spear, riding a tan camel-like mount with a red tail. Cheer: instead of jumping, the mount rears up on its hind legs in cells 2-3 while the rider raises the spear; cell 4 back on all four legs.
 ```
 
 ```text
-(optional) Sheet 3 row 1: the cream horse has a small golden horn on its forehead, as in the ref. Add it in all 4 cells, change nothing else.
+Sheet 9. Copy the characters EXACTLY from the attached ref image (these are the real in-game sprites).
+Row 1: the OVEN CANNON: a brown bread-loaf oven with a cute face and a glowing mouth, a grey cannon tube on top, a cream puff at the back, two wooden wheels. No crew. Cheer: the oven bounces on its wheels (small hop), the tube puffs a harmless cloud of white flour confetti straight up at the peak (no fire).
+Row 2: the APPRENTICE: a slim kid about 3 heads tall (not a big-headed chibi), a SMALL flat white cap (not a tall chef toque), white shirt, red apron, brown trousers. Cheer: both arms up, the small cap pops up at the peak, a happy landing.
 ```
+
+결과는 `cheer_7.png`~`cheer_9.png`로 넘겨주면 `import_cheer.py`의 `USE`에 더해 넣는다. 롤빵 1장만 다시 받을 필요는 없고, 시트 7에 함께 들어 있다.
