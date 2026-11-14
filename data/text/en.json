@@ -17,7 +17,7 @@
     "unit.siege.name": "Oven",
     "unit.siege.desc": "Oven Cannon. Slow, but deals heavy damage to bases and groups.",
     "hero.hero_captain.name": "Head Baker",
-    "hero.hero_captain.desc": "Leader of the Bakery Knights. You control him directly; he speeds up nearby allies' attacks.",
+    "hero.hero_captain.desc": "Leader of the Bakery Knights. Speeds up nearby allies' attacks.",
     "skill.skill_slam.name": "Slam",
     "skill.skill_slam.desc": "Smash the enemies in front with a rolling pin and knock them back.",
     "skill.skill_rally.name": "Rally",
