@@ -1,8 +1,7 @@
 extends RefCounted
 ## Cosmetic flour transport. The sim's continuous income is authoritative;
 ## neither trip timing nor sack animation grants/withholds any resources.
-const Style := preload("res://src/ui/ui_style.gd")
-const Text := preload("res://src/ui/ui_text.gd")
+const FLOUR_SACK := preload("res://assets/art/gpt/flour_sack.png")
 const CYCLE := 10.0
 const MILL_FROM_BASE := 152.0
 const GATE_FROM_BASE := 26.0
@@ -20,18 +19,9 @@ static func worker_state(index: int, seconds: float, base: float) -> Dictionary:
 	return {"x": gate, "carry": false, "left": true, "walk": false}
 
 static func sack(v: Node2D, pos: Vector2, scale := 1.0) -> void:
-	var body := Rect2(pos + Vector2(-6, -13) * scale, Vector2(12, 13) * scale)
-	v.draw_rect(body.grow(scale), Color("554337"))
-	v.draw_rect(body, Color("e7d8b2"))
-	v.draw_rect(Rect2(body.position + Vector2(2, 2) * scale, Vector2(7, 9) * scale), Color("f5e9cb"))
-	v.draw_rect(Rect2(pos + Vector2(-4, -15) * scale, Vector2(8, 3) * scale), Color("b8a178"))
-	v.draw_rect(Rect2(pos + Vector2(-4, -12) * scale, Vector2(8, 1) * scale), Color("806446"))
-	# A wheat stalk stamp, visible on the carried sack as well as the stock pile.
-	v.draw_rect(Rect2(pos + Vector2(0, -10) * scale, Vector2(1, 8) * scale), Color("9e743d"))
-	for row in 3:
-		var y := -5.0 - row * 2.0
-		v.draw_rect(Rect2(pos + Vector2(-2, y - 1) * scale, Vector2(2, 1) * scale), Color("9e743d"))
-		v.draw_rect(Rect2(pos + Vector2(1, y - 1) * scale, Vector2(2, 1) * scale), Color("9e743d"))
+	var size := (FLOUR_SACK.get_size() * scale).round()
+	var origin := (pos - Vector2(size.x * 0.5, size.y)).round()
+	v.draw_texture_rect(FLOUR_SACK, Rect2(origin, size), false)
 
 ## The home windmill: a 112x112 sprite standing on the ground at its bottom-centre (from the release-slice atlas).
 const MILL_PATH := "res://assets/backgrounds/home_mill.png"
@@ -107,14 +97,3 @@ static func draw(v: Node2D, sim, atlas, ground: float) -> void:
 			v.draw_rect(Rect2(pos + Vector2(-5,-23),Vector2(10,4)),Color("f5e8d0"))
 		if worker.carry and not has_carry_sprite:
 			sack(v, pos + Vector2(7, -13), 1.0)
-	# Short world labels keep the economy legible without another interactive HUD panel.
-	_sign(v, Text.t("world.flour_mill"), Vector2(mill, ground - 98))
-
-
-static func _sign(v: Node2D, label: String, center: Vector2) -> void:
-	var width := Style.text_width(label, 10) + 10.0
-	var plate := Rect2(center - Vector2(width * 0.5, 9), Vector2(width, 18))
-	v.draw_rect(plate.grow(1), Color("453e32"))
-	v.draw_rect(plate, Color("806341"))
-	v.draw_rect(Rect2(plate.position + Vector2(2, 2), Vector2(width - 4, 1)), Color("ac8b59"))
-	Style.draw_text_centered(v, label, center, 10, Color("fff0ce"))
