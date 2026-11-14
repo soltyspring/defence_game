@@ -62,14 +62,23 @@ func _notification(what: int) -> void:
 const Palette := preload("res://src/ui/battle_hud_palette.gd")
 const C_ALLY := Palette.ALLY
 const C_FOE := Palette.FOE
-const C_INK := Color(0.05, 0.04, 0.04)
 
 const MINIMAP_SKIN := preload("res://assets/art/hud_skin/minimap_illustrated.png")
+const MARKERS := preload("res://assets/art/hud_skin/minimap_markers.png")
+const FACE_HEIGHT := 22.0
+const ALLY_MARK := Rect2(0, 0, 5, 6)
+const FOE_MARK := Rect2(8, 0, 5, 6)
+const BOSS_MARK := Rect2(16, 0, 7, 7)
+const HERO_MARK := Rect2(24, 0, 7, 7)
+
+func _marker(region: Rect2, x: float, y: float) -> void:
+	var pos := (Vector2(x, y) - region.size * 0.5).round()
+	draw_texture_rect_region(MARKERS, Rect2(pos, region.size), region)
 
 func _draw() -> void:
-	draw_texture_rect(MINIMAP_SKIN, Rect2(0, 0, size.x, 32), false)
+	draw_texture_rect(MINIMAP_SKIN, Rect2(0, 0, size.x, FACE_HEIGHT), false)
 	if state.is_empty(): return
-	var y := 21.0 # just above the illustrated ground line
+	var y := 11.0 # between the two rows of markers
 	var bx := map_x(float(state.get("player_base", 0)))
 	var ex := map_x(float(state.get("enemy_base", 1)))
 	var dots: Array = state.get("dots", [])
@@ -93,25 +102,18 @@ func _draw() -> void:
 	for dot in dots:
 		var x := map_x(float(dot[0]))
 		if int(dot[1]) > 0:
-			draw_rect(Rect2(x - 2, y - 7, 4, 6), C_INK)
-			draw_rect(Rect2(x - 1, y - 6, 2, 4), Palette.ALLY_LIGHT)
-		elif bool(dot[2]):         # boss: a block with an outline, so it is not just "one more tick"
-			draw_rect(Rect2(x - 3, y + 1, 6, 7), C_INK)
-			draw_rect(Rect2(x - 2, y + 2, 4, 5), C_FOE)
-			draw_rect(Rect2(x - 2, y + 2, 4, 1), Color("ffd0c0"))
+			_marker(ALLY_MARK, x, y - 4.0)
+		elif bool(dot[2]):
+			_marker(BOSS_MARK, x, y + 4.5)
 		else:
-			draw_rect(Rect2(x - 2, y + 2, 5, 5), C_INK)
-			draw_rect(Rect2(x - 1, y + 3, 3, 3), Palette.FOE_LIGHT)
+			_marker(FOE_MARK, x, y + 4.5)
 	if hero_on:
-		for k in 2:
-			var r := 4.0 - k
-			var c := Vector2(hx, y - 5)
-			draw_colored_polygon(PackedVector2Array([c + Vector2(0, -r), c + Vector2(r, 0), c + Vector2(0, r), c + Vector2(-r, 0)]), C_INK if k == 0 else Color("ffe19a"))
+		_marker(HERO_MARK, hx, y - 4.0)
 	# the part of the lane on screen
 	var a := map_x(float(state.get("view_left", 0)))
 	var b := maxf(a + 5.0, map_x(float(state.get("view_right", 1))))
-	var top := 6.0
-	var bot := 28.0
+	var top := 2.0
+	var bot := FACE_HEIGHT - 2.0
 	var col := Color("ffe5a9")
 	if bool(state.get("scouting", false)):
 		draw_rect(Rect2(a, top, b - a, bot - top), Style.C_ACCENT, false, 1.0)
