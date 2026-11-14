@@ -695,9 +695,13 @@ func _draw_placeholder(u, pos: Vector2, flip: bool, mod: Color) -> void:
 	if not u.dying:
 		_hp_bar(pos + Vector2(0, -bh - hw - 9.0), 10.0 + 4.0 * s, u.hp / u.hp_max, u.side)
 
+const BAR_TICK := 4   # enemy HP bar: a 3-px cell + a 1-px dark tick
+
 func _hp_bar(center: Vector2, w: float, ratio: float, side: int) -> void:
 	if ratio >= 0.999 and w < 30.0:
 		return   # hide full bars on troops to reduce clutter
+	if side != 1:
+		w = maxf(1.0, roundf((w + 1.0) / float(BAR_TICK))) * BAR_TICK - 1.0   # whole 3-px cells split by 1-px ticks
 	var r := Rect2(roundf(center.x - w * 0.5), roundf(center.y), roundf(w), 2.0)
 	_bar_rects.append(r.grow(1.0))
 	_bar_fills.append(Rect2(r.position, Vector2(roundf(w * clampf(ratio, 0.0, 1.0)), 2.0)))
@@ -710,8 +714,9 @@ func _flush_bars() -> void:
 		draw_rect(_bar_fills[i], _bar_cols[i])
 		if _bar_cols[i] == C_BAR_ENEMY:
 			var r := _bar_fills[i]
-			for x in range(int(r.position.x) + 2, int(r.end.x), 4):
-				draw_line(Vector2(x, r.position.y), Vector2(x, r.end.y), C_OUTLINE, 1.0)
+			# ticks counted from the bar's left edge, one world pixel wide, so every cell is the same 3 px
+			for x in range(int(r.position.x) + BAR_TICK - 1, int(r.end.x), BAR_TICK):
+				draw_rect(Rect2(x, r.position.y, 1.0, r.size.y), C_OUTLINE)
 	_bar_rects.clear()
 	_bar_fills.clear()
 	_bar_cols.clear()
