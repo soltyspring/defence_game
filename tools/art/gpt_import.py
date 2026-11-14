@@ -8,6 +8,7 @@ background), trims each frame and packs the frames into atlas pages in the defen
 
     python tools/art/gpt_import.py            # writes assets/art/gpt/*.png|json and docs/art/gpt_sources/preview_*.png
     python tools/art/gpt_import.py icons      # only the 24x24 skill icons -> assets/art/skills/<skill id>.png
+    python tools/art/gpt_import.py characters # only the baker and flour courier atlas
 
 Skill icons (docs/art/gpt_sources/skillicon/skill_icons.png) were drawn on a finer grid than asked (~40 px per
 icon), so they are not block-shrunk: each badge is resampled to 24x24 (Lanczos) and snapped to its own 24-colour
@@ -188,7 +189,7 @@ def pack(items, width):
     return place, (width, hgt)
 
 
-def write_page(atlas_id, group, anims, width):
+def write_page(atlas_id, group, anims, width, events=None):
     """anims: {set: {state: (frames, fps, loop)}} -> png + json."""
     items, keys = [], []
     for s, states in anims.items():
@@ -207,6 +208,9 @@ def write_page(atlas_id, group, anims, width):
         anims_js[s] = {}
         for st, (frames, fps, loop) in states.items():
             anims_js[s][st] = {"frames": [f"{s}/{st}/{i}" for i in range(len(frames))], "fps": fps, "loop": loop}
+            if events and (s, st) in events:
+                hit = events[s, st]
+                anims_js[s][st].update(hit_frame=hit, events={"hit": hit})
     png = atlas_id + ".png"
     Image.fromarray(img).save(os.path.join(OUT, png), optimize=True)
     meta = {"schema": "defence.atlas/1", "atlas": atlas_id, "image": png, "image_res": RES + png, "size": list(size),
@@ -276,8 +280,57 @@ def skill_icons():
     print("skill icons:", ", ".join(SKILL_ICONS))
 
 
+def characters():
+    """Pack the approved 3x2 sheets, using a stable body origin instead of the weapon bounds."""
+    anims = {}
+    for unit, name, height, origin, states in [
+        ("hero_captain", "hero", 44 / 335, (245, 440),
+         {"idle": (4, 5, True), "walk": (6, 10, True), "attack": (6, 14, False),
+          "cast": (6, 12, False), "hit": (2, 10, False), "death": (6, 12, False)}),
+        ("worker", "apprentice", 28 / 303, (242, 436),
+         {"idle": (4, 4, True), "walk": (6, 10, True), "carry": (6, 9, True)}),
+    ]:
+        anims[unit] = {}
+        for state, (count, fps, loop) in states.items():
+            path = os.path.join(SRC, "characters", f"{name}_{state}.png")
+            img = Image.open(path).convert("RGB")
+            if img.size != (1536, 1024):
+                raise ValueError(f"Unexpected sheet dimensions: {path}")
+            frames = []
+            for i in range(6):
+                x, y = (i % 3) * 512, (i // 3) * 512
+                rgb = np.array(img.crop((x, y, x + 512, y + 512))).astype(np.int16)
+                mask = bg_mask(rgb)
+                if i >= count:
+                    if (~mask).sum() > 32:
+                        raise ValueError(f"Expected a blank cell: {path}, cell {i + 1}")
+                    continue
+                rgba = np.zeros((512, 512, 4), np.uint8)
+                rgba[~mask, :3] = rgb[~mask]
+                rgba[~mask, 3] = 255
+                # Pillow resamples RGBA with premultiplied alpha, so keyed pink cannot bleed in.
+                side = round(512 * height)
+                sm = np.array(Image.fromarray(rgba).resize((side, side), Image.Resampling.BOX))
+                sm[..., 3] = np.where(sm[..., 3] >= 128, 255, 0)
+                sm[sm[..., 3] == 0] = 0
+                sm = quantize(sm, 40)
+                bounds = bbox(sm)
+                if bounds is None:
+                    raise ValueError(f"Empty frame: {path}, cell {i + 1}")
+                l, t, r, b = bounds
+                ax, ay = (round(v * side / 512) for v in origin)
+                frames.append((sm[t:b, l:r], [int(ax - l), int(ay - t)]))
+            anims[unit][state] = (frames, fps, loop)
+    anims["hero_captain"]["die"] = anims["hero_captain"]["death"]
+    print("gpt_bakery_crew", write_page("gpt_bakery_crew", "character", anims, 512,
+                                      {("hero_captain", "attack"): 3}))
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
+    if len(sys.argv) > 1 and sys.argv[1] == "characters":
+        characters()
+        return 0
     skill_icons()
     if len(sys.argv) > 1 and sys.argv[1] == "icons":
         return 0

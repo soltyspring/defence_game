@@ -93,8 +93,11 @@ static func draw(v: Node2D, sim, atlas, ground: float) -> void:
 	for i in mini(int(sim.workers), 8):
 		var worker := worker_state(i, t, base)
 		var pos := Vector2(roundf(worker.x), roundf(ground + 1 + (i % 3) * 2))
+		var state := "carry" if worker.carry else ("walk" if worker.walk else "idle")
+		var has_carry_sprite := false
 		if atlas:
-			var rec = atlas.anim_rec("worker", "carry" if worker.carry else ("walk" if worker.walk else "idle"))
+			var rec = atlas.anim_rec("worker", state)
+			has_carry_sprite = worker.carry and rec != null
 			if rec == null: rec = atlas.anim_rec("worker", "walk")
 			if rec != null:
 				v._blit_rec(rec, atlas.rec_index(rec, t + i * 0.13) if worker.walk else 0, pos, worker.left, Color.WHITE)
@@ -102,7 +105,7 @@ static func draw(v: Node2D, sim, atlas, ground: float) -> void:
 			v.draw_rect(Rect2(pos + Vector2(-3,-13),Vector2(6,13)),Color("d2b383"))
 			v.draw_rect(Rect2(pos + Vector2(-4,-20),Vector2(8,7)),Color("f1ce9c"))
 			v.draw_rect(Rect2(pos + Vector2(-5,-23),Vector2(10,4)),Color("f5e8d0"))
-		if worker.carry:
+		if worker.carry and not has_carry_sprite:
 			sack(v, pos + Vector2(7, -13), 1.0)
 	# Short world labels keep the economy legible without another interactive HUD panel.
 	_sign(v, Text.t("world.flour_mill"), Vector2(mill, ground - 98))

@@ -329,6 +329,25 @@
    ]
   },
   {
+   "id": "gpt_bakery_crew",
+   "group": "character",
+   "load_policy": "battle",
+   "image": "res://assets/art/gpt/gpt_bakery_crew.png",
+   "frames": "res://assets/art/gpt/gpt_bakery_crew.json",
+   "size": [
+    512,
+    256
+   ],
+   "disk_bytes": 75883,
+   "gpu_bytes": 524288,
+   "biome": "",
+   "image_frames": 0,
+   "anim_sets": [
+    "hero_captain",
+    "worker"
+   ]
+  },
+  {
    "id": "gpt_fx",
    "group": "fx",
    "load_policy": "battle",
@@ -540,8 +559,8 @@
   }
  ],
  "anim_sets": {
-  "hero_captain": "rs_chars",
-  "worker": "rs_chars2",
+  "hero_captain": "gpt_bakery_crew",
+  "worker": "gpt_bakery_crew",
   "melee_basic": "rs_chars",
   "ranged_basic": "rs_chars2",
   "tank": "rs_chars2",
