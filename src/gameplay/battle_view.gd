@@ -92,10 +92,6 @@ func _process(_dt: float) -> void:
 func _draw() -> void:
 	if sim == null:
 		return
-	_draw_background()
-	_draw_base(sim.player_base, 1)
-	_draw_base(sim.enemy_base, -1)
-	_draw_workers()
 	# depth sort: higher lane_y (closer) drawn last
 	_order.clear()
 	for u in sim.players: _order.append(u)
@@ -103,22 +99,28 @@ func _draw() -> void:
 	if sim.hero_respawn <= 0.0: _order.append(sim.hero)
 	_order.sort_custom(_by_lane_y)
 	_variant_marks.clear()
-	# Grounding shadows are one shape pass, rather than a texture/shape switch per unit.
-	_halo_a = 0.5 if _bright_chapter() else 0.3
-	for u in _order:
-		if u.dying: continue
-		var foot := _unit_pos(u)
-		# stepped oval contact shadow (was a faint 14x2 bar that vanished on snow)
-		var w := 8.0 + 4.0 * float(u.def.get("size", 1.0)) + (4.0 if u.is_hero else 0.0)
-		var sc := Color(0.06, 0.06, 0.09, 0.30 + _halo_a * 0.4)
-		draw_rect(Rect2(foot + Vector2(-w, -1), Vector2(w * 2, 2)), sc)
-		draw_rect(Rect2(foot + Vector2(-w + 3, 1), Vector2(w * 2 - 6, 1)), sc)
-	_draw_telegraph_zones()
-	_draw_links()
 	_state_marks.clear()
 	_mark_rects.clear()
+	_halo_a = 0.5 if _bright_chapter() else 0.3
+	# Back-row units (drawn up to 20 px above the ground) passing a base are BEHIND it: drawn before the base so
+	# they step out from behind the house instead of standing on its wall (2026-11-14 user).
+	_behind.clear()
 	for u in _order:
+		if _behind_base(u): _behind.append(u)
+	_draw_background()
+	for u in _behind:
+		_draw_shadow(u)
 		_draw_unit(u)
+	_draw_base(sim.player_base, 1)
+	_draw_base(sim.enemy_base, -1)
+	_draw_workers()
+	# Grounding shadows are one shape pass, rather than a texture/shape switch per unit.
+	for u in _order:
+		if not _behind.has(u): _draw_shadow(u)
+	_draw_telegraph_zones()
+	_draw_links()
+	for u in _order:
+		if not _behind.has(u): _draw_unit(u)
 	for u in _variant_marks: _draw_variant(u)
 	for u in _state_marks: _draw_state_mark(u)
 	for badge in _crowd_badges:
@@ -147,6 +149,25 @@ func _draw() -> void:
 			if tx.alive and tx.uid >= 0: _draw_text(tx)
 		for serial in _text_offsets.keys():
 			if not live.has(serial): _text_offsets.erase(serial)
+
+var _behind: Array = []
+const BASE_SPRITE_HALF := 48.0   # base frames are 96 px wide around the pivot
+
+## A unit on a back formation row whose drawn body overlaps a base sprite.
+func _behind_base(u) -> bool:
+	if u.is_hero or u.is_boss or not _formation_slots.has(u.uid) or _formation_slots[u.uid].x <= 0: return false
+	var x := _unit_pos(u).x
+	var reach := BASE_SPRITE_HALF + 6.0 + 4.0 * float(u.def.get("size", 1.0))
+	return absf(x - float(sim.player_base.x)) < reach or absf(x - float(sim.enemy_base.x)) < reach
+
+## stepped oval contact shadow (was a faint 14x2 bar that vanished on snow)
+func _draw_shadow(u) -> void:
+	if u.dying: return
+	var foot := _unit_pos(u)
+	var w := 8.0 + 4.0 * float(u.def.get("size", 1.0)) + (4.0 if u.is_hero else 0.0)
+	var sc := Color(0.06, 0.06, 0.09, 0.30 + _halo_a * 0.4)
+	draw_rect(Rect2(foot + Vector2(-w, -1), Vector2(w * 2, 2)), sc)
+	draw_rect(Rect2(foot + Vector2(-w + 3, 1), Vector2(w * 2 - 6, 1)), sc)
 
 func _unit_pos(u) -> Vector2:
 	return _render_positions.get(u.uid,Vector2(roundf(u.x),roundf(ground_y+u.lane_y)))
