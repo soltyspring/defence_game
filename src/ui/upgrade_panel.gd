@@ -752,9 +752,10 @@ class Demo extends Control:
 		draw_texture_rect_region(TRAINING, Rect2(0, gy, size.x, size.y - gy), Rect2(source_x, 98, source_width, tex_size.y - 98))
 		draw_rect(Rect2(0, gy, size.x, 1), Color(1, 1, 1, 0.16))
 		var rng := float(def.get("range", 20))
-		var px := (size.x - 96.0) / 180.0
-		var ux := 30.0
-		var tx := ux + clampf(rng * px, 30.0, size.x - 66.0)
+		# Widest sprites (hero, siege) reach 22 px left of the pivot, 44 px at 2x: keep them inside the frame.
+		var ux := 50.0
+		var px := (size.x - 66.0 - ux) / 180.0
+		var tx := ux + clampf(rng * px, 30.0, size.x - 36.0 - ux)
 		var splash := float(def.get("splash", 0))
 		var ranged: bool = str(def.get("attack_type", "")) == "ranged" or rng >= 60.0
 		# reach ruler on the ground
