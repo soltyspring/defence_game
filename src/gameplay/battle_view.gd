@@ -360,7 +360,6 @@ func _draw_base(b: Dictionary, side: int) -> void:
 				if rec != null:
 					var bi0: int = atlas.rec_index(rec, sim.t)
 					_blit_rec(rec, bi0, Vector2(x, ground_y), false, Color(1, 0.6, 0.6) if b.flash > 0.0 else Color.WHITE)
-					_hp_bar(Vector2(x, ground_y - rec.rects[bi0].size.y - 8.0), 44.0, b.hp / b.hp_max, side)
 					return
 			if bm.has("anim_set"):
 				rec = atlas.anim_rec(str(bm.anim_set), st)
@@ -369,13 +368,11 @@ func _draw_base(b: Dictionary, side: int) -> void:
 				var mod0 := Color(1, 0.6, 0.6) if b.flash > 0.0 else Color.WHITE
 				var bi: int = atlas.rec_index(rec, sim.t)
 				_blit_rec(rec, bi, Vector2(x, ground_y), side < 0 and bool(bm.get("flip", false)), mod0)
-				_hp_bar(Vector2(x, ground_y - rec.rects[bi].size.y - 8.0), 44.0, b.hp / b.hp_max, side)
 				return
 			var f: Dictionary = atlas.frame(str(bm.get("atlas", "")), str(bm.get("frame", "")))
 			if not f.is_empty():
 				var mod := Color(1, 0.6, 0.6) if b.flash > 0.0 else Color.WHITE
 				_blit(f, Vector2(x, ground_y), side < 0 and bool(bm.get("flip", false)), mod)
-				_hp_bar(Vector2(x, ground_y - f.rect.size.y - 8.0), 44.0, b.hp / b.hp_max, side)
 				return
 	var main := C_PLAYER if side == 1 else C_ENEMY
 	var dark := C_PLAYER_D if side == 1 else C_ENEMY_D
@@ -394,7 +391,6 @@ func _draw_base(b: Dictionary, side: int) -> void:
 	draw_rect(Rect2(x - 1.0, r.position.y - 28.0, 2.0, 20.0), C_OUTLINE)
 	draw_rect(Rect2(x + (1.0 if side == 1 else -13.0), r.position.y - 28.0, 12.0, 8.0), main)
 	draw_rect(Rect2(x - 12.0, ground_y - 50.0, 24.0, 10.0), dark)
-	_hp_bar(Vector2(x, r.position.y - 36.0), 44.0, b.hp / b.hp_max, side)
 
 func _draw_workers() -> void:
 	Supply.draw(self, sim, atlas, ground_y)
