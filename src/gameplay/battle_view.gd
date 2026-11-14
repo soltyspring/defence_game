@@ -535,6 +535,8 @@ func _draw_unit(u) -> void:
 					var bw := 12.0 + 4.0 * float(u.def.get("size", 1.0))
 					var sw := bw * clampf(u.shield / maxf(1.0, u.hp_max), 0.0, 1.0)
 					draw_rect(Rect2(pos + Vector2(-bw * 0.5, -rec.rects[fi].size.y - 6.0), Vector2(sw, 2.0)), Color(1.0, 0.72, 0.86))
+				if u.cream_t > 0.0:
+					_draw_cream_cap(rec, fi, pos, flip, u.cream_t)
 	if not drawn:
 		_draw_placeholder(u, pos, flip, mod)
 
@@ -620,6 +622,64 @@ func _blit_rec(rec, i: int, pos: Vector2, flip: bool, mod: Color) -> void:
 		draw_texture_rect_region(rec.tex, Rect2(pos.x - (r.size.x - pv.x), pos.y - pv.y, -r.size.x, r.size.y), r, mod)
 	else:
 		draw_texture_rect_region(rec.tex, Rect2(pos - pv, r.size), r, mod)
+
+## Cake cream on a unit's head while its attacks are slowed: a whipped-cream cap sitting on the frame's first opaque
+## row, with a drip down one side; it melts away over the last half second.
+func _draw_cream_cap(rec, i: int, pos: Vector2, flip: bool, left: float) -> void:
+	var r: Rect2 = rec.rects[i]
+	var pv: Vector2 = rec.pivots[i]
+	var head := _frame_head(rec.tex, r)          # x: top row, y/z: first/last opaque column on the top rows
+	if head.x < 0.0: return
+	var x0 := head.y
+	var x1 := head.z
+	if flip:
+		x0 = r.size.x - 1.0 - head.z
+		x1 = r.size.x - 1.0 - head.y
+	var ox := pos.x - (r.size.x - pv.x) if flip else pos.x - pv.x
+	var cx := roundf(ox + (x0 + x1) * 0.5)
+	var hw := clampf(roundf((x1 - x0 + 1.0) * 0.5), 3.0, 6.0)
+	var top := roundf(pos.y - pv.y + head.x) + 2.0   # sunk 2 px into the head
+	var a := clampf(left / 0.5, 0.0, 1.0)
+	var ol := Color(C_OUTLINE, a)
+	var cream := Color(C_CREAM, a)
+	var shade := Color(C_CREAM_SHADE, a)
+	var drip := 1.0 if flip else -1.0
+	# outline, then shade, then cream: a dome two rows tall with a small peak and a drip
+	draw_rect(Rect2(cx - hw - 1.0, top - 3.0, hw * 2.0 + 2.0, 4.0), ol)
+	draw_rect(Rect2(cx - hw + 1.0, top - 5.0, hw * 2.0 - 2.0, 2.0), ol)
+	draw_rect(Rect2(cx - 2.0, top - 6.0, 3.0, 2.0), ol)
+	draw_rect(Rect2(cx + drip * hw - 1.0, top, 3.0, 3.0), ol)
+	draw_rect(Rect2(cx - hw, top - 2.0, hw * 2.0, 2.0), shade)
+	draw_rect(Rect2(cx - hw, top - 3.0, hw * 2.0, 1.0), cream)
+	draw_rect(Rect2(cx - hw + 1.0, top - 4.0, hw * 2.0 - 2.0, 1.0), cream)
+	draw_rect(Rect2(cx - 1.0, top - 5.0, 1.0, 1.0), cream)
+	draw_rect(Rect2(cx + drip * hw, top, 1.0, 2.0), shade)
+
+var _head_cache := {}      # "<texture rid>:<rect>" -> Vector3(top row, first col, last col) of the opaque pixels
+var _head_images := {}     # texture rid -> decoded Image (read once per atlas page)
+func _frame_head(tex: Texture2D, r: Rect2) -> Vector3:
+	var key := "%d:%s" % [tex.get_rid().get_id(), r]
+	if _head_cache.has(key): return _head_cache[key]
+	var img: Image = _head_images.get(tex.get_rid().get_id())
+	if img == null:
+		img = tex.get_image()
+		if img != null and img.is_compressed(): img.decompress()
+		_head_images[tex.get_rid().get_id()] = img
+	var out := Vector3(-1, 0, 0)
+	if img != null:
+		for y in int(r.size.y):
+			var first := -1
+			var last := -1
+			for x in int(r.size.x):
+				if img.get_pixel(int(r.position.x) + x, int(r.position.y) + y).a > 0.5:
+					if first < 0: first = x
+					last = x
+			if first >= 0:
+				if out.x < 0.0: out = Vector3(y, first, last)
+				else: out = Vector3(out.x, minf(out.y, first), maxf(out.z, last))
+				if y >= int(out.x) + 2: break       # the top three rows give the head's width
+	_head_cache[key] = out
+	return out
 
 func _blit(f: Dictionary, pos: Vector2, flip: bool, mod: Color) -> void:
 	var r: Rect2 = f.rect

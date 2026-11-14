@@ -43,6 +43,8 @@ class Unit:
 	var shield := 0.0      # sugar barrier (skill_shield): absorbs damage before HP
 	var shield_t := 0.0
 	var aura_mul := 1.0
+	var cream_t := 0.0      # > 0: whipped cream on its head (cake hit): attacks recharge at cream_mul
+	var cream_mul := 1.0
 	var flash := 0.0
 	var kb := 0.0
 	var invuln := 0.0
@@ -95,6 +97,8 @@ class Projectile:
 	var homing := true
 	var target: Unit = null
 	var hit_base := false
+	var slow_mul := 1.0     # attack-speed factor put on every unit it splashes (unit keys atk_slow_mul / atk_slow_s)
+	var slow_s := 0.0
 
 class Fx:
 	var alive := false
@@ -688,6 +692,9 @@ func _step_buff(u: Unit, dt: float) -> void:
 	if u.shield_t > 0.0:
 		u.shield_t -= dt
 		if u.shield_t <= 0.0: u.shield = 0.0
+	if u.cream_t > 0.0:
+		u.cream_t -= dt
+		if u.cream_t <= 0.0: u.cream_mul = 1.0
 
 func _apply_kb(u: Unit, dt: float) -> void:
 	if u.kb > 0.0:
@@ -1100,7 +1107,7 @@ func _step_boss_summon(u: Unit, dt: float) -> void:
 			alive += 1
 
 func _attack_logic(u: Unit, tgt: Unit, in_reach: bool, hit_base: bool, dt: float) -> void:
-	u.atk_cd -= dt * u.aura_mul   # Rally changes damage/movement; only the hero aura changes attack speed.
+	u.atk_cd -= dt * u.aura_mul * u.cream_mul   # Rally changes damage/movement; the hero aura and cake cream change attack speed.
 	if u.windup >= 0.0:
 		u.windup -= dt
 		if u.windup < 0.0:
@@ -1153,6 +1160,8 @@ func _resolve_attack(u: Unit) -> void:
 		p.splash = float(u.def.get("splash", 0.0))
 		p.struct_mult = _struct_mult(u)
 		p.knockback = kb
+		p.slow_mul = float(u.def.get("atk_slow_mul", 1.0))
+		p.slow_s = float(u.def.get("atk_slow_s", 0.0))
 		p.homing = not siege
 		p.target = tgt
 		p.hit_base = tgt == null
@@ -1271,6 +1280,19 @@ func _area_damage(x: float, radius: float, power: float, kb: float, struct_mult:
 		_damage_base(SIDE_ENEMY, power * struct_mult)
 
 ## Damage all units of `victim_side` within radius of x, excluding `skip`.
+## Cake cream: every living unit of victim_side within radius gets cream on its head for `secs`; its attacks recharge
+## at `mul` (bosses half as much, like frost). A new hit refreshes the time and keeps the stronger slow.
+func _cream_slow(victim_side: int, x: float, radius: float, mul: float, secs: float) -> void:
+	var arr: Array[Unit] = enemies if victim_side == SIDE_ENEMY else players
+	var hit: Array[Unit] = []
+	for e in arr:
+		if not e.dying and absf(e.x - x) <= radius: hit.append(e)
+	if victim_side == SIDE_PLAYER and hero_respawn <= 0.0 and absf(hero.x - x) <= radius: hit.append(hero)
+	for e in hit:
+		var m := 1.0 - (1.0 - mul) * (0.5 if e.is_boss else 1.0)
+		e.cream_mul = minf(e.cream_mul, m)
+		e.cream_t = maxf(e.cream_t, secs)
+
 func _area_damage_side(victim_side: int, x: float, radius: float, power: float, kb: float, skip: Unit) -> void:
 	var arr: Array[Unit] = enemies if victim_side == SIDE_ENEMY else players
 	for e in arr:
@@ -1418,6 +1440,8 @@ func _step_towers(dt: float) -> void:
 		p.splash = base_defense.tower_splash if side == SIDE_PLAYER else 0.0   # D29 option D, player tower only
 		p.struct_mult = 1.0
 		p.knockback = 0.0
+		p.slow_mul = 1.0
+		p.slow_s = 0.0
 		p.homing = true
 		p.target = best
 		p.hit_base = false
@@ -1436,6 +1460,7 @@ func _step_projectiles(dt: float) -> void:
 			p.alive = false
 			if p.hit_base:
 				_damage_base(-p.side, p.dmg * p.struct_mult)
+				if p.slow_s > 0.0: _cream_slow(-p.side, p.x1, maxf(p.splash, 12.0), p.slow_mul, p.slow_s)
 				if p.splash > 0.0:
 					_area_damage_side(-p.side, p.x1, p.splash, p.dmg, p.knockback, null)
 					_fx("cream_splat" if p.kind == "cream" else "explosion", p.x1, -6.0, 0.35, p.splash)
@@ -1444,6 +1469,7 @@ func _step_projectiles(dt: float) -> void:
 				if p.target != null and not p.target.dying and (p.homing or absf(p.target.x - p.x1) <= 12.0 + p.splash):
 					_damage(p.target, p.dmg, p.knockback)
 					hit_any = true
+				if p.slow_s > 0.0: _cream_slow(-p.side, p.x1, maxf(p.splash, 12.0), p.slow_mul, p.slow_s)
 				if p.splash > 0.0:
 					_area_damage_side(-p.side, p.x1, p.splash, p.dmg, p.knockback, p.target if hit_any else null)
 					_fx("cream_splat" if p.kind == "cream" else "explosion", p.x1, -6.0, 0.35, p.splash)
@@ -1527,6 +1553,8 @@ func _new_unit(d: Dictionary, side: int, x: float) -> Unit:
 	u.shield = 0.0
 	u.shield_t = 0.0
 	u.aura_mul = 1.0
+	u.cream_t = 0.0
+	u.cream_mul = 1.0
 	u.flash = 0.0
 	u.kb = 0.0
 	u.invuln = 0.0
