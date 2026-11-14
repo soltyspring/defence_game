@@ -679,7 +679,9 @@ func _step_hero(dt: float) -> void:
 	if hero_dir != 0 and can_move and not (hero_dir > 0 and (blocked or base_reach)):
 		hero.x += hero_dir * float(hero.def.speed) * hero.buff_mul * dt
 		var pbx: float = player_base.x
-		hero.x = clampf(hero.x, pbx + 10.0, maxf(pbx + 40.0, L * float(hero_def.leash)))
+		# up to the front of the enemy base (2026-11-15 user; the old `leash` stopped the hero at 85 % of the lane):
+		# moving on stops by itself once the base is in reach (base_reach above)
+		hero.x = clampf(hero.x, pbx + 10.0, maxf(pbx + 40.0, ebx - BASE_HALF))
 		hero.state = S_WALK
 	elif hero.windup < 0.0 and not in_reach and not base_reach:
 		hero.state = S_IDLE
