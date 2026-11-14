@@ -111,7 +111,7 @@ func _finish_battle(play: bool) -> bool:
 		sim.step(STEP)
 		n += 1
 	await _frames(3)
-	await _wait(1.6)   # App shows the result after 1.2 s
+	await _wait(2.4)   # App shows a win after App.VICTORY_LEN (2.0 s: march + cheer), a loss after 1.2 s
 	await _frames(3)
 	return sim.ended
 
@@ -137,7 +137,7 @@ func _win_current() -> Dictionary:
 	var n1: int = rec.battle_ended.size()
 	sim._damage_base(-1, float(sim.enemy_base.hp) + 1.0)
 	await _frames(3)
-	await _wait(1.6)
+	await _wait(2.4)   # a win: App.VICTORY_LEN
 	await _frames(3)
 	if rec.battle_ended.size() > n1:
 		res = rec.battle_ended.back()
