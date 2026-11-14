@@ -217,7 +217,7 @@ func _draw() -> void:
 	var off := Vector2(0, 1) if is_pressed else Vector2.ZERO
 	var has_sub := sub_text != ""
 	var has_visual := icon != null or glyph != &""
-	# on cooldown with a picture: no seconds, no curtain; the whole button is greyed and clears as the cooldown runs out
+	# on cooldown with a picture: no seconds; the curtain alone shows the time left (2026-11-14 user: lights up bottom to top)
 	var cd_fade := has_visual and cooldown_ratio > 0.0
 	var numeric_text := text != "" and text.is_valid_int()
 	var show_name := text != "" and (not has_visual or not has_sub or size.y >= 54 or numeric_text)
@@ -273,12 +273,13 @@ func _draw() -> void:
 	var reason := disabled and dim_reason != ""
 	var dr := Rect2(Vector2(2, size.y / 2 - 8), Vector2(size.x - 4, 16))
 	if cooldown_ratio > 0.0:
+		# a dark curtain over the top `ratio` of the button: the card lights up from the bottom as the cooldown runs out,
+		# so the bright part's height reads as "how much is ready"; a light edge marks the rising line
 		var inner := r.grow(-2)
-		if cd_fade:
-			draw_rect(inner, Color(0.10, 0.10, 0.13, 0.72 * clampf(cooldown_ratio, 0, 1)))
-		else:
-			var h := ceilf(inner.size.y * clampf(cooldown_ratio, 0, 1))
-			draw_rect(Rect2(inner.position, Vector2(inner.size.x, h)), Color(0, 0, 0, 0.55))
+		var h := ceilf(inner.size.y * clampf(cooldown_ratio, 0, 1))
+		draw_rect(Rect2(inner.position, Vector2(inner.size.x, h)), Color(0.10, 0.10, 0.13, 0.78) if cd_fade else Color(0, 0, 0, 0.55))
+		if h < inner.size.y:
+			draw_rect(Rect2(inner.position + Vector2(0, h), Vector2(inner.size.x, 1)), Color(1, 1, 1, 0.55))
 	if reason:
 		draw_rect(dr, UiStyle.C_TOAST_BG)
 	if cooldown_ratio > 0.0 or reason:
